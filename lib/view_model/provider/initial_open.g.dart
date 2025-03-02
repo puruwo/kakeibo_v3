@@ -7,12 +7,12 @@ part of 'initial_open.dart';
 // **************************************************************************
 
 String _$initialOpenNotifierHash() =>
-    r'78efbb47528fd6bbaf25fc46da124c1e6aafbd92';
+    r'b577bdfaf2c3ca56b127f62f33200da71d6338e6';
 
 /// See also [InitialOpenNotifier].
 @ProviderFor(InitialOpenNotifier)
 final initialOpenNotifierProvider =
-    AutoDisposeNotifierProvider<InitialOpenNotifier, bool>.internal(
+    NotifierProvider<InitialOpenNotifier, bool>.internal(
   InitialOpenNotifier.new,
   name: r'initialOpenNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final initialOpenNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$InitialOpenNotifier = AutoDisposeNotifier<bool>;
+typedef _$InitialOpenNotifier = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

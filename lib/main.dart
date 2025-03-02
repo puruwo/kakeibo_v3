@@ -10,7 +10,7 @@ void main() {
           // テキストサイズの制御
           minScaleFactor: 0.7,
           maxScaleFactor: 0.95,
-          child: const Foundation(),
+          child: Foundation(),
         ),
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark(),

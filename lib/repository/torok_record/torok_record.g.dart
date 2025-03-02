@@ -8,10 +8,10 @@ part of 'torok_record.dart';
 
 _$TorokRecordImpl _$$TorokRecordImplFromJson(Map<String, dynamic> json) =>
     _$TorokRecordImpl(
-      id: json['id'] as int? ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 0,
       date: json['date'] as String,
-      price: json['price'] as int? ?? 0,
-      categoryOrderKey: json['categoryOrderKey'] as int? ?? 0,
+      price: (json['price'] as num?)?.toInt() ?? 0,
+      categoryOrderKey: (json['categoryOrderKey'] as num?)?.toInt() ?? 0,
       memo: json['memo'] as String? ?? '',
     );
 

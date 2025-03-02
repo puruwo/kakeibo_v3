@@ -8,10 +8,10 @@ part of 'tbl003_record.dart';
 
 _$TBL003RecordImpl _$$TBL003RecordImplFromJson(Map<String, dynamic> json) =>
     _$TBL003RecordImpl(
-      id: json['id'] as int? ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 0,
       date: json['date'] as String,
-      bigCategory: json['bigCategory'] as int,
-      price: json['price'] as int,
+      bigCategory: (json['bigCategory'] as num).toInt(),
+      price: (json['price'] as num).toInt(),
     );
 
 Map<String, dynamic> _$$TBL003RecordImplToJson(_$TBL003RecordImpl instance) =>

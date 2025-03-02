@@ -10,8 +10,6 @@ import 'package:kakeibo/view/atom/previous_arrow_button.dart';
 import 'package:kakeibo/view/foundation.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
 import 'package:kakeibo/view/page/torok.dart';
-import 'package:kakeibo/view_model/provider/initial_open.dart';
-import 'package:kakeibo/view_model/provider/navigation_bar.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:kakeibo/constant/colors.dart';
@@ -90,9 +88,6 @@ class _ThirdState extends ConsumerState<Third> {
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
 
-    //navigationBarの状態管理
-    final navigationBarState = ref.watch(navigationBarNotifierProvider);
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -119,7 +114,7 @@ class _ThirdState extends ConsumerState<Third> {
                           // テキストサイズの制御
                           minScaleFactor: 0.7,
                           maxScaleFactor: 0.95,
-                          child: const Foundation(),
+                          child: Foundation(),
                         ),
                       ),
                       transitionDuration: Duration.zero,
@@ -149,7 +144,7 @@ class _ThirdState extends ConsumerState<Third> {
                           // テキストサイズの制御
                           minScaleFactor: 0.7,
                           maxScaleFactor: 0.95,
-                          child: const Foundation(),
+                          child: Foundation(),
                         ),
                       ),
                       transitionDuration: Duration.zero,
