@@ -79,6 +79,8 @@ class TBL001Impl {
   }
 }
 
+// 現行のカテゴリータイルのデータ取得
+
 //bigCategory指定で一ヶ月分のレコードの取得
 //目標とアイコンやアイコンカラーもMapに含まれる
 //月またぎ、1月分取得(Mutable)
@@ -98,6 +100,7 @@ class TBL001Impl {
 //      default_displaye:
 //      }
 // }
+
 Future<List<Map<String, dynamic>>> queryCrossMonthMutableRowsByBigCategory(
     DateTime fromDate, DateTime toDate) async {
   final sql = '''

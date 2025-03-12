@@ -1,46 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/domain/category_entity/category_entity.dart';
+import 'package:kakeibo/domain/small_category_entity/small_category_entity.dart';
+import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 
-import 'package:kakeibo/model/assets_conecter/category_handler.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
-import 'package:kakeibo/view_model/category_sum_getter.dart';
+import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
 
-class CategorySumTile extends StatefulWidget {
-  const CategorySumTile(
-      {required this.icon,
-      required this.categoryName,
-      required this.colorCode,
-      required this.bigCategorySum,
-      required this.budget,
-      required this.smallCategorySumList,
-      super.key});
+class CategoryTile extends HookConsumerWidget {
+  CategoryTile({required this.categoryTile, super.key});
+  final CategoryTileEntity categoryTile;
 
-  final Widget icon;
-  final String categoryName;
-  final String colorCode;
-  final int bigCategorySum;
-  final int budget;
-  final List<Map<String, dynamic>> smallCategorySumList;
+  CategoryEntity get categoryEntity => categoryTile.categoryEntity;
+  List<SmallCategoryEntity> get smallCategoryEntity => categoryTile.smallCategoryList;
 
   final double barFrameWidth = 280.0;
-
-  @override
-  State<CategorySumTile> createState() => _CategorySumTileState();
-}
-
-class _CategorySumTileState extends State<CategorySumTile>
-    with SingleTickerProviderStateMixin {
-  //横棒グラフの初期値
-  double barWidth = 0;
-  bool _isBuilt = false;
 
   // 予算を超えているか
   bool isOverBudget = false;
@@ -49,7 +31,11 @@ class _CategorySumTileState extends State<CategorySumTile>
   bool isSetBudget = true;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    //横棒グラフの初期値
+  double barWidth = 0;
+  final _isBuilt = useState(false);
+
     // 画面の横幅を取得
     final screenWidthSize = MediaQuery.of(context).size.width;
 
@@ -58,28 +44,27 @@ class _CategorySumTileState extends State<CategorySumTile>
     final screenHorizontalMagnification =
         screenHorizontalMagnificationGetter(screenWidthSize);
 
-    double degrees = (widget.bigCategorySum / widget.budget);
+    // 横棒グラフの幅を計算
+    double degrees = (categoryEntity.totalExpenseByBigCategory / categoryEntity.budget);
     barWidth =
-        degrees <= 1.0 ? widget.barFrameWidth * degrees : widget.barFrameWidth;
+        degrees <= 1.0 ? barFrameWidth * degrees : barFrameWidth;
 
-    if (widget.bigCategorySum > widget.budget) {
+    if (categoryEntity.totalExpenseByBigCategory > categoryEntity.budget) {
       isOverBudget = true;
     }
 
     //ビルドが完了したら横棒グラフのサイズを変更しアニメーションが動く
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _isBuilt = true;
-      });
+      _isBuilt.value = true;
     });
 
     // 支出合計のLabel
-    final String paymentSumLabel = formattedPriceGetter(widget.bigCategorySum);
+    final String paymentSumLabel = formattedPriceGetter(categoryEntity.totalExpenseByBigCategory);
 
     // 予算のLabel
-    final String budgetLabel = formattedPriceGetter(widget.budget);
+    final String budgetLabel = formattedPriceGetter(categoryEntity.budget);
 
-    isSetBudget = widget.budget == 0 ? false : true;
+    isSetBudget = categoryEntity.budget == 0 ? false : true;
 
     return Container(
       width: 343 * screenHorizontalMagnification,
@@ -120,7 +105,7 @@ class _CategorySumTileState extends State<CategorySumTile>
                             // バーの背景枠
                             Container(
                               height: 10,
-                              width: widget.barFrameWidth *
+                              width: barFrameWidth *
                                   screenHorizontalMagnification,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -130,34 +115,35 @@ class _CategorySumTileState extends State<CategorySumTile>
                             // バーの中身
                             AnimatedContainer(
                               height: 10,
-                              width: _isBuilt
+                              width: _isBuilt.value
                                   ? barWidth * screenHorizontalMagnification
                                   : 0,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: MyColors()
-                                    .getColorFromHex(widget.colorCode),
+                                    .getColorFromHex(categoryEntity.categoryColor),
                               ),
                               duration: const Duration(milliseconds: 500),
                             ),
                             // バーの超過分マスク
                             SizedBox(
-                              width:  widget.barFrameWidth *
+                              width: barFrameWidth *
                                   screenHorizontalMagnification,
                               child: AnimatedOpacity(
-                                opacity: _isBuilt ? 1.0 : 0.0,
+                                opacity: _isBuilt.value ? 1.0 : 0.0,
                                 curve: Curves.easeInExpo,
                                 duration: const Duration(milliseconds: 700),
                                 child: Container(
-                                  width: widget.barFrameWidth,
+                                  width: barFrameWidth,
                                   alignment: Alignment.centerRight,
                                   child: ClipRRect(
-                                      borderRadius: const BorderRadius.horizontal(
-                                          right: Radius.circular(10)),
+                                      borderRadius:
+                                          const BorderRadius.horizontal(
+                                              right: Radius.circular(10)),
                                       child: ClipRect(
                                         child: Align(
                                           alignment: Alignment.centerLeft,
-                                          widthFactor: (widget.barFrameWidth *
+                                          widthFactor: (barFrameWidth *
                                                   (degrees - 1) /
                                                   degrees) /
                                               280, // widthFactor = target width / original width
@@ -180,7 +166,7 @@ class _CategorySumTileState extends State<CategorySumTile>
                               // バーの背景枠
                               Container(
                                 height: 10,
-                                width: widget.barFrameWidth *
+                                width: barFrameWidth *
                                     screenHorizontalMagnification,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
@@ -190,13 +176,13 @@ class _CategorySumTileState extends State<CategorySumTile>
                               // バーの中身
                               AnimatedContainer(
                                 height: 10,
-                                width: _isBuilt
+                                width: _isBuilt.value
                                     ? barWidth * screenHorizontalMagnification
                                     : 0,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: MyColors()
-                                      .getColorFromHex(widget.colorCode),
+                                      .getColorFromHex(categoryEntity.categoryColor),
                                 ),
                                 duration: const Duration(milliseconds: 500),
                               ),
@@ -211,11 +197,11 @@ class _CategorySumTileState extends State<CategorySumTile>
               ),
               // バー下ラベル
               Container(
-                width: widget.barFrameWidth * screenHorizontalMagnification,
+                width: barFrameWidth * screenHorizontalMagnification,
                 // 最小の制約を設定することで子widgetのRowが最大まで拡大する
                 constraints: BoxConstraints(
                   minWidth:
-                      widget.barFrameWidth * screenHorizontalMagnification,
+                      barFrameWidth * screenHorizontalMagnification,
                   minHeight: 30,
                 ),
                 child: Row(
@@ -224,12 +210,15 @@ class _CategorySumTileState extends State<CategorySumTile>
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(right: 2.0),
-                      child: widget.icon,
+                      child: CategoryHandler().sisytIconGetterFromBigCategoryKey(
+                        categoryEntity.id,
+                        height: 25,
+                        width: 25),
                     ),
                     // カテゴリー名
                     Expanded(
                       child: Text(
-                        widget.categoryName,
+                        categoryEntity.bigCategoryName,
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           color: MyColors.white,
@@ -305,11 +294,10 @@ class _CategorySumTileState extends State<CategorySumTile>
 
           // expansionArea
           children: [
-            ...List.generate(widget.smallCategorySumList.length, (index) {
+            ...List.generate(smallCategoryEntity.length, (index) {
               // 支出合計のLabel
-              final String smallCategoryPaymentSumLabel = formattedPriceGetter(
-                  widget.smallCategorySumList[index]
-                      ['small_category_payment_sum']);
+              final String totalExpenseBySmallCategory = formattedPriceGetter(
+                  smallCategoryEntity[index].totalExpenseBySmallCategory);
 
               return Padding(
                 // 子一列の両サイドのパディング
@@ -326,8 +314,7 @@ class _CategorySumTileState extends State<CategorySumTile>
                       // 子の中でのパディング
                       padding: const EdgeInsets.only(left: 26.0),
                       child: Text(
-                        widget.smallCategorySumList[index]
-                            [TBL201RecordKey().categoryName],
+                        smallCategoryEntity[index].smallCategoryName,
                         style: GoogleFonts.notoSans(
                             fontSize: 16,
                             color: MyColors.label,
@@ -341,7 +328,7 @@ class _CategorySumTileState extends State<CategorySumTile>
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          smallCategoryPaymentSumLabel,
+                          totalExpenseBySmallCategory,
                           style: GoogleFonts.notoSans(
                               fontSize: 18,
                               color: MyColors.label,

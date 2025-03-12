@@ -8,6 +8,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/atom/next_arrow_button.dart';
 import 'package:kakeibo/view/atom/previous_arrow_button.dart';
 import 'package:kakeibo/view/foundation.dart';
+import 'package:kakeibo/view/organism/category_tile_area.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
 import 'package:kakeibo/view/page/torok.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -317,45 +318,8 @@ class _ThirdState extends ConsumerState<Third> {
                       }
                     })),
 
-                FutureBuilder(
-                    future: bigcategorySumMapList,
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Column(
-                            children:
-                                List.generate(snapshot.data!.length, (index) {
-                          final bigCategoryKey = snapshot.data![index]
-                              [TBL201RecordKey().bigCategoryKey];
-                          // 個別カテゴリーのタイル
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: CategorySumTile(
-                                icon: CategoryHandler()
-                                    .sisytIconGetterFromBigCategoryKey(
-                                        bigCategoryKey,
-                                        height: 25,
-                                        width: 25),
-                                categoryName: snapshot.data![index]
-                                    [TBL202RecordKey().bigCategoryName],
-                                colorCode: snapshot.data![index]
-                                    [TBL202RecordKey().colorCode],
-                                bigCategorySum: snapshot.data![index]
-                                    ['payment_price_sum'],
-                                budget: snapshot.data![index]
-                                    ['big_category_budget'],
-                                smallCategorySumList: snapshot.data![index]
-                                    ['smallCategorySumAndBudgetList']),
-                          );
-                        }));
-                      } else {
-                        return Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Container(
-                              height: 63,
-                              width: 343 * screenHorizontalMagnification,
-                            ));
-                      }
-                    }),
+                const CategoryTileArea(),
+
               ],
             ),
           ),
