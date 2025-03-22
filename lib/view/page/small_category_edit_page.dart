@@ -218,7 +218,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
                             // テキストの揃え(左右)
                             textAlign: TextAlign.center,
                             // カーソルの色
-                            cursorColor: MyColors.themeColor,
+                            // cursorColor: MyColors.themeColor,
                             // カーソルの先の太さ
                             cursorWidth: 2,
                             // 入力するテキストのstyle

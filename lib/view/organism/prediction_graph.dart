@@ -12,7 +12,6 @@ import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view_model/category_sum_getter.dart';
 import 'package:kakeibo/view_model/provider/active_datetime.dart';
 import 'package:kakeibo/view_model/reference_day_impl.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Chart import
 import 'package:syncfusion_flutter_charts/charts.dart';

@@ -1,15 +1,18 @@
 /// Package imports
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import 'package:kakeibo/constant/strings.dart';
+
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/atom/next_arrow_button.dart';
 import 'package:kakeibo/view/atom/previous_arrow_button.dart';
 import 'package:kakeibo/view/foundation.dart';
 import 'package:kakeibo/view/organism/all_category_tile_area.dart';
-import 'package:kakeibo/view/organism/category_tile_area.dart';
+import 'package:kakeibo/view/organism/third_page/all_category_tile_area.dart';
+import 'package:kakeibo/view/organism/third_page/category_tile_area.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
 import 'package:kakeibo/view/page/torok.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
@@ -20,16 +23,12 @@ import 'package:kakeibo/model/tableNameKey.dart';
 /// Local imports
 import 'package:kakeibo/view/page/budget_setting_page.dart';
 
-import 'package:kakeibo/view/organism/category_sum_tile.dart';
-import 'package:kakeibo/view/organism/balance_graph.dart';
-import 'package:kakeibo/view/organism/balance_graph_syncfusion.dart';
 import 'package:kakeibo/view/organism/prediction_graph.dart';
 
 import 'package:kakeibo/view/molecule/calendar_month_display.dart';
 
 import 'package:kakeibo/view_model/provider/active_datetime.dart';
 import 'package:kakeibo/view_model/provider/update_DB_count.dart';
-import 'package:kakeibo/view_model/category_sum_getter.dart';
 
 class Third extends ConsumerStatefulWidget {
   const Third({super.key});
@@ -58,12 +57,6 @@ class _ThirdState extends ConsumerState<Third> {
     ref.watch(updateDBCountNotifierProvider);
 
     final activeDt = ref.watch(activeDatetimeNotifierProvider);
-
-    //----------------------------------------------------------------------------------------------
-    //データ取得--------------------------------------------------------------------------------------
-
-    Future<List<Map<String, dynamic>>> allBudgetSum =
-        AllBudgetGetter().build(activeDt);
 
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
@@ -141,7 +134,6 @@ class _ThirdState extends ConsumerState<Third> {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   width: 343 * screenHorizontalMagnification,
@@ -149,66 +141,27 @@ class _ThirdState extends ConsumerState<Third> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      
                       Text(
                         ' 支出グラフ',
-                        style: GoogleFonts.notoSans(
-                            fontSize: 18,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w600),
+                        style: MyFonts.thirdPageSubheading,
                       ),
+
                       TextButton(
-                          onPressed: () {
-                            showModalBottomSheet(
-                              //sccafoldの上に出すか
-                              useRootNavigator: true,
-                              isScrollControlled: true,
-                              useSafeArea: true,
-                              constraints: const BoxConstraints(
-                                maxWidth: 2000,
-                              ),
-                              context: context,
-                              // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-                              builder: (context) {
-                                return MaterialApp(
-                                  debugShowCheckedModeBanner: false,
-                                  theme: ThemeData.dark(),
-                                  themeMode: ThemeMode.dark,
-                                  darkTheme: ThemeData.dark(),
-                                  home: MediaQuery.withClampedTextScaling(
-                                    // テキストサイズの制御
-                                    minScaleFactor: 0.7,
-                                    maxScaleFactor: 0.95,
-                                    child: BudgetSettingPage(),
-                                  ),
-                                );
-                              },
-                            );
+                          onPressed: () {_showModalBottomSheet(context,const BudgetSettingPage());
                           },
                           child: const Text(
                             '予算設定',
-                            style: TextStyle(
-                                color: MyColors.linkColor, fontSize: 14),
+                            style: MyFonts.thirdPageTextButton,
                           )),
                     ],
                   ),
                 ),
 
                 // グラフ部分
-                FutureBuilder(
-                    future: allBudgetSum,
-                    builder: ((context, snapshot) {
-                      if (snapshot.hasData) {
-                        // constで呼び出さないとリビルドがかかってグラフの挙動がおかしくなる
-                        return PredictionGraph(
+                PredictionGraph(
                           activeDt: activeDt,
-                        );
-                      } else {
-                        return Container(
-                          width: 343 * screenHorizontalMagnification,
-                          height: 213,
-                        );
-                      }
-                    })),
+                        ),
 
                 const SizedBox(
                   height: 8,
@@ -220,54 +173,30 @@ class _ThirdState extends ConsumerState<Third> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+
                       Text(
                         ' カテゴリーの支出',
-                        style: GoogleFonts.notoSans(
-                            fontSize: 18,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w600),
+                        style: MyFonts.thirdPageSubheading,
                       ),
-                      SizedBox(
-                        height: 30,
-                        width: 120,
-                        child: TextButton(
-                            onPressed: () {
-                              showModalBottomSheet(
-                                //sccafoldの上に出すか
-                                useRootNavigator: true,
-                                isScrollControlled: true,
-                                useSafeArea: true,
-                                constraints: const BoxConstraints(
-                                  maxWidth: 2000,
-                                ),
-                                context: context,
-                                // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-                                builder: (context) {
-                                  return MaterialApp(
-                                    debugShowCheckedModeBanner: false,
-                                    theme: ThemeData.dark(),
-                                    themeMode: ThemeMode.dark,
-                                    darkTheme: ThemeData.dark(),
-                                    home: MediaQuery.withClampedTextScaling(
-                                      // テキストサイズの制御
-                                      minScaleFactor: 0.7,
-                                      maxScaleFactor: 0.95,
-                                      child: const CategorySettingPage(),
-                                    ),
-                                  );
-                                },
-                              );
-                            },
-                            child: const Text(
-                              'カテゴリー設定',
-                              style: TextStyle(
-                                  color: MyColors.linkColor, fontSize: 14),
-                            )),
-                      ),
+
+                      TextButton(
+                          onPressed: () {
+                            _showModalBottomSheet(context,const CategorySettingPage());
+                          },
+                          child: const Text(
+                            'カテゴリー設定',
+                            style: MyFonts.thirdPageTextButton,
+                          )),
+
                     ],
                   ),
                 ),
 
+                const AllCategoryTileArea(),
+
+                const SizedBox(
+                  height: 8,
+                ),
                 const AllCategoryTileArea(),
 
                 const SizedBox(
@@ -280,11 +209,30 @@ class _ThirdState extends ConsumerState<Third> {
                   height: 32,
                 ),
 
+                const SizedBox(
+                  height: 32,
+                ),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  void _showModalBottomSheet(BuildContext context,Widget page) {
+    showModalBottomSheet(
+      //sccafoldの上に出すか
+      useRootNavigator: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      constraints: const BoxConstraints(
+        maxWidth: 2000,
+      ),
+      context: context,
+      builder: (context) {
+        return page;
+      },
     );
   }
 }
