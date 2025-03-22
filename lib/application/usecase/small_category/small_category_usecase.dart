@@ -23,6 +23,6 @@ class SmallCategoryUsecase {
     DateTime fromDate = DateTime.utc(2025, 3, 1); 
     DateTime toDate = DateTime.utc(2025, 3, 31);
 
-    return await _smallCategoryRepository.fetchAll(id,fromDate,toDate);
+    return await _smallCategoryRepository.fetchAll(bigCategoryId:id,fromDate:fromDate,toDate:toDate);
   }
 }

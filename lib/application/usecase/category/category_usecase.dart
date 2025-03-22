@@ -21,6 +21,6 @@ class CategoryUsecase {
     DateTime fromDate = DateTime.utc(2025, 3, 1); 
     DateTime toDate = DateTime.utc(2025, 3, 31);
 
-    return await _categoryRepository.fetchAll(fromDate,toDate);
+    return await _categoryRepository.fetchAll(fromDate:fromDate,toDate:toDate);
   }
 }

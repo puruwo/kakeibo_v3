@@ -96,7 +96,15 @@ class DatabaseHelper {
   // SQL入力のクエリ処理
   Future<List<Map<String, dynamic>>> query(String sql) async {
     Database? db = await instance.database;
-    return await db!.rawQuery(sql);
+    try {
+    // トランザクションを利用して安全に処理する
+      return await db!.transaction((txn) async {
+        return await txn.rawQuery(sql);
+      });
+    } catch (e) {
+      print('SQLクエリエラー: $e');
+      rethrow;
+    }
   }
 
   //　更新処理

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/domain/all_category_entity/all_category_repository.dart';
+import 'package:kakeibo/repository/all_category_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
 
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
@@ -18,6 +20,10 @@ void main() {
         smallCategoryRepositoryProvider.overrideWithValue(
           // Flavor.isDemo ? MockPostRepository() : GraphQlPostRepository()),
           ImplementsSmallCategoryRepository(),
+        ),
+        allCategoryRepositoryProvider.overrideWithValue(
+          // Flavor.isDemo ? MockPostRepository() : GraphQlPostRepository()),
+          ImplementsAllCategoryRepository(),
         ),
       ],
       child: MaterialApp(

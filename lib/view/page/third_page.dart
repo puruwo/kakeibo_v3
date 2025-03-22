@@ -8,13 +8,13 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/atom/next_arrow_button.dart';
 import 'package:kakeibo/view/atom/previous_arrow_button.dart';
 import 'package:kakeibo/view/foundation.dart';
+import 'package:kakeibo/view/organism/all_category_tile_area.dart';
 import 'package:kakeibo/view/organism/category_tile_area.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
 import 'package:kakeibo/view/page/torok.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/model/tableNameKey.dart';
 
 /// Local imports
@@ -24,7 +24,6 @@ import 'package:kakeibo/view/organism/category_sum_tile.dart';
 import 'package:kakeibo/view/organism/balance_graph.dart';
 import 'package:kakeibo/view/organism/balance_graph_syncfusion.dart';
 import 'package:kakeibo/view/organism/prediction_graph.dart';
-import 'package:kakeibo/view/organism/all_category_sum_tile.dart';
 
 import 'package:kakeibo/view/molecule/calendar_month_display.dart';
 
@@ -62,26 +61,6 @@ class _ThirdState extends ConsumerState<Third> {
 
     //----------------------------------------------------------------------------------------------
     //データ取得--------------------------------------------------------------------------------------
-
-    Future<List<Map<String, dynamic>>> bigcategorySumMapList =
-        BigCategorySumMapGetter().build(activeDt);
-    // {
-    // _id:
-    // color_code:
-    // big_category_name:
-    // resource_path:
-    // big_category_budget:
-    // payment_price_sum:
-    // smallCategorySumAndBudgetList:{_id
-    //                                small_category_payment_sum :
-    //                                big_category_key:
-    //                                tdisplayed_order_in_big:
-    //                                category_name:
-    //                                default_displayed}:
-    // }
-
-    Future<List<Map<String, dynamic>>> paymentSumByBig =
-        AllPaymentGetter().build(activeDt);
 
     Future<List<Map<String, dynamic>>> allBudgetSum =
         AllBudgetGetter().build(activeDt);
@@ -289,36 +268,17 @@ class _ThirdState extends ConsumerState<Third> {
                   ),
                 ),
 
-                // カテゴリータイル
-                FutureBuilder(
-                    future: Future.wait(
-                        [bigcategorySumMapList, paymentSumByBig, allBudgetSum]),
-                    builder: ((context, snapshot) {
-                      if (snapshot.hasData) {
-                        // 全カテゴリーのタイル
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 8.0),
-                          child: AllCategorySumTile(
-                              // ['big_category_key']['big_category_name'] ['payment_price_sum'] ['icon'] ['color']
-                              bigCategoryInformationMaps: snapshot.data![0],
-                              // int
-                              allCategorySum:
-                                  snapshot.data![1][0]['all_price_sum'] ?? 0,
-                              // int
-                              allCategoryBudgetSum:
-                                  snapshot.data![2][0]['budget_sum'] ?? 0),
-                        );
-                      } else {
-                        return Padding(
-                            padding: const EdgeInsets.only(bottom: 8.0),
-                            child: Container(
-                              height: 63,
-                              width: 343 * screenHorizontalMagnification,
-                            ));
-                      }
-                    })),
+                const AllCategoryTileArea(),
+
+                const SizedBox(
+                  height: 8,
+                ),
 
                 const CategoryTileArea(),
+
+                const SizedBox(
+                  height: 32,
+                ),
 
               ],
             ),

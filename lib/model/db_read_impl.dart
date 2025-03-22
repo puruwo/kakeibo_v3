@@ -79,107 +79,6 @@ class TBL001Impl {
   }
 }
 
-// 現行のカテゴリータイルのデータ取得
-
-//bigCategory指定で一ヶ月分のレコードの取得
-//目標とアイコンやアイコンカラーもMapに含まれる
-//月またぎ、1月分取得(Mutable)
-// {
-// _id:
-// color_code:
-// big_category_name:
-// resource_path,big_category_budget:
-// payment_price_sum:
-// smallCategorySumAndBudgetList:{
-//      {
-//      _id:
-//      small_category_payment_sum:
-//      big_category_key:
-//      tdisplayed_order_in_big:
-//      category_name:
-//      default_displaye:
-//      }
-// }
-
-Future<List<Map<String, dynamic>>> queryCrossMonthMutableRowsByBigCategory(
-    DateTime fromDate, DateTime toDate) async {
-  final sql = '''
-              SELECT  t1.${TBL202RecordKey().id} as ${TBL201RecordKey().bigCategoryKey}, 
-                      t1.${TBL202RecordKey().colorCode},
-                      t1.${TBL202RecordKey().bigCategoryName},
-                      t1.${TBL202RecordKey().resourcePath},
-                      t3.price as big_category_budget,COALESCE(t2.price_sum, 0) AS payment_price_sum
-              FROM ${TBL202RecordKey().tableName} t1
-              LEFT JOIN (
-                      SELECT ${TBL201RecordKey().bigCategoryKey}, price_sum
-                      FROM (SELECT y.${TBL201RecordKey().bigCategoryKey},SUM(z.${TBL001RecordKey().price}) as price_sum FROM ${TBL001RecordKey().tableName} z
-              			  INNER JOIN ${TBL201RecordKey().tableName} y
-              			    ON z.${TBL001RecordKey().paymentCategoryId} = y._id
-              			    WHERE (z.${TBL001RecordKey().date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND z.${TBL001RecordKey().date} <=${DateFormat('yyyyMMdd').format(toDate)})
-              			    GROUP BY y.${TBL201RecordKey().bigCategoryKey})
-                        ) t2
-              	      ON t1.${TBL202RecordKey().id} = t2.${TBL201RecordKey().bigCategoryKey}
-              LEFT JOIN (
-                    SELECT MAX(${TBL003RecordKey().date}) AS max_date, *
-                    FROM ${TBL003RecordKey().tableName}
-                    GROUP BY ${TBL003RecordKey().bigCategoryId}
-                    ) t3 
-              	    ON t1.${TBL202RecordKey().id} = t3.${TBL003RecordKey().bigCategoryId}
-                    WHERE NOT (t1.${TBL202RecordKey().isDisplayed} = 0 AND t2.${TBL201RecordKey().bigCategoryKey} IS NULL)
-                    ORDER BY t1.${TBL202RecordKey().displayOrder} ASC;
-              ''';
-
-  final immutable = db.query(sql);
-  final mutable = await makeMutable(immutable);
-
-  // expanded時に表示する小カテゴリー別の合計を取得
-  int i = 0;
-  for (var item in mutable) {
-    final bigCategoryKey = item[TBL201RecordKey().bigCategoryKey];
-
-    //  {
-    //  _id:
-    //  small_category_payment_sum:
-    //  big_category_key:
-    //  tdisplayed_order_in_big:
-    //  category_name:
-    //  default_displaye:
-    //  }
-
-    //
-
-    final sql = '''
-                SELECT  t1.${TBL201RecordKey().id},
-                        coalesce(t2.small_category_payment_sum,0) as small_category_payment_sum ,
-                        t1.${TBL201RecordKey().bigCategoryKey},
-                        t1.${TBL201RecordKey().displayedOrderInBig},
-                        t1.${TBL201RecordKey().categoryName},
-                        t1.${TBL201RecordKey().defaultDisplayed} 
-                        FROM ${TBL201RecordKey().tableName} t1 
-                LEFT JOIN
-                        (SELECT *,SUM(x.${TBL001RecordKey().price}) as small_category_payment_sum 
-                        FROM ${TBL001RecordKey().tableName} x
-						            WHERE (x.${TBL001RecordKey().date} >= ${DateFormat('yyyyMMdd').format(fromDate)}  AND x.${TBL001RecordKey().date} <=${DateFormat('yyyyMMdd').format(toDate)} )
-						            GROUP BY x.${TBL001RecordKey().paymentCategoryId}) t2
-                ON t2.${TBL001RecordKey().paymentCategoryId} = t1.${TBL201RecordKey().id}
-                INNER JOIN ${TBL202RecordKey().tableName} t3
-                ON t1.${TBL201RecordKey().bigCategoryKey} = t3._id
-                WHERE t1.${TBL201RecordKey().bigCategoryKey} = $bigCategoryKey
-                AND NOT (t1.${TBL201RecordKey().defaultDisplayed} = 0 AND t2.small_category_payment_sum IS NULL)
-                ORDER BY t1.${TBL201RecordKey().displayedOrderInBig};
-                ''';
-    // print(sql);
-    final immutable2 = db.query(sql);
-    final mutable2 = await makeMutable(immutable2);
-    // print(mutable);
-    // print('\n');
-    mutable[i].addAll({'smallCategorySumAndBudgetList': mutable2});
-    i++;
-  }
-
-  return mutable;
-}
-
 //bigCategory指定で一ヶ月分のカテゴリーごとのレコードの取得
 //月またぎ、1月分取得(Mutable)
 // {
@@ -208,20 +107,6 @@ Future<List<Map<String, dynamic>>> queryCrossMonthMutableRowsByCategory(
   return mutable;
 }
 
-//一ヶ月合計支出の取得
-Future<List<Map<String, dynamic>>> queryMonthlyAllPriceSum(
-    DateTime fromDate, DateTime toDate) async {
-  final sql = '''
-            SELECT SUM(${TBL001RecordKey().price}) as all_price_sum FROM ${TBL001RecordKey().tableName}
-            WHERE ${TBL001RecordKey().date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${TBL001RecordKey().date} <= ${DateFormat('yyyyMMdd').format(toDate)} 
-            ;
-            ''';
-
-  final immutable = db.query(sql);
-  final mutable = makeMutable(immutable);
-
-  return mutable;
-}
 
 //入力した日付の過去最近の目標の合計を取得
 Future<List<Map<String, dynamic>>> queryMonthlyAllBudgetSum(DateTime dt) async {
@@ -330,6 +215,8 @@ Future<int> getDisplaySyunyuCategoryNumber() async {
   return count;
 }
 
+// all_category_entityが代替
+
 // その月の支出合計
 // {
 // year_month:
@@ -346,6 +233,7 @@ Future<List<Map<String, dynamic>>> getMonthPaymentSum(
 
   return mutable;
 }
+
 
 // その月の収入合計
 // {

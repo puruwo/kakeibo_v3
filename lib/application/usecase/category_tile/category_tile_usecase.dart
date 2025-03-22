@@ -27,12 +27,12 @@ class CategoryTileUsecase {
 
     // todo: 名前を変更する
     // カテゴリータイルのリストを取得する
-    final categoryList = await _categoryRepository.fetchAll(fromDate,toDate);
+    final categoryList = await _categoryRepository.fetchAll(fromDate:fromDate,toDate:toDate);
 
     // カテゴリータイルのリストの並び順でList<SmallCategoryExpenceEntity>を取得する
     List<CategoryTileEntity> categoryTileList = [];
     for(int i = 0; i < categoryList.length; i++){
-      final smallCategoryList = await _smallCategoryRepository.fetchAll(categoryList[i].id, fromDate, toDate);
+      final smallCategoryList = await _smallCategoryRepository.fetchAll(bigCategoryId:categoryList[i].id, fromDate:fromDate, toDate:toDate);
       categoryTileList.add(CategoryTileEntity(categoryEntity:categoryList[i],smallCategoryList:smallCategoryList));
     }
 

@@ -15,7 +15,7 @@ class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
   }
 
   @override
-  Future<List<SmallCategoryEntity>> fetchAll(int bigCategoryId, DateTime fromDate, DateTime toDate) async {
+  Future<List<SmallCategoryEntity>> fetchAll({required int bigCategoryId,required DateTime fromDate,required DateTime toDate}) async {
 
     //  {
     //  _id:

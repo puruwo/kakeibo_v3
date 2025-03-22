@@ -7,17 +7,22 @@ import 'package:kakeibo/application/usecase/category_tile/category_tile_provider
 class CategoryTileArea extends ConsumerWidget {
   const CategoryTileArea({Key? key}) : super(key: key);
 
+  // カード間の間隔
+  static const double cardSpacing = 8.0;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(categoryTileEntityProvider).when(
           data: (categoryTileEntities) {
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: categoryTileEntities.length,
-              itemBuilder: (BuildContext context, int index) {
-                return CategoryTile(
-                    categoryTile: categoryTileEntities[index]);
-              },
+            return Column(
+              children: List.generate(
+                categoryTileEntities.length,
+                (index) => Padding(
+                  // カード間の間隔
+                  padding: const EdgeInsets.only(bottom:cardSpacing),
+                  child: CategoryTile(categoryTile: categoryTileEntities[index]),
+                ),
+              ),
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),

@@ -15,7 +15,7 @@ class ImplementsCategoryRepository implements CategoryRepository {
   }
 
   @override
-  Future<List<CategoryEntity>> fetchAll(DateTime fromDate, DateTime toDate) async {
+  Future<List<CategoryEntity>> fetchAll({required DateTime fromDate, required DateTime toDate}) async {
     final sql = '''
                   SELECT  
                     t1._id AS id, 

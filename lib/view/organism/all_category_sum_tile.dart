@@ -1,56 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/domain/all_category_tile_entity/all_category_tile_entity.dart';
 
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
 
-class AllCategorySumTile extends StatefulWidget {
+class AllCategorySumTile extends HookConsumerWidget {
   const AllCategorySumTile(
-      {required this.bigCategoryInformationMaps,
-      required this.allCategorySum,
-      required this.allCategoryBudgetSum,
-      super.key});
+      {required this.allCategoryTileEntity,super.key});
 
-  // ['big_category_key']['big_category_name'] ['payment_price_sum'] ['icon'] ['color']
-  final List<Map<String, dynamic>> bigCategoryInformationMaps;
-  // 全カテゴリーの合計支出
-  final int allCategorySum;
-  // 全カテゴリーの合計予算
-  final int allCategoryBudgetSum;
-
-  @override
-  State<AllCategorySumTile> createState() => _CategorySumTileState();
-}
-
-class _CategorySumTileState extends State<AllCategorySumTile>
-    with SingleTickerProviderStateMixin {
-  // ビルドが完了したかどうか
-  bool _isBuilt = false;
+  final AllCategoryTileEntity allCategoryTileEntity;
 
   // 横棒グラフのフレームサイズ
   final double barFrameWidth = 280.0;
 
-  late List<double> barWidthList;
-
-  // 予算が設定されているか
-  bool isSetBudget = true;
-
   @override
-  void initState() {
-    // アニメーションのため各カテゴリーの棒グラフの幅リストを初期化
-    barWidthList =
-        List.generate(widget.bigCategoryInformationMaps.length, (index) => 0);
-    super.initState();
-  }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final List<double> barWidthList =
+        List.generate(allCategoryTileEntity.categoryCount, (index) => 0.0);
 
-  @override
-  Widget build(BuildContext context) {
+    // 予算が設定されているか
+    bool isSetBudget = true;
+
+    // ビルドが完了したかどうか
+    final isBuilt = useState(false);
+
     // 画面の横幅を取得
     final screenWidthSize = MediaQuery.of(context).size.width;
 
@@ -59,52 +40,29 @@ class _CategorySumTileState extends State<AllCategorySumTile>
     final screenHorizontalMagnification =
         screenHorizontalMagnificationGetter(screenWidthSize);
 
-    isSetBudget = widget.allCategoryBudgetSum == 0 ? false : true;
-
-    // 各大カテゴリーの名前
-    List<String> bigCategoryNameList = [];
-    // 各大カテゴリー支出合計のリスト
-    List<int> paymentPriceSumList = [];
-    // 各大カテゴリーのアイコン
-    List<Widget> iconList = [];
-    // 各大カテゴリーのカラー
-    List<Color> colorList = [];
-    // 情報を展開
-    for (var value in widget.bigCategoryInformationMaps) {
-      bigCategoryNameList.add(value[TBL202RecordKey().bigCategoryName]);
-      paymentPriceSumList.add(value['payment_price_sum']);
-      iconList.add(CategoryHandler().sisytIconGetterFromBigCategoryKey(
-          value[TBL201RecordKey().bigCategoryKey],
-          height: 25,
-          width: 25));
-      colorList
-          .add(MyColors().getColorFromHex(value[TBL202RecordKey().colorCode]));
-    }
+    isSetBudget = allCategoryTileEntity.allCategoryTotalBudget == 0 ? false : true;
 
     // 各カテゴリーのグラフ幅を計算
     for (int i = 0; i < barWidthList.length; i++) {
-      if (widget.allCategorySum < widget.allCategoryBudgetSum) {
-        double degrees = (paymentPriceSumList[i] / widget.allCategoryBudgetSum);
+      if (allCategoryTileEntity.allCategoryTotalExpense < allCategoryTileEntity.allCategoryTotalBudget) {
+        double degrees = (allCategoryTileEntity.categoryExpenseList[i] / allCategoryTileEntity.allCategoryTotalBudget);
         barWidthList[i] = degrees = barFrameWidth * degrees;
       } else {
-        double degrees = (paymentPriceSumList[i] / widget.allCategorySum);
+        double degrees = (allCategoryTileEntity.categoryExpenseList[i] / allCategoryTileEntity.allCategoryTotalExpense);
         barWidthList[i] = degrees = barFrameWidth * degrees;
       }
     }
 
     //ビルドが完了したら横棒グラフのサイズを変更しアニメーションが動く
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        _isBuilt = true;
-      });
+      isBuilt.value = true;
     });
 
     // 支出合計のLabel
-    final String paymentSumLabel = formattedPriceGetter(widget.allCategorySum);
+    final String paymentSumLabel = formattedPriceGetter(allCategoryTileEntity.allCategoryTotalExpense);
 
     // 予算のLabel
-    final String budgetLabel =
-        formattedPriceGetter(widget.allCategoryBudgetSum);
+    final String budgetLabel = formattedPriceGetter(allCategoryTileEntity.allCategoryTotalBudget);
 
     return Container(
       width: 343 * screenHorizontalMagnification,
@@ -141,44 +99,52 @@ class _CategorySumTileState extends State<AllCategorySumTile>
                   Padding(
                     // バーの上下の余白を調整
                     padding: const EdgeInsets.only(top: 8, bottom: 3),
-                    child:isSetBudget ? Stack(
-                      children: [
-                        // バーの背景枠
-                        Container(
-                          height: 10,
-                          width: barFrameWidth * screenHorizontalMagnification,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            color: MyColors.secondarySystemfill,
+                    child: isSetBudget
+                        ? Stack(
+                            children: [
+                              // バーの背景枠
+                              Container(
+                                height: 10,
+                                width: barFrameWidth *
+                                    screenHorizontalMagnification,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: MyColors.secondarySystemfill,
+                                ),
+                              ),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Container(
+                                  constraints: const BoxConstraints(
+                                    minWidth: 0,
+                                  ),
+                                  child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        ...List.generate(
+                                            allCategoryTileEntity.categoryCount,
+                                            (index) {
+                                          return AnimatedContainer(
+                                            height: 10,
+                                            width: isBuilt.value
+                                                ? barWidthList[index] *
+                                                    screenHorizontalMagnification
+                                                : 0,
+                                            color: MyColors().getColorFromHex(allCategoryTileEntity.categoryColorList[index]),
+                                            duration: const Duration(
+                                                milliseconds: 500),
+                                          );
+                                        }),
+                                      ]),
+                                ),
+                              )
+                            ],
+                          )
+                        : const Text(
+                            '予算が設定されていません',
+                            style: TextStyle(
+                                color: MyColors.secondaryLabel, fontSize: 16),
                           ),
-                        ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Container(
-                            constraints: const BoxConstraints(
-                              minWidth: 0,
-                            ),
-                            child:
-                                Row(mainAxisSize: MainAxisSize.min, children: [
-                              ...List.generate(
-                                  widget.bigCategoryInformationMaps.length,
-                                  (index) {
-                                return AnimatedContainer(
-                                  height: 10,
-                                  width: _isBuilt ? barWidthList[index]*screenHorizontalMagnification : 0,
-                                  color: colorList[index],
-                                  duration: const Duration(milliseconds: 500),
-                                );
-                              }),
-                            ]),
-                          ),
-                        )
-                      ],
-                    ):const Text(
-                        '予算が設定されていません',
-                        style: TextStyle(
-                            color: MyColors.secondaryLabel, fontSize: 16),
-                      ),
                   ),
 
                   // バー下ラベル
@@ -270,11 +236,10 @@ class _CategorySumTileState extends State<AllCategorySumTile>
 
               // expansionArea
               children: [
-                ...List.generate(widget.bigCategoryInformationMaps.length,
-                    (index) {
+                ...List.generate(allCategoryTileEntity.categoryCount, (index) {
                   // 支出合計のLabel
                   final String categoryPaymentSumLabel =
-                      formattedPriceGetter(paymentPriceSumList[index]);
+                      formattedPriceGetter(allCategoryTileEntity.categoryExpenseList[index]);
                   return Padding(
                     // 子一列の両サイドのパディング
                     padding: const EdgeInsets.only(
@@ -287,12 +252,15 @@ class _CategorySumTileState extends State<AllCategorySumTile>
                         Row(
                           children: [
                             // アイコン
-                            iconList[index],
+                            CategoryHandler().sisytIconGetterFromBigCategoryKey(
+                                allCategoryTileEntity.categoryIdList[index],
+                                height: 25,
+                                width: 25),
                             // カテゴリー名
                             SizedBox(
                               width: 150,
                               child: Text(
-                                ' ${bigCategoryNameList[index]}',
+                                ' ${allCategoryTileEntity.categoryNameList[index]}',
                                 style: GoogleFonts.notoSans(
                                     fontSize: 16,
                                     color: MyColors.label,

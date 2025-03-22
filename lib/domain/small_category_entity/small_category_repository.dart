@@ -17,5 +17,5 @@ abstract interface class SmallCategoryRepository {
   Future<SmallCategoryEntity> fetch({required String postId});
 
   /// 全投稿情報取得
-  Future<List<SmallCategoryEntity>> fetchAll(int bigCategoryId, DateTime fromDate, DateTime toDate);
+  Future<List<SmallCategoryEntity>> fetchAll({required int bigCategoryId,required DateTime fromDate,required DateTime toDate});
 }

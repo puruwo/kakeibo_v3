@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/repository/tbl001_record/tbl001_record.dart';
 import 'package:kakeibo/repository/torok_record/torok_record.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'dart:collection';
 // DateTimeの日本語対応
 import 'package:intl/intl.dart';
@@ -415,6 +414,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                                       },
                                     );
                                   }
+                                  return null;
                                 },
 
                                 //ダイアログでOKを押したら処理

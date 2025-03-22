@@ -16,7 +16,7 @@ import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
 
 class CategoryTile extends HookConsumerWidget {
-  CategoryTile({required this.categoryTile, super.key});
+  const CategoryTile({required this.categoryTile, super.key});
   final CategoryTileEntity categoryTile;
 
   CategoryEntity get categoryEntity => categoryTile.categoryEntity;
@@ -24,17 +24,17 @@ class CategoryTile extends HookConsumerWidget {
 
   final double barFrameWidth = 280.0;
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
   // 予算を超えているか
   bool isOverBudget = false;
 
   // 予算が設定されているか
   bool isSetBudget = true;
 
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     //横棒グラフの初期値
   double barWidth = 0;
-  final _isBuilt = useState(false);
+  final isBuilt = useState(false);
 
     // 画面の横幅を取得
     final screenWidthSize = MediaQuery.of(context).size.width;
@@ -55,7 +55,7 @@ class CategoryTile extends HookConsumerWidget {
 
     //ビルドが完了したら横棒グラフのサイズを変更しアニメーションが動く
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _isBuilt.value = true;
+      isBuilt.value = true;
     });
 
     // 支出合計のLabel
@@ -115,7 +115,7 @@ class CategoryTile extends HookConsumerWidget {
                             // バーの中身
                             AnimatedContainer(
                               height: 10,
-                              width: _isBuilt.value
+                              width: isBuilt.value
                                   ? barWidth * screenHorizontalMagnification
                                   : 0,
                               decoration: BoxDecoration(
@@ -130,7 +130,7 @@ class CategoryTile extends HookConsumerWidget {
                               width: barFrameWidth *
                                   screenHorizontalMagnification,
                               child: AnimatedOpacity(
-                                opacity: _isBuilt.value ? 1.0 : 0.0,
+                                opacity: isBuilt.value ? 1.0 : 0.0,
                                 curve: Curves.easeInExpo,
                                 duration: const Duration(milliseconds: 700),
                                 child: Container(
@@ -176,7 +176,7 @@ class CategoryTile extends HookConsumerWidget {
                               // バーの中身
                               AnimatedContainer(
                                 height: 10,
-                                width: _isBuilt.value
+                                width: isBuilt.value
                                     ? barWidth * screenHorizontalMagnification
                                     : 0,
                                 decoration: BoxDecoration(
