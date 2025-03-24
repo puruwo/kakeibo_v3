@@ -1,27 +1,27 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'active_datetime.dart';
+part of 'selected_datetime.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$activeDatetimeNotifierHash() =>
-    r'0cbb05be16fc4deb83e8677942d4ea7e0b081a5d';
+String _$selectedDatetimeNotifierHash() =>
+    r'6a6c421a00c3feca72a06ac68349acd298579667';
 
-/// See also [ActiveDatetimeNotifier].
-@ProviderFor(ActiveDatetimeNotifier)
-final activeDatetimeNotifierProvider =
-    AutoDisposeNotifierProvider<ActiveDatetimeNotifier, DateTime>.internal(
-  ActiveDatetimeNotifier.new,
-  name: r'activeDatetimeNotifierProvider',
+/// See also [SelectedDatetimeNotifier].
+@ProviderFor(SelectedDatetimeNotifier)
+final selectedDatetimeNotifierProvider =
+    NotifierProvider<SelectedDatetimeNotifier, DateTime>.internal(
+  SelectedDatetimeNotifier.new,
+  name: r'selectedDatetimeNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$activeDatetimeNotifierHash,
+      : _$selectedDatetimeNotifierHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef _$ActiveDatetimeNotifier = AutoDisposeNotifier<DateTime>;
+typedef _$SelectedDatetimeNotifier = Notifier<DateTime>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

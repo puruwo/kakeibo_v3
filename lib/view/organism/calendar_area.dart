@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/view_model/provider/calendar_page_controller/calendar_page_controller.dart';
+import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:intl/intl.dart';
 
@@ -11,7 +13,6 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 
-import 'package:kakeibo/view_model/provider/active_datetime.dart';
 import 'package:kakeibo/view_model/provider/update_DB_count.dart';
 
 import 'package:kakeibo/view_model/calendar_builder.dart';
@@ -19,21 +20,14 @@ import 'package:kakeibo/view_model/reference_day_impl.dart';
 
 import 'package:kakeibo/repository/torok_record/torok_record.dart';
 
-// import 'package:kakeibo/view/molecule/calendar_date_box.dart';
-import 'package:kakeibo/view/molecule/calendar_month_display.dart';
-// import 'package:kakeibo/view/atom/calendar_header.dart';
-import 'package:kakeibo/view/atom/next_arrow_button.dart';
-import 'package:kakeibo/view/atom/previous_arrow_button.dart';
-
 import 'package:kakeibo/view/page/torok.dart';
 
-class CalendarArea extends ConsumerWidget {
-  CalendarArea({super.key, required this.pageController});
-
-  // pageViewのコントローラ
+// pageViewのコントローラ
   // 閾値：[0,1000] 初期値：500
   final int initialCenter = 500;
-  final PageController pageController;
+
+class CalendarArea extends ConsumerWidget {
+  CalendarArea({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -50,19 +44,16 @@ class CalendarArea extends ConsumerWidget {
         screenWidthSize, screenHorizontalMagnification);
 
 //状態管理---------------------------------------------------------------------------------------
+    
+    // pageViewのコントローラ
+    final PageController pageController = ref.watch(calendarPageControllerNotifierProvider);
 
     //databaseに操作がされた場合にカウントアップされるprovider
     ref.watch(updateDBCountNotifierProvider);
 
     // dayが変わった時だけ再描画する
     final activeDay = ref.watch(
-        activeDatetimeNotifierProvider.select((DateTime value) => value.day));
-
-    // ビルドが終わってからじゃないとコントローラが紐づいてないので怒られる
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      DateTime activedt = ref.read(activeDatetimeNotifierProvider);
-      setPageControllerIndexFromActiveDt(activedt);
-    });
+        selectedDatetimeNotifierProvider.select((DateTime value) => value.day));
 
 //----------------------------------------------------------------------------------------------
 
@@ -141,7 +132,7 @@ class CalendarArea extends ConsumerWidget {
         },
         onPageChanged: (page) {
           // pageは現在ページ
-          // pageController.page!は次ページに向かっている時の値なので、double型
+          // pageController.pageはページ遷移中の値なので、double型
           int movingDirection;
 
           if (page > pageController.page!) {
@@ -152,16 +143,14 @@ class CalendarArea extends ConsumerWidget {
             movingDirection = 0;
           }
 
-          final notifier = ref.read(activeDatetimeNotifierProvider.notifier);
-
           print(page.toString());
           print(pageController.page!.toString());
 
           if (movingDirection == 1) {
-            notifier.updateToNextMonth();
+            ref.read(selectedDatetimeNotifierProvider.notifier).updateToNextMonth();
             print('called updateToNextMonth()');
           } else if (movingDirection == -1) {
-            notifier.updateToPreviousMonth();
+            ref.read(selectedDatetimeNotifierProvider.notifier).updateToPreviousMonth();
             print('called updateToPreviousMonth()');
           } else if (movingDirection == 0) {
             print('page isn\'t moving');
@@ -169,23 +158,6 @@ class CalendarArea extends ConsumerWidget {
         },
       ),
     );
-  }
-
-  void setPageControllerIndexFromActiveDt(DateTime activedt) {
-    // activeDtから基準日を取得
-    final activeDtReferenceDt = getReferenceDay(activedt);
-
-    // 現在の日付の基準日を取得
-    DateTime nowDt = DateTime.now();
-    final nowDtReferenceDt = getReferenceDay(nowDt);
-
-    // pageViewはindex=500がDateTime.now()で設定されるので
-    // 月の差分をPageControllerに反映
-    final monthDiff =
-        (activeDtReferenceDt.year * 12 + activeDtReferenceDt.month) -
-            (nowDtReferenceDt.year * 12 + nowDtReferenceDt.month);
-
-    pageController.jumpToPage((initialCenter + monthDiff));
   }
 
   DateTime getThisIndexDisplayDt(int index, int activeDay) {
@@ -305,14 +277,14 @@ Row _weekRow(
                   onTap: isTapable
                       ? () {
                           final provider =
-                              ref.read(activeDatetimeNotifierProvider);
+                              ref.read(selectedDatetimeNotifierProvider);
 
                           // タップした日付が状態と違っていたら状態を更新
                           if (DateFormat('yyyyMMdd').format(provider) !=
                               DateFormat('yyyyMMdd')
                                   .format(DateTime(year, month, day))) {
                             final notifier = ref
-                                .read(activeDatetimeNotifierProvider.notifier);
+                                .read(selectedDatetimeNotifierProvider.notifier);
                             notifier.updateState(DateTime(year, month, day));
                           }
                           // タップした日付が状態と同じならタップした日付を持ったTorok画面を出す

@@ -10,7 +10,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view_model/category_sum_getter.dart';
-import 'package:kakeibo/view_model/provider/active_datetime.dart';
 import 'package:kakeibo/view_model/reference_day_impl.dart';
 
 /// Chart import

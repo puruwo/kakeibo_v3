@@ -13,6 +13,7 @@ import 'dart:collection';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:collection/collection.dart';
+import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 /// Local imports
@@ -21,7 +22,6 @@ import 'package:kakeibo/util/screen_size_func.dart';
 
 import 'package:kakeibo/view/page/torok.dart';
 
-import 'package:kakeibo/view_model/provider/active_datetime.dart';
 import 'package:kakeibo/view_model/provider/update_DB_count.dart';
 import 'package:kakeibo/view_model/reference_day_impl.dart';
 
@@ -71,13 +71,13 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
     //databaseに操作がされた場合にカウントアップされるprovider
     ref.watch(updateDBCountNotifierProvider);
 
-    final activeDateTime = ref.watch(activeDatetimeNotifierProvider);
+    final activeDateTime = ref.watch(selectedDatetimeNotifierProvider);
 
     // activeDatetimeが更新されたら動く
-    ref.listen(activeDatetimeNotifierProvider, (previous, next) {
+    ref.listen(selectedDatetimeNotifierProvider, (previous, next) {
       // ビルドが終わったら動く
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        final updatedActiveDateTime = ref.read(activeDatetimeNotifierProvider);
+        final updatedActiveDateTime = ref.read(selectedDatetimeNotifierProvider);
         // DateTimeで並べ替えたMapのKeyをリストとして取得
         final itemKeys = List.from(sortedGroupedMap.keys);
         _scrollToItem(

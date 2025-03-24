@@ -15,6 +15,7 @@ import 'package:kakeibo/view/organism/third_page/all_category_tile_area.dart';
 import 'package:kakeibo/view/organism/third_page/category_tile_area.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
 import 'package:kakeibo/view/page/torok.dart';
+import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:kakeibo/constant/colors.dart';
@@ -27,7 +28,6 @@ import 'package:kakeibo/view/organism/prediction_graph.dart';
 
 import 'package:kakeibo/view/molecule/calendar_month_display.dart';
 
-import 'package:kakeibo/view_model/provider/active_datetime.dart';
 import 'package:kakeibo/view_model/provider/update_DB_count.dart';
 
 class Third extends ConsumerStatefulWidget {
@@ -56,7 +56,7 @@ class _ThirdState extends ConsumerState<Third> {
     // DBが更新されたらリビルドするため
     ref.watch(updateDBCountNotifierProvider);
 
-    final activeDt = ref.watch(activeDatetimeNotifierProvider);
+    final activeDt = ref.watch(selectedDatetimeNotifierProvider);
 
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
@@ -70,61 +70,14 @@ class _ThirdState extends ConsumerState<Third> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //左矢印ボタン、押すと前の月に移動
-                PreviousArrowButton(function: () async {
-                  final notifier =
-                      ref.read(activeDatetimeNotifierProvider.notifier);
-                  notifier.updateToPreviousMonth();
-                  // Navigator.pushReplacement();
-                  Navigator.of(context, rootNavigator: true).pushReplacement(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) =>
-                          MaterialApp(
-                        debugShowCheckedModeBanner: false,
-                        theme: ThemeData.dark(),
-                        themeMode: ThemeMode.dark,
-                        darkTheme: ThemeData.dark(),
-                        home: MediaQuery.withClampedTextScaling(
-                          // テキストサイズの制御
-                          minScaleFactor: 0.7,
-                          maxScaleFactor: 0.95,
-                          child: Foundation(),
-                        ),
-                      ),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                }),
+                const PreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final activeDt = ref.watch(activeDatetimeNotifierProvider);
+                  final activeDt = ref.watch(selectedDatetimeNotifierProvider);
                   final label = labelGetter(activeDt);
                   return CalendarMonthDisplay(label: label);
                 }),
                 //左矢印ボタン、押すと次の月に移動
-                NextArrowButton(function: () async {
-                  final notifier =
-                      ref.read(activeDatetimeNotifierProvider.notifier);
-                  notifier.updateToNextMonth();
-                  Navigator.of(context, rootNavigator: true).pushReplacement(
-                    PageRouteBuilder(
-                      pageBuilder: (context, animation1, animation2) =>
-                          MaterialApp(
-                        debugShowCheckedModeBanner: false,
-                        theme: ThemeData.dark(),
-                        themeMode: ThemeMode.dark,
-                        darkTheme: ThemeData.dark(),
-                        home: MediaQuery.withClampedTextScaling(
-                          // テキストサイズの制御
-                          minScaleFactor: 0.7,
-                          maxScaleFactor: 0.95,
-                          child: Foundation(),
-                        ),
-                      ),
-                      transitionDuration: Duration.zero,
-                      reverseTransitionDuration: Duration.zero,
-                    ),
-                  );
-                }),
+                const NextArrowButton(),
               ]),
         ),
       ),
@@ -141,14 +94,14 @@ class _ThirdState extends ConsumerState<Third> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      
                       Text(
                         ' 支出グラフ',
                         style: MyFonts.thirdPageSubheading,
                       ),
-
                       TextButton(
-                          onPressed: () {_showModalBottomSheet(context,const BudgetSettingPage());
+                          onPressed: () {
+                            _showModalBottomSheet(
+                                context, const BudgetSettingPage());
                           },
                           child: const Text(
                             '予算設定',
@@ -160,8 +113,8 @@ class _ThirdState extends ConsumerState<Third> {
 
                 // グラフ部分
                 PredictionGraph(
-                          activeDt: activeDt,
-                        ),
+                  activeDt: activeDt,
+                ),
 
                 const SizedBox(
                   height: 8,
@@ -173,21 +126,19 @@ class _ThirdState extends ConsumerState<Third> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-
                       Text(
                         ' カテゴリーの支出',
                         style: MyFonts.thirdPageSubheading,
                       ),
-
                       TextButton(
                           onPressed: () {
-                            _showModalBottomSheet(context,const CategorySettingPage());
+                            _showModalBottomSheet(
+                                context, const CategorySettingPage());
                           },
                           child: const Text(
                             'カテゴリー設定',
                             style: MyFonts.thirdPageTextButton,
                           )),
-
                     ],
                   ),
                 ),
@@ -220,7 +171,7 @@ class _ThirdState extends ConsumerState<Third> {
     );
   }
 
-  void _showModalBottomSheet(BuildContext context,Widget page) {
+  void _showModalBottomSheet(BuildContext context, Widget page) {
     showModalBottomSheet(
       //sccafoldの上に出すか
       useRootNavigator: true,

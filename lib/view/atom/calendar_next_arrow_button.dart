@@ -3,17 +3,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/provider/calendar_page_controller/calendar_page_controller.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
 
-class NextArrowButton extends ConsumerWidget {
-  const NextArrowButton({super.key});
+class CalendarNextArrowButton extends ConsumerWidget {
+  const CalendarNextArrowButton({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       onPressed: () async {
-        // selectedDatetimeを更新するのではなく、calendarPageControllerを更新する
-        // onPageChanged内でselectedDatetimeを更新する
+        // selectedDatetimeの更新はonPageChanged内でselectedDatetimeを更新する
         ref.read(calendarPageControllerNotifierProvider.notifier).nextPage();
       },
       iconSize: 15,
