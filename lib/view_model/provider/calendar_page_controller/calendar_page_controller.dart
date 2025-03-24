@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'calendar_page_controller.g.dart';
@@ -18,13 +17,10 @@ class CalendarPageControllerNotifier extends _$CalendarPageControllerNotifier {
   void previousPage() {
     // Controller:前のページに移動
     state.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOutCubic);
-
-    // ref.read(selectedDatetimeNotifierProvider.notifier).updateToPreviousMonth();
   }  
 
   void nextPage() {
     // Controller:次のページに移動
     state.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOutCubic);
-    // ref.read(selectedDatetimeNotifierProvider.notifier).updateToNextMonth(); 
   }  
 }

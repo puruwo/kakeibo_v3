@@ -10,7 +10,6 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/atom/next_arrow_button.dart';
 import 'package:kakeibo/view/atom/previous_arrow_button.dart';
 import 'package:kakeibo/view/foundation.dart';
-import 'package:kakeibo/view/organism/all_category_tile_area.dart';
 import 'package:kakeibo/view/organism/third_page/all_category_tile_area.dart';
 import 'package:kakeibo/view/organism/third_page/category_tile_area.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
@@ -142,8 +141,6 @@ class _ThirdState extends ConsumerState<Third> {
                     ],
                   ),
                 ),
-
-                const AllCategoryTileArea(),
 
                 const SizedBox(
                   height: 8,

@@ -21,10 +21,6 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // pageViewのコントローラ
-    // 閾値：[0,1000] 初期値：500
-    const initialCenter = 500;
-    final pageController = PageController(initialPage: initialCenter);
 
     return Scaffold(
       // ヘッダー
