@@ -8,12 +8,6 @@ DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
 
-  // todo
-  @override
-  Future<SmallCategoryEntity> fetch({required String postId}) async {
-    throw UnimplementedError();
-  }
-
   @override
   Future<List<SmallCategoryEntity>> fetchAll({required int bigCategoryId,required DateTime fromDate,required DateTime toDate}) async {
 

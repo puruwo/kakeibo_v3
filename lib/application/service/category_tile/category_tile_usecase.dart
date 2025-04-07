@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
 import 'package:kakeibo/domain/small_category_entity/small_category_repository.dart';
+import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
 
 final categoryTileProvider = Provider<CategoryTileUsecase>(
   CategoryTileUsecase.new,
@@ -13,12 +14,11 @@ class CategoryTileUsecase {
 
   CategoryRepository get _categoryRepository => _ref.read(categoryRepositoryProvider);
   SmallCategoryRepository get _smallCategoryRepository => _ref.read(smallCategoryRepositoryProvider);
-
-  // CategoryTileRepository get _categoryTileRepository => _ref.read(categoryTileRepositoryProvider);
+  DateTime get _selectedDatetime => _ref.read(selectedDatetimeNotifierProvider);
 
   CategoryTileUsecase(this._ref);
 
-  Future<List<CategoryTileEntity>> fetchAll() async {
+  Future<List<CategoryTileEntity>> fetchSelectedRangeData() async {
     
     // todo: 選択日時を取得する
     // 例として2025年3月のデータを取得

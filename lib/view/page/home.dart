@@ -10,7 +10,7 @@ import 'package:kakeibo/view/atom/calendar_previous_arrow_button.dart';
 import 'package:kakeibo/view/atom/next_arrow_button.dart';
 import 'package:kakeibo/view/atom/previous_arrow_button.dart';
 import 'package:kakeibo/view/molecule/calendar_month_display.dart';
-import 'package:kakeibo/view/organism/calendar_area.dart';
+import 'package:kakeibo/view/organism/calendar/calendar_area.dart';
 import 'package:kakeibo/view/organism/expence_history_list_area.dart';
 
 import 'package:kakeibo/view_model/reference_day_impl.dart';

@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
+import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/model/db_read_impl.dart';
@@ -68,6 +69,9 @@ class _CategorySettingPageState extends ConsumerState<CategorySettingPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    MonthPeriodService monthPeriodService = ref.watch(monthPeriodServiceProvider);
+
     // 画面の横幅を取得
     final screenWidthSize = MediaQuery.of(context).size.width;
 

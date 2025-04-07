@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/view/organism/third_page/category_sum_tile.dart';
-import 'package:kakeibo/application/usecase/category_tile/category_tile_provider.dart';
+import 'package:kakeibo/application/service/category_tile/category_tile_provider.dart';
 
 class CategoryTileArea extends ConsumerWidget {
   const CategoryTileArea({Key? key}) : super(key: key);

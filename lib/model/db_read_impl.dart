@@ -56,23 +56,6 @@ class TBL001Impl {
     return mutable;
   }
 
-  //1日分取得(Mutable)
-  Future<List<Map<String, dynamic>>> queryDayMutableRows(DateTime date) async {
-    //where句の作成
-    //一周期の条件指定が難しいのでここで作成
-    //ex)
-    //from 2023-06-25 to 2023-07-24なら
-    //(year = 2023 and month = 6 and day >= 25 and day <= 31) or (year = 2023 and month = 7 and day >= 1 and day <25)
-    final where = '${TBL001RecordKey().date} = ? ';
-    final whereArgs = [DateFormat('yyyyMMdd').format(date)];
-
-    final immutable =
-        db.queryRowsWhere(TBL001RecordKey().tableName, where, whereArgs);
-    final mutable = makeMutable(immutable);
-
-    return mutable;
-  }
-
   //全データ取得
   Future<List<Map<String, dynamic>>> queryAllRows() async {
     return db.queryRows(TBL001RecordKey().tableName);

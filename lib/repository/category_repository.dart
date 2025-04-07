@@ -8,12 +8,6 @@ DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsCategoryRepository implements CategoryRepository {
 
-  // todo
-  @override
-  Future<CategoryEntity> fetch({required String postId}) async {
-    throw UnimplementedError();
-  }
-
   @override
   Future<List<CategoryEntity>> fetchAll({required DateTime fromDate, required DateTime toDate}) async {
     final sql = '''

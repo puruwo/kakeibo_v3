@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/domain/aggregation_start_day_entity/aggregation_start_day_repository.dart';
 import 'package:kakeibo/domain/all_category_entity/all_category_repository.dart';
+import 'package:kakeibo/domain/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/providerLogger.dart';
+import 'package:kakeibo/repository/aggregation_start_day_repository.dart';
 import 'package:kakeibo/repository/all_category_repository.dart';
+import 'package:kakeibo/repository/daily_expense_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
 
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
@@ -14,18 +19,22 @@ void main() {
     ProviderScope(
       overrides: [
         categoryRepositoryProvider.overrideWithValue(
-          // Flavor.isDemo ? MockPostRepository() : GraphQlPostRepository()),
           ImplementsCategoryRepository(),
         ),
         smallCategoryRepositoryProvider.overrideWithValue(
-          // Flavor.isDemo ? MockPostRepository() : GraphQlPostRepository()),
           ImplementsSmallCategoryRepository(),
         ),
         allCategoryRepositoryProvider.overrideWithValue(
-          // Flavor.isDemo ? MockPostRepository() : GraphQlPostRepository()),
           ImplementsAllCategoryRepository(),
         ),
+        dailyExpenseRepositoryProvider.overrideWithValue(
+          ImplementsDailyExpenseRepository(),
+        ),
+        aggregationStartDayRepositoryProvider.overrideWithValue(
+          ImplementsAggregationStartDayRepository(),
+        ),
       ],
+      observers: const [ProviderLogger()],
       child: MaterialApp(
         home: MediaQuery.withClampedTextScaling(
           // テキストサイズの制御
@@ -37,8 +46,6 @@ void main() {
         theme: ThemeData.dark(),
         themeMode: ThemeMode.dark,
         darkTheme: ThemeData.dark(),
-        // アプリ全体にテキストサイズの制御を適用
-        // builder: (context, child) => TextScaleFactor(child: child!),
       ),
     ),
   );
