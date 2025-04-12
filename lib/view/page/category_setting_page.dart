@@ -5,7 +5,6 @@ import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
@@ -14,16 +13,14 @@ import 'package:kakeibo/domain_service/month_period_service/month_period_service
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/model/db_read_impl.dart';
-import 'package:kakeibo/model/db_delete_impl.dart';
 import 'package:kakeibo/model/tableNameKey.dart';
 
-import 'package:kakeibo/repository/tbl003_record/tbl003_record.dart';
 import 'package:kakeibo/repository/tbl202_record/tbl202_record.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/molecule/icon_button%20copy.dart';
 import 'package:kakeibo/view/page/small_category_edit_page.dart';
 
-import 'package:kakeibo/view_model/provider/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view_model/provider/category_edit_page/edit_mode.dart';
 
 import 'package:kakeibo/view_model/reference_day_impl.dart';

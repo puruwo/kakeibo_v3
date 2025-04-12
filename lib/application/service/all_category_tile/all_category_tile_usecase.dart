@@ -4,6 +4,8 @@ import 'package:kakeibo/domain/all_category_tile_entity/all_category_tile_entity
 
 import 'package:kakeibo/domain/all_category_entity/all_category_repository.dart';
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
+import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 
 final allCategoryTileProvider = Provider<AllCategoryTileUsecase>(
   AllCategoryTileUsecase.new,
@@ -16,19 +18,21 @@ class AllCategoryTileUsecase {
       _ref.read(allCategoryRepositoryProvider);
   CategoryRepository get _categoryRepository =>
       _ref.read(categoryRepositoryProvider);
+  MonthPeriodService get _monthPeriodServiceProvider =>
+      _ref.read(monthPeriodServiceProvider);
 
   AllCategoryTileUsecase(this._ref);
 
-  Future<AllCategoryTileEntity> fetch() async {
-    // todo: 選択日時を取得する
-    // 例として2025年3月のデータを取得
-    DateTime fromDate = DateTime.utc(2025, 3, 1);
-    DateTime toDate = DateTime.utc(2025, 3, 31);
+  // 前カテゴリー合計のタイルデータを取得する
+  Future<AllCategoryTileEntity> fetch(MonthPeriodValue selectedMonthPeriod) async {
+
+    // 選択した月の集計期間から開始日と終了日を取得する
+    DateTime fromDate = selectedMonthPeriod.startDatetime;
+    DateTime toDate = selectedMonthPeriod.endDatetime;
 
     final allCategoryEntity =
         await _allCategoryRepository.fetch(fromDate: fromDate, toDate: toDate);
 
-    // todo: 名前を変更する
     // カテゴリータイルのリストを取得する
     final categoryEntityList =
         await _categoryRepository.fetchAll(fromDate: fromDate, toDate: toDate);

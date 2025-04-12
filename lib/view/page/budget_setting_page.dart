@@ -20,7 +20,7 @@ import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/util/util.dart';
 
-import 'package:kakeibo/view_model/provider/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 import 'package:kakeibo/view_model/reference_day_impl.dart';
 

@@ -1,5 +1,4 @@
 /// Package imports
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -9,16 +8,12 @@ import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/atom/next_arrow_button.dart';
 import 'package:kakeibo/view/atom/previous_arrow_button.dart';
-import 'package:kakeibo/view/foundation.dart';
 import 'package:kakeibo/view/organism/third_page/all_category_tile_area.dart';
 import 'package:kakeibo/view/organism/third_page/category_tile_area.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
-import 'package:kakeibo/view/page/torok.dart';
 import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
-import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
 
 /// Local imports
 import 'package:kakeibo/view/page/budget_setting_page.dart';
@@ -27,7 +22,7 @@ import 'package:kakeibo/view/organism/prediction_graph.dart';
 
 import 'package:kakeibo/view/molecule/calendar_month_display.dart';
 
-import 'package:kakeibo/view_model/provider/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class Third extends ConsumerStatefulWidget {
   const Third({super.key});

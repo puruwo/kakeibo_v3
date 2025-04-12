@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/page/third_page.dart';
 
-import 'package:kakeibo/view_model/provider/navigation_bar_number.dart';
-import 'package:kakeibo/view_model/provider/initial_open.dart';
+import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
+import 'package:kakeibo/view_model/state/initial_open.dart';
 
 import 'package:kakeibo/view/page/torok.dart';
 import 'package:kakeibo/view/page/home.dart';

@@ -18,7 +18,8 @@ class MonthPeriodService{
   // 指定した日付を含む集計期間を取得する
   Future<MonthPeriodValue> fetchMonthPeriod(DateTime includedDate) async{
 
-    AggregationStartDayEntity aggregationStartDateEntity = await aggregationStartDateRepository.fetch();
+    // ユーザ設定の集計開始日を取得する
+    AggregationStartDayEntity aggregationStartDateEntity = await fetchAggregationStartDay();
     final int aggregationStartDay = aggregationStartDateEntity.day;
     
     // 入力した日がユーザ設定の期間開始日より前の場合
@@ -46,9 +47,9 @@ class MonthPeriodService{
   }
 
   // ユーザ設定の集計開始日を取得する
-  Future<int> fetchAggregationStartDay() async{
+  Future<AggregationStartDayEntity> fetchAggregationStartDay() async{
     AggregationStartDayEntity aggregationStartDateEntity = await aggregationStartDateRepository.fetch();
-    return aggregationStartDateEntity.day;
+    return aggregationStartDateEntity;
   }
    
   // 前の集計期間を取得する

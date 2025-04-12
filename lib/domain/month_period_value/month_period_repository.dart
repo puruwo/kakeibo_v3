@@ -7,9 +7,9 @@ final monthPeriodRepositoryProvider = Provider<MonthPeriodRepository>(
   (_) => throw UnimplementedError("DailyExpenseRepositoryの実装がされていません。"),
 );
 
-/// 支出に関するリポジトリ
+/// 集計期間に関するリポジトリ
 abstract interface class MonthPeriodRepository {
 
-  /// 日付指定して全データを取得する
+  /// 日付を入力してその日付が含まれる期間を取得する
   Future<MonthPeriodValue> fetch({required DateTime dateTime});
 }

@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
@@ -22,7 +21,7 @@ import 'package:kakeibo/util/screen_size_func.dart';
 
 import 'package:kakeibo/view/page/torok.dart';
 
-import 'package:kakeibo/view_model/provider/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view_model/reference_day_impl.dart';
 
 import 'package:kakeibo/model/db_read_impl.dart';

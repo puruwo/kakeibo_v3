@@ -11,7 +11,7 @@ class ImplementsAllCategoryRepository implements AllCategoryRepository {
   @override
   Future<AllCategoryEntity> fetch({required DateTime fromDate, required DateTime toDate}) async {
     final sqlForExpence = '''
-            SELECT SUM(price) as totalExpense FROM TBL001 
+            SELECT COALESCE(SUM(price),0) as totalExpense FROM TBL001 
             WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)} 
             ;
             ''';
@@ -20,7 +20,7 @@ class ImplementsAllCategoryRepository implements AllCategoryRepository {
     final expenceMapList = await db.query(sqlForExpence);
 
     const sqlForBudget = '''
-            SELECT SUM(a.price) as totalBudget
+            SELECT COALESCE(SUM(a.price),0)  as totalBudget
             FROM TBL003 a
               INNER JOIN TBL202 b
               ON a.big_category_id = b._id
@@ -39,8 +39,8 @@ class ImplementsAllCategoryRepository implements AllCategoryRepository {
     // Listから要素を取り出しEntity化
     // 今回は1行しかないので0番目を取り出す
     final mergedMap = {
-      ...expenceMapList[0],
-      ...budgetMapList[0],
+      ...expenceMapList[0].isEmpty ? {'totalExpense': 0} : expenceMapList[0],
+      ...budgetMapList[0].isEmpty ? {'totalBudget': 0} : budgetMapList[0],
     };
 
     return AllCategoryEntity.fromJson(mergedMap);

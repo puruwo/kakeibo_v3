@@ -22,7 +22,7 @@ import 'package:kakeibo/view/page/icon_select_page.dart';
 import 'package:kakeibo/view_model/provider/small_category_edit_page/selected_color.dart';
 import 'package:kakeibo/view_model/provider/small_category_edit_page/selected_icon_path.dart';
 
-import 'package:kakeibo/view_model/provider/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class SmallCategoryEditPage extends ConsumerStatefulWidget {
   const SmallCategoryEditPage({super.key, required this.bigCategoryId});

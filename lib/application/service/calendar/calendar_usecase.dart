@@ -38,7 +38,7 @@ class CalendarUsecase {
     final List<CalendarTileEntity> inPeriodCalendarTileList = [];
     
     // 集計開始日を取得する
-    final int aggregationStartDay = await _monthPeriodServiceProvider.fetchAggregationStartDay();
+    final aggregationStartDayEntity = await _monthPeriodServiceProvider.fetchAggregationStartDay();
 
     // 期間開始日から終了日までのデータを取得する
     DateTime thisLoopDatetime = monthPeriod.startDatetime;
@@ -50,7 +50,7 @@ class CalendarUsecase {
 
       // カレンダーの日づげ表示に月を表示するかどうか
       bool shouldDisplayMonth = false;
-      if(dailyExpenseEntity.date.day == 1 || dailyExpenseEntity.date.day == aggregationStartDay) shouldDisplayMonth=true;
+      if(dailyExpenseEntity.date.day == 1 || dailyExpenseEntity.date.day == aggregationStartDayEntity.day) shouldDisplayMonth=true;
 
       // CalendarTileEntityを作成
       final CalendarTileEntity calendarTileEntity = CalendarTileEntity(

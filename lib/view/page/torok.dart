@@ -13,7 +13,7 @@ import 'package:kakeibo/view/organism/category_area.dart';
 import 'package:kakeibo/view/organism/torok_selected_segment.dart';
 import 'package:kakeibo/view_model/provider/torok_state/selected_segment_status.dart';
 import 'package:kakeibo/view_model/provider/torok_state/is_registerable.dart';
-import 'package:kakeibo/view_model/provider/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view_model/provider/torok_state/when_open.dart';
 
 import 'package:kakeibo/view/organism/date_input_field.dart';
@@ -98,15 +98,6 @@ class _TorokState extends ConsumerState<Torok> {
     //編集モードでは他のレコードに影響を与える可能性があるため実装しない
     final selectedSegmentedStatus =
         ref.watch(selectedSegmentStatusNotifierProvider);
-
-    final String label;
-    if (selectedSegmentedStatus == SelectedEnum.sisyt) {
-      label = '支出';
-    } else if (selectedSegmentedStatus == SelectedEnum.syunyu) {
-      label = '収入';
-    } else {
-      label = '';
-    }
 
     //listenもしくはwatchし続けやんとstateが勝手にdisposeされる
     //なのでlistenしている

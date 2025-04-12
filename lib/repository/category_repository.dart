@@ -26,7 +26,7 @@ class ImplementsCategoryRepository implements CategoryRepository {
                     FROM (
                       SELECT 
                         y.big_category_key,
-                        SUM(z.price) as price_sum 
+                        COALESCE(SUM(z.price),0) as price_sum 
                       FROM TBL001 z
               	  		INNER JOIN TBL201 y
                       ON z.payment_category_id = y._id

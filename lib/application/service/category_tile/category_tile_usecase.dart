@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
+import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/small_category_entity/small_category_repository.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
 
 final categoryTileProvider = Provider<CategoryTileUsecase>(
   CategoryTileUsecase.new,
@@ -14,16 +14,14 @@ class CategoryTileUsecase {
 
   CategoryRepository get _categoryRepository => _ref.read(categoryRepositoryProvider);
   SmallCategoryRepository get _smallCategoryRepository => _ref.read(smallCategoryRepositoryProvider);
-  DateTime get _selectedDatetime => _ref.read(selectedDatetimeNotifierProvider);
 
   CategoryTileUsecase(this._ref);
 
-  Future<List<CategoryTileEntity>> fetchSelectedRangeData() async {
+  Future<List<CategoryTileEntity>> fetchSelectedRangeData(MonthPeriodValue monthPeriodValue) async {
     
-    // todo: 選択日時を取得する
-    // 例として2025年3月のデータを取得
-    DateTime fromDate = DateTime.utc(2025, 3, 1); 
-    DateTime toDate = DateTime.utc(2025, 3, 31);
+    // 選択した月の集計期間から開始日と終了日を取得する
+    DateTime fromDate = monthPeriodValue.startDatetime; 
+    DateTime toDate = monthPeriodValue.endDatetime;
 
     // todo: 名前を変更する
     // カテゴリータイルのリストを取得する

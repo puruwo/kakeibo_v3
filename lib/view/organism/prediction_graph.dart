@@ -1,7 +1,3 @@
-/// Dart imports
-import 'dart:math';
-import 'dart:ui' as ui;
-
 /// Package imports
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -20,7 +16,6 @@ import 'package:kakeibo/constant/colors.dart';
 
 import 'package:kakeibo/util/util.dart';
 
-import 'package:kakeibo/view_model/provider/update_DB_count.dart';
 
 import 'package:kakeibo/model/db_read_impl.dart';
 
