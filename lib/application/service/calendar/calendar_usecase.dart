@@ -6,51 +6,65 @@ import 'package:kakeibo/domain_service/month_period_service/month_period_service
 
 import 'package:kakeibo/domain/daily_expense_entity/daily_expense_entity.dart';
 import 'package:kakeibo/domain/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final calendarUsecaseProvider = Provider<CalendarUsecase>(
-  CalendarUsecase.new,
+final calendarUsecaseNotifierProvider =
+    AsyncNotifierProvider.family<CalendarUsecaseNotifier, List<List<CalendarTileEntity>>, int>(
+  CalendarUsecaseNotifier.new,
 );
 
-class CalendarUsecase {
-  final Ref _ref;
+// AsyncNotifierFamily を使うために <状態型, 引数型> を指定する
+class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTileEntity>>, int> {
+  late  DailyExpenseRepository _repository;
+  late  MonthPeriodService _periodService;
 
-  CalendarUsecase(this._ref);
+  @override
+  Future<List<List<CalendarTileEntity>>> build(int calendarPage) async {
+    // 初回生成時
 
-  DailyExpenseRepository get _dailyExpenseRepository =>
-      _ref.watch(dailyExpenseRepositoryProvider);
+    // DBが更新された場合にbuildメソッドを再実行する
+    ref.watch(updateDBCountNotifierProvider);
 
-  // 集計期間に関するリポジトリ
-  MonthPeriodService get _monthPeriodServiceProvider => _ref.watch(monthPeriodServiceProvider);
+    _repository = ref.read(dailyExpenseRepositoryProvider);
+    _periodService = ref.read(monthPeriodServiceProvider);
+
+    return await fetch(calendarPage: calendarPage);
+  }
 
   // 入力した日付を含む集計期間のデータを取得する
-  Future<List<List<CalendarTileEntity>>> fetch(int calendarPage) async {
-    
+  Future<List<List<CalendarTileEntity>>> fetch(
+      {required int calendarPage}) async {
+    // データを取得する間はローディング状態にする
+    state = const AsyncLoading();
+
     // カレンダーページと初期カレンダーページの差分を取得
-    final distanceFromInitialPage = calendarPage - CalendarProperties().initialCalendarPage;
+    final distance = calendarPage - CalendarProperties().initialCalendarPage;
 
     // 取得するデータをカレンダーページとselectedDateから取得する
-    final selectedDateInThisPage = safeDate(DateTime.now(),distanceFromInitialPage);
+    final safe = safeDate(DateTime.now(), distance);
 
     // 集計期間を取得する
-    final MonthPeriodValue monthPeriod = await _monthPeriodServiceProvider.fetchMonthPeriod(selectedDateInThisPage);
+    final MonthPeriodValue period = await _periodService.fetchMonthPeriod(safe);
 
     // 期間内の日毎の支出データを取得する
     final List<CalendarTileEntity> inPeriodCalendarTileList = [];
-    
+
     // 集計開始日を取得する
-    final aggregationStartDayEntity = await _monthPeriodServiceProvider.fetchAggregationStartDay();
+    final startDay = await _periodService.fetchAggregationStartDay();
 
     // 期間開始日から終了日までのデータを取得する
-    DateTime thisLoopDatetime = monthPeriod.startDatetime;
-    for (var i = 0; thisLoopDatetime.isBefore(monthPeriod.endDatetime); i++) {
-      
-      thisLoopDatetime = monthPeriod.startDatetime.add(Duration(days: i));
-      
-      final DailyExpenseEntity dailyExpenseEntity = await _dailyExpenseRepository.fetch(dateTime: thisLoopDatetime);
+    DateTime thisLoopDatetime = period.startDatetime;
+    for (var i = 0; thisLoopDatetime.isBefore(period.endDatetime); i++) {
+      thisLoopDatetime = period.startDatetime.add(Duration(days: i));
+
+      final DailyExpenseEntity dailyExpenseEntity =
+          await _repository.fetch(dateTime: thisLoopDatetime);
 
       // カレンダーの日づげ表示に月を表示するかどうか
       bool shouldDisplayMonth = false;
-      if(dailyExpenseEntity.date.day == 1 || dailyExpenseEntity.date.day == aggregationStartDayEntity.day) shouldDisplayMonth=true;
+      if (dailyExpenseEntity.date.day == 1 ||
+          dailyExpenseEntity.date.day == startDay.day)
+        shouldDisplayMonth = true;
 
       // CalendarTileEntityを作成
       final CalendarTileEntity calendarTileEntity = CalendarTileEntity(
@@ -62,7 +76,7 @@ class CalendarUsecase {
         isWithinAggregationRange: true,
         shouldDisplayMonth: shouldDisplayMonth,
       );
-      
+
       inPeriodCalendarTileList.add(calendarTileEntity);
     }
 
@@ -70,33 +84,39 @@ class CalendarUsecase {
     final calendarTileEntityList = fillOutOfPeriod(inPeriodCalendarTileList);
 
     // Listを一週間ごとに分割する
-    final List<List<CalendarTileEntity>>calendarTileList = [];
+    final List<List<CalendarTileEntity>> result = [];
     for (var i = 0; i < calendarTileEntityList.length; i += 7) {
-      calendarTileList.add(calendarTileEntityList.sublist(i, i + 7));
+      result.add(calendarTileEntityList.sublist(i, i + 7));
     }
 
-    return calendarTileList;
+    // 取得したデータをstateにセットする
+    state = AsyncData(result);
+
+    return result;
   }
 }
 
 // 月を跨ぐ際に日付を安全に取得する
 DateTime safeDate(DateTime selectedDate, int calendarPage) {
-  DateTime endDateInThisPage = DateTime(selectedDate.year, selectedDate.month + calendarPage, 0);
-  
+  DateTime endDateInThisPage =
+      DateTime(selectedDate.year, selectedDate.month + calendarPage, 0);
+
   // 移動前の日付が移動後の月の月末日より大きい場合、月末にする
-  if(selectedDate.day > endDateInThisPage.day)return endDateInThisPage;
-  
+  if (selectedDate.day > endDateInThisPage.day) return endDateInThisPage;
+
   // 移動前の日付が移動後の月の月末日より小さい場合、そのままの日付にする
-  return DateTime(selectedDate.year, selectedDate.month + calendarPage, selectedDate.day);
+  return DateTime(
+      selectedDate.year, selectedDate.month + calendarPage, selectedDate.day);
 }
 
 // カレンダーの表示領域の集計期間外の日を埋める
-List<CalendarTileEntity> fillOutOfPeriod(List<CalendarTileEntity> inPeriodcalendarTileList) {
-  
+List<CalendarTileEntity> fillOutOfPeriod(
+    List<CalendarTileEntity> inPeriodcalendarTileList) {
   // 期間内の最初の日が日曜日でない場合、期間外の日を埋める
-  while(inPeriodcalendarTileList.first.weekday != DateTime.sunday){
+  while (inPeriodcalendarTileList.first.weekday != DateTime.sunday) {
     final firstDate = inPeriodcalendarTileList.first;
-    final previousDate = DateTime(firstDate.year, firstDate.month, firstDate.day - 1);
+    final previousDate =
+        DateTime(firstDate.year, firstDate.month, firstDate.day - 1);
     final previousCalendarTileEntity = CalendarTileEntity(
       year: previousDate.year,
       month: previousDate.month,
@@ -110,7 +130,7 @@ List<CalendarTileEntity> fillOutOfPeriod(List<CalendarTileEntity> inPeriodcalend
   }
 
   // 期間内の最後の日が土曜日でない場合、期間外の日を埋める
-  while(inPeriodcalendarTileList.last.weekday != DateTime.saturday){
+  while (inPeriodcalendarTileList.last.weekday != DateTime.saturday) {
     final lastDate = inPeriodcalendarTileList.last;
     final nextDate = DateTime(lastDate.year, lastDate.month, lastDate.day + 1);
     final nextCalendarTileEntity = CalendarTileEntity(

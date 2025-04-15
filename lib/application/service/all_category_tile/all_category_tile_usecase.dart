@@ -5,26 +5,31 @@ import 'package:kakeibo/domain/all_category_tile_entity/all_category_tile_entity
 import 'package:kakeibo/domain/all_category_entity/all_category_repository.dart';
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
 import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final allCategoryTileProvider = Provider<AllCategoryTileUsecase>(
-  AllCategoryTileUsecase.new,
+final allCategoryTileNotifierProvider = 
+    AsyncNotifierProvider.family<AllCategoryTileUsecaseNotifier, AllCategoryTileEntity, MonthPeriodValue>(
+    AllCategoryTileUsecaseNotifier.new,
 );
 
-class AllCategoryTileUsecase {
-  final Ref _ref;
+class AllCategoryTileUsecaseNotifier extends FamilyAsyncNotifier<AllCategoryTileEntity,MonthPeriodValue> {
+  late AllCategoryRepository _allCategoryRepository;
+  late CategoryRepository _categoryRepository;
 
-  AllCategoryRepository get _allCategoryRepository =>
-      _ref.read(allCategoryRepositoryProvider);
-  CategoryRepository get _categoryRepository =>
-      _ref.read(categoryRepositoryProvider);
-  MonthPeriodService get _monthPeriodServiceProvider =>
-      _ref.read(monthPeriodServiceProvider);
+  @override
+  Future<AllCategoryTileEntity> build(MonthPeriodValue selectedMonthPeriod) async{
+    // 初回生成時
+    // DBが更新された場合にbuildメソッドを再実行する
+    ref.watch(updateDBCountNotifierProvider);
 
-  AllCategoryTileUsecase(this._ref);
+    _allCategoryRepository = ref.read(allCategoryRepositoryProvider);
+    _categoryRepository = ref.read(categoryRepositoryProvider);
+
+    return fetch(selectedMonthPeriod: selectedMonthPeriod);
+  }
 
   // 前カテゴリー合計のタイルデータを取得する
-  Future<AllCategoryTileEntity> fetch(MonthPeriodValue selectedMonthPeriod) async {
+  Future<AllCategoryTileEntity> fetch({required MonthPeriodValue selectedMonthPeriod}) async {
 
     // 選択した月の集計期間から開始日と終了日を取得する
     DateTime fromDate = selectedMonthPeriod.startDatetime;

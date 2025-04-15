@@ -4,20 +4,29 @@ import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
 import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/small_category_entity/small_category_repository.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final categoryTileProvider = Provider<CategoryTileUsecase>(
-  CategoryTileUsecase.new,
+final categoryTileNotifierProvider = AsyncNotifierProvider.family<CategoryTileUsecaseNotifier,List<CategoryTileEntity>,MonthPeriodValue>(
+  CategoryTileUsecaseNotifier.new,
 );
 
-class CategoryTileUsecase {
-  final Ref _ref;
+class CategoryTileUsecaseNotifier extends FamilyAsyncNotifier<List<CategoryTileEntity>, MonthPeriodValue> {
+  late CategoryRepository _categoryRepository;
+  late SmallCategoryRepository _smallCategoryRepository;
 
-  CategoryRepository get _categoryRepository => _ref.read(categoryRepositoryProvider);
-  SmallCategoryRepository get _smallCategoryRepository => _ref.read(smallCategoryRepositoryProvider);
+  @override
+  Future<List<CategoryTileEntity>> build(MonthPeriodValue monthPeriodValue) async {
+    // 初回生成時
+    // DBが更新された場合にbuildメソッドを再実行する
+    ref.watch(updateDBCountNotifierProvider);
 
-  CategoryTileUsecase(this._ref);
+    _categoryRepository = ref.read(categoryRepositoryProvider);
+    _smallCategoryRepository = ref.read(smallCategoryRepositoryProvider);
 
-  Future<List<CategoryTileEntity>> fetchSelectedRangeData(MonthPeriodValue monthPeriodValue) async {
+    return fetch(monthPeriodValue);
+  }
+
+  Future<List<CategoryTileEntity>> fetch(MonthPeriodValue monthPeriodValue) async {
     
     // 選択した月の集計期間から開始日と終了日を取得する
     DateTime fromDate = monthPeriodValue.startDatetime; 
