@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/category_entity/category_entity.dart';
-import 'package:kakeibo/domain/small_category_entity/small_category_entity.dart';
+import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/util/util.dart';
@@ -20,7 +20,7 @@ class CategoryTile extends HookConsumerWidget {
   final CategoryTileEntity categoryTile;
 
   CategoryEntity get categoryEntity => categoryTile.categoryEntity;
-  List<SmallCategoryEntity> get smallCategoryEntity => categoryTile.smallCategoryList;
+  List<SmallCategoryTileEntity> get smallCategoryEntity => categoryTile.smallCategoryList;
 
   final double barFrameWidth = 280.0;
 

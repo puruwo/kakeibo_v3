@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'tbl202_record.dart';
+part of 'big_category_entity.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,12 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-TBL202Record _$TBL202RecordFromJson(Map<String, dynamic> json) {
-  return _TBL202Record.fromJson(json);
+BigCategoryEntity _$BigCategoryEntityFromJson(Map<String, dynamic> json) {
+  return _BigCategoryEntity.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TBL202Record {
+mixin _$BigCategoryEntity {
   int get id => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
@@ -29,15 +29,15 @@ mixin _$TBL202Record {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TBL202RecordCopyWith<TBL202Record> get copyWith =>
+  $BigCategoryEntityCopyWith<BigCategoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TBL202RecordCopyWith<$Res> {
-  factory $TBL202RecordCopyWith(
-          TBL202Record value, $Res Function(TBL202Record) then) =
-      _$TBL202RecordCopyWithImpl<$Res, TBL202Record>;
+abstract class $BigCategoryEntityCopyWith<$Res> {
+  factory $BigCategoryEntityCopyWith(
+          BigCategoryEntity value, $Res Function(BigCategoryEntity) then) =
+      _$BigCategoryEntityCopyWithImpl<$Res, BigCategoryEntity>;
   @useResult
   $Res call(
       {int id,
@@ -49,9 +49,9 @@ abstract class $TBL202RecordCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$TBL202RecordCopyWithImpl<$Res, $Val extends TBL202Record>
-    implements $TBL202RecordCopyWith<$Res> {
-  _$TBL202RecordCopyWithImpl(this._value, this._then);
+class _$BigCategoryEntityCopyWithImpl<$Res, $Val extends BigCategoryEntity>
+    implements $BigCategoryEntityCopyWith<$Res> {
+  _$BigCategoryEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -98,11 +98,11 @@ class _$TBL202RecordCopyWithImpl<$Res, $Val extends TBL202Record>
 }
 
 /// @nodoc
-abstract class _$$TBL202RecordImplCopyWith<$Res>
-    implements $TBL202RecordCopyWith<$Res> {
-  factory _$$TBL202RecordImplCopyWith(
-          _$TBL202RecordImpl value, $Res Function(_$TBL202RecordImpl) then) =
-      __$$TBL202RecordImplCopyWithImpl<$Res>;
+abstract class _$$BigCategoryEntityImplCopyWith<$Res>
+    implements $BigCategoryEntityCopyWith<$Res> {
+  factory _$$BigCategoryEntityImplCopyWith(_$BigCategoryEntityImpl value,
+          $Res Function(_$BigCategoryEntityImpl) then) =
+      __$$BigCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -115,11 +115,11 @@ abstract class _$$TBL202RecordImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$TBL202RecordImplCopyWithImpl<$Res>
-    extends _$TBL202RecordCopyWithImpl<$Res, _$TBL202RecordImpl>
-    implements _$$TBL202RecordImplCopyWith<$Res> {
-  __$$TBL202RecordImplCopyWithImpl(
-      _$TBL202RecordImpl _value, $Res Function(_$TBL202RecordImpl) _then)
+class __$$BigCategoryEntityImplCopyWithImpl<$Res>
+    extends _$BigCategoryEntityCopyWithImpl<$Res, _$BigCategoryEntityImpl>
+    implements _$$BigCategoryEntityImplCopyWith<$Res> {
+  __$$BigCategoryEntityImplCopyWithImpl(_$BigCategoryEntityImpl _value,
+      $Res Function(_$BigCategoryEntityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -132,7 +132,7 @@ class __$$TBL202RecordImplCopyWithImpl<$Res>
     Object? displayOrder = null,
     Object? isDisplayed = null,
   }) {
-    return _then(_$TBL202RecordImpl(
+    return _then(_$BigCategoryEntityImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -163,8 +163,8 @@ class __$$TBL202RecordImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TBL202RecordImpl extends _TBL202Record {
-  const _$TBL202RecordImpl(
+class _$BigCategoryEntityImpl extends _BigCategoryEntity {
+  const _$BigCategoryEntityImpl(
       {required this.id,
       required this.colorCode,
       required this.bigCategoryName,
@@ -173,8 +173,8 @@ class _$TBL202RecordImpl extends _TBL202Record {
       required this.isDisplayed})
       : super._();
 
-  factory _$TBL202RecordImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TBL202RecordImplFromJson(json);
+  factory _$BigCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$BigCategoryEntityImplFromJson(json);
 
   @override
   final int id;
@@ -191,14 +191,14 @@ class _$TBL202RecordImpl extends _TBL202Record {
 
   @override
   String toString() {
-    return 'TBL202Record(id: $id, colorCode: $colorCode, bigCategoryName: $bigCategoryName, resourcePath: $resourcePath, displayOrder: $displayOrder, isDisplayed: $isDisplayed)';
+    return 'BigCategoryEntity(id: $id, colorCode: $colorCode, bigCategoryName: $bigCategoryName, resourcePath: $resourcePath, displayOrder: $displayOrder, isDisplayed: $isDisplayed)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TBL202RecordImpl &&
+            other is _$BigCategoryEntityImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
@@ -220,29 +220,30 @@ class _$TBL202RecordImpl extends _TBL202Record {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TBL202RecordImplCopyWith<_$TBL202RecordImpl> get copyWith =>
-      __$$TBL202RecordImplCopyWithImpl<_$TBL202RecordImpl>(this, _$identity);
+  _$$BigCategoryEntityImplCopyWith<_$BigCategoryEntityImpl> get copyWith =>
+      __$$BigCategoryEntityImplCopyWithImpl<_$BigCategoryEntityImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TBL202RecordImplToJson(
+    return _$$BigCategoryEntityImplToJson(
       this,
     );
   }
 }
 
-abstract class _TBL202Record extends TBL202Record {
-  const factory _TBL202Record(
+abstract class _BigCategoryEntity extends BigCategoryEntity {
+  const factory _BigCategoryEntity(
       {required final int id,
       required final String colorCode,
       required final String bigCategoryName,
       required final String resourcePath,
       required final int displayOrder,
-      required final int isDisplayed}) = _$TBL202RecordImpl;
-  const _TBL202Record._() : super._();
+      required final int isDisplayed}) = _$BigCategoryEntityImpl;
+  const _BigCategoryEntity._() : super._();
 
-  factory _TBL202Record.fromJson(Map<String, dynamic> json) =
-      _$TBL202RecordImpl.fromJson;
+  factory _BigCategoryEntity.fromJson(Map<String, dynamic> json) =
+      _$BigCategoryEntityImpl.fromJson;
 
   @override
   int get id;
@@ -258,6 +259,6 @@ abstract class _TBL202Record extends TBL202Record {
   int get isDisplayed;
   @override
   @JsonKey(ignore: true)
-  _$$TBL202RecordImplCopyWith<_$TBL202RecordImpl> get copyWith =>
+  _$$BigCategoryEntityImplCopyWith<_$BigCategoryEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

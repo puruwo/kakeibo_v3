@@ -13,8 +13,8 @@ import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/model/db_read_impl.dart';
 import 'package:kakeibo/model/tableNameKey.dart';
-import 'package:kakeibo/repository/tbl201_record/tbl201_record.dart';
-import 'package:kakeibo/repository/tbl202_record/tbl202_record.dart';
+import 'package:kakeibo/domain/tbl201/small_category_entity.dart';
+import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/molecule/icon_button%20copy.dart';
 import 'package:kakeibo/view/page/color_select_page.dart';
@@ -49,7 +49,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
   // 編集モードで編集されたかどうか
   bool isEdited201 = false;
 
-  TBL202Record? tbl202record;
+  BigCategoryEntity? tbl202record;
 
   // 入力のコントローラー
   late TextEditingController _categoryNameController;
@@ -585,7 +585,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
     categoryData = await getCategoryDataFromCategoryId(widget.bigCategoryId);
 
     // インスタンス化
-    tbl202record = TBL202Record(
+    tbl202record = BigCategoryEntity(
         id: bigCategoryProperty![TBL202RecordKey().id],
         colorCode: bigCategoryProperty![TBL202RecordKey().colorCode],
         bigCategoryName:
@@ -724,12 +724,12 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
       final int defaultDisplayed = itemList[i].isChecked == true ? 1 : 0;
 
       // 目標データのインスタンス化
-      final record = TBL201Record(
+      final record = SmallCategoryEntity(
           id: id,
           smallCategoryOrderKey: smallCategoryOrderKey,
           bigCategoryKey: bigCategoryKey,
           displayedOrderInBig: displayOrderInBig,
-          categoryName: categoryName,
+          smallCategoryName: categoryName,
           defaultDisplayed: defaultDisplayed);
 
       // 目標データの挿入
@@ -738,7 +738,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
   }
 
   void tBL202Impl() {
-    final newRecord = TBL202Record(
+    final newRecord = BigCategoryEntity(
         id: tbl202record!.id,
         colorCode: selectedColorCode,
         bigCategoryName: _categoryNameController.text,

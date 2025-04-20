@@ -15,7 +15,7 @@ import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/model/db_read_impl.dart';
 import 'package:kakeibo/model/tableNameKey.dart';
 
-import 'package:kakeibo/repository/tbl202_record/tbl202_record.dart';
+import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/molecule/icon_button%20copy.dart';
 import 'package:kakeibo/view/page/small_category_edit_page.dart';
@@ -506,7 +506,7 @@ class _CategorySettingPageState extends ConsumerState<CategorySettingPage> {
       // booleanから 0 or 1 に変換
       final isDisplayed = itemList[i].isChecked == true ? 1 : 0;
 
-      final record = TBL202Record(
+      final record = BigCategoryEntity(
         id: itemList[i].bigCategoryId,
         colorCode: itemList[i].bigCategoryColor,
         bigCategoryName: itemList[i].bigCategoryName,

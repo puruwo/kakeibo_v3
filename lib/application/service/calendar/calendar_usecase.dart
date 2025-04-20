@@ -40,10 +40,12 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     // カレンダーページと初期カレンダーページの差分を取得
     final distance = calendarPage - CalendarProperties().initialCalendarPage;
 
-    // 取得するデータをカレンダーページとselectedDateから取得する
+    // todo: 先に期間を取得してから期間を前後に移動するようにする
+    // todo: 前後期間を取得するためにperiodEntityにメソッドを追加する
+    // 現在日付からカレンダーのページの分移動して日付を取得する
     final safe = safeDate(DateTime.now(), distance);
 
-    // 集計期間を取得する
+    // 移動した日付を元に、集計期間を取得する
     final MonthPeriodValue period = await _periodService.fetchMonthPeriod(safe);
 
     // 期間内の日毎の支出データを取得する
@@ -62,9 +64,7 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
 
       // カレンダーの日づげ表示に月を表示するかどうか
       bool shouldDisplayMonth = false;
-      if (dailyExpenseEntity.date.day == 1 ||
-          dailyExpenseEntity.date.day == startDay.day)
-        shouldDisplayMonth = true;
+      if (dailyExpenseEntity.date.day == 1 || dailyExpenseEntity.date.day == startDay.day)shouldDisplayMonth = true;
 
       // CalendarTileEntityを作成
       final CalendarTileEntity calendarTileEntity = CalendarTileEntity(

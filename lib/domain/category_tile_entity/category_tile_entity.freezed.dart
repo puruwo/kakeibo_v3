@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$CategoryTileEntity {
   CategoryEntity get categoryEntity => throw _privateConstructorUsedError;
-  List<SmallCategoryEntity> get smallCategoryList =>
+  List<SmallCategoryTileEntity> get smallCategoryList =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -33,7 +33,7 @@ abstract class $CategoryTileEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {CategoryEntity categoryEntity,
-      List<SmallCategoryEntity> smallCategoryList});
+      List<SmallCategoryTileEntity> smallCategoryList});
 
   $CategoryEntityCopyWith<$Res> get categoryEntity;
 }
@@ -62,7 +62,7 @@ class _$CategoryTileEntityCopyWithImpl<$Res, $Val extends CategoryTileEntity>
       smallCategoryList: null == smallCategoryList
           ? _value.smallCategoryList
           : smallCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<SmallCategoryEntity>,
+              as List<SmallCategoryTileEntity>,
     ) as $Val);
   }
 
@@ -85,7 +85,7 @@ abstract class _$$CategoryTileEntityImplCopyWith<$Res>
   @useResult
   $Res call(
       {CategoryEntity categoryEntity,
-      List<SmallCategoryEntity> smallCategoryList});
+      List<SmallCategoryTileEntity> smallCategoryList});
 
   @override
   $CategoryEntityCopyWith<$Res> get categoryEntity;
@@ -113,7 +113,7 @@ class __$$CategoryTileEntityImplCopyWithImpl<$Res>
       smallCategoryList: null == smallCategoryList
           ? _value._smallCategoryList
           : smallCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<SmallCategoryEntity>,
+              as List<SmallCategoryTileEntity>,
     ));
   }
 }
@@ -123,14 +123,14 @@ class __$$CategoryTileEntityImplCopyWithImpl<$Res>
 class _$CategoryTileEntityImpl implements _CategoryTileEntity {
   const _$CategoryTileEntityImpl(
       {required this.categoryEntity,
-      required final List<SmallCategoryEntity> smallCategoryList})
+      required final List<SmallCategoryTileEntity> smallCategoryList})
       : _smallCategoryList = smallCategoryList;
 
   @override
   final CategoryEntity categoryEntity;
-  final List<SmallCategoryEntity> _smallCategoryList;
+  final List<SmallCategoryTileEntity> _smallCategoryList;
   @override
-  List<SmallCategoryEntity> get smallCategoryList {
+  List<SmallCategoryTileEntity> get smallCategoryList {
     if (_smallCategoryList is EqualUnmodifiableListView)
       return _smallCategoryList;
     // ignore: implicit_dynamic_type
@@ -168,13 +168,13 @@ class _$CategoryTileEntityImpl implements _CategoryTileEntity {
 abstract class _CategoryTileEntity implements CategoryTileEntity {
   const factory _CategoryTileEntity(
           {required final CategoryEntity categoryEntity,
-          required final List<SmallCategoryEntity> smallCategoryList}) =
+          required final List<SmallCategoryTileEntity> smallCategoryList}) =
       _$CategoryTileEntityImpl;
 
   @override
   CategoryEntity get categoryEntity;
   @override
-  List<SmallCategoryEntity> get smallCategoryList;
+  List<SmallCategoryTileEntity> get smallCategoryList;
   @override
   @JsonKey(ignore: true)
   _$$CategoryTileEntityImplCopyWith<_$CategoryTileEntityImpl> get copyWith =>

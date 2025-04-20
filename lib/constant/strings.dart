@@ -28,5 +28,11 @@ class MyFonts {
     fontFamily: 'sf_ui',
   );
 
+
+  // ecpense history
+  static TextStyle expenseHistoryDateHeaderLabel = const TextStyle(
+    color: MyColors.secondaryLabel,
+    fontSize: 14,
+  );
   
 }

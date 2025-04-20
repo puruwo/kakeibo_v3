@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kakeibo/domain/category_entity/category_entity.dart';
-import 'package:kakeibo/domain/small_category_entity/small_category_entity.dart';
+import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_entity.dart';
 
 //Freezedで生成されるデータクラス
 part 'category_tile_entity.freezed.dart';
@@ -9,6 +9,6 @@ part 'category_tile_entity.freezed.dart';
 class CategoryTileEntity with _$CategoryTileEntity {
   const factory CategoryTileEntity({
     required CategoryEntity categoryEntity,
-    required List<SmallCategoryEntity> smallCategoryList,
+    required List<SmallCategoryTileEntity> smallCategoryList,
   }) = _CategoryTileEntity;
 }

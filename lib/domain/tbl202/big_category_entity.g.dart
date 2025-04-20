@@ -1,13 +1,14 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tbl202_record.dart';
+part of 'big_category_entity.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$TBL202RecordImpl _$$TBL202RecordImplFromJson(Map<String, dynamic> json) =>
-    _$TBL202RecordImpl(
+_$BigCategoryEntityImpl _$$BigCategoryEntityImplFromJson(
+        Map<String, dynamic> json) =>
+    _$BigCategoryEntityImpl(
       id: (json['id'] as num).toInt(),
       colorCode: json['colorCode'] as String,
       bigCategoryName: json['bigCategoryName'] as String,
@@ -16,7 +17,8 @@ _$TBL202RecordImpl _$$TBL202RecordImplFromJson(Map<String, dynamic> json) =>
       isDisplayed: (json['isDisplayed'] as num).toInt(),
     );
 
-Map<String, dynamic> _$$TBL202RecordImplToJson(_$TBL202RecordImpl instance) =>
+Map<String, dynamic> _$$BigCategoryEntityImplToJson(
+        _$BigCategoryEntityImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'colorCode': instance.colorCode,

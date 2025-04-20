@@ -5,6 +5,7 @@ part 'daily_expense_entity.freezed.dart';
 //jsonを変換する処理が生成されるクラス
 part 'daily_expense_entity.g.dart';
 
+/// 1日の支出データ
 @freezed
 class DailyExpenseEntity with _$DailyExpenseEntity {
   const factory DailyExpenseEntity({

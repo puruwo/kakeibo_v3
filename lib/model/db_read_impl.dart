@@ -31,7 +31,7 @@ class TBL001Impl {
       WHERE a.${TBL001RecordKey().date} >= ${DateFormat('yyyyMMdd').format(fromDate)} 
       AND a.${TBL001RecordKey().date} <= ${DateFormat('yyyyMMdd').format(toDate)};
       ''';
-    // print(sql);
+    print(sql);
     final immutable = db.query(sql);
     final mutable = makeMutable(immutable);
     return mutable;

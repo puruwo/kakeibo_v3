@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'tbl201_record.dart';
+part of 'small_category_entity.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,44 +14,44 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-TBL201Record _$TBL201RecordFromJson(Map<String, dynamic> json) {
-  return _TBL201Record.fromJson(json);
+SmallCategoryEntity _$SmallCategoryEntityFromJson(Map<String, dynamic> json) {
+  return _SmallCategoryEntity.fromJson(json);
 }
 
 /// @nodoc
-mixin _$TBL201Record {
+mixin _$SmallCategoryEntity {
   int get id => throw _privateConstructorUsedError;
   int get smallCategoryOrderKey => throw _privateConstructorUsedError;
   int get bigCategoryKey => throw _privateConstructorUsedError;
   int get displayedOrderInBig => throw _privateConstructorUsedError;
-  String get categoryName => throw _privateConstructorUsedError;
+  String get smallCategoryName => throw _privateConstructorUsedError;
   int get defaultDisplayed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $TBL201RecordCopyWith<TBL201Record> get copyWith =>
+  $SmallCategoryEntityCopyWith<SmallCategoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $TBL201RecordCopyWith<$Res> {
-  factory $TBL201RecordCopyWith(
-          TBL201Record value, $Res Function(TBL201Record) then) =
-      _$TBL201RecordCopyWithImpl<$Res, TBL201Record>;
+abstract class $SmallCategoryEntityCopyWith<$Res> {
+  factory $SmallCategoryEntityCopyWith(
+          SmallCategoryEntity value, $Res Function(SmallCategoryEntity) then) =
+      _$SmallCategoryEntityCopyWithImpl<$Res, SmallCategoryEntity>;
   @useResult
   $Res call(
       {int id,
       int smallCategoryOrderKey,
       int bigCategoryKey,
       int displayedOrderInBig,
-      String categoryName,
+      String smallCategoryName,
       int defaultDisplayed});
 }
 
 /// @nodoc
-class _$TBL201RecordCopyWithImpl<$Res, $Val extends TBL201Record>
-    implements $TBL201RecordCopyWith<$Res> {
-  _$TBL201RecordCopyWithImpl(this._value, this._then);
+class _$SmallCategoryEntityCopyWithImpl<$Res, $Val extends SmallCategoryEntity>
+    implements $SmallCategoryEntityCopyWith<$Res> {
+  _$SmallCategoryEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -65,7 +65,7 @@ class _$TBL201RecordCopyWithImpl<$Res, $Val extends TBL201Record>
     Object? smallCategoryOrderKey = null,
     Object? bigCategoryKey = null,
     Object? displayedOrderInBig = null,
-    Object? categoryName = null,
+    Object? smallCategoryName = null,
     Object? defaultDisplayed = null,
   }) {
     return _then(_value.copyWith(
@@ -85,9 +85,9 @@ class _$TBL201RecordCopyWithImpl<$Res, $Val extends TBL201Record>
           ? _value.displayedOrderInBig
           : displayedOrderInBig // ignore: cast_nullable_to_non_nullable
               as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
+      smallCategoryName: null == smallCategoryName
+          ? _value.smallCategoryName
+          : smallCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
       defaultDisplayed: null == defaultDisplayed
           ? _value.defaultDisplayed
@@ -98,11 +98,11 @@ class _$TBL201RecordCopyWithImpl<$Res, $Val extends TBL201Record>
 }
 
 /// @nodoc
-abstract class _$$TBL201RecordImplCopyWith<$Res>
-    implements $TBL201RecordCopyWith<$Res> {
-  factory _$$TBL201RecordImplCopyWith(
-          _$TBL201RecordImpl value, $Res Function(_$TBL201RecordImpl) then) =
-      __$$TBL201RecordImplCopyWithImpl<$Res>;
+abstract class _$$SmallCategoryEntityImplCopyWith<$Res>
+    implements $SmallCategoryEntityCopyWith<$Res> {
+  factory _$$SmallCategoryEntityImplCopyWith(_$SmallCategoryEntityImpl value,
+          $Res Function(_$SmallCategoryEntityImpl) then) =
+      __$$SmallCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -110,16 +110,16 @@ abstract class _$$TBL201RecordImplCopyWith<$Res>
       int smallCategoryOrderKey,
       int bigCategoryKey,
       int displayedOrderInBig,
-      String categoryName,
+      String smallCategoryName,
       int defaultDisplayed});
 }
 
 /// @nodoc
-class __$$TBL201RecordImplCopyWithImpl<$Res>
-    extends _$TBL201RecordCopyWithImpl<$Res, _$TBL201RecordImpl>
-    implements _$$TBL201RecordImplCopyWith<$Res> {
-  __$$TBL201RecordImplCopyWithImpl(
-      _$TBL201RecordImpl _value, $Res Function(_$TBL201RecordImpl) _then)
+class __$$SmallCategoryEntityImplCopyWithImpl<$Res>
+    extends _$SmallCategoryEntityCopyWithImpl<$Res, _$SmallCategoryEntityImpl>
+    implements _$$SmallCategoryEntityImplCopyWith<$Res> {
+  __$$SmallCategoryEntityImplCopyWithImpl(_$SmallCategoryEntityImpl _value,
+      $Res Function(_$SmallCategoryEntityImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
@@ -129,10 +129,10 @@ class __$$TBL201RecordImplCopyWithImpl<$Res>
     Object? smallCategoryOrderKey = null,
     Object? bigCategoryKey = null,
     Object? displayedOrderInBig = null,
-    Object? categoryName = null,
+    Object? smallCategoryName = null,
     Object? defaultDisplayed = null,
   }) {
-    return _then(_$TBL201RecordImpl(
+    return _then(_$SmallCategoryEntityImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
@@ -149,9 +149,9 @@ class __$$TBL201RecordImplCopyWithImpl<$Res>
           ? _value.displayedOrderInBig
           : displayedOrderInBig // ignore: cast_nullable_to_non_nullable
               as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
+      smallCategoryName: null == smallCategoryName
+          ? _value.smallCategoryName
+          : smallCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
       defaultDisplayed: null == defaultDisplayed
           ? _value.defaultDisplayed
@@ -163,18 +163,18 @@ class __$$TBL201RecordImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$TBL201RecordImpl extends _TBL201Record {
-  const _$TBL201RecordImpl(
+class _$SmallCategoryEntityImpl extends _SmallCategoryEntity {
+  const _$SmallCategoryEntityImpl(
       {required this.id,
       required this.smallCategoryOrderKey,
       required this.bigCategoryKey,
       required this.displayedOrderInBig,
-      required this.categoryName,
+      required this.smallCategoryName,
       required this.defaultDisplayed})
       : super._();
 
-  factory _$TBL201RecordImpl.fromJson(Map<String, dynamic> json) =>
-      _$$TBL201RecordImplFromJson(json);
+  factory _$SmallCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
+      _$$SmallCategoryEntityImplFromJson(json);
 
   @override
   final int id;
@@ -185,20 +185,20 @@ class _$TBL201RecordImpl extends _TBL201Record {
   @override
   final int displayedOrderInBig;
   @override
-  final String categoryName;
+  final String smallCategoryName;
   @override
   final int defaultDisplayed;
 
   @override
   String toString() {
-    return 'TBL201Record(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displayedOrderInBig: $displayedOrderInBig, categoryName: $categoryName, defaultDisplayed: $defaultDisplayed)';
+    return 'SmallCategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displayedOrderInBig: $displayedOrderInBig, smallCategoryName: $smallCategoryName, defaultDisplayed: $defaultDisplayed)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$TBL201RecordImpl &&
+            other is _$SmallCategoryEntityImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.smallCategoryOrderKey, smallCategoryOrderKey) ||
                 other.smallCategoryOrderKey == smallCategoryOrderKey) &&
@@ -206,8 +206,8 @@ class _$TBL201RecordImpl extends _TBL201Record {
                 other.bigCategoryKey == bigCategoryKey) &&
             (identical(other.displayedOrderInBig, displayedOrderInBig) ||
                 other.displayedOrderInBig == displayedOrderInBig) &&
-            (identical(other.categoryName, categoryName) ||
-                other.categoryName == categoryName) &&
+            (identical(other.smallCategoryName, smallCategoryName) ||
+                other.smallCategoryName == smallCategoryName) &&
             (identical(other.defaultDisplayed, defaultDisplayed) ||
                 other.defaultDisplayed == defaultDisplayed));
   }
@@ -215,34 +215,35 @@ class _$TBL201RecordImpl extends _TBL201Record {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, smallCategoryOrderKey,
-      bigCategoryKey, displayedOrderInBig, categoryName, defaultDisplayed);
+      bigCategoryKey, displayedOrderInBig, smallCategoryName, defaultDisplayed);
 
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$TBL201RecordImplCopyWith<_$TBL201RecordImpl> get copyWith =>
-      __$$TBL201RecordImplCopyWithImpl<_$TBL201RecordImpl>(this, _$identity);
+  _$$SmallCategoryEntityImplCopyWith<_$SmallCategoryEntityImpl> get copyWith =>
+      __$$SmallCategoryEntityImplCopyWithImpl<_$SmallCategoryEntityImpl>(
+          this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$TBL201RecordImplToJson(
+    return _$$SmallCategoryEntityImplToJson(
       this,
     );
   }
 }
 
-abstract class _TBL201Record extends TBL201Record {
-  const factory _TBL201Record(
+abstract class _SmallCategoryEntity extends SmallCategoryEntity {
+  const factory _SmallCategoryEntity(
       {required final int id,
       required final int smallCategoryOrderKey,
       required final int bigCategoryKey,
       required final int displayedOrderInBig,
-      required final String categoryName,
-      required final int defaultDisplayed}) = _$TBL201RecordImpl;
-  const _TBL201Record._() : super._();
+      required final String smallCategoryName,
+      required final int defaultDisplayed}) = _$SmallCategoryEntityImpl;
+  const _SmallCategoryEntity._() : super._();
 
-  factory _TBL201Record.fromJson(Map<String, dynamic> json) =
-      _$TBL201RecordImpl.fromJson;
+  factory _SmallCategoryEntity.fromJson(Map<String, dynamic> json) =
+      _$SmallCategoryEntityImpl.fromJson;
 
   @override
   int get id;
@@ -253,11 +254,11 @@ abstract class _TBL201Record extends TBL201Record {
   @override
   int get displayedOrderInBig;
   @override
-  String get categoryName;
+  String get smallCategoryName;
   @override
   int get defaultDisplayed;
   @override
   @JsonKey(ignore: true)
-  _$$TBL201RecordImplCopyWith<_$TBL201RecordImpl> get copyWith =>
+  _$$SmallCategoryEntityImplCopyWith<_$SmallCategoryEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

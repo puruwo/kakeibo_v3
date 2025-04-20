@@ -3,16 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/aggregation_start_day_entity/aggregation_start_day_repository.dart';
 import 'package:kakeibo/domain/all_category_entity/all_category_repository.dart';
 import 'package:kakeibo/domain/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/domain/tbl001/expense_repository.dart';
+import 'package:kakeibo/domain/tbl201/small_category_repository.dart';
+import 'package:kakeibo/domain/tbl202/big_category_repository.dart';
 import 'package:kakeibo/providerLogger.dart';
 import 'package:kakeibo/repository/aggregation_start_day_repository.dart';
 import 'package:kakeibo/repository/all_category_repository.dart';
+import 'package:kakeibo/repository/big_category_repository.dart';
 import 'package:kakeibo/repository/daily_expense_repository.dart';
+import 'package:kakeibo/repository/expense_repository.dart';
+import 'package:kakeibo/repository/small_category_Tile_repository.dart';
+import 'package:kakeibo/repository/small_category_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
 
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
-import 'package:kakeibo/domain/small_category_entity/small_category_repository.dart';
+import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/repository/category_repository.dart';
-import 'package:kakeibo/repository/small_category_repository.dart';
 
 void main() {
   runApp(
@@ -21,8 +27,8 @@ void main() {
         categoryRepositoryProvider.overrideWithValue(
           ImplementsCategoryRepository(),
         ),
-        smallCategoryRepositoryProvider.overrideWithValue(
-          ImplementsSmallCategoryRepository(),
+        smallCategoryTileRepositoryProvider.overrideWithValue(
+          ImplementsSmallCategoryTileRepository(),
         ),
         allCategoryRepositoryProvider.overrideWithValue(
           ImplementsAllCategoryRepository(),
@@ -32,6 +38,15 @@ void main() {
         ),
         aggregationStartDayRepositoryProvider.overrideWithValue(
           ImplementsAggregationStartDayRepository(),
+        ),
+        smallCategoryRepositoryProvider.overrideWithValue(
+          ImplementsSmallCategoryRepository(),
+        ),
+        bigCategoryRepositoryProvider.overrideWithValue(
+          ImplementsBigCategoryRepository(),
+        ),
+        expenseRepositoryProvider.overrideWithValue(
+          ImplementsExpenseRepository(),
         ),
       ],
       observers: const [ProviderLogger()],

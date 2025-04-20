@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
 import 'package:kakeibo/domain/category_entity/category_repository.dart';
 import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain/small_category_entity/small_category_repository.dart';
+import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final categoryTileNotifierProvider = AsyncNotifierProvider.family<CategoryTileUsecaseNotifier,List<CategoryTileEntity>,MonthPeriodValue>(
@@ -12,7 +12,7 @@ final categoryTileNotifierProvider = AsyncNotifierProvider.family<CategoryTileUs
 
 class CategoryTileUsecaseNotifier extends FamilyAsyncNotifier<List<CategoryTileEntity>, MonthPeriodValue> {
   late CategoryRepository _categoryRepository;
-  late SmallCategoryRepository _smallCategoryRepository;
+  late SmallCategoryTileRepository _smallCategoryTileRepository;
 
   @override
   Future<List<CategoryTileEntity>> build(MonthPeriodValue monthPeriodValue) async {
@@ -21,7 +21,7 @@ class CategoryTileUsecaseNotifier extends FamilyAsyncNotifier<List<CategoryTileE
     ref.watch(updateDBCountNotifierProvider);
 
     _categoryRepository = ref.read(categoryRepositoryProvider);
-    _smallCategoryRepository = ref.read(smallCategoryRepositoryProvider);
+    _smallCategoryTileRepository = ref.read(smallCategoryTileRepositoryProvider);
 
     return fetch(monthPeriodValue);
   }
@@ -36,10 +36,10 @@ class CategoryTileUsecaseNotifier extends FamilyAsyncNotifier<List<CategoryTileE
     // カテゴリータイルのリストを取得する
     final categoryList = await _categoryRepository.fetchAll(fromDate:fromDate,toDate:toDate);
 
-    // カテゴリータイルのリストの並び順でList<SmallCategoryExpenceEntity>を取得する
+    // カテゴリータイルのリストの並び順でList<SmallCategoryTileExpenceEntity>を取得する
     List<CategoryTileEntity> categoryTileList = [];
     for(int i = 0; i < categoryList.length; i++){
-      final smallCategoryList = await _smallCategoryRepository.fetchAll(bigCategoryId:categoryList[i].id, fromDate:fromDate, toDate:toDate);
+      final smallCategoryList = await _smallCategoryTileRepository.fetchAll(bigCategoryId:categoryList[i].id, fromDate:fromDate, toDate:toDate);
       categoryTileList.add(CategoryTileEntity(categoryEntity:categoryList[i],smallCategoryList:smallCategoryList));
     }
 

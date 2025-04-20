@@ -7,7 +7,7 @@ final dailyExpenseRepositoryProvider = Provider<DailyExpenseRepository>(
   (_) => throw UnimplementedError("DailyExpenseRepositoryの実装がされていません。"),
 );
 
-/// 支出に関するリポジトリ
+/// 1日の支出データに関するリポジトリ
 abstract interface class DailyExpenseRepository {
 
   /// 日付指定して全データを取得する

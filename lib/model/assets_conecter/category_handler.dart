@@ -36,12 +36,12 @@ class CategoryHandler {
         future: futureListMap,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
-            String url = snapshot.data![0][TBL202RecordKey().resourcePath];
+            String path = snapshot.data![0][TBL202RecordKey().resourcePath];
             String colorCode = snapshot.data![0][TBL202RecordKey().colorCode];
             final color = MyColors().getColorFromHex(colorCode);
             Widget icon = FittedBox(
               fit: BoxFit.scaleDown,
-              child: iconWidget(url,color,width: width, height: height));
+              child: iconWidget(path,color,width: width, height: height));
             return icon;
           } else {
             return SizedBox(width: width, height: height);
@@ -87,18 +87,6 @@ class CategoryHandler {
           }
         });
   }
-
-  // Widget iconGetterFromPath(String path, {double? height, double? width}) {
-  //   String url = path;
-  //   Widget icon = SvgPicture.asset(
-  //     url,
-  //     semanticsLabel: 'categoryIcon',
-  //     width: width,
-  //     height: height,
-  //     colorFilter: const ColorFilter.mode(Colors.blue, BlendMode.srcIn),
-  //   );
-  //   return icon;
-  // }
 
   Future<String> sisytBigCategoryNameGetter(int categoryId) async {
     final futureListMap = await db.query('''
