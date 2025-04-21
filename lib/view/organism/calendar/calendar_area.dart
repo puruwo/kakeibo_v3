@@ -12,7 +12,7 @@ import 'package:kakeibo/domain/calendar_day_entity/calendar_tile_entity.dart';
 import 'package:kakeibo/view/organism/calendar/date_box.dart';
 
 import 'package:kakeibo/view_model/provider/calendar_page_controller/calendar_page_controller.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
 
 final logger = Logger();
 

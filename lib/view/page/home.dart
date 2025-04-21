@@ -14,7 +14,7 @@ import 'package:kakeibo/view/organism/calendar/calendar_area.dart';
 import 'package:kakeibo/view/organism/expense_history_list_area/expence_history_list_area.dart';
 
 import 'package:kakeibo/view_model/reference_day_impl.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});

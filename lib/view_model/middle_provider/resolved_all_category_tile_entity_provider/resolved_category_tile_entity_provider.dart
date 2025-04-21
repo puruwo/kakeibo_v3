@@ -1,8 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/service/category_tile/category_tile_usecase.dart';
 import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
-import 'package:kakeibo/view_model/provider/selected_calendar_period/selected_calendar_period.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/provider/date_scope/selected_calendar_period.dart';
+import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
 
 final resolvedAllCategoryTileEntityProvider =
     FutureProvider<List<CategoryTileEntity>>((ref) async {

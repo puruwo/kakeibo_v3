@@ -1,29 +1,22 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
-import 'package:kakeibo/repository/tbl001_record/tbl001_record.dart';
-import 'package:kakeibo/repository/torok_record/torok_record.dart';
 // DateTimeの日本語対応
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/view/organism/expense_history_list_area/exense_history_tile.dart';
 
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 /// Local imports
-import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
-
-import 'package:kakeibo/view/page/torok.dart';
 
 class ExpenceHistoryArea extends ConsumerStatefulWidget {
   ExpenceHistoryArea({super.key});
@@ -66,20 +59,12 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
 
 //状態管理---------------------------------------------------------------------------------------
 
-    final silectedDate = ref.watch(selectedDatetimeNotifierProvider);
-
     // selectedDatetimeが更新されたら動く
-    // ref.listen(selectedDatetimeNotifierProvider, (previous, next) {
-      // ビルドが終わったら動く
-      WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-        final updatedActiveDateTime =silectedDate;
+    ref.listen(selectedDatetimeNotifierProvider, (previous, next) {
+        final updatedSelectedDateTime = next;
         _scrollToItem(
-            updatedActiveDateTime, itemKeys, widget._scrollController);
-      });
-    // });
-
-//----------------------------------------------------------------------------------------------
-//データ取得--------------------------------------------------------------------------------------
+            updatedSelectedDateTime, itemKeys, widget._scrollController);
+    });
 
 //----------------------------------------------------------------------------------------------
 

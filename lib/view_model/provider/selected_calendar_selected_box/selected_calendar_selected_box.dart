@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
 
 // selectedDatetimeNotifierProviderを参照して、そのカレンダーの日付が選択されているかどうかを判定するProvider
 final selectedCalendarBoxProvider = Provider.family

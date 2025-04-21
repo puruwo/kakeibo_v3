@@ -8,7 +8,7 @@ import 'package:kakeibo/repository/torok_record/torok_record.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/page/torok.dart';
 import 'package:kakeibo/view_model/provider/selected_calendar_selected_box/selected_calendar_selected_box.dart';
-import 'package:kakeibo/view_model/provider/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
 
 
 enum CalendarTileStatus {
