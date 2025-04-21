@@ -11,13 +11,13 @@ import 'package:kakeibo/util/screen_size_func.dart';
 
 import 'package:kakeibo/view/organism/category_area.dart';
 import 'package:kakeibo/view/organism/torok_selected_segment.dart';
-import 'package:kakeibo/view_model/provider/torok_state/selected_segment_status.dart';
-import 'package:kakeibo/view_model/provider/torok_state/is_registerable.dart';
+import 'package:kakeibo/view_model/state/register_page/selected_segment_status.dart';
+import 'package:kakeibo/view_model/state/register_page/is_registerable.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
-import 'package:kakeibo/view_model/provider/torok_state/when_open.dart';
+import 'package:kakeibo/view_model/state/register_page/when_open.dart';
 
 import 'package:kakeibo/view/organism/date_input_field.dart';
-import 'package:kakeibo/view_model/provider/torok_state/torok_state.dart';
+import 'package:kakeibo/view_model/state/register_page/torok_state.dart';
 
 class Torok extends ConsumerStatefulWidget {
   //0:登録モード、1:編集モード

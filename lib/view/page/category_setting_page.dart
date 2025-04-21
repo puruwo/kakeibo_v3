@@ -21,7 +21,7 @@ import 'package:kakeibo/view/molecule/icon_button%20copy.dart';
 import 'package:kakeibo/view/page/small_category_edit_page.dart';
 
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
-import 'package:kakeibo/view_model/provider/category_edit_page/edit_mode.dart';
+import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 
 import 'package:kakeibo/view_model/reference_day_impl.dart';
 

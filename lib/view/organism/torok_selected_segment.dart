@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view_model/provider/torok_state/selected_segment_status.dart';
+import 'package:kakeibo/view_model/state/register_page/selected_segment_status.dart';
 
 class TorokSelectedSegment extends ConsumerWidget {
   const TorokSelectedSegment({

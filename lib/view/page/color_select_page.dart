@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view_model/provider/small_category_edit_page/selected_color.dart';
+import 'package:kakeibo/view_model/state/small_category_edit_page/selected_color.dart';
 
 class ColorSelectPage extends ConsumerStatefulWidget {
   const ColorSelectPage({super.key, this.categoryColor});

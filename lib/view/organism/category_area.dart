@@ -5,8 +5,8 @@ import 'package:kakeibo/util/screen_size_func.dart';
 
 import 'package:kakeibo/view/molecule/icon_button.dart';
 
-import 'package:kakeibo/view_model/provider/torok_state/selected_segment_status.dart';
-import 'package:kakeibo/view_model/provider/torok_state/torok_state.dart';
+import 'package:kakeibo/view_model/state/register_page/selected_segment_status.dart';
+import 'package:kakeibo/view_model/state/register_page/torok_state.dart';
 
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/model/db_read_impl.dart';

@@ -7,9 +7,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
-import 'package:kakeibo/view_model/provider/small_category_edit_page/selected_color.dart';
-import 'package:kakeibo/view_model/provider/small_category_edit_page/selected_icon_path.dart';
-import 'package:kakeibo/view_model/provider/torok_state/selected_segment_status.dart';
+import 'package:kakeibo/view_model/state/small_category_edit_page/selected_color.dart';
+import 'package:kakeibo/view_model/state/small_category_edit_page/selected_icon_path.dart';
+import 'package:kakeibo/view_model/state/register_page/selected_segment_status.dart';
 
 class IconSelectPage extends ConsumerStatefulWidget {
   const IconSelectPage({super.key, this.categoryIconPath});

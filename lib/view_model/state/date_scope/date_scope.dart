@@ -1,7 +1,7 @@
-import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/entity/date_scope_entity.dart';
+import 'package:kakeibo/view_model/state/date_scope/entity/date_scope_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
-import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 
 final dateScopeEntityProvider = AsyncNotifierProvider<DateScopeNotifier,DateScopeEntity>(
   DateScopeNotifier.new,

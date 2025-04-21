@@ -19,8 +19,8 @@ import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/molecule/icon_button%20copy.dart';
 import 'package:kakeibo/view/page/color_select_page.dart';
 import 'package:kakeibo/view/page/icon_select_page.dart';
-import 'package:kakeibo/view_model/provider/small_category_edit_page/selected_color.dart';
-import 'package:kakeibo/view_model/provider/small_category_edit_page/selected_icon_path.dart';
+import 'package:kakeibo/view_model/state/small_category_edit_page/selected_color.dart';
+import 'package:kakeibo/view_model/state/small_category_edit_page/selected_icon_path.dart';
 
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 

@@ -12,7 +12,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/view/organism/expense_history_list_area/exense_history_tile.dart';
 
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
-import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 /// Local imports

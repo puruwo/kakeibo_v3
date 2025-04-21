@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
-import 'package:kakeibo/view_model/provider/torok_state/torok_state.dart';
+import 'package:kakeibo/view_model/state/register_page/torok_state.dart';
 
 class DateDisplay extends ConsumerWidget {
   const DateDisplay({

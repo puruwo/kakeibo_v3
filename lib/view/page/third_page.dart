@@ -11,7 +11,7 @@ import 'package:kakeibo/view/atom/previous_arrow_button.dart';
 import 'package:kakeibo/view/organism/third_page/all_category_tile_area.dart';
 import 'package:kakeibo/view/organism/third_page/category_tile_area.dart';
 import 'package:kakeibo/view/page/category_setting_page.dart';
-import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 

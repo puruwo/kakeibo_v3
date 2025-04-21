@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'selected_icon_path.dart';
+part of '../../state/small_category_edit_page/selected_icon_path.dart';
 
 // **************************************************************************
 // RiverpodGenerator

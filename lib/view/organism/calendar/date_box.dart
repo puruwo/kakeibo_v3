@@ -7,8 +7,8 @@ import 'package:kakeibo/domain/calendar_day_entity/calendar_tile_entity.dart';
 import 'package:kakeibo/repository/torok_record/torok_record.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/page/torok.dart';
-import 'package:kakeibo/view_model/provider/selected_calendar_selected_box/selected_calendar_selected_box.dart';
-import 'package:kakeibo/view_model/provider/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
+import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 
 
 enum CalendarTileStatus {
@@ -42,7 +42,7 @@ class DateBox extends ConsumerWidget {
     bool shouldDisplayMonth = calendarTileEntity.shouldDisplayMonth;
 
     // 選択された日付かどうかを判定
-    final isSelected = ref.watch(selectedCalendarBoxProvider(DateTime(year, month, day)));
+    final isSelected = ref.watch(isDateboxSelectedProvider(DateTime(year, month, day)));
 
     // タイルの状態をisWithinAggregationRangeとisSelectedから複合的に判定
     final tileStatus = switch(isWithinAggregationRange){
