@@ -5,8 +5,8 @@ part 'date_scope_entity.freezed.dart';
 
 @freezed
 class DateScopeEntity with _$DateScopeEntity {
-const factory DateScopeEntity({
-required DateTime selectedDate,
-required MonthPeriodValue monthPeriod,
-}) = _DateScopeEntity;
+  const factory DateScopeEntity({
+    required DateTime selectedDate,
+    required MonthPeriodValue monthPeriod,
+  }) = _DateScopeEntity;
 }

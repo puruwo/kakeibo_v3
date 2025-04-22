@@ -8,6 +8,8 @@ double screenWidthGetter(){
   return ScreenLayoutProperties().defaultWidth.toDouble();
 }
 
+/// 画面の倍率を計算
+/// iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
 double screenHorizontalMagnificationGetter(double screenWidthSize) {
     if (screenWidthSize <= 375) {
       return 1.0;
@@ -18,12 +20,12 @@ double screenHorizontalMagnificationGetter(double screenWidthSize) {
     }
   }
 
-  double screenVerticalMagnificationGetter(
-      double screenWidthSize, double screenHorizontalMagnification) {
-    if (screenHorizontalMagnification >= 1.0) {
-      // y=x^0.8
-      return pow(screenHorizontalMagnification, 0.8) as double;
-    }else{
-      return 1.0;
-    }
+double screenVerticalMagnificationGetter(
+    double screenWidthSize, double screenHorizontalMagnification) {
+  if (screenHorizontalMagnification >= 1.0) {
+    // y=x^0.8
+    return pow(screenHorizontalMagnification, 0.8) as double;
+  }else{
+    return 1.0;
   }
+}

@@ -5,10 +5,10 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/domain/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 // DateTimeの日本語対応
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/organism/expense_history_list_area/exense_history_tile.dart';
 
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
@@ -29,30 +29,24 @@ class ExpenceHistoryArea extends ConsumerStatefulWidget {
 }
 
 class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
-  // late SplayTreeMap<String, dynamic> sortedGroupedMap;
 
   late List<DateTime> itemKeys;
 
-  // リストビューの左の空白
-  late double leftsidePadding;
-
   @override
   Widget build(BuildContext context) {
-    // 画面の横幅を取得
-    final screenWidthSize = MediaQuery.of(context).size.width;
 
     // 画面の倍率を計算
     // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final screenHorizontalMagnification =
-        screenHorizontalMagnificationGetter(screenWidthSize);
+        screenHorizontalMagnificationGetter(context.screenWidth);
 
     // リスト内テキストボックスの倍率を計算
     // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final listSmallcategoryMemoOffset =
-        listSmallcategoryMemoOffsetGetter(screenWidthSize);
+        listSmallcategoryMemoOffsetGetter(context.screenWidth);
 
     // カレンダーサイズから左の空白の大きさを計算
-    leftsidePadding = 14.5 * screenHorizontalMagnification;
+    final leftsidePadding = 14.5 * screenHorizontalMagnification;
 
     // DateTimeの日本語対応
     initializeDateFormatting();
@@ -78,9 +72,6 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
             controller: widget._scrollController,
             itemCount: tileGroupList.length,
             itemBuilder: (BuildContext context, int index) {
-              DateTime date = tileGroupList[index].date;
-              List<ExpenseHistoryTileValue> tileValueList =
-                  tileGroupList[index].expenseHistoryTileValueList;
 
               itemKeys = tileGroupList.map((e) => e.date).toList();
 
@@ -102,7 +93,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                         Padding(
                           padding: EdgeInsets.only(left: leftsidePadding),
                           child: Text(
-                              DateFormat('yyyy年M月d日(E)', 'ja_JP').format(date),
+                              DateFormat('yyyy年M月d日(E)', 'ja_JP').format(tileGroupList[index].date),
                               style: MyFonts.expenseHistoryDateHeaderLabel),
                         ),
                         //右余白
@@ -120,7 +111,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
 
                     //タイル
                     ExpenseHistoryTile(
-                      tileValueList: tileValueList,
+                      tileValueList: tileGroupList[index].expenseHistoryTileValueList,
                       leftsidePadding: leftsidePadding,
                       listSmallcategoryMemoOffset: listSmallcategoryMemoOffset,
                       screenHorizontalMagnification:
@@ -156,7 +147,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
       );
     }, loading: () {
       return const Center(
-        // child: CircularProgressIndicator(),
+        child: CircularProgressIndicator(),
       );
     });
   }
