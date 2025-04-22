@@ -1,17 +1,13 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/service/category_tile/category_tile_usecase.dart';
 import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
-import 'package:kakeibo/view_model/state/date_scope/selected_period/selected_period.dart';
-import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
 
 final resolvedAllCategoryTileEntityProvider =
     FutureProvider<List<CategoryTileEntity>>((ref) async {
-
-  // 選択された日付を取得する
-  final selectedDate = ref.watch(selectedDatetimeNotifierProvider);
   
   // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(selectedPeriodProvider(selectedDate).future);
+  final monthPeriodValue = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
   
   // 選択された集計期間を元に、Entityを取得する
   final entity = ref.watch(categoryTileNotifierProvider(monthPeriodValue).future);
