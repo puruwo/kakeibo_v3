@@ -1,4 +1,4 @@
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 
 MonthPeriodValue fetchPreviousMonthPeriod(MonthPeriodValue monthPeriodValue) {
     final previousMonthStartDateBuff = DateTime(monthPeriodValue.startDatetime.year, monthPeriodValue.startDatetime.month - 1, monthPeriodValue.startDatetime.day);

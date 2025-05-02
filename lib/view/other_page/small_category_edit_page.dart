@@ -13,8 +13,8 @@ import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/model/db_read_impl.dart';
 import 'package:kakeibo/model/tableNameKey.dart';
-import 'package:kakeibo/domain/tbl201/small_category_entity.dart';
-import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/other_page/check_box.dart';
 import 'package:kakeibo/view/other_page/color_select_page.dart';
@@ -49,7 +49,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
   // 編集モードで編集されたかどうか
   bool isEdited201 = false;
 
-  BigCategoryEntity? tbl202record;
+  ExpenseBigCategoryEntity? tbl202record;
 
   // 入力のコントローラー
   late TextEditingController _categoryNameController;
@@ -585,7 +585,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
     categoryData = await getCategoryDataFromCategoryId(widget.bigCategoryId);
 
     // インスタンス化
-    tbl202record = BigCategoryEntity(
+    tbl202record = ExpenseBigCategoryEntity(
         id: bigCategoryProperty![TBL202RecordKey().id],
         colorCode: bigCategoryProperty![TBL202RecordKey().colorCode],
         bigCategoryName:
@@ -724,7 +724,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
       final int defaultDisplayed = itemList[i].isChecked == true ? 1 : 0;
 
       // 目標データのインスタンス化
-      final record = SmallCategoryEntity(
+      final record = ExpenseSmallCategoryEntity(
           id: id,
           smallCategoryOrderKey: smallCategoryOrderKey,
           bigCategoryKey: bigCategoryKey,
@@ -738,7 +738,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
   }
 
   void tBL202Impl() {
-    final newRecord = BigCategoryEntity(
+    final newRecord = ExpenseBigCategoryEntity(
         id: tbl202record!.id,
         colorCode: selectedColorCode,
         bigCategoryName: _categoryNameController.text,

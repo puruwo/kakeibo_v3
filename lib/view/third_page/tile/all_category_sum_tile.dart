@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/domain/all_category_card_entity/all_category_card_entity.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';

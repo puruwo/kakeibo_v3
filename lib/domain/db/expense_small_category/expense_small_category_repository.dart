@@ -1,21 +1,21 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'small_category_entity.dart';
+import 'expense_small_category_entity.dart';
 
 /// アプリ起動時 or テスト時に本プロバイダーを override して使用してください
-final smallCategoryRepositoryProvider = Provider<SmallCategoryRepository>(
+final expenseSmallCategoryRepositoryProvider = Provider<ExpenseSmallCategoryRepository>(
   (_) => throw UnimplementedError("SmallCategoryRepositoryの実装がされていません。"),
 );
 
 /// tbl201(小カテゴリー)に関するリポジトリ
-abstract interface class SmallCategoryRepository {
+abstract interface class ExpenseSmallCategoryRepository {
 
   // 全ての小カテゴリーの情報を取得する
-  Future<List<SmallCategoryEntity>> fetchAll();
+  Future<List<ExpenseSmallCategoryEntity>> fetchAll();
 
   /// 小カテゴリー指定で小カテゴリーの情報を取得する
-  Future<SmallCategoryEntity> fetchBySmallCategory({required int smallCategoryId});
+  Future<ExpenseSmallCategoryEntity> fetchBySmallCategory({required int smallCategoryId});
   
   /// 大カテゴリー指定で小カテゴリーのリストを取得する
-  Future<List<SmallCategoryEntity>> fetchByBigCategory({required int bigCategoryId});
+  Future<List<ExpenseSmallCategoryEntity>> fetchByBigCategory({required int bigCategoryId});
 }

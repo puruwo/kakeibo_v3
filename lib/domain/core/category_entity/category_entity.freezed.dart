@@ -26,7 +26,8 @@ mixin _$CategoryEntity {
   int get displaydOrderInBig => throw _privateConstructorUsedError;
   String get smallCategoryName => throw _privateConstructorUsedError;
   int get defaultDisplayed => throw _privateConstructorUsedError;
-  BigCategoryEntity get bigCategoryEntity => throw _privateConstructorUsedError;
+  ExpenseBigCategoryEntity get bigCategoryEntity =>
+      throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -47,9 +48,9 @@ abstract class $CategoryEntityCopyWith<$Res> {
       int displaydOrderInBig,
       String smallCategoryName,
       int defaultDisplayed,
-      BigCategoryEntity bigCategoryEntity});
+      ExpenseBigCategoryEntity bigCategoryEntity});
 
-  $BigCategoryEntityCopyWith<$Res> get bigCategoryEntity;
+  $ExpenseBigCategoryEntityCopyWith<$Res> get bigCategoryEntity;
 }
 
 /// @nodoc
@@ -101,14 +102,15 @@ class _$CategoryEntityCopyWithImpl<$Res, $Val extends CategoryEntity>
       bigCategoryEntity: null == bigCategoryEntity
           ? _value.bigCategoryEntity
           : bigCategoryEntity // ignore: cast_nullable_to_non_nullable
-              as BigCategoryEntity,
+              as ExpenseBigCategoryEntity,
     ) as $Val);
   }
 
   @override
   @pragma('vm:prefer-inline')
-  $BigCategoryEntityCopyWith<$Res> get bigCategoryEntity {
-    return $BigCategoryEntityCopyWith<$Res>(_value.bigCategoryEntity, (value) {
+  $ExpenseBigCategoryEntityCopyWith<$Res> get bigCategoryEntity {
+    return $ExpenseBigCategoryEntityCopyWith<$Res>(_value.bigCategoryEntity,
+        (value) {
       return _then(_value.copyWith(bigCategoryEntity: value) as $Val);
     });
   }
@@ -129,10 +131,10 @@ abstract class _$$CategoryEntityImplCopyWith<$Res>
       int displaydOrderInBig,
       String smallCategoryName,
       int defaultDisplayed,
-      BigCategoryEntity bigCategoryEntity});
+      ExpenseBigCategoryEntity bigCategoryEntity});
 
   @override
-  $BigCategoryEntityCopyWith<$Res> get bigCategoryEntity;
+  $ExpenseBigCategoryEntityCopyWith<$Res> get bigCategoryEntity;
 }
 
 /// @nodoc
@@ -182,7 +184,7 @@ class __$$CategoryEntityImplCopyWithImpl<$Res>
       bigCategoryEntity: null == bigCategoryEntity
           ? _value.bigCategoryEntity
           : bigCategoryEntity // ignore: cast_nullable_to_non_nullable
-              as BigCategoryEntity,
+              as ExpenseBigCategoryEntity,
     ));
   }
 }
@@ -216,7 +218,7 @@ class _$CategoryEntityImpl implements _CategoryEntity {
   @override
   final int defaultDisplayed;
   @override
-  final BigCategoryEntity bigCategoryEntity;
+  final ExpenseBigCategoryEntity bigCategoryEntity;
 
   @override
   String toString() {
@@ -278,7 +280,7 @@ abstract class _CategoryEntity implements CategoryEntity {
           required final int displaydOrderInBig,
           required final String smallCategoryName,
           required final int defaultDisplayed,
-          required final BigCategoryEntity bigCategoryEntity}) =
+          required final ExpenseBigCategoryEntity bigCategoryEntity}) =
       _$CategoryEntityImpl;
 
   factory _CategoryEntity.fromJson(Map<String, dynamic> json) =
@@ -297,7 +299,7 @@ abstract class _CategoryEntity implements CategoryEntity {
   @override
   int get defaultDisplayed;
   @override
-  BigCategoryEntity get bigCategoryEntity;
+  ExpenseBigCategoryEntity get bigCategoryEntity;
   @override
   @JsonKey(ignore: true)
   _$$CategoryEntityImplCopyWith<_$CategoryEntityImpl> get copyWith =>

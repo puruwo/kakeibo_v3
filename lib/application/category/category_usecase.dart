@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kakeibo/domain/category_entity/category_entity.dart';
-import 'package:kakeibo/domain/tbl201/small_category_repository.dart';
-import 'package:kakeibo/domain/tbl202/big_category_repository.dart';
+import 'package:kakeibo/domain/core/category_entity/category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 
 final categoryUsecaseProvider = Provider<CategoryUsecase>(
   CategoryUsecase.new,
@@ -14,10 +14,10 @@ class CategoryUsecase {
   final Ref _ref;
 
   // ゲッターを使うことで、呼び出されるたびに _ref.read() が実行され、状態が最新化される
-  SmallCategoryRepository get _smallCategoryRepositoryProvider =>
-      _ref.read(smallCategoryRepositoryProvider);
-  BigCategoryRepository get _bigCategoryRepositoryProvider =>
-      _ref.read(bigCategoryRepositoryProvider);
+  ExpenseSmallCategoryRepository get _smallCategoryRepositoryProvider =>
+      _ref.read(expenseSmallCategoryRepositoryProvider);
+  ExpenseBigCategoryRepository get _bigCategoryRepositoryProvider =>
+      _ref.read(expensebigCategoryRepositoryProvider);
 
   /// [fetchAll] メソッドは、全ての小カテゴリー情報を取得し、それに関連する大カテゴリー情報を取得して、最終的に
   /// カテゴリー情報をまとめて返す

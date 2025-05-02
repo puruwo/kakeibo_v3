@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'big_category_entity.dart';
+part of 'expense_big_category_entity.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator

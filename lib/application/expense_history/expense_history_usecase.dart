@@ -1,14 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:collection/collection.dart';
-import 'package:kakeibo/domain/expense_history_tile_value/expense_history_tile_group_value.dart';
+import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_group_value.dart';
 import 'dart:collection';
 
-import 'package:kakeibo/domain/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
-import 'package:kakeibo/domain/tbl001/expense_repository.dart';
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain/tbl201/small_category_repository.dart';
-import 'package:kakeibo/domain/tbl202/big_category_repository.dart';
+import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final expenseHistoryNotifierProvider = AsyncNotifierProvider.family<
@@ -24,10 +24,10 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
   late ExpenseRepository _expenseRepositoryProvider;
 
   // tbl201(小カテゴリー)に関するリポジトリ
-  late SmallCategoryRepository _smallCategoryRepository;
+  late ExpenseSmallCategoryRepository _smallCategoryRepository;
 
   // tbl202(大カテゴリー)に関するリポジトリ
-  late BigCategoryRepository _bigCategoryRepository;
+  late ExpenseBigCategoryRepository _bigCategoryRepository;
 
   @override
   Future<List<ExpenseHistoryTileGroupValue>> build(
@@ -38,9 +38,9 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
 
     _expenseRepositoryProvider = ref.read(expenseRepositoryProvider);
 
-    _smallCategoryRepository = ref.read(smallCategoryRepositoryProvider);
+    _smallCategoryRepository = ref.read(expenseSmallCategoryRepositoryProvider);
 
-    _bigCategoryRepository = ref.read(bigCategoryRepositoryProvider);
+    _bigCategoryRepository = ref.read(expensebigCategoryRepositoryProvider);
 
     return fetch(selectedMonthPeriod: selectedMonthPeriod);
   }

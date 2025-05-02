@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
-import 'package:kakeibo/domain/daily_expense_entity/daily_expense_entity.dart';
-import 'package:kakeibo/domain/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
+import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 
 DatabaseHelper db = DatabaseHelper.instance;

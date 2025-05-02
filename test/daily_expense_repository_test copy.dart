@@ -1,7 +1,7 @@
 // test/implements_daily_expense_repository_test.dart
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
-import 'package:kakeibo/domain/daily_expense_entity/daily_expense_entity.dart';
+import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
 import 'package:kakeibo/repository/daily_expense_repository.dart';
 import 'fake_datebase_helper/fake_database_helper.dart';
 

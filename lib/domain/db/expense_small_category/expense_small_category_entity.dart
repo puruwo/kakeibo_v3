@@ -2,17 +2,17 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kakeibo/model/database_helper.dart';
 
 //Freezedで生成されるデータクラス
-part 'small_category_entity.freezed.dart';
+part 'expense_small_category_entity.freezed.dart';
 //jsonを変換する処理が生成されるクラス
-part 'small_category_entity.g.dart';
+part 'expense_small_category_entity.g.dart';
 
 DatabaseHelper db = DatabaseHelper.instance;
 
 @freezed
-class SmallCategoryEntity with _$SmallCategoryEntity {
-  const SmallCategoryEntity._();
+class ExpenseSmallCategoryEntity with _$ExpenseSmallCategoryEntity {
+  const ExpenseSmallCategoryEntity._();
 
-  const factory SmallCategoryEntity({
+  const factory ExpenseSmallCategoryEntity({
     required int id,
     required int smallCategoryOrderKey,
     required int bigCategoryKey,
@@ -22,8 +22,8 @@ class SmallCategoryEntity with _$SmallCategoryEntity {
   }) = _SmallCategoryEntity;
 
   @override
-  factory SmallCategoryEntity.fromJson(Map<String, dynamic> json) =>
-      _$SmallCategoryEntityFromJson(json);
+  factory ExpenseSmallCategoryEntity.fromJson(Map<String, dynamic> json) =>
+      _$ExpenseSmallCategoryEntityFromJson(json);
 
   update() {
     print(

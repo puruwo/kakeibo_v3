@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 
 import 'expense_entity.dart';
 

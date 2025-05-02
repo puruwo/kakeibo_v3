@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/properties.dart';
-import 'package:kakeibo/domain/calendar_day_entity/calendar_tile_entity.dart';
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 
-import 'package:kakeibo/domain/daily_expense_entity/daily_expense_entity.dart';
-import 'package:kakeibo/domain/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
+import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final calendarUsecaseNotifierProvider =

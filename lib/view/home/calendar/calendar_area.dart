@@ -7,7 +7,7 @@ import 'package:logger/logger.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/constant/colors.dart';
 
-import 'package:kakeibo/domain/calendar_day_entity/calendar_tile_entity.dart';
+import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 
 import 'package:kakeibo/view/home/calendar/date_box.dart';
 

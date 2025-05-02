@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kakeibo/domain/category_card_entity/category_card_entity.dart';
-import 'package:kakeibo/domain/category_accounting_entity/category_accounting_repository.dart';
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_repository.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
+import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final monthlyCategoryCardNotifierProvider = AsyncNotifierProvider.family<MonthlyCategoryCardUsecaseNotifier,List<CategoryCardEntity>,MonthPeriodValue>(

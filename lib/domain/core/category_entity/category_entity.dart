@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 
 //Freezedで生成されるデータクラス
 part 'category_entity.freezed.dart';
@@ -15,7 +15,7 @@ class CategoryEntity with _$CategoryEntity {
     required int displaydOrderInBig,
     required String smallCategoryName,
     required int defaultDisplayed,
-    required BigCategoryEntity bigCategoryEntity,
+    required ExpenseBigCategoryEntity bigCategoryEntity,
   }) = _CategoryEntity;
 
   @override

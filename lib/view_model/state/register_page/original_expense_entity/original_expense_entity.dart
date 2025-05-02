@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:kakeibo/domain/tbl001/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'original_expense_entity.g.dart';

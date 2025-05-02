@@ -1,5 +1,5 @@
-import 'package:kakeibo/domain/category_entity/category_entity.dart';
-import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
+import 'package:kakeibo/domain/core/category_entity/category_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'select_category_controller.g.dart';
@@ -8,7 +8,7 @@ part 'select_category_controller.g.dart';
 class SelectCategoryControllerNotifier extends _$SelectCategoryControllerNotifier {
   @override
   CategoryEntity build() {
-    const big = BigCategoryEntity(
+    const big = ExpenseBigCategoryEntity(
       id: -1,
       colorCode: '',
       bigCategoryName: '',

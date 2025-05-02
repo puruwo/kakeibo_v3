@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kakeibo/domain/all_category_card_entity/all_category_card_entity.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 
-import 'package:kakeibo/domain/all_category_accounting_entity/all_category_accounting_repository.dart';
-import 'package:kakeibo/domain/category_accounting_entity/category_accounting_repository.dart';
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/core/all_category_accounting_entity/all_category_accounting_repository.dart';
+import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final monthlyAllCategoryCardNotifierProvider = 

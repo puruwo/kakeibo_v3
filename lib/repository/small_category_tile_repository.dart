@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
-import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_entity.dart';
-import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_repository.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 
 //DatabaseHelperの初期化

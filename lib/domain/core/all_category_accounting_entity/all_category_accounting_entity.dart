@@ -6,7 +6,7 @@ part 'all_category_accounting_entity.freezed.dart';
 part 'all_category_accounting_entity.g.dart';
 
 
-// 前カテゴリーの月毎の支出と予算のentity
+// 全カテゴリーの月毎の支出と予算のentity
 @freezed
 class AllCategoryAccountingEntity with _$AllCategoryAccountingEntity {
   const factory AllCategoryAccountingEntity({

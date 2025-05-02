@@ -1,6 +1,6 @@
 // test/implements_daily_expense_repository_test.dart
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'fake_fetch_previous_month_period.dart';
 
 void main() {

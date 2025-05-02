@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
-import 'package:kakeibo/domain/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain/tbl001/expense_entity.dart';
-import 'package:kakeibo/domain/tbl001/expense_repository.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/providerLogger.dart';
 

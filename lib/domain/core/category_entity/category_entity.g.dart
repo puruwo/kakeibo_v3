@@ -14,7 +14,7 @@ _$CategoryEntityImpl _$$CategoryEntityImplFromJson(Map<String, dynamic> json) =>
       displaydOrderInBig: (json['displaydOrderInBig'] as num).toInt(),
       smallCategoryName: json['smallCategoryName'] as String,
       defaultDisplayed: (json['defaultDisplayed'] as num).toInt(),
-      bigCategoryEntity: BigCategoryEntity.fromJson(
+      bigCategoryEntity: ExpenseBigCategoryEntity.fromJson(
           json['bigCategoryEntity'] as Map<String, dynamic>),
     );
 

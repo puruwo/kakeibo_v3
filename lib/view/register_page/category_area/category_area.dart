@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
-import 'package:kakeibo/domain/category_entity/category_entity.dart';
+import 'package:kakeibo/domain/core/category_entity/category_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';

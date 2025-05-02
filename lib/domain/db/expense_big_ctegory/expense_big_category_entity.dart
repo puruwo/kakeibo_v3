@@ -3,17 +3,17 @@ import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/tableNameKey.dart';
 
 //Freezedで生成されるデータクラス
-part 'big_category_entity.freezed.dart';
+part 'expense_big_category_entity.freezed.dart';
 //jsonを変換する処理が生成されるクラス
-part 'big_category_entity.g.dart';
+part 'expense_big_category_entity.g.dart';
 
 DatabaseHelper db = DatabaseHelper.instance;
 
 @freezed
-class BigCategoryEntity with _$BigCategoryEntity {
-  const BigCategoryEntity._();
+class ExpenseBigCategoryEntity with _$ExpenseBigCategoryEntity {
+  const ExpenseBigCategoryEntity._();
 
-  const factory BigCategoryEntity({
+  const factory ExpenseBigCategoryEntity({
     required int id,
     required String colorCode,
     required String bigCategoryName,
@@ -23,8 +23,8 @@ class BigCategoryEntity with _$BigCategoryEntity {
   }) = _BigCategoryEntity;
 
   @override
-  factory BigCategoryEntity.fromJson(Map<String, dynamic> json) =>
-      _$BigCategoryEntityFromJson(json);
+  factory ExpenseBigCategoryEntity.fromJson(Map<String, dynamic> json) =>
+      _$ExpenseBigCategoryEntityFromJson(json);
 
   update(){
     print('id: $id,smallCategoryKey: $colorCode,bigCategoryKey: $bigCategoryName,categoryName: $resourcePath,defaultDisplayed: $displayOrder,isDisplayed:$isDisplayedを登録しました');

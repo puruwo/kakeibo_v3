@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 
-import 'package:kakeibo/domain/tbl001/expense_entity.dart';
-import 'package:kakeibo/domain/tbl001/expense_repository.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 
 final expenseNotifierProvider = Provider<ExpenseUsecase>(

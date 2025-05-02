@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/domain/tbl001/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';

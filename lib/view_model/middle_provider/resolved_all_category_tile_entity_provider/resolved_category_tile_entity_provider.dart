@@ -1,6 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/monthly_category_card/moothly_category_card_usecase.dart';
-import 'package:kakeibo/domain/category_card_entity/category_card_entity.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
 
 final resolvedAllCategoryTileEntityProvider =

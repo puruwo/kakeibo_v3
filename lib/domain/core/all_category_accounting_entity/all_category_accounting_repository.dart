@@ -5,7 +5,7 @@ import 'all_category_accounting_entity.dart';
 /// 月次の全カテゴリーの支出のリポジトリプロバイダー
 /// アプリ起動時 or テスト時に本プロバイダーを override して使用してください
 final allCategoryAccountingRepositoryProvider = Provider<AllCategoryAccountingRepository>(
-  (_) => throw UnimplementedError("allCategoryProviderの実装がされていません。"),
+  (_) => throw UnimplementedError("allCategoryAccountingProviderの実装がされていません。"),
 );
 
 abstract interface class AllCategoryAccountingRepository {

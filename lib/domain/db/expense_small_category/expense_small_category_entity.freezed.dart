@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'small_category_entity.dart';
+part of 'expense_small_category_entity.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -14,12 +14,13 @@ T _$identity<T>(T value) => value;
 final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
-SmallCategoryEntity _$SmallCategoryEntityFromJson(Map<String, dynamic> json) {
+ExpenseSmallCategoryEntity _$ExpenseSmallCategoryEntityFromJson(
+    Map<String, dynamic> json) {
   return _SmallCategoryEntity.fromJson(json);
 }
 
 /// @nodoc
-mixin _$SmallCategoryEntity {
+mixin _$ExpenseSmallCategoryEntity {
   int get id => throw _privateConstructorUsedError;
   int get smallCategoryOrderKey => throw _privateConstructorUsedError;
   int get bigCategoryKey => throw _privateConstructorUsedError;
@@ -29,15 +30,16 @@ mixin _$SmallCategoryEntity {
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
-  $SmallCategoryEntityCopyWith<SmallCategoryEntity> get copyWith =>
-      throw _privateConstructorUsedError;
+  $ExpenseSmallCategoryEntityCopyWith<ExpenseSmallCategoryEntity>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $SmallCategoryEntityCopyWith<$Res> {
-  factory $SmallCategoryEntityCopyWith(
-          SmallCategoryEntity value, $Res Function(SmallCategoryEntity) then) =
-      _$SmallCategoryEntityCopyWithImpl<$Res, SmallCategoryEntity>;
+abstract class $ExpenseSmallCategoryEntityCopyWith<$Res> {
+  factory $ExpenseSmallCategoryEntityCopyWith(ExpenseSmallCategoryEntity value,
+          $Res Function(ExpenseSmallCategoryEntity) then) =
+      _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
+          ExpenseSmallCategoryEntity>;
   @useResult
   $Res call(
       {int id,
@@ -49,9 +51,10 @@ abstract class $SmallCategoryEntityCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$SmallCategoryEntityCopyWithImpl<$Res, $Val extends SmallCategoryEntity>
-    implements $SmallCategoryEntityCopyWith<$Res> {
-  _$SmallCategoryEntityCopyWithImpl(this._value, this._then);
+class _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
+        $Val extends ExpenseSmallCategoryEntity>
+    implements $ExpenseSmallCategoryEntityCopyWith<$Res> {
+  _$ExpenseSmallCategoryEntityCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -99,7 +102,7 @@ class _$SmallCategoryEntityCopyWithImpl<$Res, $Val extends SmallCategoryEntity>
 
 /// @nodoc
 abstract class _$$SmallCategoryEntityImplCopyWith<$Res>
-    implements $SmallCategoryEntityCopyWith<$Res> {
+    implements $ExpenseSmallCategoryEntityCopyWith<$Res> {
   factory _$$SmallCategoryEntityImplCopyWith(_$SmallCategoryEntityImpl value,
           $Res Function(_$SmallCategoryEntityImpl) then) =
       __$$SmallCategoryEntityImplCopyWithImpl<$Res>;
@@ -116,7 +119,8 @@ abstract class _$$SmallCategoryEntityImplCopyWith<$Res>
 
 /// @nodoc
 class __$$SmallCategoryEntityImplCopyWithImpl<$Res>
-    extends _$SmallCategoryEntityCopyWithImpl<$Res, _$SmallCategoryEntityImpl>
+    extends _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
+        _$SmallCategoryEntityImpl>
     implements _$$SmallCategoryEntityImplCopyWith<$Res> {
   __$$SmallCategoryEntityImplCopyWithImpl(_$SmallCategoryEntityImpl _value,
       $Res Function(_$SmallCategoryEntityImpl) _then)
@@ -191,7 +195,7 @@ class _$SmallCategoryEntityImpl extends _SmallCategoryEntity {
 
   @override
   String toString() {
-    return 'SmallCategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displayedOrderInBig: $displayedOrderInBig, smallCategoryName: $smallCategoryName, defaultDisplayed: $defaultDisplayed)';
+    return 'ExpenseSmallCategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displayedOrderInBig: $displayedOrderInBig, smallCategoryName: $smallCategoryName, defaultDisplayed: $defaultDisplayed)';
   }
 
   @override
@@ -232,7 +236,7 @@ class _$SmallCategoryEntityImpl extends _SmallCategoryEntity {
   }
 }
 
-abstract class _SmallCategoryEntity extends SmallCategoryEntity {
+abstract class _SmallCategoryEntity extends ExpenseSmallCategoryEntity {
   const factory _SmallCategoryEntity(
       {required final int id,
       required final int smallCategoryOrderKey,

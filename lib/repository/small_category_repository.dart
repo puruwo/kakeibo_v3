@@ -1,15 +1,15 @@
-import 'package:kakeibo/domain/tbl201/small_category_entity.dart';
-import 'package:kakeibo/domain/tbl201/small_category_repository.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/providerLogger.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
+class ImplementsSmallCategoryRepository implements ExpenseSmallCategoryRepository {
   // カテゴリーNumberを指定して取得する
   @override
-  Future<SmallCategoryEntity> fetchBySmallCategory(
+  Future<ExpenseSmallCategoryEntity> fetchBySmallCategory(
       {required int smallCategoryId}) async {
     final sql = '''
       SELECT 
@@ -26,12 +26,12 @@ class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
     try {
       final jsonList = await db.query(sql);
 
-      final results = SmallCategoryEntity.fromJson(jsonList[0]);
+      final results = ExpenseSmallCategoryEntity.fromJson(jsonList[0]);
 
       return results;
     } catch (e) {
       logger.e('[FAIL]: $e');
-      return const SmallCategoryEntity(
+      return const ExpenseSmallCategoryEntity(
         id: 0,
         smallCategoryOrderKey: 0,
         bigCategoryKey: 0,
@@ -43,7 +43,7 @@ class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
   }
 
   @override
-  Future<List<SmallCategoryEntity>> fetchAll() async {
+  Future<List<ExpenseSmallCategoryEntity>> fetchAll() async {
     const sql = '''
       SELECT 
         a._id AS id,
@@ -60,14 +60,14 @@ class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
 
     // 取得したjsonListをSmallCategoryEntityのリストに変換
     final result = jsonList.map((e) {
-      return SmallCategoryEntity.fromJson(e);
+      return ExpenseSmallCategoryEntity.fromJson(e);
     }).toList();
 
     return result;
   }
 
   @override
-  Future<List<SmallCategoryEntity>> fetchByBigCategory(
+  Future<List<ExpenseSmallCategoryEntity>> fetchByBigCategory(
       {required int bigCategoryId}) {
     // TODO: implement fetchByBigCategory
     throw UnimplementedError();

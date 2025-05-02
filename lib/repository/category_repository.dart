@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
-import 'package:kakeibo/domain/category_accounting_entity/category_accounting_repository.dart';
-import 'package:kakeibo/domain/category_accounting_entity/category_accounting_entity.dart';
+import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
+import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/model/database_helper.dart';
 
 //DatabaseHelperの初期化

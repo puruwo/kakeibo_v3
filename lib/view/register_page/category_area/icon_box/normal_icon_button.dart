@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kakeibo/domain/category_entity/category_entity.dart';
+import 'package:kakeibo/domain/core/category_entity/category_entity.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';

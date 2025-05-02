@@ -1,22 +1,22 @@
-import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
-import 'package:kakeibo/domain/tbl202/big_category_repository.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/providerLogger.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsBigCategoryRepository implements BigCategoryRepository {
+class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
   
   @override
-  Future<BigCategoryEntity> fetchAll() {
+  Future<ExpenseBigCategoryEntity> fetchAll() {
     // TODO: implement fetchAll
     throw UnimplementedError();
   }
 
   // カテゴリーを指定しないで取得する
   @override
-  Future<BigCategoryEntity> fetchByBigCategory({required int bigCategoryId}) async {
+  Future<ExpenseBigCategoryEntity> fetchByBigCategory({required int bigCategoryId}) async {
 
     final sql = '''
       SELECT 
@@ -33,13 +33,13 @@ class ImplementsBigCategoryRepository implements BigCategoryRepository {
     try {
       final jsonList = await db.query(sql);
 
-      final results = BigCategoryEntity.fromJson(jsonList[0]);
+      final results = ExpenseBigCategoryEntity.fromJson(jsonList[0]);
 
       return results;
     } catch (e) {
 
       logger.e('[FAIL]: $e');
-      return const BigCategoryEntity(
+      return const ExpenseBigCategoryEntity(
         id: 0,
         colorCode: '',
         bigCategoryName: '',

@@ -6,14 +6,14 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/domain/category_accounting_entity/category_accounting_entity.dart';
-import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_entity.dart';
+import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 
-import 'package:kakeibo/domain/category_card_entity/category_card_entity.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 
 class CategoryTile extends HookConsumerWidget {
   const CategoryTile({required this.categoryTile, super.key});
