@@ -5,7 +5,7 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 
-final expenseNotifierProvider = Provider<ExpenseUsecase>(
+final expenseUsecaseProvider = Provider<ExpenseUsecase>(
   ExpenseUsecase.new,
 );
 
@@ -54,5 +54,10 @@ class ExpenseUsecase {
 
     // tbl001にデータを追加する
     _expenseRepositoryProvider.update(editEntity);
+  }
+
+  Future<void> delete({required int id}) async {
+    // tbl001にデータを削除する
+    _expenseRepositoryProvider.delete(id);
   }
 }

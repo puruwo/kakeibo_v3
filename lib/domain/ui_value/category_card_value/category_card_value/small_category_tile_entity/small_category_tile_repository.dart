@@ -5,7 +5,7 @@ import 'small_category_tile_entity.dart';
 /// 月次の各小カテゴリー情報のリポジトリプロバイダー
 /// アプリ起動時 or テスト時に本プロバイダーを override して使用してください
 final smallCategoryTileRepositoryProvider = Provider<SmallCategoryTileRepository>(
-  (_) => throw UnimplementedError("SmallCategoryRepositoryの実装がされていません。"),
+  (_) => throw UnimplementedError("SmallCategoryTileRepositoryの実装がされていません。"),
 );
 
 abstract interface class SmallCategoryTileRepository {

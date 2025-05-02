@@ -20,7 +20,7 @@ class SubmitExpenseButton extends ConsumerWidget with PresentationMixin {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // expenseEntityを扱うusecase
-    final expenseUsecase = ref.read(expenseNotifierProvider);
+    final expenseUsecase = ref.read(expenseUsecaseProvider);
 
     // originalExpenseEntityを取得
     final original = ref.watch(originalExpenseEntityNotifierProvider);

@@ -17,7 +17,7 @@ import 'package:kakeibo/repository/small_category_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
 
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
-import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_repository.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/repository/category_repository.dart';
 
 void main() {
