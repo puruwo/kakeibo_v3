@@ -8,7 +8,7 @@ import 'package:kakeibo/domain/expense_history_tile_value/expense_history_tile_v
 import 'package:kakeibo/domain/tbl001/expense_entity.dart';
 import 'package:kakeibo/repository/tbl001_record/tbl001_record.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/page/register_page/torok.dart';
+import 'package:kakeibo/view/register_page/torok.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class ExpenseHistoryTile extends StatelessWidget {

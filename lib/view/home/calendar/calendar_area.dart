@@ -9,7 +9,7 @@ import 'package:kakeibo/constant/colors.dart';
 
 import 'package:kakeibo/domain/calendar_day_entity/calendar_tile_entity.dart';
 
-import 'package:kakeibo/view/organism/calendar/date_box.dart';
+import 'package:kakeibo/view/home/calendar/date_box.dart';
 
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';

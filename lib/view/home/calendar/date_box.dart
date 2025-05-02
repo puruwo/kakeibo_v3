@@ -6,7 +6,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/calendar_day_entity/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/tbl001/expense_entity.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/page/register_page/torok.dart';
+import 'package:kakeibo/view/register_page/torok.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';

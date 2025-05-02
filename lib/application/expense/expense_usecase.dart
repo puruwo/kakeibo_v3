@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/domain/app_exception.dart';
+import 'package:kakeibo/view/component/app_exception.dart';
 
 import 'package:kakeibo/domain/tbl001/expense_entity.dart';
 import 'package:kakeibo/domain/tbl001/expense_repository.dart';

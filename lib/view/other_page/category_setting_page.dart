@@ -17,8 +17,8 @@ import 'package:kakeibo/model/tableNameKey.dart';
 
 import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
-import 'package:kakeibo/view/molecule/icon_button%20copy.dart';
-import 'package:kakeibo/view/page/small_category_edit_page.dart';
+import 'package:kakeibo/view/other_page/check_box.dart';
+import 'package:kakeibo/view/other_page/small_category_edit_page.dart';
 
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';

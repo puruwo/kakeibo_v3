@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/domain/app_exception.dart';
+import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 

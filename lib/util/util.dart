@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:kakeibo/view_model/reference_day_impl.dart';
 
 

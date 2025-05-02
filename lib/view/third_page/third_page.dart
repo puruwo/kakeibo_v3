@@ -4,24 +4,18 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
 
+/// Local imports
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/atom/next_arrow_button.dart';
-import 'package:kakeibo/view/atom/previous_arrow_button.dart';
-import 'package:kakeibo/view/organism/third_page/all_category_tile_area.dart';
-import 'package:kakeibo/view/organism/third_page/category_tile_area.dart';
-import 'package:kakeibo/view/page/category_setting_page.dart';
+import 'package:kakeibo/view/third_page/next_arrow_button.dart';
+import 'package:kakeibo/view/third_page/previous_arrow_button.dart';
+import 'package:kakeibo/view/third_page/tile/all_category_tile_area.dart';
+import 'package:kakeibo/view/third_page/tile/category_tile_area.dart';
+import 'package:kakeibo/view/other_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
-
 import 'package:kakeibo/constant/colors.dart';
-
-/// Local imports
-import 'package:kakeibo/view/page/budget_setting_page.dart';
-
-import 'package:kakeibo/view/organism/prediction_graph.dart';
-
-import 'package:kakeibo/view/molecule/calendar_month_display.dart';
-
+import 'package:kakeibo/view/other_page/budget_setting_page.dart';
+import 'package:kakeibo/view/third_page/prediction_graph.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class Third extends ConsumerStatefulWidget {
@@ -68,7 +62,7 @@ class _ThirdState extends ConsumerState<Third> {
                 Consumer(builder: (context, ref, _) {
                   final activeDt = ref.watch(selectedDatetimeNotifierProvider);
                   final label = labelGetter(activeDt);
-                  return CalendarMonthDisplay(label: label);
+                  return Text(label,style: const TextStyle(color: MyColors.white,fontSize: 20),);
                 }),
                 //左矢印ボタン、押すと次の月に移動
                 const NextArrowButton(),
