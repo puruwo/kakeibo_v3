@@ -5,10 +5,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
+import 'package:kakeibo/domain/tbl001/expense_entity.dart';
 import 'package:kakeibo/repository/tbl001_record/tbl001_record.dart';
-import 'package:kakeibo/repository/torok_record/torok_record.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/page/torok.dart';
+import 'package:kakeibo/view/page/register_page/torok.dart';
+import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class ExpenseHistoryTile extends StatelessWidget {
   const ExpenseHistoryTile({super.key,
@@ -58,6 +59,14 @@ class ExpenseHistoryTile extends StatelessWidget {
                               context: context,
                               // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
                               builder: (context) {
+                                ExpenseEntity expenseEntity = ExpenseEntity(
+                                  id: tileValue.id,
+                                  date: DateFormat('yyyyMMdd').format(tileValue.date),
+                                  price: tileValue.price,
+                                  paymentCategoryId: tileValue.paymentCategoryId,
+                                  memo: tileValue.memo,
+                                );
+
                                 return MaterialApp(
                                   debugShowCheckedModeBanner: false,
                                   theme: ThemeData.dark(),
@@ -67,17 +76,9 @@ class ExpenseHistoryTile extends StatelessWidget {
                                     // テキストサイズの制御
                                     minScaleFactor: 0.7,
                                     maxScaleFactor: 0.95,
-                                    child: Torok.origin(
-                                      torokRecord: TorokRecord(
-                                          date:
-                                              DateFormat('yyyyMMdd').format(tileValue.date),
-                                          id: tileValue.id,
-                                          price:
-                                              tileValue.price,
-                                          memo:
-                                              tileValue.memo,
-                                          categoryOrderKey: tileValue.paymentCategoryId,),
-                                      screenMode: 1,
+                                    child: Torok(
+                                      expenseEntity: expenseEntity,
+                                      mode: RegisterScreenMode.edit,
                                     ),
                                   ),
                                 );

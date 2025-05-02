@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/domain/all_category_tile_entity/all_category_tile_entity.dart';
+import 'package:kakeibo/domain/all_category_card_entity/all_category_card_entity.dart';
 
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
@@ -15,7 +15,7 @@ class AllCategorySumTile extends HookConsumerWidget {
   const AllCategorySumTile(
       {required this.allCategoryTileEntity,super.key});
 
-  final AllCategoryTileEntity allCategoryTileEntity;
+  final AllCategoryCardEntity allCategoryTileEntity;
 
   // 横棒グラフのフレームサイズ
   final double barFrameWidth = 280.0;

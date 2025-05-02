@@ -9,21 +9,23 @@ part of 'category_entity.dart';
 _$CategoryEntityImpl _$$CategoryEntityImplFromJson(Map<String, dynamic> json) =>
     _$CategoryEntityImpl(
       id: (json['id'] as num?)?.toInt() ?? 0,
-      categoryColor: json['categoryColor'] as String,
-      bigCategoryName: json['bigCategoryName'] as String,
-      categoryIconPath: json['categoryIconPath'] as String,
-      budget: (json['budget'] as num?)?.toInt() ?? 0,
-      totalExpenseByBigCategory:
-          (json['totalExpenseByBigCategory'] as num?)?.toInt() ?? 0,
+      smallCategoryOrderKey: (json['smallCategoryOrderKey'] as num).toInt(),
+      bigCategoryKey: (json['bigCategoryKey'] as num).toInt(),
+      displaydOrderInBig: (json['displaydOrderInBig'] as num).toInt(),
+      smallCategoryName: json['smallCategoryName'] as String,
+      defaultDisplayed: (json['defaultDisplayed'] as num).toInt(),
+      bigCategoryEntity: BigCategoryEntity.fromJson(
+          json['bigCategoryEntity'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$CategoryEntityImplToJson(
         _$CategoryEntityImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'categoryColor': instance.categoryColor,
-      'bigCategoryName': instance.bigCategoryName,
-      'categoryIconPath': instance.categoryIconPath,
-      'budget': instance.budget,
-      'totalExpenseByBigCategory': instance.totalExpenseByBigCategory,
+      'smallCategoryOrderKey': instance.smallCategoryOrderKey,
+      'bigCategoryKey': instance.bigCategoryKey,
+      'displaydOrderInBig': instance.displaydOrderInBig,
+      'smallCategoryName': instance.smallCategoryName,
+      'defaultDisplayed': instance.defaultDisplayed,
+      'bigCategoryEntity': instance.bigCategoryEntity,
     };

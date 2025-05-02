@@ -10,6 +10,9 @@ final bigCategoryRepositoryProvider = Provider<BigCategoryRepository>(
 /// tbl202(大カテゴリー)に関するリポジトリ
 abstract interface class BigCategoryRepository {
 
-  /// カテゴリーidを指定してレコードを取得する
-  Future<BigCategoryEntity> fetch({required int id});
+ // 全ての大カテゴリーの情報を取得する
+  Future<BigCategoryEntity> fetchAll();
+
+  /// 大カテゴリー指定で大カテゴリーのリストを取得する
+  Future<BigCategoryEntity> fetchByBigCategory({required int bigCategoryId});
 }

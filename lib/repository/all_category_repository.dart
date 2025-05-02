@@ -1,15 +1,15 @@
 import 'package:intl/intl.dart';
-import 'package:kakeibo/domain/all_category_entity/all_category_entity.dart';
-import 'package:kakeibo/domain/all_category_entity/all_category_repository.dart';
+import 'package:kakeibo/domain/all_category_accounting_entity/all_category_accounting_entity.dart';
+import 'package:kakeibo/domain/all_category_accounting_entity/all_category_accounting_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsAllCategoryRepository implements AllCategoryRepository {
+class ImplementsAllCategoryAccountingRepository implements AllCategoryAccountingRepository {
 
   @override
-  Future<AllCategoryEntity> fetch({required DateTime fromDate, required DateTime toDate}) async {
+  Future<AllCategoryAccountingEntity> fetch({required DateTime fromDate, required DateTime toDate}) async {
     final sqlForExpence = '''
             SELECT COALESCE(SUM(price),0) as totalExpense FROM TBL001 
             WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)} 
@@ -43,6 +43,6 @@ class ImplementsAllCategoryRepository implements AllCategoryRepository {
       ...budgetMapList[0].isEmpty ? {'totalBudget': 0} : budgetMapList[0],
     };
 
-    return AllCategoryEntity.fromJson(mergedMap);
+    return AllCategoryAccountingEntity.fromJson(mergedMap);
   }
 }

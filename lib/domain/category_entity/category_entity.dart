@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kakeibo/domain/tbl202/big_category_entity.dart';
 
 //Freezedで生成されるデータクラス
 part 'category_entity.freezed.dart';
@@ -9,11 +10,12 @@ part 'category_entity.g.dart';
 class CategoryEntity with _$CategoryEntity {
   const factory CategoryEntity({
     @Default(0) int id,
-    required String categoryColor,
-    required String bigCategoryName,
-    required String categoryIconPath,
-    @Default(0) int budget,
-    @Default(0) int totalExpenseByBigCategory,
+    required int smallCategoryOrderKey,
+    required int bigCategoryKey,
+    required int displaydOrderInBig,
+    required String smallCategoryName,
+    required int defaultDisplayed,
+    required BigCategoryEntity bigCategoryEntity,
   }) = _CategoryEntity;
 
   @override

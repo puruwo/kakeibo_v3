@@ -21,11 +21,12 @@ CategoryEntity _$CategoryEntityFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$CategoryEntity {
   int get id => throw _privateConstructorUsedError;
-  String get categoryColor => throw _privateConstructorUsedError;
-  String get bigCategoryName => throw _privateConstructorUsedError;
-  String get categoryIconPath => throw _privateConstructorUsedError;
-  int get budget => throw _privateConstructorUsedError;
-  int get totalExpenseByBigCategory => throw _privateConstructorUsedError;
+  int get smallCategoryOrderKey => throw _privateConstructorUsedError;
+  int get bigCategoryKey => throw _privateConstructorUsedError;
+  int get displaydOrderInBig => throw _privateConstructorUsedError;
+  String get smallCategoryName => throw _privateConstructorUsedError;
+  int get defaultDisplayed => throw _privateConstructorUsedError;
+  BigCategoryEntity get bigCategoryEntity => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -41,11 +42,14 @@ abstract class $CategoryEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      String categoryColor,
-      String bigCategoryName,
-      String categoryIconPath,
-      int budget,
-      int totalExpenseByBigCategory});
+      int smallCategoryOrderKey,
+      int bigCategoryKey,
+      int displaydOrderInBig,
+      String smallCategoryName,
+      int defaultDisplayed,
+      BigCategoryEntity bigCategoryEntity});
+
+  $BigCategoryEntityCopyWith<$Res> get bigCategoryEntity;
 }
 
 /// @nodoc
@@ -62,38 +66,51 @@ class _$CategoryEntityCopyWithImpl<$Res, $Val extends CategoryEntity>
   @override
   $Res call({
     Object? id = null,
-    Object? categoryColor = null,
-    Object? bigCategoryName = null,
-    Object? categoryIconPath = null,
-    Object? budget = null,
-    Object? totalExpenseByBigCategory = null,
+    Object? smallCategoryOrderKey = null,
+    Object? bigCategoryKey = null,
+    Object? displaydOrderInBig = null,
+    Object? smallCategoryName = null,
+    Object? defaultDisplayed = null,
+    Object? bigCategoryEntity = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      categoryColor: null == categoryColor
-          ? _value.categoryColor
-          : categoryColor // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      budget: null == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
+      smallCategoryOrderKey: null == smallCategoryOrderKey
+          ? _value.smallCategoryOrderKey
+          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
               as int,
-      totalExpenseByBigCategory: null == totalExpenseByBigCategory
-          ? _value.totalExpenseByBigCategory
-          : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
+      bigCategoryKey: null == bigCategoryKey
+          ? _value.bigCategoryKey
+          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
               as int,
+      displaydOrderInBig: null == displaydOrderInBig
+          ? _value.displaydOrderInBig
+          : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
+              as int,
+      smallCategoryName: null == smallCategoryName
+          ? _value.smallCategoryName
+          : smallCategoryName // ignore: cast_nullable_to_non_nullable
+              as String,
+      defaultDisplayed: null == defaultDisplayed
+          ? _value.defaultDisplayed
+          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+              as int,
+      bigCategoryEntity: null == bigCategoryEntity
+          ? _value.bigCategoryEntity
+          : bigCategoryEntity // ignore: cast_nullable_to_non_nullable
+              as BigCategoryEntity,
     ) as $Val);
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $BigCategoryEntityCopyWith<$Res> get bigCategoryEntity {
+    return $BigCategoryEntityCopyWith<$Res>(_value.bigCategoryEntity, (value) {
+      return _then(_value.copyWith(bigCategoryEntity: value) as $Val);
+    });
   }
 }
 
@@ -107,11 +124,15 @@ abstract class _$$CategoryEntityImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      String categoryColor,
-      String bigCategoryName,
-      String categoryIconPath,
-      int budget,
-      int totalExpenseByBigCategory});
+      int smallCategoryOrderKey,
+      int bigCategoryKey,
+      int displaydOrderInBig,
+      String smallCategoryName,
+      int defaultDisplayed,
+      BigCategoryEntity bigCategoryEntity});
+
+  @override
+  $BigCategoryEntityCopyWith<$Res> get bigCategoryEntity;
 }
 
 /// @nodoc
@@ -126,37 +147,42 @@ class __$$CategoryEntityImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? categoryColor = null,
-    Object? bigCategoryName = null,
-    Object? categoryIconPath = null,
-    Object? budget = null,
-    Object? totalExpenseByBigCategory = null,
+    Object? smallCategoryOrderKey = null,
+    Object? bigCategoryKey = null,
+    Object? displaydOrderInBig = null,
+    Object? smallCategoryName = null,
+    Object? defaultDisplayed = null,
+    Object? bigCategoryEntity = null,
   }) {
     return _then(_$CategoryEntityImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      categoryColor: null == categoryColor
-          ? _value.categoryColor
-          : categoryColor // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      budget: null == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
+      smallCategoryOrderKey: null == smallCategoryOrderKey
+          ? _value.smallCategoryOrderKey
+          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
               as int,
-      totalExpenseByBigCategory: null == totalExpenseByBigCategory
-          ? _value.totalExpenseByBigCategory
-          : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
+      bigCategoryKey: null == bigCategoryKey
+          ? _value.bigCategoryKey
+          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
               as int,
+      displaydOrderInBig: null == displaydOrderInBig
+          ? _value.displaydOrderInBig
+          : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
+              as int,
+      smallCategoryName: null == smallCategoryName
+          ? _value.smallCategoryName
+          : smallCategoryName // ignore: cast_nullable_to_non_nullable
+              as String,
+      defaultDisplayed: null == defaultDisplayed
+          ? _value.defaultDisplayed
+          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+              as int,
+      bigCategoryEntity: null == bigCategoryEntity
+          ? _value.bigCategoryEntity
+          : bigCategoryEntity // ignore: cast_nullable_to_non_nullable
+              as BigCategoryEntity,
     ));
   }
 }
@@ -166,11 +192,12 @@ class __$$CategoryEntityImplCopyWithImpl<$Res>
 class _$CategoryEntityImpl implements _CategoryEntity {
   const _$CategoryEntityImpl(
       {this.id = 0,
-      required this.categoryColor,
-      required this.bigCategoryName,
-      required this.categoryIconPath,
-      this.budget = 0,
-      this.totalExpenseByBigCategory = 0});
+      required this.smallCategoryOrderKey,
+      required this.bigCategoryKey,
+      required this.displaydOrderInBig,
+      required this.smallCategoryName,
+      required this.defaultDisplayed,
+      required this.bigCategoryEntity});
 
   factory _$CategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$CategoryEntityImplFromJson(json);
@@ -179,21 +206,21 @@ class _$CategoryEntityImpl implements _CategoryEntity {
   @JsonKey()
   final int id;
   @override
-  final String categoryColor;
+  final int smallCategoryOrderKey;
   @override
-  final String bigCategoryName;
+  final int bigCategoryKey;
   @override
-  final String categoryIconPath;
+  final int displaydOrderInBig;
   @override
-  @JsonKey()
-  final int budget;
+  final String smallCategoryName;
   @override
-  @JsonKey()
-  final int totalExpenseByBigCategory;
+  final int defaultDisplayed;
+  @override
+  final BigCategoryEntity bigCategoryEntity;
 
   @override
   String toString() {
-    return 'CategoryEntity(id: $id, categoryColor: $categoryColor, bigCategoryName: $bigCategoryName, categoryIconPath: $categoryIconPath, budget: $budget, totalExpenseByBigCategory: $totalExpenseByBigCategory)';
+    return 'CategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displaydOrderInBig: $displaydOrderInBig, smallCategoryName: $smallCategoryName, defaultDisplayed: $defaultDisplayed, bigCategoryEntity: $bigCategoryEntity)';
   }
 
   @override
@@ -202,22 +229,31 @@ class _$CategoryEntityImpl implements _CategoryEntity {
         (other.runtimeType == runtimeType &&
             other is _$CategoryEntityImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.categoryColor, categoryColor) ||
-                other.categoryColor == categoryColor) &&
-            (identical(other.bigCategoryName, bigCategoryName) ||
-                other.bigCategoryName == bigCategoryName) &&
-            (identical(other.categoryIconPath, categoryIconPath) ||
-                other.categoryIconPath == categoryIconPath) &&
-            (identical(other.budget, budget) || other.budget == budget) &&
-            (identical(other.totalExpenseByBigCategory,
-                    totalExpenseByBigCategory) ||
-                other.totalExpenseByBigCategory == totalExpenseByBigCategory));
+            (identical(other.smallCategoryOrderKey, smallCategoryOrderKey) ||
+                other.smallCategoryOrderKey == smallCategoryOrderKey) &&
+            (identical(other.bigCategoryKey, bigCategoryKey) ||
+                other.bigCategoryKey == bigCategoryKey) &&
+            (identical(other.displaydOrderInBig, displaydOrderInBig) ||
+                other.displaydOrderInBig == displaydOrderInBig) &&
+            (identical(other.smallCategoryName, smallCategoryName) ||
+                other.smallCategoryName == smallCategoryName) &&
+            (identical(other.defaultDisplayed, defaultDisplayed) ||
+                other.defaultDisplayed == defaultDisplayed) &&
+            (identical(other.bigCategoryEntity, bigCategoryEntity) ||
+                other.bigCategoryEntity == bigCategoryEntity));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, categoryColor,
-      bigCategoryName, categoryIconPath, budget, totalExpenseByBigCategory);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      smallCategoryOrderKey,
+      bigCategoryKey,
+      displaydOrderInBig,
+      smallCategoryName,
+      defaultDisplayed,
+      bigCategoryEntity);
 
   @JsonKey(ignore: true)
   @override
@@ -236,12 +272,14 @@ class _$CategoryEntityImpl implements _CategoryEntity {
 
 abstract class _CategoryEntity implements CategoryEntity {
   const factory _CategoryEntity(
-      {final int id,
-      required final String categoryColor,
-      required final String bigCategoryName,
-      required final String categoryIconPath,
-      final int budget,
-      final int totalExpenseByBigCategory}) = _$CategoryEntityImpl;
+          {final int id,
+          required final int smallCategoryOrderKey,
+          required final int bigCategoryKey,
+          required final int displaydOrderInBig,
+          required final String smallCategoryName,
+          required final int defaultDisplayed,
+          required final BigCategoryEntity bigCategoryEntity}) =
+      _$CategoryEntityImpl;
 
   factory _CategoryEntity.fromJson(Map<String, dynamic> json) =
       _$CategoryEntityImpl.fromJson;
@@ -249,15 +287,17 @@ abstract class _CategoryEntity implements CategoryEntity {
   @override
   int get id;
   @override
-  String get categoryColor;
+  int get smallCategoryOrderKey;
   @override
-  String get bigCategoryName;
+  int get bigCategoryKey;
   @override
-  String get categoryIconPath;
+  int get displaydOrderInBig;
   @override
-  int get budget;
+  String get smallCategoryName;
   @override
-  int get totalExpenseByBigCategory;
+  int get defaultDisplayed;
+  @override
+  BigCategoryEntity get bigCategoryEntity;
   @override
   @JsonKey(ignore: true)
   _$$CategoryEntityImplCopyWith<_$CategoryEntityImpl> get copyWith =>

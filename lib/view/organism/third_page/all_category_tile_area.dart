@@ -12,9 +12,9 @@ class AllCategoryTileArea extends ConsumerWidget {
    
     return ref.watch(resolvedAllCategoryTileEntityProvider)
                 .when(
-                  data: (allCategoryTileEntity) {
+                  data: (allCategoryCardEntity) {
                     return AllCategorySumTile(
-                        allCategoryTileEntity: allCategoryTileEntity);
+                        allCategoryTileEntity: allCategoryCardEntity);
                   },
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),

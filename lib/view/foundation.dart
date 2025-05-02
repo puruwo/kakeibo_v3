@@ -7,7 +7,7 @@ import 'package:kakeibo/view/page/third_page.dart';
 import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
 import 'package:kakeibo/view_model/state/initial_open.dart';
 
-import 'package:kakeibo/view/page/torok.dart';
+import 'package:kakeibo/view/page/register_page/torok.dart';
 import 'package:kakeibo/view/page/home.dart';
 
 class Foundation extends ConsumerWidget {

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 
 class MyFonts {
-
   // Third Page
   static TextStyle thirdPageSubheading = GoogleFonts.notoSans(
       fontSize: 18,
@@ -13,7 +12,6 @@ class MyFonts {
 
   static const thirdPageTextButton =
       TextStyle(color: MyColors.linkColor, fontSize: 14);
-
 
   // Calndar Page
   static TextStyle calendarDateBoxLarge = const TextStyle(
@@ -28,11 +26,18 @@ class MyFonts {
     fontFamily: 'sf_ui',
   );
 
-
   // ecpense history
   static TextStyle expenseHistoryDateHeaderLabel = const TextStyle(
     color: MyColors.secondaryLabel,
     fontSize: 14,
   );
-  
+
+  // Rigister Page
+  static TextStyle regesterHeaderLabel = GoogleFonts.notoSans(
+      fontSize: 19, color: MyColors.white, fontWeight: FontWeight.w400);
+
+  static TextStyle placeHolder = const TextStyle(
+    fontSize: 16,
+    color: MyColors.secondaryLabel,
+  );
 }

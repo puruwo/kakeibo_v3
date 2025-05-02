@@ -1,15 +1,15 @@
 import 'package:intl/intl.dart';
-import 'package:kakeibo/domain/category_entity/category_repository.dart';
-import 'package:kakeibo/domain/category_entity/category_entity.dart';
+import 'package:kakeibo/domain/category_accounting_entity/category_accounting_repository.dart';
+import 'package:kakeibo/domain/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/model/database_helper.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsCategoryRepository implements CategoryRepository {
+class ImplementsCategoryAccountingRepository implements CategoryAccountingRepository {
 
   @override
-  Future<List<CategoryEntity>> fetchAll({required DateTime fromDate, required DateTime toDate}) async {
+  Future<List<CategoryAccountingEntity>> fetchAll({required DateTime fromDate, required DateTime toDate}) async {
     final sql = '''
                   SELECT  
                     t1._id AS id, 
@@ -51,7 +51,7 @@ class ImplementsCategoryRepository implements CategoryRepository {
     final mapList = await db.query(sql);
 
     // 各カテゴリーmapでEntity化
-    final List<CategoryEntity> categoryEntityList = mapList.map((json) => CategoryEntity.fromJson(json)).toList();
+    final List<CategoryAccountingEntity> categoryEntityList = mapList.map((json) => CategoryAccountingEntity.fromJson(json)).toList();
 
     return categoryEntityList;
   }

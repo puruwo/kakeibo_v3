@@ -7,10 +7,10 @@ import 'package:kakeibo/providerLogger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
-  
   // カテゴリーNumberを指定して取得する
   @override
-  Future<SmallCategoryEntity> fetch({required int id}) async {
+  Future<SmallCategoryEntity> fetchBySmallCategory(
+      {required int smallCategoryId}) async {
     final sql = '''
       SELECT 
         a._id AS id,
@@ -20,7 +20,7 @@ class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
         a.category_name AS smallCategoryName,
         a.default_displayed AS defaultDisplayed
       FROM TBL201 a
-      where a._id = $id;
+      where a._id = $smallCategoryId;
     ''';
 
     try {
@@ -30,7 +30,6 @@ class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
 
       return results;
     } catch (e) {
-
       logger.e('[FAIL]: $e');
       return const SmallCategoryEntity(
         id: 0,
@@ -41,5 +40,36 @@ class ImplementsSmallCategoryRepository implements SmallCategoryRepository {
         defaultDisplayed: 0,
       );
     }
+  }
+
+  @override
+  Future<List<SmallCategoryEntity>> fetchAll() async {
+    const sql = '''
+      SELECT 
+        a._id AS id,
+        a.small_category_order_key AS smallCategoryOrderKey,
+        a.big_category_key AS bigCategoryKey,
+        a.displayed_order_in_big AS displayedOrderInBig,
+        a.category_name AS smallCategoryName,
+        a.default_displayed AS defaultDisplayed
+      FROM TBL201 a;
+    ''';
+
+    // SQLを実行して結果を取得
+    final jsonList = await db.query(sql);
+
+    // 取得したjsonListをSmallCategoryEntityのリストに変換
+    final result = jsonList.map((e) {
+      return SmallCategoryEntity.fromJson(e);
+    }).toList();
+
+    return result;
+  }
+
+  @override
+  Future<List<SmallCategoryEntity>> fetchByBigCategory(
+      {required int bigCategoryId}) {
+    // TODO: implement fetchByBigCategory
+    throw UnimplementedError();
   }
 }

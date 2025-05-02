@@ -10,6 +10,12 @@ final smallCategoryRepositoryProvider = Provider<SmallCategoryRepository>(
 /// tbl201(小カテゴリー)に関するリポジトリ
 abstract interface class SmallCategoryRepository {
 
-  /// カテゴリーidを指定してレコードを取得する
-  Future<SmallCategoryEntity> fetch({required int id});
+  // 全ての小カテゴリーの情報を取得する
+  Future<List<SmallCategoryEntity>> fetchAll();
+
+  /// 小カテゴリー指定で小カテゴリーの情報を取得する
+  Future<SmallCategoryEntity> fetchBySmallCategory({required int smallCategoryId});
+  
+  /// 大カテゴリー指定で小カテゴリーのリストを取得する
+  Future<List<SmallCategoryEntity>> fetchByBigCategory({required int bigCategoryId});
 }

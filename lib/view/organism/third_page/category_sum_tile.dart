@@ -6,20 +6,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/domain/category_entity/category_entity.dart';
+import 'package:kakeibo/domain/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 
-import 'package:kakeibo/domain/category_tile_entity/category_tile_entity.dart';
+import 'package:kakeibo/domain/category_card_entity/category_card_entity.dart';
 
 class CategoryTile extends HookConsumerWidget {
   const CategoryTile({required this.categoryTile, super.key});
-  final CategoryTileEntity categoryTile;
+  final CategoryCardEntity categoryTile;
 
-  CategoryEntity get categoryEntity => categoryTile.categoryEntity;
+  CategoryAccountingEntity get monthlyExpenseByCategoryEntity => categoryTile.monthlyExpenseByCategoryEntity;
   List<SmallCategoryTileEntity> get smallCategoryEntity => categoryTile.smallCategoryList;
 
   final double barFrameWidth = 280.0;
@@ -45,11 +45,11 @@ class CategoryTile extends HookConsumerWidget {
         screenHorizontalMagnificationGetter(screenWidthSize);
 
     // 横棒グラフの幅を計算
-    double degrees = (categoryEntity.totalExpenseByBigCategory / categoryEntity.budget);
+    double degrees = (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory / monthlyExpenseByCategoryEntity.budget);
     barWidth =
         degrees <= 1.0 ? barFrameWidth * degrees : barFrameWidth;
 
-    if (categoryEntity.totalExpenseByBigCategory > categoryEntity.budget) {
+    if (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory > monthlyExpenseByCategoryEntity.budget) {
       isOverBudget = true;
     }
 
@@ -59,12 +59,12 @@ class CategoryTile extends HookConsumerWidget {
     });
 
     // 支出合計のLabel
-    final String paymentSumLabel = formattedPriceGetter(categoryEntity.totalExpenseByBigCategory);
+    final String paymentSumLabel = formattedPriceGetter(monthlyExpenseByCategoryEntity.totalExpenseByBigCategory);
 
     // 予算のLabel
-    final String budgetLabel = formattedPriceGetter(categoryEntity.budget);
+    final String budgetLabel = formattedPriceGetter(monthlyExpenseByCategoryEntity.budget);
 
-    isSetBudget = categoryEntity.budget == 0 ? false : true;
+    isSetBudget = monthlyExpenseByCategoryEntity.budget == 0 ? false : true;
 
     return Container(
       width: 343 * screenHorizontalMagnification,
@@ -121,7 +121,7 @@ class CategoryTile extends HookConsumerWidget {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: MyColors()
-                                    .getColorFromHex(categoryEntity.categoryColor),
+                                    .getColorFromHex(monthlyExpenseByCategoryEntity.categoryColor),
                               ),
                               duration: const Duration(milliseconds: 500),
                             ),
@@ -182,7 +182,7 @@ class CategoryTile extends HookConsumerWidget {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: MyColors()
-                                      .getColorFromHex(categoryEntity.categoryColor),
+                                      .getColorFromHex(monthlyExpenseByCategoryEntity.categoryColor),
                                 ),
                                 duration: const Duration(milliseconds: 500),
                               ),
@@ -211,14 +211,14 @@ class CategoryTile extends HookConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.only(right: 2.0),
                       child: CategoryHandler().sisytIconGetterFromBigCategoryKey(
-                        categoryEntity.id,
+                        monthlyExpenseByCategoryEntity.id,
                         height: 25,
                         width: 25),
                     ),
                     // カテゴリー名
                     Expanded(
                       child: Text(
-                        categoryEntity.bigCategoryName,
+                        monthlyExpenseByCategoryEntity.bigCategoryName,
                         style: GoogleFonts.notoSans(
                           fontSize: 16,
                           color: MyColors.white,

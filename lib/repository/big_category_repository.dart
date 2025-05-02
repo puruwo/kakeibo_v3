@@ -7,10 +7,16 @@ import 'package:kakeibo/providerLogger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsBigCategoryRepository implements BigCategoryRepository {
+  
+  @override
+  Future<BigCategoryEntity> fetchAll() {
+    // TODO: implement fetchAll
+    throw UnimplementedError();
+  }
 
   // カテゴリーを指定しないで取得する
   @override
-  Future<BigCategoryEntity> fetch({required int id}) async {
+  Future<BigCategoryEntity> fetchByBigCategory({required int bigCategoryId}) async {
 
     final sql = '''
       SELECT 
@@ -21,7 +27,7 @@ class ImplementsBigCategoryRepository implements BigCategoryRepository {
         a.display_order AS displayOrder, 
         a.is_displayed AS isDisplayed
       FROM TBL202 a
-      where a._id = $id;
+      where a._id = $bigCategoryId;
     ''';
 
     try {
@@ -43,4 +49,6 @@ class ImplementsBigCategoryRepository implements BigCategoryRepository {
       );
     }
   }
+  
+  
 }

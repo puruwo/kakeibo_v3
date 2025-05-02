@@ -14,4 +14,10 @@ abstract interface class ExpenseRepository {
   /// 期間指定してデータを取得する
   /// カテゴリーの指定はしない
   Future<List<ExpenseEntity>> fetchWithoutCategory({required MonthPeriodValue period});
+
+  void insert(ExpenseEntity expenseEntity);
+
+  void update(ExpenseEntity expenseEntity);
+  
+  void delete(int id);
 }

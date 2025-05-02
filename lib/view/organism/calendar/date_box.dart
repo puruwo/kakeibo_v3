@@ -4,12 +4,12 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/calendar_day_entity/calendar_tile_entity.dart';
-import 'package:kakeibo/repository/torok_record/torok_record.dart';
+import 'package:kakeibo/domain/tbl001/expense_entity.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/page/torok.dart';
+import 'package:kakeibo/view/page/register_page/torok.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
-
+import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 enum CalendarTileStatus {
   selected,
@@ -42,11 +42,14 @@ class DateBox extends ConsumerWidget {
     bool shouldDisplayMonth = calendarTileEntity.shouldDisplayMonth;
 
     // 選択された日付かどうかを判定
-    final isSelected = ref.watch(isDateboxSelectedProvider(DateTime(year, month, day)));
+    final isSelected =
+        ref.watch(isDateboxSelectedProvider(DateTime(year, month, day)));
 
     // タイルの状態をisWithinAggregationRangeとisSelectedから複合的に判定
-    final tileStatus = switch(isWithinAggregationRange){
-      true => isSelected ? CalendarTileStatus.selected : CalendarTileStatus.unselected,
+    final tileStatus = switch (isWithinAggregationRange) {
+      true => isSelected
+          ? CalendarTileStatus.selected
+          : CalendarTileStatus.unselected,
       false => CalendarTileStatus.outOfPeriod,
     };
 
@@ -82,36 +85,30 @@ class DateBox extends ConsumerWidget {
 
 Text caluculatePriceLabel(int totalExpenseBuff) {
   if (totalExpenseBuff == 0) {
+    return const Text('');
+  } else {
+    if (totalExpenseBuff > 1888888) {
       return const Text('');
+    } else if (totalExpenseBuff <= 9999) {
+      final buff = formattedPriceGetter(totalExpenseBuff);
+      return Text('¥$buff',
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.fade,
+          style: MyFonts.calendarDateBoxLarge);
+    } else if (totalExpenseBuff <= 99999) {
+      final buff = formattedPriceGetter(totalExpenseBuff);
+      return Text(buff,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.fade,
+          style: MyFonts.calendarDateBoxLarge);
     } else {
-      if (totalExpenseBuff > 1888888) {
-        return const Text('');
-      } else if (totalExpenseBuff <= 9999) {
-        final buff = formattedPriceGetter(totalExpenseBuff);
-        return Text(
-          '¥$buff',
+      final buff = formattedPriceGetter(totalExpenseBuff);
+      return Text(buff,
           textAlign: TextAlign.center,
           overflow: TextOverflow.fade,
-          style: MyFonts.calendarDateBoxLarge
-        );
-      } else if (totalExpenseBuff <= 99999) {
-        final buff = formattedPriceGetter(totalExpenseBuff);
-        return Text(
-          buff,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.fade,
-          style: MyFonts.calendarDateBoxLarge
-        );
-      } else {
-        final buff = formattedPriceGetter(totalExpenseBuff);
-        return Text(
-          buff,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.fade,
-          style: MyFonts.calendarDateBoxSmall
-        );
-      }
+          style: MyFonts.calendarDateBoxSmall);
     }
+  }
 }
 
 Container activeDateBox(int weekday, String dateLabel, Text priceLabel,
@@ -219,10 +216,14 @@ void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
             // テキストサイズの制御
             minScaleFactor: 0.7,
             maxScaleFactor: 0.95,
-            child: Torok.origin(
-              torokRecord: TorokRecord(
-                  date: DateFormat('yyyyMMdd').format(selectedDate)),
-              screenMode: 0,
+            child: Torok(
+              expenseEntity: ExpenseEntity(
+                  id: 0,
+                  date: DateFormat('yyyyMMdd').format(selectedDate),
+                  price: 0,
+                  paymentCategoryId: 0,
+                  memo: ''),
+              mode: RegisterScreenMode.add,
             )),
       );
     },

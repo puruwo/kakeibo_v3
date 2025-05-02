@@ -1,0 +1,112 @@
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
+
+class MemoInputField extends ConsumerStatefulWidget {
+  const MemoInputField({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MemoInputFieldState();
+}
+
+class _MemoInputFieldState extends ConsumerState<MemoInputField> {
+  late TextEditingController _enteredMemoController;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final originalExpenseEntity =
+          ref.read(originalExpenseEntityNotifierProvider);
+
+      // 初期値をセット
+      _enteredMemoController.text = originalExpenseEntity.memo;
+    });
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    final screenHorizontalMagnification = context.screenHorizontalMagnification;
+
+    _enteredMemoController = ref.watch(enteredMemoControllerProvider);
+
+    return // メモinputField
+        SizedBox(
+      width: 343 * screenHorizontalMagnification,
+      // height: 100,
+      child: TextFormField(
+        controller: _enteredMemoController,
+        // オートフォーカスさせるか
+        autofocus: true,
+        // テキストの揃え(上下)
+        textAlignVertical: TextAlignVertical.center,
+        // テキストの揃え(左右)
+        textAlign: TextAlign.end,
+        // カーソルの色
+        cursorColor: MyColors.themeColor,
+        // カーソルの先の太さ
+        cursorWidth: 2,
+        // 入力するテキストのstyle
+        style: const TextStyle(fontSize: 17, color: MyColors.label),
+        // 行数の制約
+        minLines: 1,
+        maxLines: 1,
+        // 最大文字数の制約
+        // maxLength: 20,
+
+        // 枠や背景などのデザイン
+        decoration: InputDecoration(
+          // なんかわからんおまじない
+          isDense: true,
+
+          // 背景の塗りつぶし
+          filled: true,
+          fillColor: MyColors.secondarySystemfill,
+
+          // ヒントテキスト
+          hintText: "メモ",
+          hintStyle: MyFonts.placeHolder,
+
+          // テキストの余白
+          contentPadding:
+              const EdgeInsets.only(top: 10, bottom: 10, left: 40, right: 16),
+
+          // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
+          // 何もしていない時の境界線
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: MyColors.jet.withOpacity(0.0),
+            ),
+          ),
+          // 入力時の境界線
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: MyColors.jet.withOpacity(0.0),
+            ),
+          ),
+        ),
+
+        keyboardAppearance: Brightness.dark,
+
+        //キーボードcloseで再描画が走っているので変更を更新してあげる必要あり
+        //領域外をタップでproviderを更新する
+        onTapOutside: (event) {
+          //キーボードを閉じる
+          FocusScope.of(context).unfocus();
+        },
+        onEditingComplete: () {
+          //キーボードを閉じる
+          FocusScope.of(context).unfocus();
+        },
+      ),
+    );
+  }
+}

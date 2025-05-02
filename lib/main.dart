@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/aggregation_start_day_entity/aggregation_start_day_repository.dart';
-import 'package:kakeibo/domain/all_category_entity/all_category_repository.dart';
+import 'package:kakeibo/domain/all_category_accounting_entity/all_category_accounting_repository.dart';
 import 'package:kakeibo/domain/daily_expense_entity/daily_expense_repository.dart';
 import 'package:kakeibo/domain/tbl001/expense_repository.dart';
 import 'package:kakeibo/domain/tbl201/small_category_repository.dart';
@@ -16,7 +16,7 @@ import 'package:kakeibo/repository/small_category_Tile_repository.dart';
 import 'package:kakeibo/repository/small_category_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
 
-import 'package:kakeibo/domain/category_entity/category_repository.dart';
+import 'package:kakeibo/domain/category_accounting_entity/category_accounting_repository.dart';
 import 'package:kakeibo/domain/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/repository/category_repository.dart';
 
@@ -24,14 +24,14 @@ void main() {
   runApp(
     ProviderScope(
       overrides: [
-        categoryRepositoryProvider.overrideWithValue(
-          ImplementsCategoryRepository(),
+        categoryAccountingRepositoryProvider.overrideWithValue(
+          ImplementsCategoryAccountingRepository(),
         ),
         smallCategoryTileRepositoryProvider.overrideWithValue(
           ImplementsSmallCategoryTileRepository(),
         ),
-        allCategoryRepositoryProvider.overrideWithValue(
-          ImplementsAllCategoryRepository(),
+        allCategoryAccountingRepositoryProvider.overrideWithValue(
+          ImplementsAllCategoryAccountingRepository(),
         ),
         dailyExpenseRepositoryProvider.overrideWithValue(
           ImplementsDailyExpenseRepository(),
