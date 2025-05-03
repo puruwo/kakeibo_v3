@@ -21,14 +21,14 @@ class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
 
     final sql = '''
       SELECT 
-        a.${SqfExpenseBigCategory().id} AS id,
-        a.${SqfExpenseBigCategory().colorCode} AS colorCode,
-        a.${SqfExpenseBigCategory().bigCategoryName} AS bigCategoryName, 
-        a.${SqfExpenseBigCategory().resourcePath} AS resourcePath, 
-        a.${SqfExpenseBigCategory().displayOrder} AS displayOrder, 
-        a.${SqfExpenseBigCategory().isDisplayed} AS isDisplayed
-      FROM ${SqfExpenseBigCategory().tableName} a
-      where a.${SqfExpenseBigCategory().id} = $bigCategoryId;
+        a.${SqfExpenseBigCategory.id} AS id,
+        a.${SqfExpenseBigCategory.colorCode} AS colorCode,
+        a.${SqfExpenseBigCategory.name} AS bigCategoryName, 
+        a.${SqfExpenseBigCategory.resourcePath} AS resourcePath, 
+        a.${SqfExpenseBigCategory.displayOrder} AS displayOrder, 
+        a.${SqfExpenseBigCategory.isDisplayed} AS isDisplayed
+      FROM ${SqfExpenseBigCategory.tableName} a
+      where a.${SqfExpenseBigCategory.id} = $bigCategoryId;
     ''';
 
     try {

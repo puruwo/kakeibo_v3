@@ -43,15 +43,15 @@ class TBL001Impl {
 Future<List<Map<String, dynamic>>> queryCrossMonthMutableRowsByCategory(
     DateTime fromDate, DateTime toDate) async {
   final sql = '''
-            SELECT a.${SqfExpenseBigCategory().id}, IFNULL(b.sum_by_bigcategory, 0) as sum_by_bigcategory FROM TBL202 a
-            LEFT JOIN (SELECT SUM(price) as sum_by_bigcategory, y.${TBL201RecordKey().bigCategoryKey}
+            SELECT a.${SqfExpenseBigCategory.id}, IFNULL(b.sum_by_bigcategory, 0) as sum_by_bigcategory FROM ${SqfExpenseBigCategory.tableName} a
+            LEFT JOIN (SELECT SUM(price) as sum_by_bigcategory, y.${SqfExpenseSmallCategory.bigCategoryKey}
                         FROM ${SqfExpense.tableName} x
-						            INNER JOIN ${TBL201RecordKey().tableName} y
-						            ON x.${SqfExpense.paymentCategoryId} = y.${TBL201RecordKey().id}
+						            INNER JOIN ${SqfExpenseSmallCategory.tableName} y
+						            ON x.${SqfExpense.expenseSmallCategoryId} = y.${SqfExpenseSmallCategory.id}
                         WHERE ${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${SqfExpense.date} < ${DateFormat('yyyyMMdd').format(toDate)}  
-                        GROUP BY y.${TBL201RecordKey().bigCategoryKey}) b
-            on a.${SqfExpenseBigCategory().id} = b.${TBL201RecordKey().bigCategoryKey}
-            ORDER BY a.${SqfExpenseBigCategory().displayOrder}
+                        GROUP BY y.${SqfExpenseSmallCategory.bigCategoryKey}) b
+            on a.${SqfExpenseBigCategory.id} = b.${SqfExpenseSmallCategory.bigCategoryKey}
+            ORDER BY a.${SqfExpenseBigCategory.displayOrder}
             ;
             ''';
 
@@ -65,17 +65,17 @@ Future<List<Map<String, dynamic>>> queryCrossMonthMutableRowsByCategory(
 
 //入力した日付の過去最近の目標の合計を取得
 Future<List<Map<String, dynamic>>> queryMonthlyAllBudgetSum(DateTime dt) async {
-  final sql = '''
-            SELECT SUM(a.${SqfBudget().price}) as budget_sum
-            FROM ${SqfBudget().tableName} a
-              INNER JOIN ${SqfExpenseBigCategory().tableName} b
-              ON a.${SqfBudget().bigCategoryId} = b.${SqfExpenseBigCategory().id}
-            WHERE ${SqfBudget().date} = (
-              SELECT MAX(${SqfBudget().date})
-              FROM ${SqfBudget().tableName} a2
-              WHERE a.${SqfBudget().bigCategoryId} = a2.${SqfBudget().bigCategoryId}
+  const sql = '''
+            SELECT SUM(a.${SqfBudget.price}) as budget_sum
+            FROM ${SqfBudget.tableName} a
+              INNER JOIN ${SqfExpenseBigCategory.tableName} b
+              ON a.${SqfBudget.expenseBigCategoryId} = b.${SqfExpenseBigCategory.id}
+            WHERE ${SqfBudget.date} = (
+              SELECT MAX(${SqfBudget.date})
+              FROM ${SqfBudget.tableName} a2
+              WHERE a.${SqfBudget.expenseBigCategoryId} = a2.${SqfBudget.expenseBigCategoryId}
             )
-            ORDER BY b.${SqfExpenseBigCategory().displayOrder}
+            ORDER BY b.${SqfExpenseBigCategory.displayOrder}
             ;
             ''';
 
@@ -97,17 +97,17 @@ Future<List<Map<String, dynamic>>> queryMonthlyAllBudgetSum(DateTime dt) async {
 // }
 Future<List<Map<String, dynamic>>> queryMonthlyCategoryBudget(
     DateTime dt) async {
-  final sql = '''
-            SELECT a.${SqfBudget().bigCategoryId},a.${SqfBudget().price},b.${SqfExpenseBigCategory().colorCode},b.${SqfExpenseBigCategory().bigCategoryName},b.${SqfExpenseBigCategory().resourcePath},b.${SqfExpenseBigCategory().displayOrder},b.${SqfExpenseBigCategory().isDisplayed}
-            FROM ${SqfBudget().tableName} a
-              INNER JOIN ${SqfExpenseBigCategory().tableName} b
-              ON a.${SqfBudget().bigCategoryId} = b.${SqfExpenseBigCategory().id}
-            WHERE ${SqfBudget().date} = (
-              SELECT MAX(${SqfBudget().date})
-              FROM ${SqfBudget().tableName} a2
-              WHERE a.${SqfBudget().bigCategoryId} = a2.${SqfBudget().bigCategoryId}
+  const sql = '''
+            SELECT a.${SqfBudget.expenseBigCategoryId},a.${SqfBudget.price},b.${SqfExpenseBigCategory.colorCode},b.${SqfExpenseBigCategory.name},b.${SqfExpenseBigCategory.resourcePath},b.${SqfExpenseBigCategory.displayOrder},b.${SqfExpenseBigCategory.isDisplayed}
+            FROM ${SqfBudget.tableName} a
+              INNER JOIN ${SqfExpenseBigCategory.tableName} b
+              ON a.${SqfBudget.expenseBigCategoryId} = b.${SqfExpenseBigCategory.id}
+            WHERE ${SqfBudget.date} = (
+              SELECT MAX(${SqfBudget.date})
+              FROM ${SqfBudget.tableName} a2
+              WHERE a.${SqfBudget.expenseBigCategoryId} = a2.${SqfBudget.expenseBigCategoryId}
             )
-            ORDER BY b.${SqfExpenseBigCategory().displayOrder}
+            ORDER BY b.${SqfExpenseBigCategory.displayOrder}
             ;
             ''';
 
@@ -128,8 +128,8 @@ Future<List<Map<String, dynamic>>> queryMonthlyCategoryBudget(
 Future<List<Map<String, dynamic>>> getMonthIncomeSum(
     DateTime fromDate, DateTime toDate) {
   final sql = '''
-              SELECT SUBSTR(CAST(a.date AS STRING), 1, 6) AS year_month, COALESCE(SUM(price), 0) as sum_price FROM TBL002 a
-              WHERE ${SqfIncome().date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${SqfIncome().date} <= ${DateFormat('yyyyMMdd').format(toDate)};
+              SELECT SUBSTR(CAST(a.date AS STRING), 1, 6) AS year_month, COALESCE(SUM(price), 0) as sum_price FROM ${SqfIncome.tableName} a
+              WHERE ${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(toDate)};
               ''';
   // print(sql);
   final immutable = db.query(sql);
@@ -143,9 +143,9 @@ Future<List<Map<String, dynamic>>> getMonthIncomeSum(
 Future<List<Map<String, dynamic>>> getSpecifiedDateBigCategoryBudget(
     String date, int bigCategory) async {
   final sql = '''
-              SELECT * FROM ${SqfBudget().tableName} a
-              WHERE a.${SqfBudget().date} = $date
-              AND a.${SqfBudget().bigCategoryId} = $bigCategory
+              SELECT * FROM ${SqfBudget.tableName} a
+              WHERE a.${SqfBudget.date} = $date
+              AND a.${SqfBudget.expenseBigCategoryId} = $bigCategory
               ''';
   // print(sql);
   final immutable = db.query(sql);
@@ -165,9 +165,9 @@ Future<List<Map<String, dynamic>>> getSpecifiedDateBigCategoryBudget(
 Future<List<Map<String, dynamic>>> getCategoryDataFromCategoryId(
     int bigCategoryId) async {
   final sql = '''
-              SELECT * FROM ${TBL201RecordKey().tableName} a
-              WHERE a.${TBL201RecordKey().bigCategoryKey} = $bigCategoryId
-              ORDER BY a.${TBL201RecordKey().displayedOrderInBig}
+              SELECT * FROM ${SqfExpenseSmallCategory.tableName} a
+              WHERE a.${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId
+              ORDER BY a.${SqfExpenseSmallCategory.displayedOrderInBig}
               ''';
   print(sql);
   final immutable = db.query(sql);
@@ -186,8 +186,8 @@ Future<List<Map<String, dynamic>>> getCategoryDataFromCategoryId(
 // bigCategoryId指定でpropertyを取得
 Future<Map<String, dynamic>> getBigCategoryProperty(int bigCategoryId) async {
   final sql = '''
-              SELECT * FROM ${SqfExpenseBigCategory().tableName} a
-              WHERE a.${SqfExpenseBigCategory().id} = $bigCategoryId
+              SELECT * FROM ${SqfExpenseBigCategory.tableName} a
+              WHERE a.${SqfExpenseBigCategory.id} = $bigCategoryId
               ''';
   // print(sql);
   final immutable = db.query(sql);
@@ -198,17 +198,17 @@ Future<Map<String, dynamic>> getBigCategoryProperty(int bigCategoryId) async {
 // 大カテゴリーに含まれる小カテゴリーの名前を返す
 Future<List<String>> querySmallCategoryNameList(int bigCategoryId) async {
   final sql = '''
-              SELECT ${TBL201RecordKey().categoryName} FROM ${TBL201RecordKey().tableName} a
-              WHERE a.${TBL201RecordKey().bigCategoryKey} = $bigCategoryId
-              AND a.${TBL201RecordKey().defaultDisplayed} = 1
-              ORDER BY a.${TBL201RecordKey().displayedOrderInBig}
+              SELECT ${SqfExpenseSmallCategory.name} FROM ${SqfExpenseSmallCategory.tableName} a
+              WHERE a.${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId
+              AND a.${SqfExpenseSmallCategory.defaultDisplayed} = 1
+              ORDER BY a.${SqfExpenseSmallCategory.displayedOrderInBig}
               ''';
   // print(sql);
   final immutable = db.query(sql);
   final mutable = await makeMutable(immutable);
   final nameList = <String>[];
   for (int i = 0; i < mutable.length; i++) {
-    nameList.add(mutable[i][TBL201RecordKey().categoryName] as String);
+    nameList.add(mutable[i][SqfExpenseSmallCategory.name] as String);
   }
   return nameList;
 }

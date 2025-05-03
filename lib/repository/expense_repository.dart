@@ -19,7 +19,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.id} AS id,
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price, 
-        a.${SqfExpense.paymentCategoryId} AS paymentCategoryId, 
+        a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId, 
         a.${SqfExpense.memo} AS memo
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)};
@@ -45,7 +45,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     db.insert(SqfExpense.tableName, {
       SqfExpense.date: expenseEntity.date,
       SqfExpense.price: expenseEntity.price,
-      SqfExpense.paymentCategoryId: expenseEntity.paymentCategoryId,
+      SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
       SqfExpense.memo: expenseEntity.memo
     });
     logger.i(
@@ -59,7 +59,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         {
           SqfExpense.date: expenseEntity.date,
           SqfExpense.price: expenseEntity.price,
-          SqfExpense.paymentCategoryId: expenseEntity.paymentCategoryId,
+          SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
           SqfExpense.memo: expenseEntity.memo
         },
         expenseEntity.id);

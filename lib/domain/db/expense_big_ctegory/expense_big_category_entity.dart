@@ -28,13 +28,13 @@ class ExpenseBigCategoryEntity with _$ExpenseBigCategoryEntity {
 
   update(){
     print('id: $id,smallCategoryKey: $colorCode,bigCategoryKey: $bigCategoryName,categoryName: $resourcePath,defaultDisplayed: $displayOrder,isDisplayed:$isDisplayedを登録しました');
-    db.update(SqfExpenseBigCategory().tableName, {
-      SqfExpenseBigCategory().id: id,
-      SqfExpenseBigCategory().colorCode: colorCode,
-      SqfExpenseBigCategory().bigCategoryName: bigCategoryName,
-      SqfExpenseBigCategory().resourcePath: resourcePath,
-      SqfExpenseBigCategory().displayOrder: displayOrder,
-      SqfExpenseBigCategory().isDisplayed: isDisplayed,
+    db.update(SqfExpenseBigCategory.tableName, {
+      SqfExpenseBigCategory.id: id,
+      SqfExpenseBigCategory.colorCode: colorCode,
+      SqfExpenseBigCategory.name: bigCategoryName,
+      SqfExpenseBigCategory.resourcePath: resourcePath,
+      SqfExpenseBigCategory.displayOrder: displayOrder,
+      SqfExpenseBigCategory.isDisplayed: isDisplayed,
     }, id);
   }
 

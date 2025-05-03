@@ -8,7 +8,7 @@ import 'package:kakeibo/model/db_read_impl.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 void tBL003RecordDelete(int id) async {
-  db.delete(SqfBudget().tableName,id);
+  db.delete(SqfBudget.tableName,id);
 }
 
 

@@ -23,17 +23,17 @@ class ImplementsAllCategoryAccountingRepository implements AllCategoryAccounting
 
     logger.i('====SQLが実行されました====\n ImplementsAllCategoryAccountingRepository\n$sqlForExpence');
 
-    final sqlForBudget = '''
-            SELECT COALESCE(SUM(a.${SqfBudget().price}),0)  as totalBudget
-            FROM ${SqfBudget().tableName} a
-              INNER JOIN ${SqfExpenseBigCategory().tableName} b
-              ON a.${SqfBudget().bigCategoryId} = b._id
+    const sqlForBudget = '''
+            SELECT COALESCE(SUM(a.${SqfBudget.price}),0)  as totalBudget
+            FROM ${SqfBudget.tableName} a
+              INNER JOIN ${SqfExpenseBigCategory.tableName} b
+              ON a.${SqfBudget.expenseBigCategoryId} = b._id
             WHERE date = (
               SELECT MAX(date)
-              FROM ${SqfBudget().tableName} a2
-              WHERE a.${SqfBudget().bigCategoryId} = a2.${SqfBudget().bigCategoryId}
+              FROM ${SqfBudget.tableName} a2
+              WHERE a.${SqfBudget.expenseBigCategoryId} = a2.${SqfBudget.expenseBigCategoryId}
             )
-            ORDER BY b.${SqfExpenseBigCategory().displayOrder} 
+            ORDER BY b.${SqfExpenseBigCategory.displayOrder} 
             ;
             ''';
 

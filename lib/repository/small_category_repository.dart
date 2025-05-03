@@ -14,14 +14,14 @@ class ImplementsSmallCategoryRepository implements ExpenseSmallCategoryRepositor
       {required int smallCategoryId}) async {
     final sql = '''
       SELECT 
-        a.${TBL201RecordKey().id} AS id,
-        a.${TBL201RecordKey().smallCategoryOrderKey} AS smallCategoryOrderKey,
-        a.${TBL201RecordKey().bigCategoryKey} AS bigCategoryKey,
-        a.${TBL201RecordKey().displayedOrderInBig} AS displayedOrderInBig,
-        a.${TBL201RecordKey().categoryName} AS smallCategoryName,
-        a.${TBL201RecordKey().defaultDisplayed} AS defaultDisplayed
-      FROM ${TBL201RecordKey().tableName} a
-      where a.${TBL201RecordKey().id} = $smallCategoryId;
+        a.${SqfExpenseSmallCategory.id} AS id,
+        a.${SqfExpenseSmallCategory.smallCategoryOrderKey} AS smallCategoryOrderKey,
+        a.${SqfExpenseSmallCategory.bigCategoryKey} AS bigCategoryKey,
+        a.${SqfExpenseSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
+        a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
+        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
+      FROM ${SqfExpenseSmallCategory.tableName} a
+      where a.${SqfExpenseSmallCategory.id} = $smallCategoryId;
     ''';
 
     try {
@@ -47,15 +47,15 @@ class ImplementsSmallCategoryRepository implements ExpenseSmallCategoryRepositor
 
   @override
   Future<List<ExpenseSmallCategoryEntity>> fetchAll() async {
-    final sql = '''
+    const sql = '''
       SELECT 
-        a.${TBL201RecordKey().id} AS id,
-        a.${TBL201RecordKey().smallCategoryOrderKey} AS smallCategoryOrderKey,
-        a.${TBL201RecordKey().bigCategoryKey} AS bigCategoryKey,
-        a.${TBL201RecordKey().displayedOrderInBig} AS displayedOrderInBig,
-        a.${TBL201RecordKey().categoryName} AS smallCategoryName,
-        a.${TBL201RecordKey().defaultDisplayed} AS defaultDisplayed
-      FROM ${TBL201RecordKey().tableName} a;
+        a.${SqfExpenseSmallCategory.id} AS id,
+        a.${SqfExpenseSmallCategory.smallCategoryOrderKey} AS smallCategoryOrderKey,
+        a.${SqfExpenseSmallCategory.bigCategoryKey} AS bigCategoryKey,
+        a.${SqfExpenseSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
+        a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
+        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
+      FROM ${SqfExpenseSmallCategory.tableName} a;
     ''';
 
     // SQLを実行して結果を取得

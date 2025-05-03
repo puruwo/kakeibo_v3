@@ -14,39 +14,39 @@ class ImplementsCategoryAccountingRepository implements CategoryAccountingReposi
   Future<List<CategoryAccountingEntity>> fetchAll({required DateTime fromDate, required DateTime toDate}) async {
     final sql = '''
                   SELECT  
-                    t1.${SqfExpenseBigCategory().id} AS id, 
-                    t1.${SqfExpenseBigCategory().colorCode} AS categoryColor,
-                    t1.${SqfExpenseBigCategory().bigCategoryName} AS bigCategoryName,
-                    t1.${SqfExpenseBigCategory().resourcePath} AS categoryIconPath,
-                    t3.${SqfBudget().price} AS budget,
+                    t1.${SqfExpenseBigCategory.id} AS id, 
+                    t1.${SqfExpenseBigCategory.colorCode} AS categoryColor,
+                    t1.${SqfExpenseBigCategory.name} AS bigCategoryName,
+                    t1.${SqfExpenseBigCategory.resourcePath} AS categoryIconPath,
+                    t3.${SqfBudget.price} AS budget,
                     COALESCE(t2.price_sum, 0) AS totalExpenseByBigCategory
-                  FROM ${SqfExpenseBigCategory().tableName} t1
+                  FROM ${SqfExpenseBigCategory.tableName} t1
                   LEFT JOIN (
                     SELECT
-                      ${TBL201RecordKey().bigCategoryKey},
+                      ${SqfExpenseSmallCategory.bigCategoryKey},
                       price_sum
                     FROM (
                       SELECT 
-                        y.${TBL201RecordKey().bigCategoryKey},
+                        y.${SqfExpenseSmallCategory.bigCategoryKey},
                         COALESCE(SUM(z.${SqfExpense.price}),0) as price_sum 
                       FROM ${SqfExpense.tableName} z
-              	  		INNER JOIN ${TBL201RecordKey().tableName} y
-                      ON z.${SqfExpense.paymentCategoryId} = y.${TBL201RecordKey().id}
+              	  		INNER JOIN ${SqfExpenseSmallCategory.tableName} y
+                      ON z.${SqfExpense.expenseSmallCategoryId} = y.${SqfExpenseSmallCategory.id}
                       WHERE (z.${SqfExpense.date} >= '${DateFormat('yyyyMMdd').format(fromDate)}' AND z.${SqfExpense.date} <= '${DateFormat('yyyyMMdd').format(toDate)}')
-                      GROUP BY y.${TBL201RecordKey().bigCategoryKey}
+                      GROUP BY y.${SqfExpenseSmallCategory.bigCategoryKey}
                     )
                   ) t2
-                  ON t1.${SqfExpenseBigCategory().id} = t2.${TBL201RecordKey().bigCategoryKey}
+                  ON t1.${SqfExpenseBigCategory.id} = t2.${SqfExpenseSmallCategory.bigCategoryKey}
                   LEFT JOIN(
                     SELECT 
-                      MAX(${SqfBudget().date}) AS max_date,
+                      MAX(${SqfBudget.date}) AS max_date,
                       *
-                    FROM ${SqfBudget().tableName}
-                    GROUP BY ${SqfBudget().bigCategoryId}
+                    FROM ${SqfBudget.tableName}
+                    GROUP BY ${SqfBudget.expenseBigCategoryId}
                   ) t3 
-                  ON t1.${SqfExpenseBigCategory().id} = t3.${SqfBudget().bigCategoryId}
-                  WHERE NOT (t1.${SqfExpenseBigCategory().isDisplayed} = 0 AND t2.${TBL201RecordKey().bigCategoryKey} IS NULL)
-                  ORDER BY t1.${SqfExpenseBigCategory().displayOrder} ASC;
+                  ON t1.${SqfExpenseBigCategory.id} = t3.${SqfBudget.expenseBigCategoryId}
+                  WHERE NOT (t1.${SqfExpenseBigCategory.isDisplayed} = 0 AND t2.${SqfExpenseSmallCategory.bigCategoryKey} IS NULL)
+                  ORDER BY t1.${SqfExpenseBigCategory.displayOrder} ASC;
                 ''';
     
     // 実行

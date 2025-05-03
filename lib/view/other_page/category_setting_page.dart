@@ -565,7 +565,7 @@ class _CategorySettingPageState extends ConsumerState<CategorySettingPage> {
 
       // 各カテゴリーの小カテゴリーのリストを取得
       final smallCategoryList = await querySmallCategoryNameList(
-          monthlyCategoryBudgetList![i][SqfBudget().bigCategoryId]);
+          monthlyCategoryBudgetList![i][SqfBudget.expenseBigCategoryId]);
       String smallCategoryNamebuff = '';
       for (int j = 0; j < smallCategoryList.length; j++) {
         if (j == 0) {
@@ -578,28 +578,28 @@ class _CategorySettingPageState extends ConsumerState<CategorySettingPage> {
       itemList.add(Item(
         // 大カテゴリーのIDを取得
         bigCategoryId: monthlyCategoryBudgetList![i]
-            [SqfBudget().bigCategoryId],
+            [SqfBudget.expenseBigCategoryId],
         // 大カテゴリーの予算を取得
         bigCategoryBudget: monthlyCategoryBudgetList![i]['price'],
         // 大カテゴリーのcolorCodeを取得
         bigCategoryColor: monthlyCategoryBudgetList![i]
-            [SqfExpenseBigCategory().colorCode],
+            [SqfExpenseBigCategory.colorCode],
         // 大カテゴリーの名前を取得
         bigCategoryName: monthlyCategoryBudgetList![i]
-            [SqfExpenseBigCategory().bigCategoryName],
+            [SqfExpenseBigCategory.name],
         // 大カテゴリーの画像パスを取得
         bigCategoryResourcePath: monthlyCategoryBudgetList![i]
-            [SqfExpenseBigCategory().resourcePath],
+            [SqfExpenseBigCategory.resourcePath],
         // 大カテゴリーの先月の実績
         sumBigCategory: lastMonthPaymentList![i]['sum_by_bigcategory'],
         // 大カテゴリーの先月のid
-        bigCategoryKey: lastMonthPaymentList![i][SqfExpenseBigCategory().id],
+        bigCategoryKey: lastMonthPaymentList![i][SqfExpenseBigCategory.id],
         // 表示順
         gotDisplayOrder: monthlyCategoryBudgetList![i]
-            [SqfExpenseBigCategory().displayOrder],
+            [SqfExpenseBigCategory.displayOrder],
         // 表示非表示設定
         isDisplayed: monthlyCategoryBudgetList![i]
-            [SqfExpenseBigCategory().isDisplayed],
+            [SqfExpenseBigCategory.isDisplayed],
 
         // 各カテゴリーの小カテゴリーのリスト
         smallCategoryName: smallCategoryNamebuff,

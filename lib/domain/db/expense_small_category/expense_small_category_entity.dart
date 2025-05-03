@@ -30,14 +30,14 @@ class ExpenseSmallCategoryEntity with _$ExpenseSmallCategoryEntity {
     print(
         'id: $id,smallCategoryKey: $smallCategoryOrderKey,bigCategoryKey: $bigCategoryKey,categoryName: $smallCategoryName,defaultDisplayed: $displayedOrderInBig,isDisplayed:$defaultDisplayedを登録しました');
     db.update(
-        TBL201RecordKey().tableName,
+        SqfExpenseSmallCategory.tableName,
         {
-          TBL201RecordKey().id: id,
-          TBL201RecordKey().smallCategoryOrderKey: smallCategoryOrderKey,
-          TBL201RecordKey().bigCategoryKey: bigCategoryKey,
-          TBL201RecordKey().displayedOrderInBig: displayedOrderInBig,
-          TBL201RecordKey().categoryName: smallCategoryName,
-          TBL201RecordKey().defaultDisplayed: defaultDisplayed,
+          SqfExpenseSmallCategory.id: id,
+          SqfExpenseSmallCategory.smallCategoryOrderKey: smallCategoryOrderKey,
+          SqfExpenseSmallCategory.bigCategoryKey: bigCategoryKey,
+          SqfExpenseSmallCategory.displayedOrderInBig: displayedOrderInBig,
+          SqfExpenseSmallCategory.name: smallCategoryName,
+          SqfExpenseSmallCategory.defaultDisplayed: defaultDisplayed,
         },
         id);
   }

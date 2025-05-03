@@ -586,25 +586,25 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
 
     // インスタンス化
     tbl202record = ExpenseBigCategoryEntity(
-        id: bigCategoryProperty![SqfExpenseBigCategory().id],
-        colorCode: bigCategoryProperty![SqfExpenseBigCategory().colorCode],
+        id: bigCategoryProperty![SqfExpenseBigCategory.id],
+        colorCode: bigCategoryProperty![SqfExpenseBigCategory.colorCode],
         bigCategoryName:
-            bigCategoryProperty![SqfExpenseBigCategory().bigCategoryName],
-        resourcePath: bigCategoryProperty![SqfExpenseBigCategory().resourcePath],
-        displayOrder: bigCategoryProperty![SqfExpenseBigCategory().displayOrder],
-        isDisplayed: bigCategoryProperty![SqfExpenseBigCategory().isDisplayed]);
+            bigCategoryProperty![SqfExpenseBigCategory.name],
+        resourcePath: bigCategoryProperty![SqfExpenseBigCategory.resourcePath],
+        displayOrder: bigCategoryProperty![SqfExpenseBigCategory.displayOrder],
+        isDisplayed: bigCategoryProperty![SqfExpenseBigCategory.isDisplayed]);
 
     // itemListの初期化
     for (int i = 0; i < categoryData!.length; i++) {
       itemList.add(ListItem(
-        id: categoryData![i][TBL201RecordKey().id],
+        id: categoryData![i][SqfExpenseSmallCategory.id],
         smallCategoryOrderKey: categoryData![i]
-            [TBL201RecordKey().smallCategoryOrderKey],
-        bigCategoryKey: categoryData![i][TBL201RecordKey().bigCategoryKey],
+            [SqfExpenseSmallCategory.smallCategoryOrderKey],
+        bigCategoryKey: categoryData![i][SqfExpenseSmallCategory.bigCategoryKey],
         bigCategoryOrderInBig: categoryData![i]
-            [TBL201RecordKey().displayedOrderInBig],
-        categoryName: categoryData![i][TBL201RecordKey().categoryName],
-        defaultDisplayed: categoryData![i][TBL201RecordKey().defaultDisplayed],
+            [SqfExpenseSmallCategory.displayedOrderInBig],
+        categoryName: categoryData![i][SqfExpenseSmallCategory.name],
+        defaultDisplayed: categoryData![i][SqfExpenseSmallCategory.defaultDisplayed],
       ));
 
       _categoryNameController =

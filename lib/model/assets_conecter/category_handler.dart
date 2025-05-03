@@ -13,8 +13,8 @@ class CategoryHandler {
   Widget sisytIconGetterFromBigCategoryKey(int bigCategoryKey,
       {double? height, double? width}) {
     final futureListMap = db.query('''
-    SELECT ${SqfExpenseBigCategory().resourcePath},${SqfExpenseBigCategory().colorCode} FROM ${SqfExpenseBigCategory().tableName} a
-    WHERE a.${SqfExpenseBigCategory().id} = $bigCategoryKey
+    SELECT ${SqfExpenseBigCategory.resourcePath},${SqfExpenseBigCategory.colorCode} FROM ${SqfExpenseBigCategory.tableName} a
+    WHERE a.${SqfExpenseBigCategory.id} = $bigCategoryKey
     ''');
     return futureBuilder(futureListMap,width: width,height: height);
   }
@@ -25,8 +25,8 @@ class CategoryHandler {
         future: futureListMap,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
-            String path = snapshot.data![0][SqfExpenseBigCategory().resourcePath];
-            String colorCode = snapshot.data![0][SqfExpenseBigCategory().colorCode];
+            String path = snapshot.data![0][SqfExpenseBigCategory.resourcePath];
+            String colorCode = snapshot.data![0][SqfExpenseBigCategory.colorCode];
             final color = MyColors().getColorFromHex(colorCode);
             Widget icon = FittedBox(
               fit: BoxFit.scaleDown,
