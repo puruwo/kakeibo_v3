@@ -2,6 +2,8 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/model/database_helper.dart';
+import 'package:kakeibo/model/sql_sentence.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
@@ -12,43 +14,45 @@ class ImplementsCategoryAccountingRepository implements CategoryAccountingReposi
   Future<List<CategoryAccountingEntity>> fetchAll({required DateTime fromDate, required DateTime toDate}) async {
     final sql = '''
                   SELECT  
-                    t1._id AS id, 
-                    t1.color_code AS categoryColor,
-                    t1.big_category_name AS bigCategoryName,
-                    t1.resource_path AS categoryIconPath,
-                    t3.price AS budget,
+                    t1.${SqfExpenseBigCategory().id} AS id, 
+                    t1.${SqfExpenseBigCategory().colorCode} AS categoryColor,
+                    t1.${SqfExpenseBigCategory().bigCategoryName} AS bigCategoryName,
+                    t1.${SqfExpenseBigCategory().resourcePath} AS categoryIconPath,
+                    t3.${SqfBudget().price} AS budget,
                     COALESCE(t2.price_sum, 0) AS totalExpenseByBigCategory
-                  FROM TBL202 t1
+                  FROM ${SqfExpenseBigCategory().tableName} t1
                   LEFT JOIN (
                     SELECT
-                      big_category_key,
+                      ${TBL201RecordKey().bigCategoryKey},
                       price_sum
                     FROM (
                       SELECT 
-                        y.big_category_key,
-                        COALESCE(SUM(z.price),0) as price_sum 
-                      FROM TBL001 z
-              	  		INNER JOIN TBL201 y
-                      ON z.payment_category_id = y._id
-                      WHERE (z.date >= '${DateFormat('yyyyMMdd').format(fromDate)}' AND z.date <= '${DateFormat('yyyyMMdd').format(toDate)}')
-                      GROUP BY y.big_category_key
+                        y.${TBL201RecordKey().bigCategoryKey},
+                        COALESCE(SUM(z.${SqfExpense.price}),0) as price_sum 
+                      FROM ${SqfExpense.tableName} z
+              	  		INNER JOIN ${TBL201RecordKey().tableName} y
+                      ON z.${SqfExpense.paymentCategoryId} = y.${TBL201RecordKey().id}
+                      WHERE (z.${SqfExpense.date} >= '${DateFormat('yyyyMMdd').format(fromDate)}' AND z.${SqfExpense.date} <= '${DateFormat('yyyyMMdd').format(toDate)}')
+                      GROUP BY y.${TBL201RecordKey().bigCategoryKey}
                     )
                   ) t2
-                  ON t1._id = t2.big_category_key
+                  ON t1.${SqfExpenseBigCategory().id} = t2.${TBL201RecordKey().bigCategoryKey}
                   LEFT JOIN(
                     SELECT 
-                      MAX(date) AS max_date,
+                      MAX(${SqfBudget().date}) AS max_date,
                       *
-                    FROM TBL003
-                    GROUP BY big_category_id
+                    FROM ${SqfBudget().tableName}
+                    GROUP BY ${SqfBudget().bigCategoryId}
                   ) t3 
-                  ON t1._id = t3.big_category_id
-                  WHERE NOT (t1.is_displayed = 0 AND t2.big_category_key IS NULL)
-                  ORDER BY t1.display_order ASC;
+                  ON t1.${SqfExpenseBigCategory().id} = t3.${SqfBudget().bigCategoryId}
+                  WHERE NOT (t1.${SqfExpenseBigCategory().isDisplayed} = 0 AND t2.${TBL201RecordKey().bigCategoryKey} IS NULL)
+                  ORDER BY t1.${SqfExpenseBigCategory().displayOrder} ASC;
                 ''';
     
     // 実行
     final mapList = await db.query(sql);
+
+    logger.i('====SQLが実行されました====\n ImplementsCategoryAccountingRepository\n$sql');
 
     // 各カテゴリーmapでEntity化
     final List<CategoryAccountingEntity> categoryEntityList = mapList.map((json) => CategoryAccountingEntity.fromJson(json)).toList();

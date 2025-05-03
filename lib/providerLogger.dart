@@ -13,6 +13,8 @@ class ProviderLogger implements ProviderObserver {
     Object? value,
     ProviderContainer container,
   ) {
+    // famlyの時は、nameがnullになり、ロガーに出力されない
+    if(provider.name == null) return;
     logger.i('[ADD]: ${provider.describe}');
   }
 

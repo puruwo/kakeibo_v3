@@ -1,35 +1,38 @@
+import 'package:kakeibo/model/table_calmn_name.dart';
+import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
 
-import 'tableNameKey.dart';
+var logger = Logger();
 
 class DataBaseHelperHandling {
   funcOnCreate(Database db) async {
     await db.execute('''
-          CREATE TABLE ${TBL001RecordKey().tableName} (
-            ${TBL001RecordKey().id} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${TBL001RecordKey().date} TEXT NOT NULL,
-            ${TBL001RecordKey().price} INTEGER NOT NULL,
-            ${TBL001RecordKey().paymentCategoryId} INTEGER NOT NULL,
-            ${TBL001RecordKey().memo} TEXT)
+          CREATE TABLE ${SqfExpense.tableName} (
+            ${SqfExpense.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${SqfExpense.date} date TEXT NOT NULL,
+            ${SqfExpense.price} price INTEGER NOT NULL,
+            ${SqfExpense.paymentCategoryId} big_category_id INTEGER NOT NULL,
+            ${SqfExpense.memo} memo TEXT)
           ;
           ''');
+    logger.i('${SqfExpense.tableName}が作成されました');
 
     await db.execute('''
-          CREATE TABLE ${TBL002RecordKey().tableName} (
-            ${TBL002RecordKey().id} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${TBL002RecordKey().date} TEXT NOT NULL,
-            ${TBL002RecordKey().price} INTEGER NOT NULL,
-            ${TBL002RecordKey().incomeCategoryId} INTEGER NOT NULL,
-            ${TBL002RecordKey().memo} TEXT
+          CREATE TABLE ${SqfIncome().tableName} (
+            ${SqfIncome().id} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${SqfIncome().date} TEXT NOT NULL,
+            ${SqfIncome().price} INTEGER NOT NULL,
+            ${SqfIncome().incomeCategoryId} INTEGER NOT NULL,
+            ${SqfIncome().memo} TEXT
           );
           ''');
 
     await db.execute('''
-          CREATE TABLE ${TBL003RecordKey().tableName} (
-            ${TBL003RecordKey().id} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${TBL003RecordKey().date} TEXT NOT NULL,
-            ${TBL003RecordKey().bigCategoryId} INTEGER NOT NULL,
-            ${TBL003RecordKey().price} INTEGER
+          CREATE TABLE ${SqfBudget().tableName} (
+            ${SqfBudget().id} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${SqfBudget().date} TEXT NOT NULL,
+            ${SqfBudget().bigCategoryId} INTEGER NOT NULL,
+            ${SqfBudget().price} INTEGER
           );
           ''');
 
@@ -70,24 +73,24 @@ class DataBaseHelperHandling {
           ''');
 
     await db.execute('''
-          CREATE TABLE ${TBL202RecordKey().tableName} (
-            ${TBL202RecordKey().id} INTEGER PRIMARY KEY AUTOINCREMENT,
-            ${TBL202RecordKey().colorCode} TEXT NOT NULL,
-            ${TBL202RecordKey().bigCategoryName} TEXT NOT NULL,
-            ${TBL202RecordKey().resourcePath} TEXT NOT NULL,
-            ${TBL202RecordKey().displayOrder} INTEGER NOT NULL,
-            ${TBL202RecordKey().isDisplayed} INTEGER NOT NULL
+          CREATE TABLE ${SqfExpenseBigCategory().tableName} (
+            ${SqfExpenseBigCategory().id} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${SqfExpenseBigCategory().colorCode} TEXT NOT NULL,
+            ${SqfExpenseBigCategory().bigCategoryName} TEXT NOT NULL,
+            ${SqfExpenseBigCategory().resourcePath} TEXT NOT NULL,
+            ${SqfExpenseBigCategory().displayOrder} INTEGER NOT NULL,
+            ${SqfExpenseBigCategory().isDisplayed} INTEGER NOT NULL
           )
           ;''');
 
     await db.execute('''
           INSERT INTO TBL202 (
-          ${TBL202RecordKey().id},
-          ${TBL202RecordKey().colorCode},
-          ${TBL202RecordKey().bigCategoryName},
-          ${TBL202RecordKey().resourcePath},
-          ${TBL202RecordKey().displayOrder},
-          ${TBL202RecordKey().isDisplayed}) 
+          ${SqfExpenseBigCategory().id},
+          ${SqfExpenseBigCategory().colorCode},
+          ${SqfExpenseBigCategory().bigCategoryName},
+          ${SqfExpenseBigCategory().resourcePath},
+          ${SqfExpenseBigCategory().displayOrder},
+          ${SqfExpenseBigCategory().isDisplayed}) 
           VALUES(0, 'FF7070', '食費', 'assets/images/icon_meal.svg', 0, 1),
                 (1, '21D19F', '日用品', 'assets/images/icon_commodity.svg', 1, 1),
                 (2, 'ED112B', '遊び娯楽', 'assets/images/icon_favo.svg', 2, 1),
@@ -147,7 +150,7 @@ class DataBaseHelperHandling {
           ''');
 
     await db.execute('''
-          INSERT INTO ${TBL003RecordKey().tableName}
+          INSERT INTO ${SqfBudget().tableName}
           (_id, date, big_category_id, price)
           VALUES
           (0, '20240101', 0, 35000),

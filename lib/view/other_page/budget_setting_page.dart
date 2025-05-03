@@ -13,7 +13,7 @@ import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/model/db_read_impl.dart';
 import 'package:kakeibo/model/db_delete_impl.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 
 import 'package:kakeibo/repository/tbl003_record/tbl003_record.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
@@ -423,7 +423,7 @@ class _BudgetSettingPageState extends ConsumerState<BudgetSettingPage> {
 
         // 削除するべきレコードがあれば削除
         if (deletingTargetData != null) {
-          int deletingTargetDataId = deletingTargetData[TBL003RecordKey().id];
+          int deletingTargetDataId = deletingTargetData[SqfBudget().id];
           tBL003RecordDelete(deletingTargetDataId);
         }
 
@@ -498,28 +498,28 @@ class _BudgetSettingPageState extends ConsumerState<BudgetSettingPage> {
       itemList.add(Item(
         // 大カテゴリーのIDを取得
         bigCategoryId: monthlyCategoryBudgetList![i]
-            [TBL003RecordKey().bigCategoryId],
+            [SqfBudget().bigCategoryId],
         // 大カテゴリーの予算を取得
         bigCategoryBudget: monthlyCategoryBudgetList![i]['price'],
         // 大カテゴリーのcolorCodeを取得
         bigCategoryColor: monthlyCategoryBudgetList![i]
-            [TBL202RecordKey().colorCode],
+            [SqfExpenseBigCategory().colorCode],
         // 大カテゴリーの名前を取得
         bigCategoryName: monthlyCategoryBudgetList![i]
-            [TBL202RecordKey().bigCategoryName],
+            [SqfExpenseBigCategory().bigCategoryName],
         // 大カテゴリーの画像パスを取得
         bigCategoryResourcePath: monthlyCategoryBudgetList![i]
-            [TBL202RecordKey().resourcePath],
+            [SqfExpenseBigCategory().resourcePath],
         // 大カテゴリーの先月の実績
         sumBigCategory: lastMonthPaymentList![i]['sum_by_bigcategory'],
         // 大カテゴリーの先月のid
-        bigCategoryKey: lastMonthPaymentList![i][TBL202RecordKey().id],
+        bigCategoryKey: lastMonthPaymentList![i][SqfExpenseBigCategory().id],
         // 表示順
         gotDisplayOrder: monthlyCategoryBudgetList![i]
-            [TBL202RecordKey().displayOrder],
+            [SqfExpenseBigCategory().displayOrder],
         // 表示非表示設定
         isDisplayed: monthlyCategoryBudgetList![i]
-            [TBL202RecordKey().isDisplayed],
+            [SqfExpenseBigCategory().isDisplayed],
         // コントローラー
         controller: TextEditingController.fromValue(
           NumberTextInputFormatter().formatEditUpdate(

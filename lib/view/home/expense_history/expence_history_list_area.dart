@@ -30,7 +30,7 @@ class ExpenceHistoryArea extends ConsumerStatefulWidget {
 
 class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
 
-  late List<DateTime> itemKeys;
+  List<DateTime> itemKeys = [];
 
   @override
   Widget build(BuildContext context) {

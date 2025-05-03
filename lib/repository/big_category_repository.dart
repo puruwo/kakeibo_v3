@@ -1,6 +1,7 @@
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/providerLogger.dart';
 
 //DatabaseHelperの初期化
@@ -20,18 +21,19 @@ class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
 
     final sql = '''
       SELECT 
-        a._id AS id,
-        a.color_code AS colorCode,
-        a.big_category_name AS bigCategoryName, 
-        a.resource_path AS resourcePath, 
-        a.display_order AS displayOrder, 
-        a.is_displayed AS isDisplayed
-      FROM TBL202 a
-      where a._id = $bigCategoryId;
+        a.${SqfExpenseBigCategory().id} AS id,
+        a.${SqfExpenseBigCategory().colorCode} AS colorCode,
+        a.${SqfExpenseBigCategory().bigCategoryName} AS bigCategoryName, 
+        a.${SqfExpenseBigCategory().resourcePath} AS resourcePath, 
+        a.${SqfExpenseBigCategory().displayOrder} AS displayOrder, 
+        a.${SqfExpenseBigCategory().isDisplayed} AS isDisplayed
+      FROM ${SqfExpenseBigCategory().tableName} a
+      where a.${SqfExpenseBigCategory().id} = $bigCategoryId;
     ''';
 
     try {
       final jsonList = await db.query(sql);
+      logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
 
       final results = ExpenseBigCategoryEntity.fromJson(jsonList[0]);
 

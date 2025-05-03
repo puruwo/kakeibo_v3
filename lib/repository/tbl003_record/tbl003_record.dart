@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kakeibo/model/database_helper.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 
 //Freezedで生成されるデータクラス
 part 'tbl003_record.freezed.dart';
@@ -28,16 +28,16 @@ class TBL003Record with _$TBL003Record {
   insert() {
     print('$date,$bigCategory,$price');
     // //データベースに格納の処理
-    print(db.insert(TBL003RecordKey().tableName,{
-      TBL003RecordKey().date: date,
-      TBL003RecordKey().price: price,
-      TBL003RecordKey().bigCategoryId: bigCategory,
+    print(db.insert(SqfBudget().tableName,{
+      SqfBudget().date: date,
+      SqfBudget().price: price,
+      SqfBudget().bigCategoryId: bigCategory,
     }));
   }
 
   delete(){
-    db.delete(TBL003RecordKey().tableName, id);
-    print('${TBL003RecordKey().tableName}で${id}のレコードを削除しました');
+    db.delete(SqfBudget().tableName, id);
+    print('${SqfBudget().tableName}で${id}のレコードを削除しました');
   }
 
 }

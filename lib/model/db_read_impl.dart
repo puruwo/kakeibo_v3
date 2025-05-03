@@ -1,6 +1,6 @@
 import 'package:intl/intl.dart';
 import 'package:kakeibo/model/database_helper.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
@@ -18,9 +18,9 @@ class TBL001Impl {
   Future<List<Map<String, dynamic>>> queryPriceByDateCrossMonthRows(
       DateTime fromDate, DateTime toDate) async {
     final sql = '''
-      SELECT SUM(a.price) as sum_price_daily , a.date FROM ${TBL001RecordKey().tableName} a
-      WHERE ${DateFormat('yyyyMMdd').format(fromDate)} <= a.${TBL001RecordKey().date} and a.${TBL001RecordKey().date} <= ${DateFormat('yyyyMMdd').format(toDate)}
-      GROUP BY a.${TBL001RecordKey().date};
+      SELECT SUM(a.price) as sum_price_daily , a.date FROM ${SqfExpense.tableName} a
+      WHERE ${DateFormat('yyyyMMdd').format(fromDate)} <= a.${SqfExpense.date} and a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(toDate)}
+      GROUP BY a.${SqfExpense.date};
       ''';
     // print(sql);
     final immutable = db.query(sql);
@@ -30,7 +30,7 @@ class TBL001Impl {
 
   //全データ取得
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    return db.queryRows(TBL001RecordKey().tableName);
+    return db.queryRows(SqfExpense.tableName);
   }
 }
 
@@ -43,15 +43,15 @@ class TBL001Impl {
 Future<List<Map<String, dynamic>>> queryCrossMonthMutableRowsByCategory(
     DateTime fromDate, DateTime toDate) async {
   final sql = '''
-            SELECT a.${TBL202RecordKey().id}, IFNULL(b.sum_by_bigcategory, 0) as sum_by_bigcategory FROM TBL202 a
+            SELECT a.${SqfExpenseBigCategory().id}, IFNULL(b.sum_by_bigcategory, 0) as sum_by_bigcategory FROM TBL202 a
             LEFT JOIN (SELECT SUM(price) as sum_by_bigcategory, y.${TBL201RecordKey().bigCategoryKey}
-                        FROM ${TBL001RecordKey().tableName} x
+                        FROM ${SqfExpense.tableName} x
 						            INNER JOIN ${TBL201RecordKey().tableName} y
-						            ON x.${TBL001RecordKey().paymentCategoryId} = y.${TBL201RecordKey().id}
-                        WHERE ${TBL001RecordKey().date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${TBL001RecordKey().date} < ${DateFormat('yyyyMMdd').format(toDate)}  
+						            ON x.${SqfExpense.paymentCategoryId} = y.${TBL201RecordKey().id}
+                        WHERE ${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${SqfExpense.date} < ${DateFormat('yyyyMMdd').format(toDate)}  
                         GROUP BY y.${TBL201RecordKey().bigCategoryKey}) b
-            on a.${TBL202RecordKey().id} = b.${TBL201RecordKey().bigCategoryKey}
-            ORDER BY a.${TBL202RecordKey().displayOrder}
+            on a.${SqfExpenseBigCategory().id} = b.${TBL201RecordKey().bigCategoryKey}
+            ORDER BY a.${SqfExpenseBigCategory().displayOrder}
             ;
             ''';
 
@@ -66,16 +66,16 @@ Future<List<Map<String, dynamic>>> queryCrossMonthMutableRowsByCategory(
 //入力した日付の過去最近の目標の合計を取得
 Future<List<Map<String, dynamic>>> queryMonthlyAllBudgetSum(DateTime dt) async {
   final sql = '''
-            SELECT SUM(a.${TBL003RecordKey().price}) as budget_sum
-            FROM ${TBL003RecordKey().tableName} a
-              INNER JOIN ${TBL202RecordKey().tableName} b
-              ON a.${TBL003RecordKey().bigCategoryId} = b.${TBL202RecordKey().id}
-            WHERE ${TBL003RecordKey().date} = (
-              SELECT MAX(${TBL003RecordKey().date})
-              FROM ${TBL003RecordKey().tableName} a2
-              WHERE a.${TBL003RecordKey().bigCategoryId} = a2.${TBL003RecordKey().bigCategoryId}
+            SELECT SUM(a.${SqfBudget().price}) as budget_sum
+            FROM ${SqfBudget().tableName} a
+              INNER JOIN ${SqfExpenseBigCategory().tableName} b
+              ON a.${SqfBudget().bigCategoryId} = b.${SqfExpenseBigCategory().id}
+            WHERE ${SqfBudget().date} = (
+              SELECT MAX(${SqfBudget().date})
+              FROM ${SqfBudget().tableName} a2
+              WHERE a.${SqfBudget().bigCategoryId} = a2.${SqfBudget().bigCategoryId}
             )
-            ORDER BY b.${TBL202RecordKey().displayOrder}
+            ORDER BY b.${SqfExpenseBigCategory().displayOrder}
             ;
             ''';
 
@@ -98,16 +98,16 @@ Future<List<Map<String, dynamic>>> queryMonthlyAllBudgetSum(DateTime dt) async {
 Future<List<Map<String, dynamic>>> queryMonthlyCategoryBudget(
     DateTime dt) async {
   final sql = '''
-            SELECT a.${TBL003RecordKey().bigCategoryId},a.${TBL003RecordKey().price},b.${TBL202RecordKey().colorCode},b.${TBL202RecordKey().bigCategoryName},b.${TBL202RecordKey().resourcePath},b.${TBL202RecordKey().displayOrder},b.${TBL202RecordKey().isDisplayed}
-            FROM ${TBL003RecordKey().tableName} a
-              INNER JOIN ${TBL202RecordKey().tableName} b
-              ON a.${TBL003RecordKey().bigCategoryId} = b.${TBL202RecordKey().id}
-            WHERE ${TBL003RecordKey().date} = (
-              SELECT MAX(${TBL003RecordKey().date})
-              FROM ${TBL003RecordKey().tableName} a2
-              WHERE a.${TBL003RecordKey().bigCategoryId} = a2.${TBL003RecordKey().bigCategoryId}
+            SELECT a.${SqfBudget().bigCategoryId},a.${SqfBudget().price},b.${SqfExpenseBigCategory().colorCode},b.${SqfExpenseBigCategory().bigCategoryName},b.${SqfExpenseBigCategory().resourcePath},b.${SqfExpenseBigCategory().displayOrder},b.${SqfExpenseBigCategory().isDisplayed}
+            FROM ${SqfBudget().tableName} a
+              INNER JOIN ${SqfExpenseBigCategory().tableName} b
+              ON a.${SqfBudget().bigCategoryId} = b.${SqfExpenseBigCategory().id}
+            WHERE ${SqfBudget().date} = (
+              SELECT MAX(${SqfBudget().date})
+              FROM ${SqfBudget().tableName} a2
+              WHERE a.${SqfBudget().bigCategoryId} = a2.${SqfBudget().bigCategoryId}
             )
-            ORDER BY b.${TBL202RecordKey().displayOrder}
+            ORDER BY b.${SqfExpenseBigCategory().displayOrder}
             ;
             ''';
 
@@ -129,7 +129,7 @@ Future<List<Map<String, dynamic>>> getMonthIncomeSum(
     DateTime fromDate, DateTime toDate) {
   final sql = '''
               SELECT SUBSTR(CAST(a.date AS STRING), 1, 6) AS year_month, COALESCE(SUM(price), 0) as sum_price FROM TBL002 a
-              WHERE ${TBL002RecordKey().date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${TBL002RecordKey().date} <= ${DateFormat('yyyyMMdd').format(toDate)};
+              WHERE ${SqfIncome().date} >= ${DateFormat('yyyyMMdd').format(fromDate)} AND ${SqfIncome().date} <= ${DateFormat('yyyyMMdd').format(toDate)};
               ''';
   // print(sql);
   final immutable = db.query(sql);
@@ -143,9 +143,9 @@ Future<List<Map<String, dynamic>>> getMonthIncomeSum(
 Future<List<Map<String, dynamic>>> getSpecifiedDateBigCategoryBudget(
     String date, int bigCategory) async {
   final sql = '''
-              SELECT * FROM ${TBL003RecordKey().tableName} a
-              WHERE a.${TBL003RecordKey().date} = $date
-              AND a.${TBL003RecordKey().bigCategoryId} = $bigCategory
+              SELECT * FROM ${SqfBudget().tableName} a
+              WHERE a.${SqfBudget().date} = $date
+              AND a.${SqfBudget().bigCategoryId} = $bigCategory
               ''';
   // print(sql);
   final immutable = db.query(sql);
@@ -186,8 +186,8 @@ Future<List<Map<String, dynamic>>> getCategoryDataFromCategoryId(
 // bigCategoryId指定でpropertyを取得
 Future<Map<String, dynamic>> getBigCategoryProperty(int bigCategoryId) async {
   final sql = '''
-              SELECT * FROM ${TBL202RecordKey().tableName} a
-              WHERE a.${TBL202RecordKey().id} = $bigCategoryId
+              SELECT * FROM ${SqfExpenseBigCategory().tableName} a
+              WHERE a.${SqfExpenseBigCategory().id} = $bigCategoryId
               ''';
   // print(sql);
   final immutable = db.query(sql);

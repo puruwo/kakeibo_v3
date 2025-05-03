@@ -4,15 +4,11 @@ import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:kakeibo/model/sql_sentence.dart';
 
-import 'package:kakeibo/model/tableNameKey.dart';
-
 class DatabaseHelper {
-  // static final _databaseName = "kakeibo_on_mac.db"; // DB名
-  // static final _databaseVersion = 6; // スキーマのバージョン指定
-  static final _databaseName = "kakeibo.db"; // DB名
-  static final _databaseVersion = 5; // スキーマのバージョン指定
+  static final _databaseName = "kakeibo_v3.db"; // DB名
+  static final _databaseVersion = 1; // スキーマのバージョン指定
 
-  //読み出しデータ(Map)はImmutable!!!!!!!!!!
+  //読み出しデータ(Map)はImmutable
   //なので'Unsupported operation: read-only'が出た時はmakeMutable関数で返す必要がある
 
   // DatabaseHelper クラスを定義
@@ -110,7 +106,7 @@ class DatabaseHelper {
   //　更新処理
   Future<int> update(String table, Map<String, dynamic> row, int id) async {
     Database? db = await instance.database;
-    return await db!.update(table, row, where: '_Id = ?', whereArgs: [id]);
+    return await db!.update(table, row, where: '_id = ?', whereArgs: [id]);
   }
 
   //　削除処理

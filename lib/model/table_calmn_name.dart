@@ -1,21 +1,15 @@
-class TBL001RecordKey {
-  final String _tableName = 'TBL001';
+class SqfExpense {
+  static const tableName = 'expense';
 
-  final String _id = '_id';
-  final String _date = 'date';
-  final String _price = 'price';
-  final String _paymentCategoryId = 'payment_category_id';
-  final String _memo = 'memo';
+  static const id = '_id';
+  static const date = 'date';
+  static const price = 'price';
+  static const paymentCategoryId = 'payment_category_id';
+  static const memo = 'memo';
   
-  String get tableName => _tableName;
-  String get id => _id;
-  String get date => _date;
-  String get price => _price;
-  String get paymentCategoryId => _paymentCategoryId;
-  String get memo => _memo;
 }
 
-class TBL002RecordKey {
+class SqfIncome {
   final String _tableName = 'TBL002';
 
   final String _id = '_id';
@@ -32,7 +26,7 @@ class TBL002RecordKey {
   String get memo => _memo;
 }
 
-class TBL003RecordKey {
+class SqfBudget {
   final String _tableName = 'TBL003';
 
   final String _id = '_id';
@@ -66,7 +60,7 @@ class TBL201RecordKey {
   String get defaultDisplayed => _defaultDisplayed;
 }
 
-class TBL202RecordKey {
+class SqfExpenseBigCategory {
   final String _tableName = 'TBL202';
 
   final String _id = '_id';
@@ -123,19 +117,4 @@ class TBL212RecordKey {
   String get isDisplayed => _isDisplayed;
 }
 
-class SeparateLabelMapKey {
-  final String _id = '_id';
-  final String _date = 'date';
-  final String _price = 'price';
-  final String _category = 'payment_category_id';
-  final String _memo = 'memo';
-  final String _dateTime = 'dateTime';
-
-  String get id => _id;
-  String get date => _date;
-  String get price => _price;
-  String get category => _category;
-  String get memo => _memo;
-  String get dateTime => _dateTime;
-}
 

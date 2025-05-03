@@ -12,7 +12,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/model/db_read_impl.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
@@ -586,13 +586,13 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
 
     // インスタンス化
     tbl202record = ExpenseBigCategoryEntity(
-        id: bigCategoryProperty![TBL202RecordKey().id],
-        colorCode: bigCategoryProperty![TBL202RecordKey().colorCode],
+        id: bigCategoryProperty![SqfExpenseBigCategory().id],
+        colorCode: bigCategoryProperty![SqfExpenseBigCategory().colorCode],
         bigCategoryName:
-            bigCategoryProperty![TBL202RecordKey().bigCategoryName],
-        resourcePath: bigCategoryProperty![TBL202RecordKey().resourcePath],
-        displayOrder: bigCategoryProperty![TBL202RecordKey().displayOrder],
-        isDisplayed: bigCategoryProperty![TBL202RecordKey().isDisplayed]);
+            bigCategoryProperty![SqfExpenseBigCategory().bigCategoryName],
+        resourcePath: bigCategoryProperty![SqfExpenseBigCategory().resourcePath],
+        displayOrder: bigCategoryProperty![SqfExpenseBigCategory().displayOrder],
+        isDisplayed: bigCategoryProperty![SqfExpenseBigCategory().isDisplayed]);
 
     // itemListの初期化
     for (int i = 0; i < categoryData!.length; i++) {

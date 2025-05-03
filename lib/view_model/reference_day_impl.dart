@@ -30,16 +30,7 @@ DateTime getReferenceDayOfMonth(int year, int month) {
       12: 25
     }
   };
-  final monthMap = referenceDayMap[year];
-  //エラー処理を書く
-  try {
-    int referenceDay = monthMap![month]!;
-    return DateTime(year, month, referenceDay);
-  } catch (e) {
-    print(e);
-    print('基準日を取得できませんでした');
-    return DateTime(year, month, 25);
-  }
+  return DateTime(year, month, 25);
 }
 
 DateTime getReferenceDay(DateTime dateTime) {
@@ -50,7 +41,9 @@ DateTime getReferenceDay(DateTime dateTime) {
   //入力した日が、属している基準日よりも前なら
   //一月前の基準日を取得
   if (dateTime.day < thisMonthReferenceDateTime.day) {
-    return getReferenceDayOfMonth(DateTime(dateTime.year, dateTime.month - 1).year, DateTime(dateTime.year, dateTime.month - 1).month);
+    return getReferenceDayOfMonth(
+        DateTime(dateTime.year, dateTime.month - 1).year,
+        DateTime(dateTime.year, dateTime.month - 1).month);
   }
   //入力した日が、属している基準日よりも後なら
   //属している月の基準日を取得
@@ -66,8 +59,9 @@ DateTime getNextReferenceDay(DateTime dateTime) {
   final referenceDay = getReferenceDay(dateTime);
 
   //今の基準日の月に加算原産をし次基準日を取得
-  final nextReferenceDt =
-      getReferenceDayOfMonth(DateTime(referenceDay.year, referenceDay.month + 1).year, DateTime(referenceDay.year, referenceDay.month + 1).month);
+  final nextReferenceDt = getReferenceDayOfMonth(
+      DateTime(referenceDay.year, referenceDay.month + 1).year,
+      DateTime(referenceDay.year, referenceDay.month + 1).month);
   return nextReferenceDt;
 }
 
@@ -76,9 +70,10 @@ DateTime getPreviousReferenceDay(DateTime dateTime) {
   final referenceDay = getReferenceDay(dateTime);
 
   //今の基準日の月に加算原産をし前基準日を取得
-  final previousReferenceDt =
-      getReferenceDayOfMonth(DateTime(referenceDay.year, referenceDay.month - 1).year, DateTime(referenceDay.year, referenceDay.month -1).month);
-  return previousReferenceDt; 
+  final previousReferenceDt = getReferenceDayOfMonth(
+      DateTime(referenceDay.year, referenceDay.month - 1).year,
+      DateTime(referenceDay.year, referenceDay.month - 1).month);
+  return previousReferenceDt;
 }
 
 String getYYDDLabel(DateTime dt) {

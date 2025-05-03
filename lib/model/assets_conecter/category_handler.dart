@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kakeibo/model/database_helper.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/constant/colors.dart';
 
 
@@ -13,8 +13,8 @@ class CategoryHandler {
   Widget sisytIconGetterFromBigCategoryKey(int bigCategoryKey,
       {double? height, double? width}) {
     final futureListMap = db.query('''
-    SELECT ${TBL202RecordKey().resourcePath},${TBL202RecordKey().colorCode} FROM ${TBL202RecordKey().tableName} a
-    WHERE a.${TBL202RecordKey().id} = $bigCategoryKey
+    SELECT ${SqfExpenseBigCategory().resourcePath},${SqfExpenseBigCategory().colorCode} FROM ${SqfExpenseBigCategory().tableName} a
+    WHERE a.${SqfExpenseBigCategory().id} = $bigCategoryKey
     ''');
     return futureBuilder(futureListMap,width: width,height: height);
   }
@@ -25,8 +25,8 @@ class CategoryHandler {
         future: futureListMap,
         builder: (context, snapshot) {
           if (snapshot.data != null) {
-            String path = snapshot.data![0][TBL202RecordKey().resourcePath];
-            String colorCode = snapshot.data![0][TBL202RecordKey().colorCode];
+            String path = snapshot.data![0][SqfExpenseBigCategory().resourcePath];
+            String colorCode = snapshot.data![0][SqfExpenseBigCategory().colorCode];
             final color = MyColors().getColorFromHex(colorCode);
             Widget icon = FittedBox(
               fit: BoxFit.scaleDown,

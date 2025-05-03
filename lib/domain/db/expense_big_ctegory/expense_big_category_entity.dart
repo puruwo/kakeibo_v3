@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kakeibo/model/database_helper.dart';
-import 'package:kakeibo/model/tableNameKey.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 
 //Freezedで生成されるデータクラス
 part 'expense_big_category_entity.freezed.dart';
@@ -28,13 +28,13 @@ class ExpenseBigCategoryEntity with _$ExpenseBigCategoryEntity {
 
   update(){
     print('id: $id,smallCategoryKey: $colorCode,bigCategoryKey: $bigCategoryName,categoryName: $resourcePath,defaultDisplayed: $displayOrder,isDisplayed:$isDisplayedを登録しました');
-    db.update(TBL202RecordKey().tableName, {
-      TBL202RecordKey().id: id,
-      TBL202RecordKey().colorCode: colorCode,
-      TBL202RecordKey().bigCategoryName: bigCategoryName,
-      TBL202RecordKey().resourcePath: resourcePath,
-      TBL202RecordKey().displayOrder: displayOrder,
-      TBL202RecordKey().isDisplayed: isDisplayed,
+    db.update(SqfExpenseBigCategory().tableName, {
+      SqfExpenseBigCategory().id: id,
+      SqfExpenseBigCategory().colorCode: colorCode,
+      SqfExpenseBigCategory().bigCategoryName: bigCategoryName,
+      SqfExpenseBigCategory().resourcePath: resourcePath,
+      SqfExpenseBigCategory().displayOrder: displayOrder,
+      SqfExpenseBigCategory().isDisplayed: isDisplayed,
     }, id);
   }
 

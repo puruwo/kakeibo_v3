@@ -3,6 +3,8 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
+import 'package:kakeibo/model/sql_sentence.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 
 DatabaseHelper db = DatabaseHelper.instance;
 
@@ -16,15 +18,17 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository{
 
     final sql = '''
       SELECT 
-        date,
-        SUM(price) AS totalExpense
-      FROM TBL001
-      WHERE date = $whereArgs
-      GROUP BY date
+        ${SqfExpense.date},
+        SUM(${SqfExpense.price}) AS totalExpense
+      FROM ${SqfExpense.tableName}
+      WHERE ${SqfExpense.date} = $whereArgs
+      GROUP BY ${SqfExpense.date}
     ''';
 
     // 実行
     final dailyExpense = await db.query(sql);
+    
+    logger.i('====SQLが実行されました====\n ImplementsDailyExpenseRepository\n$sql');
     
     // もしデータがない場合
     if(dailyExpense.isEmpty){

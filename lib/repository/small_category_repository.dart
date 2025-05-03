@@ -1,6 +1,7 @@
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/providerLogger.dart';
 
 //DatabaseHelperの初期化
@@ -13,19 +14,21 @@ class ImplementsSmallCategoryRepository implements ExpenseSmallCategoryRepositor
       {required int smallCategoryId}) async {
     final sql = '''
       SELECT 
-        a._id AS id,
-        a.small_category_order_key AS smallCategoryOrderKey,
-        a.big_category_key AS bigCategoryKey,
-        a.displayed_order_in_big AS displayedOrderInBig,
-        a.category_name AS smallCategoryName,
-        a.default_displayed AS defaultDisplayed
-      FROM TBL201 a
-      where a._id = $smallCategoryId;
+        a.${TBL201RecordKey().id} AS id,
+        a.${TBL201RecordKey().smallCategoryOrderKey} AS smallCategoryOrderKey,
+        a.${TBL201RecordKey().bigCategoryKey} AS bigCategoryKey,
+        a.${TBL201RecordKey().displayedOrderInBig} AS displayedOrderInBig,
+        a.${TBL201RecordKey().categoryName} AS smallCategoryName,
+        a.${TBL201RecordKey().defaultDisplayed} AS defaultDisplayed
+      FROM ${TBL201RecordKey().tableName} a
+      where a.${TBL201RecordKey().id} = $smallCategoryId;
     ''';
 
     try {
       final jsonList = await db.query(sql);
 
+      logger.i('====SQLが実行されました====\n ImplementsSmallCategoryRepository fetchBySmallCategory(int smallCategoryId)\n$sql');
+      
       final results = ExpenseSmallCategoryEntity.fromJson(jsonList[0]);
 
       return results;
@@ -44,19 +47,20 @@ class ImplementsSmallCategoryRepository implements ExpenseSmallCategoryRepositor
 
   @override
   Future<List<ExpenseSmallCategoryEntity>> fetchAll() async {
-    const sql = '''
+    final sql = '''
       SELECT 
-        a._id AS id,
-        a.small_category_order_key AS smallCategoryOrderKey,
-        a.big_category_key AS bigCategoryKey,
-        a.displayed_order_in_big AS displayedOrderInBig,
-        a.category_name AS smallCategoryName,
-        a.default_displayed AS defaultDisplayed
-      FROM TBL201 a;
+        a.${TBL201RecordKey().id} AS id,
+        a.${TBL201RecordKey().smallCategoryOrderKey} AS smallCategoryOrderKey,
+        a.${TBL201RecordKey().bigCategoryKey} AS bigCategoryKey,
+        a.${TBL201RecordKey().displayedOrderInBig} AS displayedOrderInBig,
+        a.${TBL201RecordKey().categoryName} AS smallCategoryName,
+        a.${TBL201RecordKey().defaultDisplayed} AS defaultDisplayed
+      FROM ${TBL201RecordKey().tableName} a;
     ''';
 
     // SQLを実行して結果を取得
     final jsonList = await db.query(sql);
+    logger.i('====SQLが実行されました====\n ImplementsSmallCategoryRepository fetchAll()\n$sql');
 
     // 取得したjsonListをSmallCategoryEntityのリストに変換
     final result = jsonList.map((e) {
