@@ -4,6 +4,7 @@ import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final expenseUsecaseProvider = Provider<ExpenseUsecase>(
   ExpenseUsecase.new,
@@ -20,6 +21,10 @@ class ExpenseUsecase {
   ExpenseEntity get originalExpenseEntity =>
       _ref.read(originalExpenseEntityNotifierProvider);
 
+  // DBの更新を管理するnotifierを取得
+  UpdateDBCountNotifier get updateDBCountNotifier =>
+      _ref.read(updateDBCountNotifierProvider.notifier);
+
   // 登録処理
   Future<void> add({required ExpenseEntity expenseEntity}) async {
     
@@ -33,6 +38,10 @@ class ExpenseUsecase {
 
     // tbl001にデータを追加する
     _expenseRepositoryProvider.insert(expenseEntity);
+
+    // DBの更新回数をインクリメント
+    updateDBCountNotifier.incrementState();
+
   }
 
   // 編集処理
@@ -54,10 +63,16 @@ class ExpenseUsecase {
 
     // tbl001にデータを追加する
     _expenseRepositoryProvider.update(editEntity);
+
+    // DBの更新回数をインクリメント
+    updateDBCountNotifier.incrementState();
   }
 
   Future<void> delete({required int id}) async {
     // tbl001にデータを削除する
     _expenseRepositoryProvider.delete(id);
+
+    // DBの更新回数をインクリメント
+    updateDBCountNotifier.incrementState();
   }
 }
