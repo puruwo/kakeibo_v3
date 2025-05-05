@@ -1,0 +1,97 @@
+import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/application/category/income_category_provider.dart';
+import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/register_page/input_molecule/expense_input_area/income_souce_picker.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
+
+class IncomeSourceInputField extends ConsumerStatefulWidget {
+  const IncomeSourceInputField({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _IncomeSourceInputField();
+}
+
+class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final originalExpenseEntity =
+          ref.read(originalExpenseEntityNotifierProvider);
+
+      // 拠出元予算カテゴリーの初期値をセット
+      ref
+          .read(enteredIncomeSourceControllerNotifierProvider.notifier)
+          .setData(originalExpenseEntity.incomeSourceBigCategory);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // コントローラの初期化
+    final incomeSourceBigCategory =
+        ref.watch(enteredIncomeSourceControllerNotifierProvider);
+
+    return GestureDetector(
+      child: Container(
+        decoration: const BoxDecoration(
+          color: MyColors.transparent,
+          borderRadius: BorderRadius.all(
+            Radius.circular(8),
+          ),
+        ),
+        height: 40,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // プレースホルダー
+            Text(
+              "拠出元",
+              textAlign: TextAlign.left,
+              style: MyFonts.placeHolder,
+            ),
+
+            // 選択状態
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // 拠出元選択状態
+                Text(
+                  ref
+                      .watch(anIncomeCategoryProvider(incomeSourceBigCategory))
+                      .when(
+                          data: (data) => data.name,
+                          loading: () => '',
+                          error: (e, _) => ''),
+                  textAlign: TextAlign.right,
+                  style: MyFonts.inputText,
+                ),
+                // テキストとアイコンの間のスペース
+                const SizedBox(width: 4),
+                // 矢印アイコン
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: MyColors.secondaryLabel,
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const IncomeSourcePicker();
+            });
+      },
+    );
+  }
+}

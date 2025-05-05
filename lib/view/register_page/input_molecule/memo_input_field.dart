@@ -69,7 +69,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
                   minLines: 1,
                   maxLines: 1,
                   // 最大文字数の制約
-                  maxLength: 10,
+                  maxLength: 20,
                   // 右下のカウンターを非表示にする
                   buildCounter: (
                     BuildContext context, {

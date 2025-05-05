@@ -7,7 +7,7 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
-import 'package:kakeibo/view/register_page/input_molecule/expense_input_field.dart';
+import 'package:kakeibo/view/register_page/input_molecule/expense_input_area/expense_input_area.dart';
 import 'package:kakeibo/view/register_page/input_molecule/memo_input_field.dart';
 import 'package:kakeibo/view/register_page/submit_expense_button.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
@@ -108,7 +108,7 @@ class _TorokState extends ConsumerState<Torok> {
 
                   SizedBox(height: 8),
 
-                  ExpenseInputField(),
+                  ExpenseInputArea(),
 
                   SizedBox(height: 8),
 
