@@ -37,18 +37,31 @@ class MyFonts {
       fontSize: 19, color: MyColors.white, fontWeight: FontWeight.w400);
 
   static TextStyle placeHolder = GoogleFonts.notoSans(
-    fontSize: 19,
-    fontWeight: FontWeight.w400,
+    fontSize: 17,
+    fontWeight: FontWeight.w500,
     color: MyColors.secondaryLabel,
   );
 
+  static TextStyle inputExpenseText = const TextStyle(
+    fontSize: 25.0,
+    fontWeight: FontWeight.w500,
+    color: MyColors.label,
+    fontFamily: 'sf_ui',
+  );
+
   static TextStyle inputText = GoogleFonts.notoSans(
-    fontSize: 20,
-    fontWeight: FontWeight.w400,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
     color: MyColors.label,
   );
 
   // Dialog
   static TextStyle dialogTitle = GoogleFonts.notoSans(
       fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w400);
+
+  static TextStyle dialogList = GoogleFonts.notoSans(
+            fontSize: 18, 
+            color: MyColors.white, 
+            fontWeight: FontWeight.w300
+          );
 }

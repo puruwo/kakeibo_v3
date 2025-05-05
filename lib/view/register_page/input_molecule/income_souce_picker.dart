@@ -38,10 +38,10 @@ class _IncomeSourcePickerState extends ConsumerState<IncomeSourcePicker> {
                 Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Text(
-                  '拠出元を選択',
-                  style: MyFonts.dialogTitle,
-                  textAlign: TextAlign.center,
-                                     ),
+                      '拠出元を選択',
+                      style: MyFonts.dialogTitle,
+                      textAlign: TextAlign.center,
+                    ),
                 ),
 
                 // カテゴリーリスト
@@ -94,7 +94,11 @@ Widget selectedListTile(
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text(entity.name,textAlign: TextAlign.center,)],
+      children: [
+        Text(
+          entity.name,
+          textAlign: TextAlign.center,
+          style: MyFonts.dialogList)],
     ),
   );
 }
@@ -109,7 +113,11 @@ Widget normalListTile(IncomeBigCategoryEntity entity) {
     ),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.center,
-      children: [Text(entity.name,textAlign: TextAlign.center,)],
+      children: [
+        Text(
+          entity.name,
+          textAlign: TextAlign.center,
+          style: MyFonts.dialogList,)],
     ),
   );
 }

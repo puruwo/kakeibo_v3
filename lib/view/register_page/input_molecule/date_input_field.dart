@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 
@@ -14,7 +14,6 @@ class DateInputField extends ConsumerStatefulWidget {
 }
 
 class _DateInputFieldState extends ConsumerState<DateInputField> {
-
   @override
   void initState() {
     super.initState();
@@ -29,10 +28,6 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
 
   @override
   Widget build(BuildContext context) {
-    // 画面の倍率を計算
-    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
-    final screenHorizontalMagnification = context.screenHorizontalMagnification;
-
     // 入力された日付を監視
     final enteredDate = ref.watch(inputDateControllerNotifierProvider);
 
@@ -44,28 +39,39 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
             Radius.circular(8),
           ),
         ),
-        width: 343 * screenHorizontalMagnification,
-        height: 40,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 4),
-              child: Text(
-                '${enteredDate.year}年${enteredDate.month}月${enteredDate.day}日',
-                textAlign: TextAlign.right,
-                style: const TextStyle(color: MyColors.white, fontSize: 17),
+        height: 44,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
+            children: [
+              Text(
+                "日付",
+                textAlign: TextAlign.left,
+                style: MyFonts.placeHolder,
               ),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(right: 16.0),
-              child: Icon(
-                Icons.arrow_forward_ios_rounded,
-                size: 14,
-                color: MyColors.secondaryLabel,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(right: 4),
+                    child: Text(
+                      '${enteredDate.year}年${enteredDate.month}月${enteredDate.day}日',
+                      textAlign: TextAlign.right,
+                      style: MyFonts.inputText,
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                    color: MyColors.secondaryLabel,
+                  )
+                ],
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
       onTap: () async {

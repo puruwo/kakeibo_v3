@@ -125,9 +125,6 @@ class Foundation extends ConsumerWidget {
                 themeMode: ThemeMode.dark,
                 darkTheme: ThemeData.dark(),
                 home: MediaQuery.withClampedTextScaling(
-                  // テキストサイズの制御
-                  minScaleFactor: 0.7,
-                  maxScaleFactor: 0.95,
                   child: Torok(),
                 ),
               );

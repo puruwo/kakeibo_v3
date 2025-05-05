@@ -51,7 +51,7 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -59,6 +59,8 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
             SizedBox(
               height: 40,
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.baseline,
+                textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
                     "購入金額",
@@ -68,6 +70,9 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
                   Expanded(
                     child: TextFormField(
                       controller: _enteredPriceController,
+                      // 入力するテキストのstyle
+                      style: MyFonts.inputExpenseText,
+
                       // オートフォーカスさせるか
                       autofocus: true,
                       // テキストの揃え(上下)
@@ -76,10 +81,10 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
                       textAlign: TextAlign.end,
                       // カーソルの色
                       cursorColor: MyColors.themeColor,
+                      // カーソルの高さ
+                      cursorHeight: 25,
                       // カーソルの先の太さ
                       cursorWidth: 2,
-                      // 入力するテキストのstyle
-                      style: MyFonts.inputText,
                       // 行数の制約
                       minLines: 1,
                       maxLines: 1,
@@ -152,6 +157,10 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
               ),
             ),
 
+            const SizedBox(
+              height: 8,
+            ),
+
             // 区切り線
             const Divider(
               // ウィジェット自体の高さ
@@ -161,6 +170,10 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
               indent: 0,
               endIndent: 0,
               color: MyColors.separater,
+            ),
+
+            const SizedBox(
+              height: 4,
             ),
 
             // 拠出元選択
@@ -190,10 +203,13 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
                       children: [
                         // 拠出元選択状態
                         Text(
-                          ref.watch(anIncomeCategoryProvider(incomeSourceBigCategory)).when(
-                              data: (data) => data.name,
-                              loading: () => '',
-                              error: (e, _) => ''),
+                          ref
+                              .watch(anIncomeCategoryProvider(
+                                  incomeSourceBigCategory))
+                              .when(
+                                  data: (data) => data.name,
+                                  loading: () => '',
+                                  error: (e, _) => ''),
                           textAlign: TextAlign.right,
                           style: MyFonts.inputText,
                         ),
@@ -210,10 +226,12 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
                   ],
                 ),
               ),
-              onTap: ()  {
-                showDialog(context: context, builder: (context) {
-                  return const IncomeSourcePicker();
-                });
+              onTap: () {
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return const IncomeSourcePicker();
+                    });
               },
             ),
           ],
