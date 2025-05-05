@@ -6,12 +6,14 @@ import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repositor
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/providerLogger.dart';
 import 'package:kakeibo/repository/aggregation_start_day_repository.dart';
 import 'package:kakeibo/repository/all_category_repository.dart';
 import 'package:kakeibo/repository/big_category_repository.dart';
 import 'package:kakeibo/repository/daily_expense_repository.dart';
 import 'package:kakeibo/repository/expense_repository.dart';
+import 'package:kakeibo/repository/income_big_category_repository.dart';
 import 'package:kakeibo/repository/small_category_Tile_repository.dart';
 import 'package:kakeibo/repository/small_category_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
@@ -44,6 +46,9 @@ void main() {
         ),
         expensebigCategoryRepositoryProvider.overrideWithValue(
           ImplementsBigCategoryRepository(),
+        ),
+        incomeBigCategoryRepositoryProvider.overrideWithValue(
+          ImplementsIncomeBigCategoryRepository(),
         ),
         expenseRepositoryProvider.overrideWithValue(
           ImplementsExpenseRepository(),

@@ -25,6 +25,7 @@ mixin _$ExpenseHistoryTileValue {
   String get bigCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get iconPath => throw _privateConstructorUsedError;
+  int get incomeSourceBigCategory => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ExpenseHistoryTileValueCopyWith<ExpenseHistoryTileValue> get copyWith =>
@@ -46,7 +47,8 @@ abstract class $ExpenseHistoryTileValueCopyWith<$Res> {
       String smallCategoryName,
       String bigCategoryName,
       String colorCode,
-      String iconPath});
+      String iconPath,
+      int incomeSourceBigCategory});
 }
 
 /// @nodoc
@@ -72,6 +74,7 @@ class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
     Object? bigCategoryName = null,
     Object? colorCode = null,
     Object? iconPath = null,
+    Object? incomeSourceBigCategory = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -110,6 +113,10 @@ class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
           ? _value.iconPath
           : iconPath // ignore: cast_nullable_to_non_nullable
               as String,
+      incomeSourceBigCategory: null == incomeSourceBigCategory
+          ? _value.incomeSourceBigCategory
+          : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -132,7 +139,8 @@ abstract class _$$ExpenseHistoryTileValueImplCopyWith<$Res>
       String smallCategoryName,
       String bigCategoryName,
       String colorCode,
-      String iconPath});
+      String iconPath,
+      int incomeSourceBigCategory});
 }
 
 /// @nodoc
@@ -157,6 +165,7 @@ class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
     Object? bigCategoryName = null,
     Object? colorCode = null,
     Object? iconPath = null,
+    Object? incomeSourceBigCategory = null,
   }) {
     return _then(_$ExpenseHistoryTileValueImpl(
       id: null == id
@@ -195,6 +204,10 @@ class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
           ? _value.iconPath
           : iconPath // ignore: cast_nullable_to_non_nullable
               as String,
+      incomeSourceBigCategory: null == incomeSourceBigCategory
+          ? _value.incomeSourceBigCategory
+          : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -211,7 +224,8 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
       required this.smallCategoryName,
       required this.bigCategoryName,
       required this.colorCode,
-      required this.iconPath});
+      required this.iconPath,
+      required this.incomeSourceBigCategory});
 
   @override
   final int id;
@@ -232,10 +246,12 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
   final String colorCode;
   @override
   final String iconPath;
+  @override
+  final int incomeSourceBigCategory;
 
   @override
   String toString() {
-    return 'ExpenseHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath)';
+    return 'ExpenseHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath, incomeSourceBigCategory: $incomeSourceBigCategory)';
   }
 
   @override
@@ -256,7 +272,10 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
             (identical(other.iconPath, iconPath) ||
-                other.iconPath == iconPath));
+                other.iconPath == iconPath) &&
+            (identical(
+                    other.incomeSourceBigCategory, incomeSourceBigCategory) ||
+                other.incomeSourceBigCategory == incomeSourceBigCategory));
   }
 
   @override
@@ -270,7 +289,8 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
       smallCategoryName,
       bigCategoryName,
       colorCode,
-      iconPath);
+      iconPath,
+      incomeSourceBigCategory);
 
   @JsonKey(ignore: true)
   @override
@@ -282,15 +302,17 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
 
 abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
   const factory _ExpenseHistoryTileValue(
-      {required final int id,
-      required final DateTime date,
-      required final int price,
-      required final int paymentCategoryId,
-      final String memo,
-      required final String smallCategoryName,
-      required final String bigCategoryName,
-      required final String colorCode,
-      required final String iconPath}) = _$ExpenseHistoryTileValueImpl;
+          {required final int id,
+          required final DateTime date,
+          required final int price,
+          required final int paymentCategoryId,
+          final String memo,
+          required final String smallCategoryName,
+          required final String bigCategoryName,
+          required final String colorCode,
+          required final String iconPath,
+          required final int incomeSourceBigCategory}) =
+      _$ExpenseHistoryTileValueImpl;
 
   @override
   int get id;
@@ -310,6 +332,8 @@ abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
   String get colorCode;
   @override
   String get iconPath;
+  @override
+  int get incomeSourceBigCategory;
   @override
   @JsonKey(ignore: true)
   _$$ExpenseHistoryTileValueImplCopyWith<_$ExpenseHistoryTileValueImpl>

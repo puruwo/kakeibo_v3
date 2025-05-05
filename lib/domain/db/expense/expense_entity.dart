@@ -10,11 +10,12 @@ part 'expense_entity.g.dart';
 @freezed
 class ExpenseEntity with _$ExpenseEntity {
   const factory ExpenseEntity({
-    required int id,
+    @Default(0) int id,
     required String date,
-    required int price,
-    required int paymentCategoryId,
+    @Default(0) int price,
+    @Default(0) int paymentCategoryId,
     @Default('') String memo,
+    @Default(0) int incomeSourceBigCategory,
   }) = _ExpenseEntity;
 
   @override

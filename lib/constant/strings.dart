@@ -36,8 +36,19 @@ class MyFonts {
   static TextStyle regesterHeaderLabel = GoogleFonts.notoSans(
       fontSize: 19, color: MyColors.white, fontWeight: FontWeight.w400);
 
-  static TextStyle placeHolder = const TextStyle(
-    fontSize: 16,
+  static TextStyle placeHolder = GoogleFonts.notoSans(
+    fontSize: 19,
+    fontWeight: FontWeight.w400,
     color: MyColors.secondaryLabel,
   );
+
+  static TextStyle inputText = GoogleFonts.notoSans(
+    fontSize: 20,
+    fontWeight: FontWeight.w400,
+    color: MyColors.label,
+  );
+
+  // Dialog
+  static TextStyle dialogTitle = GoogleFonts.notoSans(
+      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w400);
 }

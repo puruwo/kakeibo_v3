@@ -6,6 +6,7 @@ class SqfExpense {
   static const date = 'date';
   static const price = 'price';
   static const memo = 'memo';
+  static const incomeSourceBigCategory = 'income_source_big_category';
 }
 
 class SqfIncome {
@@ -67,6 +68,4 @@ class SqfIncomeBigCategory {
   static const name = 'name';
   static const colorCode = 'color_code';
   static const resourcePath = 'resource_path';
-  static const displayOrder = 'display_order';
-  static const isDisplayed = 'is_displayed';
 }

@@ -16,7 +16,6 @@ import 'package:kakeibo/view_model/state/register_page/original_expense_entity/o
 import 'package:kakeibo/view/register_page/input_molecule/date_input_field.dart';
 
 class Torok extends ConsumerStatefulWidget {
-
   final RegisterScreenMode mode;
 
   final ExpenseEntity? expenseEntity;
@@ -33,15 +32,11 @@ class _TorokState extends ConsumerState<Torok> {
 
   @override
   void initState() {
-
     // entityを受け取っていなければ初期データで宣言、受け取っていればそれを宣言
     initialExpenseData = widget.expenseEntity ??
         ExpenseEntity(
-            id: 0,
-            date: DateFormat('yyyyMMdd').format(DateTime.now()),
-            price: 0,
-            paymentCategoryId: 0,
-            memo: '');
+          date: DateFormat('yyyyMMdd').format(DateTime.now()),
+        );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // entityをproviderで管理し、各パーツからのアクセスを可能にする
@@ -62,7 +57,6 @@ class _TorokState extends ConsumerState<Torok> {
   Widget build(BuildContext context) {
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
-
 
     //レイアウト------------------------------------------------------------------------------------
 
@@ -136,5 +130,4 @@ class _TorokState extends ConsumerState<Torok> {
       ),
     );
   }
-
 }

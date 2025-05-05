@@ -17,10 +17,11 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     final sql = '''
       SELECT 
         a.${SqfExpense.id} AS id,
+        a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId, 
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price, 
-        a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId, 
-        a.${SqfExpense.memo} AS memo
+        a.${SqfExpense.memo} AS memo,
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)};
     ''';
@@ -43,10 +44,11 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   @override
   void insert(ExpenseEntity expenseEntity) {
     db.insert(SqfExpense.tableName, {
+      SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
       SqfExpense.date: expenseEntity.date,
       SqfExpense.price: expenseEntity.price,
-      SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
-      SqfExpense.memo: expenseEntity.memo
+      SqfExpense.memo: expenseEntity.memo,
+      SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory
     });
     logger.i(
         '====SQLが実行されました====\n ImplementsExpenseRepository insert(ExpenseEntity expenseEntity)\n${SqfExpense.tableName}でinsert\n  expenseEntity: \n$expenseEntity');
@@ -57,10 +59,11 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     db.update(
         SqfExpense.tableName,
         {
+          SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
           SqfExpense.date: expenseEntity.date,
           SqfExpense.price: expenseEntity.price,
-          SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
-          SqfExpense.memo: expenseEntity.memo
+          SqfExpense.memo: expenseEntity.memo,
+          SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory
         },
         expenseEntity.id);
     logger.i(

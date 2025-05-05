@@ -30,7 +30,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
       final originalExpenseEntity =
           ref.read(originalExpenseEntityNotifierProvider);
 
-      final categoryEntity = await ref.watch(categoryUsecaseProvider).fetchById(originalExpenseEntity.paymentCategoryId);
+      final categoryEntity = await ref.watch(categoryUsecaseProvider).fetchByBigCategory(originalExpenseEntity.paymentCategoryId);
       
       ref
           .read(selectCategoryControllerNotifierProvider.notifier).setData(categoryEntity);

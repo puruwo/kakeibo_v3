@@ -12,7 +12,9 @@ class DataBaseHelperHandling {
             ${SqfExpense.expenseSmallCategoryId} INTEGER NOT NULL,
             ${SqfExpense.date} TEXT NOT NULL,
             ${SqfExpense.price} INTEGER NOT NULL,
-            ${SqfExpense.memo} TEXT)
+            ${SqfExpense.memo} TEXT,
+            ${SqfExpense.incomeSourceBigCategory} INTEGER NOT NULL
+            )
           ;
           ''');
     logger.i('${SqfExpense.tableName}が作成されました');
@@ -133,9 +135,9 @@ class DataBaseHelperHandling {
             ${SqfIncomeSmallCategory.displayedOrderInBig},
             ${SqfIncomeSmallCategory.defaultDisplayed}) 
             VALUES(0, 0, '給与', 0, 0, 1),
-                  (1, 1, 'ボーナス', 1, 1, 1),
-                  (2, 1, '小遣い', 2, 2, 1),
-                  (3, 1, '臨時収入', 3, 3, 1);
+                  (1, 0, '小遣い', 2, 2, 1),
+                  (2, 0, '臨時収入', 3, 3, 1);
+                  (3, 1, 'ボーナス', 1, 1, 1),
           ''');
 
     await db.execute('''
@@ -143,9 +145,7 @@ class DataBaseHelperHandling {
             ${SqfIncomeBigCategory.id} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${SqfIncomeBigCategory.name} TEXT NOT NULL,
             ${SqfIncomeBigCategory.colorCode} TEXT NOT NULL,
-            ${SqfIncomeBigCategory.resourcePath} TEXT NOT NULL,
-            ${SqfIncomeBigCategory.displayOrder} INTEGER NOT NULL,
-            ${SqfIncomeBigCategory.isDisplayed} INTEGER NOT NULL
+            ${SqfIncomeBigCategory.resourcePath} TEXT NOT NULL
           )
           ;''');
 
@@ -154,12 +154,10 @@ class DataBaseHelperHandling {
           ${SqfIncomeBigCategory.id},
           ${SqfIncomeBigCategory.name},
           ${SqfIncomeBigCategory.colorCode},
-          ${SqfIncomeBigCategory.resourcePath},
-          ${SqfIncomeBigCategory.displayOrder},
-          ${SqfIncomeBigCategory.isDisplayed}) 
+          ${SqfIncomeBigCategory.resourcePath}) 
           VALUES
-          (0, '定期収入', 'FFC857', 'assets/images/icon_regular_income.svg', 0, 1),
-          (1, '臨時収入', 'ECB22D', 'assets/images/icon_extra_income.svg', 1, 1);
+          (0, '月次収入', 'FFC857', 'assets/images/icon_regular_income.svg'),
+          (1, 'ボーナス', 'ECB22D', 'assets/images/icon_extra_income.svg');
           ''');
 
     

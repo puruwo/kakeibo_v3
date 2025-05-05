@@ -25,6 +25,7 @@ mixin _$ExpenseEntity {
   int get price => throw _privateConstructorUsedError;
   int get paymentCategoryId => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
+  int get incomeSourceBigCategory => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -39,7 +40,12 @@ abstract class $ExpenseEntityCopyWith<$Res> {
       _$ExpenseEntityCopyWithImpl<$Res, ExpenseEntity>;
   @useResult
   $Res call(
-      {int id, String date, int price, int paymentCategoryId, String memo});
+      {int id,
+      String date,
+      int price,
+      int paymentCategoryId,
+      String memo,
+      int incomeSourceBigCategory});
 }
 
 /// @nodoc
@@ -60,6 +66,7 @@ class _$ExpenseEntityCopyWithImpl<$Res, $Val extends ExpenseEntity>
     Object? price = null,
     Object? paymentCategoryId = null,
     Object? memo = null,
+    Object? incomeSourceBigCategory = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -82,6 +89,10 @@ class _$ExpenseEntityCopyWithImpl<$Res, $Val extends ExpenseEntity>
           ? _value.memo
           : memo // ignore: cast_nullable_to_non_nullable
               as String,
+      incomeSourceBigCategory: null == incomeSourceBigCategory
+          ? _value.incomeSourceBigCategory
+          : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -95,7 +106,12 @@ abstract class _$$ExpenseEntityImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int id, String date, int price, int paymentCategoryId, String memo});
+      {int id,
+      String date,
+      int price,
+      int paymentCategoryId,
+      String memo,
+      int incomeSourceBigCategory});
 }
 
 /// @nodoc
@@ -114,6 +130,7 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
     Object? price = null,
     Object? paymentCategoryId = null,
     Object? memo = null,
+    Object? incomeSourceBigCategory = null,
   }) {
     return _then(_$ExpenseEntityImpl(
       id: null == id
@@ -136,6 +153,10 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
           ? _value.memo
           : memo // ignore: cast_nullable_to_non_nullable
               as String,
+      incomeSourceBigCategory: null == incomeSourceBigCategory
+          ? _value.incomeSourceBigCategory
+          : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -144,30 +165,37 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ExpenseEntityImpl implements _ExpenseEntity {
   const _$ExpenseEntityImpl(
-      {required this.id,
+      {this.id = 0,
       required this.date,
-      required this.price,
-      required this.paymentCategoryId,
-      this.memo = ''});
+      this.price = 0,
+      this.paymentCategoryId = 0,
+      this.memo = '',
+      this.incomeSourceBigCategory = 0});
 
   factory _$ExpenseEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExpenseEntityImplFromJson(json);
 
   @override
+  @JsonKey()
   final int id;
   @override
   final String date;
   @override
+  @JsonKey()
   final int price;
   @override
+  @JsonKey()
   final int paymentCategoryId;
   @override
   @JsonKey()
   final String memo;
+  @override
+  @JsonKey()
+  final int incomeSourceBigCategory;
 
   @override
   String toString() {
-    return 'ExpenseEntity(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo)';
+    return 'ExpenseEntity(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, incomeSourceBigCategory: $incomeSourceBigCategory)';
   }
 
   @override
@@ -180,13 +208,16 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.paymentCategoryId, paymentCategoryId) ||
                 other.paymentCategoryId == paymentCategoryId) &&
-            (identical(other.memo, memo) || other.memo == memo));
+            (identical(other.memo, memo) || other.memo == memo) &&
+            (identical(
+                    other.incomeSourceBigCategory, incomeSourceBigCategory) ||
+                other.incomeSourceBigCategory == incomeSourceBigCategory));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, date, price, paymentCategoryId, memo);
+  int get hashCode => Object.hash(runtimeType, id, date, price,
+      paymentCategoryId, memo, incomeSourceBigCategory);
 
   @JsonKey(ignore: true)
   @override
@@ -204,11 +235,12 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
 
 abstract class _ExpenseEntity implements ExpenseEntity {
   const factory _ExpenseEntity(
-      {required final int id,
+      {final int id,
       required final String date,
-      required final int price,
-      required final int paymentCategoryId,
-      final String memo}) = _$ExpenseEntityImpl;
+      final int price,
+      final int paymentCategoryId,
+      final String memo,
+      final int incomeSourceBigCategory}) = _$ExpenseEntityImpl;
 
   factory _ExpenseEntity.fromJson(Map<String, dynamic> json) =
       _$ExpenseEntityImpl.fromJson;
@@ -223,6 +255,8 @@ abstract class _ExpenseEntity implements ExpenseEntity {
   int get paymentCategoryId;
   @override
   String get memo;
+  @override
+  int get incomeSourceBigCategory;
   @override
   @JsonKey(ignore: true)
   _$$ExpenseEntityImplCopyWith<_$ExpenseEntityImpl> get copyWith =>

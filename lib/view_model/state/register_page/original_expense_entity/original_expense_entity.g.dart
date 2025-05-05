@@ -7,7 +7,7 @@ part of 'original_expense_entity.dart';
 // **************************************************************************
 
 String _$originalExpenseEntityNotifierHash() =>
-    r'0304510018a01740f95885ac50ba6e73a1c213f1';
+    r'6ae8037e6a589e8dd7c32e762cbbe77d45f3c054';
 
 /// See also [OriginalExpenseEntityNotifier].
 @ProviderFor(OriginalExpenseEntityNotifier)

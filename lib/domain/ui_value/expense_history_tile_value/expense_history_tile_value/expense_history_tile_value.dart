@@ -16,6 +16,7 @@ class ExpenseHistoryTileValue with _$ExpenseHistoryTileValue {
     required String bigCategoryName,
     required String colorCode,
     required String iconPath,
+    required int incomeSourceBigCategory,
   }) = _ExpenseHistoryTileValue;
 
 }

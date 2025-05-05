@@ -50,7 +50,7 @@ class CategoryUsecase {
     return categoryList;
   }
 
-  Future<CategoryEntity> fetchById(int id) async {
+  Future<CategoryEntity> fetchByBigCategory(int id) async {
     // 小カテゴリーを取得する
     final smallCategoryEntity =
         await _smallCategoryRepositoryProvider.fetchBySmallCategory(smallCategoryId: id);

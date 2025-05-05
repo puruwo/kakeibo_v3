@@ -11,7 +11,7 @@ class OriginalExpenseEntityNotifier extends _$OriginalExpenseEntityNotifier {
     DateTime dt = DateTime.now();
     String date = DateFormat('yyyyMMdd').format(dt);
     return ExpenseEntity(
-        id: 0, date: date, price: 0, paymentCategoryId: 0, memo: '');
+        id: 0, date: date, price: 0, paymentCategoryId: 0, memo: '',incomeSourceBigCategory: 0);
   }
 
   void setData(ExpenseEntity expenseEntity) {

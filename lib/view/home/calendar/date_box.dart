@@ -218,11 +218,7 @@ void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
             maxScaleFactor: 0.95,
             child: Torok(
               expenseEntity: ExpenseEntity(
-                  id: 0,
-                  date: DateFormat('yyyyMMdd').format(selectedDate),
-                  price: 0,
-                  paymentCategoryId: 0,
-                  memo: ''),
+                  date: DateFormat('yyyyMMdd').format(selectedDate),),
               mode: RegisterScreenMode.add,
             )),
       );

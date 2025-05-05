@@ -37,21 +37,6 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
     final enteredDate = ref.watch(inputDateControllerNotifierProvider);
 
     return GestureDetector(
-      onTap: () async {
-        //カレンダーピッカーで日付を選択し取得
-        final DateTime? picked = await showDatePicker(
-          context: context,
-          initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: enteredDate, // 最初に表示する日付
-          firstDate: DateTime(2020), // 選択できる日付の最小値
-          lastDate: DateTime(2040), // 選択できる日付の最大値
-        );
-
-        //notifierを取得
-        final notifier = ref.read(inputDateControllerNotifierProvider.notifier);
-        //nullじゃなければcontrollerを更新
-        if (picked != null) notifier.setData(picked);
-      },
       child: Container(
         decoration: const BoxDecoration(
           color: MyColors.secondarySystemfill,
@@ -83,6 +68,21 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
           ],
         ),
       ),
+      onTap: () async {
+        //カレンダーピッカーで日付を選択し取得
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
+          initialDate: enteredDate, // 最初に表示する日付
+          firstDate: DateTime(2020), // 選択できる日付の最小値
+          lastDate: DateTime(2040), // 選択できる日付の最大値
+        );
+
+        //notifierを取得
+        final notifier = ref.read(inputDateControllerNotifierProvider.notifier);
+        //nullじゃなければcontrollerを更新
+        if (picked != null) notifier.setData(picked);
+      },
     );
   }
 }

@@ -69,6 +69,7 @@ class ExpenseHistoryTile extends ConsumerWidget {
                   price: tileValue.price,
                   paymentCategoryId: tileValue.paymentCategoryId,
                   memo: tileValue.memo,
+                  incomeSourceBigCategory: tileValue.incomeSourceBigCategory
                 );
 
                 return MaterialApp(

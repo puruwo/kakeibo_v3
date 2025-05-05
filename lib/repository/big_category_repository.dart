@@ -15,7 +15,7 @@ class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
     throw UnimplementedError();
   }
 
-  // カテゴリーを指定しないで取得する
+  // カテゴリーを指定して取得する
   @override
   Future<ExpenseBigCategoryEntity> fetchByBigCategory({required int bigCategoryId}) async {
 

@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 class MyColors {
   static const themeColor = Color.fromARGB(255, 11, 178, 131);
 
+  static const transparent = Colors.transparent;
+
   static const white = Colors.white;
   static const black = Colors.black;
   

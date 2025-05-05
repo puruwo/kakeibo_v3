@@ -48,7 +48,7 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
   // 前カテゴリー合計のタイルデータを取得する
   Future<List<ExpenseHistoryTileGroupValue>> fetch({required MonthPeriodValue selectedMonthPeriod}) async {
     
-    // tbl001からデータを取得する
+    // SqfExpenseからデータを取得する
     final expenseList = await _expenseRepositoryProvider.fetchWithoutCategory(period: selectedMonthPeriod);
 
     // 取得した支出データから、それぞれカテゴリーなどの情報を取得し、タイルのデータを作成する
@@ -74,6 +74,7 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
         bigCategoryName: bigCategory.bigCategoryName,
         colorCode: bigCategory.colorCode,
         iconPath: bigCategory.resourcePath,
+        incomeSourceBigCategory: expense.incomeSourceBigCategory,
       );
 
       tileList.add(expenseHistoryTileValue);

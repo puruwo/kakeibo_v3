@@ -6,6 +6,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
@@ -47,6 +48,10 @@ class SubmitExpenseButton extends ConsumerWidget with PresentationMixin {
 
               final enteredPrice = int.tryParse(enteredPriceText) ?? 0;
 
+              // 拠出元を取得する
+              final enteredIncomeSource =
+                  ref.read(enteredIncomeSourceControllerNotifierProvider);
+
               // 入力されたメモを取得する
               final enteredMemo = ref.read(enteredMemoControllerProvider).text;
 
@@ -62,7 +67,8 @@ class SubmitExpenseButton extends ConsumerWidget with PresentationMixin {
                   date: DateFormat('yyyyMMdd').format(inputDate),
                   price: enteredPrice,
                   paymentCategoryId: selectedCategory.id,
-                  memo: enteredMemo);
+                  memo: enteredMemo,
+                  incomeSourceBigCategory: enteredIncomeSource);
 
               switch (screenMode) {
                 case RegisterScreenMode.add:
