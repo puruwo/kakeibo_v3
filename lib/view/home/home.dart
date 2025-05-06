@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/home/calendar_next_arrow_button.dart';
 import 'package:kakeibo/view/home/calendar_previous_arrow_button.dart';
 
@@ -21,20 +22,39 @@ class Home extends StatelessWidget {
       // ヘッダー
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //左矢印ボタン、押すと前の月に移動
-              const CalendarPreviousArrowButton(),
-              Consumer(builder: (context, ref, _) {
-                final activeDt = ref.watch(selectedDatetimeNotifierProvider);
-                final label = labelGetter(activeDt);
-                return Text(label,
-                    style: const TextStyle(color: MyColors.white, fontSize: 20));
-              }),
-              const CalendarNextArrowButton(),
-            ]),
+        centerTitle: true,
+        title: Stack(children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //左矢印ボタン、押すと前の月に移動
+                const CalendarPreviousArrowButton(),
+                Consumer(builder: (context, ref, _) {
+                  final activeDt = ref.watch(selectedDatetimeNotifierProvider);
+                  final label = labelGetter(activeDt);
+                  return Text(
+                    label,
+                    style: const TextStyle(color: MyColors.white, fontSize: 20),
+                  );
+                }),
+                //右矢印ボタン、押すと次の月に移動
+                const CalendarNextArrowButton(),
+              ]),
+          Positioned(
+            right: 0,
+            child: IconButton(
+                onPressed: () => {
+                      // 設定画面にrootのNavigatorで遷移
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ConfigTop(),
+                        ),
+                      )
+                    },
+                icon: const Icon(Icons.settings_rounded)),
+          )
+        ]),
       ),
 
       // 本文

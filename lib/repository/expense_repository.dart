@@ -10,6 +10,37 @@ import 'package:kakeibo/providerLogger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsExpenseRepository implements ExpenseRepository {
+
+  // 全ての支出情報を取得する
+  @override
+  Future<List<ExpenseEntity>> fetchAll() async {
+    const sql = '''
+      SELECT 
+        a.${SqfExpense.id} AS id,
+        a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId, 
+        a.${SqfExpense.date} AS date,
+        a.${SqfExpense.price} AS price, 
+        a.${SqfExpense.memo} AS memo,
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+      FROM ${SqfExpense.tableName} a
+      ORDER BY a.${SqfExpense.id} ASC;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      logger.i(
+          '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
+
+      final results =
+          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
+  } 
+
   // カテゴリーを指定しないで取得する
   @override
   Future<List<ExpenseEntity>> fetchWithoutCategory(

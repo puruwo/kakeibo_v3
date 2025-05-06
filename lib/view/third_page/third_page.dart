@@ -7,6 +7,7 @@ import 'package:kakeibo/constant/strings.dart';
 /// Local imports
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/third_page/next_arrow_button.dart';
 import 'package:kakeibo/view/third_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/third_page/tile/all_category_tile_area.dart';
@@ -52,8 +53,9 @@ class _ThirdState extends ConsumerState<Third> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: SizedBox(
-          child: Row(
+        centerTitle: true,
+        title: Stack(children: [
+          Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -62,12 +64,28 @@ class _ThirdState extends ConsumerState<Third> {
                 Consumer(builder: (context, ref, _) {
                   final activeDt = ref.watch(selectedDatetimeNotifierProvider);
                   final label = labelGetter(activeDt);
-                  return Text(label,style: const TextStyle(color: MyColors.white,fontSize: 20),);
+                  return Text(
+                    label,
+                    style: const TextStyle(color: MyColors.white, fontSize: 20),
+                  );
                 }),
-                //左矢印ボタン、押すと次の月に移動
+                //右矢印ボタン、押すと次の月に移動
                 const NextArrowButton(),
               ]),
-        ),
+          Positioned(
+            right: 0,
+            child: IconButton(
+                onPressed: () => {
+                      // 設定画面にrootのNavigatorで遷移
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ConfigTop(),
+                        ),
+                      )
+                    },
+                icon: const Icon(Icons.settings_rounded)),
+          )
+        ]),
       ),
       backgroundColor: MyColors.secondarySystemBackground,
       body: Center(

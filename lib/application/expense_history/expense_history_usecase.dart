@@ -45,7 +45,7 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
     return fetch(selectedMonthPeriod: selectedMonthPeriod);
   }
 
-  // 前カテゴリー合計のタイルデータを取得する
+  // 期間指定でタイルデータを取得する
   Future<List<ExpenseHistoryTileGroupValue>> fetch({required MonthPeriodValue selectedMonthPeriod}) async {
     
     // SqfExpenseからデータを取得する
