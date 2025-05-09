@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
@@ -27,6 +28,9 @@ class ExportUsecase {
 
   ExpenseBigCategoryRepository get _bigCategoryRepository =>
       _ref.read(expensebigCategoryRepositoryProvider);
+  
+  IncomeBigCategoryRepository get _incomeBigCategoryRepository =>
+      _ref.read(incomeBigCategoryRepositoryProvider);
 
   /// [fetchAll] メソッドは、全てのエクスポートの情報を取得する
   Future<void> exportAll() async {
@@ -46,7 +50,7 @@ class ExportUsecase {
       final expenseBigCategory = await _bigCategoryRepository.fetchByBigCategory(
           bigCategoryId: expenseSmallCategory.bigCategoryKey);
 
-      final incomeBigCategory = await _bigCategoryRepository.fetchByBigCategory(bigCategoryId: expense.incomeSourceBigCategory);
+      final incomeBigCategory = await _incomeBigCategoryRepository.fetchByBigCategory(bigCategoryId: expense.incomeSourceBigCategory);
 
       // iconPathを加工
       // assets/images/icon_〇〇.svg → 〇〇
@@ -61,7 +65,7 @@ class ExportUsecase {
         smallCategoryName: expenseSmallCategory.smallCategoryName,
         colorCode: expenseBigCategory.colorCode,
         iconName: iconName,
-        incomeSourceBigCategoryName: incomeBigCategory.bigCategoryName,
+        incomeSourceBigCategoryName: incomeBigCategory.name,
       );
 
       final list = toList(expenseHistoryTileValue);
