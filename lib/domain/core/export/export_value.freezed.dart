@@ -20,8 +20,8 @@ mixin _$ExportValue {
   String get date => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
-  String get smallCategoryName => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
+  String get smallCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get iconName => throw _privateConstructorUsedError;
   String get incomeSourceBigCategoryName => throw _privateConstructorUsedError;
@@ -42,8 +42,8 @@ abstract class $ExportValueCopyWith<$Res> {
       String date,
       int price,
       String memo,
-      String smallCategoryName,
       String bigCategoryName,
+      String smallCategoryName,
       String colorCode,
       String iconName,
       String incomeSourceBigCategoryName});
@@ -66,8 +66,8 @@ class _$ExportValueCopyWithImpl<$Res, $Val extends ExportValue>
     Object? date = null,
     Object? price = null,
     Object? memo = null,
-    Object? smallCategoryName = null,
     Object? bigCategoryName = null,
+    Object? smallCategoryName = null,
     Object? colorCode = null,
     Object? iconName = null,
     Object? incomeSourceBigCategoryName = null,
@@ -89,13 +89,13 @@ class _$ExportValueCopyWithImpl<$Res, $Val extends ExportValue>
           ? _value.memo
           : memo // ignore: cast_nullable_to_non_nullable
               as String,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
       bigCategoryName: null == bigCategoryName
           ? _value.bigCategoryName
           : bigCategoryName // ignore: cast_nullable_to_non_nullable
+              as String,
+      smallCategoryName: null == smallCategoryName
+          ? _value.smallCategoryName
+          : smallCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
       colorCode: null == colorCode
           ? _value.colorCode
@@ -126,8 +126,8 @@ abstract class _$$ExportValueImplCopyWith<$Res>
       String date,
       int price,
       String memo,
-      String smallCategoryName,
       String bigCategoryName,
+      String smallCategoryName,
       String colorCode,
       String iconName,
       String incomeSourceBigCategoryName});
@@ -148,8 +148,8 @@ class __$$ExportValueImplCopyWithImpl<$Res>
     Object? date = null,
     Object? price = null,
     Object? memo = null,
-    Object? smallCategoryName = null,
     Object? bigCategoryName = null,
+    Object? smallCategoryName = null,
     Object? colorCode = null,
     Object? iconName = null,
     Object? incomeSourceBigCategoryName = null,
@@ -171,13 +171,13 @@ class __$$ExportValueImplCopyWithImpl<$Res>
           ? _value.memo
           : memo // ignore: cast_nullable_to_non_nullable
               as String,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
       bigCategoryName: null == bigCategoryName
           ? _value.bigCategoryName
           : bigCategoryName // ignore: cast_nullable_to_non_nullable
+              as String,
+      smallCategoryName: null == smallCategoryName
+          ? _value.smallCategoryName
+          : smallCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
       colorCode: null == colorCode
           ? _value.colorCode
@@ -203,8 +203,8 @@ class _$ExportValueImpl implements _ExportValue {
       required this.date,
       required this.price,
       this.memo = '',
-      required this.smallCategoryName,
       required this.bigCategoryName,
+      required this.smallCategoryName,
       required this.colorCode,
       required this.iconName,
       required this.incomeSourceBigCategoryName});
@@ -219,9 +219,9 @@ class _$ExportValueImpl implements _ExportValue {
   @JsonKey()
   final String memo;
   @override
-  final String smallCategoryName;
-  @override
   final String bigCategoryName;
+  @override
+  final String smallCategoryName;
   @override
   final String colorCode;
   @override
@@ -231,7 +231,7 @@ class _$ExportValueImpl implements _ExportValue {
 
   @override
   String toString() {
-    return 'ExportValue(id: $id, date: $date, price: $price, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconName: $iconName, incomeSourceBigCategoryName: $incomeSourceBigCategoryName)';
+    return 'ExportValue(id: $id, date: $date, price: $price, memo: $memo, bigCategoryName: $bigCategoryName, smallCategoryName: $smallCategoryName, colorCode: $colorCode, iconName: $iconName, incomeSourceBigCategoryName: $incomeSourceBigCategoryName)';
   }
 
   @override
@@ -243,10 +243,10 @@ class _$ExportValueImpl implements _ExportValue {
             (identical(other.date, date) || other.date == date) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.memo, memo) || other.memo == memo) &&
-            (identical(other.smallCategoryName, smallCategoryName) ||
-                other.smallCategoryName == smallCategoryName) &&
             (identical(other.bigCategoryName, bigCategoryName) ||
                 other.bigCategoryName == bigCategoryName) &&
+            (identical(other.smallCategoryName, smallCategoryName) ||
+                other.smallCategoryName == smallCategoryName) &&
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
             (identical(other.iconName, iconName) ||
@@ -264,8 +264,8 @@ class _$ExportValueImpl implements _ExportValue {
       date,
       price,
       memo,
-      smallCategoryName,
       bigCategoryName,
+      smallCategoryName,
       colorCode,
       iconName,
       incomeSourceBigCategoryName);
@@ -283,8 +283,8 @@ abstract class _ExportValue implements ExportValue {
       required final String date,
       required final int price,
       final String memo,
-      required final String smallCategoryName,
       required final String bigCategoryName,
+      required final String smallCategoryName,
       required final String colorCode,
       required final String iconName,
       required final String incomeSourceBigCategoryName}) = _$ExportValueImpl;
@@ -298,9 +298,9 @@ abstract class _ExportValue implements ExportValue {
   @override
   String get memo;
   @override
-  String get smallCategoryName;
-  @override
   String get bigCategoryName;
+  @override
+  String get smallCategoryName;
   @override
   String get colorCode;
   @override
