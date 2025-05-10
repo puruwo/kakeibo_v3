@@ -33,14 +33,14 @@ class DataBaseHelperHandling {
           CREATE TABLE ${SqfBudget.tableName} (
             ${SqfBudget.id} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${SqfBudget.expenseBigCategoryId} INTEGER NOT NULL,
-            ${SqfBudget.date} TEXT NOT NULL,
+            ${SqfBudget.month} TEXT NOT NULL,
             ${SqfBudget.price} INTEGER
           );
           ''');
 
     await db.execute('''
           INSERT INTO ${SqfBudget.tableName}
-          (${SqfBudget.id}, ${SqfBudget.expenseBigCategoryId}, ${SqfBudget.date}, ${SqfBudget.price})
+          (${SqfBudget.id}, ${SqfBudget.expenseBigCategoryId}, ${SqfBudget.month}, ${SqfBudget.price})
           VALUES
           (0, 0, '20240101', 35000),
           (1, 1, '20240101', 5000),
@@ -159,11 +159,30 @@ class DataBaseHelperHandling {
           (0, '月次収入', 'FFC857', 'assets/images/icon_regular_income.svg'),
           (1, 'ボーナス', 'ECB22D', 'assets/images/icon_extra_income.svg');
           ''');
-
-    
   }
 
   funcOnUpdate(Database db) async {
     // print('データベースの更新処理が呼び出されました');
+    db.execute(
+
+        // budgetのテーブルのカラム名を変更する
+        // date -> month
+        '''
+        CREATE TABLE new_budget (
+	      ${SqfBudget.id} INTEGER PRIMARY KEY,
+	      ${SqfBudget.expenseBigCategoryId} INTEGER NOT NULL,
+	      ${SqfBudget.month} TEXT NOT NULL,  -- yyyyMMdd
+	      ${SqfBudget.price} INTEGER NOT NULL
+        ) 
+
+        INSERT INTO new_budget (${SqfBudget.id},
+        ${SqfBudget.expenseBigCategoryId},
+        ${SqfBudget.month},
+        ${SqfBudget.price})
+        SELECT * FROM ${SqfBudget.tableName}
+
+        DROP TABLE ${SqfBudget.tableName};
+        ALTER TABLE new_budget RENAME TO ${SqfBudget.tableName}
+        ''');
   }
 }

@@ -88,6 +88,51 @@ class ImplementsIncomeRepository implements IncomeRepository {
     }
   }
 
+
+  // 大カテゴリーと期間を指定して収入の合計を取得する
+  @override
+  Future<int> calcurateSumWithCategoryAndPeriod({
+    required MonthPeriodValue period,
+    required int categoryId,
+  }) async {
+    /*
+    SELECT income.*
+    FROM income
+    INNER JOIN income_small_category 
+      ON income.income_small_category_id = income_small_category._id
+    INNER JOIN income_big_category 
+      ON income_small_category.big_category_key = income_big_category._id
+    WHERE income_big_category._id = 1
+    	AND '20250425' <= income.date  AND income.date <= '20250524';
+    */
+
+    final sql = '''
+      SELECT 
+        SUM(a.${SqfIncome.price}) AS totalPrice
+      FROM ${SqfIncome.tableName} a
+      INNER JOIN ${SqfIncomeSmallCategory.tableName} b
+      ON a.${SqfIncome.incomeSmallCategoryId} = b.${SqfIncomeSmallCategory.id}
+      INNER JOIN ${SqfIncomeBigCategory.tableName} c
+      ON b.${SqfIncomeSmallCategory.bigCategoryKey} = c.${SqfIncomeBigCategory.id}
+      WHERE c.${SqfIncomeBigCategory.id} = $categoryId 
+      AND a.${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)} 
+      ;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      logger.i(
+          '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
+
+      final results = jsonList[0]['totalPrice'] as int;
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
   @override
   void insert(IncomeEntity incomeEntity) {
     db.insert(SqfIncome.tableName, {

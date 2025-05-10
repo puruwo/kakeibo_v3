@@ -24,7 +24,7 @@ class SqfBudget {
 
   static const id = '_id';
   static const expenseBigCategoryId = 'expense_big_category_id';
-  static const date = 'date';
+  static const month = 'month';
   static const price = 'price';
 }
 

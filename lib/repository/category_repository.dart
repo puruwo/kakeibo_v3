@@ -39,7 +39,7 @@ class ImplementsCategoryAccountingRepository implements CategoryAccountingReposi
                   ON t1.${SqfExpenseBigCategory.id} = t2.${SqfExpenseSmallCategory.bigCategoryKey}
                   LEFT JOIN(
                     SELECT 
-                      MAX(${SqfBudget.date}) AS max_date,
+                      MAX(${SqfBudget.month}) AS max_date,
                       *
                     FROM ${SqfBudget.tableName}
                     GROUP BY ${SqfBudget.expenseBigCategoryId}

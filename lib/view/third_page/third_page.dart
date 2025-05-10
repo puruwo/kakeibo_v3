@@ -8,6 +8,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/config/config_top.dart';
+import 'package:kakeibo/view/third_page/monthly_plan_area.dart';
 import 'package:kakeibo/view/third_page/next_arrow_button.dart';
 import 'package:kakeibo/view/third_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/third_page/tile/all_category_tile_area.dart';
@@ -148,6 +149,8 @@ class _ThirdState extends ConsumerState<Third> {
                     ],
                   ),
                 ),
+
+                const MonthlyPlanArea(),
 
                 const SizedBox(
                   height: 8,

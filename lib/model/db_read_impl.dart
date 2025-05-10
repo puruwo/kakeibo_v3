@@ -70,8 +70,8 @@ Future<List<Map<String, dynamic>>> queryMonthlyAllBudgetSum(DateTime dt) async {
             FROM ${SqfBudget.tableName} a
               INNER JOIN ${SqfExpenseBigCategory.tableName} b
               ON a.${SqfBudget.expenseBigCategoryId} = b.${SqfExpenseBigCategory.id}
-            WHERE ${SqfBudget.date} = (
-              SELECT MAX(${SqfBudget.date})
+            WHERE ${SqfBudget.month} = (
+              SELECT MAX(${SqfBudget.month})
               FROM ${SqfBudget.tableName} a2
               WHERE a.${SqfBudget.expenseBigCategoryId} = a2.${SqfBudget.expenseBigCategoryId}
             )
@@ -102,8 +102,8 @@ Future<List<Map<String, dynamic>>> queryMonthlyCategoryBudget(
             FROM ${SqfBudget.tableName} a
               INNER JOIN ${SqfExpenseBigCategory.tableName} b
               ON a.${SqfBudget.expenseBigCategoryId} = b.${SqfExpenseBigCategory.id}
-            WHERE ${SqfBudget.date} = (
-              SELECT MAX(${SqfBudget.date})
+            WHERE ${SqfBudget.month} = (
+              SELECT MAX(${SqfBudget.month})
               FROM ${SqfBudget.tableName} a2
               WHERE a.${SqfBudget.expenseBigCategoryId} = a2.${SqfBudget.expenseBigCategoryId}
             )
@@ -144,7 +144,7 @@ Future<List<Map<String, dynamic>>> getSpecifiedDateBigCategoryBudget(
     String date, int bigCategory) async {
   final sql = '''
               SELECT * FROM ${SqfBudget.tableName} a
-              WHERE a.${SqfBudget.date} = $date
+              WHERE a.${SqfBudget.month} = $date
               AND a.${SqfBudget.expenseBigCategoryId} = $bigCategory
               ''';
   // print(sql);

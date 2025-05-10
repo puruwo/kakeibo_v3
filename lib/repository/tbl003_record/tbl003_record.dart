@@ -29,7 +29,7 @@ class TBL003Record with _$TBL003Record {
     print('$date,$bigCategory,$price');
     // //データベースに格納の処理
     print(db.insert(SqfBudget.tableName,{
-      SqfBudget.date: date,
+      SqfBudget.month: date,
       SqfBudget.price: price,
       SqfBudget.expenseBigCategoryId: bigCategory,
     }));

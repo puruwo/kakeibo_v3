@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain_service/month_period_service/aggregation_start_day_provider.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
@@ -17,6 +18,7 @@ final calendarUsecaseNotifierProvider =
 class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTileEntity>>, int> {
   late  DailyExpenseRepository _repository;
   late  MonthPeriodService _periodService;
+  late  AggregationStartDayService _aggregationStartDayService;
 
   @override
   Future<List<List<CalendarTileEntity>>> build(int calendarPage) async {
@@ -27,6 +29,7 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
 
     _repository = ref.read(dailyExpenseRepositoryProvider);
     _periodService = ref.read(monthPeriodServiceProvider);
+    _aggregationStartDayService = ref.read(aggregationStartDayProvider);
 
     return await fetch(calendarPage: calendarPage);
   }
@@ -52,7 +55,7 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     final List<CalendarTileEntity> inPeriodCalendarTileList = [];
 
     // 集計開始日を取得する
-    final startDay = await _periodService.fetchAggregationStartDay();
+    final startDay = await _aggregationStartDayService.fetchAggregationStartDay();
 
     // 期間開始日から終了日までのデータを取得する
     DateTime thisLoopDatetime = period.startDatetime;

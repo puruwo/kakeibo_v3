@@ -3,17 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/db/aggregation_start_day_entity/aggregation_start_day_repository.dart';
 import 'package:kakeibo/domain/core/all_category_accounting_entity/all_category_accounting_repository.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
+import 'package:kakeibo/domain/db/month_basis_entity/month_basis_repository.dart';
 import 'package:kakeibo/providerLogger.dart';
 import 'package:kakeibo/repository/aggregation_start_day_repository.dart';
 import 'package:kakeibo/repository/all_category_repository.dart';
 import 'package:kakeibo/repository/big_category_repository.dart';
+import 'package:kakeibo/repository/budget_repository.dart';
 import 'package:kakeibo/repository/daily_expense_repository.dart';
 import 'package:kakeibo/repository/expense_repository.dart';
 import 'package:kakeibo/repository/income_big_category_repository.dart';
+import 'package:kakeibo/repository/month_basis_repository.dart';
 import 'package:kakeibo/repository/small_category_Tile_repository.dart';
 import 'package:kakeibo/repository/small_category_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
@@ -52,6 +56,12 @@ void main() {
         ),
         expenseRepositoryProvider.overrideWithValue(
           ImplementsExpenseRepository(),
+        ),
+        monthBasisRepositoryProvider.overrideWithValue(
+          ImplementsMonthBasisRepository(),
+        ),
+        budgetRepositoryProvider.overrideWithValue(
+          ImplementsBudgetRepository(),
         ),
       ],
       observers: const [ProviderLogger()],

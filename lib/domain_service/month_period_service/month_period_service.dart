@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/db/aggregation_start_day_entity/aggregation_start_day_entity.dart';
-import 'package:kakeibo/domain/db/aggregation_start_day_entity/aggregation_start_day_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain_service/month_period_service/aggregation_start_day_provider.dart';
 
 final monthPeriodServiceProvider = Provider<MonthPeriodService>(
   (ref) => MonthPeriodService(ref),
@@ -13,13 +13,13 @@ class MonthPeriodService{
 
   final Ref _ref;
 
-  AggregationStartDayRepository get aggregationStartDateRepository => _ref.read(aggregationStartDayRepositoryProvider);
+  AggregationStartDayService get _aggregationStartDateEntity => _ref.read(aggregationStartDayProvider);
 
   // 指定した日付を含む集計期間を取得する
   Future<MonthPeriodValue> fetchMonthPeriod(DateTime includedDate) async{
 
     // ユーザ設定の集計開始日を取得する
-    AggregationStartDayEntity aggregationStartDateEntity = await fetchAggregationStartDay();
+    AggregationStartDayEntity aggregationStartDateEntity = await _aggregationStartDateEntity.fetchAggregationStartDay();
     final int aggregationStartDay = aggregationStartDateEntity.day;
     
     // 入力した日がユーザ設定の期間開始日より前の場合
@@ -46,12 +46,6 @@ class MonthPeriodService{
     }
   }
 
-  // ユーザ設定の集計開始日を取得する
-  Future<AggregationStartDayEntity> fetchAggregationStartDay() async{
-    AggregationStartDayEntity aggregationStartDateEntity = await aggregationStartDateRepository.fetch();
-    return aggregationStartDateEntity;
-  }
-   
   // 前の集計期間を取得する
   MonthPeriodValue fetchPreviousMonthPeriod(MonthPeriodValue monthPeriodValue) {
     final previousMonthStartDateBuff = DateTime(monthPeriodValue.startDatetime.year, monthPeriodValue.startDatetime.month - 1, monthPeriodValue.startDatetime.day);
@@ -77,5 +71,7 @@ class MonthPeriodService{
 
     return MonthPeriodValue(startDatetime:previousMonthPeriodStartDate,endDatetime: previousMonthPeriodEndDate);
   }
+   
+  
 }
 

@@ -13,9 +13,14 @@ abstract interface class IncomeRepository {
   // / 全ての支出情報を取得する
   Future<List<IncomeEntity>> fetchAll();
 
-  /// 期間指定してデータを取得する
-  /// カテゴリーの指定はしない
+  /// 期間とカテゴリーを指定してデータを取得する
   Future<List<IncomeEntity>> fetchWithCategoryAndPeriod({
+    required MonthPeriodValue period,
+    required int categoryId,
+  });
+
+  /// 期間とカテゴリーを指定して収入の合計値を取得する
+  Future<int> calcurateSumWithCategoryAndPeriod({
     required MonthPeriodValue period,
     required int categoryId,
   });
