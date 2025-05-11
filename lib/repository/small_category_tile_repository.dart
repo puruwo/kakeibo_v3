@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/database_helper.dart';
-import 'package:kakeibo/model/sql_sentence.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 
 //DatabaseHelperの初期化

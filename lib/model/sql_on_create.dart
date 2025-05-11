@@ -1,8 +1,6 @@
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
-import 'package:logger/logger.dart';
 import 'package:sqflite/sqflite.dart';
-
-var logger = Logger();
 
 class DataBaseHelperHandling {
   funcOnCreate(Database db) async {
@@ -159,30 +157,5 @@ class DataBaseHelperHandling {
           (0, '月次収入', 'FFC857', 'assets/images/icon_regular_income.svg'),
           (1, 'ボーナス', 'ECB22D', 'assets/images/icon_extra_income.svg');
           ''');
-  }
-
-  funcOnUpdate(Database db) async {
-    // print('データベースの更新処理が呼び出されました');
-    db.execute(
-
-        // budgetのテーブルのカラム名を変更する
-        // date -> month
-        '''
-        CREATE TABLE new_budget (
-	      ${SqfBudget.id} INTEGER PRIMARY KEY,
-	      ${SqfBudget.expenseBigCategoryId} INTEGER NOT NULL,
-	      ${SqfBudget.month} TEXT NOT NULL,  -- yyyyMMdd
-	      ${SqfBudget.price} INTEGER NOT NULL
-        ) 
-
-        INSERT INTO new_budget (${SqfBudget.id},
-        ${SqfBudget.expenseBigCategoryId},
-        ${SqfBudget.month},
-        ${SqfBudget.price})
-        SELECT * FROM ${SqfBudget.tableName}
-
-        DROP TABLE ${SqfBudget.tableName};
-        ALTER TABLE new_budget RENAME TO ${SqfBudget.tableName}
-        ''');
-  }
+  }  
 }

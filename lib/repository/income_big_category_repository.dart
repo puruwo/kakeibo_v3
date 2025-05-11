@@ -2,7 +2,7 @@ import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
-import 'package:kakeibo/providerLogger.dart';
+import 'package:kakeibo/logger.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;

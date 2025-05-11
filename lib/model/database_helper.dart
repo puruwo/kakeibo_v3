@@ -1,12 +1,13 @@
 import 'dart:io';
+import 'package:kakeibo/model/sql_on_update.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:kakeibo/model/sql_sentence.dart';
+import 'package:kakeibo/model/sql_on_create.dart';
 
 class DatabaseHelper {
-  static final _databaseName = "kakeibo_v3.db"; // DB名
-  static final _databaseVersion = 2; // スキーマのバージョン指定
+  static const _databaseName = "kakeibo_v3.db"; // DB名
+  static const _databaseVersion = 5; // スキーマのバージョン指定
 
   //読み出しデータ(Map)はImmutable
   //なので'Unsupported operation: read-only'が出た時はmakeMutable関数で返す必要がある
@@ -54,7 +55,20 @@ class DatabaseHelper {
       // DBアップグッレード時に一度だけ呼び出す
       onUpgrade: (db, oldVersion, newVersion) async {
         print('データベースをアップデート中です');
-        await DataBaseHelperHandling().funcOnUpdate(db);
+        for (var version = oldVersion + 1; version <= newVersion; version++) {
+          switch (version) {
+            case 3:
+              await DataBaseMigrate().toV3(db);
+              break;
+            case 4:
+              await DataBaseMigrate().toV4(db);
+              break;
+            case 5:
+              await DataBaseMigrate().toV5(db);
+              break;
+            // ... さらにバージョンが増えたら追加
+          }
+        }
         print('アップデートが完了しました');
       },
     );
@@ -93,7 +107,7 @@ class DatabaseHelper {
   Future<List<Map<String, dynamic>>> query(String sql) async {
     Database? db = await instance.database;
     try {
-    // トランザクションを利用して安全に処理する
+      // トランザクションを利用して安全に処理する
       return await db!.transaction((txn) async {
         return await txn.rawQuery(sql);
       });

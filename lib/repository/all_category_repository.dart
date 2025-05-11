@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:kakeibo/domain/core/all_category_accounting_entity/all_category_accounting_entity.dart';
 import 'package:kakeibo/domain/core/all_category_accounting_entity/all_category_accounting_repository.dart';
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/database_helper.dart';
-import 'package:kakeibo/model/sql_sentence.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 
 //DatabaseHelperの初期化
@@ -28,8 +28,8 @@ class ImplementsAllCategoryAccountingRepository implements AllCategoryAccounting
             FROM ${SqfBudget.tableName} a
               INNER JOIN ${SqfExpenseBigCategory.tableName} b
               ON a.${SqfBudget.expenseBigCategoryId} = b._id
-            WHERE date = (
-              SELECT MAX(date)
+            WHERE ${SqfBudget.month} = (
+              SELECT MAX(${SqfBudget.month})
               FROM ${SqfBudget.tableName} a2
               WHERE a.${SqfBudget.expenseBigCategoryId} = a2.${SqfBudget.expenseBigCategoryId}
             )

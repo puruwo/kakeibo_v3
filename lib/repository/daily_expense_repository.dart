@@ -2,8 +2,8 @@ import 'package:intl/intl.dart';
 
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/database_helper.dart';
-import 'package:kakeibo/model/sql_sentence.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 
 DatabaseHelper db = DatabaseHelper.instance;
