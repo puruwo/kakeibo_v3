@@ -19,11 +19,22 @@ class MonthlyPlanArea extends ConsumerWidget {
 
   Widget MonthlyPlanCard({required MonthlyPlanValue allCategoryTileEntity}) {
     return Container(
-      child: Row(
+      child: Column(
         children: [
-          Text(allCategoryTileEntity.monthlyIncome.toString()),
-          Text(allCategoryTileEntity.monthlyBudget.toString()),
-          Text(allCategoryTileEntity.expectedSavings.toString()),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                child: Text('月の収入: ${allCategoryTileEntity.monthlyIncome.toString()}')),
+          ),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  child: Text('月の予算: ${allCategoryTileEntity.monthlyBudget.toString()}'))),
+          Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                  child:
+                      Text('予想貯金: ${allCategoryTileEntity.expectedSavings.toString()}'))),
         ],
       ),
     );
