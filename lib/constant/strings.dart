@@ -60,8 +60,26 @@ class MyFonts {
       fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w400);
 
   static TextStyle dialogList = GoogleFonts.notoSans(
-            fontSize: 18, 
-            color: MyColors.white, 
-            fontWeight: FontWeight.w300
-          );
+      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w300);
+
+  //BudgetSettingPage
+  static TextStyle categoryTitle = GoogleFonts.notoSans(
+      fontSize: 18, color: MyColors.label, fontWeight: FontWeight.w400);
+
+  static TextStyle subPrice = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 16,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
+
+  static TextStyle yenText = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
+
+  static TextStyle textField = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontWeight: FontWeight.w600,
+      color: MyColors.white,
+      fontSize: 20);
 }

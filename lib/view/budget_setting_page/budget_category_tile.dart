@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
@@ -64,10 +65,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                       width: 70 + listSTextBoxOffset * 2,
                       child: Text(
                         widget.budgetEditValue.expenseBigCategoryName,
-                        style: GoogleFonts.notoSans(
-                            fontSize: 18,
-                            color: MyColors.label,
-                            fontWeight: FontWeight.w400),
+                        style: MyFonts.categoryTitle,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -83,20 +81,13 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                             '---',
                             // formattedPriceGetter(
                             //     widget.budgetEditValue.),
-                            style: const TextStyle(
-                                fontFamily: 'sf_ui',
-                                fontSize: 16,
-                                color: MyColors.secondaryLabel,
-                                fontWeight: FontWeight.w300),
+                            style: MyFonts.subPrice,
                             textAlign: TextAlign.right,
                           ),
                         ),
                         Text(
                           ' 円',
-                          style: GoogleFonts.notoSans(
-                              fontSize: 14,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w300),
+                          style: MyFonts.yenText,
                         )
                       ],
                     ),
@@ -113,11 +104,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                             // テキストフィールドのプロパティ
                             textAlign: TextAlign.right,
                             textAlignVertical: TextAlignVertical.top,
-                            style: const TextStyle(
-                                fontFamily: 'sf_ui',
-                                fontWeight: FontWeight.w600,
-                                color: MyColors.white,
-                                fontSize: 20),
+                            style: MyFonts.textField,
                             inputFormatters: [
                               // カンマのフォーマット
                               NumberTextInputFormatter()
@@ -181,10 +168,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                               const EdgeInsets.only(top: 12.0, bottom: 8.0),
                           child: Text(
                             ' 円',
-                            style: GoogleFonts.notoSans(
-                                fontSize: 14,
-                                color: MyColors.secondaryLabel,
-                                fontWeight: FontWeight.w300),
+                            style: MyFonts.yenText,
                           ),
                         )
                       ],

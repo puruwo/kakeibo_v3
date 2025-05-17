@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/view/other_page/budget_category_tile.dart';
+import 'package:kakeibo/view/budget_setting_page/budget_category_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
 
 class BudgetCategoryArea extends ConsumerWidget {

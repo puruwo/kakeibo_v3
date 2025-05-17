@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/other_page/budget_cotegory_area.dart';
-import 'package:kakeibo/view/other_page/submit_budget_button.dart';
+import 'package:kakeibo/view/budget_setting_page/budget_cotegory_area.dart';
+import 'package:kakeibo/view/budget_setting_page/submit_budget_button.dart';
 
 class BudgetSettingPage extends ConsumerStatefulWidget {
   const BudgetSettingPage({super.key});
