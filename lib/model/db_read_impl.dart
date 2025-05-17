@@ -138,21 +138,6 @@ Future<List<Map<String, dynamic>>> getMonthIncomeSum(
   return mutable;
 }
 
-// 日付と大カテゴリー指定した予算取得
-// 1recordのみreturn
-Future<List<Map<String, dynamic>>> getSpecifiedDateBigCategoryBudget(
-    String date, int bigCategory) async {
-  final sql = '''
-              SELECT * FROM ${SqfBudget.tableName} a
-              WHERE a.${SqfBudget.month} = $date
-              AND a.${SqfBudget.expenseBigCategoryId} = $bigCategory
-              ''';
-  // print(sql);
-  final immutable = db.query(sql);
-  final mutable = await makeMutable(immutable);
-  return mutable;
-}
-
 // {
 //  id:
 //  small_category_order_key
