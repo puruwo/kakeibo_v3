@@ -9,7 +9,8 @@ import 'package:kakeibo/logger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsBudgetRepository implements BudgetRepository {
-  // 全ての支出情報を取得する
+
+  // その月の各カテゴリーの予算をListで返す
   @override
   Future<List<BudgetEntity>> fetchMonthly({required MonthValue month}) async {
     final sql = '''
@@ -38,6 +39,7 @@ class ImplementsBudgetRepository implements BudgetRepository {
     }
   }
 
+  // 月の合計予算を算出する
   @override
   Future<int> fetchMonthlyAll({required MonthValue month}) async {
     final sql = '''

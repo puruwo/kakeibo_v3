@@ -18,6 +18,7 @@ final _privateConstructorUsedError = UnsupportedError(
 mixin _$DateScopeEntity {
   DateTime get selectedDate => throw _privateConstructorUsedError;
   MonthPeriodValue get monthPeriod => throw _privateConstructorUsedError;
+  MonthValue get representativeMonth => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DateScopeEntityCopyWith<DateScopeEntity> get copyWith =>
@@ -30,9 +31,13 @@ abstract class $DateScopeEntityCopyWith<$Res> {
           DateScopeEntity value, $Res Function(DateScopeEntity) then) =
       _$DateScopeEntityCopyWithImpl<$Res, DateScopeEntity>;
   @useResult
-  $Res call({DateTime selectedDate, MonthPeriodValue monthPeriod});
+  $Res call(
+      {DateTime selectedDate,
+      MonthPeriodValue monthPeriod,
+      MonthValue representativeMonth});
 
   $MonthPeriodValueCopyWith<$Res> get monthPeriod;
+  $MonthValueCopyWith<$Res> get representativeMonth;
 }
 
 /// @nodoc
@@ -50,6 +55,7 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
   $Res call({
     Object? selectedDate = null,
     Object? monthPeriod = null,
+    Object? representativeMonth = null,
   }) {
     return _then(_value.copyWith(
       selectedDate: null == selectedDate
@@ -60,6 +66,10 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
           ? _value.monthPeriod
           : monthPeriod // ignore: cast_nullable_to_non_nullable
               as MonthPeriodValue,
+      representativeMonth: null == representativeMonth
+          ? _value.representativeMonth
+          : representativeMonth // ignore: cast_nullable_to_non_nullable
+              as MonthValue,
     ) as $Val);
   }
 
@@ -68,6 +78,14 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
   $MonthPeriodValueCopyWith<$Res> get monthPeriod {
     return $MonthPeriodValueCopyWith<$Res>(_value.monthPeriod, (value) {
       return _then(_value.copyWith(monthPeriod: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $MonthValueCopyWith<$Res> get representativeMonth {
+    return $MonthValueCopyWith<$Res>(_value.representativeMonth, (value) {
+      return _then(_value.copyWith(representativeMonth: value) as $Val);
     });
   }
 }
@@ -80,10 +98,15 @@ abstract class _$$DateScopeEntityImplCopyWith<$Res>
       __$$DateScopeEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime selectedDate, MonthPeriodValue monthPeriod});
+  $Res call(
+      {DateTime selectedDate,
+      MonthPeriodValue monthPeriod,
+      MonthValue representativeMonth});
 
   @override
   $MonthPeriodValueCopyWith<$Res> get monthPeriod;
+  @override
+  $MonthValueCopyWith<$Res> get representativeMonth;
 }
 
 /// @nodoc
@@ -99,6 +122,7 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
   $Res call({
     Object? selectedDate = null,
     Object? monthPeriod = null,
+    Object? representativeMonth = null,
   }) {
     return _then(_$DateScopeEntityImpl(
       selectedDate: null == selectedDate
@@ -109,6 +133,10 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
           ? _value.monthPeriod
           : monthPeriod // ignore: cast_nullable_to_non_nullable
               as MonthPeriodValue,
+      representativeMonth: null == representativeMonth
+          ? _value.representativeMonth
+          : representativeMonth // ignore: cast_nullable_to_non_nullable
+              as MonthValue,
     ));
   }
 }
@@ -117,16 +145,20 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
 
 class _$DateScopeEntityImpl implements _DateScopeEntity {
   const _$DateScopeEntityImpl(
-      {required this.selectedDate, required this.monthPeriod});
+      {required this.selectedDate,
+      required this.monthPeriod,
+      required this.representativeMonth});
 
   @override
   final DateTime selectedDate;
   @override
   final MonthPeriodValue monthPeriod;
+  @override
+  final MonthValue representativeMonth;
 
   @override
   String toString() {
-    return 'DateScopeEntity(selectedDate: $selectedDate, monthPeriod: $monthPeriod)';
+    return 'DateScopeEntity(selectedDate: $selectedDate, monthPeriod: $monthPeriod, representativeMonth: $representativeMonth)';
   }
 
   @override
@@ -137,11 +169,14 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
             (identical(other.selectedDate, selectedDate) ||
                 other.selectedDate == selectedDate) &&
             (identical(other.monthPeriod, monthPeriod) ||
-                other.monthPeriod == monthPeriod));
+                other.monthPeriod == monthPeriod) &&
+            (identical(other.representativeMonth, representativeMonth) ||
+                other.representativeMonth == representativeMonth));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, selectedDate, monthPeriod);
+  int get hashCode =>
+      Object.hash(runtimeType, selectedDate, monthPeriod, representativeMonth);
 
   @JsonKey(ignore: true)
   @override
@@ -154,12 +189,15 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
 abstract class _DateScopeEntity implements DateScopeEntity {
   const factory _DateScopeEntity(
       {required final DateTime selectedDate,
-      required final MonthPeriodValue monthPeriod}) = _$DateScopeEntityImpl;
+      required final MonthPeriodValue monthPeriod,
+      required final MonthValue representativeMonth}) = _$DateScopeEntityImpl;
 
   @override
   DateTime get selectedDate;
   @override
   MonthPeriodValue get monthPeriod;
+  @override
+  MonthValue get representativeMonth;
   @override
   @JsonKey(ignore: true)
   _$$DateScopeEntityImplCopyWith<_$DateScopeEntityImpl> get copyWith =>
