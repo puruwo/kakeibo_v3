@@ -30,28 +30,32 @@ class BudgetUsecase {
   /// [fetchAll] メソッドは、全てのエクスポートの情報を取得する
   Future<List<BudgetEditValue>> fetchAll(
       {required MonthValue monthValue}) async {
-    // SqfBudgetからデータを取得する
-    final budgetList =
-        await _budgetRepositoryProvider.fetchMonthly(month: monthValue);
+    // 大カテゴリーの一覧情報を取得する
+    final expenseBigCategoryList = await _bigCategoryRepository.fetchAll();
 
     // 取得した支出データから、それぞれカテゴリーなどの情報を取得し、タイルのデータを作成する
     List<BudgetEditValue> tileList = [];
 
     // 各valueの情報を取得する
-    for (var budget in budgetList) {
-      // 各BudgetEntityの大カテゴリーの情報を取得する
-      final expenseBigCategory = await _bigCategoryRepository
-          .fetchByBigCategory(bigCategoryId: budget.expenseBigCategoryId);
+    for (var bigCategory in expenseBigCategoryList) {
+      // SqfBudgetから大カテゴリーを指定して予算データを取得する
+      final budgetEntity =
+          await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
+              month: monthValue, expenseBigCategoryId: bigCategory.id);
 
       final budgetEditValue = BudgetEditValue(
-        id: budget.id,
-        expenseBigCategoryId: budget.expenseBigCategoryId,
-        month: budget.month,
-        price: budget.price,
-        expenseBigCategoryName: expenseBigCategory.bigCategoryName,
-        colorCode: expenseBigCategory.colorCode,
-        resourcePath: expenseBigCategory.resourcePath,
-        displayOrder: expenseBigCategory.displayOrder,
+        id: budgetEntity.id,
+        // 予算が設定されているかどうかbudgetEntityのidで判断
+        budgetStatus: budgetEntity.id != -1
+            ? BudgetStatus.registerd
+            : BudgetStatus.notRegisterd,
+        expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
+        month: budgetEntity.month,
+        price: budgetEntity.price,
+        expenseBigCategoryName: bigCategory.bigCategoryName,
+        colorCode: bigCategory.colorCode,
+        resourcePath: bigCategory.resourcePath,
+        displayOrder: bigCategory.displayOrder,
       );
 
       tileList.add(budgetEditValue);
@@ -64,7 +68,6 @@ class BudgetUsecase {
   Future<void> edit(
       {required List<BudgetEditValue> originalValues,
       required List<int> editPrice}) async {
-        
     //エラーチェック
     if (originalValues.length != editPrice.length) {
       // リストの長さが一致しない場合
@@ -72,7 +75,6 @@ class BudgetUsecase {
     }
 
     for (var i = 0; i < originalValues.length; i++) {
-
       // 値段に変更があればアップデートする
       if (originalValues[i].price != editPrice[i]) {
         final editEntity = BudgetEntity(
@@ -81,10 +83,27 @@ class BudgetUsecase {
           month: originalValues[i].month,
           price: editPrice[i],
         );
-        // SqfBudgetでデータをupdateする
-        _budgetRepositoryProvider.update(editEntity);
+        
+        // もともと登録されていればあればupdate、なければadd
+        if (originalValues[i].budgetStatus == BudgetStatus.registerd) {
+          // SqfBudgetでデータをupdateする
+          _budgetRepositoryProvider.update(editEntity);
+        } else {
+          _budgetRepositoryProvider.insert(editEntity);
+        }
       }
     }
+
+    // providerをdisposeしてリフレッシュ
+    _invalidateBudgetRepositoryProvider();
+
+    // DBの更新回数をインクリメント
+    _updateDBCountNotifier.incrementState();
+  }
+
+  // 新規登録処理
+  Future<void> add({required BudgetEntity entity}) async {
+    _budgetRepositoryProvider.insert(entity);
 
     // providerをdisposeしてリフレッシュ
     _invalidateBudgetRepositoryProvider();

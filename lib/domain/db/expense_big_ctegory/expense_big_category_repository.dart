@@ -11,7 +11,7 @@ final expensebigCategoryRepositoryProvider = Provider<ExpenseBigCategoryReposito
 abstract interface class ExpenseBigCategoryRepository {
 
  // 全ての大カテゴリーの情報を取得する
-  Future<ExpenseBigCategoryEntity> fetchAll();
+  Future<List<ExpenseBigCategoryEntity>> fetchAll();
 
   /// 大カテゴリー指定で大カテゴリーのリストを取得する
   Future<ExpenseBigCategoryEntity> fetchByBigCategory({required int bigCategoryId});

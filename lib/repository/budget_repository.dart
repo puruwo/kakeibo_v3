@@ -9,10 +9,10 @@ import 'package:kakeibo/logger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsBudgetRepository implements BudgetRepository {
-
   // その月の各カテゴリーの予算をListで返す
   @override
-  Future<List<BudgetEntity>> fetchMonthly({required MonthValue month}) async {
+  Future<BudgetEntity> fetchMonthlyByBigCategory(
+      {required MonthValue month, required int expenseBigCategoryId}) async {
     final sql = '''
       SELECT 
         a.${SqfBudget.id} AS id,
@@ -20,22 +20,32 @@ class ImplementsBudgetRepository implements BudgetRepository {
         a.${SqfBudget.month} AS month,
         a.${SqfBudget.price} AS price
       FROM ${SqfBudget.tableName} a
-      WHERE a.${SqfBudget.month} = ${month.month}
+      INNER JOIN (
+        SELECT ${SqfBudget.expenseBigCategoryId}, MAX(${SqfBudget.id}) AS max_id
+        FROM ${SqfBudget.tableName}
+        WHERE month = ${month.month}
+        AND ${SqfBudget.expenseBigCategoryId}  = $expenseBigCategoryId
+        GROUP BY ${SqfBudget.expenseBigCategoryId}
+      ) b
+      ON a.${SqfBudget.id} = b.max_id
       ORDER BY a.${SqfBudget.id} ASC;
     ''';
 
     try {
       final jsonList = await db.query(sql);
       logger.i(
-          '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
+          '====SQLが実行されました====\n ImplementsBudgetRepository fetchMonthlyByBigCategory()\n$sql');
 
-      final results =
-          jsonList.map((json) => BudgetEntity.fromJson(json)).toList();
+      final result = BudgetEntity.fromJson(jsonList[0]);
 
-      return results;
+      return result;
     } catch (e) {
       logger.e('[FAIL]: $e');
-      return [];
+      return BudgetEntity(
+          id: -1,
+          expenseBigCategoryId: expenseBigCategoryId,
+          month: month.month,
+          price: 0);
     }
   }
 
@@ -65,14 +75,19 @@ class ImplementsBudgetRepository implements BudgetRepository {
   }
 
   @override
-  void insert(BudgetEntity budgetEntity) {
-    db.insert(SqfBudget.tableName, {
+  void insert(BudgetEntity budgetEntity) async{
+    try {
+      final id = await db.insert(SqfBudget.tableName, {
       SqfBudget.expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
       SqfBudget.month: budgetEntity.month,
       SqfBudget.price: budgetEntity.price
     });
     logger.i(
-        '====SQLが実行されました====\n ImplementsBudgetRepository insert(BudgetEntity budgetEntity)\n${SqfBudget.tableName}でinsert\n  budgetEntity: \n$budgetEntity');
+        '====SQLが実行されました====\n ImplementsBudgetRepository insert(BudgetEntity budgetEntity)\n${SqfBudget.tableName}でinsert\n  budgetEntity: \n$budgetEntity \nid: $id');
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+    }
+    
   }
 
   @override
@@ -93,5 +108,15 @@ class ImplementsBudgetRepository implements BudgetRepository {
   void delete(int id) async {
     await db.delete(SqfBudget.tableName, id);
     logger.i('${SqfBudget.tableName}で$idのレコードを削除しました');
+  }
+
+  @override
+  Future<bool> hasData(BudgetEntity entity) async {
+    final sql =
+        'SELECT EXISTS(SELECT 1 FROM ${SqfBudget.tableName} WHERE ${SqfBudget.id}=${entity.id})';
+
+    final result = await db.hasData(sql);
+
+    return result;
   }
 }

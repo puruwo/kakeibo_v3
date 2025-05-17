@@ -128,4 +128,12 @@ class DatabaseHelper {
     Database? db = await instance.database;
     return await db!.delete(table, where: '_id = ?', whereArgs: [id]);
   }
+
+  // レコードがあるか確認する
+  Future<bool> hasData(String sql) async {
+    Database? db = await instance.database;
+    final result = await db!.rawQuery(sql);
+    final exist = Sqflite.firstIntValue(result) == 1;
+    return exist;
+  }
 }

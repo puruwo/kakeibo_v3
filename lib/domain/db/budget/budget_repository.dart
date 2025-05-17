@@ -12,7 +12,7 @@ abstract interface class BudgetRepository {
 
   /// 期間指定して各カテゴリーの月間予算を取得する
   /// カテゴリーの指定はしない
-  Future<List<BudgetEntity>> fetchMonthly({required MonthValue month});
+  Future<BudgetEntity> fetchMonthlyByBigCategory({required MonthValue month,required int expenseBigCategoryId});
 
   /// 期間指定してを月間予算の全カテゴリー合計を取得する
   Future<int> fetchMonthlyAll({required MonthValue month});
@@ -22,4 +22,7 @@ abstract interface class BudgetRepository {
   void update(BudgetEntity expenseEntity);
   
   void delete(int id);
+
+  // そのレコードがあるかどうか確認する
+  Future<bool> hasData(BudgetEntity expenseEntity);
 }

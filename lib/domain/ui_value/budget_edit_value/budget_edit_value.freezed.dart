@@ -17,6 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$BudgetEditValue {
   int get id => throw _privateConstructorUsedError;
+  BudgetStatus get budgetStatus => throw _privateConstructorUsedError;
   int get expenseBigCategoryId => throw _privateConstructorUsedError;
   String get month => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
@@ -38,6 +39,7 @@ abstract class $BudgetEditValueCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
+      BudgetStatus budgetStatus,
       int expenseBigCategoryId,
       String month,
       int price,
@@ -61,6 +63,7 @@ class _$BudgetEditValueCopyWithImpl<$Res, $Val extends BudgetEditValue>
   @override
   $Res call({
     Object? id = null,
+    Object? budgetStatus = null,
     Object? expenseBigCategoryId = null,
     Object? month = null,
     Object? price = null,
@@ -74,6 +77,10 @@ class _$BudgetEditValueCopyWithImpl<$Res, $Val extends BudgetEditValue>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      budgetStatus: null == budgetStatus
+          ? _value.budgetStatus
+          : budgetStatus // ignore: cast_nullable_to_non_nullable
+              as BudgetStatus,
       expenseBigCategoryId: null == expenseBigCategoryId
           ? _value.expenseBigCategoryId
           : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
@@ -116,6 +123,7 @@ abstract class _$$BudgetEditValueImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
+      BudgetStatus budgetStatus,
       int expenseBigCategoryId,
       String month,
       int price,
@@ -137,6 +145,7 @@ class __$$BudgetEditValueImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
+    Object? budgetStatus = null,
     Object? expenseBigCategoryId = null,
     Object? month = null,
     Object? price = null,
@@ -150,6 +159,10 @@ class __$$BudgetEditValueImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
+      budgetStatus: null == budgetStatus
+          ? _value.budgetStatus
+          : budgetStatus // ignore: cast_nullable_to_non_nullable
+              as BudgetStatus,
       expenseBigCategoryId: null == expenseBigCategoryId
           ? _value.expenseBigCategoryId
           : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
@@ -187,6 +200,7 @@ class __$$BudgetEditValueImplCopyWithImpl<$Res>
 class _$BudgetEditValueImpl implements _BudgetEditValue {
   const _$BudgetEditValueImpl(
       {required this.id,
+      required this.budgetStatus,
       required this.expenseBigCategoryId,
       required this.month,
       required this.price,
@@ -197,6 +211,8 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
 
   @override
   final int id;
+  @override
+  final BudgetStatus budgetStatus;
   @override
   final int expenseBigCategoryId;
   @override
@@ -214,7 +230,7 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
 
   @override
   String toString() {
-    return 'BudgetEditValue(id: $id, expenseBigCategoryId: $expenseBigCategoryId, month: $month, price: $price, expenseBigCategoryName: $expenseBigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, displayOrder: $displayOrder)';
+    return 'BudgetEditValue(id: $id, budgetStatus: $budgetStatus, expenseBigCategoryId: $expenseBigCategoryId, month: $month, price: $price, expenseBigCategoryName: $expenseBigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, displayOrder: $displayOrder)';
   }
 
   @override
@@ -223,6 +239,8 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
         (other.runtimeType == runtimeType &&
             other is _$BudgetEditValueImpl &&
             (identical(other.id, id) || other.id == id) &&
+            (identical(other.budgetStatus, budgetStatus) ||
+                other.budgetStatus == budgetStatus) &&
             (identical(other.expenseBigCategoryId, expenseBigCategoryId) ||
                 other.expenseBigCategoryId == expenseBigCategoryId) &&
             (identical(other.month, month) || other.month == month) &&
@@ -238,8 +256,17 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, expenseBigCategoryId, month,
-      price, expenseBigCategoryName, colorCode, resourcePath, displayOrder);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      budgetStatus,
+      expenseBigCategoryId,
+      month,
+      price,
+      expenseBigCategoryName,
+      colorCode,
+      resourcePath,
+      displayOrder);
 
   @JsonKey(ignore: true)
   @override
@@ -252,6 +279,7 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
 abstract class _BudgetEditValue implements BudgetEditValue {
   const factory _BudgetEditValue(
       {required final int id,
+      required final BudgetStatus budgetStatus,
       required final int expenseBigCategoryId,
       required final String month,
       required final int price,
@@ -262,6 +290,8 @@ abstract class _BudgetEditValue implements BudgetEditValue {
 
   @override
   int get id;
+  @override
+  BudgetStatus get budgetStatus;
   @override
   int get expenseBigCategoryId;
   @override

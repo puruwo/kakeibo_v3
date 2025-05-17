@@ -3,11 +3,14 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 //Freezedで生成されるデータクラス
 part 'budget_edit_value.freezed.dart';
 
+enum BudgetStatus{notRegisterd,registerd}
+
 // 月次計画のエンティティ
 @freezed
 class BudgetEditValue with _$BudgetEditValue {
   const factory BudgetEditValue({
     required int id,
+    required BudgetStatus budgetStatus,
     required int expenseBigCategoryId,
     required String month,
     required int price,

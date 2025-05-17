@@ -8,17 +8,37 @@ import 'package:kakeibo/logger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
-  
   @override
-  Future<ExpenseBigCategoryEntity> fetchAll() {
-    // TODO: implement fetchAll
-    throw UnimplementedError();
+  Future<List<ExpenseBigCategoryEntity>> fetchAll() async {
+    const sql = '''
+      SELECT 
+        a.${SqfExpenseBigCategory.id} AS id,
+        a.${SqfExpenseBigCategory.colorCode} AS colorCode,
+        a.${SqfExpenseBigCategory.name} AS bigCategoryName, 
+        a.${SqfExpenseBigCategory.resourcePath} AS resourcePath, 
+        a.${SqfExpenseBigCategory.displayOrder} AS displayOrder, 
+        a.${SqfExpenseBigCategory.isDisplayed} AS isDisplayed
+      FROM ${SqfExpenseBigCategory.tableName} a;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
+
+      final results =
+          jsonList.map((e) => ExpenseBigCategoryEntity.fromJson(e)).toList();
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
   }
 
   // カテゴリーを指定して取得する
   @override
-  Future<ExpenseBigCategoryEntity> fetchByBigCategory({required int bigCategoryId}) async {
-
+  Future<ExpenseBigCategoryEntity> fetchByBigCategory(
+      {required int bigCategoryId}) async {
     final sql = '''
       SELECT 
         a.${SqfExpenseBigCategory.id} AS id,
@@ -39,7 +59,6 @@ class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
 
       return results;
     } catch (e) {
-
       logger.e('[FAIL]: $e');
       return const ExpenseBigCategoryEntity(
         id: 0,
@@ -51,6 +70,4 @@ class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
       );
     }
   }
-  
-  
 }
