@@ -1,15 +1,11 @@
 // packegeImport
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
-import 'package:kakeibo/view_model/state/small_category_edit_page/selected_color.dart';
 import 'package:kakeibo/view_model/state/small_category_edit_page/selected_icon_path.dart';
-import 'package:kakeibo/view_model/state/register_page/selected_segment_status.dart';
 
 class IconSelectPage extends ConsumerStatefulWidget {
   const IconSelectPage({super.key, this.categoryIconPath});

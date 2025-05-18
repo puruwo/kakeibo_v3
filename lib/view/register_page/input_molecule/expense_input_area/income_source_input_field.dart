@@ -5,10 +5,11 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/register_page/input_molecule/expense_input_area/income_souce_picker.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
-import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
+
 
 class IncomeSourceInputField extends ConsumerStatefulWidget {
-  const IncomeSourceInputField({super.key});
+  const IncomeSourceInputField({super.key,required this.originalIncomeSourceBigCategory});
+  final int originalIncomeSourceBigCategory;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -21,13 +22,11 @@ class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final originalExpenseEntity =
-          ref.read(originalExpenseEntityNotifierProvider);
 
       // 拠出元予算カテゴリーの初期値をセット
       ref
           .read(enteredIncomeSourceControllerNotifierProvider.notifier)
-          .setData(originalExpenseEntity.incomeSourceBigCategory);
+          .setData(widget.originalIncomeSourceBigCategory);
     });
   }
 
@@ -66,7 +65,7 @@ class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
                   ref
                       .watch(anIncomeCategoryProvider(incomeSourceBigCategory))
                       .when(
-                          data: (data) => data.name,
+                          data: (data) => data.bigCategoryName,
                           loading: () => '',
                           error: (e, _) => ''),
                   textAlign: TextAlign.right,

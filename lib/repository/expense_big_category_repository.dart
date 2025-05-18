@@ -7,7 +7,7 @@ import 'package:kakeibo/logger.dart';
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsBigCategoryRepository implements ExpenseBigCategoryRepository {
+class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryRepository {
   @override
   Future<List<ExpenseBigCategoryEntity>> fetchAll() async {
     const sql = '''

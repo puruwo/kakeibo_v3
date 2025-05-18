@@ -7,12 +7,12 @@ part of 'select_category_controller.dart';
 // **************************************************************************
 
 String _$selectCategoryControllerNotifierHash() =>
-    r'01960ab703b7041198c29acda377043ac79d99bf';
+    r'973a11c621ecf79b928d1916a8783f6e2f77b389';
 
 /// See also [SelectCategoryControllerNotifier].
 @ProviderFor(SelectCategoryControllerNotifier)
 final selectCategoryControllerNotifierProvider = AutoDisposeNotifierProvider<
-    SelectCategoryControllerNotifier, CategoryEntity>.internal(
+    SelectCategoryControllerNotifier, ICategoryEntity>.internal(
   SelectCategoryControllerNotifier.new,
   name: r'selectCategoryControllerNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -23,6 +23,6 @@ final selectCategoryControllerNotifierProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$SelectCategoryControllerNotifier
-    = AutoDisposeNotifier<CategoryEntity>;
+    = AutoDisposeNotifier<ICategoryEntity>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

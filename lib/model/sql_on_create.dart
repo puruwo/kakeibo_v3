@@ -134,8 +134,8 @@ class DataBaseHelperHandling {
             ${SqfIncomeSmallCategory.defaultDisplayed}) 
             VALUES(0, 0, '給与', 0, 0, 1),
                   (1, 0, '小遣い', 2, 2, 1),
-                  (2, 0, '臨時収入', 3, 3, 1);
-                  (3, 1, 'ボーナス', 1, 1, 1),
+                  (2, 0, '臨時収入', 3, 3, 1),
+                  (3, 1, 'ボーナス', 1, 1, 1)
           ''');
 
     await db.execute('''

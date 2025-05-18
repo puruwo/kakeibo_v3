@@ -3,10 +3,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
-import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 
 class MemoInputField extends ConsumerStatefulWidget {
-  const MemoInputField({super.key});
+  const MemoInputField({super.key, required this.originalMemo});
+
+  final String originalMemo;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MemoInputFieldState();
@@ -19,11 +20,9 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final originalExpenseEntity =
-          ref.read(originalExpenseEntityNotifierProvider);
 
       // 初期値をセット
-      _enteredMemoController.text = originalExpenseEntity.memo;
+      _enteredMemoController.text = widget.originalMemo;
     });
   }
 

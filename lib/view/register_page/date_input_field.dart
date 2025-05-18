@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
-import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 
 class DateInputField extends ConsumerStatefulWidget {
-  const DateInputField({super.key});
+  const DateInputField({super.key, required this.originalDate});
+  final String originalDate;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _DateInputFieldState();
@@ -19,10 +19,8 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final originalExpenseEntity =
-          ref.read(originalExpenseEntityNotifierProvider);
       ref.read(inputDateControllerNotifierProvider.notifier).setData(DateTime.parse(
-          '${originalExpenseEntity.date.substring(0, 4)}-${originalExpenseEntity.date.substring(4, 6)}-${originalExpenseEntity.date.substring(6, 8)}'));
+          '${widget.originalDate.substring(0, 4)}-${widget.originalDate.substring(4, 6)}-${widget.originalDate.substring(6, 8)}'));
     });
   }
 

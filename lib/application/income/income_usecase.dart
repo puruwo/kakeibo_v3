@@ -1,20 +1,20 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 
-import 'package:kakeibo/domain/db/expense/expense_entity.dart';
-import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final expenseUsecaseProvider = Provider<ExpenseUsecase>(
-  ExpenseUsecase.new,
+final incomeUsecaseProvider = Provider<IncomeUsecase>(
+  IncomeUsecase.new,
 );
 
-class ExpenseUsecase {
-  ExpenseUsecase(this._ref);
+class IncomeUsecase {
+  IncomeUsecase(this._ref);
   final Ref _ref;
 
-  ExpenseRepository get _expenseRepositoryProvider =>
-      _ref.read(expenseRepositoryProvider);
+  IncomeRepository get _incomeRepositoryProvider =>
+      _ref.read(incomeRepositoryProvider);
 
 
   // DBの更新を管理するnotifierを取得
@@ -22,18 +22,18 @@ class ExpenseUsecase {
       _ref.read(updateDBCountNotifierProvider.notifier);
 
   // 登録処理
-  Future<void> add({required ExpenseEntity expenseEntity}) async {
+  Future<void> add({required IncomeEntity incomeEntity}) async {
     
     //エラーチェック
-    if (expenseEntity.price <= 0) {
+    if (incomeEntity.price <= 0) {
       throw const AppException('0円以上で入力してください');
     }
-    if (expenseEntity.price >= 1888888) {
+    if (incomeEntity.price >= 99999999) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
 
-    // tbl001にデータを追加する
-    _expenseRepositoryProvider.insert(expenseEntity);
+    // incomeにデータを追加する
+    _incomeRepositoryProvider.insert(incomeEntity);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
@@ -42,8 +42,8 @@ class ExpenseUsecase {
 
   // 編集処理
   Future<void> edit(
-      {required ExpenseEntity originalEntity,
-      required ExpenseEntity editEntity}) async {
+      {required IncomeEntity originalEntity,
+      required IncomeEntity editEntity}) async {
 
     //エラーチェック
     if (originalEntity == editEntity) {
@@ -53,20 +53,20 @@ class ExpenseUsecase {
     if (editEntity.price <= 0) {
       throw const AppException('0円以上で入力してください');
     }
-    if (editEntity.price >= 1888888) {
+    if (editEntity.price >= 99999999) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
 
-    // tbl001にデータを追加する
-    _expenseRepositoryProvider.update(editEntity);
+    // incomeにデータを追加する
+    _incomeRepositoryProvider.update(editEntity);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
   }
 
   Future<void> delete({required int id}) async {
-    // tbl001にデータを削除する
-    _expenseRepositoryProvider.delete(id);
+    // income内のレコードデータを削除する
+    _incomeRepositoryProvider.delete(id);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

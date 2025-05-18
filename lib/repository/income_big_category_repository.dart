@@ -44,7 +44,7 @@ class ImplementsIncomeBigCategoryRepository implements IncomeBigCategoryReposito
   @override
   Future<IncomeBigCategoryEntity> fetchByBigCategory(
       {required int bigCategoryId}) async {
-    // カテゴリーを指定して取得する
+    // カテゴリーidを指定して大カテゴリーを取得する
     final sql = '''
       SELECT 
         a.${SqfIncomeBigCategory.id} AS id,

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view/register_page/input_molecule/expense_input_area/expense_input_field.dart';
+import 'package:kakeibo/view/register_page/price_input_field.dart';
 import 'package:kakeibo/view/register_page/input_molecule/expense_input_area/income_source_input_field.dart';
 class ExpenseInputArea extends ConsumerStatefulWidget {
-  const ExpenseInputArea({super.key});
+  const ExpenseInputArea({super.key,required this.originalPrice,required this.originalIncomeSourceBigCategory});
+
+  final int originalPrice;
+  final int originalIncomeSourceBigCategory;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -21,13 +24,13 @@ class _ExpenseInputArea extends ConsumerState<ExpenseInputArea> {
         color: MyColors.secondarySystemfill,
         borderRadius: BorderRadius.circular(8),
       ),
-      child: const Padding(
+      child:  Padding(
         padding: EdgeInsets.fromLTRB(16, 0, 16, 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // 購入金額入力
-            ExpenseInputField(),
+            PriceInputField(originalPrice:widget.originalPrice),
 
             SizedBox(
               height: 14,
@@ -49,7 +52,7 @@ class _ExpenseInputArea extends ConsumerState<ExpenseInputArea> {
             ),
 
             // 拠出元選択
-            IncomeSourceInputField(),
+            IncomeSourceInputField(originalIncomeSourceBigCategory:widget.originalIncomeSourceBigCategory),
           ],
         ),
       ),

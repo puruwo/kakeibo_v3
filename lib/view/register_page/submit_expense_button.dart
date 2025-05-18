@@ -2,38 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
+import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
-import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class SubmitExpenseButton extends ConsumerWidget with PresentationMixin {
-  const SubmitExpenseButton({super.key});
+  const SubmitExpenseButton(
+      {super.key,
+      required this.transactionMode,
+      this.originalExpenseEntity,
+      this.originalIncomeEntity});
+
+  final TransactionMode transactionMode;
+  final ExpenseEntity? originalExpenseEntity;
+  final IncomeEntity? originalIncomeEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // expenseEntityを扱うusecase
     final expenseUsecase = ref.read(expenseUsecaseProvider);
-
-    // originalExpenseEntityを取得
-    final original = ref.watch(originalExpenseEntityNotifierProvider);
+    // expenseEntityを扱うusecase
+    final incomeUsecase = ref.read(incomeUsecaseProvider);
 
     // 新規か編集か
     final screenMode = ref.watch(registerScreenModeNotifierProvider);
 
-    return IconButton(
-        icon: const Icon(
-          //完了チェックマーク
-          Icons.done_rounded,
-          color: MyColors.white,
+    return FloatingActionButton(
+        child: Container(
+          decoration: BoxDecoration(
+              color: MyColors.themeColor,
+              borderRadius: BorderRadius.circular(9.0)),
         ),
         onPressed: () async {
           execute(
@@ -62,22 +71,43 @@ class SubmitExpenseButton extends ConsumerWidget with PresentationMixin {
               final selectedCategory =
                   ref.read(selectCategoryControllerNotifierProvider);
 
-              final entity = ExpenseEntity(
-                  id: original.id,
-                  date: DateFormat('yyyyMMdd').format(inputDate),
-                  price: enteredPrice,
-                  paymentCategoryId: selectedCategory.id,
-                  memo: enteredMemo,
-                  incomeSourceBigCategory: enteredIncomeSource);
-
-              switch (screenMode) {
-                case RegisterScreenMode.add:
-                  await expenseUsecase.add(expenseEntity: entity);
-                  break;
-                case RegisterScreenMode.edit:
-                  await expenseUsecase.edit(
-                      originalEntity: original, editEntity: entity);
-                  break;
+              switch (transactionMode) {
+                case TransactionMode.expense:
+                  final entity = ExpenseEntity(
+                      id: originalExpenseEntity!.id,
+                      date: DateFormat('yyyyMMdd').format(inputDate),
+                      price: enteredPrice,
+                      paymentCategoryId: selectedCategory.id,
+                      memo: enteredMemo,
+                      incomeSourceBigCategory: enteredIncomeSource);
+                  switch (screenMode) {
+                    case RegisterScreenMode.add:
+                      await expenseUsecase.add(expenseEntity: entity);
+                      break;
+                    case RegisterScreenMode.edit:
+                      await expenseUsecase.edit(
+                          originalEntity: originalExpenseEntity!,
+                          editEntity: entity);
+                      break;
+                  }
+                case TransactionMode.income:
+                  final entity = IncomeEntity(
+                    id: originalIncomeEntity!.id,
+                    date: DateFormat('yyyyMMdd').format(inputDate),
+                    price: enteredPrice,
+                    categoryId: selectedCategory.id,
+                    memo: enteredMemo,
+                  );
+                  switch (screenMode) {
+                    case RegisterScreenMode.add:
+                      await incomeUsecase.add(incomeEntity: entity);
+                      break;
+                    case RegisterScreenMode.edit:
+                      await incomeUsecase.edit(
+                          originalEntity: originalIncomeEntity!,
+                          editEntity: entity);
+                      break;
+                  }
               }
             },
 

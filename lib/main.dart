@@ -9,19 +9,21 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
+import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
 import 'package:kakeibo/domain/db/month_basis_entity/month_basis_repository.dart';
 import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/repository/aggregation_start_day_repository.dart';
 import 'package:kakeibo/repository/all_category_repository.dart';
-import 'package:kakeibo/repository/big_category_repository.dart';
+import 'package:kakeibo/repository/expense_big_category_repository.dart';
 import 'package:kakeibo/repository/budget_repository.dart';
 import 'package:kakeibo/repository/daily_expense_repository.dart';
 import 'package:kakeibo/repository/expense_repository.dart';
 import 'package:kakeibo/repository/income_big_category_repository.dart';
 import 'package:kakeibo/repository/income_repository.dart';
+import 'package:kakeibo/repository/income_small_category_repository.dart';
 import 'package:kakeibo/repository/month_basis_repository.dart';
 import 'package:kakeibo/repository/small_category_Tile_repository.dart';
-import 'package:kakeibo/repository/small_category_repository.dart';
+import 'package:kakeibo/repository/expense_small_category_repository.dart';
 import 'package:kakeibo/view/foundation.dart';
 
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
@@ -48,13 +50,16 @@ void main() {
           ImplementsAggregationStartDayRepository(),
         ),
         expenseSmallCategoryRepositoryProvider.overrideWithValue(
-          ImplementsSmallCategoryRepository(),
+          ImplementsExpenseSmallCategoryRepository(),
         ),
         expensebigCategoryRepositoryProvider.overrideWithValue(
-          ImplementsBigCategoryRepository(),
+          ImplementsExpenseBigCategoryRepository(),
         ),
         incomeBigCategoryRepositoryProvider.overrideWithValue(
           ImplementsIncomeBigCategoryRepository(),
+        ),
+        incomeSmallCategoryRepositoryProvider.overrideWithValue(
+          ImplementsIncomeSmallCategoryRepository(),
         ),
         expenseRepositoryProvider.overrideWithValue(
           ImplementsExpenseRepository(),

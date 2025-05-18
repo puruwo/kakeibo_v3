@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
-import 'package:kakeibo/domain/core/category_entity/category_entity.dart';
+import 'package:kakeibo/application/category/income_category_provider.dart';
+import 'package:kakeibo/application/category/income_category_usecase.dart';
+import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
-import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 
 enum ButtonStatus { selected, normal, none }
 
+enum TransactionMode {expense, income}
+
 class CategoryArea extends ConsumerStatefulWidget {
-  const CategoryArea({super.key});
+  const CategoryArea({super.key,required this.originalCategoryId,required this.transactionMode});
+  final int originalCategoryId;
+  final TransactionMode transactionMode;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CategoryAreaState();
@@ -26,11 +31,11 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async{
-      // 初期値をセット
-      final originalExpenseEntity =
-          ref.read(originalExpenseEntityNotifierProvider);
-
-      final categoryEntity = await ref.watch(categoryUsecaseProvider).fetchByBigCategory(originalExpenseEntity.paymentCategoryId);
+      
+      final ICategoryEntity categoryEntity = switch(widget.transactionMode){
+        TransactionMode.expense =>await ref.watch(categoryUsecaseProvider).fetchByBigCategory(widget.originalCategoryId),
+        TransactionMode.income =>await ref.watch(incomeCategoryUsecaseProvider).fetchByBigCategory(widget.originalCategoryId),
+      };
       
       ref
           .read(selectCategoryControllerNotifierProvider.notifier).setData(categoryEntity);
@@ -41,7 +46,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
   Widget build(context) {
 //状態管理---------------------------------------------------------------------------------------
 
-    final CategoryEntity selectCategoryControllerProvider =
+    final ICategoryEntity selectCategoryControllerProvider =
         ref.watch(selectCategoryControllerNotifierProvider);
 
 //----------------------------------------------------------------------------------------------
@@ -52,7 +57,12 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     // 画面の縦幅の倍率を取得
     final screenVerticalMagnification = context.screenVerticalMagnification;
 
-    return ref.watch(categoryProvider).when(
+    final  provider = switch(widget.transactionMode){
+        TransactionMode.expense =>categoryProvider,
+        TransactionMode.income =>allIncomeCategoryProvider,
+      };
+
+    return ref.watch(provider).when(
       data: (list) {
         // 表示するカテゴリーの数
         final categoryQuantity = list.length;
@@ -87,7 +97,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                             // ボタンNoと選択しているカテゴリーのキーが同じならselectedにする
                             if (buttonNumber ==
                                 selectCategoryControllerProvider
-                                    .smallCategoryOrderKey) {
+                                    .sortKey) {
                               buttonStatus = ButtonStatus.selected;
                             }
                             // カテゴリー数の範囲外ならnoneに設定する

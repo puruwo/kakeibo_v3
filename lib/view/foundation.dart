@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/view/register_income_page/register_page_base.dart';
+import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/third_page/third_page.dart';
 
 import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
 import 'package:kakeibo/view_model/state/initial_open.dart';
-
-import 'package:kakeibo/view/register_page/torok.dart';
 import 'package:kakeibo/view/home/home.dart';
 
 class Foundation extends ConsumerWidget {
@@ -125,7 +125,7 @@ class Foundation extends ConsumerWidget {
                 themeMode: ThemeMode.dark,
                 darkTheme: ThemeData.dark(),
                 home: MediaQuery.withClampedTextScaling(
-                  child: Torok(),
+                  child: const RegisaterPageBase(shouldDisplayTab: true, transactionMode: TransactionMode.expense),
                 ),
               );
             },

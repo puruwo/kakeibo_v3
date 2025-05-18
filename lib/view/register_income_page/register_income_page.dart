@@ -2,37 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/register_income_page/income_input_area.dart';
 
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
-import 'package:kakeibo/view/register_page/input_molecule/expense_input_area/expense_input_area.dart';
 import 'package:kakeibo/view/register_page/memo_input_field.dart';
 import 'package:kakeibo/view/register_page/submit_expense_button.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 import 'package:kakeibo/view/register_page/date_input_field.dart';
 
-class Torok extends ConsumerStatefulWidget {
+class RegisaterIncomePage extends ConsumerStatefulWidget {
   final RegisterScreenMode mode;
 
-  final ExpenseEntity? expenseEntity;
+  final IncomeEntity? incomeEntity;
 
-  const Torok(
-      {this.mode = RegisterScreenMode.add, this.expenseEntity, super.key});
+  const RegisaterIncomePage(
+      {this.mode = RegisterScreenMode.add, this.incomeEntity, super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TorokState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _RegisaterIncomePageState();
 }
 
-class _TorokState extends ConsumerState<Torok> {
-  late ExpenseEntity initialExpenseData;
+class _RegisaterIncomePageState extends ConsumerState<RegisaterIncomePage> {
+  late IncomeEntity initialIncomeData;
 
   @override
   void initState() {
     // entityを受け取っていなければ初期データで宣言、受け取っていればそれを宣言
-    initialExpenseData = widget.expenseEntity ??
-        ExpenseEntity(
+    initialIncomeData = widget.incomeEntity ??
+        IncomeEntity(
           date: DateFormat('yyyyMMdd').format(DateTime.now()),
         );
 
@@ -69,27 +70,22 @@ class _TorokState extends ConsumerState<Torok> {
 
                     SizedBox(height: 8),
 
-                    ExpenseInputArea(
-                      originalPrice: initialExpenseData.price,
-                      originalIncomeSourceBigCategory:
-                          initialExpenseData.incomeSourceBigCategory,
-                    ),
+                    IncomeInputArea(originalPrice: initialIncomeData.price),
 
                     SizedBox(height: 8),
 
-                    MemoInputField(originalMemo: initialExpenseData.memo),
+                    MemoInputField(originalMemo: initialIncomeData.memo),
 
                     SizedBox(height: 8),
 
-                    DateInputField(originalDate: initialExpenseData.date),
+                    DateInputField(originalDate: initialIncomeData.date),
 
                     SizedBox(height: 16),
 
                     // カテゴリー選択エリア
                     CategoryArea(
-                        transactionMode: TransactionMode.expense,
-                        originalCategoryId:
-                            initialExpenseData.paymentCategoryId),
+                        transactionMode: TransactionMode.income,
+                        originalCategoryId: initialIncomeData.categoryId),
                   ],
                 ),
               ),
@@ -98,8 +94,8 @@ class _TorokState extends ConsumerState<Torok> {
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: SubmitExpenseButton(
-              transactionMode: TransactionMode.expense,
-              originalExpenseEntity: initialExpenseData)),
+              transactionMode: TransactionMode.income,
+              originalIncomeEntity: initialIncomeData)),
     );
   }
 }

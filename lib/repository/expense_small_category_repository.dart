@@ -7,7 +7,7 @@ import 'package:kakeibo/logger.dart';
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsSmallCategoryRepository implements ExpenseSmallCategoryRepository {
+class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRepository {
   // カテゴリーNumberを指定して取得する
   @override
   Future<ExpenseSmallCategoryEntity> fetchBySmallCategory(

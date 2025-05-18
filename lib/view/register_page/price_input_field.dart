@@ -4,17 +4,19 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
-import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
+// import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
 
-class ExpenseInputField extends ConsumerStatefulWidget {
-  const ExpenseInputField({super.key});
+class PriceInputField extends ConsumerStatefulWidget {
+  const PriceInputField({super.key, required this.originalPrice});
 
+  final int originalPrice;
+  
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ExpenseInputFieldState();
+      _PriceInputFieldState();
 }
 
-class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
+class _PriceInputFieldState extends ConsumerState<PriceInputField> {
   late TextEditingController _enteredPriceController;
 
   @override
@@ -22,12 +24,14 @@ class _ExpenseInputFieldState extends ConsumerState<ExpenseInputField> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final originalExpenseEntity =
-          ref.read(originalExpenseEntityNotifierProvider);
+      // final originalExpenseEntity =
+      // ref.read(originalExpenseEntityNotifierProvider);
 
-      // 購入金額の初期値をセット
-      _enteredPriceController.text = originalExpenseEntity.price.toString();
-
+      // ビルドして最初の一回だけ設定
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // 購入金額の初期値をセット
+        _enteredPriceController.text = widget.originalPrice.toString();
+      });
     });
   }
 

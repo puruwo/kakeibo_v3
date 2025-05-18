@@ -124,7 +124,7 @@ class ImplementsIncomeRepository implements IncomeRepository {
       logger.i(
           '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
 
-      final results = jsonList[0]['totalPrice'] as int;
+      final int results = jsonList[0]['totalPrice'] ?? 0 ;
 
       return results;
     } catch (e) {
