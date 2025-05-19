@@ -5,10 +5,10 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
-import 'package:kakeibo/view/register_income_page/register_income_page.dart';
+import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
-import 'package:kakeibo/view/register_page/torok.dart';
+import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class RegisaterPageBase extends ConsumerStatefulWidget {
@@ -113,7 +113,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
         //body
         body: TabBarView(controller: _tabController, children: const [
-          Torok(),
+          RegisterInputPage(),
           RegisaterIncomePage(),
         ]),
       ),

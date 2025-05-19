@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view/register_income_page/register_page_base.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/third_page/third_page.dart';
 

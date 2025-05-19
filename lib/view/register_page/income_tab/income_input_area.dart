@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view/register_page/price_input_field.dart';
+import 'package:kakeibo/view/register_page/common_input_field/price_input_field.dart';
 
 class IncomeInputArea extends ConsumerStatefulWidget {
   const IncomeInputArea({super.key,required this.originalPrice});

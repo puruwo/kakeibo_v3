@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/view/register_page/input_molecule/expense_input_area/income_souce_picker.dart';
+import 'package:kakeibo/view/register_page/expense_tab/price_input_area/income_souce_picker.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 
 
