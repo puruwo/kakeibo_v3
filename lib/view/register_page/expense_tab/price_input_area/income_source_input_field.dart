@@ -6,6 +6,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/register_page/expense_tab/price_input_area/income_souce_picker.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 
+// 支出登録ページにおける拠出元の入力部分
 
 class IncomeSourceInputField extends ConsumerStatefulWidget {
   const IncomeSourceInputField({super.key,required this.originalIncomeSourceBigCategory});
@@ -63,9 +64,9 @@ class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
                 // 拠出元選択状態
                 Text(
                   ref
-                      .watch(anIncomeCategoryProvider(incomeSourceBigCategory))
+                      .watch(anIncomeBigCategoryProvider(incomeSourceBigCategory))
                       .when(
-                          data: (data) => data.bigCategoryName,
+                          data: (data) => data.name,
                           loading: () => '',
                           error: (e, _) => ''),
                   textAlign: TextAlign.right,

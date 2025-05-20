@@ -34,7 +34,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
       
       final ICategoryEntity categoryEntity = switch(widget.transactionMode){
         TransactionMode.expense =>await ref.watch(categoryUsecaseProvider).fetchByBigCategory(widget.originalCategoryId),
-        TransactionMode.income =>await ref.watch(incomeCategoryUsecaseProvider).fetchByBigCategory(widget.originalCategoryId),
+        TransactionMode.income =>await ref.watch(incomeCategoryUsecaseProvider).fetchCategoryBySmallId(widget.originalCategoryId),
       };
       
       ref

@@ -75,8 +75,18 @@ class IncomeCategoryUsecase {
     return results;
   }
 
-  /// [fetchByBigCategory] メソッドは、収入カテゴリーを取得する
-  Future<IncomeCategoryEntity> fetchByBigCategory(int id) async {
+  /// [fetchBigCategoryByBigId] メソッドは、収入カテゴリーを取得する
+  Future<IncomeBigCategoryEntity> fetchBigCategoryByBigId(int id) async {
+    // 大カテゴリーを取得する
+    final incomeBigCategoryEntity = await _bigCategoryRepositoryProvider
+        .fetchByBigCategory(bigCategoryId: id);
+
+    return incomeBigCategoryEntity;
+  }
+
+
+  /// [fetchCategoryBySmallId] メソッドは、収入カテゴリーを取得する
+  Future<IncomeCategoryEntity> fetchCategoryBySmallId(int id) async {
     // 小カテゴリーを取得する
     final smallCategoryEntity = await _smallCategoryRepositoryProvider
         .fetchBySmallCategory(smallCategoryId: id);

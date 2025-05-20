@@ -9,6 +9,9 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 
+// 支出登録画面の拠出元選択画面
+// 拠出元表示部分をタップしたら出現する
+
 class IncomeSourcePicker extends ConsumerStatefulWidget {
   const IncomeSourcePicker({super.key});
 

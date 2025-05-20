@@ -13,5 +13,9 @@ final allIncomeCategoryProvider = FutureProvider.autoDispose<List<IncomeCategory
     (ref) => ref.watch(incomeCategoryUsecaseProvider).fetchAllCategory());
 
 // カテゴリーを保持するプロバイダー
+final anIncomeBigCategoryProvider = FutureProvider.family.autoDispose<IncomeBigCategoryEntity,int>(
+    (ref,id) => ref.watch(incomeCategoryUsecaseProvider).fetchBigCategoryByBigId(id));
+
+//  特定のカテゴリーを小カテゴリー指定で保持するプロバイダー
 final anIncomeCategoryProvider = FutureProvider.family.autoDispose<IncomeCategoryEntity,int>(
-    (ref,id) => ref.watch(incomeCategoryUsecaseProvider).fetchByBigCategory(id));
+    (ref,id) => ref.watch(incomeCategoryUsecaseProvider).fetchCategoryBySmallId(id));
