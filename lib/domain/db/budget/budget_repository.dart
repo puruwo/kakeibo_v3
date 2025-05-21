@@ -17,6 +17,9 @@ abstract interface class BudgetRepository {
   /// 期間指定してを月間予算の全カテゴリー合計を取得する
   Future<int> fetchMonthlyAll({required MonthValue month});
 
+  /// 期間指定してをあるカテゴリーの月間予算を取得する
+  Future<int> fetchMonthly({required int id ,required MonthValue month});
+
   void insert(BudgetEntity expenseEntity);
 
   void update(BudgetEntity expenseEntity);

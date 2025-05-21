@@ -10,7 +10,6 @@ import 'package:kakeibo/logger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsExpenseRepository implements ExpenseRepository {
-
   // 全ての支出情報を取得する
   @override
   Future<List<ExpenseEntity>> fetchAll() async {
@@ -39,7 +38,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       logger.e('[FAIL]: $e');
       return [];
     }
-  } 
+  }
 
   // カテゴリーを指定しないで取得する
   @override
@@ -72,6 +71,30 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     }
   }
 
+  // 期間を指定して支出の合計を取得する
+  @override
+  Future<int> fetchTotalExpenseByPeriod(
+      {required DateTime fromDate, required DateTime toDate}) async {
+    final sql = '''
+      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName} 
+            WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)} 
+            ;
+            ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      logger.i(
+          '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
+
+      final results = jsonList[0]['totalExpense'];
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
   @override
   void insert(ExpenseEntity expenseEntity) {
     db.insert(SqfExpense.tableName, {
@@ -94,7 +117,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
           SqfExpense.date: expenseEntity.date,
           SqfExpense.price: expenseEntity.price,
           SqfExpense.memo: expenseEntity.memo,
-          SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory
+          SqfExpense.incomeSourceBigCategory:
+              expenseEntity.incomeSourceBigCategory
         },
         expenseEntity.id);
     logger.i(

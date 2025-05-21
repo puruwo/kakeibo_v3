@@ -16,6 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CategoryCardEntity {
+  int get monthlyBudget => throw _privateConstructorUsedError;
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity =>
       throw _privateConstructorUsedError;
   List<SmallCategoryTileEntity> get smallCategoryList =>
@@ -33,7 +34,8 @@ abstract class $CategoryCardEntityCopyWith<$Res> {
       _$CategoryCardEntityCopyWithImpl<$Res, CategoryCardEntity>;
   @useResult
   $Res call(
-      {CategoryAccountingEntity monthlyExpenseByCategoryEntity,
+      {int monthlyBudget,
+      CategoryAccountingEntity monthlyExpenseByCategoryEntity,
       List<SmallCategoryTileEntity> smallCategoryList});
 
   $CategoryAccountingEntityCopyWith<$Res> get monthlyExpenseByCategoryEntity;
@@ -52,10 +54,15 @@ class _$CategoryCardEntityCopyWithImpl<$Res, $Val extends CategoryCardEntity>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? monthlyBudget = null,
     Object? monthlyExpenseByCategoryEntity = null,
     Object? smallCategoryList = null,
   }) {
     return _then(_value.copyWith(
+      monthlyBudget: null == monthlyBudget
+          ? _value.monthlyBudget
+          : monthlyBudget // ignore: cast_nullable_to_non_nullable
+              as int,
       monthlyExpenseByCategoryEntity: null == monthlyExpenseByCategoryEntity
           ? _value.monthlyExpenseByCategoryEntity
           : monthlyExpenseByCategoryEntity // ignore: cast_nullable_to_non_nullable
@@ -87,7 +94,8 @@ abstract class _$$CategoryCardEntityImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {CategoryAccountingEntity monthlyExpenseByCategoryEntity,
+      {int monthlyBudget,
+      CategoryAccountingEntity monthlyExpenseByCategoryEntity,
       List<SmallCategoryTileEntity> smallCategoryList});
 
   @override
@@ -105,10 +113,15 @@ class __$$CategoryCardEntityImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? monthlyBudget = null,
     Object? monthlyExpenseByCategoryEntity = null,
     Object? smallCategoryList = null,
   }) {
     return _then(_$CategoryCardEntityImpl(
+      monthlyBudget: null == monthlyBudget
+          ? _value.monthlyBudget
+          : monthlyBudget // ignore: cast_nullable_to_non_nullable
+              as int,
       monthlyExpenseByCategoryEntity: null == monthlyExpenseByCategoryEntity
           ? _value.monthlyExpenseByCategoryEntity
           : monthlyExpenseByCategoryEntity // ignore: cast_nullable_to_non_nullable
@@ -125,10 +138,13 @@ class __$$CategoryCardEntityImplCopyWithImpl<$Res>
 
 class _$CategoryCardEntityImpl implements _CategoryCardEntity {
   const _$CategoryCardEntityImpl(
-      {required this.monthlyExpenseByCategoryEntity,
+      {required this.monthlyBudget,
+      required this.monthlyExpenseByCategoryEntity,
       required final List<SmallCategoryTileEntity> smallCategoryList})
       : _smallCategoryList = smallCategoryList;
 
+  @override
+  final int monthlyBudget;
   @override
   final CategoryAccountingEntity monthlyExpenseByCategoryEntity;
   final List<SmallCategoryTileEntity> _smallCategoryList;
@@ -142,7 +158,7 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
 
   @override
   String toString() {
-    return 'CategoryCardEntity(monthlyExpenseByCategoryEntity: $monthlyExpenseByCategoryEntity, smallCategoryList: $smallCategoryList)';
+    return 'CategoryCardEntity(monthlyBudget: $monthlyBudget, monthlyExpenseByCategoryEntity: $monthlyExpenseByCategoryEntity, smallCategoryList: $smallCategoryList)';
   }
 
   @override
@@ -150,6 +166,8 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CategoryCardEntityImpl &&
+            (identical(other.monthlyBudget, monthlyBudget) ||
+                other.monthlyBudget == monthlyBudget) &&
             (identical(other.monthlyExpenseByCategoryEntity,
                     monthlyExpenseByCategoryEntity) ||
                 other.monthlyExpenseByCategoryEntity ==
@@ -159,7 +177,10 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, monthlyExpenseByCategoryEntity,
+  int get hashCode => Object.hash(
+      runtimeType,
+      monthlyBudget,
+      monthlyExpenseByCategoryEntity,
       const DeepCollectionEquality().hash(_smallCategoryList));
 
   @JsonKey(ignore: true)
@@ -172,10 +193,13 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
 
 abstract class _CategoryCardEntity implements CategoryCardEntity {
   const factory _CategoryCardEntity(
-      {required final CategoryAccountingEntity monthlyExpenseByCategoryEntity,
+      {required final int monthlyBudget,
+      required final CategoryAccountingEntity monthlyExpenseByCategoryEntity,
       required final List<SmallCategoryTileEntity>
           smallCategoryList}) = _$CategoryCardEntityImpl;
 
+  @override
+  int get monthlyBudget;
   @override
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity;
   @override

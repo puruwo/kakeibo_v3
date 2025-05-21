@@ -19,6 +19,7 @@ class CategoryTile extends HookConsumerWidget {
   const CategoryTile({required this.categoryTile, super.key});
   final CategoryCardEntity categoryTile;
 
+  int get budget => categoryTile.monthlyBudget;
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity => categoryTile.monthlyExpenseByCategoryEntity;
   List<SmallCategoryTileEntity> get smallCategoryEntity => categoryTile.smallCategoryList;
 
@@ -45,11 +46,11 @@ class CategoryTile extends HookConsumerWidget {
         screenHorizontalMagnificationGetter(screenWidthSize);
 
     // 横棒グラフの幅を計算
-    double degrees = (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory / monthlyExpenseByCategoryEntity.budget);
+    double degrees = (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory / budget);
     barWidth =
         degrees <= 1.0 ? barFrameWidth * degrees : barFrameWidth;
 
-    if (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory > monthlyExpenseByCategoryEntity.budget) {
+    if (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory > budget) {
       isOverBudget = true;
     }
 
@@ -62,9 +63,9 @@ class CategoryTile extends HookConsumerWidget {
     final String paymentSumLabel = formattedPriceGetter(monthlyExpenseByCategoryEntity.totalExpenseByBigCategory);
 
     // 予算のLabel
-    final String budgetLabel = formattedPriceGetter(monthlyExpenseByCategoryEntity.budget);
+    final String budgetLabel = formattedPriceGetter(budget);
 
-    isSetBudget = monthlyExpenseByCategoryEntity.budget == 0 ? false : true;
+    isSetBudget = budget == 0 ? false : true;
 
     return Container(
       width: 343 * screenHorizontalMagnification,

@@ -9,6 +9,7 @@ import 'package:kakeibo/logger.dart';
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsBudgetRepository implements BudgetRepository {
+  
   // その月の各カテゴリーの予算をListで返す
   @override
   Future<BudgetEntity> fetchMonthlyByBigCategory(
@@ -66,6 +67,31 @@ class ImplementsBudgetRepository implements BudgetRepository {
           '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
 
       final results = jsonList[0]['totalPrice'] as int;
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+  // 月の一つのカテゴリーの予算を算出する
+  @override
+  Future<int> fetchMonthly({required int id, required MonthValue month}) async {
+    final sql = '''
+      SELECT 
+        ${SqfBudget.price} AS price
+      FROM ${SqfBudget.tableName} a
+      WHERE a.${SqfBudget.month} = ${month.month}
+      AND a.${SqfBudget.expenseBigCategoryId} = $id
+      ORDER BY a.${SqfBudget.id} ASC;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      logger.i(
+          '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
+
+      final results = jsonList[0]['price'] as int;
 
       return results;
     } catch (e) {

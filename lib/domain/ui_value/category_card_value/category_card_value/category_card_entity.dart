@@ -8,6 +8,7 @@ part 'category_card_entity.freezed.dart';
 @freezed
 class CategoryCardEntity with _$CategoryCardEntity {
   const factory CategoryCardEntity({
+    required int monthlyBudget,
     required CategoryAccountingEntity monthlyExpenseByCategoryEntity,
     required List<SmallCategoryTileEntity> smallCategoryList,
   }) = _CategoryCardEntity;

@@ -8,9 +8,9 @@ final resolvedAllCategoryTileEntityProvider =
     FutureProvider<AllCategoryCardEntity>((ref) async {
 
   // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final dateScope = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data));
 
   // 選択された集計期間を元に、Entityを取得する
-  final entity = ref.watch(monthlyAllCategoryCardNotifierProvider(monthPeriodValue).future);
+  final entity = ref.watch(monthlyAllCategoryCardNotifierProvider(dateScope).future);
   return entity;
 });

@@ -14,7 +14,6 @@ class CategoryAccountingEntity with _$CategoryAccountingEntity {
     required String categoryColor,
     required String bigCategoryName,
     required String categoryIconPath,
-    @Default(0) int budget,
     @Default(0) int totalExpenseByBigCategory,
   }) = _CategoryAccountingEntity;
 

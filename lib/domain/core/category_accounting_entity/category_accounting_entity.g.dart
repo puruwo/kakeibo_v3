@@ -13,7 +13,6 @@ _$CategoryAccountingEntityImpl _$$CategoryAccountingEntityImplFromJson(
       categoryColor: json['categoryColor'] as String,
       bigCategoryName: json['bigCategoryName'] as String,
       categoryIconPath: json['categoryIconPath'] as String,
-      budget: (json['budget'] as num?)?.toInt() ?? 0,
       totalExpenseByBigCategory:
           (json['totalExpenseByBigCategory'] as num?)?.toInt() ?? 0,
     );
@@ -25,6 +24,5 @@ Map<String, dynamic> _$$CategoryAccountingEntityImplToJson(
       'categoryColor': instance.categoryColor,
       'bigCategoryName': instance.bigCategoryName,
       'categoryIconPath': instance.categoryIconPath,
-      'budget': instance.budget,
       'totalExpenseByBigCategory': instance.totalExpenseByBigCategory,
     };

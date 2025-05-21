@@ -11,7 +11,7 @@ DatabaseHelper db = DatabaseHelper.instance;
 class ImplementsCategoryAccountingRepository implements CategoryAccountingRepository {
 
   @override
-  Future<List<CategoryAccountingEntity>> fetchAll({required DateTime fromDate, required DateTime toDate}) async {
+  Future<List<CategoryAccountingEntity>> fetchAll({required DateTime fromDate, required DateTime toDate,}) async {
     final sql = '''
                   SELECT  
                     t1.${SqfExpenseBigCategory.id} AS id, 

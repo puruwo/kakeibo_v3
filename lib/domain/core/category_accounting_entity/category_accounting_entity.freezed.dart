@@ -25,7 +25,6 @@ mixin _$CategoryAccountingEntity {
   String get categoryColor => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
   String get categoryIconPath => throw _privateConstructorUsedError;
-  int get budget => throw _privateConstructorUsedError;
   int get totalExpenseByBigCategory => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,7 +44,6 @@ abstract class $CategoryAccountingEntityCopyWith<$Res> {
       String categoryColor,
       String bigCategoryName,
       String categoryIconPath,
-      int budget,
       int totalExpenseByBigCategory});
 }
 
@@ -67,7 +65,6 @@ class _$CategoryAccountingEntityCopyWithImpl<$Res,
     Object? categoryColor = null,
     Object? bigCategoryName = null,
     Object? categoryIconPath = null,
-    Object? budget = null,
     Object? totalExpenseByBigCategory = null,
   }) {
     return _then(_value.copyWith(
@@ -87,10 +84,6 @@ class _$CategoryAccountingEntityCopyWithImpl<$Res,
           ? _value.categoryIconPath
           : categoryIconPath // ignore: cast_nullable_to_non_nullable
               as String,
-      budget: null == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
-              as int,
       totalExpenseByBigCategory: null == totalExpenseByBigCategory
           ? _value.totalExpenseByBigCategory
           : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
@@ -113,7 +106,6 @@ abstract class _$$CategoryAccountingEntityImplCopyWith<$Res>
       String categoryColor,
       String bigCategoryName,
       String categoryIconPath,
-      int budget,
       int totalExpenseByBigCategory});
 }
 
@@ -134,7 +126,6 @@ class __$$CategoryAccountingEntityImplCopyWithImpl<$Res>
     Object? categoryColor = null,
     Object? bigCategoryName = null,
     Object? categoryIconPath = null,
-    Object? budget = null,
     Object? totalExpenseByBigCategory = null,
   }) {
     return _then(_$CategoryAccountingEntityImpl(
@@ -154,10 +145,6 @@ class __$$CategoryAccountingEntityImplCopyWithImpl<$Res>
           ? _value.categoryIconPath
           : categoryIconPath // ignore: cast_nullable_to_non_nullable
               as String,
-      budget: null == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
-              as int,
       totalExpenseByBigCategory: null == totalExpenseByBigCategory
           ? _value.totalExpenseByBigCategory
           : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
@@ -174,7 +161,6 @@ class _$CategoryAccountingEntityImpl implements _CategoryAccountingEntity {
       required this.categoryColor,
       required this.bigCategoryName,
       required this.categoryIconPath,
-      this.budget = 0,
       this.totalExpenseByBigCategory = 0});
 
   factory _$CategoryAccountingEntityImpl.fromJson(Map<String, dynamic> json) =>
@@ -191,14 +177,11 @@ class _$CategoryAccountingEntityImpl implements _CategoryAccountingEntity {
   final String categoryIconPath;
   @override
   @JsonKey()
-  final int budget;
-  @override
-  @JsonKey()
   final int totalExpenseByBigCategory;
 
   @override
   String toString() {
-    return 'CategoryAccountingEntity(id: $id, categoryColor: $categoryColor, bigCategoryName: $bigCategoryName, categoryIconPath: $categoryIconPath, budget: $budget, totalExpenseByBigCategory: $totalExpenseByBigCategory)';
+    return 'CategoryAccountingEntity(id: $id, categoryColor: $categoryColor, bigCategoryName: $bigCategoryName, categoryIconPath: $categoryIconPath, totalExpenseByBigCategory: $totalExpenseByBigCategory)';
   }
 
   @override
@@ -213,7 +196,6 @@ class _$CategoryAccountingEntityImpl implements _CategoryAccountingEntity {
                 other.bigCategoryName == bigCategoryName) &&
             (identical(other.categoryIconPath, categoryIconPath) ||
                 other.categoryIconPath == categoryIconPath) &&
-            (identical(other.budget, budget) || other.budget == budget) &&
             (identical(other.totalExpenseByBigCategory,
                     totalExpenseByBigCategory) ||
                 other.totalExpenseByBigCategory == totalExpenseByBigCategory));
@@ -222,7 +204,7 @@ class _$CategoryAccountingEntityImpl implements _CategoryAccountingEntity {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, categoryColor,
-      bigCategoryName, categoryIconPath, budget, totalExpenseByBigCategory);
+      bigCategoryName, categoryIconPath, totalExpenseByBigCategory);
 
   @JsonKey(ignore: true)
   @override
@@ -245,7 +227,6 @@ abstract class _CategoryAccountingEntity implements CategoryAccountingEntity {
       required final String categoryColor,
       required final String bigCategoryName,
       required final String categoryIconPath,
-      final int budget,
       final int totalExpenseByBigCategory}) = _$CategoryAccountingEntityImpl;
 
   factory _CategoryAccountingEntity.fromJson(Map<String, dynamic> json) =
@@ -259,8 +240,6 @@ abstract class _CategoryAccountingEntity implements CategoryAccountingEntity {
   String get bigCategoryName;
   @override
   String get categoryIconPath;
-  @override
-  int get budget;
   @override
   int get totalExpenseByBigCategory;
   @override
