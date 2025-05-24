@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/home/calendar_next_arrow_button.dart';
@@ -35,7 +36,7 @@ class Home extends StatelessWidget {
                   final label = labelGetter(activeDt);
                   return Text(
                     label,
-                    style: const TextStyle(color: MyColors.white, fontSize: 20),
+                    style: MyFonts.pageHeaderText,
                   );
                 }),
                 //右矢印ボタン、押すと次の月に移動

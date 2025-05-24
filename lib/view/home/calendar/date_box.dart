@@ -216,7 +216,7 @@ void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
             // テキストサイズの制御
             minScaleFactor: 0.7,
             maxScaleFactor: 0.95,
-            child: RegisterInputPage(
+            child: RegisterExpensePage(
               expenseEntity: ExpenseEntity(
                   date: DateFormat('yyyyMMdd').format(selectedDate),),
               mode: RegisterScreenMode.add,

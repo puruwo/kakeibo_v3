@@ -88,6 +88,37 @@ class ImplementsIncomeRepository implements IncomeRepository {
     }
   }
 
+  /// 期間指定してデータを取得する
+  /// カテゴリーの指定はしない
+  @override
+  Future<List<IncomeEntity>> fetchWithoutCategory(
+      {required MonthPeriodValue period}) async {
+    final sql = '''
+      SELECT 
+        a.${SqfIncome.id} AS id,
+        a.${SqfIncome.incomeSmallCategoryId} AS categoryId,  
+        a.${SqfIncome.date} AS date,
+        a.${SqfIncome.price} AS price, 
+        a.${SqfIncome.memo} AS memo
+      FROM ${SqfIncome.tableName} a
+      WHERE a.${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)} 
+      ;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      logger.i(
+          '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
+
+      final results =
+          jsonList.map((json) => IncomeEntity.fromJson(json)).toList();
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
+  }
 
   // 大カテゴリーと期間を指定して収入の合計を取得する
   @override
@@ -124,7 +155,7 @@ class ImplementsIncomeRepository implements IncomeRepository {
       logger.i(
           '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
 
-      final int results = jsonList[0]['totalPrice'] ?? 0 ;
+      final int results = jsonList[0]['totalPrice'] ?? 0;
 
       return results;
     } catch (e) {

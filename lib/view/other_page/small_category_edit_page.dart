@@ -10,6 +10,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // LocalImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/model/db_read_impl.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
@@ -115,10 +116,7 @@ class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
           appBar: AppBar(
             title: Text(
               '小カテゴリーの設定',
-              style: GoogleFonts.notoSans(
-                  fontSize: 19,
-                  color: MyColors.white,
-                  fontWeight: FontWeight.w400),
+              style: MyFonts.pageHeaderText,
             ),
 
             backgroundColor: MyColors.secondarySystemBackground,

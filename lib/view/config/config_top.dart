@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/export/export_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
@@ -21,12 +22,13 @@ class ConfigTop extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Text(
                   '設定画面',
                   textAlign: TextAlign.start,
+                  style: MyFonts.pageHeaderText,
                 ),
               ],
             ),
@@ -39,7 +41,6 @@ class ConfigTop extends ConsumerWidget {
               ),
               child: Column(
                 children: [
-
                   GestureDetector(
                     // 透明な領域もタップできるようにする
                     behavior: HitTestBehavior.translucent,
@@ -67,7 +68,6 @@ class ConfigTop extends ConsumerWidget {
                               const Center(child: CircularProgressIndicator()));
                     },
                   ),
-
                 ],
               ),
             ),

@@ -25,6 +25,11 @@ abstract interface class IncomeRepository {
     required int categoryId,
   });
 
+  /// 期間指定してデータを取得する
+  /// カテゴリーの指定はしない
+  Future<List<IncomeEntity>> fetchWithoutCategory(
+      {required MonthPeriodValue period});
+
   void insert(IncomeEntity expenseEntity);
 
   void update(IncomeEntity expenseEntity);

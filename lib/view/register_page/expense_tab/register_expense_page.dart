@@ -14,21 +14,21 @@ import 'package:kakeibo/view_model/state/register_page/register_screen_mode/regi
 
 import 'package:kakeibo/view/register_page/common_input_field/date_input_field.dart';
 
-class RegisterInputPage extends ConsumerStatefulWidget {
+class RegisterExpensePage extends ConsumerStatefulWidget {
 
   final RegisterScreenMode mode;
 
   final ExpenseEntity? expenseEntity;
 
-  const RegisterInputPage(
+  const RegisterExpensePage(
       {this.mode = RegisterScreenMode.add, this.expenseEntity, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _RegisterInputPageState();
+      _RegisterExpensePageState();
 }
 
-class _RegisterInputPageState extends ConsumerState<RegisterInputPage> {
+class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
   late ExpenseEntity initialExpenseData;
 
   @override

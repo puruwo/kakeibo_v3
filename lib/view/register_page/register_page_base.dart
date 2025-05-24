@@ -113,7 +113,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
         //body
         body: TabBarView(controller: _tabController, children: const [
-          RegisterInputPage(),
+          RegisterExpensePage(),
           RegisaterIncomePage(),
         ]),
       ),

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_cotegory_area.dart';
 import 'package:kakeibo/view/budget_setting_page/submit_budget_button.dart';
@@ -31,10 +32,7 @@ class _BudgetSettingPageState extends ConsumerState<BudgetSettingPage> {
         appBar: AppBar(
           title: Text(
             '今月の予算を入力',
-            style: GoogleFonts.notoSans(
-                fontSize: 19,
-                color: MyColors.white,
-                fontWeight: FontWeight.w400),
+            style: MyFonts.pageHeaderText,
           ),
 
           backgroundColor: MyColors.secondarySystemBackground,

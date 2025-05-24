@@ -9,7 +9,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/home/expense_history/exense_history_tile.dart';
+import 'package:kakeibo/view/home/expense_history/expense_history_tile.dart';
 
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
@@ -42,8 +42,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
 
     // リスト内テキストボックスの倍率を計算
     // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
-    final listSmallcategoryMemoOffset =
-        listSmallcategoryMemoOffsetGetter(context.screenWidth);
+    final listSmallcategoryMemoOffset = context.listSmallcategoryMemoOffset;
 
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * screenHorizontalMagnification;

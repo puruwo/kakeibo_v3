@@ -81,7 +81,7 @@ class ExpenseHistoryTile extends ConsumerWidget {
                     // テキストサイズの制御
                     minScaleFactor: 0.7,
                     maxScaleFactor: 0.95,
-                    child: RegisterInputPage(
+                    child: RegisterExpensePage(
                       expenseEntity: expenseEntity,
                       mode: RegisterScreenMode.edit,
                     ),

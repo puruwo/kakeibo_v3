@@ -67,7 +67,7 @@ class _ThirdState extends ConsumerState<Third> {
                   final label = labelGetter(activeDt);
                   return Text(
                     label,
-                    style: const TextStyle(color: MyColors.white, fontSize: 20),
+                    style: MyFonts.pageHeaderText,
                   );
                 }),
                 //右矢印ボタン、押すと次の月に移動

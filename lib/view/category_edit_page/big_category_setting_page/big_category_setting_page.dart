@@ -1,17 +1,16 @@
 /// packegeImport
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_list_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/submit_big_category_button.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/big_category_edit_list/big_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
-
 
 class BigCategorySettingPage extends ConsumerStatefulWidget {
   const BigCategorySettingPage({super.key});
@@ -21,7 +20,8 @@ class BigCategorySettingPage extends ConsumerStatefulWidget {
       _BigCategorySettingPageState();
 }
 
-class _BigCategorySettingPageState extends ConsumerState<BigCategorySettingPage> {
+class _BigCategorySettingPageState
+    extends ConsumerState<BigCategorySettingPage> {
   @override
   Widget build(BuildContext context) {
     final editmodeProvider = ref.watch(editModeNotifierProvider);
@@ -35,10 +35,7 @@ class _BigCategorySettingPageState extends ConsumerState<BigCategorySettingPage>
             backgroundColor: MyColors.secondarySystemBackground,
             title: Text(
               'カテゴリーの設定',
-              style: GoogleFonts.notoSans(
-                  fontSize: 19,
-                  color: MyColors.white,
-                  fontWeight: FontWeight.w400),
+              style: MyFonts.pageHeaderText,
             ),
 
             //ヘッダー左のアイコンボタン

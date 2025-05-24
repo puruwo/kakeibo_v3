@@ -27,4 +27,11 @@ extension MediaQueryExtension on BuildContext {
       return 1.0;
     }
   }
+
+  // リスト内テキストボックスの倍率を計算
+  // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
+  double get listSmallcategoryMemoOffset {
+    final defaultWidth = ScreenLayoutProperties().defaultWidth;
+    return screenWidth - defaultWidth;
+  }
 }

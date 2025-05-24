@@ -4,6 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 
 class MyFonts {
+
+  // Common
+  static TextStyle pageHeaderText = GoogleFonts.notoSans(
+                  fontSize: 19,
+                  color: MyColors.white,
+                  fontWeight: FontWeight.w400);
+
   // Third Page
   static TextStyle thirdPageSubheading = GoogleFonts.notoSans(
       fontSize: 18,
