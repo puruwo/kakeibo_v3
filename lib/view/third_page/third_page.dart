@@ -13,7 +13,7 @@ import 'package:kakeibo/view/third_page/next_arrow_button.dart';
 import 'package:kakeibo/view/third_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/third_page/tile/all_category_tile_area.dart';
 import 'package:kakeibo/view/third_page/tile/category_tile_area.dart';
-import 'package:kakeibo/view/other_page/category_setting_page.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_setting_page.dart';
@@ -140,7 +140,7 @@ class _ThirdState extends ConsumerState<Third> {
                       TextButton(
                           onPressed: () {
                             _showModalBottomSheet(
-                                context, const CategorySettingPage());
+                                context, const BigCategorySettingPage());
                           },
                           child: const Text(
                             'カテゴリー設定',

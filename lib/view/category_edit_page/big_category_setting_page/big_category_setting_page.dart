@@ -5,23 +5,23 @@ import 'package:flutter/material.dart';
 
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view/other_page/big_category_edit_area.dart';
-import 'package:kakeibo/view/other_page/big_category_list_area.dart';
-import 'package:kakeibo/view/other_page/submit_big_category_button.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_list_area.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_setting_page/submit_big_category_button.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/big_category_edit_list/big_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 
 
-class CategorySettingPage extends ConsumerStatefulWidget {
-  const CategorySettingPage({super.key});
+class BigCategorySettingPage extends ConsumerStatefulWidget {
+  const BigCategorySettingPage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _CategorySettingPageState();
+      _BigCategorySettingPageState();
 }
 
-class _CategorySettingPageState extends ConsumerState<CategorySettingPage> {
+class _BigCategorySettingPageState extends ConsumerState<BigCategorySettingPage> {
   @override
   Widget build(BuildContext context) {
     final editmodeProvider = ref.watch(editModeNotifierProvider);
