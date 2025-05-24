@@ -11,7 +11,6 @@ mixin PresentationMixin {
     Future<void> Function()? succesAction,
     String? successMessage,
   }) async {
-    final scaffoldMessenger = ScaffoldMessenger.of(context);
     try {
       
       await action();
@@ -21,20 +20,24 @@ mixin PresentationMixin {
 
       await Future.delayed(const Duration(milliseconds: 100));
       
-      // SuccessMessageが指定されている場合は、スナックバーを表示
-      if(successMessage == null)return;
-      SuccessSnackBar.show(
-        scaffoldMessenger,
-        message: successMessage,
-      );
-
+      // 成功メッセージがある場合は、1フレーム遅らせてから SnackBar を表示
+      if (successMessage != null) {
+        Future.microtask(() {
+          final messenger = ScaffoldMessenger.maybeOf(context);
+          if (messenger != null) {
+            SuccessSnackBar.show(messenger, message: successMessage);
+          }
+        });
+      }
     } on AppException catch (e) {
-      
-      FailureSnackBar.show(
-        scaffoldMessenger,
-        message: e.toString(),
-
-      );
+      // 同様にエラーメッセージも 1フレーム遅らせる
+      Future.microtask(() {
+        final messenger = ScaffoldMessenger.maybeOf(context);
+        if (messenger != null) {
+          FailureSnackBar.show(messenger, message: e.toString());
+        }
+      });
+    }
     }
   }
-}
+

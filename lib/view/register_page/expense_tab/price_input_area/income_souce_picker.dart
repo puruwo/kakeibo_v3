@@ -26,7 +26,7 @@ class _IncomeSourcePickerState extends ConsumerState<IncomeSourcePicker> {
     final incomeSourceBigCategory =
         ref.watch(enteredIncomeSourceControllerNotifierProvider);
 
-    return ref.watch(allIncomeBigCategoryProvider).when(
+    return ref.watch(allIncomeBigCategoriesProvider).when(
           data: (data) => Dialog(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),

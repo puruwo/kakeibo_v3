@@ -70,4 +70,21 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
       );
     }
   }
+
+  @override
+  Future<void> update({required ExpenseBigCategoryEntity entity})async{
+    db.update(
+        SqfExpenseBigCategory.tableName,
+        {
+          SqfExpenseBigCategory.id: entity.id,
+          SqfExpenseBigCategory.name: entity.bigCategoryName,
+          SqfExpenseBigCategory.colorCode: entity.colorCode,
+          SqfExpenseBigCategory.resourcePath: entity.resourcePath,
+          SqfExpenseBigCategory.displayOrder: entity.displayOrder,
+          SqfExpenseBigCategory.isDisplayed: entity.isDisplayed,
+        },
+        entity.id);
+    logger.i(
+        '====SQLが実行されました====\n ImplementsExpenseBigCategoryRepository update(ExpenseBigCategoryEntity entity)\n ${SqfExpenseBigCategory.tableName}でupdate\n ExpenseBigCategoryEntity: \n$entity');
+  }
 }

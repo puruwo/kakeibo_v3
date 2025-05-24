@@ -4,12 +4,12 @@ import 'package:kakeibo/domain/core/category_entity/income_category_entity/incom
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 
 // 全大カテゴリーを保持するプロバイダー
-final allIncomeBigCategoryProvider = FutureProvider.autoDispose<List<IncomeBigCategoryEntity>>(
+final allIncomeBigCategoriesProvider = FutureProvider.autoDispose<List<IncomeBigCategoryEntity>>(
     (ref) => ref.watch(incomeCategoryUsecaseProvider).fetchAllBigCategory());
 
 
 // 全カテゴリーを保持するプロバイダー
-final allIncomeCategoryProvider = FutureProvider.autoDispose<List<IncomeCategoryEntity>>(
+final allIncomeCategoriesProvider = FutureProvider.autoDispose<List<IncomeCategoryEntity>>(
     (ref) => ref.watch(incomeCategoryUsecaseProvider).fetchAllCategory());
 
 // カテゴリーを保持するプロバイダー

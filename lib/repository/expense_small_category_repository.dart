@@ -72,8 +72,28 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
 
   @override
   Future<List<ExpenseSmallCategoryEntity>> fetchByBigCategory(
-      {required int bigCategoryId}) {
-    // TODO: implement fetchByBigCategory
-    throw UnimplementedError();
+      {required int bigCategoryId}) async{
+    final sql = '''
+      SELECT 
+        a.${SqfExpenseSmallCategory.id} AS id,
+        a.${SqfExpenseSmallCategory.smallCategoryOrderKey} AS smallCategoryOrderKey,
+        a.${SqfExpenseSmallCategory.bigCategoryKey} AS bigCategoryKey,
+        a.${SqfExpenseSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
+        a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
+        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
+      FROM ${SqfExpenseSmallCategory.tableName} a
+      WHERE a.${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId;
+    ''';
+
+    // SQLを実行して結果を取得
+    final jsonList = await db.query(sql);
+    logger.i('====SQLが実行されました====\n ImplementsSmallCategoryRepository fetchAll()\n$sql');
+
+    // 取得したjsonListをSmallCategoryEntityのリストに変換
+    final result = jsonList.map((e) {
+      return ExpenseSmallCategoryEntity.fromJson(e);
+    }).toList();
+
+    return result;
   }
 }

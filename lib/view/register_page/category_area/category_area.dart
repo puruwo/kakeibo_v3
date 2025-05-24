@@ -33,7 +33,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     WidgetsBinding.instance.addPostFrameCallback((_) async{
       
       final ICategoryEntity categoryEntity = switch(widget.transactionMode){
-        TransactionMode.expense =>await ref.watch(categoryUsecaseProvider).fetchByBigCategory(widget.originalCategoryId),
+        TransactionMode.expense =>await ref.watch(categoryUsecaseProvider).fetchBySmallId(widget.originalCategoryId),
         TransactionMode.income =>await ref.watch(incomeCategoryUsecaseProvider).fetchCategoryBySmallId(widget.originalCategoryId),
       };
       
@@ -58,8 +58,8 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     final screenVerticalMagnification = context.screenVerticalMagnification;
 
     final  provider = switch(widget.transactionMode){
-        TransactionMode.expense =>categoryProvider,
-        TransactionMode.income =>allIncomeCategoryProvider,
+        TransactionMode.expense =>allCategoriesProvider,
+        TransactionMode.income =>allIncomeCategoriesProvider,
       };
 
     return ref.watch(provider).when(

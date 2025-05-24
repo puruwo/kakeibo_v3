@@ -7,7 +7,7 @@ final expensebigCategoryRepositoryProvider = Provider<ExpenseBigCategoryReposito
   (_) => throw UnimplementedError("BigCategoryRepositoryの実装がされていません。"),
 );
 
-/// tbl202(大カテゴリー)に関するリポジトリ
+/// SqfExpenseNmallCategory(大カテゴリー)に関するリポジトリ
 abstract interface class ExpenseBigCategoryRepository {
 
  // 全ての大カテゴリーの情報を取得する
@@ -15,4 +15,6 @@ abstract interface class ExpenseBigCategoryRepository {
 
   /// 大カテゴリー指定で大カテゴリーのリストを取得する
   Future<ExpenseBigCategoryEntity> fetchByBigCategory({required int bigCategoryId});
+
+  Future<void> update({required ExpenseBigCategoryEntity entity});
 }
