@@ -4,11 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
-import 'package:kakeibo/view/third_page/third_page.dart';
+import 'package:kakeibo/view/monthly_page/monthly_page.dart';
+import 'package:kakeibo/view/year_page/year_page.dart';
 
 import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
 import 'package:kakeibo/view_model/state/initial_open.dart';
-import 'package:kakeibo/view/home/home.dart';
 
 class Foundation extends ConsumerWidget {
   Foundation({super.key});
@@ -21,8 +21,8 @@ class Foundation extends ConsumerWidget {
 
   //navigationBarに設定するbodyのpageリスト
   final List<Widget> pageList = [
-    const Home(),
-    const Third(),
+    const YearPage(),
+    const MonthlyPage(),
   ];
 
   @override

@@ -9,18 +9,28 @@ import 'package:kakeibo/constant/colors.dart';
 
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 
-import 'package:kakeibo/view/home/calendar/date_box.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_area/date_box.dart';
 
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 
 final logger = Logger();
 
-class CalendarArea extends ConsumerWidget {
+class CalendarArea extends ConsumerStatefulWidget {
   const CalendarArea({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _CalendarAreaState();
+}
+
+class _CalendarAreaState extends ConsumerState<CalendarArea> {
+  late DateTime initialDate;
+
+
+  @override
+  Widget build(
+    BuildContext context,
+  ) {
     // 画面の横幅を取得
     final screenWidthSize = MediaQuery.of(context).size.width;
 
@@ -83,6 +93,7 @@ class CalendarArea extends ConsumerWidget {
 
         // 表示部分記述
         itemBuilder: (context, index) {
+
           return ref.watch(calendarUsecaseNotifierProvider(index)).when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stackTrace) => Center(child: Text('$error')),
@@ -184,8 +195,10 @@ Row _weekRow(
   return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(7, (dayIndex) {
-        
-        return DateBox(calendarTileEntity:calendarTileEntityList[dayIndex],boxHeight:boxHeight,boxWidth:boxWidth);
+        return DateBox(
+            calendarTileEntity: calendarTileEntityList[dayIndex],
+            boxHeight: boxHeight,
+            boxWidth: boxWidth);
       }));
 }
 
@@ -195,6 +208,3 @@ String gettermmdd(List<List<Map<String, dynamic>>> dateInformationList,
   final day = dateInformationList[weekIndex][dayIndex]['day'].toString();
   return '$month月$day日';
 }
-
-
-

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
+import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/page_manager/page_manager.dart';
+
 
 class PreviousArrowButton extends ConsumerWidget {
   const PreviousArrowButton({super.key});
@@ -11,9 +13,9 @@ class PreviousArrowButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       onPressed: () async {
-        // selectedDatetimeを更新するのではなく、calendarPageControllerを更新する
-        // onPageChanged内でselectedDatetimeを更新する
-        ref.read(calendarPageControllerNotifierProvider.notifier).previousPage();
+        // selectedDatetimeとpageManagerNotifierProviderを更新する
+        ref.read(pageManagerNotifierProvider.notifier).previousPage();
+        ref.read(selectedDatetimeNotifierProvider.notifier).updateToPreviousMonth();
       },
       iconSize: 15,
       icon: const Icon(Icons.arrow_back_ios_rounded),

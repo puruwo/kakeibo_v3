@@ -6,16 +6,15 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/config/config_top.dart';
-import 'package:kakeibo/view/home/calendar_next_arrow_button.dart';
-import 'package:kakeibo/view/home/calendar_previous_arrow_button.dart';
-
-import 'package:kakeibo/view/home/calendar/calendar_area.dart';
-import 'package:kakeibo/view/home/expense_history/expence_history_list_area.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_area/calendar_area.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_next_arrow_button.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_previous_arrow_button.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_area/expence_history_list_area.dart';
 
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class ExpenseHistoryPage extends StatelessWidget {
+  const ExpenseHistoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -34,4 +34,9 @@ extension MediaQueryExtension on BuildContext {
     final defaultWidth = ScreenLayoutProperties().defaultWidth;
     return screenWidth - defaultWidth;
   }
+
+  // カレンダーサイズから左の空白の大きさを計算
+  double get leftsidePadding {
+    return 14.5 * screenHorizontalMagnification;
+  }
 }

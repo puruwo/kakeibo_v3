@@ -3,43 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
-import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/config/config_top.dart';
-import 'package:kakeibo/view/third_page/monthly_plan_area.dart';
-import 'package:kakeibo/view/third_page/next_arrow_button.dart';
-import 'package:kakeibo/view/third_page/previous_arrow_button.dart';
-import 'package:kakeibo/view/third_page/tile/all_category_tile_area.dart';
-import 'package:kakeibo/view/third_page/tile/category_tile_area.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_digest_area.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
+import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
+import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
+import 'package:kakeibo/view/monthly_page/tile/all_category_tile_area.dart';
+import 'package:kakeibo/view/monthly_page/tile/category_tile_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_setting_page.dart';
-import 'package:kakeibo/view/third_page/prediction_graph.dart';
+import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-class Third extends ConsumerStatefulWidget {
-  const Third({super.key});
+class MonthlyPage extends ConsumerStatefulWidget {
+  const MonthlyPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ThirdState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MonthlyPage();
 }
 
-class _ThirdState extends ConsumerState<Third> {
+class _MonthlyPage extends ConsumerState<MonthlyPage> {
   @override
   Widget build(BuildContext context) {
-    // 画面の横幅を取得
-    final screenWidthSize = MediaQuery.of(context).size.width;
-
-    // 画面の倍率を計算
-    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
-    final screenHorizontalMagnification =
-        screenHorizontalMagnificationGetter(screenWidthSize);
-
-    // カレンダーサイズから左の空白の大きさを計算
-    final leftsidePadding = 14.5 * screenHorizontalMagnification;
 
     //状態管理---------------------------------------------------------------------------------------
 
@@ -92,11 +84,11 @@ class _ThirdState extends ConsumerState<Third> {
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
+            padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
             child: Column(
               children: [
                 SizedBox(
-                  width: 343 * screenHorizontalMagnification,
+                  width: 343 * context.screenHorizontalMagnification,
                   height: 35,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -128,7 +120,7 @@ class _ThirdState extends ConsumerState<Third> {
                 ),
 
                 SizedBox(
-                  width: 343 * screenHorizontalMagnification,
+                  width: 343 * context.screenHorizontalMagnification,
                   height: 35,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -166,6 +158,31 @@ class _ThirdState extends ConsumerState<Third> {
                 const SizedBox(
                   height: 32,
                 ),
+
+                SizedBox(
+                  width: 343 * context.screenHorizontalMagnification,
+                  height: 35,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        ' 履歴',
+                        style: MyFonts.thirdPageSubheading,
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const ExpenseHistoryPage(),
+                            ));},
+                          child: const Text(
+                            'さらに表示',
+                            style: MyFonts.thirdPageTextButton,
+                          )),
+                    ],
+                  ),
+                ),
+
+                const ExpenceHistoryDigestArea(),
 
                 const SizedBox(
                   height: 32,
