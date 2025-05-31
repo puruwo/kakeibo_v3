@@ -7,71 +7,115 @@ final monthPeriodServiceProvider = Provider<MonthPeriodService>(
   (ref) => MonthPeriodService(ref),
 );
 
-class MonthPeriodService{
-
+class MonthPeriodService {
   MonthPeriodService(this._ref);
 
   final Ref _ref;
 
-  AggregationStartDayService get _aggregationStartDateEntity => _ref.read(aggregationStartDayProvider);
+  AggregationStartDayService get _aggregationStartDateEntity =>
+      _ref.read(aggregationStartDayProvider);
 
   // 指定した日付を含む集計期間を取得する
-  Future<PeriodValue> fetchMonthPeriod(DateTime includedDate) async{
-
+  Future<PeriodValue> fetchMonthPeriod(DateTime includedDate) async {
     // ユーザ設定の集計開始日を取得する
-    AggregationStartDayEntity aggregationStartDateEntity = await _aggregationStartDateEntity.fetchAggregationStartDay();
+    AggregationStartDayEntity aggregationStartDateEntity =
+        await _aggregationStartDateEntity.fetchAggregationStartDay();
     final int aggregationStartDay = aggregationStartDateEntity.day;
-    
+
     // 入力した日がユーザ設定の期間開始日より前の場合
-    if(includedDate.day < aggregationStartDay){
+    if (includedDate.day < aggregationStartDay) {
       // 今月の開始日
-      final startDatetime = DateTime(includedDate.year, includedDate.month - 1, aggregationStartDay);
+      final startDatetime = DateTime(
+          includedDate.year, includedDate.month - 1, aggregationStartDay);
       // 先月の終了日
-      final endDatetime = DateTime(includedDate.year, includedDate.month, aggregationStartDay - 1);
+      final endDatetime = DateTime(
+          includedDate.year, includedDate.month, aggregationStartDay - 1);
 
-      return PeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
-
+      return PeriodValue(
+          startDatetime: startDatetime, endDatetime: endDatetime);
     }
     // 入力した日がユーザ設定の期間開始日以降の場合
-    else if(includedDate.day >= aggregationStartDay){
+    else if (includedDate.day >= aggregationStartDay) {
       // 今月の開始日
-      final startDatetime = DateTime(includedDate.year, includedDate.month, aggregationStartDay);
+      final startDatetime =
+          DateTime(includedDate.year, includedDate.month, aggregationStartDay);
       // 今月の終了日
-      final endDatetime = DateTime(includedDate.year, includedDate.month + 1, aggregationStartDay - 1);
+      final endDatetime = DateTime(
+          includedDate.year, includedDate.month + 1, aggregationStartDay - 1);
 
-      return PeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
-
-    }else{
+      return PeriodValue(
+          startDatetime: startDatetime, endDatetime: endDatetime);
+    } else {
       throw Exception('期間の取得に失敗しました');
     }
   }
 
   // 前の集計期間を取得する
-  PeriodValue fetchPreviousMonthPeriod(PeriodValue monthPeriodValue) {
-    final previousMonthStartDateBuff = DateTime(monthPeriodValue.startDatetime.year, monthPeriodValue.startDatetime.month - 1, monthPeriodValue.startDatetime.day);
+  PeriodValue fetchShiftedMonthPeriod(PeriodValue monthPeriodValue, int shift) {
+    
+    // ====開始日====
+    DateTime shiftedMonthPeriodStartDate;
 
-    // 開始日
-    DateTime previousMonthPeriodStartDate;
+    // シフト分月移動して、その日付を取得する
+    // 日付が存在しなければ
+    final shiftedMonthStartDay = DateTime(
+            monthPeriodValue.startDatetime.year,
+            monthPeriodValue.startDatetime.month + shift,
+            monthPeriodValue.startDatetime.day)
+        .day;
 
-    // 前月の最終日の日付よりも、開始基準日が大きい場合 
-    if (previousMonthStartDateBuff.day < monthPeriodValue.startDatetime.day) {
+    // 移動後月の日付よりも、開始基準日の日付が大きい場合
+    // 例: 開始基準日が月末(31日)で、前月の最終日が30日の場合
+    // previousMonthStartDateBuffは次の月の1日になる
+    if (shiftedMonthStartDay < monthPeriodValue.startDatetime.day) {
       // 開始日: 前月の最終日を開始日として扱い
-      previousMonthPeriodStartDate = previousMonthStartDateBuff;
-    } 
-    // 開始基準日が前月に存在する場合 
-    else if (previousMonthStartDateBuff.day >= monthPeriodValue.startDatetime.day) {
-      // 開始日: 前月の年と月の値と、開始基準日を代入して返却
-      previousMonthPeriodStartDate = DateTime(previousMonthStartDateBuff.year, previousMonthStartDateBuff.month, monthPeriodValue.startDatetime.day); 
-    }else{
+      shiftedMonthPeriodStartDate = DateTime(
+          monthPeriodValue.startDatetime.year,
+          monthPeriodValue.startDatetime.month + shift,
+          0);
+    }
+    // 開始基準日が前月に存在する場合
+    else if (shiftedMonthStartDay >= monthPeriodValue.startDatetime.day) {
+      // 月をシフトしただけで大丈夫
+      shiftedMonthPeriodStartDate = DateTime(
+          monthPeriodValue.startDatetime.year,
+          monthPeriodValue.startDatetime.month + shift,
+          monthPeriodValue.startDatetime.day);
+    } else {
       throw Exception('開始基準日の処理に失敗しました');
     }
 
-    // 終了日: 前月の開始基準日を終了日として扱う
-    final previousMonthPeriodEndDate = monthPeriodValue.startDatetime.add(const Duration(days: -1));
+    // ====終了日===
+    DateTime shiftedMonthPeriodEndDate;
 
-    return PeriodValue(startDatetime:previousMonthPeriodStartDate,endDatetime: previousMonthPeriodEndDate);
+    // シフト分月移動して、その日付を取得する
+    // 日付が存在しなければ
+    final shiftedMonthEndDay = DateTime(
+            monthPeriodValue.endDatetime.year,
+            monthPeriodValue.endDatetime.month + shift,
+            monthPeriodValue.endDatetime.day)
+        .day;
+
+    if (shiftedMonthEndDay < monthPeriodValue.endDatetime.day) {
+      // 開始日: 前月の最終日を開始日として扱い
+      shiftedMonthPeriodEndDate = DateTime(
+          monthPeriodValue.endDatetime.year,
+          monthPeriodValue.endDatetime.month + shift,
+          0);
+    }
+    // 開始基準日が前月に存在する場合
+    else if (shiftedMonthEndDay >= monthPeriodValue.endDatetime.day) {
+      // 月をシフトしただけで大丈夫
+      shiftedMonthPeriodEndDate = DateTime(
+          monthPeriodValue.endDatetime.year,
+          monthPeriodValue.endDatetime.month + shift,
+          monthPeriodValue.endDatetime.day);
+    } else {
+      throw Exception('開始基準日の処理に失敗しました');
+    }
+
+    return PeriodValue(
+        startDatetime: shiftedMonthPeriodStartDate,
+        endDatetime: shiftedMonthPeriodEndDate);
   }
-   
-  
 }
-

@@ -22,7 +22,6 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
 
   @override
   Future<List<List<CalendarTileEntity>>> build(int calendarPage) async {
-    // 初回生成時
 
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
@@ -43,13 +42,11 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     // カレンダーページと初期カレンダーページの差分を取得
     final distance = calendarPage - CalendarProperties().initialCalendarPage;
 
-    // todo: 先に期間を取得してから期間を前後に移動するようにする
-    // todo: 前後期間を取得するためにperiodEntityにメソッドを追加する
-    // 現在日付からカレンダーのページの分移動して日付を取得する
-    final safe = safeDate(DateTime.now(), distance);
+    // その日の日付をルートとして集計期間を取得する
+    final PeriodValue rootPeriod = await _periodService.fetchMonthPeriod(DateTime.now());
 
-    // 移動した日付を元に、集計期間を取得する
-    final PeriodValue period = await _periodService.fetchMonthPeriod(safe);
+    // ページ分を移動して集計期間を取得する
+    final PeriodValue shiftedPeriod = _periodService.fetchShiftedMonthPeriod(rootPeriod, distance);
 
     // 期間内の日毎の支出データを取得する
     final List<CalendarTileEntity> inPeriodCalendarTileList = [];
@@ -58,9 +55,9 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     final startDay = await _aggregationStartDayService.fetchAggregationStartDay();
 
     // 期間開始日から終了日までのデータを取得する
-    DateTime thisLoopDatetime = period.startDatetime;
-    for (var i = 0; thisLoopDatetime.isBefore(period.endDatetime); i++) {
-      thisLoopDatetime = period.startDatetime.add(Duration(days: i));
+    DateTime thisLoopDatetime = shiftedPeriod.startDatetime;
+    for (var i = 0; thisLoopDatetime.isBefore(shiftedPeriod.endDatetime); i++) {
+      thisLoopDatetime = shiftedPeriod.startDatetime.add(Duration(days: i));
 
       final DailyExpenseEntity dailyExpenseEntity =
           await _repository.fetch(dateTime: thisLoopDatetime);

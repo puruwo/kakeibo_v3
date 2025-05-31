@@ -37,8 +37,8 @@ class _BudgetHomePage extends ConsumerState<BudgetHomePage> {
           // 本体
           body: Padding(
             padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
-            child: SingleChildScrollView(
-              child: const Column(
+            child: const SingleChildScrollView(
+              child: Column(
                 children: [
                   IncomeListArea(),
                 ],
