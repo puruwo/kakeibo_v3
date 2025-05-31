@@ -81,13 +81,11 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       ''';
 
     try {
-      final jsonList = await db.query(sql);
+      final result = await db.queryFirstIntValue(sql);
       logger.i(
           '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(DateTime $fromDate, DateTime $toDate)\n$sql');
 
-      final results = jsonList[0]['totalExpense'];
-
-      return results;
+      return result ?? 0; // nullの場合は0を返す
     } catch (e) {
       logger.e('[FAIL]: $e');
       return 0;
@@ -107,13 +105,11 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       ''';
 
     try {
-      final jsonList = await db.query(sql);
+      final result = await db.queryFirstIntValue(sql);
       logger.i(
           '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalExpenseByPeriodWithBigCategory(int $bigCategory, DateTime $fromDate, DateTime $toDate)\n$sql');
 
-      final results = jsonList[0]['totalExpense'];
-
-      return results;
+      return result ?? 0; // nullの場合は0を返す
     } catch (e) {
       logger.e('[FAIL]: $e');
       return 0;

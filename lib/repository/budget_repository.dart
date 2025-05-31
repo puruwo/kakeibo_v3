@@ -62,13 +62,11 @@ class ImplementsBudgetRepository implements BudgetRepository {
     ''';
 
     try {
-      final jsonList = await db.query(sql);
+      final result = await db.queryFirstIntValue(sql);
       logger.i(
           '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
 
-      final results = jsonList[0]['totalPrice'] as int;
-
-      return results;
+      return result ?? 0; // nullの場合は0を返す
     } catch (e) {
       logger.e('[FAIL]: $e');
       return 0;
@@ -87,13 +85,11 @@ class ImplementsBudgetRepository implements BudgetRepository {
     ''';
 
     try {
-      final jsonList = await db.query(sql);
+      final result = await db.queryFirstIntValue(sql);
       logger.i(
           '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
 
-      final results = jsonList[0]['price'] as int;
-
-      return results;
+      return result ?? 0; // nullの場合は0を返す
     } catch (e) {
       logger.e('[FAIL]: $e');
       return 0;

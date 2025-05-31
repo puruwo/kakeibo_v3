@@ -151,13 +151,11 @@ class ImplementsIncomeRepository implements IncomeRepository {
     ''';
 
     try {
-      final jsonList = await db.query(sql);
+      final result = await db.queryFirstIntValue(sql);
       logger.i(
           '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
 
-      final int results = jsonList[0]['totalPrice'] ?? 0;
-
-      return results;
+      return result ?? 0; // nullの場合は0を返す
     } catch (e) {
       logger.e('[FAIL]: $e');
       return 0;

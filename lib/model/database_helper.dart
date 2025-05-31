@@ -117,6 +117,21 @@ class DatabaseHelper {
     }
   }
 
+  // SQL入力のクエリ処理で、最初の整数値を取得
+  Future<int?> queryFirstIntValue(String sql) async {
+    Database? db = await instance.database;
+    try {
+      // トランザクションを利用して安全に処理する
+      return await db!.transaction((txn) async {
+        final buff = await txn.rawQuery(sql);
+        return Sqflite.firstIntValue(buff);
+      });
+    } catch (e) {
+      print('SQLクエリエラー: $e');
+      rethrow;
+    }
+  }
+
   //　更新処理
   Future<int> update(String table, Map<String, dynamic> row, int id) async {
     Database? db = await instance.database;
