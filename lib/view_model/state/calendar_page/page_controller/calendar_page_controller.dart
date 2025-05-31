@@ -5,7 +5,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'calendar_page_controller.g.dart';
 
 // Notifierを使用したPageControllerの管理
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class CalendarPageControllerNotifier extends _$CalendarPageControllerNotifier {
   @override
   PageController build() {

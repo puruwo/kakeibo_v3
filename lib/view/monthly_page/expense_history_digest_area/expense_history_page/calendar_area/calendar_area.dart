@@ -45,6 +45,10 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
 
 //状態管理---------------------------------------------------------------------------------------
 
+    // providerが破棄されていないことが多いので、初期化を強制的に行う
+    // 初期化することで、pageManagerNotifierProviderの値を取り込んで初期化する
+    ref.invalidate(calendarPageControllerNotifierProvider);
+    
     // pageViewのコントローラ
     final PageController pageController =
         ref.watch(calendarPageControllerNotifierProvider);
