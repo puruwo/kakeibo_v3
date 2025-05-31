@@ -42,7 +42,9 @@ class MonthlyCategoryCardUsecaseNotifier
 
     // 大カテゴリー(タイル情報つき)のリストを取得する
     final categoryList = await _categoryAccountingRepositoryProvider.fetchAll(
-        fromDate: fromDate, toDate: toDate);
+        incomeSourceBigCategoryId: 0, // ボーナスを除く
+        fromDate: fromDate,
+        toDate: toDate);
 
     // カテゴリータイルのリストの並び順でList<SmallCategoryTileExpenceEntity>を取得する
     List<CategoryCardEntity> categoryTileList = [];
@@ -53,6 +55,7 @@ class MonthlyCategoryCardUsecaseNotifier
 
       // タイル内の小カテゴリーのリスト情報を取得する
       final smallCategoryList = await _smallCategoryTileRepository.fetchAll(
+          incomeSourceBigCategoryId: 0, // ボーナスを除く
           bigCategoryId: categoryList[i].id,
           fromDate: fromDate,
           toDate: toDate);

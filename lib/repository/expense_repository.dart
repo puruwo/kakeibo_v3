@@ -95,19 +95,19 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   // 期間とカテゴリーを指定して支出の合計を取得する
   @override
   Future<int> fetchTotalExpenseByPeriodWithBigCategory(
-      {required int bigCategory,
+      {required int incomeSourceBigCategory,
       required DateTime fromDate,
       required DateTime toDate}) async {
     final sql = '''
       SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName} 
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
-      AND ${SqfExpense.incomeSourceBigCategory} = $bigCategory;
+      AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory;
       ''';
 
     try {
       final result = await db.queryFirstIntValue(sql);
       logger.i(
-          '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalExpenseByPeriodWithBigCategory(int $bigCategory, DateTime $fromDate, DateTime $toDate)\n$sql');
+          '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalExpenseByPeriodWithBigCategory(int $incomeSourceBigCategory, DateTime $fromDate, DateTime $toDate)\n$sql');
 
       return result ?? 0; // nullの場合は0を返す
     } catch (e) {

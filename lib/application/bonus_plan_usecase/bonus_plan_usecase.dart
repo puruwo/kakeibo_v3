@@ -40,7 +40,7 @@ class BonusPlanUsecaseNotifier
     // カテゴリーIDを1で指定することで、ボーナス分の支出の合計を取得する
     final yearlyBonusExpense =
         await _expenseRepository.fetchTotalExpenseByPeriodWithBigCategory(
-            bigCategory: 1,
+            incomeSourceBigCategory: 1,
             fromDate: selectedYearPeriod.startDatetime,
             toDate: selectedYearPeriod.endDatetime);
 

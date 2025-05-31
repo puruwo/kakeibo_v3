@@ -24,7 +24,7 @@ abstract interface class ExpenseRepository {
 
   // 期間とカテゴリーを指定して支出の合計を取得する
   Future<int> fetchTotalExpenseByPeriodWithBigCategory(
-      {required int bigCategory, required DateTime fromDate, required DateTime toDate});
+      {required int incomeSourceBigCategory, required DateTime fromDate, required DateTime toDate});
 
   void insert(ExpenseEntity expenseEntity);
 

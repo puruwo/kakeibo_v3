@@ -11,7 +11,7 @@ DatabaseHelper db = DatabaseHelper.instance;
 class ImplementsSmallCategoryTileRepository implements SmallCategoryTileRepository {
 
   @override
-  Future<List<SmallCategoryTileEntity>> fetchAll({required int bigCategoryId,required DateTime fromDate,required DateTime toDate}) async {
+  Future<List<SmallCategoryTileEntity>> fetchAll({required int incomeSourceBigCategoryId,required int bigCategoryId,required DateTime fromDate,required DateTime toDate}) async {
 
     //  {
     //  _id:
@@ -36,6 +36,7 @@ class ImplementsSmallCategoryTileRepository implements SmallCategoryTileReposito
                   SUM(x.price) as small_category_payment_sum 
                   FROM ${SqfExpense.tableName} x
                   WHERE (x.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(fromDate)}  AND x.${SqfExpense.date} <=${DateFormat('yyyyMMdd').format(toDate)} )
+                  AND x.${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategoryId
                   GROUP BY x.${SqfExpense.expenseSmallCategoryId}
                 ) t2
                 ON t2.${SqfExpense.expenseSmallCategoryId} = t1.${SqfExpenseSmallCategory.id}

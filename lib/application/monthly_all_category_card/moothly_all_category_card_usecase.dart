@@ -46,12 +46,13 @@ class MonthlyAllCategoryTileUsecaseNotifier
         month: dateScope.representativeMonth);
 
     // 全カテゴリーの支出を取得
+    // 大カテゴリーIDを0にすることで、ボーナスを除くカテゴリーの支出を取得する
     final allCategoryExpense = await _expenseRepositoryProvider
-        .fetchTotalExpenseByPeriod(fromDate: fromDate, toDate: toDate);
+        .fetchTotalExpenseByPeriodWithBigCategory(incomeSourceBigCategory: 0, fromDate: fromDate, toDate: toDate);
 
     // カテゴリータイルのリストを取得する
     final categoryEntityList = await _categoryAccountingRepositoryProvider
-        .fetchAll(fromDate: fromDate, toDate: toDate);
+        .fetchAll(incomeSourceBigCategoryId: 0, fromDate: fromDate, toDate: toDate);
 
     // 大カテゴリーが何個あるか
     final categoryCount = categoryEntityList.length;

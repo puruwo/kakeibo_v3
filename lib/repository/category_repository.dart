@@ -11,7 +11,7 @@ DatabaseHelper db = DatabaseHelper.instance;
 class ImplementsCategoryAccountingRepository implements CategoryAccountingRepository {
 
   @override
-  Future<List<CategoryAccountingEntity>> fetchAll({required DateTime fromDate, required DateTime toDate,}) async {
+  Future<List<CategoryAccountingEntity>> fetchAll({required int incomeSourceBigCategoryId, required DateTime fromDate, required DateTime toDate,}) async {
     final sql = '''
                   SELECT  
                     t1.${SqfExpenseBigCategory.id} AS id, 
@@ -33,6 +33,7 @@ class ImplementsCategoryAccountingRepository implements CategoryAccountingReposi
               	  		INNER JOIN ${SqfExpenseSmallCategory.tableName} y
                       ON z.${SqfExpense.expenseSmallCategoryId} = y.${SqfExpenseSmallCategory.id}
                       WHERE (z.${SqfExpense.date} >= '${DateFormat('yyyyMMdd').format(fromDate)}' AND z.${SqfExpense.date} <= '${DateFormat('yyyyMMdd').format(toDate)}')
+                      AND z.${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategoryId
                       GROUP BY y.${SqfExpenseSmallCategory.bigCategoryKey}
                     )
                   ) t2

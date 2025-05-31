@@ -10,5 +10,5 @@ final smallCategoryTileRepositoryProvider = Provider<SmallCategoryTileRepository
 
 abstract interface class SmallCategoryTileRepository {
 
-  Future<List<SmallCategoryTileEntity>> fetchAll({required int bigCategoryId,required DateTime fromDate,required DateTime toDate});
+  Future<List<SmallCategoryTileEntity>> fetchAll({required int incomeSourceBigCategoryId,required int bigCategoryId,required DateTime fromDate,required DateTime toDate});
 }

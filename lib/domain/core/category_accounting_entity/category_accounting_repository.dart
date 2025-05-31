@@ -10,5 +10,5 @@ final categoryAccountingRepositoryProvider = Provider<CategoryAccountingReposito
 
 abstract interface class CategoryAccountingRepository {
 
-  Future<List<CategoryAccountingEntity>> fetchAll({required DateTime fromDate,required DateTime toDate});
+  Future<List<CategoryAccountingEntity>> fetchAll({required int incomeSourceBigCategoryId, required DateTime fromDate,required DateTime toDate});
 }
