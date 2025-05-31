@@ -49,7 +49,7 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     final safe = safeDate(DateTime.now(), distance);
 
     // 移動した日付を元に、集計期間を取得する
-    final MonthPeriodValue period = await _periodService.fetchMonthPeriod(safe);
+    final PeriodValue period = await _periodService.fetchMonthPeriod(safe);
 
     // 期間内の日毎の支出データを取得する
     final List<CalendarTileEntity> inPeriodCalendarTileList = [];

@@ -43,7 +43,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   // カテゴリーを指定しないで取得する
   @override
   Future<List<ExpenseEntity>> fetchWithoutCategory(
-      {required MonthPeriodValue period}) async {
+      {required PeriodValue period}) async {
     final sql = '''
       SELECT 
         a.${SqfExpense.id} AS id,
@@ -77,14 +77,39 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       {required DateTime fromDate, required DateTime toDate}) async {
     final sql = '''
       SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName} 
-            WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)} 
-            ;
-            ''';
+      WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)};
+      ''';
 
     try {
       final jsonList = await db.query(sql);
       logger.i(
-          '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
+          '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(DateTime $fromDate, DateTime $toDate)\n$sql');
+
+      final results = jsonList[0]['totalExpense'];
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
+  // 期間とカテゴリーを指定して支出の合計を取得する
+  @override
+  Future<int> fetchTotalExpenseByPeriodWithBigCategory(
+      {required int bigCategory,
+      required DateTime fromDate,
+      required DateTime toDate}) async {
+    final sql = '''
+      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName} 
+      WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
+      AND ${SqfExpense.incomeSourceBigCategory} = $bigCategory;
+      ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      logger.i(
+          '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalExpenseByPeriodWithBigCategory(int $bigCategory, DateTime $fromDate, DateTime $toDate)\n$sql');
 
       final results = jsonList[0]['totalExpense'];
 

@@ -13,7 +13,7 @@ class MonthBasisService {
   MonthBasisRepository get monthBasesRepository =>
       _ref.read(monthBasisRepositoryProvider);
 
-  // ユーザ設定の集計開始日を取得する
+  // ユーザ設定の集計表示代表日の開始日 or 最終日の選択設定を取得
   Future<MonthBasisEntity> fetch() async {
     MonthBasisEntity monthBasisEntity =
         await monthBasesRepository.fetch();

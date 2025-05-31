@@ -8,9 +8,9 @@ final resolvedMonthlyPlanValueProvider =
     FutureProvider<MonthlyPlanValue>((ref) async {
 
   // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final dateScope = await ref.watch(dateScopeEntityProvider.selectAsync((dateScope) => dateScope));
 
   // 選択された集計期間を元に、Entityを取得する
-  final value = ref.watch(monthlyPlanNotifierProvider(monthPeriodValue).future);
+  final value = ref.watch(monthlyPlanNotifierProvider(dateScope).future);
   return value;
 });

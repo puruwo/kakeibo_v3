@@ -11,3 +11,15 @@ class MonthValue with _$MonthValue {
   }) = _MonthValue;
 
 }
+
+extension MonthValueExtension on MonthValue {
+  int get year {
+    // 先頭4文字をintへ
+    return int.parse(month.substring(0, 4));
+  }
+
+  int get monthNumber {
+    // 5,6文字目をintへ
+    return int.parse(month.substring(4, 6));
+  }
+}

@@ -42,7 +42,7 @@ class ImplementsIncomeRepository implements IncomeRepository {
   // 大カテゴリーと期間を指定して取得する
   @override
   Future<List<IncomeEntity>> fetchWithCategoryAndPeriod({
-    required MonthPeriodValue period,
+    required PeriodValue period,
     required int categoryId,
   }) async {
     /*
@@ -92,7 +92,7 @@ class ImplementsIncomeRepository implements IncomeRepository {
   /// カテゴリーの指定はしない
   @override
   Future<List<IncomeEntity>> fetchWithoutCategory(
-      {required MonthPeriodValue period}) async {
+      {required PeriodValue period}) async {
     final sql = '''
       SELECT 
         a.${SqfIncome.id} AS id,
@@ -122,9 +122,9 @@ class ImplementsIncomeRepository implements IncomeRepository {
 
   // 大カテゴリーと期間を指定して収入の合計を取得する
   @override
-  Future<int> calcurateSumWithCategoryAndPeriod({
-    required MonthPeriodValue period,
-    required int categoryId,
+  Future<int> calcurateSumWithBigCategoryAndPeriod({
+    required PeriodValue period,
+    required int bigCategoryId,
   }) async {
     /*
     SELECT income.*
@@ -145,7 +145,7 @@ class ImplementsIncomeRepository implements IncomeRepository {
       ON a.${SqfIncome.incomeSmallCategoryId} = b.${SqfIncomeSmallCategory.id}
       INNER JOIN ${SqfIncomeBigCategory.tableName} c
       ON b.${SqfIncomeSmallCategory.bigCategoryKey} = c.${SqfIncomeBigCategory.id}
-      WHERE c.${SqfIncomeBigCategory.id} = $categoryId 
+      WHERE c.${SqfIncomeBigCategory.id} = $bigCategoryId 
       AND a.${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)} 
       ;
     ''';

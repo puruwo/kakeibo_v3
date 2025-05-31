@@ -10,7 +10,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 03, 25);
       final testEndDate = DateTime(2025, 04, 24);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -18,7 +18,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2025, 02, 25);
       final correctEndDate = DateTime(2025, 03, 24);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -31,7 +31,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 03, 01);
       final testEndDate = DateTime(2025, 03, 31);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -39,7 +39,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2025, 02, 01);
       final correctEndDate = DateTime(2025, 02, 28);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -52,7 +52,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 02, 28);
       final testEndDate = DateTime(2025, 03, 27);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -60,7 +60,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2025, 01, 28);
       final correctEndDate = DateTime(2025, 02, 27);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -73,7 +73,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 01, 31);
       final testEndDate = DateTime(2025, 02, 27);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -81,7 +81,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2024, 12, 31);
       final correctEndDate = DateTime(2025, 01, 30);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -93,7 +93,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 01, 01);
       final testEndDate = DateTime(2025, 01, 31);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -101,7 +101,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2024, 12, 01);
       final correctEndDate = DateTime(2024, 12, 31);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -113,7 +113,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 01, 31);
       final testEndDate = DateTime(2025, 02, 27);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -121,7 +121,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2024, 12, 31);
       final correctEndDate = DateTime(2025, 01, 30);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -133,7 +133,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 02, 28);
       final testEndDate = DateTime(2025, 03, 27);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -141,7 +141,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2025, 01, 28);
       final correctEndDate = DateTime(2025, 02, 27);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -153,7 +153,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 02, 01);
       final testEndDate = DateTime(2025, 02, 28);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -161,7 +161,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2025, 01, 01);
       final correctEndDate = DateTime(2025, 01, 31);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );
@@ -173,7 +173,7 @@ void main() {
       // テスト用の日付を設定
       final testStartDate = DateTime(2025, 02, 28);
       final testEndDate = DateTime(2025, 03, 30);
-      final testMonthPeriodValue = MonthPeriodValue(
+      final testMonthPeriodValue = PeriodValue(
         startDatetime: testStartDate,
         endDatetime: testEndDate,
       );
@@ -181,7 +181,7 @@ void main() {
       // 正解日付
       final correctStartDate = DateTime(2025, 01, 28);
       final correctEndDate = DateTime(2025, 02, 27);
-      final correctMonthPeriodValue = MonthPeriodValue(
+      final correctMonthPeriodValue = PeriodValue(
         startDatetime: correctStartDate,
         endDatetime: correctEndDate,
       );

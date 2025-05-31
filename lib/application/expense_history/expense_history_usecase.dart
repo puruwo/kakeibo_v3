@@ -15,16 +15,16 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 final expenseHistoryGroupByDateNotifierProvider = AsyncNotifierProvider.family<
     ExpenseHistoryUsecaseNotifier,
     List<ExpenseHistoryTileGroupValue>,
-    MonthPeriodValue>(
+    PeriodValue>(
   ExpenseHistoryUsecaseNotifier.new,
 );
 
 class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
-    List<ExpenseHistoryTileGroupValue>, MonthPeriodValue> {
+    List<ExpenseHistoryTileGroupValue>, PeriodValue> {
 
   @override
   Future<List<ExpenseHistoryTileGroupValue>> build(
-      MonthPeriodValue selectedMonthPeriod) async {
+      PeriodValue selectedMonthPeriod) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 

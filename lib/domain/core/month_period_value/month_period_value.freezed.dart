@@ -15,28 +15,28 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$MonthPeriodValue {
+mixin _$PeriodValue {
   DateTime get startDatetime => throw _privateConstructorUsedError;
   DateTime get endDatetime => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $MonthPeriodValueCopyWith<MonthPeriodValue> get copyWith =>
+  $PeriodValueCopyWith<PeriodValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MonthPeriodValueCopyWith<$Res> {
-  factory $MonthPeriodValueCopyWith(
-          MonthPeriodValue value, $Res Function(MonthPeriodValue) then) =
-      _$MonthPeriodValueCopyWithImpl<$Res, MonthPeriodValue>;
+abstract class $PeriodValueCopyWith<$Res> {
+  factory $PeriodValueCopyWith(
+          PeriodValue value, $Res Function(PeriodValue) then) =
+      _$PeriodValueCopyWithImpl<$Res, PeriodValue>;
   @useResult
   $Res call({DateTime startDatetime, DateTime endDatetime});
 }
 
 /// @nodoc
-class _$MonthPeriodValueCopyWithImpl<$Res, $Val extends MonthPeriodValue>
-    implements $MonthPeriodValueCopyWith<$Res> {
-  _$MonthPeriodValueCopyWithImpl(this._value, this._then);
+class _$PeriodValueCopyWithImpl<$Res, $Val extends PeriodValue>
+    implements $PeriodValueCopyWith<$Res> {
+  _$PeriodValueCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -64,7 +64,7 @@ class _$MonthPeriodValueCopyWithImpl<$Res, $Val extends MonthPeriodValue>
 
 /// @nodoc
 abstract class _$$MonthPeriodValueImplCopyWith<$Res>
-    implements $MonthPeriodValueCopyWith<$Res> {
+    implements $PeriodValueCopyWith<$Res> {
   factory _$$MonthPeriodValueImplCopyWith(_$MonthPeriodValueImpl value,
           $Res Function(_$MonthPeriodValueImpl) then) =
       __$$MonthPeriodValueImplCopyWithImpl<$Res>;
@@ -75,7 +75,7 @@ abstract class _$$MonthPeriodValueImplCopyWith<$Res>
 
 /// @nodoc
 class __$$MonthPeriodValueImplCopyWithImpl<$Res>
-    extends _$MonthPeriodValueCopyWithImpl<$Res, _$MonthPeriodValueImpl>
+    extends _$PeriodValueCopyWithImpl<$Res, _$MonthPeriodValueImpl>
     implements _$$MonthPeriodValueImplCopyWith<$Res> {
   __$$MonthPeriodValueImplCopyWithImpl(_$MonthPeriodValueImpl _value,
       $Res Function(_$MonthPeriodValueImpl) _then)
@@ -113,7 +113,7 @@ class _$MonthPeriodValueImpl implements _MonthPeriodValue {
 
   @override
   String toString() {
-    return 'MonthPeriodValue(startDatetime: $startDatetime, endDatetime: $endDatetime)';
+    return 'PeriodValue(startDatetime: $startDatetime, endDatetime: $endDatetime)';
   }
 
   @override
@@ -138,7 +138,7 @@ class _$MonthPeriodValueImpl implements _MonthPeriodValue {
           this, _$identity);
 }
 
-abstract class _MonthPeriodValue implements MonthPeriodValue {
+abstract class _MonthPeriodValue implements PeriodValue {
   const factory _MonthPeriodValue(
       {required final DateTime startDatetime,
       required final DateTime endDatetime}) = _$MonthPeriodValueImpl;

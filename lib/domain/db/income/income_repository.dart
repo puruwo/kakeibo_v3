@@ -15,20 +15,20 @@ abstract interface class IncomeRepository {
 
   /// 期間とカテゴリーを指定してデータを取得する
   Future<List<IncomeEntity>> fetchWithCategoryAndPeriod({
-    required MonthPeriodValue period,
+    required PeriodValue period,
     required int categoryId,
   });
 
   /// 期間とカテゴリーを指定して収入の合計値を取得する
-  Future<int> calcurateSumWithCategoryAndPeriod({
-    required MonthPeriodValue period,
-    required int categoryId,
+  Future<int> calcurateSumWithBigCategoryAndPeriod({
+    required PeriodValue period,
+    required int bigCategoryId,
   });
 
   /// 期間指定してデータを取得する
   /// カテゴリーの指定はしない
   Future<List<IncomeEntity>> fetchWithoutCategory(
-      {required MonthPeriodValue period});
+      {required PeriodValue period});
 
   void insert(IncomeEntity expenseEntity);
 

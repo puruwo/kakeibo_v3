@@ -18,7 +18,7 @@ class ExpenseHistoryService {
     required this.bigCategoryRepo,
   });
 
-  Future<List<ExpenseHistoryTileValue>> fetchTileList(MonthPeriodValue period) async {
+  Future<List<ExpenseHistoryTileValue>> fetchTileList(PeriodValue period) async {
     final expenseList = await expenseRepo.fetchWithoutCategory(period: period);
     List<ExpenseHistoryTileValue> tileList = [];
 

@@ -9,12 +9,12 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 final incomeHistoryNotifierProvider = AsyncNotifierProvider.family<
     IncomeHistoryUsecaseNotifier,
     List<IncomeHistoryTileValue>,
-    MonthPeriodValue>(
+    PeriodValue>(
   IncomeHistoryUsecaseNotifier.new,
 );
 
 class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
-    List<IncomeHistoryTileValue>, MonthPeriodValue> {
+    List<IncomeHistoryTileValue>, PeriodValue> {
   // 収入履歴に関するリポジトリ
   late IncomeRepository _incomeRepositoryProvider;
 
@@ -26,7 +26,7 @@ class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
 
   @override
   Future<List<IncomeHistoryTileValue>> build(
-      MonthPeriodValue selectedMonthPeriod) async {
+      PeriodValue selectedMonthPeriod) async {
 
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
@@ -41,7 +41,7 @@ class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
   }
 
   // 期間指定でタイルデータを取得する
-  Future<List<IncomeHistoryTileValue>> fetch({required MonthPeriodValue selectedMonthPeriod}) async {
+  Future<List<IncomeHistoryTileValue>> fetch({required PeriodValue selectedMonthPeriod}) async {
     
     // SqfExpenseからデータを取得する
     final incomeList = await _incomeRepositoryProvider.fetchWithoutCategory(period: selectedMonthPeriod);

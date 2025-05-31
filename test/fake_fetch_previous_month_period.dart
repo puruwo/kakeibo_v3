@@ -1,6 +1,6 @@
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 
-MonthPeriodValue fetchPreviousMonthPeriod(MonthPeriodValue monthPeriodValue) {
+PeriodValue fetchPreviousMonthPeriod(PeriodValue monthPeriodValue) {
     final previousMonthStartDateBuff = DateTime(monthPeriodValue.startDatetime.year, monthPeriodValue.startDatetime.month - 1, monthPeriodValue.startDatetime.day);
 
     // 開始日
@@ -22,5 +22,5 @@ MonthPeriodValue fetchPreviousMonthPeriod(MonthPeriodValue monthPeriodValue) {
     // 終了日: 前月の開始基準日を終了日として扱う
     final previousMonthPeriodEndDate = monthPeriodValue.startDatetime.add(const Duration(days: -1));
 
-    return MonthPeriodValue(startDatetime:previousMonthPeriodStartDate,endDatetime: previousMonthPeriodEndDate);
+    return PeriodValue(startDatetime:previousMonthPeriodStartDate,endDatetime: previousMonthPeriodEndDate);
   }

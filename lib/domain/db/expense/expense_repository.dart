@@ -16,11 +16,15 @@ abstract interface class ExpenseRepository {
   /// 期間指定してデータを取得する
   /// カテゴリーの指定はしない
   Future<List<ExpenseEntity>> fetchWithoutCategory(
-      {required MonthPeriodValue period});
+      {required PeriodValue period});
 
   // 期間を指定して支出の合計を取得する
   Future<int> fetchTotalExpenseByPeriod(
       {required DateTime fromDate, required DateTime toDate});
+
+  // 期間とカテゴリーを指定して支出の合計を取得する
+  Future<int> fetchTotalExpenseByPeriodWithBigCategory(
+      {required int bigCategory, required DateTime fromDate, required DateTime toDate});
 
   void insert(ExpenseEntity expenseEntity);
 

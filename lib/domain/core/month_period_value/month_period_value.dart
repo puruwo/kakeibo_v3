@@ -4,8 +4,8 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'month_period_value.freezed.dart';
 
 @freezed
-class MonthPeriodValue with _$MonthPeriodValue {
-  const factory MonthPeriodValue({
+class PeriodValue with _$PeriodValue {
+  const factory PeriodValue({
     required DateTime startDatetime,
     required DateTime endDatetime,
   }) = _MonthPeriodValue;

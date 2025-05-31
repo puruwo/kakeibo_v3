@@ -7,7 +7,7 @@ part of 'calendar_page_controller.dart';
 // **************************************************************************
 
 String _$calendarPageControllerNotifierHash() =>
-    r'0d7da87308fc0933922824ecb46dc94b5d154793';
+    r'87cd367df683f4665c7c9cc25a11ba6f0d28b08c';
 
 /// See also [CalendarPageControllerNotifier].
 @ProviderFor(CalendarPageControllerNotifier)

@@ -4,7 +4,7 @@ import 'month_basis_entity.dart';
 
 /// アプリ起動時 or テスト時に本プロバイダーを override して使用してください
 final monthBasisRepositoryProvider = Provider<MonthBasisRepository>(
-  (_) => throw UnimplementedError("AggregationStartDayRepositoryの実装がされていません。"),
+  (_) => throw UnimplementedError("MonthBasisRepositoryの実装がされていません。"),
 );
 
 

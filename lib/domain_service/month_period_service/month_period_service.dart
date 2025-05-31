@@ -16,7 +16,7 @@ class MonthPeriodService{
   AggregationStartDayService get _aggregationStartDateEntity => _ref.read(aggregationStartDayProvider);
 
   // 指定した日付を含む集計期間を取得する
-  Future<MonthPeriodValue> fetchMonthPeriod(DateTime includedDate) async{
+  Future<PeriodValue> fetchMonthPeriod(DateTime includedDate) async{
 
     // ユーザ設定の集計開始日を取得する
     AggregationStartDayEntity aggregationStartDateEntity = await _aggregationStartDateEntity.fetchAggregationStartDay();
@@ -29,7 +29,7 @@ class MonthPeriodService{
       // 先月の終了日
       final endDatetime = DateTime(includedDate.year, includedDate.month, aggregationStartDay - 1);
 
-      return MonthPeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
+      return PeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
 
     }
     // 入力した日がユーザ設定の期間開始日以降の場合
@@ -39,7 +39,7 @@ class MonthPeriodService{
       // 今月の終了日
       final endDatetime = DateTime(includedDate.year, includedDate.month + 1, aggregationStartDay - 1);
 
-      return MonthPeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
+      return PeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
 
     }else{
       throw Exception('期間の取得に失敗しました');
@@ -47,7 +47,7 @@ class MonthPeriodService{
   }
 
   // 前の集計期間を取得する
-  MonthPeriodValue fetchPreviousMonthPeriod(MonthPeriodValue monthPeriodValue) {
+  PeriodValue fetchPreviousMonthPeriod(PeriodValue monthPeriodValue) {
     final previousMonthStartDateBuff = DateTime(monthPeriodValue.startDatetime.year, monthPeriodValue.startDatetime.month - 1, monthPeriodValue.startDatetime.day);
 
     // 開始日
@@ -69,7 +69,7 @@ class MonthPeriodService{
     // 終了日: 前月の開始基準日を終了日として扱う
     final previousMonthPeriodEndDate = monthPeriodValue.startDatetime.add(const Duration(days: -1));
 
-    return MonthPeriodValue(startDatetime:previousMonthPeriodStartDate,endDatetime: previousMonthPeriodEndDate);
+    return PeriodValue(startDatetime:previousMonthPeriodStartDate,endDatetime: previousMonthPeriodEndDate);
   }
    
   
