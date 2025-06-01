@@ -19,7 +19,10 @@ class ExpenseHistoryService {
   });
 
   Future<List<ExpenseHistoryTileValue>> fetchTileList(PeriodValue period) async {
-    final expenseList = await expenseRepo.fetchWithoutCategory(period: period);
+
+    // 期間を指定して支出情報を取得する
+    // incomeSourceBigIdは0を指定して、月次支出のみを取得する
+    final expenseList = await expenseRepo.fetchWithCategory(incomeSourceBigId: 0, period: period);
     List<ExpenseHistoryTileValue> tileList = [];
 
     for (var expense in expenseList) {

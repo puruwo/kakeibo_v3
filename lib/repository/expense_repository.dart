@@ -42,8 +42,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // カテゴリーを指定しないで取得する
   @override
-  Future<List<ExpenseEntity>> fetchWithoutCategory(
-      {required PeriodValue period}) async {
+  Future<List<ExpenseEntity>> fetchWithCategory(
+      {required int incomeSourceBigId, required PeriodValue period}) async {
     final sql = '''
       SELECT 
         a.${SqfExpense.id} AS id,
@@ -53,7 +53,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.memo} AS memo,
         a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
       FROM ${SqfExpense.tableName} a
-      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)};
+      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      AND a.${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
+      ORDER BY a.${SqfExpense.id} DESC;
     ''';
 
     try {
