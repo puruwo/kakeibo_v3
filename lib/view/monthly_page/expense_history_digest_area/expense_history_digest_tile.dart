@@ -192,7 +192,7 @@ class ExpenseHistoryDigestTile extends ConsumerWidget {
                     ],
                   ),
                 ),
-                Divider(
+                const Divider(
                   thickness: 0.25,
                   height: 0.25,
                   color: MyColors.separater,

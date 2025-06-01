@@ -11,14 +11,28 @@ class MyFonts {
                   color: MyColors.white,
                   fontWeight: FontWeight.w400);
 
-  // Third Page
+  // Monthly Page
   static TextStyle thirdPageSubheading = GoogleFonts.notoSans(
       fontSize: 18,
-      color: MyColors.secondaryLabel,
+      color: MyColors.label,
       fontWeight: FontWeight.w600);
 
   static const thirdPageTextButton =
-      TextStyle(color: MyColors.linkColor, fontSize: 14);
+      TextStyle(color: MyColors.themeColor, fontSize: 14);
+
+  // MonthlyPlanArea BonusPlaaArea
+  static TextStyle planAreaLeftLabel = GoogleFonts.notoSans(
+      fontSize: 16, color: MyColors.secondaryLabel, fontWeight: FontWeight.w400);
+
+  static TextStyle planAreaRightLabel = const TextStyle(
+    color: MyColors.label,
+    fontSize: 26,
+    fontFamily: 'sf_ui',
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle planAreaYenLabel = GoogleFonts.notoSans(
+      fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w600);
 
   // Calndar Page
   static TextStyle calendarDateBoxLarge = const TextStyle(
@@ -39,7 +53,7 @@ class MyFonts {
     fontSize: 14,
   );
 
-  // Rigister Page
+  // Register Page
   static TextStyle regesterHeaderLabel = GoogleFonts.notoSans(
       fontSize: 19, color: MyColors.white, fontWeight: FontWeight.w400);
 

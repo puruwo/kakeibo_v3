@@ -81,142 +81,140 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
         ]),
       ),
       backgroundColor: MyColors.secondarySystemBackground,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
-            child: Column(
-              children: [
-                SizedBox(
-                  width: 343 * context.screenHorizontalMagnification,
-                  height: 35,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ' 支出グラフ',
-                        style: MyFonts.thirdPageSubheading,
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            _showModalBottomSheet(
-                                context, const BudgetSettingPage());
-                          },
-                          child: const Text(
-                            '予算設定',
-                            style: MyFonts.thirdPageTextButton,
-                          )),
-                    ],
-                  ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 343 * context.screenHorizontalMagnification,
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' 支出グラフ',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          _showModalBottomSheet(
+                              context, const BudgetSettingPage());
+                        },
+                        child: const Text(
+                          '予算設定',
+                          style: MyFonts.thirdPageTextButton,
+                        )),
+                  ],
                 ),
-
-                // グラフ部分
-                PredictionGraph(
-                  activeDt: activeDt,
+              ),
+      
+              // グラフ部分
+              PredictionGraph(
+                activeDt: activeDt,
+              ),
+      
+              const SizedBox(
+                height: 8,
+              ),
+      
+              SizedBox(
+                width: 343 * context.screenHorizontalMagnification,
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' 今月の計画',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const BudgetHomePage(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          '編集する',
+                          style: MyFonts.thirdPageTextButton,
+                        )),
+                  ],
                 ),
-
-                const SizedBox(
-                  height: 8,
+              ),
+      
+              const MonthlyPlanArea(),
+      
+              const SizedBox(
+                height: 8,
+              ),
+      
+              SizedBox(
+                width: 343 * context.screenHorizontalMagnification,
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' カテゴリーの支出',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          _showModalBottomSheet(
+                              context, const BigCategorySettingPage());
+                        },
+                        child: const Text(
+                          'カテゴリー設定',
+                          style: MyFonts.thirdPageTextButton,
+                        )),
+                  ],
                 ),
-
-                SizedBox(
-                  width: 343 * context.screenHorizontalMagnification,
-                  height: 35,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ' 今月の計画',
-                        style: MyFonts.thirdPageSubheading,
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const BudgetHomePage(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            '編集する',
-                            style: MyFonts.thirdPageTextButton,
-                          )),
-                    ],
-                  ),
+              ),
+      
+              const AllCategoryTileArea(),
+      
+              const SizedBox(
+                height: 8,
+              ),
+      
+              const CategoryTileArea(),
+      
+              const SizedBox(
+                height: 32,
+              ),
+      
+              SizedBox(
+                width: 343 * context.screenHorizontalMagnification,
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' 履歴',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const ExpenseHistoryPage(),
+                          ));
+                        },
+                        child: const Text(
+                          'さらに表示',
+                          style: MyFonts.thirdPageTextButton,
+                        )),
+                  ],
                 ),
-
-                const MonthlyPlanArea(),
-
-                const SizedBox(
-                  height: 8,
-                ),
-
-                SizedBox(
-                  width: 343 * context.screenHorizontalMagnification,
-                  height: 35,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ' カテゴリーの支出',
-                        style: MyFonts.thirdPageSubheading,
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            _showModalBottomSheet(
-                                context, const BigCategorySettingPage());
-                          },
-                          child: const Text(
-                            'カテゴリー設定',
-                            style: MyFonts.thirdPageTextButton,
-                          )),
-                    ],
-                  ),
-                ),
-
-                const AllCategoryTileArea(),
-
-                const SizedBox(
-                  height: 8,
-                ),
-
-                const CategoryTileArea(),
-
-                const SizedBox(
-                  height: 32,
-                ),
-
-                SizedBox(
-                  width: 343 * context.screenHorizontalMagnification,
-                  height: 35,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ' 履歴',
-                        style: MyFonts.thirdPageSubheading,
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const ExpenseHistoryPage(),
-                            ));
-                          },
-                          child: const Text(
-                            'さらに表示',
-                            style: MyFonts.thirdPageTextButton,
-                          )),
-                    ],
-                  ),
-                ),
-
-                const ExpenceHistoryDigestArea(),
-
-                const SizedBox(
-                  height: 32,
-                ),
-              ],
-            ),
+              ),
+      
+              const ExpenceHistoryDigestArea(),
+      
+              const SizedBox(
+                height: 32,
+              ),
+            ],
           ),
         ),
       ),

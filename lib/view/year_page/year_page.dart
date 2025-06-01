@@ -66,46 +66,44 @@ class _YearPageState extends ConsumerState<YearPage> {
         ]),
       ),
       backgroundColor: MyColors.secondarySystemBackground,
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
-            child: Column(
-              children: [
-                
-                SizedBox(
-                  width: 343 * context.screenHorizontalMagnification,
-                  height: 35,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        ' ボーナス利用状況',
-                        style: MyFonts.thirdPageSubheading,
-                      ),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => const BonusHomePage(),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'さらに表示する',
-                            style: MyFonts.thirdPageTextButton,
-                          )),
-                    ],
-                  ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 343 * context.screenHorizontalMagnification,
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' ボーナス利用状況',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const BonusHomePage(),
+                            ),
+                          );
+                        },
+                        child: const Text(
+                          'さらに表示する',
+                          style: MyFonts.thirdPageTextButton,
+                        )),
+                  ],
                 ),
-
-                const BonusPlanArea(),
-
-                const SizedBox(
-                  height: 32,
-                ),
-              ],
-            ),
+              ),
+      
+              const BonusPlanArea(),
+      
+              const SizedBox(
+                height: 32,
+              ),
+            ],
           ),
         ),
       ),
