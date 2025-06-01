@@ -21,15 +21,15 @@ class CalendarPageControllerNotifier extends _$CalendarPageControllerNotifier {
     // Controller:前のページに移動
     state.previousPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOutCubic);
 
-    // 全体管理の状態も更新
-    ref.read(pageManagerNotifierProvider.notifier).previousPage();
+    // 全体管理の状態はviewのonPageChangedで更新
+    // ref.read(pageManagerNotifierProvider.notifier).previousPage();
   }  
 
   void nextPage() {
     // Controller:次のページに移動
     state.nextPage(duration: const Duration(milliseconds: 200), curve: Curves.easeOutCubic);
 
-    // 全体管理の状態も更新
-    ref.read(pageManagerNotifierProvider.notifier).nextPage();
+    // 全体管理の状態はviewのonPageChangedで更新
+    // ref.read(pageManagerNotifierProvider.notifier).nextPage();
   }  
 }

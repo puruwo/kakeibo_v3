@@ -15,7 +15,7 @@ class ProviderLogger implements ProviderObserver {
   ) {
     // famlyの時は、nameがnullになり、ロガーに出力されない
     if(provider.name == null) return;
-    logger.i('[ADD]: ${provider.describe}');
+    logger.i('[ADD${provider.name}: ${provider.describe}');
   }
 
   @override
@@ -23,7 +23,9 @@ class ProviderLogger implements ProviderObserver {
     ProviderBase provider,
     ProviderContainer container,
   ) {
-    // logger.d('[DISPOSE]: ${provider.describe}');
+    // famlyの時は、nameがnullになり、ロガーに出力されない
+    if(provider.name == null) return;
+    logger.d('[DISPOSE]${provider.name}: ${provider.describe}');
   }
 
   @override
@@ -33,7 +35,9 @@ class ProviderLogger implements ProviderObserver {
     Object? newValue,
     ProviderContainer container,
   ) {
-    logger.i('''[UPDATE]*: ${provider.describe}\n
+    // famlyの時は、nameがnullになり、ロガーに出力されない
+    if(provider.name == null) return;
+    logger.i('''[UPDATE]${provider.name}: ${provider.describe}\n
     previous: $previousValue\n
     -> now: $newValue''');
   }
@@ -45,7 +49,7 @@ class ProviderLogger implements ProviderObserver {
     StackTrace stackTrace,
     ProviderContainer container,
   ) {
-    logger.e('[FAIL]: ${provider.describe}');
+    // logger.e('[FAIL]: ${provider.describe}');
   }
 }
 

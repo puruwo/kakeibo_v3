@@ -27,8 +27,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
     try {
       final jsonList = await db.query(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
 
       final results =
           jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
@@ -58,8 +58,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
     try {
       final jsonList = await db.query(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
 
       final results =
           jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
@@ -82,8 +82,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
     try {
       final result = await db.queryFirstIntValue(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(DateTime $fromDate, DateTime $toDate)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(DateTime $fromDate, DateTime $toDate)\n$sql');
 
       return result ?? 0; // nullの場合は0を返す
     } catch (e) {
@@ -106,8 +106,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
     try {
       final result = await db.queryFirstIntValue(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalExpenseByPeriodWithBigCategory(int $incomeSourceBigCategory, DateTime $fromDate, DateTime $toDate)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalExpenseByPeriodWithBigCategory(int $incomeSourceBigCategory, DateTime $fromDate, DateTime $toDate)\n$sql');
 
       return result ?? 0; // nullの場合は0を返す
     } catch (e) {
@@ -125,8 +125,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       SqfExpense.memo: expenseEntity.memo,
       SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory
     });
-    logger.i(
-        '====SQLが実行されました====\n ImplementsExpenseRepository insert(ExpenseEntity expenseEntity)\n${SqfExpense.tableName}でinsert\n  expenseEntity: \n$expenseEntity');
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsExpenseRepository insert(ExpenseEntity expenseEntity)\n${SqfExpense.tableName}でinsert\n  expenseEntity: \n$expenseEntity');
   }
 
   @override
@@ -142,13 +142,13 @@ class ImplementsExpenseRepository implements ExpenseRepository {
               expenseEntity.incomeSourceBigCategory
         },
         expenseEntity.id);
-    logger.i(
-        '====SQLが実行されました====\n ImplementsExpenseRepository update(ExpenseEntity expenseEntity)\n ${SqfExpense.tableName}でupdate\n expenseEntity: \n$expenseEntity');
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsExpenseRepository update(ExpenseEntity expenseEntity)\n ${SqfExpense.tableName}でupdate\n expenseEntity: \n$expenseEntity');
   }
 
   @override
   void delete(int id) async {
     await db.delete(SqfExpense.tableName, id);
-    logger.i('${SqfExpense.tableName}で$idのレコードを削除しました');
+    // logger.i('${SqfExpense.tableName}で$idのレコードを削除しました');
   }
 }

@@ -27,7 +27,7 @@ class ImplementsIncomeSmallCategoryRepository implements IncomeSmallCategoryRepo
     try {
       final jsonList = await db.query(sql);
 
-      logger.i('====SQLが実行されました====\n ImplementsIncomeSmallCategoryRepository fetchBySmallCategory(int smallCategoryId)\n$sql');
+      // logger.i('====SQLが実行されました====\n ImplementsIncomeSmallCategoryRepository fetchBySmallCategory(int smallCategoryId)\n$sql');
       
       final results = IncomeSmallCategoryEntity.fromJson(jsonList[0]);
 
@@ -60,7 +60,7 @@ class ImplementsIncomeSmallCategoryRepository implements IncomeSmallCategoryRepo
 
     // SQLを実行して結果を取得
     final jsonList = await db.query(sql);
-    logger.i('====SQLが実行されました====\n ImplementsSmallCategoryRepository fetchAll()\n$sql');
+    // logger.i('====SQLが実行されました====\n ImplementsSmallCategoryRepository fetchAll()\n$sql');
 
     // 取得したjsonListをSmallCategoryEntityのリストに変換
     final result = jsonList.map((e) {

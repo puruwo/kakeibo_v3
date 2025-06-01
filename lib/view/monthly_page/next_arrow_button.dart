@@ -12,7 +12,7 @@ class NextArrowButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       onPressed: () async {
-        // selectedDatetimeを更新するのではなく、pageManagerNotifierProviderを更新する
+        // selectedDatetimeを更新するだけでなく、pageManagerNotifierProviderを更新する
         ref.read(pageManagerNotifierProvider.notifier).nextPage();
         ref.read(selectedDatetimeNotifierProvider.notifier).updateToNextMonth();
       },

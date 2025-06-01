@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
-import 'package:kakeibo/logger.dart';
+// import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 
@@ -53,7 +53,7 @@ class ImplementsCategoryAccountingRepository implements CategoryAccountingReposi
     // 実行
     final mapList = await db.query(sql);
 
-    logger.i('====SQLが実行されました====\n ImplementsCategoryAccountingRepository\n$sql');
+    // logger.i('====SQLが実行されました====\n ImplementsCategoryAccountingRepository\n$sql');
 
     // 各カテゴリーmapでEntity化
     final List<CategoryAccountingEntity> categoryEntityList = mapList.map((json) => CategoryAccountingEntity.fromJson(json)).toList();

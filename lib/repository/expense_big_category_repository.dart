@@ -23,7 +23,7 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
 
     try {
       final jsonList = await db.query(sql);
-      logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
+      // logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
 
       final results =
           jsonList.map((e) => ExpenseBigCategoryEntity.fromJson(e)).toList();
@@ -53,7 +53,7 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
 
     try {
       final jsonList = await db.query(sql);
-      logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
+      // logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
 
       final results = ExpenseBigCategoryEntity.fromJson(jsonList[0]);
 
@@ -84,7 +84,7 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
           SqfExpenseBigCategory.isDisplayed: entity.isDisplayed,
         },
         entity.id);
-    logger.i(
-        '====SQLが実行されました====\n ImplementsExpenseBigCategoryRepository update(ExpenseBigCategoryEntity entity)\n ${SqfExpenseBigCategory.tableName}でupdate\n ExpenseBigCategoryEntity: \n$entity');
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsExpenseBigCategoryRepository update(ExpenseBigCategoryEntity entity)\n ${SqfExpenseBigCategory.tableName}でupdate\n ExpenseBigCategoryEntity: \n$entity');
   }
 }

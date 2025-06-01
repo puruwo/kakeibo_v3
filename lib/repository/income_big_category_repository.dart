@@ -22,7 +22,7 @@ class ImplementsIncomeBigCategoryRepository implements IncomeBigCategoryReposito
 
     try {
       final jsonList = await db.query(sql);
-      logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
+      // logger.i('====SQLが実行されました====\n ImplementsBigCategoryRepository\n$sql');
 
       final results =
           jsonList.map((e) => IncomeBigCategoryEntity.fromJson(e)).toList();
@@ -57,8 +57,8 @@ class ImplementsIncomeBigCategoryRepository implements IncomeBigCategoryReposito
 
     try {
       final jsonList = await db.query(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsBigCategoryRepository fetchByBigCategory(int bigCategoryId)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsBigCategoryRepository fetchByBigCategory(int bigCategoryId)\n$sql');
 
       final results = IncomeBigCategoryEntity.fromJson(jsonList[0]);
 

@@ -34,8 +34,8 @@ class ImplementsBudgetRepository implements BudgetRepository {
 
     try {
       final jsonList = await db.query(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsBudgetRepository fetchMonthlyByBigCategory()\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsBudgetRepository fetchMonthlyByBigCategory()\n$sql');
 
       final result = BudgetEntity.fromJson(jsonList[0]);
 
@@ -63,8 +63,8 @@ class ImplementsBudgetRepository implements BudgetRepository {
 
     try {
       final result = await db.queryFirstIntValue(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
 
       return result ?? 0; // nullの場合は0を返す
     } catch (e) {
@@ -86,8 +86,8 @@ class ImplementsBudgetRepository implements BudgetRepository {
 
     try {
       final result = await db.queryFirstIntValue(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
 
       return result ?? 0; // nullの場合は0を返す
     } catch (e) {
@@ -99,13 +99,14 @@ class ImplementsBudgetRepository implements BudgetRepository {
   @override
   void insert(BudgetEntity budgetEntity) async{
     try {
-      final id = await db.insert(SqfBudget.tableName, {
+      // final id = 
+      await db.insert(SqfBudget.tableName, {
       SqfBudget.expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
       SqfBudget.month: budgetEntity.month,
       SqfBudget.price: budgetEntity.price
     });
-    logger.i(
-        '====SQLが実行されました====\n ImplementsBudgetRepository insert(BudgetEntity budgetEntity)\n${SqfBudget.tableName}でinsert\n  budgetEntity: \n$budgetEntity \nid: $id');
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsBudgetRepository insert(BudgetEntity budgetEntity)\n${SqfBudget.tableName}でinsert\n  budgetEntity: \n$budgetEntity \nid: $id');
     } catch (e) {
       logger.e('[FAIL]: $e');
     }
@@ -122,14 +123,14 @@ class ImplementsBudgetRepository implements BudgetRepository {
           SqfBudget.price: budgetEntity.price
         },
         budgetEntity.id);
-    logger.i(
-        '====SQLが実行されました====\n ImplementsBudgetRepository update(BudgetEntity budgetEntity)\n ${SqfBudget.tableName}でupdate\n budgetEntity: \n$budgetEntity');
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsBudgetRepository update(BudgetEntity budgetEntity)\n ${SqfBudget.tableName}でupdate\n budgetEntity: \n$budgetEntity');
   }
 
   @override
   void delete(int id) async {
     await db.delete(SqfBudget.tableName, id);
-    logger.i('${SqfBudget.tableName}で$idのレコードを削除しました');
+    // logger.i('${SqfBudget.tableName}で$idのレコードを削除しました');
   }
 
   @override

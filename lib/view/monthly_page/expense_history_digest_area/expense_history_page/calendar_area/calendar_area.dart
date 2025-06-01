@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/calendar/calendar_usecase.dart';
+import 'package:kakeibo/view_model/state/page_manager/page_manager.dart';
 import 'package:logger/logger.dart';
 
 /// LocalImport
@@ -76,6 +77,8 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
             ref
                 .read(selectedDatetimeNotifierProvider.notifier)
                 .updateToNextMonth();
+            // 全体管理の状態も更新
+            ref.read(pageManagerNotifierProvider.notifier).nextPage();
             logger.d('Callendar: called updateToNextMonth()');
           }
 
@@ -84,6 +87,8 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
             ref
                 .read(selectedDatetimeNotifierProvider.notifier)
                 .updateToPreviousMonth();
+            // 全体管理の状態も更新
+            ref.read(pageManagerNotifierProvider.notifier).previousPage();
             logger.d('Callendar: called updateToPreviousMonth()');
           }
 

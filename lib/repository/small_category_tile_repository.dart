@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
-import 'package:kakeibo/logger.dart';
+// import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 
@@ -50,7 +50,7 @@ class ImplementsSmallCategoryTileRepository implements SmallCategoryTileReposito
     // 実行
     final mapList = await db.query(sql);
     
-    logger.i('====SQLが実行されました====\n ImplementsSmallCategoryTileRepository\n$sql');
+    // logger.i('====SQLが実行されました====\n ImplementsSmallCategoryTileRepository\n$sql');
 
     // 各カテゴリーmapでEntity化
     final List<SmallCategoryTileEntity> categoryEntityList = mapList.map((json) => SmallCategoryTileEntity.fromJson(json)).toList();

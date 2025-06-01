@@ -26,8 +26,8 @@ class ImplementsIncomeRepository implements IncomeRepository {
 
     try {
       final jsonList = await db.query(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsIncomeRepository fetchAll()\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsIncomeRepository fetchAll()\n$sql');
 
       final results =
           jsonList.map((json) => IncomeEntity.fromJson(json)).toList();
@@ -75,8 +75,8 @@ class ImplementsIncomeRepository implements IncomeRepository {
 
     try {
       final jsonList = await db.query(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
 
       final results =
           jsonList.map((json) => IncomeEntity.fromJson(json)).toList();
@@ -107,8 +107,8 @@ class ImplementsIncomeRepository implements IncomeRepository {
 
     try {
       final jsonList = await db.query(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
 
       final results =
           jsonList.map((json) => IncomeEntity.fromJson(json)).toList();
@@ -152,8 +152,8 @@ class ImplementsIncomeRepository implements IncomeRepository {
 
     try {
       final result = await db.queryFirstIntValue(sql);
-      logger.i(
-          '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
 
       return result ?? 0; // nullの場合は0を返す
     } catch (e) {
@@ -170,8 +170,8 @@ class ImplementsIncomeRepository implements IncomeRepository {
       SqfIncome.price: incomeEntity.price,
       SqfIncome.memo: incomeEntity.memo
     });
-    logger.i(
-        '====SQLが実行されました====\n ImplementsIncomeRepository insert(IncomeEntity incomeEntity)\n${SqfIncome.tableName}でinsert\n  incomeEntity: \n$incomeEntity');
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsIncomeRepository insert(IncomeEntity incomeEntity)\n${SqfIncome.tableName}でinsert\n  incomeEntity: \n$incomeEntity');
   }
 
   @override
@@ -185,8 +185,8 @@ class ImplementsIncomeRepository implements IncomeRepository {
           SqfIncome.memo: incomeEntity.memo
         },
         incomeEntity.id);
-    logger.i(
-        '====SQLが実行されました====\n ImplementsIncomeRepository update(IncomeEntity incomeEntity)\n ${SqfIncome.tableName}でupdate\n incomeEntity: \n$incomeEntity');
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsIncomeRepository update(IncomeEntity incomeEntity)\n ${SqfIncome.tableName}でupdate\n incomeEntity: \n$incomeEntity');
   }
 
   @override

@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
-import 'package:kakeibo/logger.dart';
+// import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 
@@ -28,7 +28,7 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository{
     // 実行
     final dailyExpense = await db.query(sql);
     
-    logger.i('====SQLが実行されました====\n ImplementsDailyExpenseRepository\n$sql');
+    // logger.i('====SQLが実行されました====\n ImplementsDailyExpenseRepository\n$sql');
     
     // もしデータがない場合
     if(dailyExpense.isEmpty){
