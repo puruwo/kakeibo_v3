@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
+import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class BonusExpenseHistoryTile extends ConsumerWidget {
@@ -57,12 +57,13 @@ class BonusExpenseHistoryTile extends ConsumerWidget {
           context: context,
           // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
           builder: (context) {
-            IncomeEntity incomeEntity = IncomeEntity(
+            ExpenseEntity expenseEntity = ExpenseEntity(
               id: value.id,
               date: DateFormat('yyyyMMdd').format(value.date),
               price: value.price,
-              categoryId: value.paymentCategoryId,
+              paymentCategoryId : value.paymentCategoryId,
               memo: value.memo,
+              incomeSourceBigCategory: value.incomeSourceBigCategory,
             );
 
             return MaterialApp(
@@ -74,8 +75,8 @@ class BonusExpenseHistoryTile extends ConsumerWidget {
                 // テキストサイズの制御
                 minScaleFactor: 0.7,
                 maxScaleFactor: 0.95,
-                child: RegisaterIncomePage(
-                  incomeEntity: incomeEntity,
+                child: RegisterExpensePage(
+                  expenseEntity: expenseEntity,
                   mode: RegisterScreenMode.edit,
                 ),
               ),

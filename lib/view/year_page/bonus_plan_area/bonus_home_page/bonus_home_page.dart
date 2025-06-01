@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/bonus_home_page/bonus_expense_list_area/bonus_expense_list_area.dart';
+import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_list_area.dart';
 
 class BonusHomePage extends ConsumerStatefulWidget {
   const BonusHomePage({super.key});

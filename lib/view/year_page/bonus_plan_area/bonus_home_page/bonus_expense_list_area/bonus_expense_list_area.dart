@@ -1,7 +1,7 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:kakeibo/view/bonus_home_page/bonus_expense_list_area/bonus_expense_history_tile.dart';
+import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_history_tile.dart';
 
 /// Local imports
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_expense_history_value_provider.dart';
