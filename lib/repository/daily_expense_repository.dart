@@ -11,7 +11,7 @@ DatabaseHelper db = DatabaseHelper.instance;
 class ImplementsDailyExpenseRepository implements DailyExpenseRepository{
 
   @override
-  Future<DailyExpenseEntity> fetch({required DateTime dateTime}) async {
+  Future<DailyExpenseEntity> fetchWithCategory({required int incomeSourceBigId, required DateTime dateTime}) async {
 
     // 日付指定
     final whereArgs = DateFormat('yyyyMMdd').format(dateTime);
@@ -22,6 +22,7 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository{
         SUM(${SqfExpense.price}) AS totalExpense
       FROM ${SqfExpense.tableName}
       WHERE ${SqfExpense.date} = $whereArgs
+      AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
       GROUP BY ${SqfExpense.date}
     ''';
 

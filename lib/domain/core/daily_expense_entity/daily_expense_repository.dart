@@ -11,5 +11,6 @@ final dailyExpenseRepositoryProvider = Provider<DailyExpenseRepository>(
 abstract interface class DailyExpenseRepository {
 
   /// 日付指定して全データを取得する
-  Future<DailyExpenseEntity> fetch({required DateTime dateTime});
+  /// カテゴリー指定あり
+  Future<DailyExpenseEntity> fetchWithCategory({required int incomeSourceBigId, required DateTime dateTime});
 }

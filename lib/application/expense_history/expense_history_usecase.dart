@@ -34,7 +34,8 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
       bigCategoryRepo: ref.read(expensebigCategoryRepositoryProvider),
     );
 
-    final entities = await _service.fetchTileList(selectedMonthPeriod);
+    // incomeSourceBigIdは0を指定して、月次支出のみを取得する
+    final entities = await _service.fetchTileList(0,selectedMonthPeriod);
 
     // 取得したタイルデータをDateTimeでグループ分けする
     // groupListsByは、List<T>をMap<K, List<T>>に変換するメソッド

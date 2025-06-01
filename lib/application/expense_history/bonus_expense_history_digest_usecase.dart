@@ -8,7 +8,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final expenseHistoryDigestNotifierProvider = AsyncNotifierProvider.family<
+final bonusExpenseHistoryDigestNotifierProvider = AsyncNotifierProvider.family<
     ExpenseHistoryUsecaseNotifier,
     List<ExpenseHistoryTileValue>,
     PeriodValue>(
@@ -31,8 +31,8 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
       bigCategoryRepo: ref.read(expensebigCategoryRepositoryProvider),
     );
 
-    // incomeSourceBigIdは0を指定して、月次支出のみを取得する
-    final entities = await _service.fetchTileList(0,selectedMonthPeriod);
+    // incomeSourceBigIdは1を指定して、ボーナス利用分のみを取得する
+    final entities = await _service.fetchTileList(1,selectedMonthPeriod);
 
     return entities;
   }

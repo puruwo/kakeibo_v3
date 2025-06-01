@@ -16,13 +16,13 @@ class BonusPlanArea extends ConsumerWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Container(
                         child: Text(
-                            'ボーナス: ${bonusPlanValue.yearlyBonusExpense .toString()}')),
+                            'ボーナス: ${bonusPlanValue.yearlyBonusIncome .toString()}')),
                   ),
                   Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
                           child: Text(
-                              '利用額: ${bonusPlanValue.yearlyBonusIncome.toString()}'))),
+                              '利用額: ${bonusPlanValue.yearlyBonusExpense.toString()}'))),
                   Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(

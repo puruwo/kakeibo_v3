@@ -7,6 +7,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/budget_home_page/budget_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_digest_area.dart';
@@ -32,7 +33,6 @@ class MonthlyPage extends ConsumerStatefulWidget {
 class _MonthlyPage extends ConsumerState<MonthlyPage> {
   @override
   Widget build(BuildContext context) {
-
     //状態管理---------------------------------------------------------------------------------------
 
     // DBが更新されたらリビルドするため
@@ -126,6 +126,38 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
+                        ' 今月の計画',
+                        style: MyFonts.thirdPageSubheading,
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const BudgetHomePage(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            '編集する',
+                            style: MyFonts.thirdPageTextButton,
+                          )),
+                    ],
+                  ),
+                ),
+
+                const MonthlyPlanArea(),
+
+                const SizedBox(
+                  height: 8,
+                ),
+
+                SizedBox(
+                  width: 343 * context.screenHorizontalMagnification,
+                  height: 35,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
                         ' カテゴリーの支出',
                         style: MyFonts.thirdPageSubheading,
                       ),
@@ -142,11 +174,6 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   ),
                 ),
 
-                const MonthlyPlanArea(),
-
-                const SizedBox(
-                  height: 8,
-                ),
                 const AllCategoryTileArea(),
 
                 const SizedBox(
@@ -172,8 +199,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       TextButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const ExpenseHistoryPage(),
-                            ));},
+                              builder: (context) => const ExpenseHistoryPage(),
+                            ));
+                          },
                           child: const Text(
                             'さらに表示',
                             style: MyFonts.thirdPageTextButton,

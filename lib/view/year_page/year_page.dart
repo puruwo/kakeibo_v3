@@ -7,6 +7,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
@@ -72,29 +73,31 @@ class _YearPageState extends ConsumerState<YearPage> {
             child: Column(
               children: [
                 
-                // SizedBox(
-                //   width: 343 * context.screenHorizontalMagnification,
-                //   height: 35,
-                //   child: Row(
-                //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //     children: [
-                //       Text(
-                //         ' ボーナス利用状況',
-                //         style: MyFonts.thirdPageSubheading,
-                //       ),
-                //       TextButton(
-                //           onPressed: () {
-                //             Navigator.of(context).push(MaterialPageRoute(
-                //               builder: (context) => const BonusPlanArea(),
-                //             ));
-                //           },
-                //           child: const Text(
-                //             'さらに表示',
-                //             style: MyFonts.thirdPageTextButton,
-                //           )),
-                //     ],
-                //   ),
-                // ),
+                SizedBox(
+                  width: 343 * context.screenHorizontalMagnification,
+                  height: 35,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        ' ボーナス利用状況',
+                        style: MyFonts.thirdPageSubheading,
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const BonusHomePage(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'さらに表示する',
+                            style: MyFonts.thirdPageTextButton,
+                          )),
+                    ],
+                  ),
+                ),
 
                 const BonusPlanArea(),
 

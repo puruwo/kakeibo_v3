@@ -59,8 +59,9 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     for (var i = 0; thisLoopDatetime.isBefore(shiftedPeriod.endDatetime); i++) {
       thisLoopDatetime = shiftedPeriod.startDatetime.add(Duration(days: i));
 
+      // incomeSourceBigIdは0を指定して、月次カテゴリーのデータを取得する
       final DailyExpenseEntity dailyExpenseEntity =
-          await _repository.fetch(dateTime: thisLoopDatetime);
+          await _repository.fetchWithCategory(incomeSourceBigId: 0, dateTime: thisLoopDatetime);
 
       // カレンダーの日づげ表示に月を表示するかどうか
       bool shouldDisplayMonth = false;
