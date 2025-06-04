@@ -9,10 +9,13 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class BonusExpenseListArea extends ConsumerStatefulWidget {
-  const BonusExpenseListArea({super.key});
+  const BonusExpenseListArea({this.scrollController, super.key});
+
+  final ScrollController? scrollController;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BonusExpenseListArea();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _BonusExpenseListArea();
 }
 
 class _BonusExpenseListArea extends ConsumerState<BonusExpenseListArea> {
@@ -27,27 +30,29 @@ class _BonusExpenseListArea extends ConsumerState<BonusExpenseListArea> {
     //レイアウト------------------------------------------------------------------------------------
 
     return ref.watch(resolvedBonusExpenseHistoryValueProvider).when(
-            data: (valueList) {
-              if (valueList.isNotEmpty) {
-                return ListView.builder(
-                  shrinkWrap: true, 
-                  itemCount: valueList.length,
-                  itemBuilder: (context, index) {
-                    return BonusExpenseHistoryTile(value:valueList[index]);
-                  },
-                );
-              } else {
-                return const Center(
-                  child: Text(
-                    '記録がまだありません',
-                    style:
-                        TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
-                  ),
-                );
-              }
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (e, _) => Center(child: Text('エラー: $e')),
-    );
+          data: (valueList) {
+            if (valueList.isNotEmpty) {
+              return ListView.builder(
+                controller: widget.scrollController,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(), // デフォルトで「必要なときだけスクロール」
+                itemCount: valueList.length,
+                itemBuilder: (context, index) {
+                  return BonusExpenseHistoryTile(value: valueList[index]);
+                },
+              );
+            } else {
+              return const Center(
+                child: Text(
+                  '記録がまだありません',
+                  style:
+                      TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+                ),
+              );
+            }
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (e, _) => Center(child: Text('エラー: $e')),
+        );
   }
 }
