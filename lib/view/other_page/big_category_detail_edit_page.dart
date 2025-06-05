@@ -25,16 +25,16 @@ import 'package:kakeibo/view_model/state/small_category_edit_page/selected_icon_
 
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-class SmallCategoryEditPage extends ConsumerStatefulWidget {
-  const SmallCategoryEditPage({super.key, required this.bigCategoryId});
+class BigCategoryDetailEditPage extends ConsumerStatefulWidget {
+  const BigCategoryDetailEditPage({super.key, required this.bigCategoryId});
   final int bigCategoryId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _SmallCategoryEditPageState();
+      _BigCategoryDetailEditPage();
 }
 
-class _SmallCategoryEditPageState extends ConsumerState<SmallCategoryEditPage> {
+class _BigCategoryDetailEditPage extends ConsumerState<BigCategoryDetailEditPage> {
   // そのカテゴリーのproperty
   Map<String, dynamic>? bigCategoryProperty;
 
