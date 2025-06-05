@@ -33,6 +33,7 @@ class _BonusExpenseListArea extends ConsumerState<BonusExpenseListArea> {
           data: (valueList) {
             if (valueList.isNotEmpty) {
               return ListView.builder(
+                padding: const EdgeInsets.only(top: 16.0),
                 controller: widget.scrollController,
                 shrinkWrap: true,
                 physics: const BouncingScrollPhysics(), // デフォルトで「必要なときだけスクロール」

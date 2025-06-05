@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_bar_graph.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_plan_provider.dart';
 
 class BonusPlanArea extends ConsumerWidget {
@@ -21,6 +22,7 @@ class BonusPlanArea extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,6 +82,12 @@ class BonusPlanArea extends ConsumerWidget {
                       height: 4.0,
                       color: MyColors.separater,
                     ),
+
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 4.0),
+                      child: BonusPlanBarGraph(expense: bonusPlanValue.yearlyBonusExpense,budget: bonusPlanValue.yearlyBonusIncome,),
+                    ),
+                    
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.baseline,

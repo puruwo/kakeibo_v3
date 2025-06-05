@@ -4,25 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 
 class MyFonts {
-
   // Common
   static TextStyle pageHeaderText = GoogleFonts.notoSans(
-                  fontSize: 19,
-                  color: MyColors.white,
-                  fontWeight: FontWeight.w400);
+      fontSize: 19, color: MyColors.white, fontWeight: FontWeight.w400);
 
   // Monthly Page
   static TextStyle thirdPageSubheading = GoogleFonts.notoSans(
-      fontSize: 18,
-      color: MyColors.label,
-      fontWeight: FontWeight.w600);
+      fontSize: 18, color: MyColors.label, fontWeight: FontWeight.w600);
 
   static const thirdPageTextButton =
       TextStyle(color: MyColors.themeColor, fontSize: 14);
 
   // MonthlyPlanArea BonusPlaaArea
   static TextStyle planAreaLeftLabel = GoogleFonts.notoSans(
-      fontSize: 16, color: MyColors.secondaryLabel, fontWeight: FontWeight.w400);
+      fontSize: 16,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
 
   static TextStyle planAreaRightLabel = const TextStyle(
     color: MyColors.label,
@@ -103,4 +100,39 @@ class MyFonts {
       fontWeight: FontWeight.w600,
       color: MyColors.white,
       fontSize: 20);
+
+  // innerTab
+  static TextStyle selectedLabelStyle = GoogleFonts.notoSans(
+      fontSize: 14, color: MyColors.themeColor, fontWeight: FontWeight.w600);
+
+  static TextStyle unselectedLabelStyle = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
+
+  //button
+  static TextStyle mainButtonText = GoogleFonts.notoSans(
+      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w600);
+
+  static TextStyle secondaryButtonText = GoogleFonts.notoSans(
+      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w600);
+
+  // Card
+  static TextStyle cardPrimaryTitle = GoogleFonts.notoSans(
+      fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w300);
+
+  static TextStyle cardSecondaryTitle = GoogleFonts.notoSans(
+      fontSize: 12, color: MyColors.secondaryLabel, fontWeight: FontWeight.w300);
+
+  static TextStyle cardMinusLabel = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 16,
+      color: MyColors.pink,
+      fontWeight: FontWeight.w600);
+
+  static TextStyle cardPriceLabel = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 19,
+      color: MyColors.label,
+      fontWeight: FontWeight.w600);
 }
