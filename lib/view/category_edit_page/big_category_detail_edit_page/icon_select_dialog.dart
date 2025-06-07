@@ -7,14 +7,14 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_icon_contoroller/big_category_icon_contoroller.dart';
 
-class IconSelectPage extends ConsumerStatefulWidget {
-  const IconSelectPage({super.key,});
+class IconSelectDialog extends ConsumerStatefulWidget {
+  const IconSelectDialog({super.key,});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _IconSelectPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _IconSelectDialog();
 }
 
-class _IconSelectPageState extends ConsumerState<IconSelectPage> {
+class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
   //選択カテゴリーのpath
   String? iconPath;
 

@@ -6,15 +6,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
 
-class ColorSelectPage extends ConsumerStatefulWidget {
-  const ColorSelectPage({super.key,});
+class ColorSelectDialog extends ConsumerStatefulWidget {
+  const ColorSelectDialog({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ColorSelectPageState();
+      _ColorSelectDialogState();
 }
 
-class _ColorSelectPageState extends ConsumerState<ColorSelectPage> {
+class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
   //選択カラー
   Color selectedColor = MyColors.transparent;
 

@@ -9,7 +9,7 @@ import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/other_page/big_category_detail_edit_page.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/big_category_detail_edit_page.dart';
 
 class BigCategoryListArea extends ConsumerStatefulWidget {
   const BigCategoryListArea({super.key});
