@@ -1,9 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_big_category_with_small_list_value/edit_expense_big_category_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -22,9 +23,6 @@ class CategoryUsecase {
       _ref.read(expenseSmallCategoryRepositoryProvider);
   ExpenseBigCategoryRepository get _bigCategoryRepositoryProvider =>
       _ref.read(expensebigCategoryRepositoryProvider);
-
-  void _invalidateCategoryProvider() =>
-      _ref.invalidate(categoryUsecaseProvider);
 
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get _updateDBCountNotifier =>
@@ -105,6 +103,15 @@ class CategoryUsecase {
     return categoryEntity;
   }
 
+  /// [fetchBigCategory] メソッドは、小カテゴリーのキーを入力しカテゴリー情報を取得する
+  Future<ExpenseBigCategoryEntity> fetchBigCategory(int bigId) async {
+    // 小カテゴリーから大カテゴリーの情報を取得する
+    final bigCategoryEntity = await _bigCategoryRepositoryProvider
+        .fetchByBigCategory(bigCategoryId: bigId);
+
+    return bigCategoryEntity;
+  }
+
   /// [fetchAllBigCategoriesWithSmallList]はsmallCategoryの情報を添えて全ての大カテゴリーを取得する
   Future<List<EditExpenseBigCategoryValue>>
       fetchAllBigCategoriesWithSmallList() async {
@@ -161,8 +168,48 @@ class CategoryUsecase {
     return bigCategoryList;
   }
 
-  // 編集処理
-  Future<void> edit(
+  /// [fetchSmallCategoriesByBig]はBigIDを指定してsmallCategoryの一覧を取得する
+  Future<List<EditExpenseSmallCategoryValue>> fetchSmallCategoriesByBig(
+      int bigCategoryId) async {
+    // カテゴリーのリストを取得する
+    final fetchList = await _smallCategoryRepositoryProvider.fetchByBigCategory(
+        bigCategoryId: bigCategoryId);
+
+    final resultList = <EditExpenseSmallCategoryValue>[];
+
+    // 各カテゴリー情報をentity化する
+    for (var element in fetchList) {
+      // カテゴリー情報をまとめてentityに格納する
+      final smallCategoryEntity = EditExpenseSmallCategoryValue(
+          id: element.id,
+          bigCategoryKey: element.bigCategoryKey,
+          name: element.smallCategoryName,
+          smallCategoryOrderKey: element.smallCategoryOrderKey,
+          displayOrderInBig: element.displayedOrderInBig,
+          defaultDisplayed: element.defaultDisplayed,
+          editedStateDisplayOrder: element.displayedOrderInBig,
+          etitedStateIsChecked: element.defaultDisplayed == 1);
+
+      resultList.add(smallCategoryEntity);
+    }
+
+    // smallCategoryOrderKeyの昇順で並び替える
+    resultList
+        .sort(((a, b) => a.displayOrderInBig.compareTo(b.displayOrderInBig)));
+
+    // smallCategoryOrderKeyが歯抜けの場合の対策として整数連続値でsortKeyを付与する
+    int i = 0;
+    for (EditExpenseSmallCategoryValue smallCategoryEntity in resultList) {
+      final updated = smallCategoryEntity.copyWith(editedStateDisplayOrder: i);
+      resultList[i] = updated;
+      i++;
+    }
+
+    return resultList;
+  }
+
+  // 大カテゴリーの複数編集処理
+  Future<void> bigCategoriesEdit(
       {required List<EditExpenseBigCategoryValue> originalValues,
       required List<EditExpenseBigCategoryValue> editValues}) async {
     //エラーチェック
@@ -189,8 +236,51 @@ class CategoryUsecase {
       }
     }
 
-    // providerをdisposeしてリフレッシュ
-    _invalidateCategoryProvider;
+    // DBの更新回数をインクリメント
+    _updateDBCountNotifier.incrementState();
+  }
+
+  // 大カテゴリーの単一編集処理
+  Future<void> bigEdit(
+      {required ExpenseBigCategoryEntity original,
+      required ExpenseBigCategoryEntity edit}) async {
+    // 変更があればアップデートする
+    if (original != edit) {
+      _bigCategoryRepositoryProvider.update(entity: edit);
+    }
+
+    // DBの更新回数をインクリメント
+    _updateDBCountNotifier.incrementState();
+  }
+
+  // 小カテゴリーの編集処理
+  Future<void> smallEdit(
+      {required List<EditExpenseSmallCategoryValue> originalValues,
+      required List<EditExpenseSmallCategoryValue> editValues}) async {
+    //エラーチェック
+    if (originalValues.length != editValues.length) {
+      // リストの長さが一致しない場合
+      throw const AppException('予期せぬエラーが発生しました(E001)');
+    }
+
+    // カテゴリーID順に並べてfor文で扱いやすくする
+    originalValues.sort((a, b) => a.id.compareTo(b.id));
+
+    for (var i = 0; i < originalValues.length; i++) {
+      // 変更があればアップデートする
+      if (originalValues[i] != editValues[i]) {
+        final entity = ExpenseSmallCategoryEntity(
+            id: editValues[i].id,
+            bigCategoryKey: editValues[i].bigCategoryKey,
+            smallCategoryName: editValues[i].name,
+            smallCategoryOrderKey: editValues[i].smallCategoryOrderKey,
+            displayedOrderInBig: editValues[i].editedStateDisplayOrder,
+            defaultDisplayed: editValues[i].etitedStateIsChecked ? 1 : 0);
+
+        // 小カテゴリーを更新する
+        _smallCategoryRepositoryProvider.update(entity: entity);
+      }
+    }
 
     // DBの更新回数をインクリメント
     _updateDBCountNotifier.incrementState();

@@ -18,4 +18,7 @@ abstract interface class ExpenseSmallCategoryRepository {
   
   /// 大カテゴリー指定で小カテゴリーのリストを取得する
   Future<List<ExpenseSmallCategoryEntity>> fetchByBigCategory({required int bigCategoryId});
+
+  /// 小カテゴリーを編集する
+  Future<void> update({required ExpenseSmallCategoryEntity entity});
 }

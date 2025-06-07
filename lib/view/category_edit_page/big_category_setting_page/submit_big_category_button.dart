@@ -6,7 +6,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
-import 'package:kakeibo/view_model/state/big_category_edit_page/big_category_edit_list/big_category_edit_list.dart';
+import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -43,7 +43,7 @@ class SubmitBigCategoryButton extends ConsumerWidget with PresentationMixin {
                     ref.watch(isBigCategoryListEditedNotifierProvider);
                 if (!isChanged) throw const AppException('編集がされていません');
 
-                await categoryUsecase.edit(
+                await categoryUsecase.bigCategoriesEdit(
                     originalValues: initialData, editValues: editedLsit);
               },
 

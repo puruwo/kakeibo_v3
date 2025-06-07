@@ -5,11 +5,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
-import 'package:kakeibo/view_model/state/small_category_edit_page/selected_icon_path.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_icon_contoroller/big_category_icon_contoroller.dart';
 
 class IconSelectPage extends ConsumerStatefulWidget {
-  const IconSelectPage({super.key, this.categoryIconPath});
-  final String? categoryIconPath;
+  const IconSelectPage({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _IconSelectPageState();
@@ -33,17 +32,15 @@ class _IconSelectPageState extends ConsumerState<IconSelectPage> {
     ];
 
   @override
-  void initState() {
-    // 初期化が終わる前にbuildが完了してしまうのでawait&SetStateする
-    Future(() async {
-      await initialize();
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+
+    // ====状態管理====
+
+    // アイコンのパスを取得
+    iconPath = ref.watch(bigCategroyIconControllerNotifierProvider);
+
+    // ==============
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -55,8 +52,8 @@ class _IconSelectPageState extends ConsumerState<IconSelectPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
               child: Text('カテゴリーカラーを選択'),
             ),
             Row(
@@ -89,16 +86,12 @@ class _IconSelectPageState extends ConsumerState<IconSelectPage> {
     );
   }
 
-  initialize() {
-    iconPath = widget.categoryIconPath;
-  }
-
   void urlSelectFunction(String url) {
     setState(() {
       iconPath = url;
     });
     Navigator.of(context).pop();
-    final notifier = ref.read(selectedIconPathNotifierProvider.notifier);
+    final notifier = ref.read(bigCategroyIconControllerNotifierProvider.notifier);
     notifier.updateState(url);
   }
 }

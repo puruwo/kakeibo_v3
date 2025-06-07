@@ -60,8 +60,14 @@ class MyColors {
 
   static const barHandler = Color(0xFFD9D9D9);
 
-  getColorFromHex(String colorCode) {
+  Color getColorFromHex(String colorCode) {
     int intValue = int.parse('FF$colorCode', radix: 16);
     return Color(intValue);
+  }
+
+  String getColorCodeFromColor(Color color) {
+    return color.red.toRadixString(16).padLeft(2, '0') +
+        color.green.toRadixString(16).padLeft(2, '0') +
+        color.blue.toRadixString(16).padLeft(2, '0');
   }
 }

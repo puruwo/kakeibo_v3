@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'big_category_edit_list.dart';
+part of 'editting_big_category_list.dart';
 
 // **************************************************************************
 // RiverpodGenerator

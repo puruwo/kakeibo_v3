@@ -82,7 +82,9 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
         a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
         a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
       FROM ${SqfExpenseSmallCategory.tableName} a
-      WHERE a.${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId;
+      WHERE a.${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId
+      ORDER BY a.${SqfExpenseSmallCategory.displayedOrderInBig} ASC
+      ;
     ''';
 
     // SQLを実行して結果を取得
@@ -95,5 +97,20 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
     }).toList();
 
     return result;
+  }
+
+  @override
+  Future<void> update({required ExpenseSmallCategoryEntity entity})async{
+    db.update(
+        SqfExpenseSmallCategory.tableName,
+        {
+          SqfExpenseSmallCategory.id: entity.id,
+          SqfExpenseSmallCategory.bigCategoryKey: entity.bigCategoryKey,
+          SqfExpenseSmallCategory.name: entity.smallCategoryName,
+          SqfExpenseSmallCategory.smallCategoryOrderKey: entity.smallCategoryOrderKey,
+          SqfExpenseSmallCategory.displayedOrderInBig: entity.displayedOrderInBig,
+          SqfExpenseSmallCategory.defaultDisplayed: entity.defaultDisplayed,
+        },
+        entity.id);
   }
 }

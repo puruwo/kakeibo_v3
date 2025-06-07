@@ -7,12 +7,12 @@ part of 'calendar_page_controller.dart';
 // **************************************************************************
 
 String _$calendarPageControllerNotifierHash() =>
-    r'87cd367df683f4665c7c9cc25a11ba6f0d28b08c';
+    r'994ba0576d1ac340f8cfa17e70ac23c7f891ab24';
 
 /// See also [CalendarPageControllerNotifier].
 @ProviderFor(CalendarPageControllerNotifier)
-final calendarPageControllerNotifierProvider =
-    NotifierProvider<CalendarPageControllerNotifier, PageController>.internal(
+final calendarPageControllerNotifierProvider = AutoDisposeNotifierProvider<
+    CalendarPageControllerNotifier, PageController>.internal(
   CalendarPageControllerNotifier.new,
   name: r'calendarPageControllerNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final calendarPageControllerNotifierProvider =
   allTransitiveDependencies: null,
 );
 
-typedef _$CalendarPageControllerNotifier = Notifier<PageController>;
+typedef _$CalendarPageControllerNotifier = AutoDisposeNotifier<PageController>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

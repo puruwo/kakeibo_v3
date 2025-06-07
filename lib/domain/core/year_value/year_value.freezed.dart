@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$YearValue {
-// ex)202504
+// ex)2025
   String get year => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -94,7 +94,7 @@ class __$$YearValueImplCopyWithImpl<$Res>
 class _$YearValueImpl implements _YearValue {
   const _$YearValueImpl({required this.year});
 
-// ex)202504
+// ex)2025
   @override
   final String year;
 
@@ -124,7 +124,7 @@ class _$YearValueImpl implements _YearValue {
 abstract class _YearValue implements YearValue {
   const factory _YearValue({required final String year}) = _$YearValueImpl;
 
-  @override // ex)202504
+  @override // ex)2025
   String get year;
   @override
   @JsonKey(ignore: true)

@@ -1,9 +1,9 @@
 import 'package:kakeibo/domain/ui_value/expense_big_category_with_small_list_value/edit_expense_big_category_value.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-part 'big_category_edit_list.g.dart';
+part 'editting_big_category_list.g.dart';
 
 // 大カテゴリー並び替え編集ページの状態を保持したカテゴリーリスト
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class EdittingBigCategoryListNotifier
     extends _$EdittingBigCategoryListNotifier {
   List<EditExpenseBigCategoryValue> build() {

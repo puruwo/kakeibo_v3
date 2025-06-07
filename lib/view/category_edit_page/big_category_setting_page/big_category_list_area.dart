@@ -120,6 +120,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                   padding: const EdgeInsets.all(12.5),
                                   child: SvgPicture.asset(
                                     itemList[index].resourcePath,
+                                    colorFilter: ColorFilter.mode(MyColors().getColorFromHex(itemList[index].colorCode), BlendMode.srcIn),
                                     semanticsLabel: 'categoryIcon',
                                     width: 25,
                                     height: 25,

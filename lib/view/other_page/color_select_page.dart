@@ -1,16 +1,13 @@
 // packegeImport
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view_model/state/small_category_edit_page/selected_color.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
 
 class ColorSelectPage extends ConsumerStatefulWidget {
-  const ColorSelectPage({super.key, this.categoryColor});
-  final Color? categoryColor;
+  const ColorSelectPage({super.key,});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -19,7 +16,7 @@ class ColorSelectPage extends ConsumerStatefulWidget {
 
 class _ColorSelectPageState extends ConsumerState<ColorSelectPage> {
   //選択カラー
-  Color? selectedColor;
+  Color selectedColor = MyColors.transparent;
 
   final List<Color> colorList = [
     MyColors.red,
@@ -35,17 +32,15 @@ class _ColorSelectPageState extends ConsumerState<ColorSelectPage> {
   ];
 
   @override
-  void initState() {
-    // 初期化が終わる前にbuildが完了してしまうのでawait&SetStateする
-    Future(() async {
-      await initialize();
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
+
+    // ====状態管理====
+
+    // アイコンのパスを取得
+    selectedColor = ref.watch(bigCategroyColorControllerNotifierProvider);
+
+    // ==============
+
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -82,17 +77,13 @@ class _ColorSelectPageState extends ConsumerState<ColorSelectPage> {
       ),
     );
   }
-
-  initialize() {
-    selectedColor = widget.categoryColor;
-  }
   
   void colorSelectFunction(Color color) {
     setState(() {
       selectedColor = color;
     });
     Navigator.of(context).pop();
-    final notifier = ref.read(selectedColorNotifierProvider.notifier);
+    final notifier = ref.read(bigCategroyColorControllerNotifierProvider.notifier);
     notifier.updateState(color);
   }
 }
