@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/application/income_history/income_history_service.dart';
+import 'package:kakeibo/application/income_history/request_income_history_usecase.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
@@ -9,12 +11,12 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 final incomeHistoryNotifierProvider = AsyncNotifierProvider.family<
     IncomeHistoryUsecaseNotifier,
     List<IncomeHistoryTileValue>,
-    PeriodValue>(
+    RequestIncomeHistoryUsecase>(
   IncomeHistoryUsecaseNotifier.new,
 );
 
 class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
-    List<IncomeHistoryTileValue>, PeriodValue> {
+    List<IncomeHistoryTileValue>, RequestIncomeHistoryUsecase> {
   // 収入履歴に関するリポジトリ
   late IncomeRepository _incomeRepositoryProvider;
 
@@ -26,8 +28,7 @@ class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
 
   @override
   Future<List<IncomeHistoryTileValue>> build(
-      PeriodValue selectedMonthPeriod) async {
-
+      RequestIncomeHistoryUsecase request) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
@@ -37,42 +38,19 @@ class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
 
     _bigCategoryRepository = ref.read(incomeBigCategoryRepositoryProvider);
 
-    return fetch(selectedMonthPeriod: selectedMonthPeriod);
+    return fetch(
+        bigId: request.bigId, selectedMonthPeriod: request.selectedMonthPeriod);
   }
 
   // 期間指定でタイルデータを取得する
-  Future<List<IncomeHistoryTileValue>> fetch({required PeriodValue selectedMonthPeriod}) async {
-    
-    // SqfExpenseからデータを取得する
-    final incomeList = await _incomeRepositoryProvider.fetchWithoutCategory(period: selectedMonthPeriod);
+  Future<List<IncomeHistoryTileValue>> fetch(
+      {required int bigId, required PeriodValue selectedMonthPeriod}) async {
+    final service = IncomeHistoryService(
+        bigCategoryRepo: _bigCategoryRepository,
+        incomeRepo: _incomeRepositoryProvider,
+        smallCategoryRepo: _smallCategoryRepository);
 
-    // 取得した支出データから、それぞれカテゴリーなどの情報を取得し、タイルのデータを作成する
-    List<IncomeHistoryTileValue> result = [];
-
-    for (var income in incomeList) {
-      // 支出のレコードからカテゴリーidを取得し、小カテゴリーの情報を取得する
-      final smallCategory =
-          await _smallCategoryRepository.fetchBySmallCategory(smallCategoryId: income.categoryId);
-
-      // 小カテゴリーのレコードから大カテゴリーidを取得し、大カテゴリーの情報を取得する
-      final bigCategory =
-          await _bigCategoryRepository.fetchByBigCategory(bigCategoryId: smallCategory.bigCategoryKey);
-
-      final incomeHistoryTileValue = IncomeHistoryTileValue(
-        id: income.id,
-        date: DateTime.parse(
-        '${income.date.substring(0, 4)}-${income.date.substring(4, 6)}-${income.date.substring(6, 8)}'),
-        price: income.price,
-        paymentCategoryId: income.categoryId,
-        memo: income.memo,
-        smallCategoryName: smallCategory.smallCategoryName,
-        bigCategoryName: bigCategory.name,
-        colorCode: bigCategory.colorCode,
-        iconPath: bigCategory.iconPath,
-      );
-
-      result.add(incomeHistoryTileValue);
-    }
+    final result = await service.fetchTileList(bigId, selectedMonthPeriod);
 
     return result;
   }

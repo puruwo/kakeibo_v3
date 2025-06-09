@@ -13,7 +13,6 @@ class MonthlyPlanArea extends ConsumerWidget {
     return ref.watch(resolvedMonthlyPlanValueProvider).when(
           data: (monthlyPlanValue) {
             return Container(
-              width: double.infinity,
               decoration: BoxDecoration(
                 color: MyColors.quarternarySystemfill,
                 borderRadius: BorderRadius.circular(8.0),
@@ -21,6 +20,7 @@ class MonthlyPlanArea extends ConsumerWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
                 child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

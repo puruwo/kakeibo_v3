@@ -3,8 +3,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view/other_page/color_select_page.dart';
-import 'package:kakeibo/view/other_page/icon_select_page.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/color_select_dialog.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/icon_select_dialog.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_icon_contoroller/big_category_icon_contoroller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_name_contoroller/big_category_name_contoroller.dart';
@@ -73,7 +73,7 @@ class _BigCategoryAppearanceEditAreaState
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return const IconSelectPage();
+                        return const IconSelectDialog();
                       },
                     );
                   },
@@ -215,7 +215,7 @@ class _BigCategoryAppearanceEditAreaState
             await showDialog(
               context: context,
               builder: (BuildContext context) {
-                return const ColorSelectPage();
+                return const ColorSelectDialog();
               },
             );
           },

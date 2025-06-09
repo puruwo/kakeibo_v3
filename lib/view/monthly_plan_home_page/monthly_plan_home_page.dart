@@ -5,19 +5,21 @@ import 'package:flutter/material.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_list_area.dart';
-import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_footer.dart';
-import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_income_list_area/bonus_income_list_area.dart';
-import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view/budget_setting_page/budget_cotegory_area.dart';
 
-class BonusHomePage extends ConsumerStatefulWidget {
-  const BonusHomePage({super.key});
+import 'package:kakeibo/view/monthly_plan_home_page/monthly_plan_home_footer.dart';
+import 'package:kakeibo/view/monthly_plan_home_page/income_list_area/income_list_area.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
+import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
+
+class MonthlyPlanHomePage extends ConsumerStatefulWidget {
+  const MonthlyPlanHomePage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BonusHomePage();
+  ConsumerState<ConsumerStatefulWidget> createState() => _MonthlyPlanHomePage();
 }
 
-class _BonusHomePage extends ConsumerState<BonusHomePage> {
+class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -28,7 +30,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
         appBar: AppBar(
           backgroundColor: MyColors.secondarySystemBackground,
           title: Text(
-            'ボーナス利用状況',
+            '毎月の予算',
             style: MyFonts.pageHeaderText,
           ),
         ),
@@ -39,13 +41,13 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
             // 上部（ここに通常の内容など追加）
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: BonusPlanArea(),
+              child: MonthlyPlanArea(),
             ),
             DraggableScrollableSheet(
                 // 初期の表示割合
                 initialChildSize: 0.7,
                 // 最小の表示割合
-                minChildSize: 0.7,
+                minChildSize: 0,
                 // 最大の表示割合
                 maxChildSize: 1.0,
                 // ドラッグを離した時に一番近いsnapSizeになるか
@@ -58,7 +60,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                     children: [
                       // ハンドルバー
                       // SingleChildScrollViewの範囲がドラッグできる範囲
-                        // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
+                      // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
                       SingleChildScrollView(
                         controller: scrollController,
                         physics: const ClampingScrollPhysics(),
@@ -112,9 +114,39 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                                         labelStyle: MyFonts.selectedLabelStyle,
                                         indicatorWeight: 2,
                                         tabs: const [
-                                          Tab(text: 'ボーナス支出'),
-                                          Tab(text: 'ボーナス収入'),
+                                          Tab(text: '予算'),
+                                          Tab(text: '収入'),
                                         ],
+                                        onTap: (value) {
+                                          final footerState = ref.read(
+                                              footerStateControllerNotifierProvider);
+                                          switch (value) {
+                                            case 0:
+                                              // 予算タブが選択された場合
+                                              if (footerState ==
+                                                  TabState.income) {
+                                                ref
+                                                    .read(
+                                                        footerStateControllerNotifierProvider
+                                                            .notifier)
+                                                    .updateState(
+                                                        TabState.budgetNormal);
+                                              }
+                                              break;
+                                            case 1:
+                                              // 収入タブが選択された場合
+                                              if (footerState !=
+                                                  TabState.income) {
+                                                ref
+                                                    .read(
+                                                        footerStateControllerNotifierProvider
+                                                            .notifier)
+                                                    .updateState(
+                                                        TabState.income);
+                                              }
+                                              break;
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),
@@ -125,15 +157,10 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                                 const Expanded(
                                   child: TabBarView(
                                     children: [
-                                      // ボーナス支出のエリア
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16.0),
-                                        child: BonusExpenseListArea(),
-                                      ),
-
-                                      // ボーナス収入のエリア
-                                      BonusIncomeListArea(),
+                                      // 予算のエリア
+                                      BudgetCategoryArea(),
+                                      // 収入のエリア
+                                      IncomeListArea(),
                                     ],
                                   ),
                                 ),
@@ -144,7 +171,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(
                                       16.0, 16.0, 16.0, 40.0),
-                                  child: BonusHomeFooter(),
+                                  child: MonthlyPlanHomeFooter(),
                                 ),
                               ],
                             ),

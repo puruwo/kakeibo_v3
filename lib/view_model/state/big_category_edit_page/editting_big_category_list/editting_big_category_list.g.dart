@@ -7,11 +7,11 @@ part of 'editting_big_category_list.dart';
 // **************************************************************************
 
 String _$edittingBigCategoryListNotifierHash() =>
-    r'fa0381787c04661a1a41e4333e5596d97dd18e8d';
+    r'5b6d8d19b838b203ea80073d7ec10efc9fc83769';
 
 /// See also [EdittingBigCategoryListNotifier].
 @ProviderFor(EdittingBigCategoryListNotifier)
-final edittingBigCategoryListNotifierProvider = NotifierProvider<
+final edittingBigCategoryListNotifierProvider = AutoDisposeNotifierProvider<
     EdittingBigCategoryListNotifier,
     List<EditExpenseBigCategoryValue>>.internal(
   EdittingBigCategoryListNotifier.new,
@@ -24,6 +24,6 @@ final edittingBigCategoryListNotifierProvider = NotifierProvider<
 );
 
 typedef _$EdittingBigCategoryListNotifier
-    = Notifier<List<EditExpenseBigCategoryValue>>;
+    = AutoDisposeNotifier<List<EditExpenseBigCategoryValue>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

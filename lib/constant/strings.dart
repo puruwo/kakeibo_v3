@@ -127,6 +127,12 @@ class MyFonts {
   static TextStyle cardMinusLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 16,
+      color: MyColors.mintBlue,
+      fontWeight: FontWeight.w600);
+
+  static TextStyle cardPlusLabel = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 16,
       color: MyColors.pink,
       fontWeight: FontWeight.w600);
 

@@ -4,15 +4,15 @@ import 'package:kakeibo/application/income_history/request_income_history_usecas
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
 
-final resolvedIncomeHistoryValueProvider =
+final resolvedBonusIncomeHistoryValueProvider =
     FutureProvider<List<IncomeHistoryTileValue>>((ref) async {
   
   // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final yearPeriodValue = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data.yearPeriod));
 
   // リクエスト用のEntityを作成する
-  // idは0を指定して、月次収入の履歴を取得する
-  final request = RequestIncomeHistoryUsecase(bigId: 0, selectedMonthPeriod: monthPeriodValue);
+  // idは1を指定して、ボーナス収入の履歴を取得する
+  final request = RequestIncomeHistoryUsecase(bigId: 1, selectedMonthPeriod: yearPeriodValue);
   
   // 選択された集計期間を元に、Entityを取得する
   final result = ref.watch(incomeHistoryNotifierProvider(request).future);

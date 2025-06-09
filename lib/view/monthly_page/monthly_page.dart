@@ -7,7 +7,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/budget_home_page/budget_home_page.dart';
+import 'package:kakeibo/view/monthly_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_digest_area.dart';
@@ -22,6 +22,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_setting_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/view/component/modal.dart';
 
 class MonthlyPage extends ConsumerStatefulWidget {
   const MonthlyPage({super.key});
@@ -98,7 +99,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                          _showModalBottomSheet(
+                          showModalBottomSheetFunc(
                               context, const BudgetSettingPage());
                         },
                         child: const Text(
@@ -132,7 +133,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         onPressed: () {
                           Navigator.of(context).push(
                             MaterialPageRoute(
-                              builder: (context) => const BudgetHomePage(),
+                              builder: (context) => const MonthlyPlanHomePage(),
                             ),
                           );
                         },
@@ -162,7 +163,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                     ),
                     TextButton(
                         onPressed: () {
-                          _showModalBottomSheet(
+                          showModalBottomSheetFunc(
                               context, const BigCategorySettingPage());
                         },
                         child: const Text(
@@ -218,22 +219,6 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
           ),
         ),
       ),
-    );
-  }
-
-  void _showModalBottomSheet(BuildContext context, Widget page) {
-    showModalBottomSheet(
-      //sccafoldの上に出すか
-      useRootNavigator: true,
-      isScrollControlled: true,
-      useSafeArea: true,
-      constraints: const BoxConstraints(
-        maxWidth: 2000,
-      ),
-      context: context,
-      builder: (context) {
-        return page;
-      },
     );
   }
 }

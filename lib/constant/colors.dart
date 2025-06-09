@@ -19,6 +19,7 @@ class MyColors {
   static const red = Color(0xFFED112B);
   static const pink = Color(0xFFFF7070);
   static const blue = Color(0xFF2596FF);
+  static const mintBlue = Color(0xFF36C5F1);
   static const mint = Color(0xFF21D19F);
   static const yellow = Color(0xFFFFC857);
   static const giantsOrange = Color(0xFFFF5714);
@@ -70,4 +71,9 @@ class MyColors {
         color.green.toRadixString(16).padLeft(2, '0') +
         color.blue.toRadixString(16).padLeft(2, '0');
   }
+
+
+  // Component colors
+  static const buttonPrimary = themeColor;
+  static const buttonSecondary = systemfill;
 }

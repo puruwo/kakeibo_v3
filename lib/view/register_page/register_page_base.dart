@@ -40,8 +40,10 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
   @override
   void initState() {
+    final initialIndex = widget.transactionMode == TransactionMode.expense ? 0 : 1;
+
     // タブを2つに設定
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(initialIndex: initialIndex, length: 2, vsync: this);
 
     // 編集モードなのにoriginalEntityを受け取っていない
     if (widget.registerMode == RegisterScreenMode.edit) {
