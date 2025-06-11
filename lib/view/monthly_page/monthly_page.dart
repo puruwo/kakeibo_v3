@@ -7,7 +7,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/monthly_plan_home_page/monthly_plan_home_page.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_digest_area.dart';

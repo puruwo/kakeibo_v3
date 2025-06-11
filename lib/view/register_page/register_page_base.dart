@@ -40,14 +40,19 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
   @override
   void initState() {
-    final initialIndex = widget.transactionMode == TransactionMode.expense ? 0 : 1;
+    final initialIndex =
+        widget.transactionMode == TransactionMode.expense ? 0 : 1;
 
     // タブを2つに設定
-    _tabController = TabController(initialIndex: initialIndex, length: 2, vsync: this);
+    _tabController =
+        TabController(initialIndex: initialIndex, length: 2, vsync: this);
 
     // 編集モードなのにoriginalEntityを受け取っていない
     if (widget.registerMode == RegisterScreenMode.edit) {
-      if (widget.expenseEntity == null && widget.incomeEntity == null) {
+      if ((widget.transactionMode == TransactionMode.expense &&
+              widget.expenseEntity == null) &&
+          (widget.transactionMode == TransactionMode.income &&
+              widget.incomeEntity == null)) {
         throw const AppException('編集モードで編集前データが入力されていません');
       }
     }
@@ -88,8 +93,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
             ),
           ),
 
-          
-
           //ヘッダーの左ボタン
           leading: IconButton(
             onPressed: () {
@@ -114,9 +117,15 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         ),
 
         //body
-        body: TabBarView(controller: _tabController, children: const [
-          RegisterExpensePage(),
-          RegisaterIncomePage(),
+        body: TabBarView(controller: _tabController, children: [
+          RegisterExpensePage(
+            mode: RegisterScreenMode.add,
+            expenseEntity: widget.expenseEntity,
+          ),
+          RegisaterIncomePage(
+            mode: RegisterScreenMode.add,
+            incomeEntity: widget.incomeEntity,
+          ),
         ]),
       ),
     );
