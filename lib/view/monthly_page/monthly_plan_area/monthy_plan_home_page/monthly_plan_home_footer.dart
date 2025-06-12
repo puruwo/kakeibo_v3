@@ -177,40 +177,43 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
   }
 
   Widget _incomeButton(BuildContext context, WidgetRef ref) {
-    return ElevatedButton(
-      onPressed: () {
-        showModalBottomSheet(
-          //sccafoldの上に出すか
-          useRootNavigator: true,
-          isScrollControlled: true,
-          useSafeArea: true,
-          constraints: const BoxConstraints(
-            maxWidth: 2000,
-          ),
-          context: context,
-          // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-          builder: (context) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData.dark(),
-              themeMode: ThemeMode.dark,
-              darkTheme: ThemeData.dark(),
-              home: MediaQuery.withClampedTextScaling(
-                child: const RegisaterPageBase(
-                  shouldDisplayTab: true,
-                  transactionMode: TransactionMode.income,
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          showModalBottomSheet(
+            //sccafoldの上に出すか
+            useRootNavigator: true,
+            isScrollControlled: true,
+            useSafeArea: true,
+            constraints: const BoxConstraints(
+              maxWidth: 2000,
+            ),
+            context: context,
+            // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
+            builder: (context) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData.dark(),
+                themeMode: ThemeMode.dark,
+                darkTheme: ThemeData.dark(),
+                home: MediaQuery.withClampedTextScaling(
+                  child: const RegisaterPageBase(
+                    shouldDisplayTab: true,
+                    transactionMode: TransactionMode.income,
+                  ),
                 ),
-              ),
-            );
-          },
-        );
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: MyColors.buttonPrimary,
-      ),
-      child: Text(
-        '新しい収入を追加',
-        style: MyFonts.mainButtonText,
+              );
+            },
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: MyColors.buttonPrimary,
+        ),
+        child: Text(
+          '新しい収入を追加',
+          style: MyFonts.mainButtonText,
+        ),
       ),
     );
   }

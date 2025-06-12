@@ -20,27 +20,34 @@ class BonusHomeFooter extends ConsumerWidget {
   }
 
   Widget _newExpenseButton() {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: MyColors.buttonPrimary,
-      ),
-      child: Text(
-        '新しい支出を追加',
-        style: MyFonts.mainButtonText,
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: MyColors.buttonPrimary,
+        ),
+        child: Text(
+          '新しい支出を追加',
+          style: MyFonts.mainButtonText,
+        ),
       ),
     );
   }
 
   Widget _newIncomeButton() {
-    return ElevatedButton(
-      onPressed: () {},
-      style: ElevatedButton.styleFrom(
-        backgroundColor: MyColors.buttonPrimary,
-      ),
-      child: Text(
-        '新しい収入を追加',
-        style: MyFonts.mainButtonText,
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {},
+        style: ElevatedButton.styleFrom(
+          backgroundColor: MyColors.buttonPrimary,
+        ),
+        child: Text(
+          '新しい収入を追加',
+          style: MyFonts.mainButtonText,
+        ),
       ),
     );
   }

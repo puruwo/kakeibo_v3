@@ -9,6 +9,7 @@ import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_exp
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_footer.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_income_list_area/bonus_income_list_area.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view_model/state/bonus_home_page/selected_tab_controller/selected_tab_controller.dart';
 
 class BonusHomePage extends ConsumerStatefulWidget {
   const BonusHomePage({super.key});
@@ -58,7 +59,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                     children: [
                       // ハンドルバー
                       // SingleChildScrollViewの範囲がドラッグできる範囲
-                        // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
+                      // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
                       SingleChildScrollView(
                         controller: scrollController,
                         physics: const ClampingScrollPhysics(),
@@ -115,6 +116,28 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                                           Tab(text: 'ボーナス支出'),
                                           Tab(text: 'ボーナス収入'),
                                         ],
+                                        onTap: (index) {
+                                          switch (index) {
+                                            // ボーナス支出タブが選択された場合
+                                            case 0:
+                                              ref
+                                                  .read(
+                                                      selectedTabControllerNotifierProvider
+                                                          .notifier)
+                                                  .updateState(
+                                                      SelectedTab.bonusExpense);
+                                              break;
+                                            // ボーナス収入タブが選択された場合
+                                            case 1:
+                                              ref
+                                                  .read(
+                                                      selectedTabControllerNotifierProvider
+                                                          .notifier)
+                                                  .updateState(
+                                                      SelectedTab.bonusIncome);
+                                              break;
+                                          }
+                                        },
                                       ),
                                     ],
                                   ),
