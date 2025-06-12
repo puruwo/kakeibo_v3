@@ -14,7 +14,8 @@ class Foundation extends ConsumerWidget {
   Foundation({super.key});
 
   // 各タブごとの Navigator にアクセスするための GlobalKey
-  final  List<GlobalKey<NavigatorState>> navigatorKeys = [
+  final List<GlobalKey<NavigatorState>> navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
   ];
@@ -22,6 +23,7 @@ class Foundation extends ConsumerWidget {
   //navigationBarに設定するbodyのpageリスト
   final List<Widget> pageList = [
     const YearPage(),
+    Container(), // 2番目のタブは入力画面を表示するための空のコンテナ
     const MonthlyPage(),
   ];
 
@@ -46,8 +48,9 @@ class Foundation extends ConsumerWidget {
               );
             },
           ),
+          Container(),// 2番目のタブは入力画面を表示するための空のコンテナ
           Navigator(
-            key: navigatorKeys[1],
+            key: navigatorKeys[2],
             onGenerateRoute: (RouteSettings settings) {
               return MaterialPageRoute(
                 builder: (_) => pageList[1],
@@ -56,19 +59,14 @@ class Foundation extends ConsumerWidget {
           ),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: MyColors.blackmint,
-        onPressed: () {
-          _showExpenseEntrySheet(context);
-        },
-        child: const Icon(Icons.add),
-      ),
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: MyColors.quarternarySystemfill,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month_rounded), label: '履歴'),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.add,),label: '履歴'
+          ),
           BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph_rounded), label: 'グラフ')
         ],
@@ -81,53 +79,60 @@ class Foundation extends ConsumerWidget {
   }
 
   // タブがタップされたときの処理
-  void _selectTab(int index,WidgetRef ref) {
-    if (index == ref.read(navigationBarNumberNotifierProvider)) {
-      // 同じタブが再タップされた場合、タブ内の Navigator を初期状態までポップしてリセットする
-      navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
-    } else {
+  void _selectTab(int index, WidgetRef ref) {
+    // 1をタップしたときは、入力画面を表示する
+    if (index == 1) {
+      _showExpenseEntrySheet(ref.context);
+    } 
+    // それ以外のタブがタップされた場合
+    else {
+      // 同じタブが再タップされた場合は、Navigatorを初期状態までポップしてリセットする
+      if (index == ref.read(navigationBarNumberNotifierProvider)) {
+        // 同じタブが再タップされた場合、タブ内の Navigator を初期状態までポップしてリセットする
+        navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
+      } else {
         final notifier = ref.read(navigationBarNumberNotifierProvider.notifier);
         notifier.updateState(index);
-      };
+      }
     }
   }
+}
 
-  void _onBuildComplete(BuildContext context, WidgetRef ref) {
-    final isInitialOpen = ref.read(initialOpenNotifierProvider);
-    if (isInitialOpen == false) return;
+void _onBuildComplete(BuildContext context, WidgetRef ref) {
+  final isInitialOpen = ref.read(initialOpenNotifierProvider);
+  if (isInitialOpen == false) return;
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      
-      _showExpenseEntrySheet(context);
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _showExpenseEntrySheet(context);
 
-      //状態を更新
-      final initialOpenNotifier =
-          ref.read(initialOpenNotifierProvider.notifier);
-      initialOpenNotifier.updateState();
-    });
-  }
-  
-  void _showExpenseEntrySheet(BuildContext context) {
-    showModalBottomSheet(
-            //sccafoldの上に出すか
-            useRootNavigator: true,
-            isScrollControlled: true,
-            useSafeArea: true,
-            constraints: const BoxConstraints(
-              maxWidth: 2000,
-            ),
-            context: context,
-            // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-            builder: (context) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData.dark(),
-                themeMode: ThemeMode.dark,
-                darkTheme: ThemeData.dark(),
-                home: MediaQuery.withClampedTextScaling(
-                  child: const RegisaterPageBase(shouldDisplayTab: true, transactionMode: TransactionMode.expense),
-                ),
-              );
-            },
-          );
-  }
+    //状態を更新
+    final initialOpenNotifier = ref.read(initialOpenNotifierProvider.notifier);
+    initialOpenNotifier.updateState();
+  });
+}
+
+void _showExpenseEntrySheet(BuildContext context) {
+  showModalBottomSheet(
+    //sccafoldの上に出すか
+    useRootNavigator: true,
+    isScrollControlled: true,
+    useSafeArea: true,
+    constraints: const BoxConstraints(
+      maxWidth: 2000,
+    ),
+    context: context,
+    // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
+    builder: (context) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        themeMode: ThemeMode.dark,
+        darkTheme: ThemeData.dark(),
+        home: MediaQuery.withClampedTextScaling(
+          child: const RegisaterPageBase(
+              shouldDisplayTab: true, transactionMode: TransactionMode.expense),
+        ),
+      );
+    },
+  );
+}

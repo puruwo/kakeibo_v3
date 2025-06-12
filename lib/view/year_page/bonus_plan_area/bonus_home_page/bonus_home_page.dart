@@ -143,7 +143,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                                 // フッターボタンエリア
                                 const Padding(
                                   padding: EdgeInsets.fromLTRB(
-                                      16.0, 16.0, 16.0, 40.0),
+                                      16.0, 16.0, 16.0, 16.0),
                                   child: BonusHomeFooter(),
                                 ),
                               ],
