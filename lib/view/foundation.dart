@@ -53,7 +53,7 @@ class Foundation extends ConsumerWidget {
             key: navigatorKeys[2],
             onGenerateRoute: (RouteSettings settings) {
               return MaterialPageRoute(
-                builder: (_) => pageList[1],
+                builder: (_) => pageList[2],
               );
             },
           ),
