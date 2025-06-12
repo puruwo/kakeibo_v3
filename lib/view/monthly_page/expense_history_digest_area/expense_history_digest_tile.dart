@@ -71,6 +71,7 @@ class ExpenseHistoryDigestTile extends ConsumerWidget {
                     child: RegisterExpensePage(
                       expenseEntity: expenseEntity,
                       mode: RegisterScreenMode.edit,
+                      isTabVisible: true,
                     ),
                   ),
                 );

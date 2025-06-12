@@ -71,9 +71,10 @@ class IncomeHistoryTile extends ConsumerWidget {
                 // テキストサイズの制御
                 minScaleFactor: 0.7,
                 maxScaleFactor: 0.95,
-                child: RegisaterIncomePage(
+                child: RegisterIncomePage(
                   incomeEntity: incomeEntity,
                   mode: RegisterScreenMode.edit,
+                  isTabVisible: true,
                 ),
               ),
             );

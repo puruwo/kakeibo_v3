@@ -121,10 +121,12 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           RegisterExpensePage(
             mode: RegisterScreenMode.add,
             expenseEntity: widget.expenseEntity,
+            isTabVisible: false,
           ),
-          RegisaterIncomePage(
+          RegisterIncomePage(
             mode: RegisterScreenMode.add,
             incomeEntity: widget.incomeEntity,
+            isTabVisible: false, // タブを非表示にする
           ),
         ]),
       ),

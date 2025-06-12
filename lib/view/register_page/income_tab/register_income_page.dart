@@ -14,20 +14,26 @@ import 'package:kakeibo/view_model/state/register_page/register_screen_mode/regi
 
 import 'package:kakeibo/view/register_page/common_input_field/date_input_field.dart';
 
-class RegisaterIncomePage extends ConsumerStatefulWidget {
+class RegisterIncomePage extends ConsumerStatefulWidget {
   final RegisterScreenMode mode;
 
   final IncomeEntity? incomeEntity;
 
-  const RegisaterIncomePage(
-      {this.mode = RegisterScreenMode.add, this.incomeEntity, super.key});
+  /// タブが見えるかどうか
+  final bool isTabVisible;
+
+  const RegisterIncomePage(
+      {this.mode = RegisterScreenMode.add,
+      this.incomeEntity,
+      required this.isTabVisible,
+      super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _RegisaterIncomePageState();
 }
 
-class _RegisaterIncomePageState extends ConsumerState<RegisaterIncomePage> {
+class _RegisaterIncomePageState extends ConsumerState<RegisterIncomePage> {
   late IncomeEntity initialIncomeData;
 
   @override
@@ -53,20 +59,14 @@ class _RegisaterIncomePageState extends ConsumerState<RegisaterIncomePage> {
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
 
-    // tabbarは新規追加モードでは見えない
-    final isInvisibleTab = widget.mode == RegisterScreenMode.add ? true : false;
-
     //レイアウト------------------------------------------------------------------------------------
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
           backgroundColor: MyColors.secondarySystemBackground,
-
-          
-          appBar: isInvisibleTab
-              ? null
-              : AppBar(
+          appBar: widget.isTabVisible
+              ? AppBar(
                   // ヘッダーの色
                   backgroundColor: MyColors.secondarySystemBackground,
 
@@ -95,7 +95,8 @@ class _RegisaterIncomePageState extends ConsumerState<RegisaterIncomePage> {
                       color: MyColors.white,
                     ),
                   ),
-                ),
+                )
+              : null,
 
           //body
           body: SingleChildScrollView(

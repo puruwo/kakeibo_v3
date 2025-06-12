@@ -220,6 +220,7 @@ void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
               expenseEntity: ExpenseEntity(
                   date: DateFormat('yyyyMMdd').format(selectedDate),),
               mode: RegisterScreenMode.add,
+              isTabVisible: true,
             )),
       );
     },

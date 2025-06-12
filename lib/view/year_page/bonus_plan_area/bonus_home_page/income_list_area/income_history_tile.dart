@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -11,8 +10,8 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
-class BonusIncomeHistoryTile extends ConsumerWidget {
-  const BonusIncomeHistoryTile({
+class IncomeHistoryTile extends ConsumerWidget {
+  const IncomeHistoryTile({
     super.key,
     required this.value,
   });
@@ -24,6 +23,10 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
     // 画面の倍率を計算
     // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final screenHorizontalMagnification = context.screenHorizontalMagnification;
+
+    // リスト内テキストボックスの倍率を計算
+    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
+    final listSmallcategoryMemoOffset = context.listSmallcategoryMemoOffset;
 
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * screenHorizontalMagnification;
@@ -82,7 +85,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
+        padding: const EdgeInsets.symmetric(vertical:4.0),
         child: Container(
           decoration: const BoxDecoration(
               borderRadius: BorderRadius.all(Radius.circular(12)),
@@ -93,92 +96,84 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
                 padding: EdgeInsets.only(
                     left: leftsidePadding, right: leftsidePadding),
                 child: SizedBox(
-                  height: 69,
+                  height: 49,
                   width: double.infinity,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       // アイコン
-                      SizedBox(height: 49, child: icon),
-
-                      // アイコンの横のスペース
-                      const SizedBox(
-                        width: 8,
-                      ),
-
+                      SizedBox(height: 49, width: 49, child: icon),
+        
                       // 大カテゴリー、小カテゴリーのColumn
                       Expanded(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // 大カテゴリーと日付
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                SizedBox(
-                                  width: 70 * screenHorizontalMagnification,
-                                  child: Text(value.bigCategoryName,
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: MyFonts.cardPrimaryTitle),
+                            // 大カテゴリー
+                            SizedBox(
+                              width: 153 * screenHorizontalMagnification,
+                              child: Text(
+                                value.bigCategoryName,
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  color: MyColors.label,
                                 ),
+                              ),
+                            ),
+        
+                            // 小カテゴリーとメモ
+                            Row(
+                              children: [
+                                // 小カテゴリー
                                 SizedBox(
-                                  width: 70 * screenHorizontalMagnification,
+                                  width: 56,
                                   child: Text(
-                                    '${value.date.month}月${value.date.day}日',
+                                    ' ${value.smallCategoryName}',
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
-                                    style: MyFonts.cardSecondaryTitle,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        color: MyColors.secondaryLabel),
+                                  ),
+                                ),
+                                // メモ
+                                SizedBox(
+                                  width: 90 + listSmallcategoryMemoOffset,
+                                  child: Text(
+                                    ' ${value.memo}',
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        color: MyColors.secondaryLabel),
                                   ),
                                 ),
                               ],
-                            ),
-
-                            // memo
-                            value.memo == ''
-                                ? Container()
-                                : Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      SizedBox(
-                                        width:
-                                            140 * screenHorizontalMagnification,
-                                        child: Text('${value.memo}',
-                                            textAlign: TextAlign.start,
-                                            overflow: TextOverflow.ellipsis,
-                                            style: MyFonts.cardPrimaryTitle),
-                                      ),
-                                    ],
-                                  )
+                            )
                           ],
                         ),
                       ),
-
+        
                       // 値段
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 125,
-                            child: Text(
-                              priceLabel,
-                              textAlign: TextAlign.end,
-                              overflow: TextOverflow.ellipsis,
-                              style: MyFonts.cardPriceLabel,
-                            ),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 22.0),
+                        child: SizedBox(
+                          width: 100,
+                          child: Text(
+                            priceLabel,
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                                fontSize: 19, color: MyColors.label),
                           ),
-                          const SizedBox(
-                            width: 4,
-                          ),
-                          Text(
-                            '+',
-                            style: MyFonts.cardPlusLabel,
-                          ),
-                        ],
+                        ),
                       ),
+        
+                     
                     ],
                   ),
                 ),

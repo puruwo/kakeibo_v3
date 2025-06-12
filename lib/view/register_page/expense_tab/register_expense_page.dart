@@ -15,13 +15,17 @@ import 'package:kakeibo/view_model/state/register_page/register_screen_mode/regi
 import 'package:kakeibo/view/register_page/common_input_field/date_input_field.dart';
 
 class RegisterExpensePage extends ConsumerStatefulWidget {
-
   final RegisterScreenMode mode;
 
   final ExpenseEntity? expenseEntity;
 
+  final bool isTabVisible;
+
   const RegisterExpensePage(
-      {this.mode = RegisterScreenMode.add, this.expenseEntity, super.key});
+      {this.mode = RegisterScreenMode.add,
+      this.expenseEntity,
+      required this.isTabVisible,
+      super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -54,19 +58,14 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
 
-    // tabbarは新規追加モードでは見えない
-    final isInvisibleTab = widget.mode == RegisterScreenMode.add ? true : false;
-
     //レイアウト------------------------------------------------------------------------------------
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
           backgroundColor: MyColors.secondarySystemBackground,
-
-          appBar: isInvisibleTab
-              ? null
-              : AppBar(
+          appBar: widget.isTabVisible
+              ? AppBar(
                   // ヘッダーの色
                   backgroundColor: MyColors.secondarySystemBackground,
 
@@ -95,7 +94,8 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                       color: MyColors.white,
                     ),
                   ),
-                ),
+                )
+              : null,
 
           //body
           body: SingleChildScrollView(
