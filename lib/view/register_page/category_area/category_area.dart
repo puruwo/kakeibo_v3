@@ -13,10 +13,13 @@ import 'package:kakeibo/view_model/state/register_page/select_category_controlle
 
 enum ButtonStatus { selected, normal, none }
 
-enum TransactionMode {expense, income}
+enum TransactionMode { expense, income }
 
 class CategoryArea extends ConsumerStatefulWidget {
-  const CategoryArea({super.key,required this.originalCategoryId,required this.transactionMode});
+  const CategoryArea(
+      {super.key,
+      required this.originalCategoryId,
+      required this.transactionMode});
   final int originalCategoryId;
   final TransactionMode transactionMode;
 
@@ -30,15 +33,19 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async{
-      
-      final ICategoryEntity categoryEntity = switch(widget.transactionMode){
-        TransactionMode.expense =>await ref.watch(categoryUsecaseProvider).fetchBySmallId(widget.originalCategoryId),
-        TransactionMode.income =>await ref.watch(incomeCategoryUsecaseProvider).fetchCategoryBySmallId(widget.originalCategoryId),
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final ICategoryEntity categoryEntity = switch (widget.transactionMode) {
+        TransactionMode.expense => await ref
+            .watch(categoryUsecaseProvider)
+            .fetchBySmallId(widget.originalCategoryId),
+        TransactionMode.income => await ref
+            .watch(incomeCategoryUsecaseProvider)
+            .fetchCategoryBySmallId(widget.originalCategoryId),
       };
-      
+
       ref
-          .read(selectCategoryControllerNotifierProvider.notifier).setData(categoryEntity);
+          .read(selectCategoryControllerNotifierProvider.notifier)
+          .setData(categoryEntity);
     });
   }
 
@@ -57,10 +64,10 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     // 画面の縦幅の倍率を取得
     final screenVerticalMagnification = context.screenVerticalMagnification;
 
-    final  provider = switch(widget.transactionMode){
-        TransactionMode.expense =>allCategoriesProvider,
-        TransactionMode.income =>allIncomeCategoriesProvider,
-      };
+    final provider = switch (widget.transactionMode) {
+      TransactionMode.expense => allCategoriesProvider,
+      TransactionMode.income => allIncomeCategoriesProvider,
+    };
 
     return ref.watch(provider).when(
       data: (list) {
@@ -95,9 +102,8 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                             // ボタンの番号と選択しているカテゴリーのorderKeyが同じかどうか
                             ButtonStatus buttonStatus = ButtonStatus.normal;
                             // ボタンNoと選択しているカテゴリーのキーが同じならselectedにする
-                            if (buttonNumber ==
-                                selectCategoryControllerProvider
-                                    .sortKey) {
+                            if (selectCategoryControllerProvider.id ==
+                                list[buttonNumber].id) {
                               buttonStatus = ButtonStatus.selected;
                             }
                             // カテゴリー数の範囲外ならnoneに設定する
