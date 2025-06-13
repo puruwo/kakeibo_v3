@@ -81,68 +81,71 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
     // 編集前のbudgetListを取得する
     return ref.watch(resolvedBudgetEditValueProvider).when(
       data: (budgetEditList) {
-        return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: MyColors.buttonPrimary,
-            ),
-            child: Text(
-              '編集を完了',
-              style: MyFonts.mainButtonText,
-            ),
-            onPressed: () async {
-              // 実行
-              execute(
-                context,
-                action: () async {
-                  // 予算が編集されているか確認する
-                  final isChanged = ref.watch(isPriceEditedNotifierProvider);
-                  if (!isChanged) throw const AppException('予算が編集されていません');
-        
-                  // 各カテゴリーのControllerに格納された値を代入するList
-                  final editPriceLists = <int>[];
-        
-                  // 取得したbudgetListの分だけ繰り返しして、実行する
-                  for (BudgetEditValue budgetEditValue in budgetEditList) {
-                    // 入力金額を取得する
-                    // 正規表現による空文字の置き換えで、文字列から数字以外の文字を削除
-                    final enteredPriceText = ref
-                        .read(enteredBudgetPriceControllerProvider(
-                            budgetEditValue))
-                        .text
-                        .replaceAll(RegExp(r'\D'), '');
-        
-                    final enteredPrice = int.tryParse(enteredPriceText) ?? 0;
-        
-                    editPriceLists.add(enteredPrice);
-                  }
-        
-                  await budgetUsecase.edit(
-                      originalValues: budgetEditList,
-                      editPrice: editPriceLists);
-                },
-        
-                // actionを実行しエラーがレスポンスされなかった場合の成功時の処理
-                succesAction: () async {
-                  // DBの更新を通知
-                  ref
-                      .read(updateDBCountNotifierProvider.notifier)
-                      .incrementState();
-        
-                  // 呼び出し元画面でスナックバーを表示
-                  SuccessSnackBar.show(
-                    ScaffoldMessenger.of(context),
-                    message: '登録が完了しました',
-                  );
-        
-                  // フッターの状態を非編集状態に戻す
-                  ref
-                      .read(footerStateControllerNotifierProvider.notifier)
-                      .updateState(TabState.budgetNormal);
-        
-                  ref.invalidate(isPriceEditedNotifierProvider);
-                },
-              );
-            });
+        return SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: MyColors.buttonPrimary,
+              ),
+              child: Text(
+                '編集を完了',
+                style: MyFonts.mainButtonText,
+              ),
+              onPressed: () async {
+                // 実行
+                execute(
+                  context,
+                  action: () async {
+                    // 予算が編集されているか確認する
+                    final isChanged = ref.watch(isPriceEditedNotifierProvider);
+                    if (!isChanged) throw const AppException('予算が編集されていません');
+          
+                    // 各カテゴリーのControllerに格納された値を代入するList
+                    final editPriceLists = <int>[];
+          
+                    // 取得したbudgetListの分だけ繰り返しして、実行する
+                    for (BudgetEditValue budgetEditValue in budgetEditList) {
+                      // 入力金額を取得する
+                      // 正規表現による空文字の置き換えで、文字列から数字以外の文字を削除
+                      final enteredPriceText = ref
+                          .read(enteredBudgetPriceControllerProvider(
+                              budgetEditValue))
+                          .text
+                          .replaceAll(RegExp(r'\D'), '');
+          
+                      final enteredPrice = int.tryParse(enteredPriceText) ?? 0;
+          
+                      editPriceLists.add(enteredPrice);
+                    }
+          
+                    await budgetUsecase.edit(
+                        originalValues: budgetEditList,
+                        editPrice: editPriceLists);
+                  },
+          
+                  // actionを実行しエラーがレスポンスされなかった場合の成功時の処理
+                  succesAction: () async {
+                    // DBの更新を通知
+                    ref
+                        .read(updateDBCountNotifierProvider.notifier)
+                        .incrementState();
+          
+                    // 呼び出し元画面でスナックバーを表示
+                    SuccessSnackBar.show(
+                      ScaffoldMessenger.of(context),
+                      message: '登録が完了しました',
+                    );
+          
+                    // フッターの状態を非編集状態に戻す
+                    ref
+                        .read(footerStateControllerNotifierProvider.notifier)
+                        .updateState(TabState.budgetNormal);
+          
+                    ref.invalidate(isPriceEditedNotifierProvider);
+                  },
+                );
+              }),
+        );
       },
       error: (error, stackTrace) {
         return Expanded(

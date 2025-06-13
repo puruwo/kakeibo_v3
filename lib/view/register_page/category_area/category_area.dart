@@ -101,14 +101,14 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                             // ボタン状態の設定
                             // ボタンの番号と選択しているカテゴリーのorderKeyが同じかどうか
                             ButtonStatus buttonStatus = ButtonStatus.normal;
-                            // ボタンNoと選択しているカテゴリーのキーが同じならselectedにする
-                            if (selectCategoryControllerProvider.id ==
-                                list[buttonNumber].id) {
-                              buttonStatus = ButtonStatus.selected;
-                            }
                             // カテゴリー数の範囲外ならnoneに設定する
                             if (buttonNumber + 1 > categoryQuantity) {
                               buttonStatus = ButtonStatus.none;
+                            }
+                            // ボタンNoと選択しているカテゴリーのキーが同じならselectedにする
+                            else if (selectCategoryControllerProvider.id ==
+                                list[buttonNumber].id) {
+                              buttonStatus = ButtonStatus.selected;
                             }
 
                             return Padding(
