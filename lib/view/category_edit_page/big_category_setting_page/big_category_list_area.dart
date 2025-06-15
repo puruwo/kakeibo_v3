@@ -45,9 +45,9 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                   Row(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 48),
+                        padding: const EdgeInsets.only(left: 12),
                         child: SizedBox(
-                          width: 90 + listSTextBoxOffset,
+                          width: 37 + 90 + listSTextBoxOffset,
                           child: Text(
                             'カテゴリー',
                             style: GoogleFonts.notoSans(
@@ -58,7 +58,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                         ),
                       ),
                       Text(
-                        '小カテゴリー',
+                        '項目',
                         style: GoogleFonts.notoSans(
                             fontSize: 16,
                             color: MyColors.secondaryLabel,
@@ -150,7 +150,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                     ),
                                   ),
 
-                                  // 小カテゴリーの列挙
+                                  // 項目の列挙
                                   Expanded(
                                     child: Text(
                                       itemList.isEmpty

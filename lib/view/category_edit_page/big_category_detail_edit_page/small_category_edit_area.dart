@@ -92,7 +92,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                       SizedBox(
                         width: 110 + listSTextBoxOffset,
                         child: Text(
-                          'カテゴリー',
+                          '項目',
                           style: GoogleFonts.notoSans(
                               fontSize: 16,
                               color: MyColors.secondaryLabel,
@@ -244,7 +244,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                 child: SizedBox(
                                   width: double.infinity,
                                   child: Text(
-                                    '+ 新しいカテゴリーを追加',
+                                    '+ 新しい項目を追加',
                                     style: MyFonts.newCategoryAdd,
                                     overflow: TextOverflow.ellipsis,
                                   ),

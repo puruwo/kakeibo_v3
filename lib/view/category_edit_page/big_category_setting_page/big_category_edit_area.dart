@@ -90,7 +90,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                       ),
                     ),
                     Text(
-                      '小カテゴリー',
+                      '項目',
                       style: GoogleFonts.notoSans(
                           fontSize: 16,
                           color: MyColors.secondaryLabel,
