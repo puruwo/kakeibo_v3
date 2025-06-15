@@ -28,7 +28,6 @@ class _BigCategoryAppearanceEditAreaState
 
     // 取得したデータをedittingSmallCategoryListNotifierProviderに格納し編集できる状態にする
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       // -1の時は新規作成のため、initialItemはなく、下記処理はしない
       if (widget.bigId == -1) {
         return;
@@ -158,23 +157,36 @@ class _BigCategoryAppearanceEditAreaState
                       suffixIcon: Padding(
                         // contentPaddingの影響を受けないので、余白を追加
                         padding: const EdgeInsets.only(right: 0),
-                        child: IconButton(
-                          // 右アイコンを押した時の処理
-                          onPressed: () => {
-                            // テキストフィールドの内容をクリア
-                            ref
-                                .read(bigCategoryNameControllerProvider)
-                                .clear(),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                          Container(
+                            width: 20,
+                            height: 20,
+                            decoration: const BoxDecoration(
+                              color: MyColors.systemfill,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          IconButton(
+                            // 右アイコンを押した時の処理
+                            onPressed: () => {
+                              // テキストフィールドの内容をクリア
+                              ref
+                                  .read(bigCategoryNameControllerProvider)
+                                  .clear(),
 
-                            // 大カテゴリーの見た目が編集されたことを通知
-                            ref
-                                .read(isBigCategoryAppearanceEditedNotifierProvider
-                                    .notifier)
-                                .updateState(true),
-                          },
-                          icon: const Icon(Icons.clear,
-                              size: 14, color: MyColors.blue),
-                        ),
+                              // 大カテゴリーの見た目が編集されたことを通知
+                              ref
+                                  .read(
+                                      isBigCategoryAppearanceEditedNotifierProvider
+                                          .notifier)
+                                  .updateState(true),
+                            },
+                            icon: const Icon(Icons.clear,
+                                size: 14, color: MyColors.white),
+                          ),
+                        ]),
                       ),
 
                       // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
