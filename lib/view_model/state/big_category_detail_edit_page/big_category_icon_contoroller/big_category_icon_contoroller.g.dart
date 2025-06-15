@@ -7,7 +7,7 @@ part of 'big_category_icon_contoroller.dart';
 // **************************************************************************
 
 String _$bigCategroyIconControllerNotifierHash() =>
-    r'a656750724543f4d922fe5035ab92e562832bba6';
+    r'2acfbbfa3ce60180d213b8fedee065e73f691f77';
 
 /// See also [BigCategroyIconControllerNotifier].
 @ProviderFor(BigCategroyIconControllerNotifier)

@@ -7,7 +7,7 @@ part of 'big_category_color_contoroller.dart';
 // **************************************************************************
 
 String _$bigCategroyColorControllerNotifierHash() =>
-    r'3138d580e951565ba933f8e32f6fc63f93fa46b1';
+    r'eb2065636b6732077aac33def03fd88ca410557f';
 
 /// See also [BigCategroyColorControllerNotifier].
 @ProviderFor(BigCategroyColorControllerNotifier)
