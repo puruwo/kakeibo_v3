@@ -58,7 +58,7 @@ class _NewSmallCategoryInputNameDialog
               // テキストの揃え(上下)
               textAlignVertical: TextAlignVertical.center,
               // テキストの揃え(左右)
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.center,
               // カーソルの色
               cursorColor: MyColors.themeColor,
               // カーソルの先の太さ
@@ -140,6 +140,24 @@ class _NewSmallCategoryInputNameDialog
                 ),
                 ElevatedButton(
                   onPressed: () {
+                    // 入力が空の場合は何もしない
+                    if (_textContoroller.text.isEmpty) {
+                      // スナックバーを表示する
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: const Text(
+                            '項目名を入力してください',
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          duration: const Duration(seconds: 2),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8.0),
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+
                     // 入力された名前を使って新しい小カテゴリーのentityを作成
                     final entity = EditExpenseSmallCategoryValue(
                       id: 0, // 新規作成なのでIDは0
