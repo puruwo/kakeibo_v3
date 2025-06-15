@@ -258,13 +258,14 @@ class CategoryUsecase {
       {required List<EditExpenseSmallCategoryValue> originalValues,
       required List<EditExpenseSmallCategoryValue> editValues}) async {
     //エラーチェック
-    if (originalValues.length != editValues.length) {
+    if (originalValues.length > editValues.length) {
       // リストの長さが一致しない場合
       throw const AppException('予期せぬエラーが発生しました(E001)');
     }
 
     // カテゴリーID順に並べてfor文で扱いやすくする
     originalValues.sort((a, b) => a.id.compareTo(b.id));
+    editValues.sort((a, b) => a.id.compareTo(b.id));
 
     for (var i = 0; i < originalValues.length; i++) {
       // 変更があればアップデートする
@@ -281,6 +282,50 @@ class CategoryUsecase {
         _smallCategoryRepositoryProvider.update(entity: entity);
       }
     }
+
+    // 編集後の要素の方が多い場合は、追加された要素があると考えられる
+    if (originalValues.length < editValues.length) {
+      // 追加された要素を取得する
+      final addedElements = editValues.sublist(originalValues.length);
+
+      // 追加された要素をDBに保存する
+      for (var element in addedElements) {
+        final entity = ExpenseSmallCategoryEntity(
+            id: element.id,
+            bigCategoryKey: element.bigCategoryKey,
+            smallCategoryName: element.name,
+            smallCategoryOrderKey: element.smallCategoryOrderKey,
+            displayedOrderInBig: element.editedStateDisplayOrder,
+            defaultDisplayed: element.etitedStateIsChecked ? 1 : 0);
+
+        _smallCategoryRepositoryProvider.add(entity: entity);
+      }
+    }
+
+    // DBの更新回数をインクリメント
+    _updateDBCountNotifier.incrementState();
+  }
+
+  // 大カテゴリーの追加処理
+  Future<int> addBig(ExpenseBigCategoryEntity entity) async {
+    // 小カテゴリーの追加は、リポジトリのaddメソッドを呼び出す
+    final addedBigId = await _bigCategoryRepositoryProvider.add(entity: entity);
+
+    // DBの更新回数をインクリメント
+    _updateDBCountNotifier.incrementState();
+
+    // 追加された大カテゴリーのIDを返す
+    return addedBigId;
+  }
+  
+  // 小カテゴリーの追加処理
+  Future<void> addSmall(ExpenseSmallCategoryEntity entity) async {
+    // 受け取ったentityのsmallCategoryOrderKeyは仮の値であるため、表示順の最大値を取得する
+    _smallCategoryRepositoryProvider.getMaxSmallCategoryOrderKey(
+        bigCategoryId: entity.bigCategoryKey);
+    
+    // 小カテゴリーの追加は、リポジトリのaddメソッドを呼び出す
+    _smallCategoryRepositoryProvider.add(entity: entity);
 
     // DBの更新回数をインクリメント
     _updateDBCountNotifier.incrementState();

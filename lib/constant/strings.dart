@@ -141,4 +141,8 @@ class MyFonts {
       fontSize: 19,
       color: MyColors.label,
       fontWeight: FontWeight.w600);
+
+  // CategoryEditPage
+  static TextStyle newCategoryAdd = GoogleFonts.notoSans(
+      fontSize: 17, color: MyColors.secondaryLabel, fontWeight: FontWeight.w400);
 }

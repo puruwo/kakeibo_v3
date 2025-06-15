@@ -19,10 +19,10 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
   String? iconPath;
 
   final List<String> iconPathList = [
-    'assets/images/icon_clothes.svg',
-    'assets/images/icon_commodity.svg',
     'assets/images/icon_favo.svg',
     'assets/images/icon_meal.svg',
+    'assets/images/icon_clothes.svg',
+    'assets/images/icon_commodity.svg',
     'assets/images/icon_medical.svg',
     'assets/images/icon_others.svg',
     'assets/images/icon_transportation.svg',

@@ -28,6 +28,12 @@ class _BigCategoryAppearanceEditAreaState
 
     // 取得したデータをedittingSmallCategoryListNotifierProviderに格納し編集できる状態にする
     WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      // -1の時は新規作成のため、initialItemはなく、下記処理はしない
+      if (widget.bigId == -1) {
+        return;
+      }
+
       Future(() async {
         // 一度だけ取得してセット
         final initialItem =
@@ -47,10 +53,8 @@ class _BigCategoryAppearanceEditAreaState
 
   @override
   Widget build(BuildContext context) {
-
     final iconPath = ref.watch(bigCategroyIconControllerNotifierProvider);
     final color = ref.watch(bigCategroyColorControllerNotifierProvider);
-
 
     return Column(
       children: [
@@ -156,7 +160,18 @@ class _BigCategoryAppearanceEditAreaState
                         padding: const EdgeInsets.only(right: 0),
                         child: IconButton(
                           // 右アイコンを押した時の処理
-                          onPressed: () => null,
+                          onPressed: () => {
+                            // テキストフィールドの内容をクリア
+                            ref
+                                .read(bigCategoryNameControllerProvider)
+                                .clear(),
+
+                            // 大カテゴリーの見た目が編集されたことを通知
+                            ref
+                                .read(isBigCategoryAppearanceEditedNotifierProvider
+                                    .notifier)
+                                .updateState(true),
+                          },
                           icon: const Icon(Icons.clear,
                               size: 14, color: MyColors.blue),
                         ),

@@ -21,4 +21,10 @@ abstract interface class ExpenseSmallCategoryRepository {
 
   /// 小カテゴリーを編集する
   Future<void> update({required ExpenseSmallCategoryEntity entity});
+
+  /// 小カテゴリーを追加する
+  Future<void> add({required ExpenseSmallCategoryEntity entity});
+
+  // 小カテゴリーの最大の表示順序を取得する
+  Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId});
 }

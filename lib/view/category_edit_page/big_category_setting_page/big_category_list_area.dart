@@ -8,8 +8,10 @@ import 'package:kakeibo/application/category/category_provider.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/big_category_detail_edit_page.dart';
+import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 
 class BigCategoryListArea extends ConsumerStatefulWidget {
   const BigCategoryListArea({super.key});
@@ -22,7 +24,6 @@ class BigCategoryListArea extends ConsumerStatefulWidget {
 class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
   @override
   Widget build(BuildContext context) {
-
     // リスト内テキストボックスの拡大部を計算
     // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     // 大カテゴリーと小カテゴリーで増幅分を2等分する
@@ -91,93 +92,150 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
             // リスト部分
             Expanded(
               child: ListView.builder(
-                itemCount: itemList.length,
+                itemCount: itemList.length + 1, // 末尾に追加ボタンを表示するために1つ多くする
                 itemBuilder: (BuildContext context, int index) {
-                  return GestureDetector(
-                    // ヒット範囲を拡大
-                    behavior: HitTestBehavior.opaque,
-                    onTap: () async {
-                      await Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: ((context) => BigCategoryDetailEditPage(
-                              bigCategoryId: itemList[index].id)),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding:
-                              EdgeInsets.symmetric(horizontal: leftsidePadding),
-                          child: SizedBox(
-                            height: 50,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              key: Key('$index'),
-                              children: [
-                                // アイコン
-                                Padding(
-                                  padding: const EdgeInsets.all(12.5),
-                                  child: SvgPicture.asset(
-                                    itemList[index].resourcePath,
-                                    colorFilter: ColorFilter.mode(MyColors().getColorFromHex(itemList[index].colorCode), BlendMode.srcIn),
-                                    semanticsLabel: 'categoryIcon',
-                                    width: 25,
-                                    height: 25,
+                  if (index < itemList.length) {
+                    return GestureDetector(
+                      // ヒット範囲を拡大
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        await Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: ((context) => BigCategoryDetailEditPage(
+                                screenMode:
+                                    BigCategoryDetailEditScreenMode.edit,
+                                bigCategoryId: itemList[index].id)),
+                          ),
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: leftsidePadding),
+                            child: SizedBox(
+                              height: 50,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                key: Key('$index'),
+                                children: [
+                                  // アイコン
+                                  Padding(
+                                    padding: const EdgeInsets.all(12.5),
+                                    child: SvgPicture.asset(
+                                      itemList[index].resourcePath,
+                                      colorFilter: ColorFilter.mode(
+                                          MyColors().getColorFromHex(
+                                              itemList[index].colorCode),
+                                          BlendMode.srcIn),
+                                      semanticsLabel: 'categoryIcon',
+                                      width: 25,
+                                      height: 25,
+                                    ),
                                   ),
-                                ),
 
-                                // カテゴリー名
-                                SizedBox(
-                                  width: 90 + listSTextBoxOffset,
-                                  child: Text(
-                                    itemList.isEmpty
-                                        ? ''
-                                        : itemList[index].bigCategoryName,
-                                    style: GoogleFonts.notoSans(
-                                        fontSize: 16,
-                                        color: MyColors.label,
-                                        fontWeight: FontWeight.w400),
-                                    overflow: TextOverflow.ellipsis,
+                                  // カテゴリー名
+                                  SizedBox(
+                                    width: 90 + listSTextBoxOffset,
+                                    child: Text(
+                                      itemList.isEmpty
+                                          ? ''
+                                          : itemList[index].bigCategoryName,
+                                      style: GoogleFonts.notoSans(
+                                          fontSize: 16,
+                                          color: MyColors.label,
+                                          fontWeight: FontWeight.w400),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                ),
 
-                                // 小カテゴリーの列挙
-                                Expanded(
-                                  child: Text(
-                                    itemList.isEmpty
-                                        ? ''
-                                        : itemList[index].expenseSmallCategoryNameText,
-                                    style: GoogleFonts.notoSans(
-                                        fontSize: 14,
-                                        color: MyColors.secondaryLabel,
-                                        fontWeight: FontWeight.w300),
-                                    overflow: TextOverflow.ellipsis,
+                                  // 小カテゴリーの列挙
+                                  Expanded(
+                                    child: Text(
+                                      itemList.isEmpty
+                                          ? ''
+                                          : itemList[index]
+                                              .expenseSmallCategoryNameText,
+                                      style: GoogleFonts.notoSans(
+                                          fontSize: 14,
+                                          color: MyColors.secondaryLabel,
+                                          fontWeight: FontWeight.w300),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ),
-                                ),
 
-                                // 進むアイコン
-                                const Padding(
-                                  padding: EdgeInsets.all(12.5),
-                                  child: Icon(Icons.arrow_forward_ios_rounded,
-                                      size: 18, color: MyColors.white),
-                                ),
-                              ],
+                                  // 進むアイコン
+                                  const Padding(
+                                    padding: EdgeInsets.all(12.5),
+                                    child: Icon(Icons.arrow_forward_ios_rounded,
+                                        size: 18, color: MyColors.white),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
 
-                        //区切り線
-                        Divider(
-                          thickness: 0.25,
-                          height: 0.25,
-                          indent: leftsidePadding + 50,
-                          endIndent: leftsidePadding,
-                          color: MyColors.separater,
+                          //区切り線
+                          Divider(
+                            thickness: 0.25,
+                            height: 0.25,
+                            indent: leftsidePadding + 50,
+                            endIndent: leftsidePadding,
+                            color: MyColors.separater,
+                          ),
+                        ],
+                      ),
+                    );
+                  } else {
+                    // 末尾の追加Widget
+                    return GestureDetector(
+                      key: Key('$index'),
+                      child: SizedBox(
+                        height: 50,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // カテゴリー名
+                            Expanded(
+                              child: Center(
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    child: Text(
+                                      '+ 新しいカテゴリーを追加',
+                                      style: MyFonts.newCategoryAdd,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            //区切り線
+                            Divider(
+                              thickness: 0.25,
+                              height: 0.25,
+                              indent: leftsidePadding + 50,
+                              endIndent: leftsidePadding,
+                              color: MyColors.separater,
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  );
+                      ),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => BigCategoryDetailEditPage(
+                                  screenMode: BigCategoryDetailEditScreenMode
+                                      .newCategoryAdd,
+                                  categoryOrder: itemList.length - 1 + 1,
+                                )));
+                      },
+                    );
+                  }
                 },
               ),
             ),

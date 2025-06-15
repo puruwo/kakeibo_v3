@@ -17,4 +17,7 @@ abstract interface class ExpenseBigCategoryRepository {
   Future<ExpenseBigCategoryEntity> fetchByBigCategory({required int bigCategoryId});
 
   Future<void> update({required ExpenseBigCategoryEntity entity});
+
+  /// 大カテゴリーを追加する
+  Future<int> add({required ExpenseBigCategoryEntity entity});
 }

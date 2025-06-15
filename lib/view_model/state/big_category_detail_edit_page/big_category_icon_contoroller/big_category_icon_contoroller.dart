@@ -10,7 +10,7 @@ class BigCategroyIconControllerNotifier
   @override
   String build() {
     // 最初のデータ
-    return '';
+    return 'assets/images/icon_favo.svg';
   }
 
   // 初回設定時に利用する

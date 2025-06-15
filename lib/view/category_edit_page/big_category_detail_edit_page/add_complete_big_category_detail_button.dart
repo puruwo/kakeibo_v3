@@ -16,17 +16,20 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_ca
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
+class AddCompleteBigCategoryDetailButton extends ConsumerWidget
     with PresentationMixin {
-  const UpdateCompleteBigCategoryDetailButton({required this.bigId, super.key});
+  const AddCompleteBigCategoryDetailButton(
+      {required this.categoryOrder, super.key});
 
-  final int bigId;
+  /// カテゴリーの表示順
+  final int categoryOrder;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     // expenseEntityを扱うusecase
     final categoryUsecase = ref.read(categoryUsecaseProvider);
+
+    late int addedBigCategoryId;
 
     return IconButton(
         icon: const Icon(
@@ -41,60 +44,56 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
           execute(
             context,
             action: () async {
-              // 大カテゴリーが編集されているか確認する
-              final isBigCategoryListChanged =
-                  ref.watch(isBigCategoryAppearanceEditedNotifierProvider);
-              // 小カテゴリーが編集されているか確認する
-              final isSmallCategoryListChanged =
-                  ref.watch(isSmallCategoryListEditedNotifierProvider);
-              if (!isSmallCategoryListChanged &&
-                  !isBigCategoryListChanged) {
-                throw const AppException('編集がされていません');
+              final name = ref.watch(bigCategoryNameControllerProvider).text;
+              if (name.isEmpty) {
+                throw const AppException('カテゴリー名を入力してください');
               }
 
-              final editedLsit =
-                        ref.watch(edittingSmallCategoryListNotifierProvider);
-              for (EditExpenseSmallCategoryValue value in editedLsit) {
+              final editedSmallLsit =
+                  ref.watch(edittingSmallCategoryListNotifierProvider);
+              if (editedSmallLsit.isEmpty) {
+                throw const AppException('項目を1つ以上入力してください');
+              }
+
+              for (EditExpenseSmallCategoryValue value in editedSmallLsit) {
                 if (value.name.isEmpty) {
                   throw const AppException('名前が入力されていない項目名があります');
                 }
               }
 
+              final color =
+                  ref.watch(bigCategroyColorControllerNotifierProvider);
+              final colorCode = MyColors().getColorCodeFromColor(color);
+              if (color == Colors.transparent) {
+                throw const AppException('カテゴリーの色を選択してください');
+              }
+
+              final resourcePath =
+                  ref.watch(bigCategroyIconControllerNotifierProvider);
+              if (resourcePath.isEmpty) {
+                throw const AppException('カテゴリーのアイコンを選択してください');
+              }
+
               // awaitの前に保存したcontextをスナックバーで利用すると怒られるため、allBigCategoriesWithSmallListProviderの取得をthenで待つようにする
 
-              // 大カテゴリーが編集されている場合は大カテゴリーを更新する
-              if (isBigCategoryListChanged) {
-                await ref
-                    .read(bigCategoriesProvider(bigId).future)
-                    .then((initialData) async {
-                  final name =
-                      ref.watch(bigCategoryNameControllerProvider).text;
-                  final colorCode = MyColors().getColorCodeFromColor(
-                      ref.watch(bigCategroyColorControllerNotifierProvider));
-                  final resourcePath =
-                      ref.watch(bigCategroyIconControllerNotifierProvider);
-                  final editEntity = ExpenseBigCategoryEntity(
-                    id: initialData.id,
-                    bigCategoryName: name,
-                    colorCode: colorCode,
-                    resourcePath: resourcePath,
-                    displayOrder: initialData.displayOrder,
-                    isDisplayed: initialData.displayOrder,
-                  );
-                  await categoryUsecase.bigEdit(
-                      original: initialData, edit: editEntity);
-                });
+              // 大カテゴリーを登録する
+              final entity = ExpenseBigCategoryEntity(
+                id: 0, // 新規追加のためIDは0
+                bigCategoryName: name,
+                colorCode: colorCode,
+                resourcePath: resourcePath,
+                displayOrder: categoryOrder,
+                isDisplayed: 1, // デフォルトで表示する
+              );
+              final addedBigId = await categoryUsecase.addBig(entity);
+              addedBigCategoryId = addedBigId;
 
-                // 小カテゴリーが編集されている場合は小カテゴリーを更新する
-                if (isSmallCategoryListChanged) {
-                  await ref
-                      .read(allSmallCategoriesListProvider(bigId).future)
-                      .then((initialData) async {
-                    
-                    await categoryUsecase.smallEdit(
-                        originalValues: initialData, editValues: editedLsit);
-                  });
-                }
+              // 小カテゴリーを登録する
+              for (EditExpenseSmallCategoryValue value in editedSmallLsit) {
+                final smallEntity = value.toExpenseSmallCategoryEntity(
+                  bigCategoryKey: addedBigId,
+                );
+                await categoryUsecase.addSmall(smallEntity);
               }
             },
 
@@ -107,7 +106,7 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
               // 大カテゴリーのデータを保持するproviderをinvalidateする
               // pop元の画面で表示されている大カテゴリーのデータを更新するため
               ref.invalidate(allBigCategoriesWithSmallListProvider);
-              ref.invalidate(allSmallCategoriesListProvider(bigId));
+              ref.invalidate(allSmallCategoriesListProvider(addedBigCategoryId));
 
               // 呼び出し元画面でスナックバーを表示
               SuccessSnackBar.show(

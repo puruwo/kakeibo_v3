@@ -41,7 +41,8 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
         ref
             .read(edittingBigCategoryListNotifierProvider.notifier)
             .setData(initialList);
-      });    });
+      });
+    });
   }
 
   @override
@@ -137,6 +138,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
           },
           itemCount: itemList.length,
           itemBuilder: (BuildContext context, int index) {
+            // 並べ替え可能なリストのアイテム
             return Column(
               key: Key('$index'),
               children: [
@@ -180,7 +182,10 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                           padding: const EdgeInsets.all(12.5),
                           child: SvgPicture.asset(
                             itemList[index].resourcePath,
-                            colorFilter: ColorFilter.mode(MyColors().getColorFromHex(itemList[index].colorCode), BlendMode.srcIn),
+                            colorFilter: ColorFilter.mode(
+                                MyColors()
+                                    .getColorFromHex(itemList[index].colorCode),
+                                BlendMode.srcIn),
                             semanticsLabel: 'categoryIcon',
                             width: 25,
                             height: 25,

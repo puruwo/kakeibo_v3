@@ -76,7 +76,7 @@ class DatabaseHelper {
 
   //挿入メソッド
   //dictionary形式でレコードを変数として入力
-  //戻り値はid?を返す
+  //戻り値はprmaryKeyである値を返す
   Future<int> insert(String table, Map<String, dynamic> row) async {
     Database? db = await instance.database;
     return await db!.insert(table, row);

@@ -113,4 +113,38 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
         },
         entity.id);
   }
+
+  @override
+  Future<int> add({required ExpenseSmallCategoryEntity entity}) async {
+    final id = await db.insert(
+      SqfExpenseSmallCategory.tableName,
+      {
+        SqfExpenseSmallCategory.bigCategoryKey: entity.bigCategoryKey,
+        SqfExpenseSmallCategory.name: entity.smallCategoryName,
+        SqfExpenseSmallCategory.smallCategoryOrderKey: entity.smallCategoryOrderKey,
+        SqfExpenseSmallCategory.displayedOrderInBig: entity.displayedOrderInBig,
+        SqfExpenseSmallCategory.defaultDisplayed: entity.defaultDisplayed,
+      },
+    );
+    return id;
+  }
+
+  /// 小カテゴリーの最大の表示順序を取得する
+  @override
+  Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId}) async {
+    final sql = '''
+      SELECT MAX(${SqfExpenseSmallCategory.smallCategoryOrderKey}) AS maxOrderKey
+      FROM ${SqfExpenseSmallCategory.tableName}
+      WHERE ${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId;
+    ''';
+
+    final jsonList = await db.query(sql);
+    // logger.i('====SQLが実行されました====\n ImplementsExpenseSmallCategoryRepository getMaxSmallCategoryOrderKey(int bigCategoryId)\n$sql');
+
+    if (jsonList.isNotEmpty && jsonList[0]['maxOrderKey'] != null) {
+      return jsonList[0]['maxOrderKey'] as int;
+    } else {
+      return 0; // デフォルト値
+    }
+  }
 }

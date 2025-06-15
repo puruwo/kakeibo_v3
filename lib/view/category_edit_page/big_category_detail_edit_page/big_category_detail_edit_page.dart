@@ -5,16 +5,24 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // LocalImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/add_complete_big_category_detail_button.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/big_cotegory_appearance_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/small_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/submit_big_category_detail_button.dart';
 
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
+import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 
 class BigCategoryDetailEditPage extends ConsumerStatefulWidget {
-  const BigCategoryDetailEditPage({super.key, required this.bigCategoryId});
-  final int bigCategoryId;
+  const BigCategoryDetailEditPage(
+      {super.key,
+      required this.screenMode,
+      this.bigCategoryId,
+      this.categoryOrder});
+  final int? bigCategoryId;
+  final int? categoryOrder;
+  final BigCategoryDetailEditScreenMode screenMode;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -23,7 +31,6 @@ class BigCategoryDetailEditPage extends ConsumerStatefulWidget {
 
 class _BigCategoryDetailEditPage
     extends ConsumerState<BigCategoryDetailEditPage> {
-
   @override
   Widget build(BuildContext context) {
 
@@ -52,7 +59,13 @@ class _BigCategoryDetailEditPage
                   color: MyColors.white)),
           //ヘッダー右のアイコンボタン
           actions: [
-            SubmitBigCategoryDetailButton(bigId: widget.bigCategoryId,),
+            widget.screenMode == BigCategoryDetailEditScreenMode.edit
+                ? UpdateCompleteBigCategoryDetailButton(
+                    bigId: widget.bigCategoryId!,
+                  )
+                : AddCompleteBigCategoryDetailButton(
+                    categoryOrder: widget.categoryOrder!,
+                  ),
           ],
         ),
 
@@ -61,14 +74,14 @@ class _BigCategoryDetailEditPage
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            BigCategoryAppearanceEditArea(bigId: widget.bigCategoryId),
+            BigCategoryAppearanceEditArea(bigId: widget.bigCategoryId ?? -1),
 
             // 余白
             const SizedBox(height: 8.0),
 
             // 小カテゴリーのリスト
             SmallCategoryEditArea(
-              bigId: widget.bigCategoryId,
+              bigId: widget.bigCategoryId ?? -1,
             ),
           ],
         ),

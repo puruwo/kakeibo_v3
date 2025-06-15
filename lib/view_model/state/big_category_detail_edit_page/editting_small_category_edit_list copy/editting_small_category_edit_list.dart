@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'editting_small_category_edit_list.g.dart';
 
 // 大カテゴリー並び替え編集ページの状態を保持したカテゴリーリスト
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: false)
 class EdittingSmallCategoryListNotifier
     extends _$EdittingSmallCategoryListNotifier {
   List<EditExpenseSmallCategoryValue> build() {
@@ -41,5 +41,11 @@ class EdittingSmallCategoryListNotifier
     final oldState = state[order].etitedStateIsChecked;
     // 状態を反転させ更新
     state[order] = state[order].copyWith(etitedStateIsChecked: !oldState);
+  }
+
+  // 小カテゴリーを追加する
+  void addSmallCategory(EditExpenseSmallCategoryValue value) {
+    // 新しい値を追加
+    state = [...state, value];
   }
 }

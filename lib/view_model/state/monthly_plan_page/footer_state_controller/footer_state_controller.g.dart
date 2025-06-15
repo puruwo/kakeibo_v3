@@ -7,7 +7,7 @@ part of 'footer_state_controller.dart';
 // **************************************************************************
 
 String _$footerStateControllerNotifierHash() =>
-    r'ff3a09a27f56f34d44cf5ec22b0f4c2113697043';
+    r'9fc1b19816b813a357c4ee10686bef903d285bd0';
 
 /// See also [FooterStateControllerNotifier].
 @ProviderFor(FooterStateControllerNotifier)

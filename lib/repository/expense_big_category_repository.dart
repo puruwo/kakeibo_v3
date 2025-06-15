@@ -87,4 +87,21 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseBigCategoryRepository update(ExpenseBigCategoryEntity entity)\n ${SqfExpenseBigCategory.tableName}でupdate\n ExpenseBigCategoryEntity: \n$entity');
   }
+
+  @override
+  Future<int> add({required ExpenseBigCategoryEntity entity}) async {
+    final id = await db.insert(
+      SqfExpenseBigCategory.tableName,
+      {
+        SqfExpenseBigCategory.name: entity.bigCategoryName,
+        SqfExpenseBigCategory.colorCode: entity.colorCode,
+        SqfExpenseBigCategory.resourcePath: entity.resourcePath,
+        SqfExpenseBigCategory.displayOrder: entity.displayOrder,
+        SqfExpenseBigCategory.isDisplayed: entity.isDisplayed,
+      },
+    );
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsExpenseBigCategoryRepository add(ExpenseBigCategoryEntity entity)\n ${SqfExpenseBigCategory.tableName}でinsert\n ExpenseBigCategoryEntity: \n$entity');
+    return id;
+  }
 }

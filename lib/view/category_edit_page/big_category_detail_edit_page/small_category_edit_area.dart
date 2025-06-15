@@ -7,9 +7,11 @@ import 'package:kakeibo/application/category/category_provider.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/check_box.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/new_small_category_input_name_dialog.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 
@@ -35,6 +37,12 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
 
     // 取得したデータをedittingSmallCategoryListNotifierProviderに格納し編集できる状態にする
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.bigId == -1) {
+        // 新規作成の時は初期化しない
+        return;
+      }
+      
+      // 一度だけ取得してセット
       Future(() async {
         // 一度だけ取得してセット
         final initialList = await ref
@@ -131,89 +139,143 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                     .read(isSmallCategoryListEditedNotifierProvider.notifier)
                     .updateState(true);
               },
-              itemCount: itemList.length,
+              itemCount: itemList.length + 1, // +1は追加ボタン用
               itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  key: Key('$index'),
-                  children: [
-                    // リスト本体
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(horizontal: leftsidePadding),
-                      child: SizedBox(
-                        height: 50,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // チェックボックス
-                            Padding(
-                              padding: const EdgeInsets.all(12.5),
-                              child: GestureDetector(
-                                onTap: () {
-                                  // チェックボックスのタップ処理
-                                  setState(() {
-                                    // チェックボックスの状態を更新する
-                                    ref
-                                        .read(
-                                            edittingSmallCategoryListNotifierProvider
-                                                .notifier)
-                                        .toggleDisplay(index);
-                                    // 変更を加えたことを管理する状態管理する
-                                    ref
-                                        .read(
-                                            isSmallCategoryListEditedNotifierProvider
-                                                .notifier)
-                                        .updateState(true);
-                                  });
-                                },
-                                child: CheckBox(
-                                    isChecked:
-                                        itemList[index].etitedStateIsChecked),
+                if (index < itemList.length) {
+                  // 並べ替え可能なリストのアイテム
+                  return Column(
+                    key: Key('$index'),
+                    children: [
+                      // リスト本体
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: leftsidePadding),
+                        child: SizedBox(
+                          height: 50,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // チェックボックス
+                              Padding(
+                                padding: const EdgeInsets.all(12.5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // チェックボックスのタップ処理
+                                    setState(() {
+                                      // チェックボックスの状態を更新する
+                                      ref
+                                          .read(
+                                              edittingSmallCategoryListNotifierProvider
+                                                  .notifier)
+                                          .toggleDisplay(index);
+                                      // 変更を加えたことを管理する状態管理する
+                                      ref
+                                          .read(
+                                              isSmallCategoryListEditedNotifierProvider
+                                                  .notifier)
+                                          .updateState(true);
+                                    });
+                                  },
+                                  child: CheckBox(
+                                      isChecked:
+                                          itemList[index].etitedStateIsChecked),
+                                ),
                               ),
-                            ),
 
-                            const SizedBox(width: 16,),
-
-                            // カテゴリー名
-                            Expanded(
-                              child: Text(
-                                itemList[index].name,
-                                style: GoogleFonts.notoSans(
-                                    fontSize: 18,
-                                    color: MyColors.label,
-                                    fontWeight: FontWeight.w400),
-                                overflow: TextOverflow.ellipsis,
+                              const SizedBox(
+                                width: 16,
                               ),
-                            ),
 
-                            // 並べ替えアイコン
-                            ReorderableDragStartListener(
-                              index: index,
-                              child: Container(
-                                alignment: Alignment.centerRight,
-                                width: 50,
-                                height: 50,
-                                child: const Icon(
-                                  Icons.drag_handle_rounded,
-                                  color: MyColors.systemGray2,
+                              // カテゴリー名
+                              Expanded(
+                                child: Text(
+                                  itemList[index].name,
+                                  style: GoogleFonts.notoSans(
+                                      fontSize: 18,
+                                      color: MyColors.label,
+                                      fontWeight: FontWeight.w400),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+
+                              // 並べ替えアイコン
+                              ReorderableDragStartListener(
+                                index: index,
+                                child: Container(
+                                  alignment: Alignment.centerRight,
+                                  width: 50,
+                                  height: 50,
+                                  child: const Icon(
+                                    Icons.drag_handle_rounded,
+                                    color: MyColors.systemGray2,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+
+                      //区切り線
+                      Divider(
+                        thickness: 0.25,
+                        height: 0.25,
+                        indent: leftsidePadding + 50,
+                        endIndent: leftsidePadding,
+                        color: MyColors.separater,
+                      ),
+                    ],
+                  );
+                } else {
+                  // 末尾の追加Widget
+                  return GestureDetector(
+                    key: Key('$index'),
+                    child: SizedBox(
+                      height: 50,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // カテゴリー名
+                          Expanded(
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    '+ 新しいカテゴリーを追加',
+                                    style: MyFonts.newCategoryAdd,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+
+                          //区切り線
+                          Divider(
+                            thickness: 0.25,
+                            height: 0.25,
+                            indent: leftsidePadding + 50,
+                            endIndent: leftsidePadding,
+                            color: MyColors.separater,
+                          ),
+                        ],
                       ),
                     ),
-
-                    //区切り線
-                    Divider(
-                      thickness: 0.25,
-                      height: 0.25,
-                      indent: leftsidePadding + 50,
-                      endIndent: leftsidePadding,
-                      color: MyColors.separater,
-                    ),
-                  ],
-                );
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return NewSmallCategoryInputNameDialog(
+                              bigCategoryId: widget.bigId,
+                              displayedOrderInBig: itemList.length + 1);
+                        },
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
