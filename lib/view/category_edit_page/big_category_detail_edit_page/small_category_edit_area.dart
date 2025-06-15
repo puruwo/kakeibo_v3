@@ -10,8 +10,8 @@ import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/check_box.dart';
-import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/new_small_category_input_name_dialog.dart';
+import 'package:kakeibo/view/component/check_box.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_name_dialog.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 
