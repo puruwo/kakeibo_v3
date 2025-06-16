@@ -160,7 +160,7 @@ class _NewSmallCategoryInputNameDialog
 
                     // 入力された名前を使って新しい小カテゴリーのentityを作成
                     final entity = EditExpenseSmallCategoryValue(
-                      id: 0, // 新規作成なのでIDは0
+                      id: -1, // 新規作成なのでIDは-1
                       bigCategoryKey: widget.bigCategoryId,
                       name: _textContoroller.text,
                       smallCategoryOrderKey: 0, // 新規作成なので0

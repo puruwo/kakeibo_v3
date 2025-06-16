@@ -7,12 +7,12 @@ part of 'is_small_category_list_edited.dart';
 // **************************************************************************
 
 String _$isSmallCategoryListEditedNotifierHash() =>
-    r'c95c9762a13b2e976504c1ef56432889902a6ea5';
+    r'80c6f09e41b9347e52d16574bc4c532de05c93d8';
 
 /// See also [IsSmallCategoryListEditedNotifier].
 @ProviderFor(IsSmallCategoryListEditedNotifier)
-final isSmallCategoryListEditedNotifierProvider = AutoDisposeNotifierProvider<
-    IsSmallCategoryListEditedNotifier, bool>.internal(
+final isSmallCategoryListEditedNotifierProvider =
+    NotifierProvider<IsSmallCategoryListEditedNotifier, bool>.internal(
   IsSmallCategoryListEditedNotifier.new,
   name: r'isSmallCategoryListEditedNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -22,6 +22,6 @@ final isSmallCategoryListEditedNotifierProvider = AutoDisposeNotifierProvider<
   allTransitiveDependencies: null,
 );
 
-typedef _$IsSmallCategoryListEditedNotifier = AutoDisposeNotifier<bool>;
+typedef _$IsSmallCategoryListEditedNotifier = Notifier<bool>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

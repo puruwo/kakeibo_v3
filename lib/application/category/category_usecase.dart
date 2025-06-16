@@ -264,8 +264,10 @@ class CategoryUsecase {
     }
 
     // カテゴリーID順に並べてfor文で扱いやすくする
-    originalValues.sort((a, b) => a.id.compareTo(b.id));
-    editValues.sort((a, b) => a.id.compareTo(b.id));
+    // 追加カテゴリーは-1で入力されるため、ID順に並べると-1が先頭に来てしまう
+    // そのため、IDの降順で並べる
+    originalValues.sort((a, b) => b.id.compareTo(a.id));
+    editValues.sort((a, b) => b.id.compareTo(a.id));
 
     for (var i = 0; i < originalValues.length; i++) {
       // 変更があればアップデートする

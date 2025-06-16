@@ -11,6 +11,7 @@ import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/sm
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/submit_big_category_detail_button.dart';
 
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 
@@ -52,6 +53,7 @@ class _BigCategoryDetailEditPage
               // 閉じるときはネストしているModal内のRouteではなく、root側のNavigatorを指定する必要がある
               onPressed: () {
                 Navigator.of(context).pop();
+                ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
                 ref.invalidate(isSmallCategoryListEditedNotifierProvider);
                 ref.invalidate(edittingSmallCategoryListNotifierProvider);
               },

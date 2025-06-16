@@ -7,11 +7,11 @@ part of 'editting_small_category_edit_list.dart';
 // **************************************************************************
 
 String _$edittingSmallCategoryListNotifierHash() =>
-    r'c22d3ce6e680b18ba7dc1007c50ce066b2714634';
+    r'0889e90ab3b77806298d1b6d7abcae9d36699d73';
 
 /// See also [EdittingSmallCategoryListNotifier].
 @ProviderFor(EdittingSmallCategoryListNotifier)
-final edittingSmallCategoryListNotifierProvider = AutoDisposeNotifierProvider<
+final edittingSmallCategoryListNotifierProvider = NotifierProvider<
     EdittingSmallCategoryListNotifier,
     List<EditExpenseSmallCategoryValue>>.internal(
   EdittingSmallCategoryListNotifier.new,
@@ -24,6 +24,6 @@ final edittingSmallCategoryListNotifierProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$EdittingSmallCategoryListNotifier
-    = AutoDisposeNotifier<List<EditExpenseSmallCategoryValue>>;
+    = Notifier<List<EditExpenseSmallCategoryValue>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -24,7 +24,6 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     // expenseEntityを扱うusecase
     final categoryUsecase = ref.read(categoryUsecaseProvider);
 
@@ -47,13 +46,12 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
               // 小カテゴリーが編集されているか確認する
               final isSmallCategoryListChanged =
                   ref.watch(isSmallCategoryListEditedNotifierProvider);
-              if (!isSmallCategoryListChanged &&
-                  !isBigCategoryListChanged) {
+              if (!isSmallCategoryListChanged && !isBigCategoryListChanged) {
                 throw const AppException('編集がされていません');
               }
 
               final editedLsit =
-                        ref.watch(edittingSmallCategoryListNotifierProvider);
+                  ref.watch(edittingSmallCategoryListNotifierProvider);
               for (EditExpenseSmallCategoryValue value in editedLsit) {
                 if (value.name.isEmpty) {
                   throw const AppException('名前が入力されていない項目名があります');
@@ -84,17 +82,15 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
                   await categoryUsecase.bigEdit(
                       original: initialData, edit: editEntity);
                 });
-
-                // 小カテゴリーが編集されている場合は小カテゴリーを更新する
-                if (isSmallCategoryListChanged) {
-                  await ref
-                      .read(allSmallCategoriesListProvider(bigId).future)
-                      .then((initialData) async {
-                    
-                    await categoryUsecase.smallEdit(
-                        originalValues: initialData, editValues: editedLsit);
-                  });
-                }
+              }
+              // 小カテゴリーが編集されている場合は小カテゴリーを更新する
+              if (isSmallCategoryListChanged) {
+                await ref
+                    .read(allSmallCategoriesListProvider(bigId).future)
+                    .then((initialData) async {
+                  await categoryUsecase.smallEdit(
+                      originalValues: initialData, editValues: editedLsit);
+                });
               }
             },
 
@@ -117,6 +113,7 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
 
               ref.invalidate(isSmallCategoryListEditedNotifierProvider);
               ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
+              ref.invalidate(edittingSmallCategoryListNotifierProvider);
 
               Navigator.of(context).pop();
             },
