@@ -14,7 +14,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
-import 'package:kakeibo/view/monthly_page/tile/category_expense_hisotry_page.dart';
+import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/category_expense_hisotry_page.dart';
 
 class CategoryTile extends HookConsumerWidget {
   const CategoryTile({required this.categoryTile, super.key});

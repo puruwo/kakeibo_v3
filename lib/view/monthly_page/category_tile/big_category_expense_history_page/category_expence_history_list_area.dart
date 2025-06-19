@@ -18,6 +18,8 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 /// Local imports
 import 'package:kakeibo/util/screen_size_func.dart';
 
+// カテゴリー指定して支出履歴を表示するエリア
+
 class CategoryExpenceHistoryArea extends ConsumerStatefulWidget {
   CategoryExpenceHistoryArea({super.key, required this.bigId});
   final int bigId;

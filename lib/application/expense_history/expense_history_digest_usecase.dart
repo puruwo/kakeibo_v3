@@ -8,6 +8,8 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
+// 支出タイルのValueを取得し、日付ごとにグループ分けせずにそのままリストで返却するプロバイダ
+
 final expenseHistoryDigestNotifierProvider = AsyncNotifierProvider.family<
     ExpenseHistoryUsecaseNotifier,
     List<ExpenseHistoryTileValue>,

@@ -12,6 +12,8 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
+// 支出タイルのValueを小カテゴリー指定して取得し、日付ごとにグループ分けして返却するプロバイダ
+
 final categoryExpenseHistoryNotifierProvider = AsyncNotifierProvider.family<
     CategoryExpenseHistoryUsecaseNotifier,
     List<ExpenseHistoryTileGroupValue>,
