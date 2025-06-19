@@ -18,11 +18,15 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 /// Local imports
 import 'package:kakeibo/util/screen_size_func.dart';
 
+enum ListAreaMode {bigCategory, smallCategory}
+
 // カテゴリー指定して支出履歴を表示するエリア
 
 class CategoryExpenceHistoryArea extends ConsumerStatefulWidget {
-  CategoryExpenceHistoryArea({super.key, required this.bigId});
-  final int bigId;
+  CategoryExpenceHistoryArea({super.key,required this.listAreaMode, this.bigId,this.smallId});
+  final ListAreaMode listAreaMode;
+  final int? bigId;
+  final int? smallId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -64,7 +68,12 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
 
 //----------------------------------------------------------------------------------------------
 
-    return ref.watch(resolvedCategoryExpenseHistoryDigestValueProvider(widget.bigId)).when(
+    final provider = switch (widget.listAreaMode){
+      ListAreaMode.bigCategory => resolvedCategoryExpenseHistoryDigestValueProvider(widget.bigId!),
+      ListAreaMode.smallCategory => resolvedSmallCategoryExpenseHistoryDigestValueProvider(widget.smallId!),
+    };
+
+    return ref.watch(provider).when(
         data: (tileGroupList) {
       Widget children;
 

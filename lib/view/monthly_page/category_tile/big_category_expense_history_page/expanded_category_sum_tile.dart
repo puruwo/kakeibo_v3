@@ -9,6 +9,7 @@ import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
+import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/small_category_expanded_history_page/small_category_expanded_history_page.dart';
 
 
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_category_tile_entity_provider.dart';
@@ -318,54 +319,62 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                 final String totalExpenseBySmallCategory = formattedPriceGetter(
                     smallCategoryList[index].totalExpenseBySmallCategory);
 
+                // 小カテゴリーのID
+                final int smallCategoryId = smallCategoryList[index].id;
+
                 return Padding(
                   // 子一列の両サイドのパディング
                   padding: const EdgeInsets.only(
                     left: 24,
                     right: 52.0,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // 小カテゴリー名
-                      Padding(
-                        // 子の中でのパディング
-                        padding: const EdgeInsets.only(left: 26.0),
-                        child: Text(
-                          smallCategoryList[index].smallCategoryName,
-                          style: GoogleFonts.notoSans(
-                              fontSize: 16,
-                              color: MyColors.label,
-                              fontWeight: FontWeight.w400),
-                          textAlign: TextAlign.start,
-                        ),
-                      ),
-
-                      // 小カテゴリーの支払い合計
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            totalExpenseBySmallCategory,
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SmallCategoryExpenseHistoryPage(smallId: smallCategoryId,)));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        // 小カテゴリー名
+                        Padding(
+                          // 子の中でのパディング
+                          padding: const EdgeInsets.only(left: 26.0),
+                          child: Text(
+                            smallCategoryList[index].smallCategoryName,
                             style: GoogleFonts.notoSans(
-                                fontSize: 18,
+                                fontSize: 16,
                                 color: MyColors.label,
                                 fontWeight: FontWeight.w400),
-                            textAlign: TextAlign.end,
+                            textAlign: TextAlign.start,
                           ),
-                          Text(
-                            ' 円',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 11,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w400,
+                        ),
+                    
+                        // 小カテゴリーの支払い合計
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              totalExpenseBySmallCategory,
+                              style: GoogleFonts.notoSans(
+                                  fontSize: 18,
+                                  color: MyColors.label,
+                                  fontWeight: FontWeight.w400),
+                              textAlign: TextAlign.end,
                             ),
-                            textAlign: TextAlign.end,
-                          ),
-                        ],
-                      ),
-                    ],
+                            Text(
+                              ' 円',
+                              style: GoogleFonts.notoSans(
+                                fontSize: 11,
+                                color: MyColors.secondaryLabel,
+                                fontWeight: FontWeight.w400,
+                              ),
+                              textAlign: TextAlign.end,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 );
               }),

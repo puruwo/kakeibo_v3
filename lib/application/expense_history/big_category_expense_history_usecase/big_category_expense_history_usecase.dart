@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:kakeibo/application/expense_history/expense_history_service.dart';
-import 'package:kakeibo/application/expense_history/request_expense_history.dart';
+import 'package:kakeibo/application/expense_history/big_category_expense_history_usecase/request_big_expense_history.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_group_value.dart';
 
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
@@ -14,18 +14,18 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // 支出タイルのValueを小カテゴリー指定して取得し、日付ごとにグループ分けして返却するプロバイダ
 
-final categoryExpenseHistoryNotifierProvider = AsyncNotifierProvider.family<
-    CategoryExpenseHistoryUsecaseNotifier,
+final bigCategoryExpenseHistoryNotifierProvider = AsyncNotifierProvider.family<
+    BigCategoryExpenseHistoryUsecaseNotifier,
     List<ExpenseHistoryTileGroupValue>,
-    RequestExpenseHistory>(
-  CategoryExpenseHistoryUsecaseNotifier.new,
+    RequestBigExpenseHistory>(
+  BigCategoryExpenseHistoryUsecaseNotifier.new,
 );
 
-class CategoryExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
-    List<ExpenseHistoryTileGroupValue>, RequestExpenseHistory> {
+class BigCategoryExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
+    List<ExpenseHistoryTileGroupValue>, RequestBigExpenseHistory> {
   @override
   Future<List<ExpenseHistoryTileGroupValue>> build(
-      RequestExpenseHistory request) async {
+      RequestBigExpenseHistory request) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
