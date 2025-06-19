@@ -27,4 +27,7 @@ abstract interface class ExpenseSmallCategoryRepository {
 
   // 小カテゴリーの最大の表示順序を取得する
   Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId});
+
+  // 大カテゴリーを指定して、それにふくまれる小カテゴリーのidを取得する
+  Future<List<int>> fetchSmallCategoryIdListByBigCategoryId({required int bigCategoryId});
 }

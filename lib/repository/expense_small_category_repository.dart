@@ -7,7 +7,8 @@ import 'package:kakeibo/logger.dart';
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRepository {
+class ImplementsExpenseSmallCategoryRepository
+    implements ExpenseSmallCategoryRepository {
   // カテゴリーNumberを指定して取得する
   @override
   Future<ExpenseSmallCategoryEntity> fetchBySmallCategory(
@@ -28,7 +29,7 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
       final jsonList = await db.query(sql);
 
       // logger.i('====SQLが実行されました====\n ImplementsSmallCategoryRepository fetchBySmallCategory(int smallCategoryId)\n$sql');
-      
+
       final results = ExpenseSmallCategoryEntity.fromJson(jsonList[0]);
 
       return results;
@@ -72,7 +73,7 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
 
   @override
   Future<List<ExpenseSmallCategoryEntity>> fetchByBigCategory(
-      {required int bigCategoryId}) async{
+      {required int bigCategoryId}) async {
     final sql = '''
       SELECT 
         a.${SqfExpenseSmallCategory.id} AS id,
@@ -100,15 +101,17 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
   }
 
   @override
-  Future<void> update({required ExpenseSmallCategoryEntity entity})async{
+  Future<void> update({required ExpenseSmallCategoryEntity entity}) async {
     db.update(
         SqfExpenseSmallCategory.tableName,
         {
           SqfExpenseSmallCategory.id: entity.id,
           SqfExpenseSmallCategory.bigCategoryKey: entity.bigCategoryKey,
           SqfExpenseSmallCategory.name: entity.smallCategoryName,
-          SqfExpenseSmallCategory.smallCategoryOrderKey: entity.smallCategoryOrderKey,
-          SqfExpenseSmallCategory.displayedOrderInBig: entity.displayedOrderInBig,
+          SqfExpenseSmallCategory.smallCategoryOrderKey:
+              entity.smallCategoryOrderKey,
+          SqfExpenseSmallCategory.displayedOrderInBig:
+              entity.displayedOrderInBig,
           SqfExpenseSmallCategory.defaultDisplayed: entity.defaultDisplayed,
         },
         entity.id);
@@ -121,7 +124,8 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
       {
         SqfExpenseSmallCategory.bigCategoryKey: entity.bigCategoryKey,
         SqfExpenseSmallCategory.name: entity.smallCategoryName,
-        SqfExpenseSmallCategory.smallCategoryOrderKey: entity.smallCategoryOrderKey,
+        SqfExpenseSmallCategory.smallCategoryOrderKey:
+            entity.smallCategoryOrderKey,
         SqfExpenseSmallCategory.displayedOrderInBig: entity.displayedOrderInBig,
         SqfExpenseSmallCategory.defaultDisplayed: entity.defaultDisplayed,
       },
@@ -146,5 +150,19 @@ class ImplementsExpenseSmallCategoryRepository implements ExpenseSmallCategoryRe
     } else {
       return 0; // デフォルト値
     }
+  }
+
+  /// 大カテゴリーを指定して、それにふくまれる小カテゴリーのidを取得する
+  @override
+  Future<List<int>> fetchSmallCategoryIdListByBigCategoryId(
+      {required int bigCategoryId}) async {
+    final sql = '''
+      SELECT ${SqfExpenseSmallCategory.id} as smallCategoryId
+      FROM ${SqfExpenseSmallCategory.tableName}
+      WHERE ${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId;
+    ''';
+    final jsonList = await db.query(sql);
+    // logger.i('====SQLが実行されました====\n ImplementsExpenseSmallCategoryRepository fetchSmallCategoryIdListByBigCategoryId(int bigCategoryId)\n$sql');
+    return jsonList.map((e) => e['smallCategoryId'] as int).toList();
   }
 }
