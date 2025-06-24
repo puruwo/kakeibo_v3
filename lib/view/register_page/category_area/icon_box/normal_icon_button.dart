@@ -22,6 +22,8 @@ class NormalIconButton extends ConsumerWidget {
     final notifier =
         ref.watch(selectCategoryControllerNotifierProvider.notifier);
 
+    final color = MyColors().getColorFromHex(categoryEntity.colorCode);
+
     return GestureDetector(
       
       onTap: () {
@@ -42,6 +44,7 @@ class NormalIconButton extends ConsumerWidget {
                   fit: BoxFit.scaleDown,
                   child: SvgPicture.asset(
                     categoryEntity.resourcePath,
+                    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                     semanticsLabel: 'categoryIcon',
                     width: 25,
                     height: 25,

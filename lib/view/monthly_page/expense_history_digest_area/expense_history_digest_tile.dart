@@ -23,12 +23,14 @@ class ExpenseHistoryDigestTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final expenseUsecase = ref.read(expenseUsecaseProvider);
-
+    final color = MyColors().getColorFromHex(tileValue.colorCode);
+           
         // アイコン
         final icon = FittedBox(
           fit: BoxFit.scaleDown,
           child: SvgPicture.asset(
             tileValue.iconPath,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             semanticsLabel: 'categoryIcon',
             width: 25,
             height: 25,

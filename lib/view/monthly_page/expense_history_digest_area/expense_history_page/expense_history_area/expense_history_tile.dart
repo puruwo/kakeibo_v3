@@ -37,11 +37,14 @@ class ExpenseHistoryTile extends ConsumerWidget {
       itemBuilder: (BuildContext context, int index) {
         final tileValue = tileValueList[index];
 
+        final color = MyColors().getColorFromHex(tileValue.colorCode);
+
         // アイコン
         final icon = FittedBox(
           fit: BoxFit.scaleDown,
           child: SvgPicture.asset(
             tileValue.iconPath,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
             semanticsLabel: 'categoryIcon',
             width: 25,
             height: 25,
@@ -64,13 +67,12 @@ class ExpenseHistoryTile extends ConsumerWidget {
               // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
               builder: (context) {
                 ExpenseEntity expenseEntity = ExpenseEntity(
-                  id: tileValue.id,
-                  date: DateFormat('yyyyMMdd').format(tileValue.date),
-                  price: tileValue.price,
-                  paymentCategoryId: tileValue.paymentCategoryId,
-                  memo: tileValue.memo,
-                  incomeSourceBigCategory: tileValue.incomeSourceBigCategory
-                );
+                    id: tileValue.id,
+                    date: DateFormat('yyyyMMdd').format(tileValue.date),
+                    price: tileValue.price,
+                    paymentCategoryId: tileValue.paymentCategoryId,
+                    memo: tileValue.memo,
+                    incomeSourceBigCategory: tileValue.incomeSourceBigCategory);
 
                 return MaterialApp(
                   debugShowCheckedModeBanner: false,

@@ -28,11 +28,15 @@ class BonusExpenseHistoryTile extends ConsumerWidget {
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * screenHorizontalMagnification;
 
+    // カテゴリーの色を取得
+    final color = MyColors().getColorFromHex(value.colorCode);
+
     // アイコン
     final icon = FittedBox(
       fit: BoxFit.scaleDown,
       child: SvgPicture.asset(
         value.iconPath,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
         semanticsLabel: 'categoryIcon',
         width: 25,
         height: 25,
