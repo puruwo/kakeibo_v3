@@ -132,9 +132,12 @@ class _RegisaterIncomePageState extends ConsumerState<RegisterIncomePage> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: SubmitExpenseButton(
-              transactionMode: TransactionMode.income,
-              originalIncomeEntity: initialIncomeData)),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.symmetric(horizontal:16.0),
+            child: SubmitExpenseButton(
+                transactionMode: TransactionMode.income,
+                originalIncomeEntity: initialIncomeData),
+          )),
     );
   }
 }

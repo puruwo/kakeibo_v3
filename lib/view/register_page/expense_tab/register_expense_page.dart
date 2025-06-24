@@ -136,9 +136,12 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
           ),
           floatingActionButtonLocation:
               FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: SubmitExpenseButton(
-              transactionMode: TransactionMode.expense,
-              originalExpenseEntity: initialExpenseData)),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: SubmitExpenseButton(
+                transactionMode: TransactionMode.expense,
+                originalExpenseEntity: initialExpenseData),
+          )),
     );
   }
 }

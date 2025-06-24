@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
@@ -38,12 +39,9 @@ class SubmitExpenseButton extends ConsumerWidget with PresentationMixin {
     // 新規か編集か
     final screenMode = ref.watch(registerScreenModeNotifierProvider);
 
-    return FloatingActionButton(
-        child: Container(
-          decoration: BoxDecoration(
-              color: MyColors.themeColor,
-              borderRadius: BorderRadius.circular(9.0)),
-        ),
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton(
         onPressed: () async {
           execute(
             context,
@@ -129,6 +127,19 @@ class SubmitExpenseButton extends ConsumerWidget with PresentationMixin {
               );
             },
           );
-        });
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: MyColors.buttonPrimary,
+        ),
+        child: Text(
+          screenMode == RegisterScreenMode.edit
+              ? '更新'
+              : // 編集モードなら「更新」
+              '追加' // 新規モードなら「追加」
+          ,
+          style: MyFonts.mainButtonText,
+        ),
+      ),
+    );
   }
 }
