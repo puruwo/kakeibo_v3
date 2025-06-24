@@ -58,8 +58,14 @@ class BudgetUsecase {
         displayOrder: bigCategory.displayOrder,
       );
 
-      tileList.add(budgetEditValue);
+      // 0の場合は予算を表示しない
+      if (bigCategory.isDisplayed == 1) {
+        tileList.add(budgetEditValue);
+      }
     }
+
+    // displayOrderでソートする
+    tileList.sort((a, b) => a.displayOrder.compareTo(b.displayOrder));
 
     return tileList;
   }
@@ -83,7 +89,7 @@ class BudgetUsecase {
           month: originalValues[i].month,
           price: editPrice[i],
         );
-        
+
         // もともと登録されていればあればupdate、なければadd
         if (originalValues[i].budgetStatus == BudgetStatus.registerd) {
           // SqfBudgetでデータをupdateする

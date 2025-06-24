@@ -18,7 +18,8 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
         a.${SqfExpenseBigCategory.resourcePath} AS resourcePath, 
         a.${SqfExpenseBigCategory.displayOrder} AS displayOrder, 
         a.${SqfExpenseBigCategory.isDisplayed} AS isDisplayed
-      FROM ${SqfExpenseBigCategory.tableName} a;
+      FROM ${SqfExpenseBigCategory.tableName} a
+      ORDER BY a.${SqfExpenseBigCategory.displayOrder} ASC;
     ''';
 
     try {

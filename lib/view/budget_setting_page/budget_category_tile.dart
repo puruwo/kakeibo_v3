@@ -56,6 +56,10 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                       padding: const EdgeInsets.all(12.5),
                       child: SvgPicture.asset(
                         widget.budgetEditValue.resourcePath,
+                        colorFilter: ColorFilter.mode(
+                            MyColors().getColorFromHex(
+                                widget.budgetEditValue.colorCode),
+                            BlendMode.srcIn),
                         semanticsLabel: 'categoryIcon',
                         width: 25,
                         height: 25,

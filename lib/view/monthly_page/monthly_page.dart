@@ -19,7 +19,6 @@ import 'package:kakeibo/view/monthly_page/category_tile/category_tile_area.dart'
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/view/budget_setting_page/budget_setting_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view/component/modal.dart';
@@ -91,21 +90,12 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 width: 343 * context.screenHorizontalMagnification,
                 height: 35,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       ' 支出グラフ',
                       style: MyFonts.thirdPageSubheading,
                     ),
-                    TextButton(
-                        onPressed: () {
-                          showModalBottomSheetFunc(
-                              context, const BudgetSettingPage());
-                        },
-                        child: const Text(
-                          '予算設定',
-                          style: MyFonts.thirdPageTextButton,
-                        )),
                   ],
                 ),
               ),
