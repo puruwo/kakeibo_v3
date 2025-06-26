@@ -261,7 +261,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
 
                           // 予算が設定されているかどうか
                           isSetBudget
-                          // 予算が設定されている場合
+                              // 予算が設定されている場合
                               ? Row(
                                   children: [
                                     Text(
@@ -290,7 +290,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                     ),
                                   ],
                                 )
-                          // 予算が設定されていない場合、なにも表示しない
+                              // 予算が設定されていない場合、なにも表示しない
                               : const SizedBox(),
                         ],
                       )
@@ -320,6 +320,8 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                   final int smallCategoryId = smallCategoryList[index].id;
 
                   return GestureDetector(
+                    // タップ時の挙動: 透明部分もタップ可能にする
+                    behavior: HitTestBehavior.opaque,
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => SmallCategoryExpenseHistoryPage(
@@ -395,6 +397,14 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                 ' 円',
                                 style: MyFonts.categoryExpenseHistoryPageYen,
                                 textAlign: TextAlign.end,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: MyColors.white,
+                                size: 15,
                               ),
                             ],
                           ),
