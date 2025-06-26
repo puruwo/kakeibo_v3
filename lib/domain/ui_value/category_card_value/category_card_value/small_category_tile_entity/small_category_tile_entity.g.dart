@@ -14,6 +14,7 @@ _$SmallCategoryTileEntityImpl _$$SmallCategoryTileEntityImplFromJson(
       smallCategoryName: json['smallCategoryName'] as String,
       totalExpenseBySmallCategory:
           (json['totalExpenseBySmallCategory'] as num?)?.toInt() ?? 0,
+      recordCount: (json['recordCount'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$SmallCategoryTileEntityImplToJson(
@@ -23,4 +24,5 @@ Map<String, dynamic> _$$SmallCategoryTileEntityImplToJson(
       'displeyOrder': instance.displeyOrder,
       'smallCategoryName': instance.smallCategoryName,
       'totalExpenseBySmallCategory': instance.totalExpenseBySmallCategory,
+      'recordCount': instance.recordCount,
     };

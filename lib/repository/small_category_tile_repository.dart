@@ -29,10 +29,12 @@ class ImplementsSmallCategoryTileRepository implements SmallCategoryTileReposito
                   t1.${SqfExpenseSmallCategory.name} AS smallCategoryName,
                   coalesce(t2.small_category_payment_sum,0) AS totalExpenseBySmallCategory ,
                   t1.${SqfExpenseSmallCategory.bigCategoryKey} AS bigCategoryKey,
-                  t1.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed 
+                  t1.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed,
+                  t2.recordCount AS recordCount
                 FROM ${SqfExpenseSmallCategory.tableName} t1 
                 LEFT JOIN(
                   SELECT *,
+                  COUNT(x.${SqfExpense.id}) AS recordCount,
                   SUM(x.price) as small_category_payment_sum 
                   FROM ${SqfExpense.tableName} x
                   WHERE (x.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(fromDate)}  AND x.${SqfExpense.date} <=${DateFormat('yyyyMMdd').format(toDate)} )

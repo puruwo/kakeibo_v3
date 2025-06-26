@@ -25,6 +25,7 @@ mixin _$SmallCategoryTileEntity {
   int get displeyOrder => throw _privateConstructorUsedError;
   String get smallCategoryName => throw _privateConstructorUsedError;
   int get totalExpenseBySmallCategory => throw _privateConstructorUsedError;
+  int get recordCount => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +43,8 @@ abstract class $SmallCategoryTileEntityCopyWith<$Res> {
       {int id,
       int displeyOrder,
       String smallCategoryName,
-      int totalExpenseBySmallCategory});
+      int totalExpenseBySmallCategory,
+      int recordCount});
 }
 
 /// @nodoc
@@ -63,6 +65,7 @@ class _$SmallCategoryTileEntityCopyWithImpl<$Res,
     Object? displeyOrder = null,
     Object? smallCategoryName = null,
     Object? totalExpenseBySmallCategory = null,
+    Object? recordCount = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -81,6 +84,10 @@ class _$SmallCategoryTileEntityCopyWithImpl<$Res,
           ? _value.totalExpenseBySmallCategory
           : totalExpenseBySmallCategory // ignore: cast_nullable_to_non_nullable
               as int,
+      recordCount: null == recordCount
+          ? _value.recordCount
+          : recordCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -98,7 +105,8 @@ abstract class _$$SmallCategoryTileEntityImplCopyWith<$Res>
       {int id,
       int displeyOrder,
       String smallCategoryName,
-      int totalExpenseBySmallCategory});
+      int totalExpenseBySmallCategory,
+      int recordCount});
 }
 
 /// @nodoc
@@ -118,6 +126,7 @@ class __$$SmallCategoryTileEntityImplCopyWithImpl<$Res>
     Object? displeyOrder = null,
     Object? smallCategoryName = null,
     Object? totalExpenseBySmallCategory = null,
+    Object? recordCount = null,
   }) {
     return _then(_$SmallCategoryTileEntityImpl(
       id: null == id
@@ -136,6 +145,10 @@ class __$$SmallCategoryTileEntityImplCopyWithImpl<$Res>
           ? _value.totalExpenseBySmallCategory
           : totalExpenseBySmallCategory // ignore: cast_nullable_to_non_nullable
               as int,
+      recordCount: null == recordCount
+          ? _value.recordCount
+          : recordCount // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -147,7 +160,8 @@ class _$SmallCategoryTileEntityImpl implements _SmallCategoryTileEntity {
       {this.id = 0,
       this.displeyOrder = 0,
       required this.smallCategoryName,
-      this.totalExpenseBySmallCategory = 0});
+      this.totalExpenseBySmallCategory = 0,
+      this.recordCount = 0});
 
   factory _$SmallCategoryTileEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$SmallCategoryTileEntityImplFromJson(json);
@@ -163,10 +177,13 @@ class _$SmallCategoryTileEntityImpl implements _SmallCategoryTileEntity {
   @override
   @JsonKey()
   final int totalExpenseBySmallCategory;
+  @override
+  @JsonKey()
+  final int recordCount;
 
   @override
   String toString() {
-    return 'SmallCategoryTileEntity(id: $id, displeyOrder: $displeyOrder, smallCategoryName: $smallCategoryName, totalExpenseBySmallCategory: $totalExpenseBySmallCategory)';
+    return 'SmallCategoryTileEntity(id: $id, displeyOrder: $displeyOrder, smallCategoryName: $smallCategoryName, totalExpenseBySmallCategory: $totalExpenseBySmallCategory, recordCount: $recordCount)';
   }
 
   @override
@@ -182,13 +199,15 @@ class _$SmallCategoryTileEntityImpl implements _SmallCategoryTileEntity {
             (identical(other.totalExpenseBySmallCategory,
                     totalExpenseBySmallCategory) ||
                 other.totalExpenseBySmallCategory ==
-                    totalExpenseBySmallCategory));
+                    totalExpenseBySmallCategory) &&
+            (identical(other.recordCount, recordCount) ||
+                other.recordCount == recordCount));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, displeyOrder,
-      smallCategoryName, totalExpenseBySmallCategory);
+      smallCategoryName, totalExpenseBySmallCategory, recordCount);
 
   @JsonKey(ignore: true)
   @override
@@ -210,7 +229,8 @@ abstract class _SmallCategoryTileEntity implements SmallCategoryTileEntity {
       {final int id,
       final int displeyOrder,
       required final String smallCategoryName,
-      final int totalExpenseBySmallCategory}) = _$SmallCategoryTileEntityImpl;
+      final int totalExpenseBySmallCategory,
+      final int recordCount}) = _$SmallCategoryTileEntityImpl;
 
   factory _SmallCategoryTileEntity.fromJson(Map<String, dynamic> json) =
       _$SmallCategoryTileEntityImpl.fromJson;
@@ -223,6 +243,8 @@ abstract class _SmallCategoryTileEntity implements SmallCategoryTileEntity {
   String get smallCategoryName;
   @override
   int get totalExpenseBySmallCategory;
+  @override
+  int get recordCount;
   @override
   @JsonKey(ignore: true)
   _$$SmallCategoryTileEntityImplCopyWith<_$SmallCategoryTileEntityImpl>

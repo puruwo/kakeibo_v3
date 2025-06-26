@@ -12,6 +12,7 @@ class SmallCategoryTileEntity with _$SmallCategoryTileEntity {
     @Default(0) int displeyOrder,
     required String smallCategoryName,
     @Default(0) int totalExpenseBySmallCategory,
+    @Default(0) int recordCount,
   }) = _SmallCategoryTileEntity;
 
   @override

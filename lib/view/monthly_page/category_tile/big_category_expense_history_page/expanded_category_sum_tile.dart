@@ -369,7 +369,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                             // 左の項目名エリア:0.45 真ん中の件数エリア: 0.1 右の支払い合計エリア:0.45
                             width: barFrameWidth * 0.15,
                             child: Text(
-                              '999件',
+                              '${smallCategoryList[index].recordCount}件',
                               style:
                                   MyFonts.categoryExpenseHistoryPageRecordCount,
                               textAlign: TextAlign.right,
