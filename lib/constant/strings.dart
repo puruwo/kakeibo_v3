@@ -122,7 +122,9 @@ class MyFonts {
       fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w300);
 
   static TextStyle cardSecondaryTitle = GoogleFonts.notoSans(
-      fontSize: 12, color: MyColors.secondaryLabel, fontWeight: FontWeight.w300);
+      fontSize: 12,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
 
   static TextStyle cardMinusLabel = const TextStyle(
       fontFamily: 'sf_ui',
@@ -144,5 +146,48 @@ class MyFonts {
 
   // CategoryEditPage
   static TextStyle newCategoryAdd = GoogleFonts.notoSans(
-      fontSize: 17, color: MyColors.secondaryLabel, fontWeight: FontWeight.w400);
+      fontSize: 17,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
+
+  /// CategoryExpenseHistoryPage
+  /// カテゴリー別利用状況ページ
+
+  // カテゴリー・項目タイトル表示
+  static TextStyle categoryExpenseHistoryPageCategoryName =
+      GoogleFonts.notoSans(
+          fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w400);
+
+  // 件数表示
+  static TextStyle categoryExpenseHistoryPageRecordCount = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
+
+  // 金額表示
+  static TextStyle categoryExpenseHistoryPagePrice = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 19,
+      color: MyColors.label,
+      fontWeight: FontWeight.w300);
+
+  // 予算表示
+  static TextStyle categoryExpenseHistoryPageBudgetPrice = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
+
+  // 円
+  static TextStyle categoryExpenseHistoryPageYen = GoogleFonts.notoSans(
+    fontSize: 11,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
+
+  // 日本語サブテキスト
+  static TextStyle categoryExpenseHistoryPageSubText = GoogleFonts.notoSans(
+      fontSize: 13,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
 }
