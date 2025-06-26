@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -401,11 +402,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                               const SizedBox(
                                 width: 8,
                               ),
-                              const Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: MyColors.white,
-                                size: 15,
-                              ),
+                              MyIcon.next,
                             ],
                           ),
                         ),

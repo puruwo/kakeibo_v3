@@ -6,6 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
@@ -307,11 +308,7 @@ class CategoryTile extends HookConsumerWidget {
                     ),
                   ],
                 ),
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  color: MyColors.white,
-                  size: 15,
-                ),
+                MyIcon.next,
               ],
             ),
           ),
