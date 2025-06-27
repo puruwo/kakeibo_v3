@@ -162,6 +162,41 @@ class ImplementsIncomeRepository implements IncomeRepository {
     }
   }
 
+  // 期間を指定して収入の合計を取得する
+  @override
+  Future<int> calcurateSumWithPeriod({
+    required PeriodValue period,
+  }) async {
+    /*
+    SELECT income.*
+    FROM income
+    INNER JOIN income_small_category 
+      ON income.income_small_category_id = income_small_category._id
+    INNER JOIN income_big_category 
+      ON income_small_category.big_category_key = income_big_category._id
+    WHERE '20250425' <= income.date  AND income.date <= '20250524';
+    */
+
+    final sql = '''
+      SELECT 
+        SUM(a.${SqfIncome.price}) AS totalPrice
+      FROM ${SqfIncome.tableName} a
+      WHERE a.${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)} 
+      ;
+    ''';
+
+    try {
+      final result = await db.queryFirstIntValue(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
+
+      return result ?? 0; // nullの場合は0を返す
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
   @override
   void insert(IncomeEntity incomeEntity) {
     db.insert(SqfIncome.tableName, {

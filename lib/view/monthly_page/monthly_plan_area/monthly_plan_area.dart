@@ -29,7 +29,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                         children: [
                           Text(
                             '月の収入',
-                            style: MyFonts.planAreaLeftLabel,
+                            style: MyFonts.topCardTitleLabel,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -38,11 +38,11 @@ class MonthlyPlanArea extends ConsumerWidget {
                               Text(
                                 formattedPriceGetter(
                                     monthlyPlanValue.monthlyIncome),
-                                style: MyFonts.planAreaRightLabel,
+                                style: MyFonts.topCardPriceLabel,
                               ),
                               Text(
                                 ' 円',
-                                style: MyFonts.planAreaYenLabel,
+                                style: MyFonts.topCardYenLabel,
                               ),
                             ],
                           ),
@@ -54,7 +54,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                       children: [
                         Text(
                           '月の予算',
-                          style: MyFonts.planAreaLeftLabel,
+                          style: MyFonts.topCardTitleLabel,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -63,11 +63,11 @@ class MonthlyPlanArea extends ConsumerWidget {
                             Text(
                               formattedPriceGetter(
                                   monthlyPlanValue.monthlyBudget),
-                              style: MyFonts.planAreaRightLabel,
+                              style: MyFonts.topCardPriceLabel,
                             ),
                             Text(
                               ' 円',
-                              style: MyFonts.planAreaYenLabel,
+                              style: MyFonts.topCardYenLabel,
                             ),
                           ],
                         ),
@@ -88,7 +88,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                       children: [
                         Text(
                           '予想貯金',
-                          style: MyFonts.planAreaLeftLabel,
+                          style: MyFonts.topCardTitleLabel,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -97,11 +97,11 @@ class MonthlyPlanArea extends ConsumerWidget {
                             Text(
                               formattedPriceGetter(
                                   monthlyPlanValue.expectedSavings),
-                              style: MyFonts.planAreaRightLabel,
+                              style: MyFonts.topCardPriceLabel,
                             ),
                             Text(
                               ' 円',
-                              style: MyFonts.planAreaYenLabel,
+                              style: MyFonts.topCardYenLabel,
                             ),
                           ],
                         ),

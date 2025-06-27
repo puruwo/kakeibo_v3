@@ -15,21 +15,36 @@ class MyFonts {
   static const thirdPageTextButton =
       TextStyle(color: MyColors.themeColor, fontSize: 14);
 
-  // MonthlyPlanArea BonusPlaaArea
-  static TextStyle planAreaLeftLabel = GoogleFonts.notoSans(
+  // MonthlyPlanArea BonusPlaaArea YearlyBalanceArea
+  static TextStyle topCardTitleLabel = GoogleFonts.notoSans(
       fontSize: 16,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
+      
+  static TextStyle topCardSubTitleLabel = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
 
-  static TextStyle planAreaRightLabel = const TextStyle(
+  static TextStyle topCardPriceLabel = const TextStyle(
     color: MyColors.label,
     fontSize: 26,
     fontFamily: 'sf_ui',
     fontWeight: FontWeight.w600,
   );
 
-  static TextStyle planAreaYenLabel = GoogleFonts.notoSans(
+  static TextStyle topCardSubPriceLabel = const TextStyle(
+    color: MyColors.label,
+    fontSize: 19,
+    fontFamily: 'sf_ui',
+    fontWeight: FontWeight.w600,
+  );
+
+  static TextStyle topCardYenLabel = GoogleFonts.notoSans(
       fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w600);
+
+  static TextStyle topCardSubYenLabel = GoogleFonts.notoSans(
+      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w300);
 
   // Calndar Page
   static TextStyle calendarDateBoxLarge = const TextStyle(

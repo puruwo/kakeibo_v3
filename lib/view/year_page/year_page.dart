@@ -12,6 +12,7 @@ import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 
@@ -73,7 +74,6 @@ class _YearPageState extends ConsumerState<YearPage> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               SizedBox(
-                width: 343 * context.screenHorizontalMagnification,
                 height: 35,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -99,6 +99,26 @@ class _YearPageState extends ConsumerState<YearPage> {
               ),
       
               const BonusPlanArea(),
+
+              const SizedBox(
+                height: 16,
+              ),
+
+              SizedBox(
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' 年間収支',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+
+                  ],
+                ),
+              ),
+
+              const YearlyBalanceArea(),
       
               const SizedBox(
                 height: 32,
