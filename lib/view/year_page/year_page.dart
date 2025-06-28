@@ -7,6 +7,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
@@ -123,6 +124,8 @@ class _YearPageState extends ConsumerState<YearPage> {
               const SizedBox(
                 height: 32,
               ),
+
+              AnnualBalanceChart()
             ],
           ),
         ),
