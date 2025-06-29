@@ -10,6 +10,7 @@ class DateScopeEntity with _$DateScopeEntity {
   const factory DateScopeEntity({
     required DateTime selectedDate,
     required PeriodValue monthPeriod,
+    required int monthIndex,
     required MonthValue representativeMonth,
     required PeriodValue yearPeriod,
     required YearValue representativeYear,

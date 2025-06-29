@@ -165,7 +165,7 @@ class MyFonts {
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
 
-  /// CategoryExpenseHistoryPage
+  /// ================CategoryExpenseHistoryPage================
   /// カテゴリー別利用状況ページ
 
   // カテゴリー・項目タイトル表示
@@ -205,4 +205,17 @@ class MyFonts {
       fontSize: 13,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
+
+  /// ================================================
+  /// 
+  /// ================AnnualBalanceChartPage================
+  /// 年間収支グラフページ
+  
+  // 縦軸ラベル
+  static TextStyle annualBalanceChartPageVerticalLabel = GoogleFonts.notoSans(
+      fontSize: 12, color: MyColors.secondaryLabel, fontWeight: FontWeight.w300);
+
+  // 月ラベル
+  static TextStyle annualBalanceChartPageMonthLabel = GoogleFonts.notoSans(
+      fontSize: 15, color: MyColors.label, fontWeight: FontWeight.w300);
 }

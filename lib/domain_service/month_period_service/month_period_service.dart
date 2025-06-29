@@ -50,8 +50,13 @@ class MonthPeriodService {
     }
   }
 
-  // 前の集計期間を取得する
+  // shift分移動した月の集計期間を取得する
   PeriodValue fetchShiftedMonthPeriod(PeriodValue monthPeriodValue, int shift) {
+
+    if (shift == 0) {
+      // シフトしない場合はそのまま返す
+      return monthPeriodValue;
+    }
     
     // ====開始日====
     DateTime shiftedMonthPeriodStartDate;

@@ -39,7 +39,7 @@ class ImplementsIncomeRepository implements IncomeRepository {
     }
   }
 
-  // 大カテゴリーと期間を指定して取得する
+  // 大カテゴリーと期間を指定してレコードを取得する
   @override
   Future<List<IncomeEntity>> fetchWithCategoryAndPeriod({
     required PeriodValue period,

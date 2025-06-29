@@ -97,19 +97,6 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
   }
 }
 
-// 月を跨ぐ際に日付を安全に取得する
-DateTime safeDate(DateTime selectedDate, int calendarPage) {
-  DateTime endDateInThisPage =
-      DateTime(selectedDate.year, selectedDate.month + calendarPage, 0);
-
-  // 移動前の日付が移動後の月の月末日より大きい場合、月末にする
-  if (selectedDate.day > endDateInThisPage.day) return endDateInThisPage;
-
-  // 移動前の日付が移動後の月の月末日より小さい場合、そのままの日付にする
-  return DateTime(
-      selectedDate.year, selectedDate.month + calendarPage, selectedDate.day);
-}
-
 // カレンダーの表示領域の集計期間外の日を埋める
 List<CalendarTileEntity> fillOutOfPeriod(
     List<CalendarTileEntity> inPeriodcalendarTileList) {

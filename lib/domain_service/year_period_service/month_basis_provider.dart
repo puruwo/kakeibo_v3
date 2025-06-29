@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/db/year_basis_entity/year_basis_entity.dart';
 import 'package:kakeibo/domain/db/year_basis_entity/year_basis_entity_repository.dart';
 
-// 集計期間の代表月は初日か最終日のどっちか
+// 集計期間の代表月は初月か最終月のどっちか
 final yearBasisProvider =
     Provider<YearBasisService>(YearBasisService.new);
 
@@ -13,7 +13,7 @@ class YearBasisService {
   YearBasisRepository get yearBasesRepository =>
       _ref.read(yearBasisRepositoryProvider);
 
-  // ユーザ設定の集計開始日を取得する
+  // ユーザ設定を取得する
   Future<YearBasisEntity> fetch() async {
     YearBasisEntity yearBasisEntity =
         await yearBasesRepository.fetch();
