@@ -16,6 +16,7 @@ class MonthlyPlanArea extends ConsumerWidget {
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: const Column(
+        mainAxisSize: MainAxisSize.min,
         children: [MnothlyPlanGraphArea(), MonthlyPlanDataArea()],
       ),
     );

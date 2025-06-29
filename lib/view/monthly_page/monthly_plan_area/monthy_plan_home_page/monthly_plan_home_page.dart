@@ -6,10 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_cotegory_area.dart';
-
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_footer.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/income_list_area/income_list_area.dart';
-import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_data_area.dart';
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
 
 class MonthlyPlanHomePage extends ConsumerStatefulWidget {
@@ -41,7 +40,7 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage> {
             // 上部（ここに通常の内容など追加）
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: MonthlyPlanDataArea(),
+              child: SizedBox(child: MonthlyPlanArea()),
             ),
             DraggableScrollableSheet(
                 // 初期の表示割合
