@@ -7,9 +7,10 @@ part 'monthly_plan_value.freezed.dart';
 @freezed
 class MonthlyPlanValue with _$MonthlyPlanValue {
   const factory MonthlyPlanValue({
+    required int monthlyExpense,
     required int monthlyIncome,
     required int monthlyBudget,
-    required int expectedSavings,
+    required int realSavings,
   }) = _MonthlyPlanValue;
 
 }

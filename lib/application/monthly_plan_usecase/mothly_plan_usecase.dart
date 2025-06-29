@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/monthly_plan_value/monthly_plan_value.dart';
 import 'package:kakeibo/domain_service/month_period_service/aggregation_representative_month_service.dart';
@@ -13,6 +14,7 @@ final monthlyPlanNotifierProvider = AsyncNotifierProvider.family<
 
 class MonthlyPlanUsecaseNotifier
     extends FamilyAsyncNotifier<MonthlyPlanValue, DateScopeEntity> {
+  late ExpenseRepository _expenseRepositoryProvider;
   late IncomeRepository _incomeRepository;
   late AggregationRepresentativeMonthService
       _aggregationRepresentativeMonthService;
@@ -23,6 +25,7 @@ class MonthlyPlanUsecaseNotifier
     // 初回生成時
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
+    _expenseRepositoryProvider = ref.read(expenseRepositoryProvider);
 
     _incomeRepository = ref.read(incomeRepositoryProvider);
 
@@ -35,8 +38,17 @@ class MonthlyPlanUsecaseNotifier
   }
 
   // 前カテゴリー合計のタイルデータを取得する
-  Future<MonthlyPlanValue> fetch(
-      {required DateScopeEntity dateScope}) async {
+  Future<MonthlyPlanValue> fetch({required DateScopeEntity dateScope}) async {
+
+    // 選択した月の集計期間から開始日と終了日を取得する
+    DateTime fromDate = dateScope.monthPeriod.startDatetime;
+    DateTime toDate = dateScope.monthPeriod.endDatetime;
+
+    // 全カテゴリーの支出を取得
+    // 大カテゴリーIDを0にすることで、ボーナスを除くカテゴリーの支出を取得する
+    final mothlyExpense = await _expenseRepositoryProvider
+        .fetchTotalExpenseByPeriodWithBigCategory(incomeSourceBigCategory: 0, fromDate: fromDate, toDate: toDate);
+
     // categoryIdは0を指定することで、月次収入の合計を取得する
     final monthlyIncome =
         await _incomeRepository.calcurateSumWithBigCategoryAndPeriod(
@@ -51,13 +63,14 @@ class MonthlyPlanUsecaseNotifier
     final totalPrice = await _budgetRepository.fetchMonthlyAll(
         month: aggregationRepresentativeMonth);
 
-    // 予定貯金を計算
-    final expectedSavings = monthlyIncome - totalPrice;
+    // 今月の残額を計算
+    final realSavings = monthlyIncome - mothlyExpense;
 
     return MonthlyPlanValue(
+      monthlyExpense: mothlyExpense,
       monthlyIncome: monthlyIncome,
       monthlyBudget: totalPrice,
-      expectedSavings: expectedSavings,
+      realSavings: realSavings,
     );
   }
 }
