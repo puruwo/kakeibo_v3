@@ -8,9 +8,6 @@ import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_en
 class MnothlyPlanGraphArea extends HookConsumerWidget {
   const MnothlyPlanGraphArea({super.key});
 
-  // 横棒グラフのフレームサイズ
-  final double barFrameWidth = 280.0;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(resolvedAllCategoryTileEntityProvider).when(
@@ -31,6 +28,9 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
             // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
             final screenHorizontalMagnification =
                 screenHorizontalMagnificationGetter(screenWidthSize);
+
+            // 横棒グラフのフレームサイズ
+            final double barFrameWidth = screenWidthSize - 64;
 
             isSetBudget = allCategoryCardEntity.allCategoryTotalBudget == 0
                 ? false
