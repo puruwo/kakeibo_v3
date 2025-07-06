@@ -7,6 +7,8 @@ class SqfExpense {
   static const price = 'price';
   static const memo = 'memo';
   static const incomeSourceBigCategory = 'income_source_big_category';
+  static const fixedCostId = 'fixed_cost_id';
+  static const isConfirmed = 'is_confirmed';
 }
 
 class SqfIncome {
@@ -68,4 +70,29 @@ class SqfIncomeBigCategory {
   static const name = 'name';
   static const colorCode = 'color_code';
   static const resourcePath = 'resource_path';
+}
+
+class SqfFixedCost {
+  static const tableName = 'fixed_cost';
+
+  static const id = '_id';
+  static const name = 'name';
+  static const variable = 'variable';
+  static const price = 'price';
+  static const expenseSmallCategoryId = 'expense_small_category_id';
+  static const intervalNumber = 'interval_number';
+  static const intervalUnit = 'interval_unit';
+  static const firstPaymentDate = 'fiirst_payment_date';
+  static const recentPaymentDate = 'recent_payment_date';
+  static const nextPaymentDate = 'next_payment_date';
+  static const deleteFlag = 'delete_flag';
+}
+
+class SqfBatchHistory {
+  static const tableName = 'batch_history';
+
+  static const id = '_id';
+  static const startDate = 'start_date';
+  static const endDate = 'end_date';
+  static const status = 'status';
 }

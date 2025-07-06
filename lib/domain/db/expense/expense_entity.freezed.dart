@@ -26,6 +26,8 @@ mixin _$ExpenseEntity {
   int get paymentCategoryId => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
   int get incomeSourceBigCategory => throw _privateConstructorUsedError;
+  int? get fixedCostId => throw _privateConstructorUsedError;
+  int get isConfirmed => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -45,7 +47,9 @@ abstract class $ExpenseEntityCopyWith<$Res> {
       int price,
       int paymentCategoryId,
       String memo,
-      int incomeSourceBigCategory});
+      int incomeSourceBigCategory,
+      int? fixedCostId,
+      int isConfirmed});
 }
 
 /// @nodoc
@@ -67,6 +71,8 @@ class _$ExpenseEntityCopyWithImpl<$Res, $Val extends ExpenseEntity>
     Object? paymentCategoryId = null,
     Object? memo = null,
     Object? incomeSourceBigCategory = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -93,6 +99,14 @@ class _$ExpenseEntityCopyWithImpl<$Res, $Val extends ExpenseEntity>
           ? _value.incomeSourceBigCategory
           : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
               as int,
+      fixedCostId: freezed == fixedCostId
+          ? _value.fixedCostId
+          : fixedCostId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isConfirmed: null == isConfirmed
+          ? _value.isConfirmed
+          : isConfirmed // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -111,7 +125,9 @@ abstract class _$$ExpenseEntityImplCopyWith<$Res>
       int price,
       int paymentCategoryId,
       String memo,
-      int incomeSourceBigCategory});
+      int incomeSourceBigCategory,
+      int? fixedCostId,
+      int isConfirmed});
 }
 
 /// @nodoc
@@ -131,6 +147,8 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
     Object? paymentCategoryId = null,
     Object? memo = null,
     Object? incomeSourceBigCategory = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
   }) {
     return _then(_$ExpenseEntityImpl(
       id: null == id
@@ -157,6 +175,14 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
           ? _value.incomeSourceBigCategory
           : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
               as int,
+      fixedCostId: freezed == fixedCostId
+          ? _value.fixedCostId
+          : fixedCostId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isConfirmed: null == isConfirmed
+          ? _value.isConfirmed
+          : isConfirmed // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -170,7 +196,9 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
       this.price = 0,
       this.paymentCategoryId = 0,
       this.memo = '',
-      this.incomeSourceBigCategory = 0});
+      this.incomeSourceBigCategory = 0,
+      this.fixedCostId,
+      this.isConfirmed = 1});
 
   factory _$ExpenseEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExpenseEntityImplFromJson(json);
@@ -192,10 +220,15 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
   @override
   @JsonKey()
   final int incomeSourceBigCategory;
+  @override
+  final int? fixedCostId;
+  @override
+  @JsonKey()
+  final int isConfirmed;
 
   @override
   String toString() {
-    return 'ExpenseEntity(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, incomeSourceBigCategory: $incomeSourceBigCategory)';
+    return 'ExpenseEntity(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, incomeSourceBigCategory: $incomeSourceBigCategory, fixedCostId: $fixedCostId, isConfirmed: $isConfirmed)';
   }
 
   @override
@@ -211,13 +244,25 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
             (identical(other.memo, memo) || other.memo == memo) &&
             (identical(
                     other.incomeSourceBigCategory, incomeSourceBigCategory) ||
-                other.incomeSourceBigCategory == incomeSourceBigCategory));
+                other.incomeSourceBigCategory == incomeSourceBigCategory) &&
+            (identical(other.fixedCostId, fixedCostId) ||
+                other.fixedCostId == fixedCostId) &&
+            (identical(other.isConfirmed, isConfirmed) ||
+                other.isConfirmed == isConfirmed));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, date, price,
-      paymentCategoryId, memo, incomeSourceBigCategory);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      date,
+      price,
+      paymentCategoryId,
+      memo,
+      incomeSourceBigCategory,
+      fixedCostId,
+      isConfirmed);
 
   @JsonKey(ignore: true)
   @override
@@ -240,7 +285,9 @@ abstract class _ExpenseEntity implements ExpenseEntity {
       final int price,
       final int paymentCategoryId,
       final String memo,
-      final int incomeSourceBigCategory}) = _$ExpenseEntityImpl;
+      final int incomeSourceBigCategory,
+      final int? fixedCostId,
+      final int isConfirmed}) = _$ExpenseEntityImpl;
 
   factory _ExpenseEntity.fromJson(Map<String, dynamic> json) =
       _$ExpenseEntityImpl.fromJson;
@@ -257,6 +304,10 @@ abstract class _ExpenseEntity implements ExpenseEntity {
   String get memo;
   @override
   int get incomeSourceBigCategory;
+  @override
+  int? get fixedCostId;
+  @override
+  int get isConfirmed;
   @override
   @JsonKey(ignore: true)
   _$$ExpenseEntityImplCopyWith<_$ExpenseEntityImpl> get copyWith =>

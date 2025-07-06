@@ -31,6 +31,14 @@ abstract interface class ExpenseRepository {
   Future<int> fetchTotalExpenseByPeriodWithBigCategory(
       {required int incomeSourceBigCategory, required DateTime fromDate, required DateTime toDate});
 
+  // 確定している固定費の支出を取得する
+  Future<List<ExpenseEntity>> fetchFixedCostByPeriod(
+      {required PeriodValue period});
+
+  // 確定していない固定費の支出を取得する
+  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostByPeriod(
+      {required PeriodValue period});
+
   void insert(ExpenseEntity expenseEntity);
 
   void update(ExpenseEntity expenseEntity);

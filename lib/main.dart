@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/batch/batch_history_usecase.dart';
 import 'package:kakeibo/domain/db/aggregation_start_day_entity/aggregation_start_day_repository.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
 import 'package:kakeibo/domain/db/aggregation_start_month_entity/aggregation_start_month_repository.dart';
+import 'package:kakeibo/domain/db/batch_history/batch_history_repository.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
@@ -15,10 +18,12 @@ import 'package:kakeibo/domain/db/year_basis_entity/year_basis_entity_repository
 import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/repository/aggregation_start_day_repository.dart';
 import 'package:kakeibo/repository/aggregation_start_month_repository.dart';
+import 'package:kakeibo/repository/batch_history_repository.dart';
 import 'package:kakeibo/repository/expense_big_category_repository.dart';
 import 'package:kakeibo/repository/budget_repository.dart';
 import 'package:kakeibo/repository/daily_expense_repository.dart';
 import 'package:kakeibo/repository/expense_repository.dart';
+import 'package:kakeibo/repository/fixed_cost_repository.dart';
 import 'package:kakeibo/repository/income_big_category_repository.dart';
 import 'package:kakeibo/repository/income_repository.dart';
 import 'package:kakeibo/repository/income_small_category_repository.dart';
@@ -77,6 +82,12 @@ void main() {
         ),
         incomeRepositoryProvider.overrideWithValue(
           ImplementsIncomeRepository(),
+        ),
+        fixedCostRepositoryProvider.overrideWithValue(
+          ImplementsFixedCostRepository(),
+        ),
+        batchHistoryRepositoryProvider.overrideWithValue(
+          ImplementsBatchHistoryRepository(),
         ),
       ],
       observers: const [ProviderLogger()],

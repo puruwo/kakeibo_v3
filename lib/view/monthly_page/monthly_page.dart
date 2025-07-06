@@ -7,6 +7,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
@@ -98,16 +99,16 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   ],
                 ),
               ),
-      
+
               // グラフ部分
               PredictionGraph(
                 activeDt: activeDt,
               ),
-      
+
               const SizedBox(
                 height: 8,
               ),
-      
+
               SizedBox(
                 width: 343 * context.screenHorizontalMagnification,
                 height: 35,
@@ -133,13 +134,13 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   ],
                 ),
               ),
-      
+
               const MonthlyPlanArea(),
-      
+
               const SizedBox(
                 height: 8,
               ),
-      
+
               SizedBox(
                 width: 343 * context.screenHorizontalMagnification,
                 height: 35,
@@ -162,13 +163,37 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   ],
                 ),
               ),
-      
+
               const CategoryTileArea(),
-      
+
               const SizedBox(
                 height: 32,
               ),
-      
+
+              SizedBox(
+                width: 343 * context.screenHorizontalMagnification,
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' 固定費',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) =>
+                                  const MonthlyFixedCostPage()));
+                        },
+                        child: const Text(
+                          'さらに表示',
+                          style: MyFonts.thirdPageTextButton,
+                        )),
+                  ],
+                ),
+              ),
+
               SizedBox(
                 width: 343 * context.screenHorizontalMagnification,
                 height: 35,
@@ -192,9 +217,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   ],
                 ),
               ),
-      
+
               const ExpenceHistoryDigestArea(),
-      
+
               const SizedBox(
                 height: 32,
               ),

@@ -51,7 +51,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price, 
         a.${SqfExpense.memo} AS memo,
-        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       AND a.${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
@@ -86,7 +88,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price,
         a.${SqfExpense.memo} AS memo,
-        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       AND a.${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
@@ -153,6 +157,76 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     }
   }
 
+  // 確定している固定費の支出を取得する
+  @override
+  Future<List<ExpenseEntity>> fetchFixedCostByPeriod(
+      {required PeriodValue period}) async {
+    final sql = '''
+      SELECT 
+        a.${SqfExpense.id} AS id,
+        a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId,
+        a.${SqfExpense.date} AS date,
+        a.${SqfExpense.price} AS price,
+        a.${SqfExpense.memo} AS memo,
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed
+      FROM ${SqfExpense.tableName} a
+      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      AND a.${SqfExpense.fixedCostId} IS NOT NULL
+      AND a.${SqfExpense.isConfirmed} = 1
+      ORDER BY a.${SqfExpense.id} DESC;
+    ''';
+    try {
+      final jsonList = await db.query(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchFixedCostByPeriod(MonthPeriodValue period)\n$sql');
+
+      final results =
+          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
+  }
+
+  // 確定していない固定費の支出を取得する
+  @override
+  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostByPeriod(
+      {required PeriodValue period}) async {
+    final sql = '''
+      SELECT 
+        a.${SqfExpense.id} AS id,
+        a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId,
+        a.${SqfExpense.date} AS date,
+        a.${SqfExpense.price} AS price,
+        a.${SqfExpense.memo} AS memo,
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed
+      FROM ${SqfExpense.tableName} a
+      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      AND a.${SqfExpense.fixedCostId} IS NOT NULL
+      AND a.${SqfExpense.isConfirmed} = 0
+      ORDER BY a.${SqfExpense.id} DESC;
+    ''';
+    try {
+      final jsonList = await db.query(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchUnconfirmedFixedCostByPeriod(MonthPeriodValue period)\n$sql');
+
+      final results =
+          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
+  }
+
   @override
   void insert(ExpenseEntity expenseEntity) {
     db.insert(SqfExpense.tableName, {
@@ -160,7 +234,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       SqfExpense.date: expenseEntity.date,
       SqfExpense.price: expenseEntity.price,
       SqfExpense.memo: expenseEntity.memo,
-      SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory
+      SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory,
+      SqfExpense.fixedCostId: expenseEntity.fixedCostId,
+      SqfExpense.isConfirmed: expenseEntity.isConfirmed
     });
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseRepository insert(ExpenseEntity expenseEntity)\n${SqfExpense.tableName}でinsert\n  expenseEntity: \n$expenseEntity');
@@ -176,7 +252,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
           SqfExpense.price: expenseEntity.price,
           SqfExpense.memo: expenseEntity.memo,
           SqfExpense.incomeSourceBigCategory:
-              expenseEntity.incomeSourceBigCategory
+              expenseEntity.incomeSourceBigCategory,
+          SqfExpense.fixedCostId: expenseEntity.fixedCostId,
+          SqfExpense.isConfirmed: expenseEntity.isConfirmed
         },
         expenseEntity.id);
     // logger.i(

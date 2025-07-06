@@ -1,7 +1,6 @@
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/properties.dart';
 // DateTimeの日本語対応
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_digest_tile.dart';
@@ -64,10 +63,5 @@ class _ExpenceHistoryDigestAreaState
         child: CircularProgressIndicator(),
       );
     });
-  }
-
-  double listSmallcategoryMemoOffsetGetter(double screenWidthSize) {
-    final defaultWidth = ScreenLayoutProperties().defaultWidth;
-    return screenWidthSize - defaultWidth;
   }
 }

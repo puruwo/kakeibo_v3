@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/batch/batch_history_usecase.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -48,7 +49,7 @@ class Foundation extends ConsumerWidget {
               );
             },
           ),
-          Container(),// 2番目のタブは入力画面を表示するための空のコンテナ
+          Container(), // 2番目のタブは入力画面を表示するための空のコンテナ
           Navigator(
             key: navigatorKeys[2],
             onGenerateRoute: (RouteSettings settings) {
@@ -65,8 +66,10 @@ class Foundation extends ConsumerWidget {
           BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month_rounded), label: '履歴'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add,),label: '履歴'
-          ),
+              icon: Icon(
+                Icons.add,
+              ),
+              label: '履歴'),
           BottomNavigationBarItem(
               icon: Icon(Icons.auto_graph_rounded), label: 'グラフ')
         ],
@@ -83,7 +86,7 @@ class Foundation extends ConsumerWidget {
     // 1をタップしたときは、入力画面を表示する
     if (index == 1) {
       _showExpenseEntrySheet(ref.context);
-    } 
+    }
     // それ以外のタブがタップされた場合
     else {
       // 同じタブが再タップされた場合は、Navigatorを初期状態までポップしてリセットする
@@ -98,9 +101,13 @@ class Foundation extends ConsumerWidget {
   }
 }
 
-void _onBuildComplete(BuildContext context, WidgetRef ref) {
+void _onBuildComplete(BuildContext context, WidgetRef ref) async {
   final isInitialOpen = ref.read(initialOpenNotifierProvider);
   if (isInitialOpen == false) return;
+  // 月の変わり目にバッチ処理を実行
+  final result =
+      await ref.read(batchProcessUsecaseProvider).grobalBatchProscessing();
+  print('バッチ処理の結果: $result');
 
   WidgetsBinding.instance.addPostFrameCallback((_) {
     _showExpenseEntrySheet(context);
