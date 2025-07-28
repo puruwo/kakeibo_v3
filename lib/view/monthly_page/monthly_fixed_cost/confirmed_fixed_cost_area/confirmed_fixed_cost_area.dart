@@ -30,7 +30,6 @@ class _ConfirmedFixedCostListAreaState extends ConsumerState<ConfirmedFixedCostL
           data: (valueList) {
             if (valueList.isNotEmpty) {
               return ListView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 8.0, 16.0, 0),
                 shrinkWrap: true,
                 itemCount: valueList.length,
                 itemBuilder: (context, index) {

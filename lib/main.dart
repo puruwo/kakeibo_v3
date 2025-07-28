@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/batch/batch_history_usecase.dart';
 import 'package:kakeibo/domain/db/aggregation_start_day_entity/aggregation_start_day_repository.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
 import 'package:kakeibo/domain/db/aggregation_start_month_entity/aggregation_start_month_repository.dart';

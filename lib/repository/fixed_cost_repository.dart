@@ -67,7 +67,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       final jsonList = await db.query(sql);
       final result = FixedCostEntity.fromJson(jsonList[0]);
       return result;
-
     } catch (e) {
       logger.e('[FAIL]: $e');
       return const FixedCostEntity(
@@ -123,7 +122,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
   @override
   Future<int> insert(FixedCostEntity fixedCostEntity) async {
     final id = db.insert(SqfFixedCost.tableName, {
-      SqfFixedCost.id: fixedCostEntity.id,
       SqfFixedCost.name: fixedCostEntity.name,
       SqfFixedCost.variable: fixedCostEntity.variable,
       SqfFixedCost.price: fixedCostEntity.price,
@@ -156,7 +154,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
           SqfFixedCost.nextPaymentDate: fixedCostEntity.nextPaymentDate,
           SqfFixedCost.deleteFlag: fixedCostEntity.deleteFlag,
         },
-        fixedCostEntity.id);
+        fixedCostEntity.id ?? -1);
   }
 
   @override

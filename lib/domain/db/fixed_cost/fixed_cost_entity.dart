@@ -10,17 +10,17 @@ part 'fixed_cost_entity.g.dart';
 @freezed
 class FixedCostEntity with _$FixedCostEntity {
   const factory FixedCostEntity({
-    @Default(0) int id,
-    required String name,
+    int? id,
+    @Default('') String name,
     required int variable,
-    int? price,
+    @Default(0) int price,
     required int expenseSmallCategoryId,
     required int intervalNumber,
     required int intervalUnit,
     required String firstPaymentDate,
     String? recentPaymentDate,
     String? nextPaymentDate,
-    required int deleteFlag,
+    @Default(0) int deleteFlag,
   }) = _FixedCostEntity;
 
   @override

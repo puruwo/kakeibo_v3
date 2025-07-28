@@ -3,8 +3,10 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
+import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
@@ -18,6 +20,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
 
   final ExpenseEntity? expenseEntity;
   final IncomeEntity? incomeEntity;
+  final FixedCostEntity? fixedCostEntity;
 
   const RegisaterPageBase(
       {required this.shouldDisplayTab,
@@ -25,6 +28,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
       this.registerMode = RegisterScreenMode.add,
       this.expenseEntity,
       this.incomeEntity,
+      this.fixedCostEntity,
       super.key});
 
   @override
@@ -34,23 +38,22 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
 
 class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     with SingleTickerProviderStateMixin {
-  late IncomeEntity initialIncomeData;
-
   late TabController _tabController;
 
   @override
   void initState() {
-    final initialIndex =
-        widget.transactionMode == TransactionMode.expense ? 0 : 1;
+    final initialIndex = widget.transactionMode.modeNumber;
 
     // タブを2つに設定
     _tabController =
-        TabController(initialIndex: initialIndex, length: 2, vsync: this);
+        TabController(initialIndex: initialIndex, length: 3, vsync: this);
 
     // 編集モードなのにoriginalEntityを受け取っていない
     if (widget.registerMode == RegisterScreenMode.edit) {
       if ((widget.transactionMode == TransactionMode.expense &&
               widget.expenseEntity == null) &&
+          (widget.transactionMode == TransactionMode.fixedCost &&
+              widget.fixedCostEntity == null) &&
           (widget.transactionMode == TransactionMode.income &&
               widget.incomeEntity == null)) {
         throw const AppException('編集モードで編集前データが入力されていません');
@@ -108,6 +111,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
             controller: _tabController,
             tabs: const [
               Tab(text: '支出'),
+              Tab(text: '固定費'),
               Tab(text: '収入'),
             ],
             onTap: (value) {
@@ -121,6 +125,11 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           RegisterExpensePage(
             mode: RegisterScreenMode.add,
             expenseEntity: widget.expenseEntity,
+            isTabVisible: false,
+          ),
+          RegisterFixedCostPage(
+            mode: RegisterScreenMode.add,
+            fixedCostEntity: widget.fixedCostEntity,
             isTabVisible: false,
           ),
           RegisterIncomePage(

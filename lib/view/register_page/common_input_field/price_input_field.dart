@@ -4,13 +4,23 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
-// import 'package:kakeibo/view_model/state/register_page/original_expense_entity/original_expense_entity.dart';
+
+enum PriceInputFieldStatus {
+  normal,// 通常
+  unconfirmed,// 未確定
+}
 
 class PriceInputField extends ConsumerStatefulWidget {
-  const PriceInputField({super.key, required this.originalPrice});
+  const PriceInputField(
+      {super.key,
+      required this.originalPrice,
+      required this.priceInputFieldStatus,
+      this.titleLabel = "購入金額"});
 
   final int originalPrice;
-  
+  final PriceInputFieldStatus priceInputFieldStatus;
+  final String titleLabel;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _PriceInputFieldState();
@@ -24,8 +34,6 @@ class _PriceInputFieldState extends ConsumerState<PriceInputField> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // final originalExpenseEntity =
-      // ref.read(originalExpenseEntityNotifierProvider);
 
       // ビルドして最初の一回だけ設定
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -47,12 +55,12 @@ class _PriceInputFieldState extends ConsumerState<PriceInputField> {
         textBaseline: TextBaseline.alphabetic,
         children: [
           Text(
-            "購入金額",
+            widget.titleLabel,
             textAlign: TextAlign.left,
             style: MyFonts.placeHolder,
           ),
           Expanded(
-            child: TextFormField(
+            child: widget.priceInputFieldStatus == PriceInputFieldStatus.normal ? TextFormField(
               controller: _enteredPriceController,
               // 入力するテキストのstyle
               style: MyFonts.inputExpenseText,
@@ -135,7 +143,12 @@ class _PriceInputFieldState extends ConsumerState<PriceInputField> {
                 //キーボードを閉じる
                 FocusScope.of(context).unfocus();
               },
-            ),
+            )
+            : Text(
+                '---',
+                style: MyFonts.inputExpenseText,
+                textAlign: TextAlign.end,
+              ),
           ),
         ],
       ),

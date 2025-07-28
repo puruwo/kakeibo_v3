@@ -36,14 +36,29 @@ class FixedCostUsecase {
     DateTime enteredDate = DateTime.parse(
         '${fixedCostEntity.firstPaymentDate.substring(0, 4)}-${fixedCostEntity.firstPaymentDate.substring(4, 6)}-${fixedCostEntity.firstPaymentDate.substring(6, 8)}');
 
+    //エラーチェック
     if (enteredDate.isBefore(currentMonthPeriod.startDatetime)) {
-      throw const AppException('今月以降の日付を入力してください');
+      throw const AppException('今の集計期間以降の日付を入力してください');
+    }
+    if (fixedCostEntity.name == '') {
+      throw const AppException('名前を入力してください');
+    }
+    if (fixedCostEntity.price <= 0 && fixedCostEntity.variable == 0) {
+      throw const AppException('0円以上で入力してください');
+    }
+    if (fixedCostEntity.price >= 99999999) {
+      throw const AppException('金額の入力値が大き過ぎます');
     }
 
-    // レコードの初回支払いが今月かどうかチェックし、今月ならexpenseにデータを追加する
     FixedCostEntity insertRecord;
-    if (enteredDate.isAfter(currentMonthPeriod.endDatetime)) {
-
+    if (enteredDate.isAfter(currentMonthPeriod.endDatetime)) {//レコードの初回支払いが来月以降
+      // 今月の支払いがないので、次の支払い日に初回支払い日を設定する
+      insertRecord = fixedCostEntity.copyWith(
+        nextPaymentDate: fixedCostEntity.firstPaymentDate,
+      );
+      // fixed_costにデータを追加する
+      _fixedCostRepositoryProvider.insert(insertRecord);
+    } else {// レコードの初回支払いが今月かどうかチェックし、今月ならexpenseにデータを追加する
       // 次の支払い日と最近支払い日を埋めて、挿入用データを作成
       insertRecord =
           FixedCostService().populateNextPaymentEntity(fixedCostEntity);
@@ -55,13 +70,6 @@ class FixedCostUsecase {
       // expenseEntityを作成し、DBに挿入する
       FixedCostService().insertToExpense(
           _ref, fixedCostEntity, insertRecord.firstPaymentDate, fixedCostId);
-    } else {
-      // 今月の支払いがない場合は、次の支払い日に初回支払い日を設定する
-      insertRecord = fixedCostEntity.copyWith(
-        nextPaymentDate: fixedCostEntity.firstPaymentDate,
-      );
-      // fixed_costにデータを追加する
-      _fixedCostRepositoryProvider.insert(insertRecord);
     }
 
     // DBの更新回数をインクリメント
@@ -83,8 +91,8 @@ class FixedCostUsecase {
           FixedCostService().insertToExpense(
             _ref,
             fixedCostEntity,
-            fixedCostEntity.nextPaymentDate!,
-            fixedCostEntity.id,
+            fixedCostEntity.nextPaymentDate ?? '00000000',
+            fixedCostEntity.id ?? -1,
           );
           // 次の支払い日と最近支払い日を埋めて、更新用データを作成
           final updateRecord =FixedCostService().populateNextPaymentEntity(fixedCostEntity);
@@ -98,27 +106,27 @@ class FixedCostUsecase {
   }
 
   // 編集処理
-  Future<void> edit(
-      {required FixedCostEntity originalEntity,
-      required FixedCostEntity editEntity}) async {
-    //エラーチェック
-    if (originalEntity == editEntity) {
-      // 変更がない場合は何もしない
-      throw const AppException('変更がありません');
-    }
+  // Future<void> edit(
+  //     {required FixedCostEntity originalEntity,
+  //     required FixedCostEntity editEntity}) async {
+  //   //エラーチェック
+  //   if (originalEntity == editEntity) {
+  //     // 変更がない場合は何もしない
+  //     throw const AppException('変更がありません');
+  //   }
 
-    // データを追加する
-    _fixedCostRepositoryProvider.update(editEntity);
+  //   // データを追加する
+  //   _fixedCostRepositoryProvider.update(editEntity);
 
-    // DBの更新回数をインクリメント
-    updateDBCountNotifier.incrementState();
-  }
+  //   // DBの更新回数をインクリメント
+  //   updateDBCountNotifier.incrementState();
+  // }
 
-  Future<void> delete({required int id}) async {
-    // データを削除する
-    _fixedCostRepositoryProvider.delete(id);
+  // Future<void> delete({required int id}) async {
+  //   // データを削除する
+  //   _fixedCostRepositoryProvider.delete(id);
 
-    // DBの更新回数をインクリメント
-    updateDBCountNotifier.incrementState();
-  }
+  //   // DBの更新回数をインクリメント
+  //   updateDBCountNotifier.incrementState();
+  // }
 }

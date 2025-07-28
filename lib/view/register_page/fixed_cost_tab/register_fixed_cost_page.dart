@@ -3,27 +3,25 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
-import 'package:kakeibo/view/register_page/expense_tab/price_input_area/expense_input_area.dart';
 import 'package:kakeibo/view/register_page/common_input_field/memo_input_field.dart';
+import 'package:kakeibo/view/register_page/fixed_cost_tab/price_input_area/fixed_cost_price_input_area.dart';
+import 'package:kakeibo/view/register_page/fixed_cost_tab/payment_frequency_input_area/payment_frequency_input_area.dart';
 import 'package:kakeibo/view/register_page/submit_button.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
-import 'package:kakeibo/view/register_page/common_input_field/date_input_field.dart';
-
-class RegisterExpensePage extends ConsumerStatefulWidget {
+class RegisterFixedCostPage extends ConsumerStatefulWidget {
   final RegisterScreenMode mode;
 
-  final ExpenseEntity? expenseEntity;
+  final FixedCostEntity? fixedCostEntity;
 
   final bool isTabVisible;
 
-  const RegisterExpensePage(
+  const RegisterFixedCostPage(
       {this.mode = RegisterScreenMode.add,
-      this.expenseEntity,
+      this.fixedCostEntity,
       required this.isTabVisible,
       super.key});
 
@@ -32,15 +30,21 @@ class RegisterExpensePage extends ConsumerStatefulWidget {
       _RegisterExpensePageState();
 }
 
-class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
-  late ExpenseEntity initialExpenseData;
+class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
+  late FixedCostEntity initialFixedData;
 
   @override
   void initState() {
     // entityを受け取っていなければ初期データで宣言、受け取っていればそれを宣言
-    initialExpenseData = widget.expenseEntity ??
-        ExpenseEntity(
-          date: DateFormat('yyyyMMdd').format(DateTime.now()),
+    initialFixedData = widget.fixedCostEntity ??
+        FixedCostEntity(
+          name: '',
+          variable: 0,
+          price: 0,
+          expenseSmallCategoryId: 0,
+          intervalNumber: 1,
+          intervalUnit: 1, // 月
+          firstPaymentDate: DateFormat('yyyyMMdd').format(DateTime.now()),
         );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -104,31 +108,32 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                 padding: EdgeInsets.all(leftsidePadding),
                 child: Column(
                   children: [
-                    SizedBox(height: 5),
+                    const SizedBox(height: 5),
 
-                    SizedBox(height: 8),
+                    MemoInputField(originalMemo: initialFixedData.name,
+                        titleLabel: "名称"),
 
-                    ExpenseInputArea(
-                      originalPrice: initialExpenseData.price,
-                      originalIncomeSourceBigCategory:
-                          initialExpenseData.incomeSourceBigCategory,
+                    const SizedBox(height: 8),
+
+                    FixedCostPriceInputArea(
+                      initialFixedData: initialFixedData,
                     ),
 
-                    SizedBox(height: 8),
 
-                    MemoInputField(originalMemo: initialExpenseData.memo),
+                    const SizedBox(height: 8),
 
-                    SizedBox(height: 8),
+                    PaymentFrequencyInputArea(
+                      initialFixedData: initialFixedData,
+                    ),
+                    
 
-                    DateInputField(originalDate: initialExpenseData.date),
-
-                    SizedBox(height: 16),
+                    const SizedBox(height: 16),
 
                     // カテゴリー選択エリア
                     CategoryArea(
                         transactionMode: TransactionMode.expense,
                         originalCategoryId:
-                            initialExpenseData.paymentCategoryId),
+                            initialFixedData.expenseSmallCategoryId),
                   ],
                 ),
               ),
@@ -139,8 +144,8 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
           floatingActionButton: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: SubmitButton(
-                transactionMode: TransactionMode.expense,
-                originalExpenseEntity: initialExpenseData),
+                transactionMode: TransactionMode.fixedCost,
+                originalFixedCostEntity: initialFixedData),
           )),
     );
   }

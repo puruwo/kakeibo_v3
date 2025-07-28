@@ -13,7 +13,15 @@ import 'package:kakeibo/view_model/state/register_page/select_category_controlle
 
 enum ButtonStatus { selected, normal, none }
 
-enum TransactionMode { expense, income }
+enum TransactionMode {
+  expense(0),
+  fixedCost(1),
+  income(2);
+
+  final int modeNumber;
+
+  const TransactionMode(this.modeNumber);
+}
 
 class CategoryArea extends ConsumerStatefulWidget {
   const CategoryArea(
@@ -35,7 +43,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final ICategoryEntity categoryEntity = switch (widget.transactionMode) {
-        TransactionMode.expense => await ref
+        TransactionMode.expense || TransactionMode.fixedCost => await ref
             .watch(categoryUsecaseProvider)
             .fetchBySmallId(widget.originalCategoryId),
         TransactionMode.income => await ref
@@ -65,7 +73,9 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     final screenVerticalMagnification = context.screenVerticalMagnification;
 
     final provider = switch (widget.transactionMode) {
-      TransactionMode.expense => allCategoriesProvider,
+      TransactionMode.expense ||
+      TransactionMode.fixedCost =>
+        allCategoriesProvider,
       TransactionMode.income => allIncomeCategoriesProvider,
     };
 

@@ -41,7 +41,7 @@ class FixedCostService {
     final expenseEntity = ExpenseEntity(
         paymentCategoryId: fixedCostEntity.expenseSmallCategoryId,
         date: paymentDate,
-        price: fixedCostEntity.variable == 0 ? fixedCostEntity.price! : 0,
+        price: fixedCostEntity.variable == 0 ? fixedCostEntity.price : 0, // 変動費なら価格は0
         memo: fixedCostEntity.name,
         incomeSourceBigCategory: 0, // 固定費なので収入元は0
         fixedCostId: fixedCostId,

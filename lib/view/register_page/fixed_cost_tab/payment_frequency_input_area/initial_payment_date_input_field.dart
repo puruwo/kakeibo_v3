@@ -5,8 +5,8 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 
-class DateInputField extends ConsumerStatefulWidget {
-  const DateInputField({super.key, required this.originalDate, this.titleLabel = "日付"});
+class InitialPaymentDateInputField extends ConsumerStatefulWidget {
+  const InitialPaymentDateInputField({super.key, required this.originalDate, this.titleLabel = "日付"});
   final String originalDate;
   final String titleLabel;
 
@@ -14,7 +14,7 @@ class DateInputField extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _DateInputFieldState();
 }
 
-class _DateInputFieldState extends ConsumerState<DateInputField> {
+class _DateInputFieldState extends ConsumerState<InitialPaymentDateInputField> {
   @override
   void initState() {
     super.initState();
@@ -31,46 +31,36 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
     final enteredDate = ref.watch(inputDateControllerNotifierProvider);
 
     return GestureDetector(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: MyColors.secondarySystemfill,
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
-          ),
-        ),
-        height: 44,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
-            children: [
-              Text(
-                widget.titleLabel,
-                textAlign: TextAlign.left,
-                style: MyFonts.placeHolder,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      '${enteredDate.year}年${enteredDate.month}月${enteredDate.day}日',
-                      textAlign: TextAlign.right,
-                      style: MyFonts.inputText,
-                    ),
+      child: SizedBox(
+        height: 40,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          textBaseline: TextBaseline.alphabetic,
+          children: [
+            Text(
+              widget.titleLabel,
+              textAlign: TextAlign.left,
+              style: MyFonts.placeHolder,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 4),
+                  child: Text(
+                    '${enteredDate.year}年${enteredDate.month}月${enteredDate.day}日',
+                    textAlign: TextAlign.right,
+                    style: MyFonts.inputText,
                   ),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 14,
-                    color: MyColors.secondaryLabel,
-                  )
-                ],
-              ),
-            ],
-          ),
+                ),
+                const Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 14,
+                  color: MyColors.secondaryLabel,
+                )
+              ],
+            ),
+          ],
         ),
       ),
       onTap: () async {

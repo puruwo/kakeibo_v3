@@ -9,7 +9,7 @@ import 'package:kakeibo/view/register_page/income_tab/income_input_area.dart';
 
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/register_page/common_input_field/memo_input_field.dart';
-import 'package:kakeibo/view/register_page/submit_expense_button.dart';
+import 'package:kakeibo/view/register_page/submit_button.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 import 'package:kakeibo/view/register_page/common_input_field/date_input_field.dart';
@@ -134,7 +134,7 @@ class _RegisaterIncomePageState extends ConsumerState<RegisterIncomePage> {
               FloatingActionButtonLocation.centerDocked,
           floatingActionButton: Padding(
             padding: const EdgeInsets.symmetric(horizontal:16.0),
-            child: SubmitExpenseButton(
+            child: SubmitButton(
                 transactionMode: TransactionMode.income,
                 originalIncomeEntity: initialIncomeData),
           )),

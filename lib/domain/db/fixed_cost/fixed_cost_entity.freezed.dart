@@ -20,10 +20,10 @@ FixedCostEntity _$FixedCostEntityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$FixedCostEntity {
-  int get id => throw _privateConstructorUsedError;
+  int? get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get variable => throw _privateConstructorUsedError;
-  int? get price => throw _privateConstructorUsedError;
+  int get price => throw _privateConstructorUsedError;
   int get expenseSmallCategoryId => throw _privateConstructorUsedError;
   int get intervalNumber => throw _privateConstructorUsedError;
   int get intervalUnit => throw _privateConstructorUsedError;
@@ -45,10 +45,10 @@ abstract class $FixedCostEntityCopyWith<$Res> {
       _$FixedCostEntityCopyWithImpl<$Res, FixedCostEntity>;
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String name,
       int variable,
-      int? price,
+      int price,
       int expenseSmallCategoryId,
       int intervalNumber,
       int intervalUnit,
@@ -71,10 +71,10 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? name = null,
     Object? variable = null,
-    Object? price = freezed,
+    Object? price = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -84,10 +84,10 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
     Object? deleteFlag = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -96,10 +96,10 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
           ? _value.variable
           : variable // ignore: cast_nullable_to_non_nullable
               as int,
-      price: freezed == price
+      price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       expenseSmallCategoryId: null == expenseSmallCategoryId
           ? _value.expenseSmallCategoryId
           : expenseSmallCategoryId // ignore: cast_nullable_to_non_nullable
@@ -141,10 +141,10 @@ abstract class _$$FixedCostEntityImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int id,
+      {int? id,
       String name,
       int variable,
-      int? price,
+      int price,
       int expenseSmallCategoryId,
       int intervalNumber,
       int intervalUnit,
@@ -165,10 +165,10 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
+    Object? id = freezed,
     Object? name = null,
     Object? variable = null,
-    Object? price = freezed,
+    Object? price = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -178,10 +178,10 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
     Object? deleteFlag = null,
   }) {
     return _then(_$FixedCostEntityImpl(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as int,
+              as int?,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -190,10 +190,10 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
           ? _value.variable
           : variable // ignore: cast_nullable_to_non_nullable
               as int,
-      price: freezed == price
+      price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
-              as int?,
+              as int,
       expenseSmallCategoryId: null == expenseSmallCategoryId
           ? _value.expenseSmallCategoryId
           : expenseSmallCategoryId // ignore: cast_nullable_to_non_nullable
@@ -230,30 +230,31 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$FixedCostEntityImpl implements _FixedCostEntity {
   const _$FixedCostEntityImpl(
-      {this.id = 0,
-      required this.name,
+      {this.id,
+      this.name = '',
       required this.variable,
-      this.price,
+      this.price = 0,
       required this.expenseSmallCategoryId,
       required this.intervalNumber,
       required this.intervalUnit,
       required this.firstPaymentDate,
       this.recentPaymentDate,
       this.nextPaymentDate,
-      required this.deleteFlag});
+      this.deleteFlag = 0});
 
   factory _$FixedCostEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$FixedCostEntityImplFromJson(json);
 
   @override
-  @JsonKey()
-  final int id;
+  final int? id;
   @override
+  @JsonKey()
   final String name;
   @override
   final int variable;
   @override
-  final int? price;
+  @JsonKey()
+  final int price;
   @override
   final int expenseSmallCategoryId;
   @override
@@ -267,6 +268,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
   @override
   final String? nextPaymentDate;
   @override
+  @JsonKey()
   final int deleteFlag;
 
   @override
@@ -333,29 +335,29 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
 
 abstract class _FixedCostEntity implements FixedCostEntity {
   const factory _FixedCostEntity(
-      {final int id,
-      required final String name,
+      {final int? id,
+      final String name,
       required final int variable,
-      final int? price,
+      final int price,
       required final int expenseSmallCategoryId,
       required final int intervalNumber,
       required final int intervalUnit,
       required final String firstPaymentDate,
       final String? recentPaymentDate,
       final String? nextPaymentDate,
-      required final int deleteFlag}) = _$FixedCostEntityImpl;
+      final int deleteFlag}) = _$FixedCostEntityImpl;
 
   factory _FixedCostEntity.fromJson(Map<String, dynamic> json) =
       _$FixedCostEntityImpl.fromJson;
 
   @override
-  int get id;
+  int? get id;
   @override
   String get name;
   @override
   int get variable;
   @override
-  int? get price;
+  int get price;
   @override
   int get expenseSmallCategoryId;
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_service.dart';
+import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -48,8 +48,11 @@ class MonthlyUnconfirmedFixedCostUsecaseNotifier
       final fixedCostEntity = await _fixedCostRepo.fetch(
           fixedCostId: expense.fixedCostId!);
 
-      final frequencyLabel =
-          MonthlyFixedCostService().frequencyLabelGetter(fixedCostEntity);
+      // 支払い頻度のラベルを取得するために、valueを生成
+      final PaymentFrequencyValue frequencyValue =
+          PaymentFrequencyValue.fromDB(
+              intervalNumber: fixedCostEntity.intervalNumber,
+              intervalUnitNumber: fixedCostEntity.intervalUnit);
 
       values.add(
         MonthlyUnconfirmedFixedCostTileValue(
@@ -65,7 +68,7 @@ class MonthlyUnconfirmedFixedCostUsecaseNotifier
           bigCategoryName: big.bigCategoryName,
           colorCode: big.colorCode,
           resourcePath: big.resourcePath,
-          frequencyLabel: frequencyLabel,
+          frequencyLabel: frequencyValue.dateLabel,
         ),
       );
     }

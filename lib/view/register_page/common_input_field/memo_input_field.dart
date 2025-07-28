@@ -5,9 +5,10 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 
 class MemoInputField extends ConsumerStatefulWidget {
-  const MemoInputField({super.key, required this.originalMemo});
+  const MemoInputField({super.key, required this.originalMemo,this.titleLabel = "メモ"});
 
   final String originalMemo;
+  final String titleLabel;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MemoInputFieldState();
@@ -45,7 +46,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
             textBaseline: TextBaseline.alphabetic,
             children: [
               Text(
-                "メモ",
+                widget.titleLabel,
                 textAlign: TextAlign.left,
                 style: MyFonts.placeHolder,
               ),
