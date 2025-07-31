@@ -7,7 +7,8 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_summary_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
@@ -167,7 +168,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
               const CategoryTileArea(),
 
               const SizedBox(
-                height: 32,
+                height: 8,
               ),
 
               SizedBox(
@@ -192,6 +193,12 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         )),
                   ],
                 ),
+              ),
+
+              const MonthlyFixedCostSummaryArea(),  
+
+              const SizedBox(
+                height: 8,
               ),
 
               SizedBox(

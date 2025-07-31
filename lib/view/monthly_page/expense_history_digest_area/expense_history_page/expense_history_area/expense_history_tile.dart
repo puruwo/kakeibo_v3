@@ -51,7 +51,9 @@ class ExpenseHistoryTile extends ConsumerWidget {
           ),
         );
         // 値段ラベル
-        final priceLabel = yenmarkFormattedPriceGetter(tileValue.price);
+        final priceLabel = tileValue.price == 0
+            ? '未確定'
+            : yenmarkFormattedPriceGetter(tileValue.price);
 
         return GestureDetector(
           onTap: () async {

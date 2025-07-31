@@ -5,6 +5,8 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/unconfirmed_fixed_cost_area/price_input_dialog.dart';
 
 class UnconfirmedFixedCostTile extends ConsumerWidget {
   const UnconfirmedFixedCostTile({
@@ -32,7 +34,8 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
     final color = MyColors().getColorFromHex(value.colorCode);
 
     // 支払い日のフォーマット
-    final paymentDateLabel = '${value.date.year}/${value.date.month}/${value.date.day}';
+    final paymentDateLabel =
+        '${value.date.year}/${value.date.month}/${value.date.day}';
 
     // アイコン
     final icon = FittedBox(
@@ -47,45 +50,6 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
     );
 
     return GestureDetector(
-      onTap: () async {
-        // showModalBottomSheet(
-        //   //sccafoldの上に出すか
-        //   useRootNavigator: true,
-        //   isScrollControlled: true,
-        //   useSafeArea: true,
-        //   constraints: const BoxConstraints(
-        //     maxWidth: 2000,
-        //   ),
-        //   context: context,
-        //   // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-        //   builder: (context) {
-        //     IncomeEntity incomeEntity = IncomeEntity(
-        //       id: value.id,
-        //       date: DateFormat('yyyyMMdd').format(value.date),
-        //       price: value.price,
-        //       categoryId: value.paymentCategoryId,
-        //       memo: value.name,
-        //     );
-
-        //     return MaterialApp(
-        //       debugShowCheckedModeBanner: false,
-        //       theme: ThemeData.dark(),
-        //       themeMode: ThemeMode.dark,
-        //       darkTheme: ThemeData.dark(),
-        //       home: MediaQuery.withClampedTextScaling(
-        //         // テキストサイズの制御
-        //         minScaleFactor: 0.7,
-        //         maxScaleFactor: 0.95,
-        //         child: RegisterIncomePage(
-        //           incomeEntity: incomeEntity,
-        //           mode: RegisterScreenMode.edit,
-        //           isTabVisible: true,
-        //         ),
-        //       ),
-        //     );
-        //   },
-        // );
-      },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: Container(
@@ -103,31 +67,63 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // アイコン
-                    Row(
-                      children: [
-                        SizedBox(height: 49, child: icon),
-                        // アイコンの横のスペース
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        // 名前
-                        SizedBox(
-                          width: 70 * screenHorizontalMagnification,
-                          child: Text(value.name,
+                    Expanded(
+                      flex: 6,
+                      child: Row(
+                        children: [
+                          SizedBox(height: 49, child: icon),
+                          // アイコンの横のスペース
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          // 名前
+                          Text(value.name,
                               textAlign: TextAlign.start,
                               overflow: TextOverflow.ellipsis,
                               style: MyFonts.cardPrimaryTitle),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     // 値段
-                    SizedBox(
-                      width: 125,
-                      child: Text(
-                        '---',
-                        textAlign: TextAlign.end,
-                        overflow: TextOverflow.ellipsis,
-                        style: MyFonts.cardPriceLabel,
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '未入力',
+                              textAlign: TextAlign.end,
+                              overflow: TextOverflow.ellipsis,
+                              style: MyFonts.cardPriceLabel,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  '過去平均',
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MyFonts.cardSecondaryTitle,
+                                ),
+                                const SizedBox(
+                                  width: 6,
+                                ),
+                                // 小カテゴリー名
+                                Text(
+                                  value.estimatedPrice == 0
+                                      ? '---'
+                                      : yenmarkFormattedPriceGetter(
+                                          value.estimatedPrice),
+                                  textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MyFonts.cardSecondaryTitle,
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -143,8 +139,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                         children: [
                           // 大カテゴリー名
                           Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   'カテゴリー',
@@ -192,8 +187,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                         children: [
                           // 大カテゴリー名
                           Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '頻度',
@@ -243,6 +237,13 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
           ),
         ),
       ),
+      onTap: () async {
+        showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return PriceInputDialog(value: value);
+            });
+      },
     );
   }
 }

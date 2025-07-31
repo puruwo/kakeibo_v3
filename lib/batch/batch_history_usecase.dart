@@ -26,11 +26,14 @@ class BatchProcessUsecase {
     final currentMonthEndDate = dateScope.monthPeriod.endDatetime;
 
     // batchHistoryをチェックして、最近のバッチ処理実行済み期間の最終日を取得
-    final latestBatchProcessingDateString = await _batchHistoryRepositoryProvider.fetchLatestDate();
-    DateTime latestBatchProcessingDate = latestBatchProcessingDateString.toDateTime();
+    final latestBatchProcessingDateString =
+        await _batchHistoryRepositoryProvider.fetchLatestDate();
+    DateTime latestBatchProcessingDate =
+        latestBatchProcessingDateString.toDateTime();
 
     // 最近のバッチ処理実行済み期間の最終日が、今の集計期間の最終日以降の場合は何もしない
-    if (currentMonthEndDate.isBefore(latestBatchProcessingDate) || currentMonthEndDate.isAtSameMomentAs(latestBatchProcessingDate)) {
+    if (currentMonthEndDate.isBefore(latestBatchProcessingDate) ||
+        currentMonthEndDate.isAtSameMomentAs(latestBatchProcessingDate)) {
       return false;
     }
 
@@ -38,14 +41,14 @@ class BatchProcessUsecase {
     // 月ごとの支払い登録が最短繰り返し期間なので、実行する期間単位は月単位とする
 
     // バッチ実行済み最終日がmonthEndDateを超えるまで繰り返す
-    while (currentMonthEndDate.isAfter(latestBatchProcessingDate) ) {
-
+    while (currentMonthEndDate.isAfter(latestBatchProcessingDate)) {
       // バッチ開始日
       final start = latestBatchProcessingDate.add(const Duration(days: 1));
 
       // バッチ終了日
       // バッチ終了日は1ヶ月後の1日前とするが、現在のdateScopeの月の終了日を超えないようにする
-      final end = currentMonthEndDate.isBefore(start.addMonths(1).add(const Duration(days: -1)))
+      final end = currentMonthEndDate
+              .isBefore(start.addMonths(1).add(const Duration(days: -1)))
           ? currentMonthEndDate
           : start.addMonths(1).add(const Duration(days: -1));
 
@@ -66,22 +69,19 @@ class BatchProcessUsecase {
   }
 
   Future<void> monthlyBatchProcess({required PeriodValue periodValue}) async {
-
     // =========バッチ処理==========
     // 月の変わり目に呼ばれる処理
-    // その月に支払いがある固定費を取得し、expenseに支出データを追加する
-    _ref
-        .read(fixedCostUsecaseProvider)
-        .addExpenseForFixedCost(periodValue);
+
+    await _ref.read(fixedCostUsecaseProvider).addExpenseForFixedCost(
+        periodValue); // その月に支払いがある固定費を取得し、expenseに支出データを追加する
 
     // ===========================
 
     // バッチ処理が行われたことを記録するため、batch_historyを更新する
     final insertEntity = BatchHistoryEntity(
-      startDate:periodValue.startDatetime.toFormattedString(),
-      endDate:periodValue.endDatetime.toFormattedString(),
-      status:1
-    );
+        startDate: periodValue.startDatetime.toFormattedString(),
+        endDate: periodValue.endDatetime.toFormattedString(),
+        status: 1);
     _batchHistoryRepositoryProvider.insert(insertEntity);
 
     // DBの更新を管理するnotifierを取得

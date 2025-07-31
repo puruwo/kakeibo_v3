@@ -24,6 +24,7 @@ mixin _$FixedCostEntity {
   String get name => throw _privateConstructorUsedError;
   int get variable => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
+  int get estimatedPrice => throw _privateConstructorUsedError;
   int get expenseSmallCategoryId => throw _privateConstructorUsedError;
   int get intervalNumber => throw _privateConstructorUsedError;
   int get intervalUnit => throw _privateConstructorUsedError;
@@ -49,6 +50,7 @@ abstract class $FixedCostEntityCopyWith<$Res> {
       String name,
       int variable,
       int price,
+      int estimatedPrice,
       int expenseSmallCategoryId,
       int intervalNumber,
       int intervalUnit,
@@ -75,6 +77,7 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
     Object? name = null,
     Object? variable = null,
     Object? price = null,
+    Object? estimatedPrice = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -99,6 +102,10 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
+              as int,
+      estimatedPrice: null == estimatedPrice
+          ? _value.estimatedPrice
+          : estimatedPrice // ignore: cast_nullable_to_non_nullable
               as int,
       expenseSmallCategoryId: null == expenseSmallCategoryId
           ? _value.expenseSmallCategoryId
@@ -145,6 +152,7 @@ abstract class _$$FixedCostEntityImplCopyWith<$Res>
       String name,
       int variable,
       int price,
+      int estimatedPrice,
       int expenseSmallCategoryId,
       int intervalNumber,
       int intervalUnit,
@@ -169,6 +177,7 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
     Object? name = null,
     Object? variable = null,
     Object? price = null,
+    Object? estimatedPrice = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -193,6 +202,10 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
+              as int,
+      estimatedPrice: null == estimatedPrice
+          ? _value.estimatedPrice
+          : estimatedPrice // ignore: cast_nullable_to_non_nullable
               as int,
       expenseSmallCategoryId: null == expenseSmallCategoryId
           ? _value.expenseSmallCategoryId
@@ -234,6 +247,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
       this.name = '',
       required this.variable,
       this.price = 0,
+      this.estimatedPrice = 0,
       required this.expenseSmallCategoryId,
       required this.intervalNumber,
       required this.intervalUnit,
@@ -256,6 +270,9 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
   @JsonKey()
   final int price;
   @override
+  @JsonKey()
+  final int estimatedPrice;
+  @override
   final int expenseSmallCategoryId;
   @override
   final int intervalNumber;
@@ -273,7 +290,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
 
   @override
   String toString() {
-    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, expenseSmallCategoryId: $expenseSmallCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
+    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, estimatedPrice: $estimatedPrice, expenseSmallCategoryId: $expenseSmallCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
   }
 
   @override
@@ -286,6 +303,8 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
             (identical(other.variable, variable) ||
                 other.variable == variable) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.estimatedPrice, estimatedPrice) ||
+                other.estimatedPrice == estimatedPrice) &&
             (identical(other.expenseSmallCategoryId, expenseSmallCategoryId) ||
                 other.expenseSmallCategoryId == expenseSmallCategoryId) &&
             (identical(other.intervalNumber, intervalNumber) ||
@@ -310,6 +329,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
       name,
       variable,
       price,
+      estimatedPrice,
       expenseSmallCategoryId,
       intervalNumber,
       intervalUnit,
@@ -339,6 +359,7 @@ abstract class _FixedCostEntity implements FixedCostEntity {
       final String name,
       required final int variable,
       final int price,
+      final int estimatedPrice,
       required final int expenseSmallCategoryId,
       required final int intervalNumber,
       required final int intervalUnit,
@@ -358,6 +379,8 @@ abstract class _FixedCostEntity implements FixedCostEntity {
   int get variable;
   @override
   int get price;
+  @override
+  int get estimatedPrice;
   @override
   int get expenseSmallCategoryId;
   @override

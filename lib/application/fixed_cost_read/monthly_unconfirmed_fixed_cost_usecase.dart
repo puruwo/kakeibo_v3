@@ -10,20 +10,22 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // 月の確定分固定費を取得するユースケース
 
-final monthlyUnconfirmedFixedCostNotifierProvider = AsyncNotifierProvider.family<
-    MonthlyUnconfirmedFixedCostUsecaseNotifier, List<MonthlyUnconfirmedFixedCostTileValue>, PeriodValue>(
+final monthlyUnconfirmedFixedCostNotifierProvider =
+    AsyncNotifierProvider.family<MonthlyUnconfirmedFixedCostUsecaseNotifier,
+        List<MonthlyUnconfirmedFixedCostTileValue>, PeriodValue>(
   MonthlyUnconfirmedFixedCostUsecaseNotifier.new,
 );
 
-class MonthlyUnconfirmedFixedCostUsecaseNotifier
-    extends FamilyAsyncNotifier<List<MonthlyUnconfirmedFixedCostTileValue>, PeriodValue> {
+class MonthlyUnconfirmedFixedCostUsecaseNotifier extends FamilyAsyncNotifier<
+    List<MonthlyUnconfirmedFixedCostTileValue>, PeriodValue> {
   late ExpenseRepository _expenseRepo;
   late ExpenseSmallCategoryRepository _smallCategoryRepo;
   late ExpenseBigCategoryRepository _bigCategoryRepo;
   late FixedCostRepository _fixedCostRepo;
 
   @override
-  Future<List<MonthlyUnconfirmedFixedCostTileValue>> build(PeriodValue selectedMonthPeriod) async {
+  Future<List<MonthlyUnconfirmedFixedCostTileValue>> build(
+      PeriodValue selectedMonthPeriod) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
@@ -45,22 +47,23 @@ class MonthlyUnconfirmedFixedCostUsecaseNotifier
           smallCategoryId: expense.paymentCategoryId);
       final big = await _bigCategoryRepo.fetchByBigCategory(
           bigCategoryId: small.bigCategoryKey);
-      final fixedCostEntity = await _fixedCostRepo.fetch(
-          fixedCostId: expense.fixedCostId!);
+      final fixedCostEntity =
+          await _fixedCostRepo.fetch(fixedCostId: expense.fixedCostId!);
 
       // 支払い頻度のラベルを取得するために、valueを生成
-      final PaymentFrequencyValue frequencyValue =
-          PaymentFrequencyValue.fromDB(
-              intervalNumber: fixedCostEntity.intervalNumber,
-              intervalUnitNumber: fixedCostEntity.intervalUnit);
+      final PaymentFrequencyValue frequencyValue = PaymentFrequencyValue.fromDB(
+          intervalNumber: fixedCostEntity.intervalNumber,
+          intervalUnitNumber: fixedCostEntity.intervalUnit);
 
       values.add(
         MonthlyUnconfirmedFixedCostTileValue(
           id: expense.id,
           date: DateTime.parse(
               '${expense.date.substring(0, 4)}-${expense.date.substring(4, 6)}-${expense.date.substring(6, 8)}'),
+          fixedCostId: expense.fixedCostId!,
           name: expense.memo,
           variable: fixedCostEntity.variable,
+          estimatedPrice: fixedCostEntity.estimatedPrice,
           intervalNumber: fixedCostEntity.intervalNumber,
           intervalUnit: fixedCostEntity.intervalUnit,
           nextPaymentDate: fixedCostEntity.nextPaymentDate,

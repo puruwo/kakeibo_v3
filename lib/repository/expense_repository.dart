@@ -192,6 +192,28 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     }
   }
 
+  // 確定している固定費の合計額を取得する
+  @override
+  Future<int> fetchTotalFixedCostByPeriod(
+      {required PeriodValue period}) async {
+    final sql = '''
+      SELECT COALESCE(SUM(price),0) as totalFixedCost FROM ${SqfExpense.tableName} a
+      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      AND a.${SqfExpense.fixedCostId} IS NOT NULL
+      AND a.${SqfExpense.isConfirmed} = 1;
+      ''';
+    try {
+      final result = await db.queryFirstIntValue(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalFixedCostByPeriod(MonthPeriodValue period)\n$sql');
+
+      return result ?? 0; // nullの場合は0を返す
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
   // 確定していない固定費の支出を取得する
   @override
   Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostByPeriod(
@@ -227,6 +249,28 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     }
   }
 
+  // ID指定の変動固定費の推定支出を支出レコードから取得する
+  @override
+  Future<double> fetchFixedCostEstimatedPriceById({required int fixedCostId}) async {
+    final sql = '''
+      SELECT 
+        AVG(a.${SqfExpense.price}) AS price
+      FROM ${SqfExpense.tableName} a
+      WHERE a.${SqfExpense.fixedCostId} = $fixedCostId
+      AND a.${SqfExpense.isConfirmed} = 1;
+    ''';
+    try {
+      // queryFirstIntValueを使うとdoubleで帰ってきた時にnullが返ってくることがあるので、queryを使う
+      final json = await db.query(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchFixedCostEstimatedPriceById(int fixedCostId)\n$sql');
+      return json[0]['price'] ?? 0; // nullの場合は0を返す
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
   @override
   void insert(ExpenseEntity expenseEntity) {
     db.insert(SqfExpense.tableName, {
@@ -259,6 +303,21 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         expenseEntity.id);
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseRepository update(ExpenseEntity expenseEntity)\n ${SqfExpense.tableName}でupdate\n expenseEntity: \n$expenseEntity');
+  }
+
+  /// 確定していない固定費の支出を確定させる
+  @override
+  Future<void> updateUnconfirmedCost({required int id,required int confirmedPrice})async{
+    await db.update(
+      SqfExpense.tableName,
+      {
+        SqfExpense.price: confirmedPrice,
+        SqfExpense.isConfirmed: 1 // 確定済みに更新
+      },
+      id,
+    );
+    // logger.i(
+    //     '====SQLが実行されました====\n ImplementsExpenseRepository updateUnconfirmedCost(int id, int confirmedPrice)\n ${SqfExpense.tableName}でupdate\n id: $id, confirmedPrice: $confirmedPrice');
   }
 
   @override

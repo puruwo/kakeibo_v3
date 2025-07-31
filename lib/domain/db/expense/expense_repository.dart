@@ -21,7 +21,9 @@ abstract interface class ExpenseRepository {
   /// 期間指定してデータを取得する
   /// カテゴリーと拠出元の指定あり
   Future<List<ExpenseEntity>> fetchWithCategory(
-      {required int incomeSourceBigId, required PeriodValue period,required int smallCategoryId});
+      {required int incomeSourceBigId,
+      required PeriodValue period,
+      required int smallCategoryId});
 
   // 期間を指定して支出の合計を取得する
   Future<int> fetchTotalExpenseByPeriod(
@@ -29,19 +31,31 @@ abstract interface class ExpenseRepository {
 
   // 期間とカテゴリーを指定して支出の合計を取得する
   Future<int> fetchTotalExpenseByPeriodWithBigCategory(
-      {required int incomeSourceBigCategory, required DateTime fromDate, required DateTime toDate});
+      {required int incomeSourceBigCategory,
+      required DateTime fromDate,
+      required DateTime toDate});
 
   // 確定している固定費の支出を取得する
   Future<List<ExpenseEntity>> fetchFixedCostByPeriod(
       {required PeriodValue period});
 
+  // 確定している固定費の合計額を取得する
+  Future<int> fetchTotalFixedCostByPeriod({required PeriodValue period});
+
   // 確定していない固定費の支出を取得する
   Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostByPeriod(
       {required PeriodValue period});
 
+  // 固定費の支出をID指定で取得する
+  Future<double> fetchFixedCostEstimatedPriceById({required int fixedCostId});
+
   void insert(ExpenseEntity expenseEntity);
 
   void update(ExpenseEntity expenseEntity);
+
+  /// 確定していない固定費の支出を更新する
+  Future<void> updateUnconfirmedCost(
+      {required int id, required int confirmedPrice});
 
   void delete(int id);
 }

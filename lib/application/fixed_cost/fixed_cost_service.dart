@@ -7,10 +7,9 @@ import 'package:kakeibo/util/extension/datetime_extension.dart';
 class FixedCostService {
   // 次の支払い日を設定しentityを返す
   FixedCostEntity populateNextPaymentEntity(FixedCostEntity entity) {
-    // 基準日を取得
-    // 最近支払い日が設定されている場合はそれを基準にする、なければ最初の支払い日を基準にする
-    final recentPaymentDate =
-        entity.recentPaymentDate ?? entity.firstPaymentDate;
+
+    // 次支払い日が設定されている場合はそれを基準にする、なければ最初の支払い日を基準にする
+    final recentPaymentDate = entity.nextPaymentDate ?? entity.firstPaymentDate;
 
     // 次の支払い日を計算
     DateTime nextPaymentDate;

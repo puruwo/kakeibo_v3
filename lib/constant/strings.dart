@@ -15,17 +15,24 @@ class MyFonts {
   static const thirdPageTextButton =
       TextStyle(color: MyColors.themeColor, fontSize: 14);
 
-  // MonthlyPlanArea BonusPlaaArea YearlyBalanceArea
+  /// MonthlyPlanArea BonusPlaaArea YearlyBalanceArea FixedCostArea
+  // タイトル
   static TextStyle topCardTitleLabel = GoogleFonts.notoSans(
       fontSize: 16,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
-      
+
   static TextStyle topCardSubTitleLabel = GoogleFonts.notoSans(
       fontSize: 14,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
 
+  static TextStyle topCardTirtiaryTitleLabel = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
+
+  // 金額
   static TextStyle topCardPriceLabel = const TextStyle(
     color: MyColors.label,
     fontSize: 26,
@@ -39,12 +46,20 @@ class MyFonts {
     fontFamily: 'sf_ui',
     fontWeight: FontWeight.w600,
   );
-
+  static TextStyle topCardTirtiaryPriceLabel = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
+  
+  // 円
   static TextStyle topCardYenLabel = GoogleFonts.notoSans(
       fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w600);
 
   static TextStyle topCardSubYenLabel = GoogleFonts.notoSans(
       fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w300);
+
+  static TextStyle topCardTirtiaryYenLabel = GoogleFonts.notoSans(
+      fontSize: 11, color: MyColors.secondaryLabel, fontWeight: FontWeight.w300);
 
   // Calndar Page
   static TextStyle calendarDateBoxLarge = const TextStyle(
@@ -207,13 +222,15 @@ class MyFonts {
       fontWeight: FontWeight.w400);
 
   /// ================================================
-  /// 
+  ///
   /// ================AnnualBalanceChartPage================
   /// 年間収支グラフページ
-  
+
   // 縦軸ラベル
   static TextStyle annualBalanceChartPageVerticalLabel = GoogleFonts.notoSans(
-      fontSize: 12, color: MyColors.secondaryLabel, fontWeight: FontWeight.w300);
+      fontSize: 12,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
 
   // 月ラベル
   static TextStyle annualBalanceChartPageMonthLabel = GoogleFonts.notoSans(

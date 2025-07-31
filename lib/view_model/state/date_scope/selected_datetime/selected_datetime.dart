@@ -8,6 +8,7 @@ class SelectedDatetimeNotifier extends _$SelectedDatetimeNotifier {
   DateTime build() {
     // 最初のデータ
     final now = DateTime.now();
+    // final now = DateTime(2025,9,26);
     return DateTime(now.year, now.month, now.day);
   }
 

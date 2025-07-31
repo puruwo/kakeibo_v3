@@ -1,7 +1,7 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/confirmed_fixed_cost_area/confirmed_fixed_cost_tile.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/confirmed_fixed_cost_area/confirmed_fixed_cost_tile.dart';
 
 /// Local imports
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
@@ -30,6 +30,7 @@ class _ConfirmedFixedCostListAreaState extends ConsumerState<ConfirmedFixedCostL
           data: (valueList) {
             if (valueList.isNotEmpty) {
               return ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: valueList.length,
                 itemBuilder: (context, index) {

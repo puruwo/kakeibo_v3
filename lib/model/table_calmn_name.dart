@@ -79,6 +79,7 @@ class SqfFixedCost {
   static const name = 'name';
   static const variable = 'variable';
   static const price = 'price';
+  static const estimatedPrice = 'estimated_price';
   static const expenseSmallCategoryId = 'expense_small_category_id';
   static const intervalNumber = 'interval_number';
   static const intervalUnit = 'interval_unit';

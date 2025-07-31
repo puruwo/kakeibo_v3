@@ -166,6 +166,7 @@ class DataBaseHelperHandling {
           ${SqfFixedCost.name} TEXT NOT NULL,
           ${SqfFixedCost.variable} INTEGER NOT NULL,
           ${SqfFixedCost.price} INTEGER,
+          ${SqfFixedCost.estimatedPrice} INTEGER,
           ${SqfFixedCost.expenseSmallCategoryId} INTEGER NOT NULL,
           ${SqfFixedCost.intervalNumber} INTEGER NOT NULL,
           ${SqfFixedCost.intervalUnit} INTEGER NOT NULL,
@@ -207,17 +208,8 @@ class DataBaseHelperHandling {
           ${SqfBatchHistory.endDate},
           ${SqfBatchHistory.status})
           VALUES
-          ('20250401', '${DateTime(2025,04,01).toFormattedString()}', 1);
+          ('20250401', '${DateTime(2025,06,24).toFormattedString()}', 1);
           ''');
-    // await db.execute('''
-    //       INSERT INTO ${SqfBatchHistory.tableName} (
-    //       ${SqfBatchHistory.id},
-    //       ${SqfBatchHistory.startDate},
-    //       ${SqfBatchHistory.endDate},
-    //       ${SqfBatchHistory.status})
-    //       VALUES
-    //       (0, '20250401', '${DateTime.now().toFormattedString()}', 1);
-    //       ''');
 
     print('モックデータを挿入中です');
     await db.transaction((txn) async {

@@ -19,10 +19,12 @@ mixin _$MonthlyUnconfirmedFixedCostTileValue {
 // expense
   int get id => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError; // fixed cost
+  int get fixedCostId => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   int get variable => throw _privateConstructorUsedError;
   int get intervalNumber => throw _privateConstructorUsedError;
   int get intervalUnit => throw _privateConstructorUsedError;
+  int get estimatedPrice => throw _privateConstructorUsedError;
   String? get nextPaymentDate =>
       throw _privateConstructorUsedError; // small category
   String get smallCategoryName =>
@@ -49,10 +51,12 @@ abstract class $MonthlyUnconfirmedFixedCostTileValueCopyWith<$Res> {
   $Res call(
       {int id,
       DateTime date,
+      int fixedCostId,
       String name,
       int variable,
       int intervalNumber,
       int intervalUnit,
+      int estimatedPrice,
       String? nextPaymentDate,
       String smallCategoryName,
       String bigCategoryName,
@@ -77,10 +81,12 @@ class _$MonthlyUnconfirmedFixedCostTileValueCopyWithImpl<$Res,
   $Res call({
     Object? id = null,
     Object? date = null,
+    Object? fixedCostId = null,
     Object? name = null,
     Object? variable = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
+    Object? estimatedPrice = null,
     Object? nextPaymentDate = freezed,
     Object? smallCategoryName = null,
     Object? bigCategoryName = null,
@@ -97,6 +103,10 @@ class _$MonthlyUnconfirmedFixedCostTileValueCopyWithImpl<$Res,
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      fixedCostId: null == fixedCostId
+          ? _value.fixedCostId
+          : fixedCostId // ignore: cast_nullable_to_non_nullable
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -112,6 +122,10 @@ class _$MonthlyUnconfirmedFixedCostTileValueCopyWithImpl<$Res,
       intervalUnit: null == intervalUnit
           ? _value.intervalUnit
           : intervalUnit // ignore: cast_nullable_to_non_nullable
+              as int,
+      estimatedPrice: null == estimatedPrice
+          ? _value.estimatedPrice
+          : estimatedPrice // ignore: cast_nullable_to_non_nullable
               as int,
       nextPaymentDate: freezed == nextPaymentDate
           ? _value.nextPaymentDate
@@ -153,10 +167,12 @@ abstract class _$$MonthlyUnconfirmedFixedCostTileValueImplCopyWith<$Res>
   $Res call(
       {int id,
       DateTime date,
+      int fixedCostId,
       String name,
       int variable,
       int intervalNumber,
       int intervalUnit,
+      int estimatedPrice,
       String? nextPaymentDate,
       String smallCategoryName,
       String bigCategoryName,
@@ -180,10 +196,12 @@ class __$$MonthlyUnconfirmedFixedCostTileValueImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? date = null,
+    Object? fixedCostId = null,
     Object? name = null,
     Object? variable = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
+    Object? estimatedPrice = null,
     Object? nextPaymentDate = freezed,
     Object? smallCategoryName = null,
     Object? bigCategoryName = null,
@@ -200,6 +218,10 @@ class __$$MonthlyUnconfirmedFixedCostTileValueImplCopyWithImpl<$Res>
           ? _value.date
           : date // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      fixedCostId: null == fixedCostId
+          ? _value.fixedCostId
+          : fixedCostId // ignore: cast_nullable_to_non_nullable
+              as int,
       name: null == name
           ? _value.name
           : name // ignore: cast_nullable_to_non_nullable
@@ -215,6 +237,10 @@ class __$$MonthlyUnconfirmedFixedCostTileValueImplCopyWithImpl<$Res>
       intervalUnit: null == intervalUnit
           ? _value.intervalUnit
           : intervalUnit // ignore: cast_nullable_to_non_nullable
+              as int,
+      estimatedPrice: null == estimatedPrice
+          ? _value.estimatedPrice
+          : estimatedPrice // ignore: cast_nullable_to_non_nullable
               as int,
       nextPaymentDate: freezed == nextPaymentDate
           ? _value.nextPaymentDate
@@ -251,10 +277,12 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
   const _$MonthlyUnconfirmedFixedCostTileValueImpl(
       {required this.id,
       required this.date,
+      required this.fixedCostId,
       required this.name,
       required this.variable,
       required this.intervalNumber,
       required this.intervalUnit,
+      required this.estimatedPrice,
       this.nextPaymentDate,
       required this.smallCategoryName,
       required this.bigCategoryName,
@@ -269,6 +297,8 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
   final DateTime date;
 // fixed cost
   @override
+  final int fixedCostId;
+  @override
   final String name;
   @override
   final int variable;
@@ -276,6 +306,8 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
   final int intervalNumber;
   @override
   final int intervalUnit;
+  @override
+  final int estimatedPrice;
   @override
   final String? nextPaymentDate;
 // small category
@@ -293,7 +325,7 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
 
   @override
   String toString() {
-    return 'MonthlyUnconfirmedFixedCostTileValue(id: $id, date: $date, name: $name, variable: $variable, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, nextPaymentDate: $nextPaymentDate, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, frequencyLabel: $frequencyLabel)';
+    return 'MonthlyUnconfirmedFixedCostTileValue(id: $id, date: $date, fixedCostId: $fixedCostId, name: $name, variable: $variable, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, estimatedPrice: $estimatedPrice, nextPaymentDate: $nextPaymentDate, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, frequencyLabel: $frequencyLabel)';
   }
 
   @override
@@ -303,6 +335,8 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
             other is _$MonthlyUnconfirmedFixedCostTileValueImpl &&
             (identical(other.id, id) || other.id == id) &&
             (identical(other.date, date) || other.date == date) &&
+            (identical(other.fixedCostId, fixedCostId) ||
+                other.fixedCostId == fixedCostId) &&
             (identical(other.name, name) || other.name == name) &&
             (identical(other.variable, variable) ||
                 other.variable == variable) &&
@@ -310,6 +344,8 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
                 other.intervalNumber == intervalNumber) &&
             (identical(other.intervalUnit, intervalUnit) ||
                 other.intervalUnit == intervalUnit) &&
+            (identical(other.estimatedPrice, estimatedPrice) ||
+                other.estimatedPrice == estimatedPrice) &&
             (identical(other.nextPaymentDate, nextPaymentDate) ||
                 other.nextPaymentDate == nextPaymentDate) &&
             (identical(other.smallCategoryName, smallCategoryName) ||
@@ -329,10 +365,12 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
       runtimeType,
       id,
       date,
+      fixedCostId,
       name,
       variable,
       intervalNumber,
       intervalUnit,
+      estimatedPrice,
       nextPaymentDate,
       smallCategoryName,
       bigCategoryName,
@@ -354,10 +392,12 @@ abstract class _MonthlyUnconfirmedFixedCostTileValue
   const factory _MonthlyUnconfirmedFixedCostTileValue(
           {required final int id,
           required final DateTime date,
+          required final int fixedCostId,
           required final String name,
           required final int variable,
           required final int intervalNumber,
           required final int intervalUnit,
+          required final int estimatedPrice,
           final String? nextPaymentDate,
           required final String smallCategoryName,
           required final String bigCategoryName,
@@ -371,6 +411,8 @@ abstract class _MonthlyUnconfirmedFixedCostTileValue
   @override
   DateTime get date;
   @override // fixed cost
+  int get fixedCostId;
+  @override
   String get name;
   @override
   int get variable;
@@ -378,6 +420,8 @@ abstract class _MonthlyUnconfirmedFixedCostTileValue
   int get intervalNumber;
   @override
   int get intervalUnit;
+  @override
+  int get estimatedPrice;
   @override
   String? get nextPaymentDate;
   @override // small category

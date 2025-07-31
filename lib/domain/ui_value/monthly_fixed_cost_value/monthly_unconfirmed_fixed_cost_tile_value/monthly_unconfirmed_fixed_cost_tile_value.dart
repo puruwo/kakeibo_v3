@@ -14,10 +14,12 @@ class MonthlyUnconfirmedFixedCostTileValue with _$MonthlyUnconfirmedFixedCostTil
     required DateTime date,
 
     // fixed cost
+    required int fixedCostId,
     required String name,
     required int variable,
     required int intervalNumber,
     required int intervalUnit,
+    required int estimatedPrice, 
     String? nextPaymentDate,
 
     // small category

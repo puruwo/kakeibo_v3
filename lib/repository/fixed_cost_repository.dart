@@ -19,6 +19,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.name} AS name, 
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price, 
+        a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -51,6 +52,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.name} AS name, 
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price, 
+        a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -95,6 +97,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.name} AS name, 
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price, 
+        a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -106,6 +109,8 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       WHERE a.${SqfFixedCost.nextPaymentDate} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.nextPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       ORDER BY a.${SqfFixedCost.id} DESC;
     ''';
+
+  
 
     try {
       final jsonList = await db.query(sql);
@@ -119,12 +124,32 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
     }
   }
 
+  // 期間指定してその期間内に最近支払いありの、変動あり固定費の推定支出合計を取得する
+  @override
+  Future<int> fetchEstimatedPriceByPeriod(
+      {required PeriodValue period}) async {
+    final sql = '''
+      SELECT SUM(a.${SqfFixedCost.estimatedPrice}) AS estimatedPrice
+      FROM ${SqfFixedCost.tableName} a
+      WHERE a.${SqfFixedCost.recentPaymentDate} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.recentPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      AND a.${SqfFixedCost.deleteFlag} = 0;
+    ''';
+    try {
+      final result = await db.queryFirstIntValue(sql);
+      return result ?? 0;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
   @override
   Future<int> insert(FixedCostEntity fixedCostEntity) async {
     final id = db.insert(SqfFixedCost.tableName, {
       SqfFixedCost.name: fixedCostEntity.name,
       SqfFixedCost.variable: fixedCostEntity.variable,
       SqfFixedCost.price: fixedCostEntity.price,
+      SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
       SqfFixedCost.expenseSmallCategoryId:
           fixedCostEntity.expenseSmallCategoryId,
       SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
@@ -138,13 +163,14 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
   }
 
   @override
-  void update(FixedCostEntity fixedCostEntity) {
-    db.update(
+  Future<void> update(FixedCostEntity fixedCostEntity) async {
+    final result = await db.update(
         SqfFixedCost.tableName,
         {
           SqfFixedCost.name: fixedCostEntity.name,
           SqfFixedCost.variable: fixedCostEntity.variable,
           SqfFixedCost.price: fixedCostEntity.price,
+          SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
           SqfFixedCost.expenseSmallCategoryId:
               fixedCostEntity.expenseSmallCategoryId,
           SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
@@ -155,10 +181,11 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
           SqfFixedCost.deleteFlag: fixedCostEntity.deleteFlag,
         },
         fixedCostEntity.id ?? -1);
+    print('Update result: $result');
   }
 
   @override
-  void delete(int id) async {
+  Future<void> delete(int id) async {
     await db.delete(SqfFixedCost.tableName, id);
   }
 }
