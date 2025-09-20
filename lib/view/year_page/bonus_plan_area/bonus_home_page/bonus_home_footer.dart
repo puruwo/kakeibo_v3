@@ -93,7 +93,6 @@ class BonusHomeFooter extends ConsumerWidget {
               IncomeEntity newIncome = IncomeEntity(
                 date: DateFormat('yyyyMMdd').format(today),
                 categoryId: 1, //　1を指定することで、でボーナスを選択する
-                memo: 'oeiaoi',
               );
               return MaterialApp(
                 debugShowCheckedModeBanner: false,

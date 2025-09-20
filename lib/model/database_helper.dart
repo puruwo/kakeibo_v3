@@ -57,12 +57,12 @@ class DatabaseHelper {
         print('データベースをアップデート中です');
         for (var version = oldVersion + 1; version <= newVersion; version++) {
           switch (version) {
-            case 3:
-              await DataBaseMigrate().toV3(db);
-              break;
-            case 5:
-              await DataBaseMigrate().toV5(db);
-              break;
+            // case 3:
+            //   await DataBaseMigrate().toV3(db);
+            //   break;
+            // case 5:
+            //   await DataBaseMigrate().toV5(db);
+            //   break;
           }
         }
         print('アップデートが完了しました');
