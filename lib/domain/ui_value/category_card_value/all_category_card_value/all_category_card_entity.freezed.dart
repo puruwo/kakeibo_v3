@@ -15,9 +15,14 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$AllCategoryCardEntity {
+mixin _$AllCategoryCardModel {
+  AllCategoryCardStatusType get cardStatusType =>
+      throw _privateConstructorUsedError;
   int get allCategoryTotalExpense => throw _privateConstructorUsedError;
   int get allCategoryTotalBudget => throw _privateConstructorUsedError;
+  int get allCategoryTotalIncome => throw _privateConstructorUsedError;
+  int get denominator => throw _privateConstructorUsedError;
+  int get realSavings => throw _privateConstructorUsedError;
   int get categoryCount => throw _privateConstructorUsedError;
   List<int> get categoryIdList => throw _privateConstructorUsedError;
   List<String> get categoryNameList => throw _privateConstructorUsedError;
@@ -26,19 +31,23 @@ mixin _$AllCategoryCardEntity {
   List<String> get categoryColorList => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
-  $AllCategoryCardEntityCopyWith<AllCategoryCardEntity> get copyWith =>
+  $AllCategoryCardModelCopyWith<AllCategoryCardModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $AllCategoryCardEntityCopyWith<$Res> {
-  factory $AllCategoryCardEntityCopyWith(AllCategoryCardEntity value,
-          $Res Function(AllCategoryCardEntity) then) =
-      _$AllCategoryCardEntityCopyWithImpl<$Res, AllCategoryCardEntity>;
+abstract class $AllCategoryCardModelCopyWith<$Res> {
+  factory $AllCategoryCardModelCopyWith(AllCategoryCardModel value,
+          $Res Function(AllCategoryCardModel) then) =
+      _$AllCategoryCardModelCopyWithImpl<$Res, AllCategoryCardModel>;
   @useResult
   $Res call(
-      {int allCategoryTotalExpense,
+      {AllCategoryCardStatusType cardStatusType,
+      int allCategoryTotalExpense,
       int allCategoryTotalBudget,
+      int allCategoryTotalIncome,
+      int denominator,
+      int realSavings,
       int categoryCount,
       List<int> categoryIdList,
       List<String> categoryNameList,
@@ -48,10 +57,10 @@ abstract class $AllCategoryCardEntityCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$AllCategoryCardEntityCopyWithImpl<$Res,
-        $Val extends AllCategoryCardEntity>
-    implements $AllCategoryCardEntityCopyWith<$Res> {
-  _$AllCategoryCardEntityCopyWithImpl(this._value, this._then);
+class _$AllCategoryCardModelCopyWithImpl<$Res,
+        $Val extends AllCategoryCardModel>
+    implements $AllCategoryCardModelCopyWith<$Res> {
+  _$AllCategoryCardModelCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
@@ -61,8 +70,12 @@ class _$AllCategoryCardEntityCopyWithImpl<$Res,
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? cardStatusType = null,
     Object? allCategoryTotalExpense = null,
     Object? allCategoryTotalBudget = null,
+    Object? allCategoryTotalIncome = null,
+    Object? denominator = null,
+    Object? realSavings = null,
     Object? categoryCount = null,
     Object? categoryIdList = null,
     Object? categoryNameList = null,
@@ -71,6 +84,10 @@ class _$AllCategoryCardEntityCopyWithImpl<$Res,
     Object? categoryColorList = null,
   }) {
     return _then(_value.copyWith(
+      cardStatusType: null == cardStatusType
+          ? _value.cardStatusType
+          : cardStatusType // ignore: cast_nullable_to_non_nullable
+              as AllCategoryCardStatusType,
       allCategoryTotalExpense: null == allCategoryTotalExpense
           ? _value.allCategoryTotalExpense
           : allCategoryTotalExpense // ignore: cast_nullable_to_non_nullable
@@ -78,6 +95,18 @@ class _$AllCategoryCardEntityCopyWithImpl<$Res,
       allCategoryTotalBudget: null == allCategoryTotalBudget
           ? _value.allCategoryTotalBudget
           : allCategoryTotalBudget // ignore: cast_nullable_to_non_nullable
+              as int,
+      allCategoryTotalIncome: null == allCategoryTotalIncome
+          ? _value.allCategoryTotalIncome
+          : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
+              as int,
+      denominator: null == denominator
+          ? _value.denominator
+          : denominator // ignore: cast_nullable_to_non_nullable
+              as int,
+      realSavings: null == realSavings
+          ? _value.realSavings
+          : realSavings // ignore: cast_nullable_to_non_nullable
               as int,
       categoryCount: null == categoryCount
           ? _value.categoryCount
@@ -108,17 +137,20 @@ class _$AllCategoryCardEntityCopyWithImpl<$Res,
 }
 
 /// @nodoc
-abstract class _$$AllCategoryCardEntityImplCopyWith<$Res>
-    implements $AllCategoryCardEntityCopyWith<$Res> {
-  factory _$$AllCategoryCardEntityImplCopyWith(
-          _$AllCategoryCardEntityImpl value,
-          $Res Function(_$AllCategoryCardEntityImpl) then) =
-      __$$AllCategoryCardEntityImplCopyWithImpl<$Res>;
+abstract class _$$AllCategoryCardModelImplCopyWith<$Res>
+    implements $AllCategoryCardModelCopyWith<$Res> {
+  factory _$$AllCategoryCardModelImplCopyWith(_$AllCategoryCardModelImpl value,
+          $Res Function(_$AllCategoryCardModelImpl) then) =
+      __$$AllCategoryCardModelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
-      {int allCategoryTotalExpense,
+      {AllCategoryCardStatusType cardStatusType,
+      int allCategoryTotalExpense,
       int allCategoryTotalBudget,
+      int allCategoryTotalIncome,
+      int denominator,
+      int realSavings,
       int categoryCount,
       List<int> categoryIdList,
       List<String> categoryNameList,
@@ -128,19 +160,22 @@ abstract class _$$AllCategoryCardEntityImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$AllCategoryCardEntityImplCopyWithImpl<$Res>
-    extends _$AllCategoryCardEntityCopyWithImpl<$Res,
-        _$AllCategoryCardEntityImpl>
-    implements _$$AllCategoryCardEntityImplCopyWith<$Res> {
-  __$$AllCategoryCardEntityImplCopyWithImpl(_$AllCategoryCardEntityImpl _value,
-      $Res Function(_$AllCategoryCardEntityImpl) _then)
+class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
+    extends _$AllCategoryCardModelCopyWithImpl<$Res, _$AllCategoryCardModelImpl>
+    implements _$$AllCategoryCardModelImplCopyWith<$Res> {
+  __$$AllCategoryCardModelImplCopyWithImpl(_$AllCategoryCardModelImpl _value,
+      $Res Function(_$AllCategoryCardModelImpl) _then)
       : super(_value, _then);
 
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? cardStatusType = null,
     Object? allCategoryTotalExpense = null,
     Object? allCategoryTotalBudget = null,
+    Object? allCategoryTotalIncome = null,
+    Object? denominator = null,
+    Object? realSavings = null,
     Object? categoryCount = null,
     Object? categoryIdList = null,
     Object? categoryNameList = null,
@@ -148,7 +183,11 @@ class __$$AllCategoryCardEntityImplCopyWithImpl<$Res>
     Object? categoryIconPathList = null,
     Object? categoryColorList = null,
   }) {
-    return _then(_$AllCategoryCardEntityImpl(
+    return _then(_$AllCategoryCardModelImpl(
+      cardStatusType: null == cardStatusType
+          ? _value.cardStatusType
+          : cardStatusType // ignore: cast_nullable_to_non_nullable
+              as AllCategoryCardStatusType,
       allCategoryTotalExpense: null == allCategoryTotalExpense
           ? _value.allCategoryTotalExpense
           : allCategoryTotalExpense // ignore: cast_nullable_to_non_nullable
@@ -156,6 +195,18 @@ class __$$AllCategoryCardEntityImplCopyWithImpl<$Res>
       allCategoryTotalBudget: null == allCategoryTotalBudget
           ? _value.allCategoryTotalBudget
           : allCategoryTotalBudget // ignore: cast_nullable_to_non_nullable
+              as int,
+      allCategoryTotalIncome: null == allCategoryTotalIncome
+          ? _value.allCategoryTotalIncome
+          : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
+              as int,
+      denominator: null == denominator
+          ? _value.denominator
+          : denominator // ignore: cast_nullable_to_non_nullable
+              as int,
+      realSavings: null == realSavings
+          ? _value.realSavings
+          : realSavings // ignore: cast_nullable_to_non_nullable
               as int,
       categoryCount: null == categoryCount
           ? _value.categoryCount
@@ -187,10 +238,14 @@ class __$$AllCategoryCardEntityImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$AllCategoryCardEntityImpl implements _AllCategoryCardEntity {
-  const _$AllCategoryCardEntityImpl(
-      {required this.allCategoryTotalExpense,
+class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
+  const _$AllCategoryCardModelImpl(
+      {required this.cardStatusType,
+      required this.allCategoryTotalExpense,
       required this.allCategoryTotalBudget,
+      required this.allCategoryTotalIncome,
+      required this.denominator,
+      required this.realSavings,
       required this.categoryCount,
       required final List<int> categoryIdList,
       required final List<String> categoryNameList,
@@ -204,9 +259,17 @@ class _$AllCategoryCardEntityImpl implements _AllCategoryCardEntity {
         _categoryColorList = categoryColorList;
 
   @override
+  final AllCategoryCardStatusType cardStatusType;
+  @override
   final int allCategoryTotalExpense;
   @override
   final int allCategoryTotalBudget;
+  @override
+  final int allCategoryTotalIncome;
+  @override
+  final int denominator;
+  @override
+  final int realSavings;
   @override
   final int categoryCount;
   final List<int> _categoryIdList;
@@ -255,19 +318,27 @@ class _$AllCategoryCardEntityImpl implements _AllCategoryCardEntity {
 
   @override
   String toString() {
-    return 'AllCategoryCardEntity(allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, categoryCount: $categoryCount, categoryIdList: $categoryIdList, categoryNameList: $categoryNameList, categoryExpenseList: $categoryExpenseList, categoryIconPathList: $categoryIconPathList, categoryColorList: $categoryColorList)';
+    return 'AllCategoryCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, denominator: $denominator, realSavings: $realSavings, categoryCount: $categoryCount, categoryIdList: $categoryIdList, categoryNameList: $categoryNameList, categoryExpenseList: $categoryExpenseList, categoryIconPathList: $categoryIconPathList, categoryColorList: $categoryColorList)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$AllCategoryCardEntityImpl &&
+            other is _$AllCategoryCardModelImpl &&
+            (identical(other.cardStatusType, cardStatusType) ||
+                other.cardStatusType == cardStatusType) &&
             (identical(
                     other.allCategoryTotalExpense, allCategoryTotalExpense) ||
                 other.allCategoryTotalExpense == allCategoryTotalExpense) &&
             (identical(other.allCategoryTotalBudget, allCategoryTotalBudget) ||
                 other.allCategoryTotalBudget == allCategoryTotalBudget) &&
+            (identical(other.allCategoryTotalIncome, allCategoryTotalIncome) ||
+                other.allCategoryTotalIncome == allCategoryTotalIncome) &&
+            (identical(other.denominator, denominator) ||
+                other.denominator == denominator) &&
+            (identical(other.realSavings, realSavings) ||
+                other.realSavings == realSavings) &&
             (identical(other.categoryCount, categoryCount) ||
                 other.categoryCount == categoryCount) &&
             const DeepCollectionEquality()
@@ -285,8 +356,12 @@ class _$AllCategoryCardEntityImpl implements _AllCategoryCardEntity {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      cardStatusType,
       allCategoryTotalExpense,
       allCategoryTotalBudget,
+      allCategoryTotalIncome,
+      denominator,
+      realSavings,
       categoryCount,
       const DeepCollectionEquality().hash(_categoryIdList),
       const DeepCollectionEquality().hash(_categoryNameList),
@@ -297,27 +372,40 @@ class _$AllCategoryCardEntityImpl implements _AllCategoryCardEntity {
   @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
-  _$$AllCategoryCardEntityImplCopyWith<_$AllCategoryCardEntityImpl>
-      get copyWith => __$$AllCategoryCardEntityImplCopyWithImpl<
-          _$AllCategoryCardEntityImpl>(this, _$identity);
+  _$$AllCategoryCardModelImplCopyWith<_$AllCategoryCardModelImpl>
+      get copyWith =>
+          __$$AllCategoryCardModelImplCopyWithImpl<_$AllCategoryCardModelImpl>(
+              this, _$identity);
 }
 
-abstract class _AllCategoryCardEntity implements AllCategoryCardEntity {
-  const factory _AllCategoryCardEntity(
-          {required final int allCategoryTotalExpense,
+abstract class _AllCategoryCardModel implements AllCategoryCardModel {
+  const factory _AllCategoryCardModel(
+          {required final AllCategoryCardStatusType cardStatusType,
+          required final int allCategoryTotalExpense,
           required final int allCategoryTotalBudget,
+          required final int allCategoryTotalIncome,
+          required final int denominator,
+          required final int realSavings,
           required final int categoryCount,
           required final List<int> categoryIdList,
           required final List<String> categoryNameList,
           required final List<int> categoryExpenseList,
           required final List<String> categoryIconPathList,
           required final List<String> categoryColorList}) =
-      _$AllCategoryCardEntityImpl;
+      _$AllCategoryCardModelImpl;
 
+  @override
+  AllCategoryCardStatusType get cardStatusType;
   @override
   int get allCategoryTotalExpense;
   @override
   int get allCategoryTotalBudget;
+  @override
+  int get allCategoryTotalIncome;
+  @override
+  int get denominator;
+  @override
+  int get realSavings;
   @override
   int get categoryCount;
   @override
@@ -332,6 +420,6 @@ abstract class _AllCategoryCardEntity implements AllCategoryCardEntity {
   List<String> get categoryColorList;
   @override
   @JsonKey(ignore: true)
-  _$$AllCategoryCardEntityImplCopyWith<_$AllCategoryCardEntityImpl>
+  _$$AllCategoryCardModelImplCopyWith<_$AllCategoryCardModelImpl>
       get copyWith => throw _privateConstructorUsedError;
 }

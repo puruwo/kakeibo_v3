@@ -3,15 +3,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_plan_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 
 class MonthlyPlanDataArea extends ConsumerWidget {
   const MonthlyPlanDataArea({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(resolvedMonthlyPlanValueProvider).when(
+    return ref.watch(resolvedAllCategoryCardModelProvider).when(
           data: (monthlyPlanValue) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
@@ -31,54 +32,63 @@ class MonthlyPlanDataArea extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           textBaseline: TextBaseline.alphabetic,
                           children: [
-                            Text(
+                            RichText(
                               ///月の総支出
-                              formattedPriceGetter(
-                                  monthlyPlanValue.monthlyExpense),
-                              style: MyFonts.topCardPriceLabel,
+                              text: TextSpan(
+                                  text: formattedPriceGetter(
+                                      monthlyPlanValue.allCategoryTotalExpense),
+                                  style: MyFonts.topCardPriceLabel,
+                                  children: [
+                                    TextSpan(
+                                      text: ' 円',
+                                      style: MyFonts.topCardYenLabel,
+                                    ),
+                                  ]),
                             ),
-                            Text(
-                              ' 円',
-                              style: MyFonts.topCardYenLabel,
-                            ),
-                            Text(
-                              ' /',
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 14,
-                                  color: MyColors.secondaryLabel,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            Text(
-                              '予算 ',
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 13,
-                                  color: MyColors.secondaryLabel,
-                                  fontWeight: FontWeight.w400),
-                            ),
-                            // 予算
-                            Text(
-                              formattedPriceGetter(
-                                  monthlyPlanValue.monthlyBudget),
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 14,
-                                  color: MyColors.secondaryLabel,
-                                  fontWeight: FontWeight.w400),
-                              textAlign: TextAlign.end,
-                            ),
-                            Padding(
-                              // 円の右のスペース
-                              padding: const EdgeInsets.only(right: 2.0),
-                              child: Text(
-                                ' 円',
-                                style: GoogleFonts.notoSans(
-                                  fontSize: 11,
-                                  color: MyColors.secondaryLabel,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                textAlign: TextAlign.end,
-                              ),
-                            ),
+                            monthlyPlanValue.cardStatusType !=
+                                    AllCategoryCardStatusType.noData
+                                ? RichText(
+                                    overflow: TextOverflow.ellipsis,
+                                    textAlign: TextAlign.end,
+                                    text: TextSpan(
+                                        text: ' /',
+                                        style: GoogleFonts.notoSans(
+                                            fontSize: 14,
+                                            color: MyColors.secondaryLabel,
+                                            fontWeight: FontWeight.w400),
+                                        children: <TextSpan>[
+                                          TextSpan(
+                                            text: monthlyPlanValue
+                                                        .cardStatusType ==
+                                                    AllCategoryCardStatusType
+                                                        .hasBudget
+                                                ? '予算 '
+                                                : '収入 ',
+                                            style: GoogleFonts.notoSans(
+                                                fontSize: 13,
+                                                color: MyColors.secondaryLabel,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          // 予算
+                                          TextSpan(
+                                            text: formattedPriceGetter(
+                                                monthlyPlanValue.denominator),
+                                            style: GoogleFonts.notoSans(
+                                                fontSize: 14,
+                                                color: MyColors.secondaryLabel,
+                                                fontWeight: FontWeight.w400),
+                                          ),
+                                          TextSpan(
+                                            text: ' 円',
+                                            style: GoogleFonts.notoSans(
+                                              fontSize: 11,
+                                              color: MyColors.secondaryLabel,
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                          ),
+                                        ]),
+                                  )
+                                : Container(),
                           ],
                         ),
                       ]),
@@ -93,7 +103,6 @@ class MonthlyPlanDataArea extends ConsumerWidget {
                   const SizedBox(
                     height: 8.0,
                   ),
-            
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -109,7 +118,7 @@ class MonthlyPlanDataArea extends ConsumerWidget {
                         children: [
                           Text(
                             formattedPriceGetter(
-                                monthlyPlanValue.monthlyIncome),
+                                monthlyPlanValue.allCategoryTotalIncome),
                             style: MyFonts.topCardPriceLabel,
                           ),
                           Text(
@@ -134,8 +143,7 @@ class MonthlyPlanDataArea extends ConsumerWidget {
                         textBaseline: TextBaseline.alphabetic,
                         children: [
                           Text(
-                            formattedPriceGetter(
-                                monthlyPlanValue.realSavings),
+                            formattedPriceGetter(monthlyPlanValue.realSavings),
                             style: MyFonts.topCardPriceLabel,
                           ),
                           Text(
