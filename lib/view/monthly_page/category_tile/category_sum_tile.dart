@@ -28,12 +28,9 @@ class CategorySumTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
-
     return GestureDetector(
       child: Container(
         width: 343 * context.screenHorizontalMagnification,
-        height: 70,
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: MyColors.quarternarySystemfill,
@@ -60,11 +57,7 @@ class CategorySumTile extends HookConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                     Padding(
-                      // バーの上下の余白を調整
-                      padding: const EdgeInsets.only(top: 8, bottom: 3),
-                      child: CategorySumGraph(categoryTile: categoryTile)
-                    ),
+                    CategorySumGraph(categoryTile: categoryTile),
                     CategorySumText(categoryTile: categoryTile)
                   ],
                 ),

@@ -23,12 +23,6 @@ class CategorySumGraph extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 予算を超えているか
-    bool isOverBudget = false;
-
-    // 予算が設定されているか
-    bool isSetBudget = true;
-
     //横棒グラフの初期値
     double barWidth = 0;
     final isBuilt = useState(false);
@@ -41,123 +35,114 @@ class CategorySumGraph extends HookConsumerWidget {
     final screenHorizontalMagnification =
         screenHorizontalMagnificationGetter(screenWidthSize);
 
-    // 横棒グラフの幅を計算
-    double degrees =
-        (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory / budget);
-    barWidth = degrees <= 1.0 ? barFrameWidth * degrees : barFrameWidth;
-
-    if (monthlyExpenseByCategoryEntity.totalExpenseByBigCategory > budget) {
-      isOverBudget = true;
-    }
-
+    barWidth = categoryTile.graphRatio! <= 1.0
+        ? barFrameWidth * categoryTile.graphRatio!
+        : barFrameWidth;
     //ビルドが完了したら横棒グラフのサイズを変更しアニメーションが動く
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isBuilt.value = true;
     });
 
-    isSetBudget = budget == 0 ? false : true;
-
-    return isSetBudget == true
-                    ? isOverBudget
-                        // 予算を超えている場合
-                        ? Stack(children: [
-                            // バーの背景枠
-                            Container(
-                              height: 10,
-                              width:
-                                  barFrameWidth * screenHorizontalMagnification,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: MyColors.secondarySystemfill,
-                              ),
-                            ),
-                            // バーの中身
-                            AnimatedContainer(
-                              height: 10,
-                              width: isBuilt.value
-                                  ? barWidth * screenHorizontalMagnification
-                                  : 0,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: MyColors().getColorFromHex(
-                                    monthlyExpenseByCategoryEntity
-                                        .categoryColor),
-                              ),
-                              duration: const Duration(milliseconds: 500),
-                            ),
-                            // バーの超過分マスク
-                            SizedBox(
-                              width:
-                                  barFrameWidth * screenHorizontalMagnification,
-                              child: AnimatedOpacity(
-                                opacity: isBuilt.value ? 1.0 : 0.0,
-                                curve: Curves.easeInExpo,
-                                duration: const Duration(milliseconds: 700),
-                                child: Container(
-                                  width: barFrameWidth,
-                                  alignment: Alignment.centerRight,
-                                  child: ClipRRect(
-                                      borderRadius:
-                                          const BorderRadius.horizontal(
-                                              right: Radius.circular(10)),
-                                      child: ClipRect(
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          widthFactor: (barFrameWidth *
-                                                  (degrees - 1) /
-                                                  degrees) /
-                                              280, // widthFactor = target width / original width
-                                          child: Image.asset(
-                                            'assets/images/over_fill.png',
-                                            width: 280,
-                                            height: 10,
-                                            fit: BoxFit.cover,
-                                          ),
-                                        ),
-                                      )),
-                                ),
-                              ),
-                            )
-                          ])
-
-                        // 予算を超えていない場合
-                        : Stack(
-                            children: [
-                              // バーの背景枠
-                              Container(
-                                height: 10,
-                                width: barFrameWidth *
-                                    screenHorizontalMagnification,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: MyColors.secondarySystemfill,
-                                ),
-                              ),
-                              // バーの中身
-                              AnimatedContainer(
-                                height: 10,
-                                width: isBuilt.value
-                                    ? barWidth * screenHorizontalMagnification
-                                    : 0,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: MyColors().getColorFromHex(
-                                      monthlyExpenseByCategoryEntity
-                                          .categoryColor),
-                                ),
-                                duration: const Duration(milliseconds: 500),
-                              ),
-                            ],
-                          )
-                    // 予算が0円の場合
-                    : SizedBox(
-                        height: 11,
-                        child: const Text(
-                          '予算が設定されていません',
-                          style: TextStyle(
-                              color: MyColors.secondaryLabel, fontSize: 12),
+    switch (categoryTile.graphType) {
+      // 予算あり
+      case GraphType.hasBudget:
+      // 他のカードも全て予算なしだが、支出はある
+      case GraphType.allNoBudget:
+        return Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 3),
+          child: Stack(
+            children: [
+              // バーの背景枠
+              Container(
+                height: 10,
+                width: barFrameWidth * screenHorizontalMagnification,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: MyColors.secondarySystemfill,
+                ),
+              ),
+              // バーの中身
+              AnimatedContainer(
+                height: 10,
+                width: isBuilt.value
+                    ? barWidth * screenHorizontalMagnification
+                    : 0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: MyColors().getColorFromHex(
+                      monthlyExpenseByCategoryEntity.categoryColor),
+                ),
+                duration: const Duration(milliseconds: 500),
+              ),
+            ],
+          ),
+        );
+      // 予算あり、支出超過
+      case GraphType.hasBudgetButOver:
+        return Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 3),
+          child: Stack(children: [
+            // バーの背景枠
+            Container(
+              height: 10,
+              width: barFrameWidth * screenHorizontalMagnification,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: MyColors.secondarySystemfill,
+              ),
+            ),
+            // バーの中身
+            AnimatedContainer(
+              height: 10,
+              width: isBuilt.value
+                  ? barFrameWidth * screenHorizontalMagnification
+                  : 0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: MyColors().getColorFromHex(
+                    monthlyExpenseByCategoryEntity.categoryColor),
+              ),
+              duration: const Duration(milliseconds: 500),
+            ),
+            // バーの超過分マスク
+            SizedBox(
+              width: barFrameWidth * screenHorizontalMagnification,
+              child: AnimatedOpacity(
+                opacity: isBuilt.value ? 1.0 : 0.0,
+                curve: Curves.easeInExpo,
+                duration: const Duration(milliseconds: 700),
+                child: Container(
+                  width: barFrameWidth,
+                  // alignment: Alignment.centerRight,
+                  child: ClipRRect(
+                      borderRadius: const BorderRadius.horizontal(
+                          right: Radius.circular(10)),
+                      child: ClipRect(
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          widthFactor:
+                              (barFrameWidth * categoryTile.graphRatio!),
+                          child: Image.asset(
+                            'assets/images/over_fill.png',
+                            width: 280,
+                            height: 10,
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      );
+                      )),
+                ),
+              ),
+            )
+          ]),
+        );
+      // 予算なし支出なし
+      case GraphType.noExpenseNoBudget:
+      // 他に予算設定はあるが、該当カテゴリーに予算なし
+      case GraphType.noBudgetOtherHasBudget:
+      // 個別カード表示で利用 --予算なし
+      case GraphType.noBudget:
+        return Container();
+    }
   }
 }
 

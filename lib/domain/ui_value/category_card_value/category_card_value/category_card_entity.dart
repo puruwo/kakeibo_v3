@@ -7,6 +7,7 @@ part 'category_card_entity.freezed.dart';
 
 enum GraphType {
   hasBudget, // 予算あり
+  hasBudgetButOver, // 予算ありだが、支出が予算を超過
   noExpenseNoBudget, // 予算なし支出なし
   noBudgetOtherHasBudget, // 他に予算設定はあるが、該当カテゴリーに予算なし
   allNoBudget, // 他のカードも全て予算なしだが、支出はある

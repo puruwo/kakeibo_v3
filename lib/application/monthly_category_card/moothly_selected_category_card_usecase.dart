@@ -16,8 +16,8 @@ final monthlySelectedCategoryCardNotifierProvider =
   MonthlySelectedCategoryCardUsecaseNotifier.new,
 );
 
-class MonthlySelectedCategoryCardUsecaseNotifier extends FamilyAsyncNotifier<
-    CategoryCardEntity, RequestMonthlyCateoryCard> {
+class MonthlySelectedCategoryCardUsecaseNotifier
+    extends FamilyAsyncNotifier<CategoryCardEntity, RequestMonthlyCateoryCard> {
   late CategoryAccountingRepository _categoryAccountingRepositoryProvider;
   late SmallCategoryTileRepository _smallCategoryTileRepository;
   late BudgetRepository _budgetRepository;
@@ -65,20 +65,21 @@ class MonthlySelectedCategoryCardUsecaseNotifier extends FamilyAsyncNotifier<
 
     // グラフのタイプを決定する
     final GraphType graphType = budget != 0
-        ? GraphType.hasBudget
+        ? accountingValue.totalExpenseByBigCategory > budget
+            ? GraphType.hasBudgetButOver
+            : GraphType.hasBudget
         : GraphType.noBudget;
 
     // グラフの比率を計算する
     final double graphRatio = graphType == GraphType.hasBudget
-        ? accountingValue.totalExpenseByBigCategory > budget
+        ? graphType == GraphType.hasBudgetButOver
             ? 1
             : (accountingValue.totalExpenseByBigCategory / budget)
         : 0.0;
 
     // グラフの分母比率を計算する
-    final double graphDenomiratorRatio = graphType == GraphType.hasBudget
-        ? 1.0
-        : 0.0;
+    final double graphDenomiratorRatio =
+        graphType == GraphType.hasBudget ? 1.0 : 0.0;
 
     // カードのvalueに代入
     final result = CategoryCardEntity(

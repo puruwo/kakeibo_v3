@@ -67,14 +67,16 @@ class MonthlyCategoryCardUsecaseNotifier
 
       // グラフのタイプを決定する
       final GraphType graphType = budget != 0
-          ? GraphType.hasBudget
+          ? expense > budget
+              ? GraphType.hasBudgetButOver
+              : GraphType.hasBudget
           : expense == 0
               ? GraphType.noExpenseNoBudget
               : GraphType.noBudgetOtherHasBudget;
 
       // グラフの比率を計算する
       final double graphRatio = graphType == GraphType.hasBudget
-          ? expense > budget
+          ? graphType == GraphType.hasBudgetButOver
               ? 1
               : (expense / budget)
           : 0.0;
@@ -97,7 +99,8 @@ class MonthlyCategoryCardUsecaseNotifier
     // それを基準にグラフの比率を再計算する
     bool isAllNoBudget = true;
     for (int i = 0; i < categoryTileList.length; i++) {
-      if (categoryTileList[i].graphType == GraphType.hasBudget) {
+      if (categoryTileList[i].graphType == GraphType.hasBudget ||
+          categoryTileList[i].graphType == GraphType.hasBudgetButOver) {
         isAllNoBudget = false;
         break;
       }

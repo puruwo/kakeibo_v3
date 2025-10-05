@@ -114,7 +114,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
               children: [
                 Padding(
                   // バーの上下の余白を調整
-                  padding: const EdgeInsets.only(top: 8, bottom: 3),
+                  padding: const EdgeInsets.only(top: 3, bottom: 3),
                   child: isSetBudget == true
                       ? isOverBudget
                           // 予算を超えている場合

@@ -67,59 +67,65 @@ class CategorySumText extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               // カテゴリー総支出
-              Text(
-                paymentSumLabel,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.notoSans(
-                    fontSize: 18,
-                    color: MyColors.white,
-                    fontWeight: FontWeight.w400),
-                textAlign: TextAlign.end,
-              ),
-              Text(
-                ' 円',
-                style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    color: MyColors.white,
-                    fontWeight: FontWeight.w400),
-              ),
-              Text(
-                ' /',
-                style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    color: MyColors.secondaryLabel,
-                    fontWeight: FontWeight.w400),
-              ),
-              Text(
-                '予算 ',
-                style: GoogleFonts.notoSans(
-                    fontSize: 13,
-                    color: MyColors.secondaryLabel,
-                    fontWeight: FontWeight.w400),
-              ),
-              // カテゴリー予算
-              Text(
-                budgetLabel,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    color: MyColors.secondaryLabel,
-                    fontWeight: FontWeight.w400),
-                textAlign: TextAlign.end,
-              ),
-              Padding(
-                // 円の右のスペース
-                padding: const EdgeInsets.only(right: 2.0),
-                child: Text(
-                  ' 円',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 11,
-                    color: MyColors.secondaryLabel,
-                    fontWeight: FontWeight.w400,
-                  ),
+              RichText(
                   textAlign: TextAlign.end,
-                ),
-              ),
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(children: [
+                    TextSpan(
+                      text: paymentSumLabel,
+                      style: GoogleFonts.notoSans(
+                          fontSize: 18,
+                          color: MyColors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                    TextSpan(
+                      text: ' 円',
+                      style: GoogleFonts.notoSans(
+                          fontSize: 14,
+                          color: MyColors.white,
+                          fontWeight: FontWeight.w400),
+                    ),
+                  ])),
+
+              // 予算
+              categoryTile.graphType == GraphType.hasBudget ||
+                      categoryTile.graphType == GraphType.hasBudgetButOver
+                  ? RichText(
+                      textAlign: TextAlign.end,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(children: [
+                        TextSpan(
+                          text: ' /',
+                          style: GoogleFonts.notoSans(
+                              fontSize: 14,
+                              color: MyColors.secondaryLabel,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        TextSpan(
+                          text: '予算 ',
+                          style: GoogleFonts.notoSans(
+                              fontSize: 13,
+                              color: MyColors.secondaryLabel,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        // カテゴリー予算
+                        TextSpan(
+                          text: budgetLabel,
+                          style: GoogleFonts.notoSans(
+                              fontSize: 14,
+                              color: MyColors.secondaryLabel,
+                              fontWeight: FontWeight.w400),
+                        ),
+                        TextSpan(
+                          text: ' 円',
+                          style: GoogleFonts.notoSans(
+                            fontSize: 11,
+                            color: MyColors.secondaryLabel,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ]))
+                  : Container(),
             ],
           )
         ],
