@@ -5,10 +5,23 @@ import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/
 //Freezedで生成されるデータクラス
 part 'category_card_entity.freezed.dart';
 
+enum GraphType {
+  hasBudget, // 予算あり
+  noExpenseNoBudget, // 予算なし支出なし
+  noBudgetOtherHasBudget, // 他に予算設定はあるが、該当カテゴリーに予算なし
+  allNoBudget, // 他のカードも全て予算なしだが、支出はある
+
+  noBudget // 個別カード表示で利用 --予算なし
+}
+
 @freezed
 class CategoryCardEntity with _$CategoryCardEntity {
   const factory CategoryCardEntity({
+    required GraphType graphType,
+    double? graphRatio,
+    double? graphDenomiratorRatio,
     required int monthlyBudget,
+    required int monthlyExpense,
     required CategoryAccountingEntity monthlyExpenseByCategoryEntity,
     required List<SmallCategoryTileEntity> smallCategoryList,
   }) = _CategoryCardEntity;

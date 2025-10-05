@@ -16,7 +16,7 @@ import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_hi
 import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
-import 'package:kakeibo/view/monthly_page/category_tile/category_tile_area.dart';
+import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
@@ -165,7 +165,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 ),
               ),
 
-              const CategoryTileArea(),
+              const CategorySumTileList(),
 
               const SizedBox(
                 height: 8,

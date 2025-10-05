@@ -16,7 +16,11 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$CategoryCardEntity {
+  GraphType get graphType => throw _privateConstructorUsedError;
+  double? get graphRatio => throw _privateConstructorUsedError;
+  double? get graphDenomiratorRatio => throw _privateConstructorUsedError;
   int get monthlyBudget => throw _privateConstructorUsedError;
+  int get monthlyExpense => throw _privateConstructorUsedError;
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity =>
       throw _privateConstructorUsedError;
   List<SmallCategoryTileEntity> get smallCategoryList =>
@@ -34,7 +38,11 @@ abstract class $CategoryCardEntityCopyWith<$Res> {
       _$CategoryCardEntityCopyWithImpl<$Res, CategoryCardEntity>;
   @useResult
   $Res call(
-      {int monthlyBudget,
+      {GraphType graphType,
+      double? graphRatio,
+      double? graphDenomiratorRatio,
+      int monthlyBudget,
+      int monthlyExpense,
       CategoryAccountingEntity monthlyExpenseByCategoryEntity,
       List<SmallCategoryTileEntity> smallCategoryList});
 
@@ -54,14 +62,34 @@ class _$CategoryCardEntityCopyWithImpl<$Res, $Val extends CategoryCardEntity>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? graphType = null,
+    Object? graphRatio = freezed,
+    Object? graphDenomiratorRatio = freezed,
     Object? monthlyBudget = null,
+    Object? monthlyExpense = null,
     Object? monthlyExpenseByCategoryEntity = null,
     Object? smallCategoryList = null,
   }) {
     return _then(_value.copyWith(
+      graphType: null == graphType
+          ? _value.graphType
+          : graphType // ignore: cast_nullable_to_non_nullable
+              as GraphType,
+      graphRatio: freezed == graphRatio
+          ? _value.graphRatio
+          : graphRatio // ignore: cast_nullable_to_non_nullable
+              as double?,
+      graphDenomiratorRatio: freezed == graphDenomiratorRatio
+          ? _value.graphDenomiratorRatio
+          : graphDenomiratorRatio // ignore: cast_nullable_to_non_nullable
+              as double?,
       monthlyBudget: null == monthlyBudget
           ? _value.monthlyBudget
           : monthlyBudget // ignore: cast_nullable_to_non_nullable
+              as int,
+      monthlyExpense: null == monthlyExpense
+          ? _value.monthlyExpense
+          : monthlyExpense // ignore: cast_nullable_to_non_nullable
               as int,
       monthlyExpenseByCategoryEntity: null == monthlyExpenseByCategoryEntity
           ? _value.monthlyExpenseByCategoryEntity
@@ -94,7 +122,11 @@ abstract class _$$CategoryCardEntityImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {int monthlyBudget,
+      {GraphType graphType,
+      double? graphRatio,
+      double? graphDenomiratorRatio,
+      int monthlyBudget,
+      int monthlyExpense,
       CategoryAccountingEntity monthlyExpenseByCategoryEntity,
       List<SmallCategoryTileEntity> smallCategoryList});
 
@@ -113,14 +145,34 @@ class __$$CategoryCardEntityImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? graphType = null,
+    Object? graphRatio = freezed,
+    Object? graphDenomiratorRatio = freezed,
     Object? monthlyBudget = null,
+    Object? monthlyExpense = null,
     Object? monthlyExpenseByCategoryEntity = null,
     Object? smallCategoryList = null,
   }) {
     return _then(_$CategoryCardEntityImpl(
+      graphType: null == graphType
+          ? _value.graphType
+          : graphType // ignore: cast_nullable_to_non_nullable
+              as GraphType,
+      graphRatio: freezed == graphRatio
+          ? _value.graphRatio
+          : graphRatio // ignore: cast_nullable_to_non_nullable
+              as double?,
+      graphDenomiratorRatio: freezed == graphDenomiratorRatio
+          ? _value.graphDenomiratorRatio
+          : graphDenomiratorRatio // ignore: cast_nullable_to_non_nullable
+              as double?,
       monthlyBudget: null == monthlyBudget
           ? _value.monthlyBudget
           : monthlyBudget // ignore: cast_nullable_to_non_nullable
+              as int,
+      monthlyExpense: null == monthlyExpense
+          ? _value.monthlyExpense
+          : monthlyExpense // ignore: cast_nullable_to_non_nullable
               as int,
       monthlyExpenseByCategoryEntity: null == monthlyExpenseByCategoryEntity
           ? _value.monthlyExpenseByCategoryEntity
@@ -138,13 +190,25 @@ class __$$CategoryCardEntityImplCopyWithImpl<$Res>
 
 class _$CategoryCardEntityImpl implements _CategoryCardEntity {
   const _$CategoryCardEntityImpl(
-      {required this.monthlyBudget,
+      {required this.graphType,
+      this.graphRatio,
+      this.graphDenomiratorRatio,
+      required this.monthlyBudget,
+      required this.monthlyExpense,
       required this.monthlyExpenseByCategoryEntity,
       required final List<SmallCategoryTileEntity> smallCategoryList})
       : _smallCategoryList = smallCategoryList;
 
   @override
+  final GraphType graphType;
+  @override
+  final double? graphRatio;
+  @override
+  final double? graphDenomiratorRatio;
+  @override
   final int monthlyBudget;
+  @override
+  final int monthlyExpense;
   @override
   final CategoryAccountingEntity monthlyExpenseByCategoryEntity;
   final List<SmallCategoryTileEntity> _smallCategoryList;
@@ -158,7 +222,7 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
 
   @override
   String toString() {
-    return 'CategoryCardEntity(monthlyBudget: $monthlyBudget, monthlyExpenseByCategoryEntity: $monthlyExpenseByCategoryEntity, smallCategoryList: $smallCategoryList)';
+    return 'CategoryCardEntity(graphType: $graphType, graphRatio: $graphRatio, graphDenomiratorRatio: $graphDenomiratorRatio, monthlyBudget: $monthlyBudget, monthlyExpense: $monthlyExpense, monthlyExpenseByCategoryEntity: $monthlyExpenseByCategoryEntity, smallCategoryList: $smallCategoryList)';
   }
 
   @override
@@ -166,8 +230,16 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CategoryCardEntityImpl &&
+            (identical(other.graphType, graphType) ||
+                other.graphType == graphType) &&
+            (identical(other.graphRatio, graphRatio) ||
+                other.graphRatio == graphRatio) &&
+            (identical(other.graphDenomiratorRatio, graphDenomiratorRatio) ||
+                other.graphDenomiratorRatio == graphDenomiratorRatio) &&
             (identical(other.monthlyBudget, monthlyBudget) ||
                 other.monthlyBudget == monthlyBudget) &&
+            (identical(other.monthlyExpense, monthlyExpense) ||
+                other.monthlyExpense == monthlyExpense) &&
             (identical(other.monthlyExpenseByCategoryEntity,
                     monthlyExpenseByCategoryEntity) ||
                 other.monthlyExpenseByCategoryEntity ==
@@ -179,7 +251,11 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      graphType,
+      graphRatio,
+      graphDenomiratorRatio,
       monthlyBudget,
+      monthlyExpense,
       monthlyExpenseByCategoryEntity,
       const DeepCollectionEquality().hash(_smallCategoryList));
 
@@ -193,13 +269,25 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
 
 abstract class _CategoryCardEntity implements CategoryCardEntity {
   const factory _CategoryCardEntity(
-      {required final int monthlyBudget,
+      {required final GraphType graphType,
+      final double? graphRatio,
+      final double? graphDenomiratorRatio,
+      required final int monthlyBudget,
+      required final int monthlyExpense,
       required final CategoryAccountingEntity monthlyExpenseByCategoryEntity,
       required final List<SmallCategoryTileEntity>
           smallCategoryList}) = _$CategoryCardEntityImpl;
 
   @override
+  GraphType get graphType;
+  @override
+  double? get graphRatio;
+  @override
+  double? get graphDenomiratorRatio;
+  @override
   int get monthlyBudget;
+  @override
+  int get monthlyExpense;
   @override
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity;
   @override

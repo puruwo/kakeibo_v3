@@ -60,11 +60,67 @@ class MonthlyCategoryCardUsecaseNotifier
           fromDate: fromDate,
           toDate: toDate);
 
+      // そのカテゴリーの支出を取得する
+      final expense = smallCategoryList
+          .map((e) => e.totalExpenseBySmallCategory)
+          .fold(0, (a, b) => a + b);
+
+      // グラフのタイプを決定する
+      final GraphType graphType = budget != 0
+          ? GraphType.hasBudget
+          : expense == 0
+              ? GraphType.noExpenseNoBudget
+              : GraphType.noBudgetOtherHasBudget;
+
+      // グラフの比率を計算する
+      final double graphRatio = graphType == GraphType.hasBudget
+          ? expense > budget
+              ? 1
+              : (expense / budget)
+          : 0.0;
+
+      final double? graphDenomiratorRatio =
+          graphType == GraphType.hasBudget ? 1.0 : null;
+
       // カードのvalueに代入
       categoryTileList.add(CategoryCardEntity(
+          graphType: graphType,
+          graphRatio: graphRatio,
+          graphDenomiratorRatio: graphDenomiratorRatio,
           monthlyBudget: budget,
+          monthlyExpense: expense,
           monthlyExpenseByCategoryEntity: categoryList[i],
           smallCategoryList: smallCategoryList));
+    }
+
+    // 全てのカードで予算が設定されていなければ、最大の支出を取得し
+    // それを基準にグラフの比率を再計算する
+    bool isAllNoBudget = true;
+    for (int i = 0; i < categoryTileList.length; i++) {
+      if (categoryTileList[i].graphType == GraphType.hasBudget) {
+        isAllNoBudget = false;
+        break;
+      }
+    }
+    if (isAllNoBudget == true) {
+      final maxExpense =
+          categoryTileList.map((e) => e).fold(0, (temporaryMax, expense) {
+        if (expense.monthlyExpense > temporaryMax) {
+          temporaryMax = expense.monthlyExpense;
+        }
+        return temporaryMax;
+      });
+
+      for (int i = 0; i < categoryTileList.length; i++) {
+        if (categoryTileList[i].graphType != GraphType.noExpenseNoBudget) {
+          categoryTileList[i] = categoryTileList[i].copyWith(
+            graphType: GraphType.allNoBudget,
+            graphRatio: maxExpense > 0
+                ? (categoryTileList[i].monthlyExpense / maxExpense)
+                : 0,
+          );
+        }
+      }
     }
 
     return categoryTileList;

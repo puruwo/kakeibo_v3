@@ -63,8 +63,29 @@ class MonthlySelectedCategoryCardUsecaseNotifier extends FamilyAsyncNotifier<
         fromDate: fromDate,
         toDate: toDate);
 
+    // グラフのタイプを決定する
+    final GraphType graphType = budget != 0
+        ? GraphType.hasBudget
+        : GraphType.noBudget;
+
+    // グラフの比率を計算する
+    final double graphRatio = graphType == GraphType.hasBudget
+        ? accountingValue.totalExpenseByBigCategory > budget
+            ? 1
+            : (accountingValue.totalExpenseByBigCategory / budget)
+        : 0.0;
+
+    // グラフの分母比率を計算する
+    final double graphDenomiratorRatio = graphType == GraphType.hasBudget
+        ? 1.0
+        : 0.0;
+
     // カードのvalueに代入
     final result = CategoryCardEntity(
+        graphType: graphType,
+        graphRatio: graphRatio,
+        graphDenomiratorRatio: graphDenomiratorRatio,
+        monthlyExpense: accountingValue.totalExpenseByBigCategory,
         monthlyBudget: budget,
         monthlyExpenseByCategoryEntity: accountingValue,
         smallCategoryList: smallCategory);
