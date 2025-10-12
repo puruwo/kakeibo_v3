@@ -19,14 +19,12 @@ class ExpenseUsecase {
   FixedCostUsecase get _fixedCostUsecaseProvider =>
       _ref.read(fixedCostUsecaseProvider);
 
-
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get updateDBCountNotifier =>
       _ref.read(updateDBCountNotifierProvider.notifier);
 
   // 登録処理
   Future<void> add({required ExpenseEntity expenseEntity}) async {
-    
     //エラーチェック
     if (expenseEntity.price <= 0) {
       throw const AppException('0円以上で入力してください');
@@ -40,14 +38,12 @@ class ExpenseUsecase {
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
-
   }
 
   // 編集処理
   Future<void> edit(
       {required ExpenseEntity originalEntity,
       required ExpenseEntity editEntity}) async {
-
     //エラーチェック
     if (originalEntity == editEntity) {
       // 変更がない場合は何もしない
@@ -61,7 +57,14 @@ class ExpenseUsecase {
     }
 
     // tbl001にデータを追加する
-    _expenseRepositoryProvider.update(editEntity);
+    // isConfirmedは編集時に1にする
+    _expenseRepositoryProvider.update(editEntity.copyWith(isConfirmed: 1));
+
+    // 固定費の場合変動固定費の推定金額を更新する
+    if (editEntity.fixedCostId != null) {
+      await _fixedCostUsecaseProvider.updateEstimatedPrice(
+          fixedCostId: editEntity.fixedCostId!);
+    }
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
@@ -73,8 +76,7 @@ class ExpenseUsecase {
     required int confirmedPrice,
     required int fixedCostId,
   }) async {
-
-    // エラーチェック 
+    // エラーチェック
     if (confirmedPrice <= 0) {
       throw const AppException('0円以上で入力してください');
     }
@@ -89,7 +91,8 @@ class ExpenseUsecase {
     );
 
     // 確定した変動固定費の推定金額を更新する
-    await _fixedCostUsecaseProvider.updateEstimatedPrice(fixedCostId: fixedCostId);
+    await _fixedCostUsecaseProvider.updateEstimatedPrice(
+        fixedCostId: fixedCostId);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

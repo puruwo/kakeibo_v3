@@ -49,6 +49,8 @@ class ExpenseHistoryService {
           price: expense.price,
           paymentCategoryId: expense.paymentCategoryId,
           memo: expense.memo,
+          fixedCostId: expense.fixedCostId,
+          isConfirmed: expense.isConfirmed,
           smallCategoryName: small.smallCategoryName,
           bigCategoryName: big.bigCategoryName,
           colorCode: big.colorCode,

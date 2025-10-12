@@ -11,9 +11,14 @@ import 'package:kakeibo/view/year_page/year_page.dart';
 import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
 import 'package:kakeibo/view_model/state/initial_open.dart';
 
-class Foundation extends ConsumerWidget {
-  Foundation({super.key});
+class Foundation extends ConsumerStatefulWidget {
+  const Foundation({super.key});
 
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _FoundationState();
+}
+
+class _FoundationState extends ConsumerState<Foundation> {
   // 各タブごとの Navigator にアクセスするための GlobalKey
   final List<GlobalKey<NavigatorState>> navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -29,12 +34,19 @@ class Foundation extends ConsumerWidget {
   ];
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _onBuildComplete(context, ref);
+
+      _showExpenseEntrySheet(context); // 起動時に入力画面を表示する
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     //navigationBarの状態管理
     final navigationBarState = ref.watch(navigationBarNumberNotifierProvider);
-
-    //buildが完了した後に処理を行い,入力画面を表示
-    _onBuildComplete(context, ref);
 
     return Scaffold(
       // IndexedStack によって、各タブの Navigator を保持
@@ -109,13 +121,9 @@ void _onBuildComplete(BuildContext context, WidgetRef ref) async {
       await ref.read(batchProcessUsecaseProvider).grobalBatchProscessing();
   print('バッチ処理の結果: $result');
 
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _showExpenseEntrySheet(context);
-
-    //状態を更新
-    final initialOpenNotifier = ref.read(initialOpenNotifierProvider.notifier);
-    initialOpenNotifier.updateState();
-  });
+  //状態を更新
+  final initialOpenNotifier = ref.read(initialOpenNotifierProvider.notifier);
+  initialOpenNotifier.updateState();
 }
 
 void _showExpenseEntrySheet(BuildContext context) {

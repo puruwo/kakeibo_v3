@@ -118,6 +118,11 @@ class FixedCostUsecase {
     final fixedCostEntity = await _fixedCostRepositoryProvider.fetch(
         fixedCostId: fixedCostId);
 
+    if (fixedCostEntity.variable == 0) {
+      // 変動費でない場合は何もしない
+      return;
+    }
+
     // 支出の過去の支払いから平均価格情報を取得
     final pastExpensesAverage =
         await _expenseRepositoryProvider.fetchFixedCostEstimatedPriceById(

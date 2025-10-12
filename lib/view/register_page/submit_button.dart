@@ -86,7 +86,10 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
                       price: enteredPrice,
                       paymentCategoryId: selectedCategory.id,
                       memo: enteredMemo,
-                      incomeSourceBigCategory: enteredIncomeSource);
+                      incomeSourceBigCategory: enteredIncomeSource,
+                      fixedCostId: originalExpenseEntity!.fixedCostId ?? -1,
+                      isConfirmed: 1 // 登録時に確定にする
+                  );  
                   switch (screenMode) {
                     case RegisterScreenMode.add:
                       await expenseUsecase.add(expenseEntity: entity);

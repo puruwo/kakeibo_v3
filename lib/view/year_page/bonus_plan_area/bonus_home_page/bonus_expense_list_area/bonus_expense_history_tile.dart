@@ -65,6 +65,8 @@ class BonusExpenseHistoryTile extends ConsumerWidget {
               paymentCategoryId: value.paymentCategoryId,
               memo: value.memo,
               incomeSourceBigCategory: value.incomeSourceBigCategory,
+              fixedCostId: value.fixedCostId ?? -1,
+              isConfirmed: value.isConfirmed,
             );
 
             return MaterialApp(

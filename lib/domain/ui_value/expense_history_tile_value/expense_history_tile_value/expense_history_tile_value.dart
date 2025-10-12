@@ -12,6 +12,8 @@ class ExpenseHistoryTileValue with _$ExpenseHistoryTileValue {
     required int price,
     required int paymentCategoryId,
     @Default('') String memo,
+    int? fixedCostId,
+    @Default(1) int isConfirmed, // 金額が確定したかどうか
     required String smallCategoryName,
     required String bigCategoryName,
     required String colorCode,

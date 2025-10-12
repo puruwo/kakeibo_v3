@@ -21,6 +21,8 @@ mixin _$ExpenseHistoryTileValue {
   int get price => throw _privateConstructorUsedError;
   int get paymentCategoryId => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
+  int? get fixedCostId => throw _privateConstructorUsedError;
+  int get isConfirmed => throw _privateConstructorUsedError; // 金額が確定したかどうか
   String get smallCategoryName => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
@@ -44,6 +46,8 @@ abstract class $ExpenseHistoryTileValueCopyWith<$Res> {
       int price,
       int paymentCategoryId,
       String memo,
+      int? fixedCostId,
+      int isConfirmed,
       String smallCategoryName,
       String bigCategoryName,
       String colorCode,
@@ -70,6 +74,8 @@ class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
     Object? price = null,
     Object? paymentCategoryId = null,
     Object? memo = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
     Object? smallCategoryName = null,
     Object? bigCategoryName = null,
     Object? colorCode = null,
@@ -97,6 +103,14 @@ class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
           ? _value.memo
           : memo // ignore: cast_nullable_to_non_nullable
               as String,
+      fixedCostId: freezed == fixedCostId
+          ? _value.fixedCostId
+          : fixedCostId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isConfirmed: null == isConfirmed
+          ? _value.isConfirmed
+          : isConfirmed // ignore: cast_nullable_to_non_nullable
+              as int,
       smallCategoryName: null == smallCategoryName
           ? _value.smallCategoryName
           : smallCategoryName // ignore: cast_nullable_to_non_nullable
@@ -136,6 +150,8 @@ abstract class _$$ExpenseHistoryTileValueImplCopyWith<$Res>
       int price,
       int paymentCategoryId,
       String memo,
+      int? fixedCostId,
+      int isConfirmed,
       String smallCategoryName,
       String bigCategoryName,
       String colorCode,
@@ -161,6 +177,8 @@ class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
     Object? price = null,
     Object? paymentCategoryId = null,
     Object? memo = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
     Object? smallCategoryName = null,
     Object? bigCategoryName = null,
     Object? colorCode = null,
@@ -188,6 +206,14 @@ class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
           ? _value.memo
           : memo // ignore: cast_nullable_to_non_nullable
               as String,
+      fixedCostId: freezed == fixedCostId
+          ? _value.fixedCostId
+          : fixedCostId // ignore: cast_nullable_to_non_nullable
+              as int?,
+      isConfirmed: null == isConfirmed
+          ? _value.isConfirmed
+          : isConfirmed // ignore: cast_nullable_to_non_nullable
+              as int,
       smallCategoryName: null == smallCategoryName
           ? _value.smallCategoryName
           : smallCategoryName // ignore: cast_nullable_to_non_nullable
@@ -221,6 +247,8 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
       required this.price,
       required this.paymentCategoryId,
       this.memo = '',
+      this.fixedCostId,
+      this.isConfirmed = 1,
       required this.smallCategoryName,
       required this.bigCategoryName,
       required this.colorCode,
@@ -239,6 +267,12 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
   @JsonKey()
   final String memo;
   @override
+  final int? fixedCostId;
+  @override
+  @JsonKey()
+  final int isConfirmed;
+// 金額が確定したかどうか
+  @override
   final String smallCategoryName;
   @override
   final String bigCategoryName;
@@ -251,7 +285,7 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
 
   @override
   String toString() {
-    return 'ExpenseHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath, incomeSourceBigCategory: $incomeSourceBigCategory)';
+    return 'ExpenseHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, fixedCostId: $fixedCostId, isConfirmed: $isConfirmed, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath, incomeSourceBigCategory: $incomeSourceBigCategory)';
   }
 
   @override
@@ -265,6 +299,10 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
             (identical(other.paymentCategoryId, paymentCategoryId) ||
                 other.paymentCategoryId == paymentCategoryId) &&
             (identical(other.memo, memo) || other.memo == memo) &&
+            (identical(other.fixedCostId, fixedCostId) ||
+                other.fixedCostId == fixedCostId) &&
+            (identical(other.isConfirmed, isConfirmed) ||
+                other.isConfirmed == isConfirmed) &&
             (identical(other.smallCategoryName, smallCategoryName) ||
                 other.smallCategoryName == smallCategoryName) &&
             (identical(other.bigCategoryName, bigCategoryName) ||
@@ -286,6 +324,8 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
       price,
       paymentCategoryId,
       memo,
+      fixedCostId,
+      isConfirmed,
       smallCategoryName,
       bigCategoryName,
       colorCode,
@@ -307,6 +347,8 @@ abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
           required final int price,
           required final int paymentCategoryId,
           final String memo,
+          final int? fixedCostId,
+          final int isConfirmed,
           required final String smallCategoryName,
           required final String bigCategoryName,
           required final String colorCode,
@@ -325,6 +367,10 @@ abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
   @override
   String get memo;
   @override
+  int? get fixedCostId;
+  @override
+  int get isConfirmed;
+  @override // 金額が確定したかどうか
   String get smallCategoryName;
   @override
   String get bigCategoryName;

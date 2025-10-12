@@ -60,7 +60,10 @@ class ExpenseHistoryDigestTile extends ConsumerWidget {
                 price: tileValue.price,
                 paymentCategoryId: tileValue.paymentCategoryId,
                 memo: tileValue.memo,
-                incomeSourceBigCategory: tileValue.incomeSourceBigCategory);
+                incomeSourceBigCategory: tileValue.incomeSourceBigCategory,
+                fixedCostId:tileValue.fixedCostId,
+                isConfirmed: tileValue.isConfirmed, 
+                );
 
             return MaterialApp(
               debugShowCheckedModeBanner: false,
