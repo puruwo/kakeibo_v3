@@ -18,9 +18,9 @@ abstract interface class FixedCostRepository {
   Future<List<FixedCostEntity>> fetchNextPeriodPayment(
       {required PeriodValue period});
 
-  // 期間指定して変動あり固定費の推定支出合計を取得する
-  Future<int> fetchEstimatedPriceByPeriod(
-      {required PeriodValue period});
+  // id指定して変動あり固定費の推定支出を取得する
+  Future<int> fetchEstimatedPriceById(
+      {required int id});
 
   Future<int> insert(FixedCostEntity entity);
 

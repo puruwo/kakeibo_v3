@@ -194,8 +194,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // 確定している固定費の合計額を取得する
   @override
-  Future<int> fetchTotalFixedCostByPeriod(
-      {required PeriodValue period}) async {
+  Future<int> fetchTotalFixedCostByPeriod({required PeriodValue period}) async {
     final sql = '''
       SELECT COALESCE(SUM(price),0) as totalFixedCost FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
@@ -251,7 +250,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // ID指定の変動固定費の推定支出を支出レコードから取得する
   @override
-  Future<double> fetchFixedCostEstimatedPriceById({required int fixedCostId}) async {
+  Future<double> fetchFixedCostEstimatedPriceById(
+      {required int fixedCostId}) async {
     final sql = '''
       SELECT 
         AVG(a.${SqfExpense.price}) AS price
@@ -307,7 +307,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   /// 確定していない固定費の支出を確定させる
   @override
-  Future<void> updateUnconfirmedCost({required int id,required int confirmedPrice})async{
+  Future<void> updateUnconfirmedCost(
+      {required int id, required int confirmedPrice}) async {
     await db.update(
       SqfExpense.tableName,
       {
@@ -318,6 +319,28 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     );
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseRepository updateUnconfirmedCost(int id, int confirmedPrice)\n ${SqfExpense.tableName}でupdate\n id: $id, confirmedPrice: $confirmedPrice');
+  }
+
+  // 期間指定してその期間内に最近支払いありの、変動あり固定費のfixedCostIdを取得する
+  @override
+  Future<List<int>> fetchUnFixedIdsByPeriod(
+      {required PeriodValue period}) async {
+    final sql = '''
+      SELECT ${SqfExpense.fixedCostId}
+      FROM ${SqfExpense.tableName} a
+      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.recentPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      AND a.${SqfExpense.isConfirmed} = 0;
+    ''';
+    try {
+      final jsonList = await db.query(sql);
+
+      final results =
+          jsonList.map((json) => int.parse(json[SqfExpense.fixedCostId])).toList();
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
   }
 
   @override

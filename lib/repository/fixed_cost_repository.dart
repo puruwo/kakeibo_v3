@@ -124,15 +124,14 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
     }
   }
 
-  // 期間指定してその期間内に最近支払いありの、変動あり固定費の推定支出合計を取得する
+  // idを指定して、変動あり固定費の推定支出合計を取得する
   @override
-  Future<int> fetchEstimatedPriceByPeriod(
-      {required PeriodValue period}) async {
+  Future<int> fetchEstimatedPriceById(
+      {required int id}) async {
     final sql = '''
       SELECT SUM(a.${SqfFixedCost.estimatedPrice}) AS estimatedPrice
       FROM ${SqfFixedCost.tableName} a
-      WHERE a.${SqfFixedCost.recentPaymentDate} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.recentPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
-      AND a.${SqfFixedCost.deleteFlag} = 0;
+      WHERE a.${SqfFixedCost.id} = $id;
     ''';
     try {
       final result = await db.queryFirstIntValue(sql);

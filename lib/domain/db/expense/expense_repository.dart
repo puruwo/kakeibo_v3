@@ -57,5 +57,9 @@ abstract interface class ExpenseRepository {
   Future<void> updateUnconfirmedCost(
       {required int id, required int confirmedPrice});
 
+  // 期間指定して変動あり固定費の推定支出合計を取得する
+  // 今月確定分の固定費は含まない
+  Future<List<int>> fetchUnFixedIdsByPeriod({required PeriodValue period});
+
   void delete(int id);
 }
