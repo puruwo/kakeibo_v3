@@ -42,7 +42,7 @@ class FixedCostUsecase {
 
     //エラーチェック
     if (enteredDate.isBefore(currentMonthPeriod.startDatetime)) {
-      throw const AppException('今の集計期間以降の日付を入力してください');
+      throw const AppException('今月の集計期間以降の日付を入力してください');
     }
     if (fixedCostEntity.name == '') {
       throw const AppException('名前を入力してください');
