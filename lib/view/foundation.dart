@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
 
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
@@ -24,6 +25,7 @@ class _FoundationState extends ConsumerState<Foundation> {
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
+    GlobalKey<NavigatorState>(),
   ];
 
   //navigationBarに設定するbodyのpageリスト
@@ -31,6 +33,7 @@ class _FoundationState extends ConsumerState<Foundation> {
     const YearPage(),
     Container(), // 2番目のタブは入力画面を表示するための空のコンテナ
     const MonthlyPage(),
+    const ExpenseHistoryPage(),
   ];
 
   @override
@@ -70,20 +73,32 @@ class _FoundationState extends ConsumerState<Foundation> {
               );
             },
           ),
+          Navigator(
+            key: navigatorKeys[3],
+            onGenerateRoute: (RouteSettings settings) {
+              return MaterialPageRoute(
+                builder: (_) => pageList[3],
+              );
+            },
+          ),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        selectedItemColor: MyColors.themeSecondaryColor,
         backgroundColor: MyColors.quarternarySystemfill,
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_rounded), label: '履歴'),
+              icon: Icon(Icons.home_outlined), label: 'ホーム'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.add,
               ),
-              label: '履歴'),
+              label: '入力'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.auto_graph_rounded), label: 'グラフ')
+              icon: Icon(Icons.auto_graph_rounded), label: '分析'),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.calendar_month_rounded), label: '履歴'),
         ],
         currentIndex: navigationBarState,
         onTap: (int index) {

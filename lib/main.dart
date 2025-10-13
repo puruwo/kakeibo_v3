@@ -92,7 +92,7 @@ void main() {
       observers: const [ProviderLogger()],
       child: MaterialApp(
         home: MediaQuery.withClampedTextScaling(
-          child: Foundation(),
+          child: const Foundation(),
         ),
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark(),
