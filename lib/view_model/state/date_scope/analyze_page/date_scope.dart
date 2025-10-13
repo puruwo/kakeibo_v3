@@ -2,10 +2,10 @@ import 'package:kakeibo/domain_service/month_period_service/aggregation_represen
 import 'package:kakeibo/domain_service/month_period_service/month_index_service.dart';
 import 'package:kakeibo/domain_service/year_period_service/aggregation_representative_year_service.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart';
-import 'package:kakeibo/view_model/state/date_scope/entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
-import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/selected_datetime.dart';
 
 final dateScopeEntityProvider = AsyncNotifierProvider<DateScopeNotifier,DateScopeEntity>(
   DateScopeNotifier.new,

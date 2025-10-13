@@ -5,7 +5,7 @@ import 'package:kakeibo/domain/db/income/income_repository.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
-import 'package:kakeibo/view_model/state/date_scope/entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final monthlyAllCategoryCardNotifierProvider = AsyncNotifierProvider.family<

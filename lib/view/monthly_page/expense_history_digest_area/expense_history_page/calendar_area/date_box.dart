@@ -8,7 +8,7 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
-import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 enum CalendarTileStatus {
@@ -64,7 +64,7 @@ class DateBox extends ConsumerWidget {
         onTap: switch (tileStatus) {
           CalendarTileStatus.unselected => () {
               final notifier =
-                  ref.read(selectedDatetimeNotifierProvider.notifier);
+                  ref.read(historicalSelectedDatetimeNotifierProvider.notifier);
               notifier.updateState(DateTime(year, month, day));
             },
           CalendarTileStatus.selected => () {

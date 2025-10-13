@@ -6,7 +6,7 @@ import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/annual_balanc
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
 import 'package:kakeibo/domain_service/month_period_service/aggregation_representative_month_service.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
-import 'package:kakeibo/view_model/state/date_scope/entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final annualBalanceChartNotifierProvider = AsyncNotifierProvider.family<

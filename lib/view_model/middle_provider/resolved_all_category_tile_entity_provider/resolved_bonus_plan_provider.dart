@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/bonus_plan_usecase/bonus_plan_usecase.dart';
 import 'package:kakeibo/domain/ui_value/bonus_plan_value/bonus_plan_value.dart';
-import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 
 // カレンダーで表示されている選択期間を取得し、Valueを取得する中間プロバイダ
 final resolvedBonusPlanValueProvider =

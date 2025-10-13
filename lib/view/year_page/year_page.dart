@@ -14,7 +14,7 @@ import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
-import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 
 class YearPage extends ConsumerStatefulWidget {

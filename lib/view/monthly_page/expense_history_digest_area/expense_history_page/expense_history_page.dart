@@ -11,7 +11,7 @@ import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_hi
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_previous_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_area/expence_history_list_area.dart';
 
-import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 
 class ExpenseHistoryPage extends StatelessWidget {
   const ExpenseHistoryPage({super.key});
@@ -31,7 +31,7 @@ class ExpenseHistoryPage extends StatelessWidget {
                 //左矢印ボタン、押すと前の月に移動
                 const CalendarPreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final activeDt = ref.watch(selectedDatetimeNotifierProvider);
+                  final activeDt = ref.watch(historicalSelectedDatetimeNotifierProvider);
                   final label = labelGetter(activeDt);
                   return Text(
                     label,

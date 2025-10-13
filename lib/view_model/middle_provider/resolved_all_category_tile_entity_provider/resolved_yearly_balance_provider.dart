@@ -1,9 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/yearly_balance_usecase/yearly_balance_usecase.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
-import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 
-// カレンダーで表示されている選択期間を取得し、Entityを取得する中間プロバイダ
+// 選択期間を取得し、Entityを取得する中間プロバイダ
 final resolvedYearlyBalanceValueProvider =
     FutureProvider<YearlyBalanceValue>((ref) async {
 

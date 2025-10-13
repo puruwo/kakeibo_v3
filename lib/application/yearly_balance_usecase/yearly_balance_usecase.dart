@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
-import 'package:kakeibo/view_model/state/date_scope/entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final yearlyBalanceNotifierProvider = AsyncNotifierProvider.family<

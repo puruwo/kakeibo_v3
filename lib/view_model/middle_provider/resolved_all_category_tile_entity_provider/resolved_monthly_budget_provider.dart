@@ -1,9 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/budget/budget_provider.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
-import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 
-// カレンダーで表示されている選択期間を取得し、Valuesを取得する中間プロバイダ
+// 選択期間を取得し、Valuesを取得する中間プロバイダ
 final resolvedBudgetEditValueProvider =
     FutureProvider<List<BudgetEditValue>>((ref) async {
 

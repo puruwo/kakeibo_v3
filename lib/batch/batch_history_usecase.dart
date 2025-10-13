@@ -4,7 +4,7 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/batch_history/batch_history_entity.dart';
 import 'package:kakeibo/domain/db/batch_history/batch_history_repository.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
-import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final batchProcessUsecaseProvider = Provider<BatchProcessUsecase>(

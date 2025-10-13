@@ -5,7 +5,7 @@ import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
-import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final fixedCostUsecaseProvider = Provider<FixedCostUsecase>(

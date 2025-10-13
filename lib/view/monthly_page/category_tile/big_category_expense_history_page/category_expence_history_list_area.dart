@@ -12,7 +12,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_area/expense_history_tile.dart';
 
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
-import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 /// Local imports
@@ -60,7 +60,7 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
 //状態管理---------------------------------------------------------------------------------------
 
     // selectedDatetimeが更新されたら動く
-    ref.listen(selectedDatetimeNotifierProvider, (previous, next) {
+    ref.listen(historicalSelectedDatetimeNotifierProvider, (previous, next) {
         final updatedSelectedDateTime = next;
         _scrollToItem(
             updatedSelectedDateTime, itemKeys, widget._scrollController);

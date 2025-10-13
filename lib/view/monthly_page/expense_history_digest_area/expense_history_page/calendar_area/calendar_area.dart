@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/calendar/calendar_usecase.dart';
+import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 import 'package:kakeibo/view_model/state/page_manager/page_manager.dart';
 import 'package:logger/logger.dart';
 
@@ -13,7 +14,6 @@ import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_area/date_box.dart';
 
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
-import 'package:kakeibo/view_model/state/date_scope/selected_datetime/selected_datetime.dart';
 
 final logger = Logger();
 
@@ -75,7 +75,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
           // 1: 右に移動中
           if (page > pageController.page!) {
             ref
-                .read(selectedDatetimeNotifierProvider.notifier)
+                .read(historicalSelectedDatetimeNotifierProvider.notifier)
                 .updateToNextMonth();
             // 全体管理の状態も更新
             ref.read(pageManagerNotifierProvider.notifier).nextPage();
@@ -85,7 +85,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
           // -1: 左に移動中
           else if (page < pageController.page!) {
             ref
-                .read(selectedDatetimeNotifierProvider.notifier)
+                .read(historicalSelectedDatetimeNotifierProvider.notifier)
                 .updateToPreviousMonth();
             // 全体管理の状態も更新
             ref.read(pageManagerNotifierProvider.notifier).previousPage();

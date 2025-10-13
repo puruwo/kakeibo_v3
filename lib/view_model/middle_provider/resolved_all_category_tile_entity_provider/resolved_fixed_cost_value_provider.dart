@@ -5,9 +5,9 @@ import 'package:kakeibo/application/fixed_cost_read/monthly_unconfirmed_fixed_co
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_sammary_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
-import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 
-// カレンダーで表示されている選択期間を取得し、決定済み固定費のValuesを取得する中間プロバイダ
+// 選択期間を取得し、決定済み固定費のValuesを取得する中間プロバイダ
 final resolvedConfirmedFixedCostValueValueProvider =
     FutureProvider<List<MonthlyConfirmedFixedCostTileValue>>((ref) async {
 
@@ -19,7 +19,7 @@ final resolvedConfirmedFixedCostValueValueProvider =
   return values;
 });
 
-// カレンダーで表示されている選択期間を取得し、未確定固定費のValuesを取得する中間プロバイダ
+// 選択期間を取得し、未確定固定費のValuesを取得する中間プロバイダ
 final resolvedUnconfirmedFixedCostValueValueProvider =
     FutureProvider<List<MonthlyUnconfirmedFixedCostTileValue>>((ref) async {
 
@@ -31,7 +31,7 @@ final resolvedUnconfirmedFixedCostValueValueProvider =
   return values;
 });
 
-// カレンダーで表示されている選択期間を取得し、固定費のサマリーValuesを取得する中間プロバイダ
+// 選択期間を取得し、固定費のサマリーValuesを取得する中間プロバイダ
 final resolvedFixedCostSammaryValueProvider =
     FutureProvider<MonthlyFixedCostSummaryValue>((ref) async {
 

@@ -1,4 +1,4 @@
-import 'package:kakeibo/view_model/state/date_scope/entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 
 class RequestMonthlyCateoryCard {
   final int bigId;

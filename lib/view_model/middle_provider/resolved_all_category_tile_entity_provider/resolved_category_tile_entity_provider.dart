@@ -3,7 +3,7 @@ import 'package:kakeibo/application/monthly_category_card/moothly_category_card_
 import 'package:kakeibo/application/monthly_category_card/moothly_selected_category_card_usecase.dart';
 import 'package:kakeibo/application/monthly_category_card/request_moothly_category_card.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
-import 'package:kakeibo/view_model/state/date_scope/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 
 final resolvedAllCategoryTileEntityProvider =
     FutureProvider<List<CategoryCardEntity>>((ref) async {
