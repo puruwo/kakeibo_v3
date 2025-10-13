@@ -11,8 +11,6 @@ import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_summary_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
-import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_page.dart';
-import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_digest_area.dart';
 import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
@@ -196,36 +194,6 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
               ),
 
               const MonthlyFixedCostSummaryArea(),  
-
-              const SizedBox(
-                height: 8,
-              ),
-
-              SizedBox(
-                width: 343 * context.screenHorizontalMagnification,
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      ' 履歴',
-                      style: MyFonts.thirdPageSubheading,
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const ExpenseHistoryPage(),
-                          ));
-                        },
-                        child: const Text(
-                          'さらに表示',
-                          style: MyFonts.thirdPageTextButton,
-                        )),
-                  ],
-                ),
-              ),
-
-              const ExpenceHistoryDigestArea(),
 
               const SizedBox(
                 height: 32,
