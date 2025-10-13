@@ -7,7 +7,7 @@ part of 'historical_selected_datetime.dart';
 // **************************************************************************
 
 String _$historicalSelectedDatetimeNotifierHash() =>
-    r'3ba51eb51663ef6bdf10c207cb8cd54d3b98ab67';
+    r'92b222f4ccc507a96a86eeed755c11cc22b9df57';
 
 /// See also [HistoricalSelectedDatetimeNotifier].
 @ProviderFor(HistoricalSelectedDatetimeNotifier)

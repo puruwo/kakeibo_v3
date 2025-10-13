@@ -3,8 +3,8 @@ import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/batch_history/batch_history_entity.dart';
 import 'package:kakeibo/domain/db/batch_history/batch_history_repository.dart';
+import 'package:kakeibo/domain_service/system_datetime/date_scope.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
-import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final batchProcessUsecaseProvider = Provider<BatchProcessUsecase>(
@@ -20,7 +20,7 @@ class BatchProcessUsecase {
 
   // 登録処理
   Future<bool> grobalBatchProscessing() async {
-    final dateScope = await _ref.read(dateScopeEntityProvider.future);
+    final dateScope = await _ref.read(systemDateScopeEntityProvider.future);
 
     // 今の集計期間の終了日を取得
     final currentMonthEndDate = dateScope.monthPeriod.endDatetime;

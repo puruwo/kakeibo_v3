@@ -6,10 +6,10 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/config/config_top.dart';
-import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_area/calendar_area.dart';
-import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_next_arrow_button.dart';
-import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/calendar_previous_arrow_button.dart';
-import 'package:kakeibo/view/monthly_page/expense_history_digest_area/expense_history_page/expense_history_area/expence_history_list_area.dart';
+import 'package:kakeibo/view/historical_calendar_page/calendar_area/calendar_area.dart';
+import 'package:kakeibo/view/historical_calendar_page/calendar_next_arrow_button.dart';
+import 'package:kakeibo/view/historical_calendar_page/calendar_previous_arrow_button.dart';
+import 'package:kakeibo/view/historical_calendar_page/expense_history_area/expence_history_list_area.dart';
 
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 
@@ -32,7 +32,7 @@ class ExpenseHistoryPage extends StatelessWidget {
                 const CalendarPreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
                   final activeDt = ref.watch(historicalSelectedDatetimeNotifierProvider);
-                  final label = labelGetter(activeDt);
+                  final label = yyyyMMtoMMGetter(activeDt);
                   return Text(
                     label,
                     style: MyFonts.pageHeaderText,

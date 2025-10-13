@@ -1,15 +1,15 @@
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'selected_datetime.g.dart';
+part 'home_selected_datetime.g.dart';
 
 @Riverpod(keepAlive: true)
-class SelectedDatetimeNotifier extends _$SelectedDatetimeNotifier {
+class HomeSelectedDatetimeNotifier extends _$HomeSelectedDatetimeNotifier {
   @override
   DateTime build() {
     // 最初のデータ
-    final now = DateTime.now();
-    // final now = DateTime(2026,3,26);
-    return DateTime(now.year, now.month, now.day);
+    final now = ref.read(systemDatetimeNotifierProvider);
+    return now;
   }
 
   void updateState(DateTime dateTime) {

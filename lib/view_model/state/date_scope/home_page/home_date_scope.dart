@@ -3,20 +3,20 @@ import 'package:kakeibo/domain_service/month_period_service/month_index_service.
 import 'package:kakeibo/domain_service/year_period_service/aggregation_representative_year_service.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/view_model/state/date_scope/home_page/selected_datetime/home_selected_datetime.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
-import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/selected_datetime.dart';
 
-final dateScopeEntityProvider = AsyncNotifierProvider<DateScopeNotifier,DateScopeEntity>(
-  DateScopeNotifier.new,
+final homeDateScopeEntityProvider = AsyncNotifierProvider<HomeDateScopeNotifier,DateScopeEntity>(
+  HomeDateScopeNotifier.new,
 );
 
-class DateScopeNotifier extends AsyncNotifier<DateScopeEntity> {
+class HomeDateScopeNotifier extends AsyncNotifier<DateScopeEntity> {
   @override
   Future<DateScopeEntity> build() async {
 
     // 選択期間を取得する
-    final selectedDate = ref.watch(selectedDatetimeNotifierProvider);
+    final selectedDate = ref.watch(homeSelectedDatetimeNotifierProvider);
 
     // 月の期間を取得する
     final monthService = ref.read(monthPeriodServiceProvider);

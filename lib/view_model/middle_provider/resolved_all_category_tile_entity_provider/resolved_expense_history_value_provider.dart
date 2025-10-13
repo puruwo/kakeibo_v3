@@ -5,9 +5,11 @@ import 'package:kakeibo/application/expense_history/big_category_expense_history
 import 'package:kakeibo/application/expense_history/small_category_expense_history_usecase/request_small_expense_history.dart';
 import 'package:kakeibo/application/expense_history/small_category_expense_history_usecase/small_category_expense_history_usecase.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_group_value.dart';
-import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/historical_date_scope.dart';
 
+
+// historical系のページで利用する
 final resolvedExpenseHistoryValueProvider =
     FutureProvider<List<ExpenseHistoryTileGroupValue>>((ref) async {
   
@@ -19,11 +21,13 @@ final resolvedExpenseHistoryValueProvider =
   return result;
 });
 
+
+// monthly系のページで利用する
 final resolvedCategoryExpenseHistoryDigestValueProvider =
     FutureProvider.family<List<ExpenseHistoryTileGroupValue>,int>((ref,bigId) async {
   
   // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final monthPeriodValue = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
 
   final request = RequestBigExpenseHistory(
     bigId: bigId,
@@ -39,7 +43,7 @@ final resolvedSmallCategoryExpenseHistoryDigestValueProvider =
     FutureProvider.family<List<ExpenseHistoryTileGroupValue>,int>((ref,smallId) async {
   
   // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(dateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final monthPeriodValue = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
 
   final request = RequestSmallExpenseHistory(
     smallId: smallId,

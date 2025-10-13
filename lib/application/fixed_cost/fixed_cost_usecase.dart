@@ -4,8 +4,8 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
+import 'package:kakeibo/domain_service/system_datetime/date_scope.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
-import 'package:kakeibo/view_model/state/date_scope/analyze_page/date_scope.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final fixedCostUsecaseProvider = Provider<FixedCostUsecase>(
@@ -30,7 +30,7 @@ class FixedCostUsecase {
   Future<void> add({required FixedCostEntity fixedCostEntity}) async {
     // 現在のdateScopeを取得
     final dateScope =
-        await _ref.read(dateScopeEntityProvider.selectAsync((data) => data));
+        await _ref.read(systemDateScopeEntityProvider.selectAsync((data) => data));
 
     //エラーチェック
     // 入力した日付が集計期間より前の日付でないかチェック

@@ -16,7 +16,7 @@ import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_page.dart';
-import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -37,7 +37,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
     // DBが更新されたらリビルドするため
     ref.watch(updateDBCountNotifierProvider);
 
-    final activeDt = ref.watch(selectedDatetimeNotifierProvider);
+    final activeDt = ref.watch(analyzePageSelectedDatetimeNotifierProvider);
 
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
@@ -54,8 +54,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 //左矢印ボタン、押すと前の月に移動
                 const PreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final activeDt = ref.watch(selectedDatetimeNotifierProvider);
-                  final label = labelGetter(activeDt);
+                  final activeDt = ref.watch(analyzePageSelectedDatetimeNotifierProvider);
+                  final label = yyyyMMtoMMGetter(activeDt);
                   return Text(
                     label,
                     style: MyFonts.pageHeaderText,

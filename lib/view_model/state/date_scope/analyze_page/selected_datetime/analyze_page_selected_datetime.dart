@@ -1,10 +1,10 @@
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'historical_selected_datetime.g.dart';
+part 'analyze_page_selected_datetime.g.dart';
 
 @Riverpod(keepAlive: true)
-class HistoricalSelectedDatetimeNotifier extends _$HistoricalSelectedDatetimeNotifier {
+class AnalyzePageSelectedDatetimeNotifier extends _$AnalyzePageSelectedDatetimeNotifier {
   @override
   DateTime build() {
     // 最初のデータ
