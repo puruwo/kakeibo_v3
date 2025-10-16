@@ -76,194 +76,186 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
             ]);
           },
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 8.0),
-            child: Container(
-              decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(12)),
-                  color: MyColors.quarternarySystemfill),
-              child: Padding(
-                padding: EdgeInsets.only(
-                    left: leftsidePadding, right: leftsidePadding),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+            padding: EdgeInsets.only(
+                left: leftsidePadding, right: leftsidePadding),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // アイコン
-                        Expanded(
-                          flex: 6,
-                          child: Row(
-                            children: [
-                              SizedBox(height: 49, child: icon),
-                              // アイコンの横のスペース
-                              const SizedBox(
-                                width: 8,
-                              ),
-                              // 名前
-                              Text(value.name,
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: MyFonts.cardPrimaryTitle),
-                            ],
+                    // アイコン
+                    Expanded(
+                      flex: 6,
+                      child: Row(
+                        children: [
+                          SizedBox(height: 49, child: icon),
+                          // アイコンの横のスペース
+                          const SizedBox(
+                            width: 8,
                           ),
-                        ),
-                        // 値段
-                        Expanded(
-                          flex: 4,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
+                          // 名前
+                          Text(value.name,
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              style: MyFonts.cardPrimaryTitle),
+                        ],
+                      ),
+                    ),
+                    // 値段
+                    Expanded(
+                      flex: 4,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '未入力',
+                              textAlign: TextAlign.end,
+                              overflow: TextOverflow.ellipsis,
+                              style: MyFonts.cardPriceLabel,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  '未入力',
+                                  '過去平均',
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MyFonts.cardSecondaryTitle,
+                                ),
+                                const SizedBox(
+                                  width: 6,
+                                ),
+                                // 小カテゴリー名
+                                Text(
+                                  value.estimatedPrice == 0
+                                      ? '---'
+                                      : yenmarkFormattedPriceGetter(
+                                          value.estimatedPrice),
                                   textAlign: TextAlign.end,
                                   overflow: TextOverflow.ellipsis,
-                                  style: MyFonts.cardPriceLabel,
+                                  style: MyFonts.cardSecondaryTitle,
                                 ),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      '過去平均',
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: MyFonts.cardSecondaryTitle,
-                                    ),
-                                    const SizedBox(
-                                      width: 6,
-                                    ),
-                                    // 小カテゴリー名
-                                    Text(
-                                      value.estimatedPrice == 0
-                                          ? '---'
-                                          : yenmarkFormattedPriceGetter(
-                                              value.estimatedPrice),
-                                      textAlign: TextAlign.end,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: MyFonts.cardSecondaryTitle,
-                                    ),
-                                  ],
-                                )
                               ],
-                            ),
-                          ),
+                            )
+                          ],
                         ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // 左列
-                        SizedBox(
-                          width: drawableWidth * leftColumnRatio,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // 大カテゴリー名
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      'カテゴリー',
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: MyFonts.cardSecondaryTitle,
-                                    ),
-                                    // 小カテゴリー名
-                                    Text(
-                                      value.bigCategoryName,
-                                      textAlign: TextAlign.end,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: MyFonts.cardSecondaryTitle,
-                                    ),
-                                  ]),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '項目',
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: MyFonts.cardSecondaryTitle,
-                                  ),
-                                  // 小カテゴリー名
-                                  Text(
-                                    value.smallCategoryName,
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: MyFonts.cardSecondaryTitle,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        // 右列
-                        SizedBox(
-                          width: drawableWidth * rightColumnRatio,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              // 大カテゴリー名
-                              Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '頻度',
-                                      textAlign: TextAlign.start,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: MyFonts.cardSecondaryTitle,
-                                    ),
-                                    // 小カテゴリー名
-                                    Text(
-                                      value.frequencyLabel,
-                                      textAlign: TextAlign.end,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: MyFonts.cardSecondaryTitle,
-                                    ),
-                                  ]),
-                              const SizedBox(
-                                height: 4,
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    '支払い日',
-                                    textAlign: TextAlign.start,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: MyFonts.cardSecondaryTitle,
-                                  ),
-                                  // 小カテゴリー名
-                                  Text(
-                                    paymentDateLabel,
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: MyFonts.cardSecondaryTitle,
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 16,
+                      ),
                     ),
                   ],
                 ),
-              ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 左列
+                    SizedBox(
+                      width: drawableWidth * leftColumnRatio,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // 大カテゴリー名
+                          Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'カテゴリー',
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MyFonts.cardSecondaryTitle,
+                                ),
+                                // 小カテゴリー名
+                                Text(
+                                  value.bigCategoryName,
+                                  textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MyFonts.cardSecondaryTitle,
+                                ),
+                              ]),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '項目',
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                style: MyFonts.cardSecondaryTitle,
+                              ),
+                              // 小カテゴリー名
+                              Text(
+                                value.smallCategoryName,
+                                textAlign: TextAlign.end,
+                                overflow: TextOverflow.ellipsis,
+                                style: MyFonts.cardSecondaryTitle,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    // 右列
+                    SizedBox(
+                      width: drawableWidth * rightColumnRatio,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          // 大カテゴリー名
+                          Row(
+                              mainAxisAlignment:
+                                  MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '頻度',
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MyFonts.cardSecondaryTitle,
+                                ),
+                                // 小カテゴリー名
+                                Text(
+                                  value.frequencyLabel,
+                                  textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: MyFonts.cardSecondaryTitle,
+                                ),
+                              ]),
+                          const SizedBox(
+                            height: 4,
+                          ),
+                          Row(
+                            mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                '支払い日',
+                                textAlign: TextAlign.start,
+                                overflow: TextOverflow.ellipsis,
+                                style: MyFonts.cardSecondaryTitle,
+                              ),
+                              // 小カテゴリー名
+                              Text(
+                                paymentDateLabel,
+                                textAlign: TextAlign.end,
+                                overflow: TextOverflow.ellipsis,
+                                style: MyFonts.cardSecondaryTitle,
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
+              ],
             ),
           ),
           onTap: () async {
