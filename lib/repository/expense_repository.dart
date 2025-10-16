@@ -328,14 +328,16 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     final sql = '''
       SELECT ${SqfExpense.fixedCostId}
       FROM ${SqfExpense.tableName} a
-      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.recentPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       AND a.${SqfExpense.isConfirmed} = 0;
     ''';
+    print(sql);
     try {
       final jsonList = await db.query(sql);
 
-      final results =
-          jsonList.map((json) => int.parse(json[SqfExpense.fixedCostId])).toList();
+      final results = jsonList
+          .map((json) => json[SqfExpense.fixedCostId] as int)
+          .toList();
       return results;
     } catch (e) {
       logger.e('[FAIL]: $e');
