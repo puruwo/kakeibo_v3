@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
@@ -18,6 +20,8 @@ final monthlyAllCategoryCardNotifierProvider = AsyncNotifierProvider.family<
 class MonthlyAllCategoryTileUsecaseNotifier
     extends FamilyAsyncNotifier<AllCategoryCardModel, DateScopeEntity> {
   late ExpenseRepository _expenseRepositoryProvider;
+  late FixedCostExpenseRepository _fixedCostExpenseRepositoryProvider;
+  late FixedCostRepository _fixedCostRepositoryProvider;
   late BudgetRepository _budgetRepositoryProvider;
   late IncomeRepository _incomeRepositoryProvider;
   late CategoryAccountingRepository _categoryAccountingRepositoryProvider;
@@ -29,6 +33,9 @@ class MonthlyAllCategoryTileUsecaseNotifier
     ref.watch(updateDBCountNotifierProvider);
 
     _expenseRepositoryProvider = ref.read(expenseRepositoryProvider);
+    _fixedCostExpenseRepositoryProvider =
+        ref.read(fixedCostExpenseRepositoryProvider);
+    _fixedCostRepositoryProvider = ref.read(fixedCostRepositoryProvider);
     _budgetRepositoryProvider = ref.read(budgetRepositoryProvider);
     _incomeRepositoryProvider = ref.read(incomeRepositoryProvider);
     _categoryAccountingRepositoryProvider =
@@ -48,14 +55,33 @@ class MonthlyAllCategoryTileUsecaseNotifier
     final allCategoryBudget = await _budgetRepositoryProvider.fetchMonthlyAll(
         month: dateScope.representativeMonth);
 
+    // 支払いがある固定費の合計を取得
+    // 支払額未定の固定費は推定額を使用する
+    final confirmedFixedCostExpenseTotal =
+        await _fixedCostExpenseRepositoryProvider
+            .fetchTotalConfirmedFixedCostExpenseWithPeriod(
+                period: dateScope.monthPeriod);
+    final unconfirmedFixedCostList = await _fixedCostExpenseRepositoryProvider
+        .fetchUnconfirmedFixedCostExpenseWithPeriod(
+            period: dateScope.monthPeriod);
+    final unconfirmedFixedCostEstimatedTotal = await Future.wait(
+        unconfirmedFixedCostList.map((element) async {
+      final estimatePrice = await _fixedCostRepositoryProvider
+          .fetchEstimatedPriceById(id: element.fixedCostId);
+      return estimatePrice;
+    })).then((values) => values.fold<int>(
+        0, (previousValue, estimatePrice) => previousValue + estimatePrice));
+
     // 全カテゴリーの支出を取得
     // 大カテゴリーIDを0にすることで、ボーナスを除くカテゴリーの支出を取得する
     final allCategoryExpense = await _expenseRepositoryProvider
-        .fetchTotalExpenseByPeriodWithBigCategory(incomeSourceBigCategory: 0, fromDate: fromDate, toDate: toDate);
+        .fetchTotalExpenseByPeriodWithBigCategory(
+            incomeSourceBigCategory: 0, fromDate: fromDate, toDate: toDate);
 
     // カテゴリータイルのリストを取得する
-    final categoryEntityList = await _categoryAccountingRepositoryProvider
-        .fetchAll(incomeSourceBigCategoryId: 0, fromDate: fromDate, toDate: toDate);
+    final categoryEntityList =
+        await _categoryAccountingRepositoryProvider.fetchAll(
+            incomeSourceBigCategoryId: 0, fromDate: fromDate, toDate: toDate);
 
     // 大カテゴリーが何個あるか
     final categoryCount = categoryEntityList.length;
@@ -71,14 +97,14 @@ class MonthlyAllCategoryTileUsecaseNotifier
         categoryEntityList.map((e) => e.categoryColor).toList();
 
     // 収入を取得
-    final allCategoryIncome = await _incomeRepositoryProvider.calcurateSumWithPeriod(period: dateScope.monthPeriod);
+    final allCategoryIncome = await _incomeRepositoryProvider
+        .calcurateSumWithPeriod(period: dateScope.monthPeriod);
 
-    final AllCategoryCardStatusType cardStatusType =
-        allCategoryBudget > 0
-            ? AllCategoryCardStatusType.hasBudget
-            : allCategoryIncome > 0
-                ? AllCategoryCardStatusType.hasIncome
-                : AllCategoryCardStatusType.noData;
+    final AllCategoryCardStatusType cardStatusType = allCategoryBudget > 0
+        ? AllCategoryCardStatusType.hasBudget
+        : allCategoryIncome > 0
+            ? AllCategoryCardStatusType.hasIncome
+            : AllCategoryCardStatusType.noData;
 
     final denominator = cardStatusType == AllCategoryCardStatusType.hasBudget
         ? allCategoryBudget
@@ -86,9 +112,13 @@ class MonthlyAllCategoryTileUsecaseNotifier
 
     return AllCategoryCardModel(
       cardStatusType: cardStatusType,
-      allCategoryTotalExpense: allCategoryExpense,
+      allCategoryTotalExpense: allCategoryExpense +
+          confirmedFixedCostExpenseTotal +
+          unconfirmedFixedCostEstimatedTotal,
       allCategoryTotalBudget: allCategoryBudget,
       allCategoryTotalIncome: allCategoryIncome,
+      allFixedCostExpense:
+          confirmedFixedCostExpenseTotal + unconfirmedFixedCostEstimatedTotal,
       realSavings: allCategoryIncome - allCategoryExpense,
       denominator: denominator,
       categoryCount: categoryCount,

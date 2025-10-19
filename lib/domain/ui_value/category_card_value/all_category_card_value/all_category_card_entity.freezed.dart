@@ -21,6 +21,7 @@ mixin _$AllCategoryCardModel {
   int get allCategoryTotalExpense => throw _privateConstructorUsedError;
   int get allCategoryTotalBudget => throw _privateConstructorUsedError;
   int get allCategoryTotalIncome => throw _privateConstructorUsedError;
+  int get allFixedCostExpense => throw _privateConstructorUsedError;
   int get denominator => throw _privateConstructorUsedError;
   int get realSavings => throw _privateConstructorUsedError;
   int get categoryCount => throw _privateConstructorUsedError;
@@ -46,6 +47,7 @@ abstract class $AllCategoryCardModelCopyWith<$Res> {
       int allCategoryTotalExpense,
       int allCategoryTotalBudget,
       int allCategoryTotalIncome,
+      int allFixedCostExpense,
       int denominator,
       int realSavings,
       int categoryCount,
@@ -74,6 +76,7 @@ class _$AllCategoryCardModelCopyWithImpl<$Res,
     Object? allCategoryTotalExpense = null,
     Object? allCategoryTotalBudget = null,
     Object? allCategoryTotalIncome = null,
+    Object? allFixedCostExpense = null,
     Object? denominator = null,
     Object? realSavings = null,
     Object? categoryCount = null,
@@ -99,6 +102,10 @@ class _$AllCategoryCardModelCopyWithImpl<$Res,
       allCategoryTotalIncome: null == allCategoryTotalIncome
           ? _value.allCategoryTotalIncome
           : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
+              as int,
+      allFixedCostExpense: null == allFixedCostExpense
+          ? _value.allFixedCostExpense
+          : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
               as int,
       denominator: null == denominator
           ? _value.denominator
@@ -149,6 +156,7 @@ abstract class _$$AllCategoryCardModelImplCopyWith<$Res>
       int allCategoryTotalExpense,
       int allCategoryTotalBudget,
       int allCategoryTotalIncome,
+      int allFixedCostExpense,
       int denominator,
       int realSavings,
       int categoryCount,
@@ -174,6 +182,7 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
     Object? allCategoryTotalExpense = null,
     Object? allCategoryTotalBudget = null,
     Object? allCategoryTotalIncome = null,
+    Object? allFixedCostExpense = null,
     Object? denominator = null,
     Object? realSavings = null,
     Object? categoryCount = null,
@@ -199,6 +208,10 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
       allCategoryTotalIncome: null == allCategoryTotalIncome
           ? _value.allCategoryTotalIncome
           : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
+              as int,
+      allFixedCostExpense: null == allFixedCostExpense
+          ? _value.allFixedCostExpense
+          : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
               as int,
       denominator: null == denominator
           ? _value.denominator
@@ -244,6 +257,7 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
       required this.allCategoryTotalExpense,
       required this.allCategoryTotalBudget,
       required this.allCategoryTotalIncome,
+      required this.allFixedCostExpense,
       required this.denominator,
       required this.realSavings,
       required this.categoryCount,
@@ -266,6 +280,8 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
   final int allCategoryTotalBudget;
   @override
   final int allCategoryTotalIncome;
+  @override
+  final int allFixedCostExpense;
   @override
   final int denominator;
   @override
@@ -318,7 +334,7 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
 
   @override
   String toString() {
-    return 'AllCategoryCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, denominator: $denominator, realSavings: $realSavings, categoryCount: $categoryCount, categoryIdList: $categoryIdList, categoryNameList: $categoryNameList, categoryExpenseList: $categoryExpenseList, categoryIconPathList: $categoryIconPathList, categoryColorList: $categoryColorList)';
+    return 'AllCategoryCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, allFixedCostExpense: $allFixedCostExpense, denominator: $denominator, realSavings: $realSavings, categoryCount: $categoryCount, categoryIdList: $categoryIdList, categoryNameList: $categoryNameList, categoryExpenseList: $categoryExpenseList, categoryIconPathList: $categoryIconPathList, categoryColorList: $categoryColorList)';
   }
 
   @override
@@ -335,6 +351,8 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
                 other.allCategoryTotalBudget == allCategoryTotalBudget) &&
             (identical(other.allCategoryTotalIncome, allCategoryTotalIncome) ||
                 other.allCategoryTotalIncome == allCategoryTotalIncome) &&
+            (identical(other.allFixedCostExpense, allFixedCostExpense) ||
+                other.allFixedCostExpense == allFixedCostExpense) &&
             (identical(other.denominator, denominator) ||
                 other.denominator == denominator) &&
             (identical(other.realSavings, realSavings) ||
@@ -360,6 +378,7 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
       allCategoryTotalExpense,
       allCategoryTotalBudget,
       allCategoryTotalIncome,
+      allFixedCostExpense,
       denominator,
       realSavings,
       categoryCount,
@@ -384,6 +403,7 @@ abstract class _AllCategoryCardModel implements AllCategoryCardModel {
           required final int allCategoryTotalExpense,
           required final int allCategoryTotalBudget,
           required final int allCategoryTotalIncome,
+          required final int allFixedCostExpense,
           required final int denominator,
           required final int realSavings,
           required final int categoryCount,
@@ -402,6 +422,8 @@ abstract class _AllCategoryCardModel implements AllCategoryCardModel {
   int get allCategoryTotalBudget;
   @override
   int get allCategoryTotalIncome;
+  @override
+  int get allFixedCostExpense;
   @override
   int get denominator;
   @override

@@ -13,6 +13,14 @@ abstract class FixedCostExpenseRepository {
   Future<List<FixedCostExpenseEntity>> fetchByPeriod(
       {required PeriodValue period});
 
+  // 確定している固定費の支出合計を取得する
+  Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriod(
+      {required PeriodValue period});
+
+  // 確定していない固定費の一覧を取得する
+  Future<List<FixedCostExpenseEntity>>
+      fetchUnconfirmedFixedCostExpenseWithPeriod({required PeriodValue period});
+
   // 確定している固定費の合計額を取得する
   Future<List<FixedCostExpenseEntity>> fetchByFixedCostId(
       {required int fixedCostId});

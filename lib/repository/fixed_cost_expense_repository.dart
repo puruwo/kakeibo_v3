@@ -109,6 +109,46 @@ class ImplementsFixedCostExpenseRepository
   }
 
   @override
+  Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriod(
+      {required PeriodValue period}) async {
+    final sql = '''
+      SELECT COALESCE(SUM(${SqfFixedCostExpense.price}), 0) as total
+      FROM ${SqfFixedCostExpense.tableName}
+      WHERE ${SqfFixedCostExpense.date} >= '${period.startDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND ${SqfFixedCostExpense.date} <= '${period.endDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND ${SqfFixedCostExpense.isConfirmed} = 1
+    ''';
+    final result = await DatabaseHelper.instance.query(sql);
+    if (result.isEmpty) {
+      return 0;
+    }
+    return (result.first['total'] as num).toInt();
+  }
+
+  @override
+  Future<List<FixedCostExpenseEntity>> fetchUnconfirmedFixedCostExpenseWithPeriod(
+      {required PeriodValue period}) async {
+    final sql = '''
+      SELECT
+        ${SqfFixedCostExpense.id} as id,
+        ${SqfFixedCostExpense.fixedCostId} as fixedCostId,
+        ${SqfFixedCostExpense.fixedCostCategoryId} as fixedCostCategoryId,
+        ${SqfFixedCostExpense.date} as date,
+        ${SqfFixedCostExpense.price} as price,
+        ${SqfFixedCostExpense.name} as name,
+        ${SqfFixedCostExpense.confirmedCostType} as confirmedCostType,
+        ${SqfFixedCostExpense.isConfirmed} as isConfirmed
+      FROM ${SqfFixedCostExpense.tableName}
+      WHERE ${SqfFixedCostExpense.date} >= '${period.startDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND ${SqfFixedCostExpense.date} <= '${period.endDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND ${SqfFixedCostExpense.isConfirmed} = 0
+      ORDER BY ${SqfFixedCostExpense.date} DESC
+    ''';
+    final result = await DatabaseHelper.instance.query(sql);
+    return result.map((e) => FixedCostExpenseEntity.fromJson(e)).toList();
+  }
+
+  @override
   Future<void> confirmExpense({required int id, required int price}) async {
     final entity = await _fetchById(id);
     final updatedEntity = entity.copyWith(
@@ -133,6 +173,9 @@ class ImplementsFixedCostExpenseRepository
       WHERE ${SqfFixedCostExpense.id} = $id
     ''';
     final result = await DatabaseHelper.instance.query(sql);
+    if (result.isEmpty) {
+      throw Exception('FixedCostExpense not found with id: $id');
+    }
     return FixedCostExpenseEntity.fromJson(result.first);
   }
 

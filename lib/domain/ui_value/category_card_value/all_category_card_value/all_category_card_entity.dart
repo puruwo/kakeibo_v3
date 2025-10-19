@@ -16,6 +16,7 @@ class AllCategoryCardModel with _$AllCategoryCardModel {
     required int allCategoryTotalExpense,
     required int allCategoryTotalBudget,
     required int allCategoryTotalIncome,
+    required int allFixedCostExpense,
     required int denominator,
     required int realSavings,
     required int categoryCount,
