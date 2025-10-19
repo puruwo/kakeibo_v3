@@ -73,7 +73,7 @@ class BatchProcessUsecase {
     // 月の変わり目に呼ばれる処理
 
     await _ref.read(fixedCostUsecaseProvider).addExpenseForFixedCost(
-        periodValue); // その月に支払いがある固定費を取得し、expenseに支出データを追加する
+        periodValue); // その月に支払いがある固定費を取得し、fixed_cost_expenseに支出データを追加する
 
     // ===========================
 

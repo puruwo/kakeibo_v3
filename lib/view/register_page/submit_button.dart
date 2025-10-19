@@ -81,15 +81,13 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
               switch (transactionMode) {
                 case TransactionMode.expense:
                   final entity = ExpenseEntity(
-                      id: originalExpenseEntity!.id,
-                      date: DateFormat('yyyyMMdd').format(inputDate),
-                      price: enteredPrice,
-                      paymentCategoryId: selectedCategory.id,
-                      memo: enteredMemo,
-                      incomeSourceBigCategory: enteredIncomeSource,
-                      fixedCostId: originalExpenseEntity!.fixedCostId ?? -1,
-                      isConfirmed: 1 // 登録時に確定にする
-                  );  
+                    id: originalExpenseEntity!.id,
+                    date: DateFormat('yyyyMMdd').format(inputDate),
+                    price: enteredPrice,
+                    paymentCategoryId: selectedCategory.id,
+                    memo: enteredMemo,
+                    incomeSourceBigCategory: enteredIncomeSource,
+                  );
                   switch (screenMode) {
                     case RegisterScreenMode.add:
                       await expenseUsecase.add(expenseEntity: entity);
@@ -126,8 +124,8 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
                           ? 1
                           : 0;
                   // 支払い頻度を取得
-                  final frequencyValue = ref
-                      .read(paymentFrequencyControllerNotifierProvider);
+                  final frequencyValue =
+                      ref.read(paymentFrequencyControllerNotifierProvider);
 
                   // 固定費のエンティティを作成
                   final entity = FixedCostEntity(
@@ -135,9 +133,10 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
                     name: enteredMemo,
                     price: variable == 0 ? enteredPrice : 0, // 変動費なら価格は0
                     variable: variable,
-                    expenseSmallCategoryId: selectedCategory.id,
+                    fixedCostCategoryId: selectedCategory.id,
                     intervalNumber: frequencyValue.intervalNumber,
-                    intervalUnit: frequencyValue.intervalUnit.inturvalUnitNumber,
+                    intervalUnit:
+                        frequencyValue.intervalUnit.inturvalUnitNumber,
                     firstPaymentDate: DateFormat('yyyyMMdd').format(inputDate),
                   );
                   switch (screenMode) {

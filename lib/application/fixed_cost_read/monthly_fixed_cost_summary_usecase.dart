@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_sammary_value.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -14,8 +13,7 @@ final monthlyFixedCostSummaryNotifierProvider = AsyncNotifierProvider.family<
 
 class MonthlyFixedCostSummaryNotifier
     extends FamilyAsyncNotifier<MonthlyFixedCostSummaryValue, PeriodValue> {
-  late ExpenseRepository _expenseRepo;
-  late FixedCostRepository _fixedCostRepo;
+  late FixedCostExpenseRepository _fixedCostExpenseRepo;
 
   @override
   Future<MonthlyFixedCostSummaryValue> build(
@@ -23,24 +21,25 @@ class MonthlyFixedCostSummaryNotifier
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
-    _expenseRepo = ref.read(expenseRepositoryProvider);
-    _fixedCostRepo = ref.read(fixedCostRepositoryProvider);
+    _fixedCostExpenseRepo = ref.read(fixedCostExpenseRepositoryProvider);
 
-    // expenseから確定文の固定費の支出合計を取得する
-    final fixedCostSum = await _expenseRepo.fetchTotalFixedCostByPeriod(
+    // fixed_cost_expenseから固定費の支出を取得する
+    final fixedCostExpenseList = await _fixedCostExpenseRepo.fetchByPeriod(
       period: selectedMonthPeriod,
     );
 
-    // 未確定分の固定費の推定支出合計を取得する
-    final unFixedIds =
-        await _expenseRepo.fetchUnFixedIdsByPeriod(period: selectedMonthPeriod);
-
-    // 未確定分の固定費の推定支出合計を取得する
+    // 確定分と未確定分を集計
+    int fixedCostSum = 0;
     int unconfirmedFixedCostSum = 0;
-    for (int i = 0; i < unFixedIds.length; i++) {
-      final unconfirmedFixedCost =
-          await _fixedCostRepo.fetchEstimatedPriceById(id: unFixedIds[i]);
-      unconfirmedFixedCostSum += unconfirmedFixedCost;
+
+    for (var fixedCostExpense in fixedCostExpenseList) {
+      if (fixedCostExpense.isConfirmed == 1) {
+        // 確定済み
+        fixedCostSum += fixedCostExpense.price;
+      } else {
+        // 未確定 - priceは0なので、推定価格を使う必要があるが現状は0とする
+        unconfirmedFixedCostSum += fixedCostExpense.price;
+      }
     }
 
     // 今月の支払い予定

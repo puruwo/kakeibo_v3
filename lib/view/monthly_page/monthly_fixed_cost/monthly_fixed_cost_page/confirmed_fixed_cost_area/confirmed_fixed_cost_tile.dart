@@ -176,7 +176,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                               ),
                               // 小カテゴリー名
                               Text(
-                                value.bigCategoryName,
+                                value.categoryName,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
                                 style: MyFonts.cardSecondaryTitle,
@@ -185,24 +185,6 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                         const SizedBox(
                           height: 4,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '項目',
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                              style: MyFonts.cardSecondaryTitle,
-                            ),
-                            // 小カテゴリー名
-                            Text(
-                              value.smallCategoryName,
-                              textAlign: TextAlign.end,
-                              overflow: TextOverflow.ellipsis,
-                              style: MyFonts.cardSecondaryTitle,
-                            ),
-                          ],
-                        )
                       ],
                     ),
                   ),

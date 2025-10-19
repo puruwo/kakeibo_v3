@@ -15,7 +15,7 @@ class FixedCostEntity with _$FixedCostEntity {
     required int variable,
     @Default(0) int price,
     @Default(0) int estimatedPrice,
-    required int expenseSmallCategoryId,
+    required int fixedCostCategoryId,
     required int intervalNumber,
     required int intervalUnit,
     required String firstPaymentDate,

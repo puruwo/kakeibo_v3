@@ -1,7 +1,7 @@
 // packegeImport
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 
 // localImport
 import 'package:kakeibo/constant/colors.dart';
@@ -173,12 +173,11 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
                       return;
                     }
 
-                    // 入力された金額を整数に変換して、ExpenseRepositoryを通じて更新
-                    ref.read(expenseUsecaseProvider).updateUnconfirmedCost(
-                          id: widget.value.id,
+                    // 入力された金額を整数に変換して、FixedCostExpenseRepositoryを通じて更新
+                    ref.read(fixedCostExpenseUsecaseProvider).confirmExpense(
+                          tileValue: widget.value,
                           confirmedPrice: int.parse(_textContoroller.text
                               .replaceAll(RegExp(r'\D'), '')),
-                          fixedCostId: widget.value.fixedCostId,
                         );
 
                     // OKボタンを押した時の処理

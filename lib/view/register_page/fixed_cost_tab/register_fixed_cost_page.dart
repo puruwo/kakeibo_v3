@@ -41,7 +41,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
           name: '',
           variable: 0,
           price: 0,
-          expenseSmallCategoryId: 0,
+          fixedCostCategoryId: 0,
           intervalNumber: 1,
           intervalUnit: 1, // 月
           firstPaymentDate: DateFormat('yyyyMMdd').format(DateTime.now()),
@@ -131,9 +131,9 @@ class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
 
                     // カテゴリー選択エリア
                     CategoryArea(
-                        transactionMode: TransactionMode.expense,
+                        transactionMode: TransactionMode.fixedCost,
                         originalCategoryId:
-                            initialFixedData.expenseSmallCategoryId),
+                            initialFixedData.fixedCostCategoryId),
                   ],
                 ),
               ),

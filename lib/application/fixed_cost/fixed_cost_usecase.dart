@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain_service/system_datetime/date_scope.dart';
@@ -19,8 +19,8 @@ class FixedCostUsecase {
   FixedCostRepository get _fixedCostRepositoryProvider =>
       _ref.read(fixedCostRepositoryProvider);
 
-  ExpenseRepository get _expenseRepositoryProvider =>
-      _ref.read(expenseRepositoryProvider);
+  FixedCostExpenseRepository get _fixedCostExpenseRepositoryProvider =>
+      _ref.read(fixedCostExpenseRepositoryProvider);
 
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get updateDBCountNotifier =>
@@ -29,8 +29,8 @@ class FixedCostUsecase {
   // 登録処理
   Future<void> add({required FixedCostEntity fixedCostEntity}) async {
     // 現在のdateScopeを取得
-    final dateScope =
-        await _ref.read(systemDateScopeEntityProvider.selectAsync((data) => data));
+    final dateScope = await _ref
+        .read(systemDateScopeEntityProvider.selectAsync((data) => data));
 
     //エラーチェック
     // 入力した日付が集計期間より前の日付でないかチェック
@@ -70,12 +70,16 @@ class FixedCostUsecase {
           FixedCostService().populateNextPaymentEntity(fixedCostEntity);
 
       // fixed_costにデータを追加する
-      final fixedCostId =
-          await _fixedCostRepositoryProvider.insert(insertRecord);
+      final id = await _fixedCostRepositoryProvider.insert(insertRecord);
 
-      // expenseEntityを作成し、DBに挿入する
-      FixedCostService().insertToExpense(
-          _ref, fixedCostEntity, insertRecord.firstPaymentDate, fixedCostId);
+      final insertedFixedCostRecord = insertRecord.copyWith(id: id);
+
+      // fixedCostExpenseEntityを作成し、DBに挿入する
+      FixedCostService().insertToFixedCostExpense(
+        _ref,
+        insertedFixedCostRecord,
+        insertRecord.firstPaymentDate,
+      );
     }
 
     // DBの更新回数をインクリメント
@@ -93,12 +97,11 @@ class FixedCostUsecase {
 
     // 支払いがある固定費に対して、支出データを追加する
     for (final fixedCostEntity in fixedCostList) {
-      // expenseEntityを作成し、DBに挿入する
-      FixedCostService().insertToExpense(
+      // fixedCostExpenseEntityを作成し、DBに挿入する
+      FixedCostService().insertToFixedCostExpense(
         _ref,
         fixedCostEntity,
         fixedCostEntity.nextPaymentDate ?? '00000000',
-        fixedCostEntity.id ?? -1,
       );
       // 次の支払い日と最近支払い日を埋めて、更新用データを作成
       final updateRecord =
@@ -115,17 +118,17 @@ class FixedCostUsecase {
   // 変動固定費の想定支出を更新する
   Future<void> updateEstimatedPrice({required int fixedCostId}) async {
     // fixedCostEntityを取得
-    final fixedCostEntity = await _fixedCostRepositoryProvider.fetch(
-        fixedCostId: fixedCostId);
+    final fixedCostEntity =
+        await _fixedCostRepositoryProvider.fetch(fixedCostId: fixedCostId);
 
     if (fixedCostEntity.variable == 0) {
       // 変動費でない場合は何もしない
       return;
     }
 
-    // 支出の過去の支払いから平均価格情報を取得
-    final pastExpensesAverage =
-        await _expenseRepositoryProvider.fetchFixedCostEstimatedPriceById(
+    // 固定費支出の過去の支払いから平均価格情報を取得
+    final pastExpensesAverage = await _fixedCostExpenseRepositoryProvider
+        .fetchFixedCostEstimatedPriceById(
       fixedCostId: fixedCostId,
     );
 

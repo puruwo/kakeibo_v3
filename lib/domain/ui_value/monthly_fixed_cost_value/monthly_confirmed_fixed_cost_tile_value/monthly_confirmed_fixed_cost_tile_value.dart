@@ -21,11 +21,8 @@ class MonthlyConfirmedFixedCostTileValue with _$MonthlyConfirmedFixedCostTileVal
     required int intervalUnit,
     String? nextPaymentDate,
 
-    // small category
-    required String smallCategoryName,
-
-    // big category
-    required String bigCategoryName,
+    // fixed cost category
+    required String categoryName,
     required String colorCode,
     required String resourcePath,
 

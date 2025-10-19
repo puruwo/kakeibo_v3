@@ -76,8 +76,8 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
             ]);
           },
           child: Padding(
-            padding: EdgeInsets.only(
-                left: leftsidePadding, right: leftsidePadding),
+            padding:
+                EdgeInsets.only(left: leftsidePadding, right: leftsidePadding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -158,8 +158,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                         children: [
                           // 大カテゴリー名
                           Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   'カテゴリー',
@@ -169,7 +168,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                                 ),
                                 // 小カテゴリー名
                                 Text(
-                                  value.bigCategoryName,
+                                  value.categoryName,
                                   textAlign: TextAlign.end,
                                   overflow: TextOverflow.ellipsis,
                                   style: MyFonts.cardSecondaryTitle,
@@ -178,25 +177,6 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                           const SizedBox(
                             height: 4,
                           ),
-                          Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '項目',
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                style: MyFonts.cardSecondaryTitle,
-                              ),
-                              // 小カテゴリー名
-                              Text(
-                                value.smallCategoryName,
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.ellipsis,
-                                style: MyFonts.cardSecondaryTitle,
-                              ),
-                            ],
-                          )
                         ],
                       ),
                     ),
@@ -208,8 +188,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                         children: [
                           // 大カテゴリー名
                           Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   '頻度',
@@ -229,8 +208,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                             height: 4,
                           ),
                           Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
                                 '支払い日',

@@ -13,13 +13,10 @@ abstract class IMonthlyFixedTileValue {
     int  get intervalUnit;
     String? get  nextPaymentDate;
 
-    // small category
-    String get smallCategoryName;
-
-    // big tegory
-    String get bigCategoryName;
+    // fixed cost category
+    String get categoryName;
     String get colorCode;
-    String get resourcePath;
+    String get resourcePath;  
 
     String get frequencyLabel;
 }

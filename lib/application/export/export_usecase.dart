@@ -10,6 +10,8 @@ import 'package:kakeibo/domain/core/export/export_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/logger.dart';
 
 
@@ -28,19 +30,23 @@ class ExportUsecase {
 
   ExpenseBigCategoryRepository get _bigCategoryRepository =>
       _ref.read(expensebigCategoryRepositoryProvider);
-  
+
   IncomeBigCategoryRepository get _incomeBigCategoryRepository =>
       _ref.read(incomeBigCategoryRepositoryProvider);
 
+  FixedCostExpenseRepository get _fixedCostExpenseRepository =>
+      _ref.read(fixedCostExpenseRepositoryProvider);
+
+  FixedCostCategoryRepository get _fixedCostCategoryRepository =>
+      _ref.read(fixedCostCategoryRepositoryProvider);
+
   /// [fetchAll] メソッドは、全てのエクスポートの情報を取得する
   Future<void> exportAll() async {
-    // SqfExpenseからデータを取得する
-    final expenseList = await _expenseRepositoryProvider.fetchAll();
-
     // 取得した支出データから、それぞれカテゴリーなどの情報を取得し、タイルのデータを作成する
     List<List> exportList = [];
 
-    // 各valueの情報を取得する
+    // 1. 通常の支出データを取得して追加
+    final expenseList = await _expenseRepositoryProvider.fetchAll();
     for (var expense in expenseList) {
       // 支出のレコードからカテゴリーidを取得し、小カテゴリーの情報を取得する
       final expenseSmallCategory = await _smallCategoryRepository.fetchBySmallCategory(
@@ -69,7 +75,33 @@ class ExportUsecase {
       );
 
       final list = toList(expenseHistoryTileValue);
+      exportList.add(list);
+    }
 
+    // 2. 固定費支出データを取得して追加
+    final fixedCostExpenseList = await _fixedCostExpenseRepository.fetchAll();
+    for (var fixedCostExpense in fixedCostExpenseList) {
+      // 固定費カテゴリーの情報を取得する
+      final fixedCostCategory = await _fixedCostCategoryRepository.fetch(
+          id: fixedCostExpense.fixedCostCategoryId);
+
+      // iconPathを加工
+      // assets/images/icon_〇〇.svg → 〇〇
+      final iconName = fixedCostCategory.resourcePath.split('/').last.split('.').first.split('_').last;
+
+      final fixedCostExportValue = ExportValue(
+        id: fixedCostExpense.id,
+        date: fixedCostExpense.date,
+        price: fixedCostExpense.price,
+        memo: fixedCostExpense.name,
+        bigCategoryName: '固定費',
+        smallCategoryName: fixedCostCategory.name,
+        colorCode: fixedCostCategory.colorCode,
+        iconName: iconName,
+        incomeSourceBigCategoryName: '', // 固定費には拠出元がないため空文字
+      );
+
+      final list = toList(fixedCostExportValue);
       exportList.add(list);
     }
 

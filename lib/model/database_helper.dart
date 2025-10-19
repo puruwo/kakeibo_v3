@@ -7,7 +7,7 @@ import 'package:kakeibo/model/sql_on_create.dart';
 
 class DatabaseHelper {
   static const _databaseName = "kakeibo_v3.db"; // DB名
-  static const _databaseVersion = 5; // スキーマのバージョン指定
+  static const _databaseVersion = 6; // スキーマのバージョン指定
 
   //読み出しデータ(Map)はImmutable
   //なので'Unsupported operation: read-only'が出た時はmakeMutable関数で返す必要がある
@@ -54,8 +54,9 @@ class DatabaseHelper {
 
       // DBアップグッレード時に一度だけ呼び出す
       onUpgrade: (db, oldVersion, newVersion) async {
-        print('データベースをアップデート中です');
+        print('データベースをアップデート中です: v$oldVersion → v$newVersion');
         for (var version = oldVersion + 1; version <= newVersion; version++) {
+          print('マイグレーション実行中: v$version');
           switch (version) {
             // case 3:
             //   await DataBaseMigrate().toV3(db);
@@ -63,6 +64,9 @@ class DatabaseHelper {
             // case 5:
             //   await DataBaseMigrate().toV5(db);
             //   break;
+            case 6:
+              await DataBaseMigrate().toV6(db);
+              break;
           }
         }
         print('アップデートが完了しました');

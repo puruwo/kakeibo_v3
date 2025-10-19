@@ -17,13 +17,28 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository{
     final whereArgs = DateFormat('yyyyMMdd').format(dateTime);
 
     final sql = '''
-      SELECT 
-        ${SqfExpense.date},
-        SUM(${SqfExpense.price}) AS totalExpense
-      FROM ${SqfExpense.tableName}
-      WHERE ${SqfExpense.date} = $whereArgs
-      AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
-      GROUP BY ${SqfExpense.date}
+      SELECT
+        date,
+        SUM(price) AS totalExpense
+      FROM (
+        -- 通常の支出
+        SELECT
+          ${SqfExpense.date} as date,
+          ${SqfExpense.price} as price
+        FROM ${SqfExpense.tableName}
+        WHERE ${SqfExpense.date} = $whereArgs
+        AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
+
+        UNION ALL
+
+        -- 固定費支出
+        SELECT
+          ${SqfFixedCostExpense.date} as date,
+          ${SqfFixedCostExpense.price} as price
+        FROM ${SqfFixedCostExpense.tableName}
+        WHERE ${SqfFixedCostExpense.date} = $whereArgs
+      )
+      GROUP BY date
     ''';
 
     // 実行

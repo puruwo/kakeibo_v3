@@ -12,9 +12,7 @@ class DataBaseHelperHandling {
             ${SqfExpense.date} TEXT NOT NULL,
             ${SqfExpense.price} INTEGER NOT NULL,
             ${SqfExpense.memo} TEXT,
-            ${SqfExpense.incomeSourceBigCategory} INTEGER NOT NULL,
-            ${SqfExpense.fixedCostId} INTEGER,
-            ${SqfExpense.isConfirmed} INTEGER NOT NULL DEFAULT 1
+            ${SqfExpense.incomeSourceBigCategory} INTEGER NOT NULL
             )
           ;
           ''');
@@ -167,7 +165,7 @@ class DataBaseHelperHandling {
           ${SqfFixedCost.variable} INTEGER NOT NULL,
           ${SqfFixedCost.price} INTEGER,
           ${SqfFixedCost.estimatedPrice} INTEGER,
-          ${SqfFixedCost.expenseSmallCategoryId} INTEGER NOT NULL,
+          ${SqfFixedCost.fixedCostCategoryId} INTEGER NOT NULL,
           ${SqfFixedCost.intervalNumber} INTEGER NOT NULL,
           ${SqfFixedCost.intervalUnit} INTEGER NOT NULL,
           ${SqfFixedCost.firstPaymentDate} TEXT NOT NULL,
@@ -181,7 +179,7 @@ class DataBaseHelperHandling {
           ${SqfFixedCost.name},
           ${SqfFixedCost.variable},
           ${SqfFixedCost.price},
-          ${SqfFixedCost.expenseSmallCategoryId},
+          ${SqfFixedCost.fixedCostCategoryId},
           ${SqfFixedCost.intervalNumber},
           ${SqfFixedCost.intervalUnit},
           ${SqfFixedCost.firstPaymentDate},
@@ -189,9 +187,9 @@ class DataBaseHelperHandling {
           ${SqfFixedCost.nextPaymentDate},
           ${SqfFixedCost.deleteFlag}) 
           VALUES
-          ('家賃', 0, 80000, 15, 1, 2, '20250401', '20250601', '20250701', 0),
-          ('サブスク', 0, 1200, 14, 1, 1, '20250410', '20250610', '20250710', 0),
-          ('携帯電話', 1, 5000, 1, 1, 1, '20250415', '20250615', '20250715', 0);
+          ('家賃', 0, 80000, 1, 1, 2, '20250401', '20250601', '20250701', 0),
+          ('サブスク', 0, 1200, 3, 1, 1, '20250410', '20250610', '20250710', 0),
+          ('携帯電話', 1, 5000, 2, 2, 1, '20250415', '20250615', '20250715', 0);
           ''');
 
     await db.execute('''CREATE TABLE ${SqfBatchHistory.tableName} (
@@ -209,6 +207,43 @@ class DataBaseHelperHandling {
           ${SqfBatchHistory.status})
           VALUES
           ('20250401', '${DateTime(2025,06,24).toFormattedString()}', 1);
+          ''');
+
+    await db.execute('''CREATE TABLE ${SqfFixedCostExpense.tableName} (
+          ${SqfFixedCostExpense.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+          ${SqfFixedCostExpense.fixedCostId} INTEGER NOT NULL,
+          ${SqfFixedCostExpense.fixedCostCategoryId} INTEGER NOT NULL,
+          ${SqfFixedCostExpense.date} TEXT NOT NULL,
+          ${SqfFixedCostExpense.price} INTEGER NOT NULL,
+          ${SqfFixedCostExpense.name} TEXT NOT NULL,
+          ${SqfFixedCostExpense.confirmedCostType} INTEGER NOT NULL,
+          ${SqfFixedCostExpense.isConfirmed} INTEGER NOT NULL
+          );
+          ''');
+
+    await db.execute('''CREATE TABLE ${SqfFixedCostCategory.tableName} (
+          ${SqfFixedCostCategory.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+          ${SqfFixedCostCategory.name} TEXT NOT NULL,
+          ${SqfFixedCostCategory.colorCode} TEXT NOT NULL,
+          ${SqfFixedCostCategory.resourcePath} TEXT NOT NULL,
+          ${SqfFixedCostCategory.displayOrder} INTEGER NOT NULL,
+          ${SqfFixedCostCategory.isDisplayed} INTEGER NOT NULL
+          );
+          ''');
+
+    await db.execute('''
+          INSERT INTO ${SqfFixedCostCategory.tableName} (
+          ${SqfFixedCostCategory.name},
+          ${SqfFixedCostCategory.colorCode},
+          ${SqfFixedCostCategory.resourcePath},
+          ${SqfFixedCostCategory.displayOrder},
+          ${SqfFixedCostCategory.isDisplayed})
+          VALUES
+          ('住居費', 'FF5722', 'assets/images/icon_home.svg', 0, 1),
+          ('通信費', '2196F3', 'assets/images/icon_phone.svg', 1, 1),
+          ('サブスク', '9C27B0', 'assets/images/icon_subscription.svg', 2, 1),
+          ('光熱費', 'FFC107', 'assets/images/icon_utility.svg', 3, 1),
+          ('その他', '607D8B', 'assets/images/icon_others.svg', 4, 1);
           ''');
 
     print('モックデータを挿入中です');

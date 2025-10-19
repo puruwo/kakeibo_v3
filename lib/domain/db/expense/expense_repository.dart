@@ -35,31 +35,9 @@ abstract interface class ExpenseRepository {
       required DateTime fromDate,
       required DateTime toDate});
 
-  // 確定している固定費の支出を取得する
-  Future<List<ExpenseEntity>> fetchFixedCostByPeriod(
-      {required PeriodValue period});
-
-  // 確定している固定費の合計額を取得する
-  Future<int> fetchTotalFixedCostByPeriod({required PeriodValue period});
-
-  // 確定していない固定費の支出を取得する
-  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostByPeriod(
-      {required PeriodValue period});
-
-  // 固定費の支出をID指定で取得する
-  Future<double> fetchFixedCostEstimatedPriceById({required int fixedCostId});
-
   void insert(ExpenseEntity expenseEntity);
 
   void update(ExpenseEntity expenseEntity);
-
-  /// 確定していない固定費の支出を更新する
-  Future<void> updateUnconfirmedCost(
-      {required int id, required int confirmedPrice});
-
-  // 期間指定して変動あり固定費の推定支出合計を取得する
-  // 今月確定分の固定費は含まない
-  Future<List<int>> fetchUnFixedIdsByPeriod({required PeriodValue period});
 
   void delete(int id);
 }

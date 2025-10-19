@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/domain/db/expense/expense_entity.dart';
-import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 
@@ -33,22 +33,21 @@ class FixedCostService {
     return result;
   }
 
-  /// 固定費の支出エンティティを作成し、DBに挿入する
-  insertToExpense(Ref ref, FixedCostEntity fixedCostEntity, String paymentDate,
-      int fixedCostId) {
-    // expenseEntityを作成
-    final expenseEntity = ExpenseEntity(
-        paymentCategoryId: fixedCostEntity.expenseSmallCategoryId,
+  /// 固定費の支出エンティティを作成し、fixed_cost_expenseに挿入する
+  insertToFixedCostExpense(Ref ref, FixedCostEntity fixedCostEntity, String paymentDate,) {
+    // FixedCostExpenseEntityを作成
+    final fixedCostExpenseEntity = FixedCostExpenseEntity(
+        fixedCostId: fixedCostEntity.id!, // 固定費ID
+        fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId, // 固定費カテゴリーID
         date: paymentDate,
         price: fixedCostEntity.variable == 0 ? fixedCostEntity.price : 0, // 変動費なら価格は0
-        memo: fixedCostEntity.name,
-        incomeSourceBigCategory: 0, // 固定費なので収入元は0
-        fixedCostId: fixedCostId,
+        name: fixedCostEntity.name,
+        confirmedCostType: fixedCostEntity.variable, // 0: 金額確定, 1: 金額未確定
         isConfirmed:
             fixedCostEntity.variable == 1 ? 0 : 1 // 変動費でない場合は金額が確定しているとみなす
         );
 
     // 挿入
-    ref.read(expenseRepositoryProvider).insert(expenseEntity);
+    ref.read(fixedCostExpenseRepositoryProvider).insert(fixedCostExpenseEntity);
   }
 }

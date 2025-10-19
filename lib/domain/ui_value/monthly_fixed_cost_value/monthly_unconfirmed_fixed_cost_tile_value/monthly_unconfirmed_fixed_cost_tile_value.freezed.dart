@@ -26,10 +26,8 @@ mixin _$MonthlyUnconfirmedFixedCostTileValue {
   int get intervalUnit => throw _privateConstructorUsedError;
   int get estimatedPrice => throw _privateConstructorUsedError;
   String? get nextPaymentDate =>
-      throw _privateConstructorUsedError; // small category
-  String get smallCategoryName =>
-      throw _privateConstructorUsedError; // big category
-  String get bigCategoryName => throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // fixed cost category
+  String get categoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get resourcePath => throw _privateConstructorUsedError;
   String get frequencyLabel => throw _privateConstructorUsedError;
@@ -58,8 +56,7 @@ abstract class $MonthlyUnconfirmedFixedCostTileValueCopyWith<$Res> {
       int intervalUnit,
       int estimatedPrice,
       String? nextPaymentDate,
-      String smallCategoryName,
-      String bigCategoryName,
+      String categoryName,
       String colorCode,
       String resourcePath,
       String frequencyLabel});
@@ -88,8 +85,7 @@ class _$MonthlyUnconfirmedFixedCostTileValueCopyWithImpl<$Res,
     Object? intervalUnit = null,
     Object? estimatedPrice = null,
     Object? nextPaymentDate = freezed,
-    Object? smallCategoryName = null,
-    Object? bigCategoryName = null,
+    Object? categoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
     Object? frequencyLabel = null,
@@ -131,13 +127,9 @@ class _$MonthlyUnconfirmedFixedCostTileValueCopyWithImpl<$Res,
           ? _value.nextPaymentDate
           : nextPaymentDate // ignore: cast_nullable_to_non_nullable
               as String?,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
       colorCode: null == colorCode
           ? _value.colorCode
@@ -174,8 +166,7 @@ abstract class _$$MonthlyUnconfirmedFixedCostTileValueImplCopyWith<$Res>
       int intervalUnit,
       int estimatedPrice,
       String? nextPaymentDate,
-      String smallCategoryName,
-      String bigCategoryName,
+      String categoryName,
       String colorCode,
       String resourcePath,
       String frequencyLabel});
@@ -203,8 +194,7 @@ class __$$MonthlyUnconfirmedFixedCostTileValueImplCopyWithImpl<$Res>
     Object? intervalUnit = null,
     Object? estimatedPrice = null,
     Object? nextPaymentDate = freezed,
-    Object? smallCategoryName = null,
-    Object? bigCategoryName = null,
+    Object? categoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
     Object? frequencyLabel = null,
@@ -246,13 +236,9 @@ class __$$MonthlyUnconfirmedFixedCostTileValueImplCopyWithImpl<$Res>
           ? _value.nextPaymentDate
           : nextPaymentDate // ignore: cast_nullable_to_non_nullable
               as String?,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
       colorCode: null == colorCode
           ? _value.colorCode
@@ -284,8 +270,7 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
       required this.intervalUnit,
       required this.estimatedPrice,
       this.nextPaymentDate,
-      required this.smallCategoryName,
-      required this.bigCategoryName,
+      required this.categoryName,
       required this.colorCode,
       required this.resourcePath,
       required this.frequencyLabel});
@@ -310,12 +295,9 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
   final int estimatedPrice;
   @override
   final String? nextPaymentDate;
-// small category
+// fixed cost category
   @override
-  final String smallCategoryName;
-// big category
-  @override
-  final String bigCategoryName;
+  final String categoryName;
   @override
   final String colorCode;
   @override
@@ -325,7 +307,7 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
 
   @override
   String toString() {
-    return 'MonthlyUnconfirmedFixedCostTileValue(id: $id, date: $date, fixedCostId: $fixedCostId, name: $name, variable: $variable, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, estimatedPrice: $estimatedPrice, nextPaymentDate: $nextPaymentDate, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, frequencyLabel: $frequencyLabel)';
+    return 'MonthlyUnconfirmedFixedCostTileValue(id: $id, date: $date, fixedCostId: $fixedCostId, name: $name, variable: $variable, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, estimatedPrice: $estimatedPrice, nextPaymentDate: $nextPaymentDate, categoryName: $categoryName, colorCode: $colorCode, resourcePath: $resourcePath, frequencyLabel: $frequencyLabel)';
   }
 
   @override
@@ -348,10 +330,8 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
                 other.estimatedPrice == estimatedPrice) &&
             (identical(other.nextPaymentDate, nextPaymentDate) ||
                 other.nextPaymentDate == nextPaymentDate) &&
-            (identical(other.smallCategoryName, smallCategoryName) ||
-                other.smallCategoryName == smallCategoryName) &&
-            (identical(other.bigCategoryName, bigCategoryName) ||
-                other.bigCategoryName == bigCategoryName) &&
+            (identical(other.categoryName, categoryName) ||
+                other.categoryName == categoryName) &&
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
             (identical(other.resourcePath, resourcePath) ||
@@ -372,8 +352,7 @@ class _$MonthlyUnconfirmedFixedCostTileValueImpl
       intervalUnit,
       estimatedPrice,
       nextPaymentDate,
-      smallCategoryName,
-      bigCategoryName,
+      categoryName,
       colorCode,
       resourcePath,
       frequencyLabel);
@@ -399,8 +378,7 @@ abstract class _MonthlyUnconfirmedFixedCostTileValue
           required final int intervalUnit,
           required final int estimatedPrice,
           final String? nextPaymentDate,
-          required final String smallCategoryName,
-          required final String bigCategoryName,
+          required final String categoryName,
           required final String colorCode,
           required final String resourcePath,
           required final String frequencyLabel}) =
@@ -424,10 +402,8 @@ abstract class _MonthlyUnconfirmedFixedCostTileValue
   int get estimatedPrice;
   @override
   String? get nextPaymentDate;
-  @override // small category
-  String get smallCategoryName;
-  @override // big category
-  String get bigCategoryName;
+  @override // fixed cost category
+  String get categoryName;
   @override
   String get colorCode;
   @override

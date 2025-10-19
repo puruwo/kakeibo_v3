@@ -16,8 +16,6 @@ class ExpenseEntity with _$ExpenseEntity {
     @Default(0) int paymentCategoryId,
     @Default('') String memo,
     @Default(0) int incomeSourceBigCategory,
-    int? fixedCostId,
-    @Default(1) int isConfirmed, // 金額が確定したかどうか
   }) = _ExpenseEntity;
 
   @override

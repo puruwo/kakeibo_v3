@@ -25,7 +25,7 @@ mixin _$FixedCostEntity {
   int get variable => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   int get estimatedPrice => throw _privateConstructorUsedError;
-  int get expenseSmallCategoryId => throw _privateConstructorUsedError;
+  int get fixedCostCategoryId => throw _privateConstructorUsedError;
   int get intervalNumber => throw _privateConstructorUsedError;
   int get intervalUnit => throw _privateConstructorUsedError;
   String get firstPaymentDate => throw _privateConstructorUsedError;
@@ -51,7 +51,7 @@ abstract class $FixedCostEntityCopyWith<$Res> {
       int variable,
       int price,
       int estimatedPrice,
-      int expenseSmallCategoryId,
+      int fixedCostCategoryId,
       int intervalNumber,
       int intervalUnit,
       String firstPaymentDate,
@@ -78,7 +78,7 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
     Object? variable = null,
     Object? price = null,
     Object? estimatedPrice = null,
-    Object? expenseSmallCategoryId = null,
+    Object? fixedCostCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
     Object? firstPaymentDate = null,
@@ -107,9 +107,9 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
           ? _value.estimatedPrice
           : estimatedPrice // ignore: cast_nullable_to_non_nullable
               as int,
-      expenseSmallCategoryId: null == expenseSmallCategoryId
-          ? _value.expenseSmallCategoryId
-          : expenseSmallCategoryId // ignore: cast_nullable_to_non_nullable
+      fixedCostCategoryId: null == fixedCostCategoryId
+          ? _value.fixedCostCategoryId
+          : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
               as int,
       intervalNumber: null == intervalNumber
           ? _value.intervalNumber
@@ -153,7 +153,7 @@ abstract class _$$FixedCostEntityImplCopyWith<$Res>
       int variable,
       int price,
       int estimatedPrice,
-      int expenseSmallCategoryId,
+      int fixedCostCategoryId,
       int intervalNumber,
       int intervalUnit,
       String firstPaymentDate,
@@ -178,7 +178,7 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
     Object? variable = null,
     Object? price = null,
     Object? estimatedPrice = null,
-    Object? expenseSmallCategoryId = null,
+    Object? fixedCostCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
     Object? firstPaymentDate = null,
@@ -207,9 +207,9 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
           ? _value.estimatedPrice
           : estimatedPrice // ignore: cast_nullable_to_non_nullable
               as int,
-      expenseSmallCategoryId: null == expenseSmallCategoryId
-          ? _value.expenseSmallCategoryId
-          : expenseSmallCategoryId // ignore: cast_nullable_to_non_nullable
+      fixedCostCategoryId: null == fixedCostCategoryId
+          ? _value.fixedCostCategoryId
+          : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
               as int,
       intervalNumber: null == intervalNumber
           ? _value.intervalNumber
@@ -248,7 +248,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
       required this.variable,
       this.price = 0,
       this.estimatedPrice = 0,
-      required this.expenseSmallCategoryId,
+      required this.fixedCostCategoryId,
       required this.intervalNumber,
       required this.intervalUnit,
       required this.firstPaymentDate,
@@ -273,7 +273,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
   @JsonKey()
   final int estimatedPrice;
   @override
-  final int expenseSmallCategoryId;
+  final int fixedCostCategoryId;
   @override
   final int intervalNumber;
   @override
@@ -290,7 +290,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
 
   @override
   String toString() {
-    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, estimatedPrice: $estimatedPrice, expenseSmallCategoryId: $expenseSmallCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
+    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, estimatedPrice: $estimatedPrice, fixedCostCategoryId: $fixedCostCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
   }
 
   @override
@@ -305,8 +305,8 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.estimatedPrice, estimatedPrice) ||
                 other.estimatedPrice == estimatedPrice) &&
-            (identical(other.expenseSmallCategoryId, expenseSmallCategoryId) ||
-                other.expenseSmallCategoryId == expenseSmallCategoryId) &&
+            (identical(other.fixedCostCategoryId, fixedCostCategoryId) ||
+                other.fixedCostCategoryId == fixedCostCategoryId) &&
             (identical(other.intervalNumber, intervalNumber) ||
                 other.intervalNumber == intervalNumber) &&
             (identical(other.intervalUnit, intervalUnit) ||
@@ -330,7 +330,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
       variable,
       price,
       estimatedPrice,
-      expenseSmallCategoryId,
+      fixedCostCategoryId,
       intervalNumber,
       intervalUnit,
       firstPaymentDate,
@@ -360,7 +360,7 @@ abstract class _FixedCostEntity implements FixedCostEntity {
       required final int variable,
       final int price,
       final int estimatedPrice,
-      required final int expenseSmallCategoryId,
+      required final int fixedCostCategoryId,
       required final int intervalNumber,
       required final int intervalUnit,
       required final String firstPaymentDate,
@@ -382,7 +382,7 @@ abstract class _FixedCostEntity implements FixedCostEntity {
   @override
   int get estimatedPrice;
   @override
-  int get expenseSmallCategoryId;
+  int get fixedCostCategoryId;
   @override
   int get intervalNumber;
   @override
