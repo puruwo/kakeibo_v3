@@ -1,16 +1,52 @@
-# kakeibo_v3
+# 家計簿アプリ（Flutter）
 
-A new Flutter project.
+## 📘 概要
+このアプリは、日々の支出や収入を記録・分析できる家計簿アプリです。  
+Flutterで開発しており、シンプルな操作と分かりやすいグラフ表示を重視しています。
 
-## Getting Started
+主な特徴：
+- カテゴリー別の支出・収入管理
+- 月別／期間別の集計とグラフ表示
+- SQLiteによるローカルデータ保存
+- Riverpodによる状態管理
+- ダークモード対応
+- Figmaで設計したモダンUI
 
-This project is a starting point for a Flutter application.
+ボトムナビゲーション：
+1. ホーム
+    1年間の収支を分析するタブ
+    - ボーナス利用状況の確認
+    - 年間収支の棒グラフ
+    - 各月の収支グラフ
+2. 入力
+    新しい記録を記入する画面
+    - 支出の入力
+    - 固定費の設定
+    - 収入の入力
+3. 分析
+    選択月の詳細収支状況を表示する
+    - 一ヶ月の支出利用推移グラフ
+    - 各カテゴリーごとの利用状況棒グラフ
+    - 固定費の支出情報
+4. 履歴
+    カレンダーベースで支出が表示される
 
-A few resources to get you started if this is your first Flutter project:
+---
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 🧱 開発環境
+| 項目 | 内容 |
+|------|------|
+| 言語 | Dart |
+| フレームワーク | Flutter 3.16.9 |
+| 状態管理 | Riverpod |
+| モデル生成 | Freezed |
+| DB | SQLite（sqfliteパッケージ） |
+| IDE | Visual Studio Code |
+| デザイン | Figma |
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+---
+
+## ⚙️ セットアップ手順
+### 1. リポジトリをクローン
+```bash
+git clone https://github.com/puruwo/kakeibo_v3.git

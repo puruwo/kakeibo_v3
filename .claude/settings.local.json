@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:docs.google.com)",
+      "Read(//Users/puruwo/dev/家計簿/設計書/テーブル設計書/old/**)",
+      "Bash(dart run build_runner build --delete-conflicting-outputs)",
+      "Bash(flutter analyze)",
+      "Bash(find lib -name \"*.dart\" -type f ! -path \"*/.*\" ! -name \"*.freezed.dart\" ! -name \"*.g.dart\" -exec grep -l \"fixedCostId\\|isConfirmed\" {})",
+      "Bash(flutter analyze lib/application/export/export_usecase.dart)",
+      "Bash(flutter analyze lib/)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
