@@ -180,6 +180,11 @@ class MyFonts {
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
 
+  static TextStyle whiteButtonText = GoogleFonts.notoSans(
+      fontSize: 17,
+      color: MyColors.white,
+      fontWeight: FontWeight.w600);
+
   /// ================CategoryExpenseHistoryPage================
   /// カテゴリー別利用状況ページ
 

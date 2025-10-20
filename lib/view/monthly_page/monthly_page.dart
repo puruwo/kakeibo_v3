@@ -15,7 +15,7 @@ import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
-import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_page.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
@@ -153,7 +153,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                     TextButton(
                         onPressed: () {
                           showModalBottomSheetFunc(
-                              context, const BigCategorySettingPage());
+                              context, const CategorySettingPage());
                         },
                         child: const Text(
                           'カテゴリー設定',

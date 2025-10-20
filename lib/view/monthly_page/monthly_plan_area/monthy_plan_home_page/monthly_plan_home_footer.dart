@@ -4,7 +4,7 @@ import 'package:kakeibo/application/budget/budget_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
-import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_page.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
@@ -40,7 +40,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         Expanded(
           child: ElevatedButton(
             onPressed: () {
-              showModalBottomSheetFunc(context, const BigCategorySettingPage());
+              showModalBottomSheetFunc(context, const CategorySettingPage());
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: MyColors.buttonSecondary,

@@ -7,7 +7,12 @@
       "Bash(flutter analyze)",
       "Bash(find lib -name \"*.dart\" -type f ! -path \"*/.*\" ! -name \"*.freezed.dart\" ! -name \"*.g.dart\" -exec grep -l \"fixedCostId\\|isConfirmed\" {})",
       "Bash(flutter analyze lib/application/export/export_usecase.dart)",
-      "Bash(flutter analyze lib/)"
+      "Bash(flutter analyze lib/)",
+      "Bash(flutter analyze lib/view/category_edit_page/category_setting_page_with_tab.dart lib/view/category_edit_page/fixed_cost_category_setting_page/ lib/view/category_edit_page/fixed_cost_category_detail_edit_page/ lib/constant/fixed_cost_constants.dart lib/application/fixed_cost_category/)",
+      "Bash(flutter analyze lib/view/category_edit_page/category_setting_page_with_tab.dart lib/view/category_edit_page/fixed_cost_category_setting_page/ lib/view/category_edit_page/fixed_cost_category_detail_edit_page/ lib/constant/fixed_cost_constants.dart lib/application/fixed_cost_category/ lib/constant/colors.dart lib/constant/strings.dart)",
+      "Bash(flutter analyze lib/view/category_edit_page/ lib/view_model/state/fixed_cost_category_detail_edit_page/)",
+      "Bash(flutter analyze lib/view/category_edit_page/ lib/view_model/state/fixed_cost_category_edit_page/ lib/domain/ui_value/fixed_cost_category_value/)",
+      "Bash(flutter analyze lib/view/category_edit_page/big_category_setting_page/)"
     ],
     "deny": [],
     "ask": []

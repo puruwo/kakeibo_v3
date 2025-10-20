@@ -55,8 +55,13 @@ class MyColors {
   static const systemBackground = Color(0xff000000);
   static const secondarySystemBackground = Color(0xff1c1c1e);
   static const tirtiarySystemBackground = Color(0xff2c2c2e);
+  static const tertiarySystemBackground = Color(0xff2c2c2e); // typo修正版
 
   static const linkColor = Color(0xff0a84ff);
+
+  static const systemGreen = Color(0xff30d158);
+
+  static const tertiaryLabel = Color(0x4cebebf5); // typo修正版
 
   static const separater = Color(0x99545458);
 
@@ -71,6 +76,12 @@ class MyColors {
     return color.red.toRadixString(16).padLeft(2, '0') +
         color.green.toRadixString(16).padLeft(2, '0') +
         color.blue.toRadixString(16).padLeft(2, '0');
+  }
+
+  String getHexFromColor(Color color) {
+    return color.red.toRadixString(16).padLeft(2, '0').toUpperCase() +
+        color.green.toRadixString(16).padLeft(2, '0').toUpperCase() +
+        color.blue.toRadixString(16).padLeft(2, '0').toUpperCase();
   }
 
 
