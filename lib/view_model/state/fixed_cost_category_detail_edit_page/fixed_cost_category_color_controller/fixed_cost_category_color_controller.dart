@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/constant/colors.dart';
 
 // 固定費カテゴリーカラーの状態管理
 final fixedCostCategoryColorControllerNotifierProvider =
@@ -10,7 +11,7 @@ final fixedCostCategoryColorControllerNotifierProvider =
 class FixedCostCategoryColorControllerNotifier extends Notifier<Color> {
   @override
   Color build() {
-    return const Color(0xFFFF5722); // デフォルトカラー（Deep Orange）
+    return MyColors.transparent;
   }
 
   void updateState(Color newColor) {

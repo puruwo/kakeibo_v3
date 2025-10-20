@@ -24,6 +24,7 @@ class FixedCostCategoryAppearanceEditArea extends ConsumerStatefulWidget {
 class _FixedCostCategoryAppearanceEditAreaState
     extends ConsumerState<FixedCostCategoryAppearanceEditArea> {
   late TextEditingController _nameController;
+  bool _isLoading = true;
 
   @override
   void initState() {
@@ -35,6 +36,9 @@ class _FixedCostCategoryAppearanceEditAreaState
       if (widget.fixedCostCategoryId == -1) {
         // 新規作成時は空の名前で初期化
         _nameController.text = '';
+        setState(() {
+          _isLoading = false;
+        });
         return;
       }
 
@@ -56,6 +60,10 @@ class _FixedCostCategoryAppearanceEditAreaState
         ref
             .read(fixedCostCategoryIconControllerNotifierProvider.notifier)
             .updateState(initialItem.resourcePath);
+
+        setState(() {
+          _isLoading = false;
+        });
       });
     });
   }
@@ -68,6 +76,12 @@ class _FixedCostCategoryAppearanceEditAreaState
 
   @override
   Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    }
+
     final iconPath = ref.watch(fixedCostCategoryIconControllerNotifierProvider);
     final color = ref.watch(fixedCostCategoryColorControllerNotifierProvider);
 

@@ -9,7 +9,7 @@ final fixedCostCategoryIconControllerNotifierProvider =
 class FixedCostCategoryIconControllerNotifier extends Notifier<String> {
   @override
   String build() {
-    return 'assets/images/icon_home.svg'; // デフォルトアイコン
+    return ''; // デフォルトアイコン
   }
 
   void updateState(String newIconPath) {
