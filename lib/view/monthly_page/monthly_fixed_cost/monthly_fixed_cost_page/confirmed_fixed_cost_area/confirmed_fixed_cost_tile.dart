@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -22,35 +21,15 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 画面の倍率を計算
-    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final screenHorizontalMagnification = context.screenHorizontalMagnification;
-
-    final drawableWidth = context.screenWidth - 64; // 左右のpaddingを引いた幅
-
-    const leftColumnRatio = 0.43; // 左のカラムの比率
-    const rightColumnRatio = 0.45; // 右のカラムの比率
 
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * screenHorizontalMagnification;
-
-    // カテゴリーの色を取得
-    final color = MyColors().getColorFromHex(value.colorCode);
 
     // 支払い日のフォーマット
     final paymentDateLabel =
         '${value.date.year}/${value.date.month}/${value.date.day}';
 
-    // アイコン
-    final icon = FittedBox(
-      fit: BoxFit.scaleDown,
-      child: SvgPicture.asset(
-        value.resourcePath,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-        semanticsLabel: 'categoryIcon',
-        width: 25,
-        height: 25,
-      ),
-    );
     // 値段ラベル
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
@@ -60,43 +39,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
         borderRadius: const BorderRadius.all(Radius.circular(12)),
         color: MyColors.quarternarySystemfill,
         onTap: () async {
-          // showModalBottomSheet(
-          //   //sccafoldの上に出すか
-          //   useRootNavigator: true,
-          //   isScrollControlled: true,
-          //   useSafeArea: true,
-          //   constraints: const BoxConstraints(
-          //     maxWidth: 2000,
-          //   ),
-          //   context: context,
-          //   // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-          //   builder: (context) {
-          //     IncomeEntity incomeEntity = IncomeEntity(
-          //       id: value.id,
-          //       date: DateFormat('yyyyMMdd').format(value.date),
-          //       price: value.price,
-          //       categoryId: value.paymentCategoryId,
-          //       memo: value.name,
-          //     );
-
-          //     return MaterialApp(
-          //       debugShowCheckedModeBanner: false,
-          //       theme: ThemeData.dark(),
-          //       themeMode: ThemeMode.dark,
-          //       darkTheme: ThemeData.dark(),
-          //       home: MediaQuery.withClampedTextScaling(
-          //         // テキストサイズの制御
-          //         minScaleFactor: 0.7,
-          //         maxScaleFactor: 0.95,
-          //         child: RegisterIncomePage(
-          //           incomeEntity: incomeEntity,
-          //           mode: RegisterScreenMode.edit,
-          //           isTabVisible: true,
-          //         ),
-          //       ),
-          //     );
-          //   },
-          // );
+          // 編集機能は将来実装
         },
         onLongPress: () async {
           return await showCustomListDialog(context, actions: [
@@ -116,130 +59,51 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
           ]);
         },
         child: Padding(
-          padding:
-              EdgeInsets.only(left: leftsidePadding, right: leftsidePadding),
+          padding: EdgeInsets.symmetric(
+            horizontal: leftsidePadding,
+            vertical: 12.0,
+          ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 上段：名前と金額
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // アイコン
-                  Row(
-                    children: [
-                      SizedBox(height: 49, child: icon),
-                      // アイコンの横のスペース
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      // 名前
-                      SizedBox(
-                        width: 70 * screenHorizontalMagnification,
-                        child: Text(value.name,
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            style: MyFonts.cardPrimaryTitle),
-                      ),
-                    ],
-                  ),
-                  // 値段
-                  SizedBox(
-                    width: 125,
+                  // 名前
+                  Expanded(
                     child: Text(
-                      priceLabel,
-                      textAlign: TextAlign.end,
+                      value.name,
+                      textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
-                      style: MyFonts.cardPriceLabel,
+                      style: MyFonts.cardPrimaryTitle,
                     ),
+                  ),
+                  const SizedBox(width: 8),
+                  // 値段
+                  Text(
+                    priceLabel,
+                    textAlign: TextAlign.end,
+                    style: MyFonts.cardPriceLabel,
                   ),
                 ],
               ),
+              const SizedBox(height: 8),
+              // 下段：日付と支払い頻度
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // 左列
-                  SizedBox(
-                    width: drawableWidth * leftColumnRatio,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // 大カテゴリー名
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'カテゴリー',
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                style: MyFonts.cardSecondaryTitle,
-                              ),
-                              // 小カテゴリー名
-                              Text(
-                                value.categoryName,
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.ellipsis,
-                                style: MyFonts.cardSecondaryTitle,
-                              ),
-                            ]),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                      ],
-                    ),
+                  // 日付
+                  Text(
+                    paymentDateLabel,
+                    style: MyFonts.cardSecondaryTitle,
                   ),
-                  // 右列
-                  SizedBox(
-                    width: drawableWidth * rightColumnRatio,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        // 大カテゴリー名
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '頻度',
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                style: MyFonts.cardSecondaryTitle,
-                              ),
-                              // 小カテゴリー名
-                              Text(
-                                value.frequencyLabel,
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.ellipsis,
-                                style: MyFonts.cardSecondaryTitle,
-                              ),
-                            ]),
-                        const SizedBox(
-                          height: 4,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '支払い日',
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                              style: MyFonts.cardSecondaryTitle,
-                            ),
-                            // 小カテゴリー名
-                            Text(
-                              paymentDateLabel,
-                              textAlign: TextAlign.end,
-                              overflow: TextOverflow.ellipsis,
-                              style: MyFonts.cardSecondaryTitle,
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
+                  // 支払い頻度
+                  Text(
+                    value.frequencyLabel,
+                    style: MyFonts.cardSecondaryTitle,
                   ),
                 ],
-              ),
-              const SizedBox(
-                height: 16,
               ),
             ],
           ),

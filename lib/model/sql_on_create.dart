@@ -239,11 +239,11 @@ class DataBaseHelperHandling {
           ${SqfFixedCostCategory.displayOrder},
           ${SqfFixedCostCategory.isDisplayed})
           VALUES
-          ('住居費', 'FF5722', 'assets/images/icon_home.svg', 0, 1),
-          ('通信費', '2196F3', 'assets/images/icon_phone.svg', 1, 1),
-          ('サブスク', '9C27B0', 'assets/images/icon_subscription.svg', 2, 1),
-          ('光熱費', 'FFC107', 'assets/images/icon_utility.svg', 3, 1),
-          ('その他', '607D8B', 'assets/images/icon_others.svg', 4, 1);
+          ('住居費', '2E7D32', 'assets/images/icon_home.svg', 0, 1),
+          ('通信費', '1E9F6E', 'assets/images/icon_phone.svg', 1, 1),
+          ('サブスク', '27AE60', 'assets/images/icon_subscription.svg', 2, 1),
+          ('光熱費', '2ECC71', 'assets/images/icon_utility.svg', 3, 1),
+          ('その他', '76D7C4', 'assets/images/icon_others.svg', 4, 1);
           ''');
 
     print('モックデータを挿入中です');
