@@ -240,9 +240,9 @@ class DataBaseHelperHandling {
           ${SqfFixedCostCategory.isDisplayed})
           VALUES
           ('住居費', '2E7D32', 'assets/images/icon_home.svg', 0, 1),
-          ('通信費', '1E9F6E', 'assets/images/icon_phone.svg', 1, 1),
+          ('通信費', '1E9F6E', 'assets/images/icon_cell_tower.svg', 1, 1),
           ('サブスク', '27AE60', 'assets/images/icon_subscription.svg', 2, 1),
-          ('光熱費', '2ECC71', 'assets/images/icon_utility.svg', 3, 1),
+          ('光熱費', '2ECC71', 'assets/images/icon_water_drop.svg', 3, 1),
           ('その他', '76D7C4', 'assets/images/icon_others.svg', 4, 1);
           ''');
 
