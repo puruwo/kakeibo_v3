@@ -52,7 +52,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
           final editList = categories.map((category) {
             return EditFixedCostCategoryValue(
               id: category.id,
-              name: category.name,
+              name: category.categoryName,
               colorCode: category.colorCode,
               resourcePath: category.resourcePath,
               displayOrder: category.displayOrder,

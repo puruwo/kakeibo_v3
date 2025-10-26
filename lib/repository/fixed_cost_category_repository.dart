@@ -10,7 +10,7 @@ class ImplementsFixedCostCategoryRepository
     final id = await DatabaseHelper.instance.insert(
       SqfFixedCostCategory.tableName,
       {
-        SqfFixedCostCategory.name: entity.name,
+        SqfFixedCostCategory.categoryName: entity.categoryName,
         SqfFixedCostCategory.colorCode: entity.colorCode,
         SqfFixedCostCategory.resourcePath: entity.resourcePath,
         SqfFixedCostCategory.displayOrder: entity.displayOrder,
@@ -25,7 +25,7 @@ class ImplementsFixedCostCategoryRepository
     const sql = '''
       SELECT
         ${SqfFixedCostCategory.id} as id,
-        ${SqfFixedCostCategory.name} as name,
+        ${SqfFixedCostCategory.categoryName} as categoryName,
         ${SqfFixedCostCategory.colorCode} as colorCode,
         ${SqfFixedCostCategory.resourcePath} as resourcePath,
         ${SqfFixedCostCategory.displayOrder} as displayOrder,
@@ -41,7 +41,7 @@ class ImplementsFixedCostCategoryRepository
     final sql = '''
       SELECT
         ${SqfFixedCostCategory.id} as id,
-        ${SqfFixedCostCategory.name} as name,
+        ${SqfFixedCostCategory.categoryName} as categoryName,
         ${SqfFixedCostCategory.colorCode} as colorCode,
         ${SqfFixedCostCategory.resourcePath} as resourcePath,
         ${SqfFixedCostCategory.displayOrder} as displayOrder,
@@ -61,7 +61,7 @@ class ImplementsFixedCostCategoryRepository
     await DatabaseHelper.instance.update(
       SqfFixedCostCategory.tableName,
       {
-        SqfFixedCostCategory.name: entity.name,
+        SqfFixedCostCategory.categoryName: entity.categoryName,
         SqfFixedCostCategory.colorCode: entity.colorCode,
         SqfFixedCostCategory.resourcePath: entity.resourcePath,
         SqfFixedCostCategory.displayOrder: entity.displayOrder,

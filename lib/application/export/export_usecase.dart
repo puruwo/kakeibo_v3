@@ -95,7 +95,7 @@ class ExportUsecase {
         price: fixedCostExpense.price,
         memo: fixedCostExpense.name,
         bigCategoryName: '固定費',
-        smallCategoryName: fixedCostCategory.name,
+        smallCategoryName: fixedCostCategory.categoryName,
         colorCode: fixedCostCategory.colorCode,
         iconName: iconName,
         incomeSourceBigCategoryName: '', // 固定費には拠出元がないため空文字

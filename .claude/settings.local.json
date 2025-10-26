@@ -16,7 +16,8 @@
       "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/application/prediction_graph/)",
       "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/application/prediction_graph/ lib/domain/ui_value/prediction_graph_value/)",
       "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart)",
-      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/view/monthly_page/monthly_page.dart lib/application/prediction_graph/ lib/domain/db/expense/expense_repository.dart lib/repository/expense_repository.dart)"
+      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/view/monthly_page/monthly_page.dart lib/application/prediction_graph/ lib/domain/db/expense/expense_repository.dart lib/repository/expense_repository.dart)",
+      "WebSearch"
     ],
     "deny": [],
     "ask": []

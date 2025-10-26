@@ -13,7 +13,7 @@ class IncomeCategoryEntity with _$IncomeCategoryEntity implements ICategoryEntit
     required int smallCategoryOrderKey,
     required int bigCategoryKey,
     required int displaydOrderInBig,
-    required String smallCategoryName,
+    required String categoryName,
     required int defaultDisplayed,
 
     required String  bigCategoryName,

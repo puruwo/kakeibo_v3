@@ -13,7 +13,7 @@ class ExpenseCategoryEntity with _$ExpenseCategoryEntity implements ICategoryEnt
     required int smallCategoryOrderKey,
     required int bigCategoryKey,
     required int displaydOrderInBig,
-    required String smallCategoryName,
+    required String categoryName,
     required int defaultDisplayed,
 
     required String  bigCategoryName,

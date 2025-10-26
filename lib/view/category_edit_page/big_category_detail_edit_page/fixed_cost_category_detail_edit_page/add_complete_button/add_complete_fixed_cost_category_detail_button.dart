@@ -53,7 +53,7 @@ class AddCompleteFixedCostCategoryDetailButton extends ConsumerWidget
                 ref.watch(fixedCostCategoryColorControllerNotifierProvider);
 
             final newEntity = FixedCostCategoryEntity(
-              name: categoryName,
+              categoryName: categoryName,
               resourcePath: iconPath,
               colorCode: MyColors().getHexFromColor(colorCode),
               displayOrder: categoryOrder,

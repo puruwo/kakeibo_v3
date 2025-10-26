@@ -32,7 +32,7 @@ class FixedCostCategoryUsecase {
   // 登録処理
   Future<void> add({required FixedCostCategoryEntity entity}) async {
     // エラーチェック
-    if (entity.name.isEmpty) {
+    if (entity.categoryName.isEmpty) {
       throw const AppException('カテゴリー名を入力してください');
     }
 
@@ -52,7 +52,7 @@ class FixedCostCategoryUsecase {
     if (originalEntity == editEntity) {
       throw const AppException('変更がありません');
     }
-    if (editEntity.name.isEmpty) {
+    if (editEntity.categoryName.isEmpty) {
       throw const AppException('カテゴリー名を入力してください');
     }
 
@@ -72,7 +72,8 @@ class FixedCostCategoryUsecase {
   }
 
   // 表示・非表示切り替え（一旦メソッドだけ用意）
-  Future<void> toggleDisplay({required int id, required int isDisplayed}) async {
+  Future<void> toggleDisplay(
+      {required int id, required int isDisplayed}) async {
     final entity = await _fixedCostCategoryRepository.fetch(id: id);
     final updatedEntity = entity.copyWith(isDisplayed: isDisplayed);
     await _fixedCostCategoryRepository.update(updatedEntity);
@@ -92,5 +93,12 @@ class FixedCostCategoryUsecase {
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
+  }
+
+  // 並び順変更（一旦メソッドだけ用意）
+  Future<FixedCostCategoryEntity> fetchCategoryById(
+    int id,
+  ) async {
+    return await _fixedCostCategoryRepository.fetch(id: id);
   }
 }

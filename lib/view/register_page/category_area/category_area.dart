@@ -4,6 +4,8 @@ import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
+import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
@@ -43,9 +45,12 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final ICategoryEntity categoryEntity = switch (widget.transactionMode) {
-        TransactionMode.expense || TransactionMode.fixedCost => await ref
+        TransactionMode.expense => await ref
             .watch(categoryUsecaseProvider)
             .fetchBySmallId(widget.originalCategoryId),
+        TransactionMode.fixedCost => await ref
+            .watch(fixedCostCategoryUsecaseProvider)
+            .fetchCategoryById(widget.originalCategoryId),
         TransactionMode.income => await ref
             .watch(incomeCategoryUsecaseProvider)
             .fetchCategoryBySmallId(widget.originalCategoryId),
@@ -73,9 +78,8 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     final screenVerticalMagnification = context.screenVerticalMagnification;
 
     final provider = switch (widget.transactionMode) {
-      TransactionMode.expense ||
-      TransactionMode.fixedCost =>
-        allCategoriesProvider,
+      TransactionMode.expense => allCategoriesProvider,
+      TransactionMode.fixedCost => allFixedCostCategoriesProvider,
       TransactionMode.income => allIncomeCategoriesProvider,
     };
 

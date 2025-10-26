@@ -57,7 +57,7 @@ class NormalIconButton extends ConsumerWidget {
             width: 62.2 * ((context.screenHorizontalMagnification - 1) / 5 + 1),
             child: Center(
               child: Text(
-                categoryEntity.smallCategoryName,
+                categoryEntity.categoryName,
                 style: const TextStyle(
                   color: MyColors.white,
                 ),

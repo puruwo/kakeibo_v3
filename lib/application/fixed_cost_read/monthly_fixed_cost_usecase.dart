@@ -68,7 +68,7 @@ class MonthlyFixedCostUsecaseNotifier extends FamilyAsyncNotifier<
               intervalNumber: fixedCostEntity.intervalNumber,
               intervalUnit: fixedCostEntity.intervalUnit,
               nextPaymentDate: fixedCostEntity.nextPaymentDate,
-              categoryName: category.name,
+              categoryName: category.categoryName,
               colorCode: category.colorCode,
               resourcePath: category.resourcePath,
               frequencyLabel: frequencyValue.dateLabel),

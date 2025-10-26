@@ -113,7 +113,7 @@ class SqfFixedCostCategory {
   static const tableName = 'fixed_cost_category';
 
   static const id = '_id';
-  static const name = 'name';
+  static const categoryName = 'category_name';
   static const colorCode = 'color_code';
   static const resourcePath = 'resource_path';
   static const displayOrder = 'display_order';

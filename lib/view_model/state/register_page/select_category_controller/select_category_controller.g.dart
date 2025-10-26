@@ -7,7 +7,7 @@ part of 'select_category_controller.dart';
 // **************************************************************************
 
 String _$selectCategoryControllerNotifierHash() =>
-    r'973a11c621ecf79b928d1916a8783f6e2f77b389';
+    r'ef64239a4617b230bf3c40fd7e641116de877c1f';
 
 /// See also [SelectCategoryControllerNotifier].
 @ProviderFor(SelectCategoryControllerNotifier)

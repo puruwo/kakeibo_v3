@@ -49,11 +49,11 @@ class _FixedCostCategoryAppearanceEditAreaState
             categories.firstWhere((c) => c.id == widget.fixedCostCategoryId);
 
         // TextEditingControllerに値をセット
-        _nameController.text = initialItem.name;
+        _nameController.text = initialItem.categoryName;
 
         ref
             .read(fixedCostCategoryNameControllerNotifierProvider.notifier)
-            .updateState(initialItem.name);
+            .updateState(initialItem.categoryName);
         ref
             .read(fixedCostCategoryColorControllerNotifierProvider.notifier)
             .updateState(MyColors().getColorFromHex(initialItem.colorCode));

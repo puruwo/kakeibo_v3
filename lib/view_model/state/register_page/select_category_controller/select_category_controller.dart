@@ -13,7 +13,7 @@ class SelectCategoryControllerNotifier
       smallCategoryOrderKey: -1,
       bigCategoryKey: -1,
       displaydOrderInBig: -1,
-      smallCategoryName: '',
+      categoryName: '',
       defaultDisplayed: -1,
       bigCategoryName: '',
       colorCode: '',

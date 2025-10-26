@@ -24,7 +24,7 @@ mixin _$IncomeCategoryEntity {
   int get smallCategoryOrderKey => throw _privateConstructorUsedError;
   int get bigCategoryKey => throw _privateConstructorUsedError;
   int get displaydOrderInBig => throw _privateConstructorUsedError;
-  String get smallCategoryName => throw _privateConstructorUsedError;
+  String get categoryName => throw _privateConstructorUsedError;
   int get defaultDisplayed => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
@@ -48,7 +48,7 @@ abstract class $IncomeCategoryEntityCopyWith<$Res> {
       int smallCategoryOrderKey,
       int bigCategoryKey,
       int displaydOrderInBig,
-      String smallCategoryName,
+      String categoryName,
       int defaultDisplayed,
       String bigCategoryName,
       String colorCode,
@@ -74,7 +74,7 @@ class _$IncomeCategoryEntityCopyWithImpl<$Res,
     Object? smallCategoryOrderKey = null,
     Object? bigCategoryKey = null,
     Object? displaydOrderInBig = null,
-    Object? smallCategoryName = null,
+    Object? categoryName = null,
     Object? defaultDisplayed = null,
     Object? bigCategoryName = null,
     Object? colorCode = null,
@@ -98,9 +98,9 @@ class _$IncomeCategoryEntityCopyWithImpl<$Res,
           ? _value.displaydOrderInBig
           : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
               as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
       defaultDisplayed: null == defaultDisplayed
           ? _value.defaultDisplayed
@@ -139,7 +139,7 @@ abstract class _$$IncomeCategoryEntityImplCopyWith<$Res>
       int smallCategoryOrderKey,
       int bigCategoryKey,
       int displaydOrderInBig,
-      String smallCategoryName,
+      String categoryName,
       int defaultDisplayed,
       String bigCategoryName,
       String colorCode,
@@ -162,7 +162,7 @@ class __$$IncomeCategoryEntityImplCopyWithImpl<$Res>
     Object? smallCategoryOrderKey = null,
     Object? bigCategoryKey = null,
     Object? displaydOrderInBig = null,
-    Object? smallCategoryName = null,
+    Object? categoryName = null,
     Object? defaultDisplayed = null,
     Object? bigCategoryName = null,
     Object? colorCode = null,
@@ -186,9 +186,9 @@ class __$$IncomeCategoryEntityImplCopyWithImpl<$Res>
           ? _value.displaydOrderInBig
           : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
               as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
       defaultDisplayed: null == defaultDisplayed
           ? _value.defaultDisplayed
@@ -222,7 +222,7 @@ class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
       required this.smallCategoryOrderKey,
       required this.bigCategoryKey,
       required this.displaydOrderInBig,
-      required this.smallCategoryName,
+      required this.categoryName,
       required this.defaultDisplayed,
       required this.bigCategoryName,
       required this.colorCode,
@@ -242,7 +242,7 @@ class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
   @override
   final int displaydOrderInBig;
   @override
-  final String smallCategoryName;
+  final String categoryName;
   @override
   final int defaultDisplayed;
   @override
@@ -258,7 +258,7 @@ class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
 
   @override
   String toString() {
-    return 'IncomeCategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displaydOrderInBig: $displaydOrderInBig, smallCategoryName: $smallCategoryName, defaultDisplayed: $defaultDisplayed, bigCategoryName: $bigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, sortKey: $sortKey)';
+    return 'IncomeCategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displaydOrderInBig: $displaydOrderInBig, categoryName: $categoryName, defaultDisplayed: $defaultDisplayed, bigCategoryName: $bigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, sortKey: $sortKey)';
   }
 
   @override
@@ -273,8 +273,8 @@ class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
                 other.bigCategoryKey == bigCategoryKey) &&
             (identical(other.displaydOrderInBig, displaydOrderInBig) ||
                 other.displaydOrderInBig == displaydOrderInBig) &&
-            (identical(other.smallCategoryName, smallCategoryName) ||
-                other.smallCategoryName == smallCategoryName) &&
+            (identical(other.categoryName, categoryName) ||
+                other.categoryName == categoryName) &&
             (identical(other.defaultDisplayed, defaultDisplayed) ||
                 other.defaultDisplayed == defaultDisplayed) &&
             (identical(other.bigCategoryName, bigCategoryName) ||
@@ -294,7 +294,7 @@ class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
       smallCategoryOrderKey,
       bigCategoryKey,
       displaydOrderInBig,
-      smallCategoryName,
+      categoryName,
       defaultDisplayed,
       bigCategoryName,
       colorCode,
@@ -323,7 +323,7 @@ abstract class _IncomeCategoryEntity implements IncomeCategoryEntity {
       required final int smallCategoryOrderKey,
       required final int bigCategoryKey,
       required final int displaydOrderInBig,
-      required final String smallCategoryName,
+      required final String categoryName,
       required final int defaultDisplayed,
       required final String bigCategoryName,
       required final String colorCode,
@@ -342,7 +342,7 @@ abstract class _IncomeCategoryEntity implements IncomeCategoryEntity {
   @override
   int get displaydOrderInBig;
   @override
-  String get smallCategoryName;
+  String get categoryName;
   @override
   int get defaultDisplayed;
   @override

@@ -22,11 +22,12 @@ FixedCostCategoryEntity _$FixedCostCategoryEntityFromJson(
 /// @nodoc
 mixin _$FixedCostCategoryEntity {
   int get id => throw _privateConstructorUsedError;
-  String get name => throw _privateConstructorUsedError;
+  String get categoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get resourcePath => throw _privateConstructorUsedError;
   int get displayOrder => throw _privateConstructorUsedError;
-  int get isDisplayed => throw _privateConstructorUsedError;
+  int get isDisplayed => throw _privateConstructorUsedError; // 表示用のソートキー
+  int get sortKey => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,11 +43,12 @@ abstract class $FixedCostCategoryEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      String name,
+      String categoryName,
       String colorCode,
       String resourcePath,
       int displayOrder,
-      int isDisplayed});
+      int isDisplayed,
+      int sortKey});
 }
 
 /// @nodoc
@@ -64,20 +66,21 @@ class _$FixedCostCategoryEntityCopyWithImpl<$Res,
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
+    Object? categoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
     Object? displayOrder = null,
     Object? isDisplayed = null,
+    Object? sortKey = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
       colorCode: null == colorCode
           ? _value.colorCode
@@ -94,6 +97,10 @@ class _$FixedCostCategoryEntityCopyWithImpl<$Res,
       isDisplayed: null == isDisplayed
           ? _value.isDisplayed
           : isDisplayed // ignore: cast_nullable_to_non_nullable
+              as int,
+      sortKey: null == sortKey
+          ? _value.sortKey
+          : sortKey // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -110,11 +117,12 @@ abstract class _$$FixedCostCategoryEntityImplCopyWith<$Res>
   @useResult
   $Res call(
       {int id,
-      String name,
+      String categoryName,
       String colorCode,
       String resourcePath,
       int displayOrder,
-      int isDisplayed});
+      int isDisplayed,
+      int sortKey});
 }
 
 /// @nodoc
@@ -131,20 +139,21 @@ class __$$FixedCostCategoryEntityImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? name = null,
+    Object? categoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
     Object? displayOrder = null,
     Object? isDisplayed = null,
+    Object? sortKey = null,
   }) {
     return _then(_$FixedCostCategoryEntityImpl(
       id: null == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
       colorCode: null == colorCode
           ? _value.colorCode
@@ -162,6 +171,10 @@ class __$$FixedCostCategoryEntityImplCopyWithImpl<$Res>
           ? _value.isDisplayed
           : isDisplayed // ignore: cast_nullable_to_non_nullable
               as int,
+      sortKey: null == sortKey
+          ? _value.sortKey
+          : sortKey // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -171,11 +184,12 @@ class __$$FixedCostCategoryEntityImplCopyWithImpl<$Res>
 class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
   const _$FixedCostCategoryEntityImpl(
       {this.id = 0,
-      required this.name,
+      required this.categoryName,
       required this.colorCode,
       required this.resourcePath,
       this.displayOrder = 0,
-      this.isDisplayed = 1});
+      this.isDisplayed = 1,
+      this.sortKey = 0});
 
   factory _$FixedCostCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$FixedCostCategoryEntityImplFromJson(json);
@@ -184,7 +198,7 @@ class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
   @JsonKey()
   final int id;
   @override
-  final String name;
+  final String categoryName;
   @override
   final String colorCode;
   @override
@@ -195,10 +209,14 @@ class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
   @override
   @JsonKey()
   final int isDisplayed;
+// 表示用のソートキー
+  @override
+  @JsonKey()
+  final int sortKey;
 
   @override
   String toString() {
-    return 'FixedCostCategoryEntity(id: $id, name: $name, colorCode: $colorCode, resourcePath: $resourcePath, displayOrder: $displayOrder, isDisplayed: $isDisplayed)';
+    return 'FixedCostCategoryEntity(id: $id, categoryName: $categoryName, colorCode: $colorCode, resourcePath: $resourcePath, displayOrder: $displayOrder, isDisplayed: $isDisplayed, sortKey: $sortKey)';
   }
 
   @override
@@ -207,7 +225,8 @@ class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
         (other.runtimeType == runtimeType &&
             other is _$FixedCostCategoryEntityImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.name, name) || other.name == name) &&
+            (identical(other.categoryName, categoryName) ||
+                other.categoryName == categoryName) &&
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
             (identical(other.resourcePath, resourcePath) ||
@@ -215,13 +234,14 @@ class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
             (identical(other.displayOrder, displayOrder) ||
                 other.displayOrder == displayOrder) &&
             (identical(other.isDisplayed, isDisplayed) ||
-                other.isDisplayed == isDisplayed));
+                other.isDisplayed == isDisplayed) &&
+            (identical(other.sortKey, sortKey) || other.sortKey == sortKey));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, colorCode,
-      resourcePath, displayOrder, isDisplayed);
+  int get hashCode => Object.hash(runtimeType, id, categoryName, colorCode,
+      resourcePath, displayOrder, isDisplayed, sortKey);
 
   @JsonKey(ignore: true)
   @override
@@ -241,11 +261,12 @@ class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
 abstract class _FixedCostCategoryEntity implements FixedCostCategoryEntity {
   const factory _FixedCostCategoryEntity(
       {final int id,
-      required final String name,
+      required final String categoryName,
       required final String colorCode,
       required final String resourcePath,
       final int displayOrder,
-      final int isDisplayed}) = _$FixedCostCategoryEntityImpl;
+      final int isDisplayed,
+      final int sortKey}) = _$FixedCostCategoryEntityImpl;
 
   factory _FixedCostCategoryEntity.fromJson(Map<String, dynamic> json) =
       _$FixedCostCategoryEntityImpl.fromJson;
@@ -253,7 +274,7 @@ abstract class _FixedCostCategoryEntity implements FixedCostCategoryEntity {
   @override
   int get id;
   @override
-  String get name;
+  String get categoryName;
   @override
   String get colorCode;
   @override
@@ -262,6 +283,8 @@ abstract class _FixedCostCategoryEntity implements FixedCostCategoryEntity {
   int get displayOrder;
   @override
   int get isDisplayed;
+  @override // 表示用のソートキー
+  int get sortKey;
   @override
   @JsonKey(ignore: true)
   _$$FixedCostCategoryEntityImplCopyWith<_$FixedCostCategoryEntityImpl>

@@ -75,7 +75,7 @@ class DataBaseMigrate {
     print('1. fixed_cost_categoryテーブル作成中...');
     await db.execute('''CREATE TABLE ${SqfFixedCostCategory.tableName} (
           ${SqfFixedCostCategory.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-          ${SqfFixedCostCategory.name} TEXT NOT NULL,
+          ${SqfFixedCostCategory.categoryName} TEXT NOT NULL,
           ${SqfFixedCostCategory.colorCode} TEXT NOT NULL,
           ${SqfFixedCostCategory.resourcePath} TEXT NOT NULL,
           ${SqfFixedCostCategory.displayOrder} INTEGER NOT NULL,
@@ -86,7 +86,7 @@ class DataBaseMigrate {
     // 固定費カテゴリーの初期データ挿入
     await db.execute('''
           INSERT INTO ${SqfFixedCostCategory.tableName} (
-          ${SqfFixedCostCategory.name},
+          ${SqfFixedCostCategory.categoryName},
           ${SqfFixedCostCategory.colorCode},
           ${SqfFixedCostCategory.resourcePath},
           ${SqfFixedCostCategory.displayOrder},

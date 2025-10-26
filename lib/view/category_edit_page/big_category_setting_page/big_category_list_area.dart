@@ -364,7 +364,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                   // カテゴリー名
                                   Expanded(
                                     child: Text(
-                                      itemList.isEmpty ? '' : itemList[index].name,
+                                      itemList.isEmpty ? '' : itemList[index].categoryName,
                                       style: GoogleFonts.notoSans(
                                         fontSize: 16,
                                         color: MyColors.label,

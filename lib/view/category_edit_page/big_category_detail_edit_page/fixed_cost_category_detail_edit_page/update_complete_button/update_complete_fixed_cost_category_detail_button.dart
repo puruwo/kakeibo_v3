@@ -54,14 +54,14 @@ class UpdateCompleteFixedCostCategoryDetailButton extends ConsumerWidget
                 ref.watch(fixedCostCategoryColorControllerNotifierProvider);
 
             // 変更があるかチェック
-            if (originalEntity.name == categoryName &&
+            if (originalEntity.categoryName == categoryName &&
                 originalEntity.resourcePath == iconPath &&
                 originalEntity.colorCode == MyColors().getHexFromColor(colorCode)) {
               throw const AppException('編集がされていません');
             }
 
             final updatedEntity = originalEntity.copyWith(
-              name: categoryName,
+              categoryName: categoryName,
               resourcePath: iconPath,
               colorCode: MyColors().getHexFromColor(colorCode),
             );
