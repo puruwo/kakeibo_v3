@@ -9,7 +9,7 @@ import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/unconfirmed_fixed_cost_area/price_input_dialog.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/price_input_dialog.dart';
 
 class UnconfirmedFixedCostTile extends ConsumerWidget {
   const UnconfirmedFixedCostTile({

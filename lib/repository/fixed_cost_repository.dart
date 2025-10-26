@@ -124,12 +124,12 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
     }
   }
 
-  // idを指定して、変動あり固定費の推定支出合計を取得する
+  // 変動あり固定費の推定支出を取得する
   @override
   Future<int> fetchEstimatedPriceById(
       {required int id}) async {
     final sql = '''
-      SELECT SUM(a.${SqfFixedCost.estimatedPrice}) AS estimatedPrice
+      SELECT a.${SqfFixedCost.estimatedPrice} AS estimatedPrice
       FROM ${SqfFixedCost.tableName} a
       WHERE a.${SqfFixedCost.id} = $id;
     ''';

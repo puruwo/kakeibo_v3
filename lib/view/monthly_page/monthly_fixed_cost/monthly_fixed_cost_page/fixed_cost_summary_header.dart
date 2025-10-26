@@ -8,15 +8,15 @@ import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_en
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-class FixedCostHeader extends ConsumerStatefulWidget {
-  const FixedCostHeader({super.key});
+class FixedCostSummaryHeader extends ConsumerStatefulWidget {
+  const FixedCostSummaryHeader({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _FixedCostHeaderState();
+      _FixedCostSummaryHeaderState();
 }
 
-class _FixedCostHeaderState extends ConsumerState<FixedCostHeader> {
+class _FixedCostSummaryHeaderState extends ConsumerState<FixedCostSummaryHeader> {
   @override
   Widget build(BuildContext context) {
     //状態管理---------------------------------------------------------------------------------------

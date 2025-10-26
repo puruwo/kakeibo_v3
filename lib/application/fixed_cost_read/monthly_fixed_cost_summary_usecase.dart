@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_sammary_value.dart';
@@ -14,6 +15,7 @@ final monthlyFixedCostSummaryNotifierProvider = AsyncNotifierProvider.family<
 class MonthlyFixedCostSummaryNotifier
     extends FamilyAsyncNotifier<MonthlyFixedCostSummaryValue, PeriodValue> {
   late FixedCostExpenseRepository _fixedCostExpenseRepo;
+  late FixedCostRepository _fixedCostRepo;
 
   @override
   Future<MonthlyFixedCostSummaryValue> build(
@@ -22,6 +24,7 @@ class MonthlyFixedCostSummaryNotifier
     ref.watch(updateDBCountNotifierProvider);
 
     _fixedCostExpenseRepo = ref.read(fixedCostExpenseRepositoryProvider);
+    _fixedCostRepo = ref.read(fixedCostRepositoryProvider);
 
     // fixed_cost_expenseから固定費の支出を取得する
     final fixedCostExpenseList = await _fixedCostExpenseRepo.fetchByPeriod(
@@ -37,8 +40,9 @@ class MonthlyFixedCostSummaryNotifier
         // 確定済み
         fixedCostSum += fixedCostExpense.price;
       } else {
-        // 未確定 - priceは0なので、推定価格を使う必要があるが現状は0とする
-        unconfirmedFixedCostSum += fixedCostExpense.price;
+        // 未確定
+        unconfirmedFixedCostSum += await _fixedCostRepo.fetchEstimatedPriceById(
+            id: fixedCostExpense.fixedCostId);
       }
     }
 

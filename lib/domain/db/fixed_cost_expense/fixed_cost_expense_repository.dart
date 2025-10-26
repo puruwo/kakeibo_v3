@@ -9,7 +9,7 @@ abstract class FixedCostExpenseRepository {
   Future<int> insert(FixedCostExpenseEntity entity);
   Future<List<FixedCostExpenseEntity>> fetchAll();
 
-  // 確定している固定費の支出を取得する
+  // 固定費の支出を取得する
   Future<List<FixedCostExpenseEntity>> fetchByPeriod(
       {required PeriodValue period});
 

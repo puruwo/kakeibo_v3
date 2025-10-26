@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_header/fixed_cost_header.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_by_category_list_area/fixed_cost_by_category_list_area.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_summary_header.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_by_category_list_area.dart';
 
 class MonthlyFixedCostPage extends ConsumerWidget {
   const MonthlyFixedCostPage({super.key});
@@ -21,7 +21,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
         child: Column(
           children: [
             // ヘッダー
-            const FixedCostHeader(),
+            const FixedCostSummaryHeader(),
 
             // カテゴリー別リスト
             const Padding(
