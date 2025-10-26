@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
@@ -52,7 +52,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                   showDeleteConfirmationDialog(
                     context,
                     onConfirm: () {
-                      ref.read(expenseUsecaseProvider).delete(id: value.id);
+                      ref.read(fixedCostExpenseUsecaseProvider).delete(id: value.id);
                     },
                   );
                 }),
