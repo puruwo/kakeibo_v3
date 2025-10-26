@@ -57,8 +57,7 @@ class ImplementsBudgetRepository implements BudgetRepository {
       SELECT 
         SUM(${SqfBudget.price}) AS totalPrice
       FROM ${SqfBudget.tableName} a
-      WHERE a.${SqfBudget.month} = ${month.month}
-      ORDER BY a.${SqfBudget.id} ASC;
+      WHERE a.${SqfBudget.month} = ${month.month};
     ''';
 
     try {

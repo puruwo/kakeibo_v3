@@ -33,3 +33,10 @@ extension DateTimeParsing on String {
     return dateTime;
   }
 }
+
+extension DateTimeComparison on DateTime {
+  // 日付が同じかどうかを比較
+  bool isSameDate(DateTime other) {
+    return year == other.year && month == other.month && day == other.day;
+  }
+}

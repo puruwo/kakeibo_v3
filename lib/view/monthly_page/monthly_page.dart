@@ -16,6 +16,7 @@ import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
@@ -36,8 +37,6 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
 
     // DBが更新されたらリビルドするため
     ref.watch(updateDBCountNotifierProvider);
-
-    final activeDt = ref.watch(analyzePageSelectedDatetimeNotifierProvider);
 
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
@@ -100,9 +99,36 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
               ),
 
               // グラフ部分
-              PredictionGraph(
-                activeDt: activeDt,
-              ),
+              Consumer(builder: (context, ref, _) {
+                final dateScope = ref.watch(analyzePageDateScopeEntityProvider);
+                return dateScope.when(
+                  data: (scope) => PredictionGraph(dateScope: scope),
+                  loading: () => Container(
+                    height: 213,
+                    width: 343 * context.screenHorizontalMagnification,
+                    decoration: BoxDecoration(
+                      color: MyColors.quarternarySystemfill,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  error: (error, stack) => Container(
+                    height: 213,
+                    width: 343 * context.screenHorizontalMagnification,
+                    decoration: BoxDecoration(
+                      color: MyColors.quarternarySystemfill,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'エラーが発生しました',
+                        style: TextStyle(
+                            color: MyColors.secondaryLabel, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                );
+              }),
 
               const SizedBox(
                 height: 8,

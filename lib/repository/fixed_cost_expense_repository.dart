@@ -1,6 +1,7 @@
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 
@@ -193,5 +194,25 @@ class ImplementsFixedCostExpenseRepository
       return 0.0;
     }
     return (result.first['avg_price'] as num).toDouble();
+  }
+
+  @override
+  Future<int> fetchDailyFixedCostExpenseByPeriod(
+      {required DateTime date}) async {
+    final sql = '''
+      SELECT
+        SUM(${SqfFixedCostExpense.price}) AS sum_price_daily
+      FROM ${SqfFixedCostExpense.tableName}
+      WHERE ${SqfFixedCostExpense.date} = '${date.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      GROUP BY ${SqfFixedCostExpense.date}
+      ORDER BY ${SqfFixedCostExpense.date} ASC
+    ''';
+    try {
+      final sum = await DatabaseHelper.instance.queryFirstIntValue(sql);
+      return sum ?? 0;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
   }
 }

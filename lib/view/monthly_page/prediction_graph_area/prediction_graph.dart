@@ -1,682 +1,383 @@
-/// Package imports
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart' show DateFormat;
-import 'package:kakeibo/util/screen_size_func.dart';
-import 'package:kakeibo/view_model/category_sum_getter.dart';
-import 'package:kakeibo/view_model/reference_day_impl.dart';
-
-/// Chart import
-import 'package:syncfusion_flutter_charts/charts.dart';
-
-/// Local imports
+import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
+import 'package:kakeibo/util/screen_size_func.dart';
 
-import 'package:kakeibo/util/util.dart';
+class PredictionGraph extends ConsumerWidget {
+  const PredictionGraph({super.key, required this.dateScope});
 
-
-import 'package:kakeibo/model/db_read_impl.dart';
-
-class PredictionGraph extends ConsumerStatefulWidget {
-  const PredictionGraph({super.key, required this.activeDt});
-
-  final DateTime activeDt;
+  final DateScopeEntity dateScope;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PredictionGraphState();
-}
-
-class _PredictionGraphState extends ConsumerState<PredictionGraph> {
-  // チャートデータ
-  List<ChartData> chartDataList = <ChartData>[];
-
-  // 予測データ
-  List<ChartData> predictionData = <ChartData>[];
-
-  // 収入データ
-  List<ChartData> incomeData = <ChartData>[];
-
-  // 予算データ
-  List<ChartData> budgetData = <ChartData>[];
-
-  // 表示開始日
-  late DateTime fromDate;
-
-  // 次の月の表示開始日
-  late DateTime toDate;
-
-  // 現在の支出額の合計
-  late int latestCumulativePrice;
-
-  // 予測支出額合計
-  late int finalPredictionPrice;
-
-  // 月の給与
-  late int income;
-
-  // グラフ内の最高額
-  late double graphHeight;
-
-  // 目標設定額
-  late Future<List<Map<String, dynamic>>> allBudgetSum;
-
-  late Future<List<Map<String, dynamic>>> cumulativePriceByDateFuture;
-
-  @override
-  void didUpdateWidget(covariant PredictionGraph oldWidget) {
-    cumulativePriceByDateFuture =
-        cumulativePriceByDateRowsGetter(widget.activeDt);
-    super.didUpdateWidget(oldWidget);
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // 画面の横幅を取得
+  Widget build(BuildContext context, WidgetRef ref) {
     final screenWidthSize = MediaQuery.of(context).size.width;
-
-    // 画面の倍率を計算
-    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final screenHorizontalMagnification =
         screenHorizontalMagnificationGetter(screenWidthSize);
 
-    cumulativePriceByDateFuture =
-        cumulativePriceByDateRowsGetter(widget.activeDt);
+    final predictionGraphData = ref.watch(predictionGraphDataProvider(dateScope));
 
-    final Future<List<Map<String, dynamic>>> incomeFuture =
-        incomeGetter(widget.activeDt);
-
-    // 目標設定額
-    final Future<List<Map<String, dynamic>>> allBudgetSum =
-        AllBudgetGetter().build(widget.activeDt);
-
-    return FutureBuilder(
-        future: Future.wait(
-            [cumulativePriceByDateFuture, incomeFuture, allBudgetSum]),
-        builder: (context, snapshot) {
-          if (snapshot.hasData && snapshot.data![0].isNotEmpty) {
-            final int allBudgetSum = snapshot.data![2][0]['budget_sum'] ?? 0;
-
-            // チャートデータの作成
-            final cumulativePriceDataList = snapshot.data![0];
-
-            // 元のデータを削除
-            chartDataList.clear();
-
-            for (int i = 0; i < cumulativePriceDataList.length; i++) {
-              // DateTime型に変換
-              final datetime =
-                  DateTime.parse(cumulativePriceDataList[i]['date'].toString());
-              final buff = ChartData(
-                  x: datetime,
-                  y: cumulativePriceDataList[i]['sum_price_daily']);
-              // 配列chartDataListに追加
-              chartDataList.add(buff);
-            }
-
-            // 予測ラインデータの作成
-            final lastValue = cumulativePriceDataList.isNotEmpty
-                ? cumulativePriceDataList.last
-                : {'sum_price_daily': 0};
-            if (lastValue.isNotEmpty) {
-              latestCumulativePrice = latestCumulativePriceGetter(lastValue);
-              setPredictionData(lastValue);
-            }
-
-            // 収入合計の設定
-            if (snapshot.data![1][0].isNotEmpty) {
-              income = snapshot.data![1][0]['sum_price'];
-            } else {
-              income = 0;
-            }
-
-            // 説明ラベルとラインデータの作成
-            setTargetData(allBudgetSum);
-
-            setGraphHeight(allBudgetSum);
-
-            return Container(
-              height: 213,
-              width: 343 * screenHorizontalMagnification,
-              decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(8)),
-              child: _buildCustomizedLineChart(allBudgetSum),
-            );
-          } else {
-            return Container(
-              height: 213,
-              width: 343 * screenHorizontalMagnification,
-              decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(8)),
-              child: const Center(child:  Text('選択月の支出の入力がありません',style: TextStyle(color: MyColors.secondaryLabel,fontSize: 16),)),
+    return Container(
+      height: 213,
+      width: 343 * screenHorizontalMagnification,
+      decoration: BoxDecoration(
+        color: MyColors.quarternarySystemfill,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: predictionGraphData.when(
+        data: (data) {
+          if (data.predictionGraphLineType == PredictionGraphLineType.futureMonth) {
+            return const Center(
+              child: Text(
+                '選択月の支出の入力がありません',
+                style: TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+              ),
             );
           }
-        });
-  }
-
-  /// Returns the customized Line chart.
-  SfCartesianChart _buildCustomizedLineChart(int allBudgetSum) {
-    return SfCartesianChart(
-      plotAreaBorderWidth: 0,
-      borderWidth: 10,
-
-      // 横軸
-      primaryXAxis: DateTimeAxis(
-        // 間隔
-        intervalType: DateTimeIntervalType.auto,
-        interval: 7,
-        // 最大最小
-        minimum: fromDate,
-        maximum: toDate,
-        // 軸の設定
-        axisLine: const AxisLine(color: MyColors.systemGray, width: 1.0),
-        // ラベル設定
-        edgeLabelPlacement: EdgeLabelPlacement.shift,
-        dateFormat: DateFormat.Md(),
-        labelStyle: const TextStyle(
-          fontSize: 14,
-          color: MyColors.secondaryLabel,
-          fontFamily: 'sf_ui',
+          return _PredictionGraphWidget(data: data);
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => const Center(
+          child: Text(
+            'エラーが発生しました',
+            style: TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+          ),
         ),
-        majorGridLines: const MajorGridLines(width: 0),
-        majorTickLines: const MajorTickLines(width: 0),
-      ),
-
-      // 縦軸
-      primaryYAxis: NumericAxis(
-        isVisible: false,
-        // 最大最小
-        minimum: 0,
-        maximum: graphHeight * 1.2,
-        // 表示しないために以下記述
-        axisLine: const AxisLine(width: 0),
-        majorGridLines: const MajorGridLines(width: 0),
-        majorTickLines: const MajorTickLines(width: 0),
-      ),
-
-      // グラフ内描画
-      series: <CartesianSeries<ChartData, DateTime>>[
-        // 収入ライン
-        LineSeries<ChartData, DateTime>(
-          color: MyColors.separater,
-          width: 1,
-          onCreateRenderer: (ChartSeries<dynamic, dynamic> series) {
-            return _CustomIncomeLineSeriesRenderer(income, allBudgetSum,
-                series as LineSeries<ChartData, DateTime>);
-          },
-          // アニメーションの設定
-          animationDuration: 0,
-          dataSource: incomeData,
-          xValueMapper: (ChartData sales, _) => sales.x as DateTime,
-          yValueMapper: (ChartData sales, _) => sales.y,
-        ),
-
-        // 予算ライン
-        LineSeries<ChartData, DateTime>(
-          color: MyColors.separater,
-          width: 1,
-          onCreateRenderer: (ChartSeries<dynamic, dynamic> series) {
-            return _CustomBudgetLineSeriesRenderer(income, allBudgetSum,
-                series as LineSeries<ChartData, DateTime>);
-          },
-          // アニメーションの設定
-          animationDuration: 0,
-          dataSource: budgetData,
-          xValueMapper: (ChartData sales, _) => sales.x as DateTime,
-          yValueMapper: (ChartData sales, _) => sales.y,
-        ),
-
-        // トレンドライン
-        LineSeries<ChartData, DateTime>(
-          // 線のスタイルはonCreateRenderで記述
-          color: Colors.transparent,
-          width: 0,
-          // dashArray: const [1, 1.5],
-          onCreateRenderer: (ChartSeries<dynamic, dynamic> series) {
-            return _CustomTrendLineSeriesRenderer(finalPredictionPrice,
-                series as LineSeries<ChartData, DateTime>);
-          },
-          // アニメーションの設定
-          animationDuration: 500,
-
-          dataSource: predictionData,
-          xValueMapper: (ChartData sales, _) => sales.x as DateTime,
-          yValueMapper: (ChartData sales, _) => sales.y,
-        ),
-
-        // 累積グラフ
-        AreaSeries<ChartData, DateTime>(
-          // 境界線の設定
-          borderWidth: 1.0,
-          borderColor: MyColors.pink,
-          // グラデーションカラーの設定
-          gradient: const LinearGradient(colors: <Color>[
-            Colors.transparent,
-            Colors.red,
-          ], stops: <double>[
-            0.0,
-            0.999,
-          ], begin: Alignment.bottomCenter, end: Alignment.topCenter),
-          // アニメーションの設定
-          animationDuration: 500,
-          dataSource: chartDataList,
-          xValueMapper: (ChartData sales, _) => sales.x as DateTime,
-          yValueMapper: (ChartData sales, _) => sales.y,
-        ),
-      ],
-    );
-  }
-
-  // 取得した日毎の支出合計を、その日時点での累積支出合計に変換する処理
-  Future<List<Map<String, dynamic>>> cumulativePriceByDateRowsGetter(
-      DateTime activeDt) async {
-    final fromDate = getReferenceDay(activeDt);
-    final toDate =
-        getNextReferenceDay(fromDate).add(const Duration(days: 1) * -1);
-
-    // {
-    //  sum_price_daily:
-    //  date:
-    // }
-    final List<Map<String, dynamic>> DataList =
-        await TBL001Impl().queryPriceByDateCrossMonthRows(fromDate, toDate);
-    int cumulativeSum = 0;
-    for (int i = 0; i < DataList.length; i++) {
-      final int sumPriceDaily = DataList[i]['sum_price_daily'];
-      cumulativeSum += sumPriceDaily;
-      DataList[i]['sum_price_daily'] = cumulativeSum;
-    }
-    return DataList;
-  }
-
-  // 予測データの作成処理
-  void setPredictionData(Map<String, dynamic> lastValue) {
-    // 元のデータを削除
-    predictionData.clear();
-
-    // 最新日
-    final lastValueDt = DateTime.parse(lastValue['date'].toString());
-
-    // 予測データの始点
-    final startPoint =
-        ChartData(x: lastValueDt, y: lastValue['sum_price_daily']);
-    predictionData.add(startPoint);
-
-    // 月の開始から最新レコードまでの日数
-    final elapsed_days = lastValueDt.difference(fromDate).inDays + 1;
-
-    // 月の開始からその月の終了までの日数
-    final daysInMonth = toDate.difference(fromDate).inDays + 1;
-
-    // 予測支出額
-    finalPredictionPrice = elapsed_days == 0
-        ? 0
-        : ((lastValue['sum_price_daily'] / elapsed_days) * daysInMonth).toInt();
-
-    final endPoint = ChartData(x: toDate, y: finalPredictionPrice);
-    predictionData.add(endPoint);
-  }
-
-  // 最新の累積支出額を取得
-  int latestCumulativePriceGetter(Map<String, dynamic> lastValue) {
-    return lastValue['sum_price_daily'];
-  }
-
-  // グラフ内で最高の値段がどの値か決める処理
-  void setGraphHeight(int allBudgetSum) {
-    graphHeight = latestCumulativePrice.toDouble();
-    if (graphHeight < finalPredictionPrice) {
-      graphHeight = finalPredictionPrice.toDouble();
-    }
-    if (graphHeight < allBudgetSum) {
-      graphHeight = allBudgetSum.toDouble();
-    }
-    if (graphHeight < income) {
-      graphHeight = income.toDouble();
-    }
-  }
-
-  // 目標データの設定
-  void setTargetData(int allBudgetSum) {
-    // 目標データの初期化
-    incomeData.clear();
-
-    incomeData.add(ChartData(x: fromDate, y: income));
-    incomeData.add(ChartData(x: toDate, y: income));
-
-    // 予算データの初期化
-    budgetData.clear();
-
-    budgetData.add(ChartData(x: fromDate, y: allBudgetSum));
-    budgetData.add(ChartData(x: toDate, y: allBudgetSum));
-  }
-
-  Future<List<Map<String, dynamic>>> incomeGetter(DateTime activeDt) {
-    fromDate = getReferenceDay(activeDt);
-    toDate = getNextReferenceDay(fromDate).add(const Duration(days: 1) * -1);
-    return getMonthIncomeSum(fromDate, toDate);
-  }
-}
-
-late double? _textIncomeXOffset, _textIncomeYOffset;
-late double? _textBudgetXOffset, _textBudgetYOffset;
-
-// 収入ラベルの描写
-/// custom  series class overriding the original  series class.
-class _CustomIncomeLineSeriesRenderer<T, D> extends LineSeriesRenderer<T, D> {
-  _CustomIncomeLineSeriesRenderer(this.income, this.budget, this.series);
-
-  final int income;
-  final int budget;
-  final LineSeries<dynamic, dynamic> series;
-
-  @override
-  LineSegment<T, D> createSegment() {
-    return _IncomeLineCustomPainter(income, budget);
-  }
-}
-
-// 収入ラインの描画
-class _IncomeLineCustomPainter<T, D> extends LineSegment<T, D> {
-  _IncomeLineCustomPainter(this.income, this.budget);
-
-  final int income;
-  final int budget;
-
-  @override
-  void onPaint(Canvas canvas) {
-    if (isEmpty) {
-      return;
-    }
-
-    final double x1 = points[0].dx,
-        y1 = points[0].dy,
-        x2 = points[1].dx,
-        y2 = points[1].dy;
-
-    // 線の形状を決める
-    final Path path = Path();
-    path.moveTo(x1, y1);
-    path.lineTo(x2, y2);
-    canvas.drawPath(path, getStrokePaint());
-
-    // ラベルの作成
-    late String label;
-    late String priceLabel;
-    if (income != 0) {
-      priceLabel = yenFormattedPriceGetter(income);
-      label = '給与 $priceLabel';
-    } else {
-      label = '';
-    }
-
-    // グラフ内のテキストの表示設定
-    if (income <= budget) {
-      _textIncomeXOffset = x1 + 5;
-      _textIncomeYOffset = y1 - 7;
-    }
-    if (income >= budget) {
-      _textIncomeXOffset = x1 + 5;
-      _textIncomeYOffset = y1 - 25;
-    }
-
-    TextSpan span = TextSpan(
-      style: const TextStyle(
-        fontSize: 14,
-        color: MyColors.secondaryLabel,
-        fontFamily: 'sf_ui',
-      ),
-      text: label,
-    );
-    final TextPainter tp =
-        TextPainter(text: span, textDirection: TextDirection.ltr);
-    tp.layout();
-    tp.paint(canvas, Offset(_textIncomeXOffset!, _textIncomeYOffset!));
-  }
-}
-
-// 予算ラベルの描画
-class _CustomBudgetLineSeriesRenderer<T, D> extends LineSeriesRenderer<T, D> {
-  _CustomBudgetLineSeriesRenderer(this.income, this.budget, this.series);
-
-  final int income;
-  final int budget;
-  final LineSeries<dynamic, dynamic> series;
-
-  @override
-  LineSegment<T, D> createSegment() {
-    return _BudgetLineCustomPainter(income, budget);
-  }
-}
-
-/// 予算ラインの描画
-class _BudgetLineCustomPainter<T, D> extends LineSegment<T, D> {
-  _BudgetLineCustomPainter(this.income, this.budget);
-
-  final int income;
-  final int budget;
-
-  @override
-  void onPaint(Canvas canvas) {
-    if (isEmpty) {
-      return;
-    }
-
-    final double x1 = points[0].dx,
-        y1 = points[0].dy,
-        x2 = points[1].dx,
-        y2 = points[1].dy;
-
-    // 線の形状を決める
-    final Path path = Path();
-    path.moveTo(x1, y1);
-    path.lineTo(x2, y2);
-    canvas.drawPath(path, getStrokePaint());
-
-    // ラベルの作成
-    final String priceLabel = yenFormattedPriceGetter(budget);
-    final String label = '予算 $priceLabel';
-
-    // グラフ内のテキストの表示設定
-    if (income <= budget) {
-      _textBudgetXOffset = x1 + 5;
-      _textBudgetYOffset = y1 - 23;
-    }
-    if (income >= budget) {
-      _textBudgetXOffset = x1 + 5;
-      _textBudgetYOffset = y1 - 0;
-    }
-
-    TextSpan span = TextSpan(
-      text: label,
-      style: const TextStyle(
-        fontSize: 14,
-        color: MyColors.secondaryLabel,
-        fontFamily: 'sf_ui',
       ),
     );
-    final TextPainter tp =
-        TextPainter(text: span, textDirection: TextDirection.ltr);
-    tp.layout();
-    tp.paint(canvas, Offset(_textBudgetXOffset!, _textBudgetYOffset!));
   }
 }
 
-// 予想支出ラベルの描写
-/// custom  series class overriding the original  series class.
-class _CustomTrendLineSeriesRenderer<T, D> extends LineSeriesRenderer<T, D> {
-  _CustomTrendLineSeriesRenderer(this.finalPredictionPrice, this.series);
-  final int finalPredictionPrice;
-  final LineSeries<dynamic, dynamic> series;
+class _PredictionGraphWidget extends StatelessWidget {
+  const _PredictionGraphWidget({required this.data});
+
+  final dynamic data;
 
   @override
-  LineSegment<T, D> createSegment() {
-    return _TrendLineCustomPainter(finalPredictionPrice);
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: CustomPaint(
+        painter: _PredictionGraphPainter(data: data),
+        child: Container(),
+      ),
+    );
   }
 }
 
-// トレンドラインの描画
-/// custom  painter class for customized  series.
-class _TrendLineCustomPainter<T, D> extends LineSegment<T, D> {
-  _TrendLineCustomPainter(this.finalPredictionPrice);
+class _PredictionGraphPainter extends CustomPainter {
+  _PredictionGraphPainter({required this.data});
 
-  final int finalPredictionPrice;
+  final dynamic data;
 
   @override
-  void onPaint(Canvas canvas) {
-    if (isEmpty) {
-      return;
+  void paint(Canvas canvas, Size size) {
+    // グラフエリアのマージン
+    const double topMargin = 30;
+    const double bottomMargin = 30;
+    const double leftMargin = 8;
+    const double rightMargin = 8;
+
+    final graphWidth = size.width - leftMargin - rightMargin;
+    final graphHeight = size.height - topMargin - bottomMargin;
+
+    // 最大値を計算（1.2倍の余裕を持たせる）
+    // maxValueが0の場合は最低値として100を設定
+    final maxValue = data.maxValue > 0 ? data.maxValue * 1.2 : 100.0;
+
+    // X軸を描画
+    _drawXAxis(canvas, size, leftMargin, topMargin, graphWidth, graphHeight);
+
+    // 収入ラインを描画
+    if (data.income > 0) {
+      _drawIncomeLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
+          maxValue, data.income, data.budget);
     }
 
-    final double x1 = points[0].dx,
-        y1 = points[0].dy,
-        x2 = points[1].dx,
-        y2 = points[1].dy;
+    // 予算ラインを描画
+    if (data.budget > 0) {
+      _drawBudgetLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
+          maxValue, data.budget, data.income);
+    }
 
-    // 線の形状を決める
-    final Path path = Path();
-    path.moveTo(x1, y1);
-    path.lineTo(x2, y2);
-    canvas.drawPath(path, getStrokePaint());
+    // 予測ラインを描画（点線）
+    if (data.shouldShowPredictionLine && data.predictionPoints == null && data.predictionPoints.isNotEmpty) {
+      _drawPredictionLine(canvas, leftMargin, topMargin, graphWidth,
+          graphHeight, maxValue, data.predictionPoints, data.predictionPrice);
+    }
 
-    final Paint paint = Paint()
-      ..color = MyColors.pink
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.8;
+    // 支出ラインを描画
+    if (data.expensePoints.isNotEmpty) {
+      _drawExpenseLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
+          maxValue, data.expensePoints);
+    }
+  }
 
-    // ラベルの作成
-    final String priceLabel = yenFormattedPriceGetter(finalPredictionPrice);
-    final String label = '予想支出 $priceLabel';
+  /// X軸を描画
+  void _drawXAxis(Canvas canvas, Size size, double leftMargin, double topMargin,
+      double graphWidth, double graphHeight) {
+    
+    // X軸メモリラベルの位置調節
+    const xAxisLabelVerticalOffset = 5;
 
-    // グラフ内のテキストの表示設定
-    _textBudgetXOffset = x2 - 130;
-    _textBudgetYOffset = y2 - 18;
+    final paint = Paint()
+      ..color = MyColors.systemGray
+      ..strokeWidth = 1.0;
 
-    canvas.drawPath(
-        _dashPath(
-          path,
-          dashArray: _CircularIntervalList<double>(<double>[3, 2]),
-        )!,
-        paint);
+    final y = topMargin + graphHeight;
+    canvas.drawLine(
+      Offset(leftMargin, y),
+      Offset(leftMargin + graphWidth, y),
+      paint,
+    );
 
-    TextSpan span = TextSpan(
-        text: label,
+    // usecaseで生成されたラベルを使用
+    final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
+
+    for (final xLabel in data.xAxisLabels) {
+      final daysDiff = xLabel.date.difference(data.fromDate).inDays;
+      final x = leftMargin + (daysDiff / totalDays) * graphWidth;
+
+      final textSpan = TextSpan(
+        text: xLabel.label,
         style: const TextStyle(
           fontSize: 14,
           color: MyColors.secondaryLabel,
           fontFamily: 'sf_ui',
-        ));
-    final TextPainter tp = TextPainter(
-      text: span,
-      textAlign: TextAlign.left,
+        ),
+      );
+
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(
+        canvas,
+        Offset(x - textPainter.width / 2, y + xAxisLabelVerticalOffset),
+      );
+    }
+  }
+
+  /// 収入ラインを描画
+  void _drawIncomeLine(
+      Canvas canvas,
+      double leftMargin,
+      double topMargin,
+      double graphWidth,
+      double graphHeight,
+      double maxValue,
+      int income,
+      int budget) {
+    // usecaseで判定された表示フラグを使用
+    if (!data.shouldShowIncomeLine || data.incomeLabelPosition == null) {
+      return;
+    }
+
+    final paint = Paint()
+      ..color = MyColors.separater
+      ..strokeWidth = 1.0;
+
+    final y = topMargin + graphHeight - (income / maxValue) * graphHeight;
+
+    canvas.drawLine(
+      Offset(leftMargin, y),
+      Offset(leftMargin + graphWidth, y),
+      paint,
+    );
+
+    // usecaseで計算されたラベル位置を使用
+    final labelPosition = data.incomeLabelPosition!;
+    final textSpan = TextSpan(
+      text: labelPosition.label,
+      style: const TextStyle(
+        fontSize: 14,
+        color: MyColors.secondaryLabel,
+        fontFamily: 'sf_ui',
+      ),
+    );
+
+    final textPainter = TextPainter(
+      text: textSpan,
       textDirection: TextDirection.ltr,
     );
-    tp.layout();
-    tp.paint(canvas, Offset(_textBudgetXOffset!, _textBudgetYOffset!));
-  }
-}
+    textPainter.layout();
 
-Path? _dashPath(
-  Path source, {
-  required _CircularIntervalList<double> dashArray,
-}) {
-  if (source == null) {
-    return null;
+    final labelY = y + labelPosition.yOffset;
+    textPainter.paint(canvas, Offset(leftMargin + 5, labelY));
   }
-  const double intialValue = 0.0;
-  final Path path = Path();
-  for (final measurePath in source.computeMetrics()) {
-    double distance = intialValue;
-    bool draw = true;
-    while (distance < measurePath.length) {
-      final double length = dashArray.next;
-      if (draw) {
-        path.addPath(
-            measurePath.extractPath(distance, distance + length), Offset.zero);
+
+  /// 予算ラインを描画
+  void _drawBudgetLine(
+      Canvas canvas,
+      double leftMargin,
+      double topMargin,
+      double graphWidth,
+      double graphHeight,
+      double maxValue,
+      int budget,
+      int income) {
+    // usecaseで判定された表示フラグを使用
+    if (!data.shouldShowBudgetLine || data.budgetLabelPosition == null) {
+      return;
+    }
+
+    final paint = Paint()
+      ..color = MyColors.separater
+      ..strokeWidth = 1.0;
+
+    final y = topMargin + graphHeight - (budget / maxValue) * graphHeight;
+
+    canvas.drawLine(
+      Offset(leftMargin, y),
+      Offset(leftMargin + graphWidth, y),
+      paint,
+    );
+
+    // usecaseで計算されたラベル位置を使用
+    final labelPosition = data.budgetLabelPosition!;
+    final textSpan = TextSpan(
+      text: labelPosition.label,
+      style: const TextStyle(
+        fontSize: 14,
+        color: MyColors.secondaryLabel,
+        fontFamily: 'sf_ui',
+      ),
+    );
+
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+
+    final labelY = y  - textPainter.height ;
+    textPainter.paint(canvas, Offset(leftMargin + 5, labelY));
+  }
+
+  /// 予測ラインを描画（点線）
+  void _drawPredictionLine(
+      Canvas canvas,
+      double leftMargin,
+      double topMargin,
+      double graphWidth,
+      double graphHeight,
+      double maxValue,
+      List<dynamic> predictionPoints,
+      int predictionPrice) {
+    final paint = Paint()
+      ..color = MyColors.separater
+      ..strokeWidth = 0.8
+      ..style = PaintingStyle.stroke;
+
+    final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
+
+    final path = Path();
+    for (int i = 0; i < predictionPoints.length; i++) {
+      final point = predictionPoints[i];
+      final daysDiff = point.date.difference(data.fromDate).inDays;
+      final x = leftMargin + (daysDiff / totalDays) * graphWidth;
+      final y = topMargin +
+          graphHeight -
+          (point.price / maxValue) * graphHeight;
+
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
       }
-      distance += length;
-      draw = !draw;
+    }
+
+    // 点線を描画
+    _drawDashedPath(canvas, path, paint);
+
+    // usecaseで生成されたラベルを使用
+    if (predictionPoints.length >= 2) {
+      final lastPoint = predictionPoints.last;
+      final daysDiff = lastPoint.date.difference(data.fromDate).inDays;
+      final x = leftMargin + (daysDiff / totalDays) * graphWidth;
+      final y = topMargin +
+          graphHeight -
+          (lastPoint.price / maxValue) * graphHeight;
+
+      final textSpan = TextSpan(
+        text: data.predictionLabel,
+        style: const TextStyle(
+          fontSize: 14,
+          color: MyColors.secondaryLabel,
+          fontFamily: 'sf_ui',
+        ),
+      );
+
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+      textPainter.paint(canvas, Offset(x - 130, y - 18));
     }
   }
-  return path;
-}
 
-class _CircularIntervalList<T> {
-  _CircularIntervalList(this._values);
-  final List<T> _values;
-  int _index = 0;
-  T get next {
-    if (_index >= _values.length) {
-      _index = 0;
+  /// 支出ラインを描画
+  void _drawExpenseLine(
+      Canvas canvas,
+      double leftMargin,
+      double topMargin,
+      double graphWidth,
+      double graphHeight,
+      double maxValue,
+      List<dynamic> expensePoints) {
+    final paint = Paint()
+      ..color = MyColors.pink
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
+
+    final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
+
+    final path = Path();
+    for (int i = 0; i < expensePoints.length; i++) {
+      final point = expensePoints[i];
+      final daysDiff = point.date.difference(data.fromDate).inDays;
+      final x = leftMargin + (daysDiff / totalDays) * graphWidth;
+      final y = topMargin +
+          graphHeight -
+          (point.price / maxValue) * graphHeight;
+
+      if (i == 0) {
+        path.moveTo(x, y);
+      } else {
+        path.lineTo(x, y);
+      }
     }
-    return _values[_index++];
+
+    canvas.drawPath(path, paint);
   }
-}
 
-class ChartData {
-  /// Holds the datapoint values like x, y, etc.,
-  ChartData(
-      {this.x,
-      this.y,
-      this.lineType,
-      this.xValue,
-      this.yValue,
-      this.secondSeriesYValue,
-      this.thirdSeriesYValue,
-      this.pointColor,
-      this.size,
-      this.text,
-      this.open,
-      this.close,
-      this.low,
-      this.high,
-      this.volume});
+  /// 点線を描画
+  void _drawDashedPath(Canvas canvas, Path path, Paint paint) {
+    const dashWidth = 3.0;
+    const dashSpace = 2.0;
 
-  /// Holds x value of the datapoint
-  final dynamic x;
+    final pathMetrics = path.computeMetrics();
+    for (final metric in pathMetrics) {
+      double distance = 0.0;
+      bool draw = true;
 
-  /// Holds y value of the datapoint
-  final num? y;
+      while (distance < metric.length) {
+        final length = draw ? dashWidth : dashSpace;
+        if (draw) {
+          final extractPath =
+              metric.extractPath(distance, distance + length);
+          canvas.drawPath(extractPath, paint);
+        }
+        distance += length;
+        draw = !draw;
+      }
+    }
+  }
 
-  final List<double>? lineType;
-
-  /// Holds x value of the datapoint
-  final dynamic xValue;
-
-  /// Holds y value of the datapoint
-  final num? yValue;
-
-  /// Holds y value of the datapoint(for 2nd series)
-  final num? secondSeriesYValue;
-
-  /// Holds y value of the datapoint(for 3nd series)
-  final num? thirdSeriesYValue;
-
-  /// Holds point color of the datapoint
-  final Color? pointColor;
-
-  /// Holds size of the datapoint
-  final num? size;
-
-  /// Holds datalabel/text value mapper of the datapoint
-  final String? text;
-
-  /// Holds open value of the datapoint
-  final num? open;
-
-  /// Holds close value of the datapoint
-  final num? close;
-
-  /// Holds low value of the datapoint
-  final num? low;
-
-  /// Holds high value of the datapoint
-  final num? high;
-
-  /// Holds open value of the datapoint
-  final num? volume;
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }

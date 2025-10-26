@@ -136,7 +136,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       required DateTime fromDate,
       required DateTime toDate}) async {
     final sql = '''
-      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName} 
+      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName}
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
       AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory;
       ''';
@@ -153,6 +153,30 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     }
   }
 
+  // 期間を指定して日毎の支出データを取得する（通常支出のみ）
+  @override
+  Future<int> fetchDailyExpenseByPeriod(
+      {required DateTime date}) async {
+    final sql = '''
+      SELECT
+        SUM(${SqfExpense.price}) AS sum_price_daily
+      FROM ${SqfExpense.tableName}
+      WHERE ${SqfExpense.date} = ${DateFormat('yyyyMMdd').format(date)}
+      GROUP BY ${SqfExpense.date}
+      ORDER BY ${SqfExpense.date} ASC
+    ''';
+
+    try {
+      final sumPriceDaily = await db.queryFirstIntValue(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchDailyExpenseByPeriod(DateTime $date)\n$sql');
+
+      return sumPriceDaily ?? 0;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
 
   @override
   void insert(ExpenseEntity expenseEntity) {

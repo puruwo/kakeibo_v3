@@ -35,6 +35,10 @@ abstract interface class ExpenseRepository {
       required DateTime fromDate,
       required DateTime toDate});
 
+  // 期間を指定して日毎の支出データを取得する
+  Future<int> fetchDailyExpenseByPeriod(
+      {required DateTime date});
+
   void insert(ExpenseEntity expenseEntity);
 
   void update(ExpenseEntity expenseEntity);

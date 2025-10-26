@@ -12,7 +12,11 @@
       "Bash(flutter analyze lib/view/category_edit_page/category_setting_page_with_tab.dart lib/view/category_edit_page/fixed_cost_category_setting_page/ lib/view/category_edit_page/fixed_cost_category_detail_edit_page/ lib/constant/fixed_cost_constants.dart lib/application/fixed_cost_category/ lib/constant/colors.dart lib/constant/strings.dart)",
       "Bash(flutter analyze lib/view/category_edit_page/ lib/view_model/state/fixed_cost_category_detail_edit_page/)",
       "Bash(flutter analyze lib/view/category_edit_page/ lib/view_model/state/fixed_cost_category_edit_page/ lib/domain/ui_value/fixed_cost_category_value/)",
-      "Bash(flutter analyze lib/view/category_edit_page/big_category_setting_page/)"
+      "Bash(flutter analyze lib/view/category_edit_page/big_category_setting_page/)",
+      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/application/prediction_graph/)",
+      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/application/prediction_graph/ lib/domain/ui_value/prediction_graph_value/)",
+      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart)",
+      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/view/monthly_page/monthly_page.dart lib/application/prediction_graph/ lib/domain/db/expense/expense_repository.dart lib/repository/expense_repository.dart)"
     ],
     "deny": [],
     "ask": []
