@@ -66,7 +66,7 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
                         children: [
                           CategorySumText(categoryTile: categoryTile),
                           CategorySumGraph(
-                            barFrameWidth: constraints.maxWidth -
+                            barFrameMaxWidth: constraints.maxWidth -
                                 priceLabelWidth -
                                 gapBetweenLabelAndIcon -
                                 gapBetweenGraphAndLabel -

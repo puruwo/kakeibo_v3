@@ -63,7 +63,7 @@ class CategorySumTile extends HookConsumerWidget {
                       ),
                       LayoutBuilder(
                           builder: ((context, constraints) => CategorySumGraph(
-                              barFrameWidth: constraints.maxWidth,
+                              barFrameMaxWidth: constraints.maxWidth,
                               categoryTile: categoryTile))),
                     ],
                   ),

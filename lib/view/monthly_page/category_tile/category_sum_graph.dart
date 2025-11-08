@@ -5,14 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
-import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 
 class CategorySumGraph extends HookConsumerWidget {
   const CategorySumGraph(
-      {required this.barFrameWidth, required this.categoryTile, super.key});
+      {required this.barFrameMaxWidth, required this.categoryTile, super.key});
   final CategoryCardEntity categoryTile;
-  final double barFrameWidth;
+  final double barFrameMaxWidth;
 
   int get budget => categoryTile.monthlyBudget;
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity =>
@@ -28,17 +27,9 @@ class CategorySumGraph extends HookConsumerWidget {
     double barWidth = 0;
     final isBuilt = useState(false);
 
-    // 画面の横幅を取得
-    final screenWidthSize = MediaQuery.of(context).size.width;
-
-    // 画面の倍率を計算
-    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
-    final screenHorizontalMagnification =
-        screenHorizontalMagnificationGetter(screenWidthSize);
-
     barWidth = categoryTile.graphRatio! <= 1.0
-        ? barFrameWidth * categoryTile.graphRatio!
-        : barFrameWidth;
+        ? barFrameMaxWidth * categoryTile.graphRatio!
+        : barFrameMaxWidth;
     //ビルドが完了したら横棒グラフのサイズを変更しアニメーションが動く
     WidgetsBinding.instance.addPostFrameCallback((_) {
       isBuilt.value = true;
@@ -54,7 +45,7 @@ class CategorySumGraph extends HookConsumerWidget {
               // バーの背景枠
               Container(
                 height: barFrameHeight,
-                width: barFrameWidth * screenHorizontalMagnification,
+                width: barFrameMaxWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: MyColors.secondarySystemfill,
@@ -64,7 +55,7 @@ class CategorySumGraph extends HookConsumerWidget {
               AnimatedContainer(
                 height: barFrameHeight,
                 width: isBuilt.value
-                    ? barWidth * screenHorizontalMagnification
+                    ? barWidth
                     : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -85,7 +76,7 @@ class CategorySumGraph extends HookConsumerWidget {
               // バーの背景枠
               Container(
                 height: barFrameHeight,
-                width: barFrameWidth * screenHorizontalMagnification,
+                width: barFrameMaxWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: MyColors.transparent,
@@ -95,7 +86,7 @@ class CategorySumGraph extends HookConsumerWidget {
               AnimatedContainer(
                 height: barFrameHeight,
                 width: isBuilt.value
-                    ? barWidth * screenHorizontalMagnification
+                    ? barWidth
                     : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -112,20 +103,11 @@ class CategorySumGraph extends HookConsumerWidget {
         return Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 3),
           child: Stack(children: [
-            // バーの背景枠
-            Container(
-              height: barFrameHeight,
-              width: barFrameWidth * screenHorizontalMagnification,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: MyColors.secondarySystemfill,
-              ),
-            ),
             // バーの中身
             AnimatedContainer(
               height: barFrameHeight,
               width: isBuilt.value
-                  ? barFrameWidth * screenHorizontalMagnification
+                  ? barFrameMaxWidth
                   : 0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -136,24 +118,22 @@ class CategorySumGraph extends HookConsumerWidget {
             ),
             // バーの超過分マスク
             SizedBox(
-              width: barFrameWidth * screenHorizontalMagnification,
+              width: barFrameMaxWidth,
               child: AnimatedOpacity(
                 opacity: isBuilt.value ? 1.0 : 0.0,
                 curve: Curves.easeInExpo,
                 duration: const Duration(milliseconds: 700),
-                child: Container(
-                  width: barFrameWidth,
+                child: SizedBox(
+                  width: barFrameMaxWidth,
                   child: ClipRRect(
                       borderRadius: const BorderRadius.horizontal(
                           right: Radius.circular(10)),
                       child: ClipRect(
                         child: Align(
                           alignment: Alignment.centerLeft,
-                          widthFactor:
-                              (barFrameWidth * categoryTile.graphRatio!),
                           child: Image.asset(
                             'assets/images/over_fill.png',
-                            width: 280,
+                            width: barFrameMaxWidth,
                             height: barFrameHeight,
                             fit: BoxFit.cover,
                           ),
