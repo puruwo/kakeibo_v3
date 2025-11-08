@@ -11,16 +11,17 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(resolvedAllCategoryCardModelProvider).when(
           data: (allCategoryCardEntity) {
-
-            return
-                allCategoryCardEntity.cardStatusType !=
-                        AllCategoryCardStatusType.noData
-                    ? Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-                      child: MnothlyPlanGraph(
+            return allCategoryCardEntity.cardStatusType !=
+                    AllCategoryCardStatusType.noData
+                ? Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                    child: LayoutBuilder(
+                      builder: (context, constraints) => MnothlyPlanGraph(
+                          maxGraphWidth: constraints.maxWidth,
                           allCategoryCardEntity: allCategoryCardEntity),
-                    )
-                    : Container();
+                    ),
+                  )
+                : Container();
           },
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => Center(child: Text('$error')),

@@ -21,8 +21,6 @@ class AllCategoryCardModel with _$AllCategoryCardModel {
     required int allFixedCostExpense,
     required int denominator,
     required int realSavings,
-    required int categoryCount,
-    required List<int> categoryIdList,
     required List<String> categoryNameList,
     required List<int> categoryExpenseList,
     required List<String> categoryIconPathList,

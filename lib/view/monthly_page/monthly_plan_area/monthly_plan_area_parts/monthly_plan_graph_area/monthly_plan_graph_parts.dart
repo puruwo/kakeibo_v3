@@ -6,14 +6,18 @@ import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_va
 import 'package:kakeibo/util/screen_size_func.dart';
 
 class MnothlyPlanGraph extends HookConsumerWidget {
-  const MnothlyPlanGraph({super.key, required this.allCategoryCardEntity});
+  const MnothlyPlanGraph(
+      {super.key,
+      required this.maxGraphWidth,
+      required this.allCategoryCardEntity});
 
+  final double maxGraphWidth;
   final AllCategoryCardModel allCategoryCardEntity;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<double> barWidthList =
-        List.generate(allCategoryCardEntity.categoryCount, (index) => 0.0);
+    final List<double> barWidthList = List.generate(
+        allCategoryCardEntity.categoryExpenseList.length, (index) => 0.0);
 
     // ビルドが完了したかどうか
     final isBuilt = useState(false);
@@ -68,7 +72,8 @@ class MnothlyPlanGraph extends HookConsumerWidget {
               minWidth: 0,
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
-              ...List.generate(allCategoryCardEntity.categoryCount, (index) {
+              ...List.generate(allCategoryCardEntity.categoryExpenseList.length,
+                  (index) {
                 return AnimatedContainer(
                   height: 10,
                   width: isBuilt.value
