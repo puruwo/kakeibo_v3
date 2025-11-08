@@ -23,6 +23,7 @@ class AllCategoryCardModel with _$AllCategoryCardModel {
     required int realSavings,
     required List<String> categoryNameList,
     required List<int> categoryExpenseList,
+    required List<double> categoryExpenseRatioList,
     required List<String> categoryIconPathList,
     required List<String> categoryColorList,
   }) = _AllCategoryCardModel;

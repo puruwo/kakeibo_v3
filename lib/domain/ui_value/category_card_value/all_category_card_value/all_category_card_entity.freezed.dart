@@ -26,6 +26,8 @@ mixin _$AllCategoryCardModel {
   int get realSavings => throw _privateConstructorUsedError;
   List<String> get categoryNameList => throw _privateConstructorUsedError;
   List<int> get categoryExpenseList => throw _privateConstructorUsedError;
+  List<double> get categoryExpenseRatioList =>
+      throw _privateConstructorUsedError;
   List<String> get categoryIconPathList => throw _privateConstructorUsedError;
   List<String> get categoryColorList => throw _privateConstructorUsedError;
 
@@ -50,6 +52,7 @@ abstract class $AllCategoryCardModelCopyWith<$Res> {
       int realSavings,
       List<String> categoryNameList,
       List<int> categoryExpenseList,
+      List<double> categoryExpenseRatioList,
       List<String> categoryIconPathList,
       List<String> categoryColorList});
 }
@@ -77,6 +80,7 @@ class _$AllCategoryCardModelCopyWithImpl<$Res,
     Object? realSavings = null,
     Object? categoryNameList = null,
     Object? categoryExpenseList = null,
+    Object? categoryExpenseRatioList = null,
     Object? categoryIconPathList = null,
     Object? categoryColorList = null,
   }) {
@@ -117,6 +121,10 @@ class _$AllCategoryCardModelCopyWithImpl<$Res,
           ? _value.categoryExpenseList
           : categoryExpenseList // ignore: cast_nullable_to_non_nullable
               as List<int>,
+      categoryExpenseRatioList: null == categoryExpenseRatioList
+          ? _value.categoryExpenseRatioList
+          : categoryExpenseRatioList // ignore: cast_nullable_to_non_nullable
+              as List<double>,
       categoryIconPathList: null == categoryIconPathList
           ? _value.categoryIconPathList
           : categoryIconPathList // ignore: cast_nullable_to_non_nullable
@@ -147,6 +155,7 @@ abstract class _$$AllCategoryCardModelImplCopyWith<$Res>
       int realSavings,
       List<String> categoryNameList,
       List<int> categoryExpenseList,
+      List<double> categoryExpenseRatioList,
       List<String> categoryIconPathList,
       List<String> categoryColorList});
 }
@@ -171,6 +180,7 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
     Object? realSavings = null,
     Object? categoryNameList = null,
     Object? categoryExpenseList = null,
+    Object? categoryExpenseRatioList = null,
     Object? categoryIconPathList = null,
     Object? categoryColorList = null,
   }) {
@@ -211,6 +221,10 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
           ? _value._categoryExpenseList
           : categoryExpenseList // ignore: cast_nullable_to_non_nullable
               as List<int>,
+      categoryExpenseRatioList: null == categoryExpenseRatioList
+          ? _value._categoryExpenseRatioList
+          : categoryExpenseRatioList // ignore: cast_nullable_to_non_nullable
+              as List<double>,
       categoryIconPathList: null == categoryIconPathList
           ? _value._categoryIconPathList
           : categoryIconPathList // ignore: cast_nullable_to_non_nullable
@@ -236,10 +250,12 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
       required this.realSavings,
       required final List<String> categoryNameList,
       required final List<int> categoryExpenseList,
+      required final List<double> categoryExpenseRatioList,
       required final List<String> categoryIconPathList,
       required final List<String> categoryColorList})
       : _categoryNameList = categoryNameList,
         _categoryExpenseList = categoryExpenseList,
+        _categoryExpenseRatioList = categoryExpenseRatioList,
         _categoryIconPathList = categoryIconPathList,
         _categoryColorList = categoryColorList;
 
@@ -275,6 +291,15 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
     return EqualUnmodifiableListView(_categoryExpenseList);
   }
 
+  final List<double> _categoryExpenseRatioList;
+  @override
+  List<double> get categoryExpenseRatioList {
+    if (_categoryExpenseRatioList is EqualUnmodifiableListView)
+      return _categoryExpenseRatioList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_categoryExpenseRatioList);
+  }
+
   final List<String> _categoryIconPathList;
   @override
   List<String> get categoryIconPathList {
@@ -295,7 +320,7 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
 
   @override
   String toString() {
-    return 'AllCategoryCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, allFixedCostExpense: $allFixedCostExpense, denominator: $denominator, realSavings: $realSavings, categoryNameList: $categoryNameList, categoryExpenseList: $categoryExpenseList, categoryIconPathList: $categoryIconPathList, categoryColorList: $categoryColorList)';
+    return 'AllCategoryCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, allFixedCostExpense: $allFixedCostExpense, denominator: $denominator, realSavings: $realSavings, categoryNameList: $categoryNameList, categoryExpenseList: $categoryExpenseList, categoryExpenseRatioList: $categoryExpenseRatioList, categoryIconPathList: $categoryIconPathList, categoryColorList: $categoryColorList)';
   }
 
   @override
@@ -322,6 +347,8 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
                 .equals(other._categoryNameList, _categoryNameList) &&
             const DeepCollectionEquality()
                 .equals(other._categoryExpenseList, _categoryExpenseList) &&
+            const DeepCollectionEquality().equals(
+                other._categoryExpenseRatioList, _categoryExpenseRatioList) &&
             const DeepCollectionEquality()
                 .equals(other._categoryIconPathList, _categoryIconPathList) &&
             const DeepCollectionEquality()
@@ -340,6 +367,7 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
       realSavings,
       const DeepCollectionEquality().hash(_categoryNameList),
       const DeepCollectionEquality().hash(_categoryExpenseList),
+      const DeepCollectionEquality().hash(_categoryExpenseRatioList),
       const DeepCollectionEquality().hash(_categoryIconPathList),
       const DeepCollectionEquality().hash(_categoryColorList));
 
@@ -363,6 +391,7 @@ abstract class _AllCategoryCardModel implements AllCategoryCardModel {
           required final int realSavings,
           required final List<String> categoryNameList,
           required final List<int> categoryExpenseList,
+          required final List<double> categoryExpenseRatioList,
           required final List<String> categoryIconPathList,
           required final List<String> categoryColorList}) =
       _$AllCategoryCardModelImpl;
@@ -385,6 +414,8 @@ abstract class _AllCategoryCardModel implements AllCategoryCardModel {
   List<String> get categoryNameList;
   @override
   List<int> get categoryExpenseList;
+  @override
+  List<double> get categoryExpenseRatioList;
   @override
   List<String> get categoryIconPathList;
   @override

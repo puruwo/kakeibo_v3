@@ -170,6 +170,13 @@ class MonthlyAllCategoryTileUsecaseNotifier
         ? allCategoryBudget
         : allCategoryIncome;
 
+    // 支出棒グラフのカテゴリーごとの比率を格納するリスト
+    final List<double> categoryExpenseRatioList = [];
+    for (int expense in categoryExpenseList) {
+      final ratio = denominator != 0 ? expense / denominator : 0.0;
+      categoryExpenseRatioList.add(ratio);
+    }
+
     return AllCategoryCardModel(
       cardStatusType: cardStatusType,
       allCategoryTotalExpense: allCategoryTotalExpense,
@@ -181,6 +188,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
       denominator: denominator,
       categoryNameList: categoryNameList,
       categoryExpenseList: categoryExpenseList,
+      categoryExpenseRatioList: categoryExpenseRatioList,
       categoryIconPathList: categoryIconPathList,
       categoryColorList: categoryColorList,
     );
