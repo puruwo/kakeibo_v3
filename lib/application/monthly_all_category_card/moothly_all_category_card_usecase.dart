@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
@@ -76,7 +77,10 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // 大カテゴリーIDを0にすることで、ボーナスを除くカテゴリーの支出を取得する
     final allCategoryExpense = await _expenseRepositoryProvider
         .fetchTotalExpenseByPeriodWithBigCategory(
-            incomeSourceBigCategory: 0, fromDate: fromDate, toDate: toDate);
+            incomeSourceBigCategory:
+                IncomeBigCategoryConstants.incomeSourceIdSalary,
+            fromDate: fromDate,
+            toDate: toDate);
 
     // カテゴリータイルのリストを取得する
     final categoryEntityList =
@@ -97,14 +101,35 @@ class MonthlyAllCategoryTileUsecaseNotifier
         categoryEntityList.map((e) => e.categoryColor).toList();
 
     // 収入を取得
-    final allCategoryIncome = await _incomeRepositoryProvider
-        .calcurateSumWithPeriod(period: dateScope.monthPeriod);
+    // ボーナス除くカテゴリーの収入のみ取得する
+    final allCategoryIncome =
+        await _incomeRepositoryProvider.calcurateSumWithBigCategoryAndPeriod(
+            period: dateScope.monthPeriod,
+            bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
 
-    final AllCategoryCardStatusType cardStatusType = allCategoryBudget > 0
-        ? AllCategoryCardStatusType.hasBudget
-        : allCategoryIncome > 0
-            ? AllCategoryCardStatusType.hasIncome
-            : AllCategoryCardStatusType.noData;
+    // 固定費も一般支出も全て足した支出
+    final allCategoryTotalExpense = allCategoryExpense +
+        confirmedFixedCostExpenseTotal +
+        unconfirmedFixedCostEstimatedTotal;
+
+    AllCategoryCardStatusType cardStatusType;
+    if (allCategoryTotalExpense == 0 &&
+        allCategoryIncome == 0 &&
+        allCategoryBudget == 0) {
+      cardStatusType = AllCategoryCardStatusType.noData;
+    } else if (allCategoryIncome == 0 && allCategoryBudget == 0) {
+      // 支出だけある
+      cardStatusType = AllCategoryCardStatusType.hasOnlyExpense;
+    } else if (allCategoryIncome != 0 && allCategoryBudget == 0) {
+      // 収入だけある
+      cardStatusType = AllCategoryCardStatusType.hasIncome;
+    } else if (allCategoryIncome == 0 && allCategoryBudget != 0) {
+      // 予算だけある
+      cardStatusType = AllCategoryCardStatusType.hasBudget;
+    } else {
+      // 収入と予算の両方がある
+      cardStatusType = AllCategoryCardStatusType.hasBudgetAndIncome;
+    }
 
     final denominator = cardStatusType == AllCategoryCardStatusType.hasBudget
         ? allCategoryBudget
@@ -112,14 +137,12 @@ class MonthlyAllCategoryTileUsecaseNotifier
 
     return AllCategoryCardModel(
       cardStatusType: cardStatusType,
-      allCategoryTotalExpense: allCategoryExpense +
-          confirmedFixedCostExpenseTotal +
-          unconfirmedFixedCostEstimatedTotal,
+      allCategoryTotalExpense: allCategoryTotalExpense,
       allCategoryTotalBudget: allCategoryBudget,
       allCategoryTotalIncome: allCategoryIncome,
       allFixedCostExpense:
           confirmedFixedCostExpenseTotal + unconfirmedFixedCostEstimatedTotal,
-      realSavings: allCategoryIncome - allCategoryExpense,
+      realSavings: allCategoryIncome - allCategoryTotalExpense,
       denominator: denominator,
       categoryCount: categoryCount,
       categoryIdList: categoryIdList,

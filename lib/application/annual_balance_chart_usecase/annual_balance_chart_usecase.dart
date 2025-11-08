@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/month_value/month_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
@@ -66,7 +67,7 @@ class AnnualBalanceChartUsecaseNotifier
       // ボーナス支出以外の支出を取得
       final expense =
           await _expenseRepository.fetchTotalExpenseByPeriodWithBigCategory(
-              incomeSourceBigCategory: 0,
+              incomeSourceBigCategory: IncomeBigCategoryConstants.incomeSourceIdSalary,
               fromDate: pueryPeriod.startDatetime,
               toDate: pueryPeriod.endDatetime);
 

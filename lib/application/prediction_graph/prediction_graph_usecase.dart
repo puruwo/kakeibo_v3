@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
@@ -88,8 +89,9 @@ class PredictionGraphUsecase {
                 : [];
 
     // 収入を取得
-    final income =
-        await _incomeRepo.calcurateSumWithPeriod(period: dateScope.monthPeriod);
+    final income = await _incomeRepo.calcurateSumWithBigCategoryAndPeriod(
+        period: dateScope.monthPeriod,
+        bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
 
     // 予算を取得
     final budget =
@@ -289,7 +291,8 @@ class PredictionGraphUsecase {
 
   /// ラベル表示判定（重なりを考慮）
   /// グラフの最大値に対する収入と予算の位置関係から、ラベルが重なるかを判定
-  _LabelDisplayDecision _decideLabelDisplay(int income, int budget, double maxValue) {
+  _LabelDisplayDecision _decideLabelDisplay(
+      int income, int budget, double maxValue) {
     // どちらかが0の場合は、値がある方のみ表示
     if (income == 0 && budget == 0) {
       return _LabelDisplayDecision(

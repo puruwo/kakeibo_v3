@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -40,7 +41,7 @@ class BonusPlanUsecaseNotifier
     // カテゴリーIDを1で指定することで、ボーナス分の支出の合計を取得する
     final yearlyBonusExpense =
         await _expenseRepository.fetchTotalExpenseByPeriodWithBigCategory(
-            incomeSourceBigCategory: 1,
+            incomeSourceBigCategory: IncomeBigCategoryConstants.incomeSourceIdBonus,
             fromDate: selectedYearPeriod.startDatetime,
             toDate: selectedYearPeriod.endDatetime);
 

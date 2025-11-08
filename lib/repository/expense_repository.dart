@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
@@ -162,6 +163,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         SUM(${SqfExpense.price}) AS sum_price_daily
       FROM ${SqfExpense.tableName}
       WHERE ${SqfExpense.date} = ${DateFormat('yyyyMMdd').format(date)}
+      AND ${SqfExpense.incomeSourceBigCategory} = ${IncomeBigCategoryConstants.incomeSourceIdSalary}
       GROUP BY ${SqfExpense.date}
       ORDER BY ${SqfExpense.date} ASC
     ''';
