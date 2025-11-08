@@ -1,14 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
-import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
-import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 
 class CategorySumText extends HookConsumerWidget {
@@ -18,118 +14,31 @@ class CategorySumText extends HookConsumerWidget {
   int get budget => categoryTile.monthlyBudget;
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity =>
       categoryTile.monthlyExpenseByCategoryEntity;
-  List<SmallCategoryTileEntity> get smallCategoryEntity =>
-      categoryTile.smallCategoryList;
-
-  final double barFrameWidth = 280.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 支出合計のLabel
-    final String paymentSumLabel = formattedPriceGetter(
-        monthlyExpenseByCategoryEntity.totalExpenseByBigCategory);
-
-    // 予算のLabel
-    final String budgetLabel = formattedPriceGetter(budget);
-
     return // バー下ラベル
-        Container(
-      width: barFrameWidth * context.screenHorizontalMagnification,
-      // 最小の制約を設定することで子widgetのRowが最大まで拡大する
-      constraints: BoxConstraints(
-        minWidth: barFrameWidth * context.screenHorizontalMagnification,
-        minHeight: 30,
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(right: 2.0),
-            child: CategoryHandler().sisytIconGetterFromBigCategoryKey(
-                monthlyExpenseByCategoryEntity.id,
-                height: 25,
-                width: 25),
+        Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(right: 2.0),
+          child: CategoryHandler().sisytIconGetterFromBigCategoryKey(
+              monthlyExpenseByCategoryEntity.id,
+              height: 25,
+              width: 25),
+        ),
+        // カテゴリー名
+        Text(
+          monthlyExpenseByCategoryEntity.bigCategoryName,
+          style: GoogleFonts.notoSans(
+            fontSize: 16,
+            color: MyColors.white,
+            fontWeight: FontWeight.w300,
           ),
-          // カテゴリー名
-          Expanded(
-            child: Text(
-              monthlyExpenseByCategoryEntity.bigCategoryName,
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                color: MyColors.white,
-                fontWeight: FontWeight.w300,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              // カテゴリー総支出
-              RichText(
-                  textAlign: TextAlign.end,
-                  overflow: TextOverflow.ellipsis,
-                  text: TextSpan(children: [
-                    TextSpan(
-                      text: paymentSumLabel,
-                      style: GoogleFonts.notoSans(
-                          fontSize: 18,
-                          color: MyColors.white,
-                          fontWeight: FontWeight.w400),
-                    ),
-                    TextSpan(
-                      text: ' 円',
-                      style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          color: MyColors.white,
-                          fontWeight: FontWeight.w400),
-                    ),
-                  ])),
-
-              // 予算
-              categoryTile.graphType == GraphType.hasBudget ||
-                      categoryTile.graphType == GraphType.hasBudgetButOver
-                  ? RichText(
-                      textAlign: TextAlign.end,
-                      overflow: TextOverflow.ellipsis,
-                      text: TextSpan(children: [
-                        TextSpan(
-                          text: ' /',
-                          style: GoogleFonts.notoSans(
-                              fontSize: 14,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        TextSpan(
-                          text: '予算 ',
-                          style: GoogleFonts.notoSans(
-                              fontSize: 13,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        // カテゴリー予算
-                        TextSpan(
-                          text: budgetLabel,
-                          style: GoogleFonts.notoSans(
-                              fontSize: 14,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w400),
-                        ),
-                        TextSpan(
-                          text: ' 円',
-                          style: GoogleFonts.notoSans(
-                            fontSize: 11,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ]))
-                  : Container(),
-            ],
-          )
-        ],
-      ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
@@ -10,8 +9,10 @@ import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 
 class CategorySumGraph extends HookConsumerWidget {
-  const CategorySumGraph({required this.categoryTile, super.key});
+  const CategorySumGraph(
+      {required this.barFrameWidth, required this.categoryTile, super.key});
   final CategoryCardEntity categoryTile;
+  final double barFrameWidth;
 
   int get budget => categoryTile.monthlyBudget;
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity =>
@@ -19,7 +20,7 @@ class CategorySumGraph extends HookConsumerWidget {
   List<SmallCategoryTileEntity> get smallCategoryEntity =>
       categoryTile.smallCategoryList;
 
-  final double barFrameWidth = 280.0;
+  final double barFrameHeight = 7.0;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,15 +47,13 @@ class CategorySumGraph extends HookConsumerWidget {
     switch (categoryTile.graphType) {
       // 予算あり
       case GraphType.hasBudget:
-      // 他のカードも全て予算なしだが、支出はある
-      case GraphType.allNoBudget:
         return Padding(
           padding: const EdgeInsets.only(top: 8, bottom: 3),
           child: Stack(
             children: [
               // バーの背景枠
               Container(
-                height: 10,
+                height: barFrameHeight,
                 width: barFrameWidth * screenHorizontalMagnification,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -63,7 +62,38 @@ class CategorySumGraph extends HookConsumerWidget {
               ),
               // バーの中身
               AnimatedContainer(
-                height: 10,
+                height: barFrameHeight,
+                width: isBuilt.value
+                    ? barWidth * screenHorizontalMagnification
+                    : 0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: MyColors().getColorFromHex(
+                      monthlyExpenseByCategoryEntity.categoryColor),
+                ),
+                duration: const Duration(milliseconds: 500),
+              ),
+            ],
+          ),
+        );
+      // 他のカードも全て予算なしだが、支出はある
+      case GraphType.allNoBudget:
+        return Padding(
+          padding: const EdgeInsets.only(top: 8, bottom: 3),
+          child: Stack(
+            children: [
+              // バーの背景枠
+              Container(
+                height: barFrameHeight,
+                width: barFrameWidth * screenHorizontalMagnification,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: MyColors.transparent,
+                ),
+              ),
+              // バーの中身
+              AnimatedContainer(
+                height: barFrameHeight,
                 width: isBuilt.value
                     ? barWidth * screenHorizontalMagnification
                     : 0,
@@ -84,7 +114,7 @@ class CategorySumGraph extends HookConsumerWidget {
           child: Stack(children: [
             // バーの背景枠
             Container(
-              height: 10,
+              height: barFrameHeight,
               width: barFrameWidth * screenHorizontalMagnification,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
@@ -93,7 +123,7 @@ class CategorySumGraph extends HookConsumerWidget {
             ),
             // バーの中身
             AnimatedContainer(
-              height: 10,
+              height: barFrameHeight,
               width: isBuilt.value
                   ? barFrameWidth * screenHorizontalMagnification
                   : 0,
@@ -113,7 +143,6 @@ class CategorySumGraph extends HookConsumerWidget {
                 duration: const Duration(milliseconds: 700),
                 child: Container(
                   width: barFrameWidth,
-                  // alignment: Alignment.centerRight,
                   child: ClipRRect(
                       borderRadius: const BorderRadius.horizontal(
                           right: Radius.circular(10)),
@@ -125,7 +154,7 @@ class CategorySumGraph extends HookConsumerWidget {
                           child: Image.asset(
                             'assets/images/over_fill.png',
                             width: 280,
-                            height: 10,
+                            height: barFrameHeight,
                             fit: BoxFit.cover,
                           ),
                         ),
