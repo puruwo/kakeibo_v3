@@ -21,6 +21,14 @@ class BudgetCategoryTile extends ConsumerStatefulWidget {
 }
 
 class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     // リスト内テキストボックスの拡大部を計算
@@ -100,92 +108,113 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
 
                     // 金額入力フィールド
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          width: 100,
-                          child: state == TabState.budgetEdditing
-                              ? TextField(
-                                  controller: controller,
-                                  // テキストフィールドのプロパティ
-                                  textAlign: TextAlign.right,
-                                  textAlignVertical: TextAlignVertical.top,
-                                  style: MyFonts.textField,
-                                  inputFormatters: [
-                                    // カンマのフォーマット
-                                    NumberTextInputFormatter()
-                                  ],
+                    GestureDetector(
+                      // readOnly時のタップで編集モードに切り替え
+                      onTap: () {
+                        if (state != TabState.budgetEdditing) {
+                          ref
+                              .read(footerStateControllerNotifierProvider
+                                  .notifier)
+                              .updateState(TabState.budgetEdditing);
+                          _focusNode.requestFocus();
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            child: TextField(
+                              controller: controller,
+                              focusNode: _focusNode,
+                              readOnly: state != TabState.budgetEdditing,
+                              // テキストフィールドのプロパティ
+                              textAlign: TextAlign.right,
+                              textAlignVertical: TextAlignVertical.top,
+                              style: MyFonts.textField,
+                              inputFormatters: [
+                                // カンマのフォーマット
+                                NumberTextInputFormatter()
+                              ],
 
-                                  // デコレーション
-                                  decoration: InputDecoration(
-                                    // なんかわからんおまじない
-                                    isDense: true,
+                              // TextFieldのタップイベント
+                              // 親のGestureDetectorでもonTap制御しているが、テキストフィールドは別途制御を記載しないと反応しない
+                              onTap: () {
+                                if (state != TabState.budgetEdditing) {
+                                  ref
+                                      .read(
+                                          footerStateControllerNotifierProvider
+                                              .notifier)
+                                      .updateState(TabState.budgetEdditing);
+                                  _focusNode.requestFocus();
+                                }
+                              },
 
-                                    // 背景の塗りつぶし
-                                    filled: false,
+                              // デコレーション
+                              decoration: InputDecoration(
+                                // なんかわからんおまじない
+                                isDense: true,
 
-                                    // ヒントテキスト
-                                    hintText: "金額を入力",
-                                    hintStyle: const TextStyle(
-                                      fontSize: 16,
-                                    ),
+                                // 背景の塗りつぶし
+                                filled: false,
 
-                                    // テキストの余白
-                                    contentPadding: const EdgeInsets.only(
-                                        top: 16, bottom: 0, left: 0, right: 0),
-
-                                    // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
-                                    // 何もしていない時の境界線
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(
-                                        color: MyColors.jet.withOpacity(0.0),
-                                      ),
-                                    ),
-                                    // 入力時の境界線
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                      borderSide: BorderSide(
-                                        color: MyColors.jet.withOpacity(0.0),
-                                      ),
-                                    ),
-                                  ),
-                                  keyboardType: TextInputType.number,
-
-                                  // 編集されたら編集フラグをtrueに
-                                  onChanged: (value) {
-                                    ref
-                                        .read(isPriceEditedNotifierProvider
-                                            .notifier)
-                                        .updateState(true);
-                                  },
-                                  // //領域外をタップでproviderを更新する
-                                  onTapOutside: (event) {
-                                    //キーボードを閉じる
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                  onEditingComplete: () {
-                                    //キーボードを閉じる
-                                    FocusScope.of(context).unfocus();
-                                  },
-                                )
-                              : Text(
-                                  controller.text, // テキストフィールドのプロパティ
-                                  textAlign: TextAlign.right,
-                                  style: MyFonts.textField,
+                                // ヒントテキスト
+                                hintText: "金額を入力",
+                                hintStyle: const TextStyle(
+                                  fontSize: 16,
                                 ),
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(top: 12.0, bottom: 8.0),
-                          child: Text(
-                            ' 円',
-                            style: MyFonts.yenText,
+
+                                // テキストの余白
+                                contentPadding: const EdgeInsets.only(
+                                    top: 16, bottom: 0, left: 0, right: 0),
+
+                                // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
+                                // 何もしていない時の境界線
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: MyColors.jet.withOpacity(0.0),
+                                  ),
+                                ),
+                                // 入力時の境界線
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide(
+                                    color: MyColors.jet.withOpacity(0.0),
+                                  ),
+                                ),
+                              ),
+                              keyboardType: TextInputType.number,
+
+                              // 編集されたら編集フラグをtrueに
+                              onChanged: (value) {
+                                ref
+                                    .read(
+                                        isPriceEditedNotifierProvider.notifier)
+                                    .updateState(true);
+                              },
+                              // //領域外をタップでproviderを更新する
+                              onTapOutside: (event) {
+                                //キーボードを閉じる
+                                FocusScope.of(context).unfocus();
+                              },
+                              onEditingComplete: () {
+                                //キーボードを閉じる
+                                FocusScope.of(context).unfocus();
+                              },
+                            ),
                           ),
-                        )
-                      ],
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 12.0, bottom: 8.0),
+                            child: Text(
+                              ' 円',
+                              style: MyFonts.yenText,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ],
                 ),
