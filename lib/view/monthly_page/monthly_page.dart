@@ -1,8 +1,10 @@
 /// Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
@@ -53,7 +55,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 //左矢印ボタン、押すと前の月に移動
                 const PreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final activeDt = ref.watch(analyzePageSelectedDatetimeNotifierProvider);
+                  final activeDt =
+                      ref.watch(analyzePageSelectedDatetimeNotifierProvider);
                   final label = yyyyMMtoMMGetter(activeDt);
                   return Text(
                     label,
@@ -131,7 +134,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
               }),
 
               const SizedBox(
-                height: 8,
+                height: 12,
               ),
 
               SizedBox(
@@ -144,18 +147,57 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       ' 今月の計画',
                       style: MyFonts.thirdPageSubheading,
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const MonthlyPlanHomePage(),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // 予算ボタン
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6.0),
+                          child: SubButton(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MonthlyPlanHomePage(initialTab: 0),
+                                ),
+                              );
+                            },
+                            icon: Padding(
+                              padding: const EdgeInsets.symmetric(horizontal:4.0),
+                              child: SvgPicture.asset(
+                                'assets/images/ui_icon_edit.svg',
+                                colorFilter: const ColorFilter.mode(
+                                    MyColors.themeColor, BlendMode.srcIn),
+                                width: 15,
+                                height: 15,
+                              ),
                             ),
-                          );
-                        },
-                        child: const Text(
-                          '編集する',
-                          style: MyFonts.thirdPageTextButton,
-                        )),
+                            label: '予算',
+                          ),
+                        ),
+                        const SizedBox(width: 6),
+                        // 収入ボタン
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 6.0),
+                          child: SubButton(
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const MonthlyPlanHomePage(initialTab: 1),
+                                ),
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.add,
+                              size: 18,
+                              color: MyColors.themeColor,
+                            ),
+                            label: '収入',
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -219,10 +261,57 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 ),
               ),
 
-              const MonthlyFixedCostSummaryArea(),  
+              const MonthlyFixedCostSummaryArea(),
 
               const SizedBox(
                 height: 32,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class SubButton extends StatelessWidget {
+  const SubButton({
+    super.key,
+    required this.onTap,
+    required this.icon,
+    required this.label,
+  });
+
+  final void Function() onTap;
+  final Widget icon;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppInkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        height: 30,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: MyColors.tirtiarySystemfill,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 14.0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              icon,
+              const SizedBox(width: 6),
+              Text(
+                label,
+                style: MyFonts.thirdPageTextButton,
+                textHeightBehavior: const TextHeightBehavior(
+                  applyHeightToFirstAscent: true,
+                  applyHeightToLastDescent: true,
+                ),
               ),
             ],
           ),

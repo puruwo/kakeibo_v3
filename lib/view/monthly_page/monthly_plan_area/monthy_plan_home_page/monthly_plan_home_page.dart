@@ -12,13 +12,44 @@ import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_pag
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
 
 class MonthlyPlanHomePage extends ConsumerStatefulWidget {
-  const MonthlyPlanHomePage({super.key});
+  const MonthlyPlanHomePage({super.key, this.initialTab = 0});
+
+  final int initialTab;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MonthlyPlanHomePage();
 }
 
-class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage> {
+class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialTab,
+    );
+
+    // initialTabに応じてフッターの状態を初期化
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final notifier = ref.read(footerStateControllerNotifierProvider.notifier);
+      if (widget.initialTab == 1) {
+        notifier.updateState(TabState.income);
+      } else {
+        notifier.updateState(TabState.budgetNormal);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -93,9 +124,7 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage> {
                               ),
                             ],
                           ),
-                          child: DefaultTabController(
-                            length: 2,
-                            child: Column(
+                          child: Column(
                               children: [
                                 // SingleChildScrollViewの範囲がドラッグできる範囲
                                 // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
@@ -106,6 +135,7 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage> {
                                     children: [
                                       // タブ
                                       TabBar(
+                                        controller: _tabController,
                                         indicatorSize: TabBarIndicatorSize.tab,
                                         indicatorColor: MyColors.themeColor,
                                         unselectedLabelStyle:
@@ -153,9 +183,10 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage> {
 
                                 const Divider(height: 1),
 
-                                const Expanded(
+                                Expanded(
                                   child: TabBarView(
-                                    children: [
+                                    controller: _tabController,
+                                    children: const [
                                       // 予算のエリア
                                       BudgetCategoryArea(),
                                       // 収入のエリア
@@ -176,9 +207,8 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage> {
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
+                      ],
+                    );
                 }),
           ],
         ),
