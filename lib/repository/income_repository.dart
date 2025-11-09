@@ -129,24 +129,24 @@ class ImplementsIncomeRepository implements IncomeRepository {
     /*
     SELECT income.*
     FROM income
-    INNER JOIN income_small_category 
+    INNER JOIN income_small_category
       ON income.income_small_category_id = income_small_category._id
-    INNER JOIN income_big_category 
+    INNER JOIN income_big_category
       ON income_small_category.big_category_key = income_big_category._id
     WHERE income_big_category._id = 1
     	AND '20250425' <= income.date  AND income.date <= '20250524';
     */
 
     final sql = '''
-      SELECT 
+      SELECT
         SUM(a.${SqfIncome.price}) AS totalPrice
       FROM ${SqfIncome.tableName} a
       INNER JOIN ${SqfIncomeSmallCategory.tableName} b
       ON a.${SqfIncome.incomeSmallCategoryId} = b.${SqfIncomeSmallCategory.id}
       INNER JOIN ${SqfIncomeBigCategory.tableName} c
       ON b.${SqfIncomeSmallCategory.bigCategoryKey} = c.${SqfIncomeBigCategory.id}
-      WHERE c.${SqfIncomeBigCategory.id} = $bigCategoryId 
-      AND a.${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)} 
+      WHERE c.${SqfIncomeBigCategory.id} = $bigCategoryId
+      AND a.${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       ;
     ''';
 
@@ -154,6 +154,34 @@ class ImplementsIncomeRepository implements IncomeRepository {
       final result = await db.queryFirstIntValue(sql);
       // logger.i(
       //     '====SQLが実行されました====\n ImplementsIncomeRepository fetchWithCategoryAndPeriod(MonthPeriodValue period,int categoryId)\n$sql');
+
+      return result ?? 0; // nullの場合は0を返す
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
+  // 小カテゴリーと期間を指定して収入の合計を取得する
+  @override
+  Future<int> calcurateSumWithSmallCategoryAndPeriod({
+    required PeriodValue period,
+    required int smallCategoryId,
+  }) async {
+    final sql = '''
+      SELECT
+        SUM(${SqfIncome.price}) AS totalPrice
+      FROM ${SqfIncome.tableName}
+      WHERE ${SqfIncome.incomeSmallCategoryId} = $smallCategoryId
+      AND ${SqfIncome.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)}
+      AND ${SqfIncome.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      ;
+    ''';
+
+    try {
+      final result = await db.queryFirstIntValue(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsIncomeRepository calcurateSumWithSmallCategoryAndPeriod(PeriodValue period,int smallCategoryId)\n$sql');
 
       return result ?? 0; // nullの場合は0を返す
     } catch (e) {

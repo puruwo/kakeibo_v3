@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 
-class MnothlyPlanGraph extends HookConsumerWidget {
-  const MnothlyPlanGraph(
+class MonthlyIncomeGraph extends HookConsumerWidget {
+  const MonthlyIncomeGraph(
       {super.key,
       required this.maxGraphWidth,
       required this.allCategoryCardEntity});
@@ -25,17 +25,6 @@ class MnothlyPlanGraph extends HookConsumerWidget {
 
     return
         // バーグラフ
-        Stack(
-      children: [
-        // バーの背景枠
-        Container(
-          height: 10,
-          width: maxGraphWidth * allCategoryCardEntity.totalBadgetRatio,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            color: MyColors.secondarySystemfill,
-          ),
-        ),
         ClipRRect(
           borderRadius: BorderRadius.circular(10),
           child: Container(
@@ -44,22 +33,20 @@ class MnothlyPlanGraph extends HookConsumerWidget {
             ),
             child: Row(mainAxisSize: MainAxisSize.min, children: [
               ...List.generate(
-                  allCategoryCardEntity.expenseCategoryNameList.length, (i) {
+                  allCategoryCardEntity.incomeCategoryNameList.length, (i) {
                 return AnimatedContainer(
                   height: 10,
                   width: isBuilt.value
-                      ? allCategoryCardEntity.expenseCategoryRatioList[i] *
+                      ? allCategoryCardEntity.incomeCategoryRatioList[i] *
                           maxGraphWidth
                       : 0,
                   color: MyColors().getColorFromHex(
-                      allCategoryCardEntity.expenseCategoryColorList[i]),
+                      allCategoryCardEntity.incomeCategoryColorList[i]),
                   duration: const Duration(milliseconds: 500),
                 );
               }),
             ]),
           ),
-        )
-      ],
-    );
+        );
   }
 }

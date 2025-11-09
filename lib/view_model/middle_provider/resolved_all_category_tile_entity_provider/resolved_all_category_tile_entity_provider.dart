@@ -5,7 +5,7 @@ import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_da
 
 // 選択期間を取得し、Entityを取得する中間プロバイダ
 final resolvedAllCategoryCardModelProvider =
-    FutureProvider<AllCategoryCardModel>((ref) async {
+    FutureProvider<MonthPlanCardModel>((ref) async {
 
   // 選択された日付から集計期間を取得する
   final dateScope = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data));

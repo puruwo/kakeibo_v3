@@ -6,6 +6,7 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
+import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
@@ -13,24 +14,23 @@ import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final monthlyAllCategoryCardNotifierProvider = AsyncNotifierProvider.family<
-    MonthlyAllCategoryTileUsecaseNotifier,
-    AllCategoryCardModel,
-    DateScopeEntity>(
+    MonthlyAllCategoryTileUsecaseNotifier, MonthPlanCardModel, DateScopeEntity>(
   MonthlyAllCategoryTileUsecaseNotifier.new,
 );
 
 class MonthlyAllCategoryTileUsecaseNotifier
-    extends FamilyAsyncNotifier<AllCategoryCardModel, DateScopeEntity> {
+    extends FamilyAsyncNotifier<MonthPlanCardModel, DateScopeEntity> {
   late ExpenseRepository _expenseRepositoryProvider;
   late FixedCostExpenseRepository _fixedCostExpenseRepositoryProvider;
   late FixedCostRepository _fixedCostRepositoryProvider;
   late FixedCostCategoryRepository _fixedCostCategoryRepositoryProvider;
   late BudgetRepository _budgetRepositoryProvider;
   late IncomeRepository _incomeRepositoryProvider;
+  late IncomeSmallCategoryRepository _incomeSmallCategoryRepositoryProvider;
   late CategoryAccountingRepository _categoryAccountingRepositoryProvider;
 
   @override
-  Future<AllCategoryCardModel> build(DateScopeEntity dateScope) async {
+  Future<MonthPlanCardModel> build(DateScopeEntity dateScope) async {
     // 初回生成時
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
@@ -43,6 +43,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
         ref.read(fixedCostCategoryRepositoryProvider);
     _budgetRepositoryProvider = ref.read(budgetRepositoryProvider);
     _incomeRepositoryProvider = ref.read(incomeRepositoryProvider);
+    _incomeSmallCategoryRepositoryProvider =
+        ref.read(incomeSmallCategoryRepositoryProvider);
     _categoryAccountingRepositoryProvider =
         ref.read(categoryAccountingRepositoryProvider);
 
@@ -50,15 +52,10 @@ class MonthlyAllCategoryTileUsecaseNotifier
   }
 
   // 前カテゴリー合計のタイルデータを取得する
-  Future<AllCategoryCardModel> fetch(
-      {required DateScopeEntity dateScope}) async {
+  Future<MonthPlanCardModel> fetch({required DateScopeEntity dateScope}) async {
     // 選択した月の集計期間から開始日と終了日を取得する
     DateTime fromDate = dateScope.monthPeriod.startDatetime;
     DateTime toDate = dateScope.monthPeriod.endDatetime;
-
-    // 全カテゴリーの予算を取得
-    final allCategoryBudget = await _budgetRepositoryProvider.fetchMonthlyAll(
-        month: dateScope.representativeMonth);
 
     // 支払いがある固定費の合計を取得
     // 支払額未定の固定費は推定額を使用する
@@ -85,6 +82,17 @@ class MonthlyAllCategoryTileUsecaseNotifier
                 IncomeBigCategoryConstants.incomeSourceIdSalary,
             fromDate: fromDate,
             toDate: toDate);
+
+    // 全カテゴリーの予算を取得
+    final allNormalCategoryBudget = await _budgetRepositoryProvider
+        .fetchMonthlyAll(month: dateScope.representativeMonth);
+
+    final totalBudgetIncudeFixedCost = allNormalCategoryBudget +
+        confirmedFixedCostExpenseTotal +
+        unconfirmedFixedCostEstimatedTotal;
+
+    final allBudget =
+        allNormalCategoryBudget != 0 ? totalBudgetIncudeFixedCost : 0;
 
     // ============================================
     // カテゴリータイルのリストを取得する
@@ -147,28 +155,121 @@ class MonthlyAllCategoryTileUsecaseNotifier
         confirmedFixedCostExpenseTotal +
         unconfirmedFixedCostEstimatedTotal;
 
+    // ============================================
+    // 棒グラフのタイプの最大値を決める
+    // ============================================
     AllCategoryCardStatusType cardStatusType;
+    int denominator;
     if (allCategoryTotalExpense == 0 &&
         allCategoryIncome == 0 &&
-        allCategoryBudget == 0) {
+        allBudget == 0) {
       cardStatusType = AllCategoryCardStatusType.noData;
-    } else if (allCategoryIncome == 0 && allCategoryBudget == 0) {
+      denominator = 0;
+    } else if (allCategoryIncome == 0 && allBudget == 0) {
       // 支出だけある
       cardStatusType = AllCategoryCardStatusType.hasOnlyExpense;
-    } else if (allCategoryIncome != 0 && allCategoryBudget == 0) {
+      denominator = allCategoryTotalExpense;
+    } else if (allCategoryIncome != 0 && allBudget == 0) {
       // 収入だけある
-      cardStatusType = AllCategoryCardStatusType.hasIncome;
-    } else if (allCategoryIncome == 0 && allCategoryBudget != 0) {
+      if (allCategoryIncome > allCategoryTotalExpense) {
+        cardStatusType = AllCategoryCardStatusType.hasOnlyIncome;
+        denominator = allCategoryIncome;
+      } else {
+        // 支出が収入をオーバーしている
+        cardStatusType = AllCategoryCardStatusType.hasIncomeAndOver;
+        denominator = allCategoryTotalExpense;
+      }
+    } else if (allCategoryIncome == 0 && allBudget != 0) {
       // 予算だけある
-      cardStatusType = AllCategoryCardStatusType.hasBudget;
+      if (allBudget > allCategoryTotalExpense) {
+        cardStatusType = AllCategoryCardStatusType.hasOnlyBudget;
+        denominator = allBudget;
+      } else {
+        // 支出が予算をオーバーしている
+        cardStatusType = AllCategoryCardStatusType.hasBudgetAndOver;
+        denominator = allCategoryTotalExpense;
+      }
     } else {
       // 収入と予算の両方がある
-      cardStatusType = AllCategoryCardStatusType.hasBudgetAndIncome;
+      if (allBudget < allCategoryIncome &&
+          allCategoryIncome < allCategoryTotalExpense) {
+        // 予算も収入も設定されているが支出がオーバーしている(予算<収入<支出)
+        cardStatusType = AllCategoryCardStatusType.hasBudgetIncomeExpenseOver;
+        denominator = allCategoryTotalExpense;
+      }
+      if (allBudget < allCategoryTotalExpense &&
+          allCategoryTotalExpense < allCategoryIncome) {
+        // 予算も収入も設定されているが支出がオーバーしている(予算<支出<収入)
+        cardStatusType = AllCategoryCardStatusType.hasBudgetExpenseIncomeOver;
+        denominator = allCategoryIncome;
+      }
+      if (allCategoryIncome < allBudget &&
+          allBudget < allCategoryTotalExpense) {
+        // 予算も収入も設定されているが支出がオーバーしている(収入<予算<支出)
+        cardStatusType = AllCategoryCardStatusType.hasIncomeBudgetExpenseOver;
+        denominator = allCategoryTotalExpense;
+      }
+      if (allBudget < allCategoryTotalExpense &&
+          allCategoryTotalExpense < allCategoryIncome) {
+        // 予算も収入も設定されているが支出がオーバーしている(予算<支出<収入)
+        cardStatusType = AllCategoryCardStatusType.hasIncomeBudgetExpenseOver;
+        denominator = allCategoryIncome;
+      } else {
+        // 予算も収入も設定されており、支出は予算と収入をオーバーしていない
+        cardStatusType = AllCategoryCardStatusType.hasBudgetAndIncomeNotOver;
+        if (allBudget < allCategoryIncome) {
+          denominator = allCategoryIncome;
+        } else {
+          denominator = allBudget;
+        }
+      }
     }
 
-    final denominator = cardStatusType == AllCategoryCardStatusType.hasBudget
-        ? allCategoryBudget
-        : allCategoryIncome;
+    // ============================================
+    // 収入カテゴリー別の集計
+    // ============================================
+
+    // 収入小カテゴリー一覧を取得
+    final incomeSmallCategoryList =
+        await _incomeSmallCategoryRepositoryProvider.fetchAll();
+
+    // カテゴリー別の収入を集計
+    List<String> incomeCategoryNameList = [];
+    List<int> incomeCategoryIncomeList = [];
+    List<String> incomeCategoryIconPathList = [];
+    List<String> incomeCategoryColorList = [];
+
+    for (var category in incomeSmallCategoryList) {
+      // ボーナスカテゴリー（bigCategoryKey = 1）は除外
+      if (category.bigCategoryKey ==
+          IncomeBigCategoryConstants.incomeSourceIdBonus) {
+        continue;
+      }
+
+      // カテゴリー別の収入合計をrepository経由で取得
+      final int totalIncome = await _incomeRepositoryProvider
+          .calcurateSumWithSmallCategoryAndPeriod(
+        period: dateScope.monthPeriod,
+        smallCategoryId: category.id,
+      );
+
+      if (totalIncome > 0) {
+        incomeCategoryNameList.add(category.smallCategoryName);
+        incomeCategoryIncomeList.add(totalIncome);
+        // 収入カテゴリーにはアイコンがないので、デフォルトのアイコンパスを設定
+        incomeCategoryIconPathList
+            .add('assets/images/category_icon/income.svg');
+        // 収入カテゴリーにはカラーがないので、デフォルトカラーを設定
+        incomeCategoryColorList.add('36C5F1');
+      }
+    }
+
+    // ============================================
+    // 棒グラフの長さを決める
+    // ============================================
+
+    // 支出と収入のグラフの長さを決める
+    final totalBadgetRatio = allBudget / denominator;
 
     // 支出棒グラフのカテゴリーごとの比率を格納するリスト
     final List<double> categoryExpenseRatioList = [];
@@ -177,20 +278,33 @@ class MonthlyAllCategoryTileUsecaseNotifier
       categoryExpenseRatioList.add(ratio);
     }
 
-    return AllCategoryCardModel(
+    // 収入棒グラフのカテゴリーごとの比率を格納するリスト
+    final List<double> incomeCategoryIncomeRatioList = [];
+    for (int income in incomeCategoryIncomeList) {
+      final ratio = denominator != 0 ? income / denominator : 0.0;
+      incomeCategoryIncomeRatioList.add(ratio);
+    }
+
+    return MonthPlanCardModel(
       cardStatusType: cardStatusType,
       allCategoryTotalExpense: allCategoryTotalExpense,
-      allCategoryTotalBudget: allCategoryBudget,
+      allCategoryTotalBudget: allBudget,
       allCategoryTotalIncome: allCategoryIncome,
       allFixedCostExpense:
           confirmedFixedCostExpenseTotal + unconfirmedFixedCostEstimatedTotal,
       realSavings: allCategoryIncome - allCategoryTotalExpense,
       denominator: denominator,
-      categoryNameList: categoryNameList,
-      categoryExpenseList: categoryExpenseList,
-      categoryExpenseRatioList: categoryExpenseRatioList,
-      categoryIconPathList: categoryIconPathList,
-      categoryColorList: categoryColorList,
+      totalBadgetRatio: totalBadgetRatio,
+      expenseCategoryNameList: categoryNameList,
+      expenseCategoryList: categoryExpenseList,
+      expenseCategoryRatioList: categoryExpenseRatioList,
+      expenseCategoryIconPathList: categoryIconPathList,
+      expenseCategoryColorList: categoryColorList,
+      incomeCategoryNameList: incomeCategoryNameList,
+      incomeCategoryList: incomeCategoryIncomeList,
+      incomeCategoryRatioList: incomeCategoryIncomeRatioList,
+      incomeCategoryIconPathList: incomeCategoryIconPathList,
+      incomeCategoryColorList: incomeCategoryColorList,
     );
   }
 }

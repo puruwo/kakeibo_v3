@@ -25,6 +25,12 @@ abstract interface class IncomeRepository {
     required int bigCategoryId,
   });
 
+  /// 期間と小カテゴリーを指定して収入の合計値を取得する
+  Future<int> calcurateSumWithSmallCategoryAndPeriod({
+    required PeriodValue period,
+    required int smallCategoryId,
+  });
+
   /// 期間を指定して収入の合計値を取得する
   Future<int> calcurateSumWithPeriod({
     required PeriodValue period,

@@ -215,7 +215,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      ' カテゴリーの支出',
+                      ' カテゴリー別',
                       style: MyFonts.thirdPageSubheading,
                     ),
                     TextButton(

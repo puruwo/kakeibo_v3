@@ -4,73 +4,71 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_parts.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_income_graph_area/monthly_income_graph_parts.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 
-class MnothlyPlanGraphArea extends HookConsumerWidget {
-  const MnothlyPlanGraphArea({super.key});
+class MonthlyIncomeGraphArea extends HookConsumerWidget {
+  const MonthlyIncomeGraphArea({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(resolvedAllCategoryCardModelProvider).when(
           data: (allCategoryCardEntity) {
-            return allCategoryCardEntity.cardStatusType.hasExpense ||
-                    allCategoryCardEntity.cardStatusType.hasBudget
+            return allCategoryCardEntity.cardStatusType.hasIncome
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.baseline,
                           textBaseline: TextBaseline.alphabetic,
                           children: [
-                            Text(
-                              '総支出',
-                              style: MyFonts.topCardTitleLabel,
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                Text(
+                                  '総収入',
+                                  style: MyFonts.topCardTitleLabel,
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                // 総収入
+                                RichText(
+                                    textAlign: TextAlign.end,
+                                    overflow: TextOverflow.ellipsis,
+                                    text: TextSpan(children: [
+                                      TextSpan(
+                                        text: formattedPriceGetter(
+                                            allCategoryCardEntity
+                                                .allCategoryTotalIncome),
+                                        style: GoogleFonts.notoSans(
+                                            fontSize: 18,
+                                            color: MyColors.white,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                      TextSpan(
+                                        text: ' 円',
+                                        style: GoogleFonts.notoSans(
+                                            fontSize: 14,
+                                            color: MyColors.white,
+                                            fontWeight: FontWeight.w400),
+                                      ),
+                                    ])),
+                              ],
                             ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            // カテゴリー総支出
-                            RichText(
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                    text: formattedPriceGetter(
-                                        allCategoryCardEntity
-                                            .allCategoryTotalExpense),
-                                    style: GoogleFonts.notoSans(
-                                        fontSize: 18,
-                                        color: MyColors.white,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                  TextSpan(
-                                    text: ' 円',
-                                    style: GoogleFonts.notoSans(
-                                        fontSize: 14,
-                                        color: MyColors.white,
-                                        fontWeight: FontWeight.w400),
-                                  ),
-                                ])),
-
-                            // 予算
-                            allCategoryCardEntity.cardStatusType.hasBudget
+                            // 残金
+                            allCategoryCardEntity.realSavings != 0
                                 ? Flexible(
                                     child: RichText(
                                         textAlign: TextAlign.end,
                                         overflow: TextOverflow.ellipsis,
                                         text: TextSpan(children: [
                                           TextSpan(
-                                            text: ' /',
-                                            style: GoogleFonts.notoSans(
-                                                fontSize: 14,
-                                                color: MyColors.secondaryLabel,
-                                                fontWeight: FontWeight.w400),
-                                          ),
-                                          TextSpan(
-                                            text: '予算 ',
+                                            text: '残金 ',
                                             style: GoogleFonts.notoSans(
                                                 fontSize: 13,
                                                 color: MyColors.secondaryLabel,
@@ -80,7 +78,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                                           TextSpan(
                                             text: formattedPriceGetter(
                                                 allCategoryCardEntity
-                                                    .allCategoryTotalBudget),
+                                                    .realSavings),
                                             style: GoogleFonts.notoSans(
                                                 fontSize: 14,
                                                 color: MyColors.secondaryLabel,
@@ -105,9 +103,11 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                         Container(
                           alignment: Alignment.centerLeft,
                           child: LayoutBuilder(
-                            builder: (context, constraints) => MnothlyPlanGraph(
-                                maxGraphWidth: constraints.maxWidth,
-                                allCategoryCardEntity: allCategoryCardEntity),
+                            builder: (context, constraints) =>
+                                MonthlyIncomeGraph(
+                                    maxGraphWidth: constraints.maxWidth,
+                                    allCategoryCardEntity:
+                                        allCategoryCardEntity),
                           ),
                         ),
                       ],
