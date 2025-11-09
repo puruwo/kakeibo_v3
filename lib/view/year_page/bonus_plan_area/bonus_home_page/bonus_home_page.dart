@@ -12,13 +12,56 @@ import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
 import 'package:kakeibo/view_model/state/bonus_home_page/selected_tab_controller/selected_tab_controller.dart';
 
 class BonusHomePage extends ConsumerStatefulWidget {
-  const BonusHomePage({super.key});
+  const BonusHomePage({super.key, this.initialTab = 0});
+
+  final int initialTab;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _BonusHomePage();
 }
 
-class _BonusHomePage extends ConsumerState<BonusHomePage> {
+class _BonusHomePage extends ConsumerState<BonusHomePage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialTab,
+    );
+
+    // タブ変更時にフッターの状態を更新（スワイプにも対応）
+    _tabController.addListener(() {
+      final notifier =
+          ref.read(selectedTabControllerNotifierProvider.notifier);
+      if (_tabController.index == 1) {
+        notifier.updateState(SelectedTab.bonusIncome);
+      } else {
+        notifier.updateState(SelectedTab.bonusExpense);
+      }
+    });
+
+    // initialTabに応じてフッターの状態を初期化
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final notifier =
+          ref.read(selectedTabControllerNotifierProvider.notifier);
+      if (widget.initialTab == 1) {
+        notifier.updateState(SelectedTab.bonusIncome);
+      } else {
+        notifier.updateState(SelectedTab.bonusExpense);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -93,84 +136,61 @@ class _BonusHomePage extends ConsumerState<BonusHomePage> {
                               ),
                             ],
                           ),
-                          child: DefaultTabController(
-                            length: 2,
-                            child: Column(
-                              children: [
-                                // SingleChildScrollViewの範囲がドラッグできる範囲
-                                // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
-                                SingleChildScrollView(
-                                  controller: scrollController,
-                                  physics: const ClampingScrollPhysics(),
-                                  child: Column(
-                                    children: [
-                                      // タブ
-                                      TabBar(
-                                        indicatorSize: TabBarIndicatorSize.tab,
-                                        indicatorColor: MyColors.themeColor,
-                                        unselectedLabelStyle:
-                                            MyFonts.unselectedLabelStyle,
-                                        labelStyle: MyFonts.selectedLabelStyle,
-                                        indicatorWeight: 2,
-                                        tabs: const [
-                                          Tab(text: 'ボーナス支出'),
-                                          Tab(text: 'ボーナス収入'),
-                                        ],
-                                        onTap: (index) {
-                                          switch (index) {
-                                            // ボーナス支出タブが選択された場合
-                                            case 0:
-                                              ref
-                                                  .read(
-                                                      selectedTabControllerNotifierProvider
-                                                          .notifier)
-                                                  .updateState(
-                                                      SelectedTab.bonusExpense);
-                                              break;
-                                            // ボーナス収入タブが選択された場合
-                                            case 1:
-                                              ref
-                                                  .read(
-                                                      selectedTabControllerNotifierProvider
-                                                          .notifier)
-                                                  .updateState(
-                                                      SelectedTab.bonusIncome);
-                                              break;
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                          child: Column(
+                            children: [
+                              // SingleChildScrollViewの範囲がドラッグできる範囲
+                              // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
+                              SingleChildScrollView(
+                                controller: scrollController,
+                                physics: const ClampingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    // タブ
+                                    TabBar(
+                                      controller: _tabController,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      indicatorColor: MyColors.themeColor,
+                                      unselectedLabelStyle:
+                                          MyFonts.unselectedLabelStyle,
+                                      labelStyle: MyFonts.selectedLabelStyle,
+                                      indicatorWeight: 2,
+                                      tabs: const [
+                                        Tab(text: 'ボーナス支出'),
+                                        Tab(text: 'ボーナス収入'),
+                                      ],
+                                    ),
+                                  ],
                                 ),
+                              ),
 
-                                const Divider(height: 1),
+                              const Divider(height: 1),
 
-                                const Expanded(
-                                  child: TabBarView(
-                                    children: [
-                                      // ボーナス支出のエリア
-                                      Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 16.0),
-                                        child: BonusExpenseListArea(),
-                                      ),
+                              Expanded(
+                                child: TabBarView(
+                                  controller: _tabController,
+                                  children: const [
+                                    // ボーナス支出のエリア
+                                    Padding(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 16.0),
+                                      child: BonusExpenseListArea(),
+                                    ),
 
-                                      // ボーナス収入のエリア
-                                      BonusIncomeListArea(),
-                                    ],
-                                  ),
+                                    // ボーナス収入のエリア
+                                    BonusIncomeListArea(),
+                                  ],
                                 ),
+                              ),
 
-                                const Divider(height: 1),
+                              const Divider(height: 1),
 
-                                // フッターボタンエリア
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      16.0, 16.0, 16.0, 16.0),
-                                  child: BonusHomeFooter(),
-                                ),
-                              ],
-                            ),
+                              // フッターボタンエリア
+                              const Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                                child: BonusHomeFooter(),
+                              ),
+                            ],
                           ),
                         ),
                       ),

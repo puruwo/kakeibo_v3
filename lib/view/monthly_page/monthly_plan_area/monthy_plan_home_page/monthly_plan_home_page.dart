@@ -33,6 +33,16 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
       initialIndex: widget.initialTab,
     );
 
+    // タブ変更時にフッターの状態を更新（スワイプにも対応）
+    _tabController.addListener(() {
+        final notifier = ref.read(footerStateControllerNotifierProvider.notifier);
+        if (_tabController.index == 1) {
+          notifier.updateState(TabState.income);
+        } else {
+          notifier.updateState(TabState.budgetNormal);
+        }
+    });
+
     // initialTabに応じてフッターの状態を初期化
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final notifier = ref.read(footerStateControllerNotifierProvider.notifier);
@@ -125,90 +135,60 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
                             ],
                           ),
                           child: Column(
-                              children: [
-                                // SingleChildScrollViewの範囲がドラッグできる範囲
-                                // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
-                                SingleChildScrollView(
-                                  controller: scrollController,
-                                  physics: const ClampingScrollPhysics(),
-                                  child: Column(
-                                    children: [
-                                      // タブ
-                                      TabBar(
-                                        controller: _tabController,
-                                        indicatorSize: TabBarIndicatorSize.tab,
-                                        indicatorColor: MyColors.themeColor,
-                                        unselectedLabelStyle:
-                                            MyFonts.unselectedLabelStyle,
-                                        labelStyle: MyFonts.selectedLabelStyle,
-                                        indicatorWeight: 2,
-                                        tabs: const [
-                                          Tab(text: '予算'),
-                                          Tab(text: '収入'),
-                                        ],
-                                        onTap: (value) {
-                                          final footerState = ref.read(
-                                              footerStateControllerNotifierProvider);
-                                          switch (value) {
-                                            case 0:
-                                              // 予算タブが選択された場合
-                                              if (footerState ==
-                                                  TabState.income) {
-                                                ref
-                                                    .read(
-                                                        footerStateControllerNotifierProvider
-                                                            .notifier)
-                                                    .updateState(
-                                                        TabState.budgetNormal);
-                                              }
-                                              break;
-                                            case 1:
-                                              // 収入タブが選択された場合
-                                              if (footerState !=
-                                                  TabState.income) {
-                                                ref
-                                                    .read(
-                                                        footerStateControllerNotifierProvider
-                                                            .notifier)
-                                                    .updateState(
-                                                        TabState.income);
-                                              }
-                                              break;
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
+                            children: [
+                              // SingleChildScrollViewの範囲がドラッグできる範囲
+                              // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
+                              SingleChildScrollView(
+                                controller: scrollController,
+                                physics: const ClampingScrollPhysics(),
+                                child: Column(
+                                  children: [
+                                    // タブ
+                                    TabBar(
+                                      controller: _tabController,
+                                      indicatorSize: TabBarIndicatorSize.tab,
+                                      indicatorColor: MyColors.themeColor,
+                                      unselectedLabelStyle:
+                                          MyFonts.unselectedLabelStyle,
+                                      labelStyle: MyFonts.selectedLabelStyle,
+                                      indicatorWeight: 2,
+                                      tabs: const [
+                                        Tab(text: '予算'),
+                                        Tab(text: '収入'),
+                                      ],
+                                    ),
+                                  ],
                                 ),
+                              ),
 
-                                const Divider(height: 1),
+                              const Divider(height: 1),
 
-                                Expanded(
-                                  child: TabBarView(
-                                    controller: _tabController,
-                                    children: const [
-                                      // 予算のエリア
-                                      BudgetCategoryArea(),
-                                      // 収入のエリア
-                                      IncomeListArea(),
-                                    ],
-                                  ),
+                              Expanded(
+                                child: TabBarView(
+                                  controller: _tabController,
+                                  children: const [
+                                    // 予算のエリア
+                                    BudgetCategoryArea(),
+                                    // 収入のエリア
+                                    IncomeListArea(),
+                                  ],
                                 ),
+                              ),
 
-                                const Divider(height: 1),
+                              const Divider(height: 1),
 
-                                // フッターボタンエリア
-                                const Padding(
-                                  padding: EdgeInsets.fromLTRB(
-                                      16.0, 16.0, 16.0, 16.0),
-                                  child: MonthlyPlanHomeFooter(),
-                                ),
-                              ],
-                            ),
+                              // フッターボタンエリア
+                              const Padding(
+                                padding:
+                                    EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                                child: MonthlyPlanHomeFooter(),
+                              ),
+                            ],
                           ),
                         ),
-                      ],
-                    );
+                      ),
+                    ],
+                  );
                 }),
           ],
         ),
