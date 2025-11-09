@@ -42,6 +42,10 @@ class BudgetUsecase {
       final budgetEntity =
           await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
               month: monthValue, expenseBigCategoryId: bigCategory.id);
+      final lastMonthBudgetEntity =
+          await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
+              month: monthValue.beforMonth,
+              expenseBigCategoryId: bigCategory.id);
 
       final budgetEditValue = BudgetEditValue(
         id: budgetEntity.id,
@@ -52,6 +56,7 @@ class BudgetUsecase {
         expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
         month: budgetEntity.month,
         price: budgetEntity.price,
+        lastMonthBudgetPrice: lastMonthBudgetEntity.price,
         expenseBigCategoryName: bigCategory.bigCategoryName,
         colorCode: bigCategory.colorCode,
         resourcePath: bigCategory.resourcePath,

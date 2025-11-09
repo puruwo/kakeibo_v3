@@ -21,6 +21,7 @@ mixin _$BudgetEditValue {
   int get expenseBigCategoryId => throw _privateConstructorUsedError;
   String get month => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
+  int get lastMonthBudgetPrice => throw _privateConstructorUsedError;
   String get expenseBigCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get resourcePath => throw _privateConstructorUsedError;
@@ -43,6 +44,7 @@ abstract class $BudgetEditValueCopyWith<$Res> {
       int expenseBigCategoryId,
       String month,
       int price,
+      int lastMonthBudgetPrice,
       String expenseBigCategoryName,
       String colorCode,
       String resourcePath,
@@ -67,6 +69,7 @@ class _$BudgetEditValueCopyWithImpl<$Res, $Val extends BudgetEditValue>
     Object? expenseBigCategoryId = null,
     Object? month = null,
     Object? price = null,
+    Object? lastMonthBudgetPrice = null,
     Object? expenseBigCategoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
@@ -92,6 +95,10 @@ class _$BudgetEditValueCopyWithImpl<$Res, $Val extends BudgetEditValue>
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
+              as int,
+      lastMonthBudgetPrice: null == lastMonthBudgetPrice
+          ? _value.lastMonthBudgetPrice
+          : lastMonthBudgetPrice // ignore: cast_nullable_to_non_nullable
               as int,
       expenseBigCategoryName: null == expenseBigCategoryName
           ? _value.expenseBigCategoryName
@@ -127,6 +134,7 @@ abstract class _$$BudgetEditValueImplCopyWith<$Res>
       int expenseBigCategoryId,
       String month,
       int price,
+      int lastMonthBudgetPrice,
       String expenseBigCategoryName,
       String colorCode,
       String resourcePath,
@@ -149,6 +157,7 @@ class __$$BudgetEditValueImplCopyWithImpl<$Res>
     Object? expenseBigCategoryId = null,
     Object? month = null,
     Object? price = null,
+    Object? lastMonthBudgetPrice = null,
     Object? expenseBigCategoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
@@ -174,6 +183,10 @@ class __$$BudgetEditValueImplCopyWithImpl<$Res>
       price: null == price
           ? _value.price
           : price // ignore: cast_nullable_to_non_nullable
+              as int,
+      lastMonthBudgetPrice: null == lastMonthBudgetPrice
+          ? _value.lastMonthBudgetPrice
+          : lastMonthBudgetPrice // ignore: cast_nullable_to_non_nullable
               as int,
       expenseBigCategoryName: null == expenseBigCategoryName
           ? _value.expenseBigCategoryName
@@ -204,6 +217,7 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
       required this.expenseBigCategoryId,
       required this.month,
       required this.price,
+      required this.lastMonthBudgetPrice,
       required this.expenseBigCategoryName,
       required this.colorCode,
       required this.resourcePath,
@@ -220,6 +234,8 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
   @override
   final int price;
   @override
+  final int lastMonthBudgetPrice;
+  @override
   final String expenseBigCategoryName;
   @override
   final String colorCode;
@@ -230,7 +246,7 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
 
   @override
   String toString() {
-    return 'BudgetEditValue(id: $id, budgetStatus: $budgetStatus, expenseBigCategoryId: $expenseBigCategoryId, month: $month, price: $price, expenseBigCategoryName: $expenseBigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, displayOrder: $displayOrder)';
+    return 'BudgetEditValue(id: $id, budgetStatus: $budgetStatus, expenseBigCategoryId: $expenseBigCategoryId, month: $month, price: $price, lastMonthBudgetPrice: $lastMonthBudgetPrice, expenseBigCategoryName: $expenseBigCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, displayOrder: $displayOrder)';
   }
 
   @override
@@ -245,6 +261,8 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
                 other.expenseBigCategoryId == expenseBigCategoryId) &&
             (identical(other.month, month) || other.month == month) &&
             (identical(other.price, price) || other.price == price) &&
+            (identical(other.lastMonthBudgetPrice, lastMonthBudgetPrice) ||
+                other.lastMonthBudgetPrice == lastMonthBudgetPrice) &&
             (identical(other.expenseBigCategoryName, expenseBigCategoryName) ||
                 other.expenseBigCategoryName == expenseBigCategoryName) &&
             (identical(other.colorCode, colorCode) ||
@@ -263,6 +281,7 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
       expenseBigCategoryId,
       month,
       price,
+      lastMonthBudgetPrice,
       expenseBigCategoryName,
       colorCode,
       resourcePath,
@@ -283,6 +302,7 @@ abstract class _BudgetEditValue implements BudgetEditValue {
       required final int expenseBigCategoryId,
       required final String month,
       required final int price,
+      required final int lastMonthBudgetPrice,
       required final String expenseBigCategoryName,
       required final String colorCode,
       required final String resourcePath,
@@ -298,6 +318,8 @@ abstract class _BudgetEditValue implements BudgetEditValue {
   String get month;
   @override
   int get price;
+  @override
+  int get lastMonthBudgetPrice;
   @override
   String get expenseBigCategoryName;
   @override

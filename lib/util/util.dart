@@ -11,6 +11,13 @@ String formattedPriceGetter(int price) {
   return result;
 }
 
+String formattedPriceGetterAndZeroAsHyphen(int price) {
+  if (price == 0) {
+    return '---';
+  }
+  return formattedPriceGetter(price);
+}
+
 String yenmarkFormattedPriceGetter(int price) {
   mathFunc(Match match) => '${match[1]},';
   RegExp reg = RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))');
@@ -49,17 +56,15 @@ yyyyMMtoMMGetter(DateTime activeDt) {
 }
 
 yyyyToyyyyGetter(DateScopeEntity dateScope) {
-
-  final startDate = dateScope.yearPeriod.startDatetime;  
-  final endDate = dateScope.yearPeriod.endDatetime;  
+  final startDate = dateScope.yearPeriod.startDatetime;
+  final endDate = dateScope.yearPeriod.endDatetime;
 
   // 年のまたぎがない場合は、年のみ表示
   if (startDate.year == endDate.year) {
-      final label = '${startDate.year}年';
-      return label;
-  }
-  else {
-      final label = '${startDate.year}年 - ${endDate.year}年';
-      return label; 
+    final label = '${startDate.year}年';
+    return label;
+  } else {
+    final label = '${startDate.year}年 - ${endDate.year}年';
+    return label;
   }
 }

@@ -9,7 +9,6 @@ class MonthValue with _$MonthValue {
     // ex)202504
     required String month,
   }) = _MonthValue;
-
 }
 
 extension MonthValueExtension on MonthValue {
@@ -21,5 +20,17 @@ extension MonthValueExtension on MonthValue {
   int get monthNumber {
     // 5,6文字目をintへ
     return int.parse(month.substring(4, 6));
+  }
+
+  // 前の月のMonthValueを返す
+  MonthValue get beforMonth {
+    final monthNumber = this.monthNumber;
+    if (monthNumber == 1) {
+      final lastYear = int.parse(month.substring(0, 4)) - 1;
+      return MonthValue(month: "${lastYear}12");
+    } else {
+      final beforeMonth = int.parse(month) - 1;
+      return MonthValue(month: beforeMonth.toString());
+    }
   }
 }
