@@ -43,16 +43,35 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository{
 
     // 実行
     final dailyExpense = await db.query(sql);
-    
+
     // logger.i('====SQLが実行されました====\n ImplementsDailyExpenseRepository\n$sql');
-    
+
     // もしデータがない場合
     if(dailyExpense.isEmpty){
       return DailyExpenseEntity(date: dateTime, totalExpense: 0);
     }
     // データがある場合
     return DailyExpenseEntity.fromJson(dailyExpense.first);
-  
+
+  }
+
+  @override
+  Future<Map<int, DailyExpenseEntity>> fetchMultipleSourcesWithCategory({
+    required List<int> incomeSourceBigIds,
+    required DateTime dateTime
+  }) async {
+    final whereArgs = DateFormat('yyyyMMdd').format(dateTime);
+    final result = <int, DailyExpenseEntity>{};
+
+    for (final incomeSourceBigId in incomeSourceBigIds) {
+      final dailyExpense = await fetchWithCategory(
+        incomeSourceBigId: incomeSourceBigId,
+        dateTime: dateTime
+      );
+      result[incomeSourceBigId] = dailyExpense;
+    }
+
+    return result;
   }
 }
 

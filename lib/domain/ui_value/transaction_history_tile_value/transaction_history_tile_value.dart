@@ -1,31 +1,29 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 //Freezedで生成されるデータクラス
-part 'expense_history_tile_value.freezed.dart';
+part 'transaction_history_tile_value.freezed.dart';
 
 // 取引タイプの列挙型
-enum TransactionHistoryType {
+enum TransactionType {
   expense,          // 支出(月次)
   bonusExpense,     // 支出(ボーナス)
   income,           // 収入
   fixedCostExpense, // 固定費
 }
 
-// 複数タイプの取引を扱うエンティティ
+// 複数タイプの取引を統一的に扱うUIモデル
 @freezed
-class ExpenseHistoryTileValue with _$ExpenseHistoryTileValue {
-  const factory ExpenseHistoryTileValue({
+class TransactionHistoryTileValue with _$TransactionHistoryTileValue {
+  const factory TransactionHistoryTileValue({
     required int id,
     required DateTime date,
     required int price,
-    required int paymentCategoryId,
+    required TransactionType type,
+    required int categoryId,
     @Default('') String memo,
     required String smallCategoryName,
     required String bigCategoryName,
     required String colorCode,
     required String iconPath,
-    required int incomeSourceBigCategory,
-    @Default(TransactionHistoryType.expense) TransactionHistoryType transactionType,
-  }) = _ExpenseHistoryTileValue;
-
+  }) = _TransactionHistoryTileValue;
 }
