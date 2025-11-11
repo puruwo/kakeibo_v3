@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:collection/collection.dart';
+import 'package:collection/collections.dart';
 import 'package:kakeibo/application/expense_history/expense_history_service.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_group_value.dart';
 import 'dart:collection';
@@ -10,6 +10,11 @@ import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/db/income/income_repository.dart';
+import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
+import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // 支出タイルのValueを取得し、日付ごとにグループ分けして返却するプロバイダ
@@ -34,10 +39,15 @@ class ExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
       expenseRepo: ref.read(expenseRepositoryProvider),
       smallCategoryRepo: ref.read(expenseSmallCategoryRepositoryProvider),
       bigCategoryRepo: ref.read(expensebigCategoryRepositoryProvider),
+      incomeRepo: ref.read(incomeRepositoryProvider),
+      incomeSmallCategoryRepo: ref.read(incomeSmallCategoryRepositoryProvider),
+      incomeBigCategoryRepo: ref.read(incomeBigCategoryRepositoryProvider),
+      fixedCostExpenseRepo: ref.read(fixedCostExpenseRepositoryProvider),
+      fixedCostCategoryRepo: ref.read(fixedCostCategoryRepositoryProvider),
     );
 
-    // incomeSourceBigIdは0を指定して、月次支出のみを取得する
-    final entities = await _service.fetchTileList(0,selectedMonthPeriod);
+    // 複数のタイプの取引（支出、ボーナス、収入、固定費）を取得
+    final entities = await _service.fetchAllTransactionTileList(selectedMonthPeriod);
 
     // 取得したタイルデータをDateTimeでグループ分けする
     // groupListsByは、List<T>をMap<K, List<T>>に変換するメソッド
