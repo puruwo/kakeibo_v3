@@ -12,6 +12,9 @@ abstract interface class FixedCostRepository {
   // / 全ての登録情報を取得する
   Future<List<FixedCostEntity>> fetchAll();
 
+  // / 削除されていない固定費のみを取得する
+  Future<List<FixedCostEntity>> fetchAllActive();
+
   Future<FixedCostEntity> fetch({required int fixedCostId});
 
   /// 期間指定してデータを取得する

@@ -14,11 +14,11 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
   @override
   Future<List<FixedCostEntity>> fetchAll() async {
     const sql = '''
-      SELECT 
+      SELECT
         a.${SqfFixedCost.id} AS id,
-        a.${SqfFixedCost.name} AS name, 
+        a.${SqfFixedCost.name} AS name,
         a.${SqfFixedCost.variable} AS variable,
-        a.${SqfFixedCost.price} AS price, 
+        a.${SqfFixedCost.price} AS price,
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
@@ -28,6 +28,40 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.nextPaymentDate} AS nextPaymentDate,
         a.${SqfFixedCost.deleteFlag} AS deleteFlag
       FROM ${SqfFixedCost.tableName} a
+      ORDER BY a.${SqfFixedCost.id} ASC;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      final results =
+          jsonList.map((json) => FixedCostEntity.fromJson(json)).toList();
+
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
+  }
+
+  // 削除されていない固定費のみを取得する
+  @override
+  Future<List<FixedCostEntity>> fetchAllActive() async {
+    const sql = '''
+      SELECT
+        a.${SqfFixedCost.id} AS id,
+        a.${SqfFixedCost.name} AS name,
+        a.${SqfFixedCost.variable} AS variable,
+        a.${SqfFixedCost.price} AS price,
+        a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
+        a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
+        a.${SqfFixedCost.intervalNumber} AS intervalNumber,
+        a.${SqfFixedCost.intervalUnit} AS intervalUnit,
+        a.${SqfFixedCost.firstPaymentDate} AS firstPaymentDate,
+        a.${SqfFixedCost.recentPaymentDate} AS recentPaymentDate,
+        a.${SqfFixedCost.nextPaymentDate} AS nextPaymentDate,
+        a.${SqfFixedCost.deleteFlag} AS deleteFlag
+      FROM ${SqfFixedCost.tableName} a
+      WHERE a.${SqfFixedCost.deleteFlag} = 0
       ORDER BY a.${SqfFixedCost.id} ASC;
     ''';
 
