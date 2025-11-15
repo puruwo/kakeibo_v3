@@ -7,11 +7,11 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_area.dart';
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
@@ -105,14 +105,10 @@ class _YearPageState extends ConsumerState<YearPage> {
                 height: 32,
               ),
               const AnnualBalanceChart(),
-              FloatingActionButton(
-                
-                  onPressed: () async {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: ((context) =>
-                            FixedCostRegistrationListPage())));
-                  },
-                  child: Container(color: Colors.amber,)),
+              const SizedBox(
+                height: 8,
+              ),
+              const FixedCostButtonArea(),
             ],
           ),
         ),
