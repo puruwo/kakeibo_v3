@@ -212,13 +212,17 @@ void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
     builder: (context) {
       return MaterialApp(
         debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        themeMode: ThemeMode.dark,
+        darkTheme: ThemeData.dark(),
         home: MediaQuery.withClampedTextScaling(
             // テキストサイズの制御
             minScaleFactor: 0.7,
             maxScaleFactor: 0.95,
             child: RegisterExpensePage(
               expenseEntity: ExpenseEntity(
-                  date: DateFormat('yyyyMMdd').format(selectedDate),),
+                date: DateFormat('yyyyMMdd').format(selectedDate),
+              ),
               mode: RegisterScreenMode.add,
               isTabVisible: true,
             )),

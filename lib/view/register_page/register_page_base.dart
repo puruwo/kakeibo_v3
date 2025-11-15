@@ -130,7 +130,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           RegisterFixedCostPage(
             mode: RegisterScreenMode.add,
             fixedCostEntity: widget.fixedCostEntity,
-            isTabVisible: false,
+            isAppBarVisible: false,
           ),
           RegisterIncomePage(
             mode: RegisterScreenMode.add,

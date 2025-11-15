@@ -3,7 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
+import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
+import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class FixedCostRegistrationListPage extends ConsumerWidget {
   const FixedCostRegistrationListPage({super.key});
@@ -51,40 +54,64 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             );
           }
 
-          return Stack(
+          return Column(
             children: [
-              // カテゴリーカードのリスト
-              ListView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                itemCount: fixedCostList.categoryGroups.length,
-                itemBuilder: (context, index) {
-                  return FixedCostCategoryCardsArea(
-                    group: fixedCostList.categoryGroups[index],
-                  );
-                },
-              ),
-              // 「固定費を追加」ボタン
-              Positioned(
-                left: 16,
-                right: 16,
-                bottom: 16,
-                child: ElevatedButton(
-                  onPressed: () {
-                    // TODO: 固定費追加画面への遷移を実装
+              // カテゴリーカードのリスト（残りのスペースを全て使う）
+              Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  itemCount: fixedCostList.categoryGroups.length,
+                  itemBuilder: (context, index) {
+                    return FixedCostCategoryCardsArea(
+                      group: fixedCostList.categoryGroups[index],
+                    );
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.themeColor,
-                    foregroundColor: MyColors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+
+              const Divider(height: 1),
+
+              // フッターボタンエリア（固定高さ）
+              Container(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        //sccafoldの上に出すか
+                        useRootNavigator: true,
+                        isScrollControlled: true,
+                        useSafeArea: true,
+                        constraints: const BoxConstraints(
+                          maxWidth: 2000,
+                        ),
+                        context: context,
+                        // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
+                        builder: (context) {
+                          return MaterialApp(
+                            debugShowCheckedModeBanner: false,
+                            theme: ThemeData.dark(),
+                            themeMode: ThemeMode.dark,
+                            darkTheme: ThemeData.dark(),
+                            home: MediaQuery.withClampedTextScaling(
+                              // テキストサイズの制御
+                              minScaleFactor: 0.7,
+                              maxScaleFactor: 0.95,
+                              child: const RegisterFixedCostPage(
+                                  mode: RegisterScreenMode.add,
+                                  isAppBarVisible: true),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: MyColors.buttonPrimary,
                     ),
-                  ),
-                  child: Text(
-                    '固定費を追加',
-                    style: GoogleFonts.notoSans(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+                    child: Text(
+                      '固定費を追加',
+                      style: MyFonts.mainButtonText,
                     ),
                   ),
                 ),

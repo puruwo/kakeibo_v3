@@ -17,12 +17,12 @@ class RegisterFixedCostPage extends ConsumerStatefulWidget {
 
   final FixedCostEntity? fixedCostEntity;
 
-  final bool isTabVisible;
+  final bool isAppBarVisible;
 
   const RegisterFixedCostPage(
       {this.mode = RegisterScreenMode.add,
       this.fixedCostEntity,
-      required this.isTabVisible,
+      required this.isAppBarVisible,
       super.key});
 
   @override
@@ -68,7 +68,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
           backgroundColor: MyColors.secondarySystemBackground,
-          appBar: widget.isTabVisible
+          appBar: widget.isAppBarVisible
               ? AppBar(
                   // ヘッダーの色
                   backgroundColor: MyColors.secondarySystemBackground,
@@ -82,7 +82,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
                   ),
                   title: SizedBox(
                     child: Text(
-                      widget.mode == RegisterScreenMode.add ? '記録' : '記録を編集する',
+                      widget.mode == RegisterScreenMode.add ? '固定費を設定' : '固定費を編集する',
                       style: MyFonts.regesterHeaderLabel,
                     ),
                   ),
