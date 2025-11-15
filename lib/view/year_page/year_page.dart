@@ -60,10 +60,38 @@ class _YearPageState extends ConsumerState<YearPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              const SizedBox(
+                height: 16,
+              ),
               SizedBox(
                 height: 35,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      ' 年間収支',
+                      style: MyFonts.thirdPageSubheading,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 4,
+              ),
+              const YearlyBalanceArea(),
+              const SizedBox(
+                height: 8,
+              ),
+              const FixedCostButtonArea(),
+              const SizedBox(
+                height: 16,
+              ),
+              SizedBox(
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
                       ' ボーナス利用状況',
@@ -84,6 +112,9 @@ class _YearPageState extends ConsumerState<YearPage> {
                   ],
                 ),
               ),
+              const SizedBox(
+                height: 4,
+              ),
               const BonusPlanArea(),
               const SizedBox(
                 height: 16,
@@ -91,24 +122,19 @@ class _YearPageState extends ConsumerState<YearPage> {
               SizedBox(
                 height: 35,
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
-                      ' 年間収支',
+                      ' 生活収支',
                       style: MyFonts.thirdPageSubheading,
                     ),
                   ],
                 ),
               ),
-              const YearlyBalanceArea(),
               const SizedBox(
-                height: 32,
+                height: 4,
               ),
               const AnnualBalanceChart(),
-              const SizedBox(
-                height: 8,
-              ),
-              const FixedCostButtonArea(),
             ],
           ),
         ),
