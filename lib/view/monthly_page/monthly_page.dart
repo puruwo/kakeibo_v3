@@ -19,7 +19,6 @@ import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.da
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
-import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -55,9 +54,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 //左矢印ボタン、押すと前の月に移動
                 const PreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final activeDt =
-                      ref.watch(analyzePageSelectedDatetimeNotifierProvider);
-                  final label = yyyyMMtoMMGetter(activeDt);
+                  final monthPeriodAsync = ref.watch(analyzePageDateScopeEntityProvider);
+                  final monthPeriod = monthPeriodAsync.whenOrNull(data: (data) => data.monthPeriod);
+                  final label =yyyyMMtoMMGetter(monthPeriod);
                   return Text(
                     label,
                     style: MyFonts.pageHeaderText,

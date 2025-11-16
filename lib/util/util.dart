@@ -1,5 +1,5 @@
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
-import 'package:kakeibo/view_model/reference_day_impl.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 
 // 値段をカンマ区切りフォーマットで出力する処理
 
@@ -34,8 +34,26 @@ String yenFormattedPriceGetter(int price) {
   return '$result 円';
 }
 
-yyyyMMtoMMGetter(DateTime activeDt) {
-  final referenceDay = getReferenceDay(activeDt);
+yyyyToyyyyGetter(DateScopeEntity dateScope) {
+  final startDate = dateScope.yearPeriod.startDatetime;
+  final endDate = dateScope.yearPeriod.endDatetime;
+
+  // 年のまたぎがない場合は、年のみ表示
+  if (startDate.year == endDate.year) {
+    final label = '${startDate.year}年';
+    return label;
+  } else {
+    final label = '${startDate.year}年 - ${endDate.year}年';
+    return label;
+  }
+}
+
+// 選択月の表示フォーマット取得
+yyyyMMtoMMGetter(PeriodValue? monthPeriod) {
+  if (monthPeriod == null) {
+    return '';
+  }
+  final referenceDay = monthPeriod.startDatetime;
   // 基準日が月初日設定なら表示月はその月のみ
   if (referenceDay.day == 1) {
     final label = '${referenceDay.year}年 ${referenceDay.month}月';
@@ -52,19 +70,5 @@ yyyyMMtoMMGetter(DateTime activeDt) {
           '${referenceDay.year}年 ${referenceDay.month} - ${referenceDay.month + 1}月';
       return label;
     }
-  }
-}
-
-yyyyToyyyyGetter(DateScopeEntity dateScope) {
-  final startDate = dateScope.yearPeriod.startDatetime;
-  final endDate = dateScope.yearPeriod.endDatetime;
-
-  // 年のまたぎがない場合は、年のみ表示
-  if (startDate.year == endDate.year) {
-    final label = '${startDate.year}年';
-    return label;
-  } else {
-    final label = '${startDate.year}年 - ${endDate.year}年';
-    return label;
   }
 }
