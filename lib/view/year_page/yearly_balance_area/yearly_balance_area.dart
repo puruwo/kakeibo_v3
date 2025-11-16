@@ -4,7 +4,9 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
+import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 
 class YearlyBalanceArea extends ConsumerStatefulWidget {
   const YearlyBalanceArea({super.key});
@@ -103,37 +105,60 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         height: 8,
                       ),
 
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
-                          children: [
-                            Text(
-                              '総収入  ',
-                              style: MyFonts.topCardSubTitleLabel,
+                      GestureDetector(
+                        onTap: () {
+                          final dateScope =
+                              ref.read(homeDateScopeEntityProvider).value!;
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => YearlyIncomeListPage(
+                                dateScope: dateScope,
+                              ),
                             ),
-                            yearlyBalanceValue.yearlyBalanceType !=
-                                    YearlyBalanceType.noIncome
-                                ? Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.baseline,
-                                    textBaseline: TextBaseline.alphabetic,
-                                    children: [
-                                      Text(
-                                          formattedPriceGetter(
-                                              yearlyBalanceValue.yearlyIncome),
-                                          style: MyFonts.topCardSubPriceLabel),
-                                      Text(
-                                        ' 円',
-                                        style: MyFonts.topCardSubYenLabel,
-                                      ),
-                                    ],
-                                  )
-                                : Text(
-                                    'まだ記録がありません',
-                                    style: MyFonts.topCardSubYenLabel,
-                                  ),
-                          ]),
+                          );
+                        },
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              Text(
+                                '総収入',
+                                style: MyFonts.topCardSubTitleLabel,
+                              ),
+                              const Icon(
+                                size: 12,
+                                Icons.arrow_forward_ios_rounded,
+                                color: MyColors.secondaryLabel,
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              yearlyBalanceValue.yearlyBalanceType !=
+                                      YearlyBalanceType.noIncome
+                                  ? Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.baseline,
+                                      textBaseline: TextBaseline.alphabetic,
+                                      children: [
+                                        Text(
+                                            formattedPriceGetter(
+                                                yearlyBalanceValue
+                                                    .yearlyIncome),
+                                            style:
+                                                MyFonts.topCardSubPriceLabel),
+                                        Text(
+                                          ' 円',
+                                          style: MyFonts.topCardSubYenLabel,
+                                        ),
+                                      ],
+                                    )
+                                  : Text(
+                                      'まだ記録がありません',
+                                      style: MyFonts.topCardSubYenLabel,
+                                    ),
+                            ]),
+                      ),
 
                       // 収入バー
                       yearlyBalanceValue.yearlyBalanceType !=

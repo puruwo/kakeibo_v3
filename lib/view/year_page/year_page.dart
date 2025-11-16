@@ -67,6 +67,8 @@ class _YearPageState extends ConsumerState<YearPage> {
                 height: 35,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.baseline,
+                  textBaseline: TextBaseline.alphabetic,
                   children: [
                     Text(
                       ' 年間収支',
