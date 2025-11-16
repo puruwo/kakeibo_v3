@@ -144,8 +144,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       ORDER BY a.${SqfFixedCost.id} DESC;
     ''';
 
-  
-
     try {
       final jsonList = await db.query(sql);
       final results =
@@ -160,8 +158,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
 
   // 変動あり固定費の推定支出を取得する
   @override
-  Future<int> fetchEstimatedPriceById(
-      {required int id}) async {
+  Future<int> fetchEstimatedPriceById({required int id}) async {
     final sql = '''
       SELECT a.${SqfFixedCost.estimatedPrice} AS estimatedPrice
       FROM ${SqfFixedCost.tableName} a
@@ -183,8 +180,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       SqfFixedCost.variable: fixedCostEntity.variable,
       SqfFixedCost.price: fixedCostEntity.price,
       SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
-      SqfFixedCost.fixedCostCategoryId:
-          fixedCostEntity.fixedCostCategoryId,
+      SqfFixedCost.fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId,
       SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
       SqfFixedCost.intervalUnit: fixedCostEntity.intervalUnit,
       SqfFixedCost.firstPaymentDate: fixedCostEntity.firstPaymentDate,
@@ -204,21 +200,28 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
           SqfFixedCost.variable: fixedCostEntity.variable,
           SqfFixedCost.price: fixedCostEntity.price,
           SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
-          SqfFixedCost.fixedCostCategoryId:
-              fixedCostEntity.fixedCostCategoryId,
+          SqfFixedCost.fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId,
           SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
           SqfFixedCost.intervalUnit: fixedCostEntity.intervalUnit,
           SqfFixedCost.firstPaymentDate: fixedCostEntity.firstPaymentDate,
-          SqfFixedCost.recentPaymentDate: fixedCostEntity.recentPaymentDate,
-          SqfFixedCost.nextPaymentDate: fixedCostEntity.nextPaymentDate,
+          SqfFixedCost.recentPaymentDate:
+              fixedCostEntity.recentPaymentDate ?? '',
+          SqfFixedCost.nextPaymentDate: fixedCostEntity.nextPaymentDate ?? '',
           SqfFixedCost.deleteFlag: fixedCostEntity.deleteFlag,
         },
         fixedCostEntity.id ?? -1);
     print('Update result: $result');
   }
 
+  // レコードは削除せず、deleteFlagを1にする
   @override
   Future<void> delete(int id) async {
-    await db.delete(SqfFixedCost.tableName, id);
+    final result = await db.update(
+        SqfFixedCost.tableName,
+        {
+          SqfFixedCost.deleteFlag: 1,
+        },
+        id);
+    print('chage status to delete result: $result');
   }
 }

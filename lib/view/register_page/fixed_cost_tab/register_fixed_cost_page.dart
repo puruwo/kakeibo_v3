@@ -82,7 +82,9 @@ class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
                   ),
                   title: SizedBox(
                     child: Text(
-                      widget.mode == RegisterScreenMode.add ? '固定費を設定' : '固定費を編集する',
+                      widget.mode == RegisterScreenMode.add
+                          ? '固定費を設定'
+                          : '固定費を編集する',
                       style: MyFonts.regesterHeaderLabel,
                     ),
                   ),
@@ -110,8 +112,8 @@ class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
                   children: [
                     const SizedBox(height: 5),
 
-                    MemoInputField(originalMemo: initialFixedData.name,
-                        titleLabel: "名称"),
+                    MemoInputField(
+                        originalMemo: initialFixedData.name, titleLabel: "名称"),
 
                     const SizedBox(height: 8),
 
@@ -119,13 +121,13 @@ class _RegisterExpensePageState extends ConsumerState<RegisterFixedCostPage> {
                       initialFixedData: initialFixedData,
                     ),
 
-
                     const SizedBox(height: 8),
 
-                    PaymentFrequencyInputArea(
-                      initialFixedData: initialFixedData,
-                    ),
-                    
+                    widget.mode == RegisterScreenMode.add
+                        ? PaymentFrequencyInputArea(
+                            initialFixedData: initialFixedData,
+                          )
+                        : Container(),
 
                     const SizedBox(height: 16),
 

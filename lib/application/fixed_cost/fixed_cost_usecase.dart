@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
+import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_service.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
@@ -21,6 +22,9 @@ class FixedCostUsecase {
 
   FixedCostExpenseRepository get _fixedCostExpenseRepositoryProvider =>
       _ref.read(fixedCostExpenseRepositoryProvider);
+
+  FixedCostExpenseService get _fixedCostExpenseServiceProvider =>
+      _ref.read(fixedCostExpenseServiceProvider);
 
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get updateDBCountNotifier =>
@@ -145,27 +149,37 @@ class FixedCostUsecase {
   }
 
   // 編集処理
-  // Future<void> edit(
-  //     {required FixedCostEntity originalEntity,
-  //     required FixedCostEntity editEntity}) async {
-  //   //エラーチェック
-  //   if (originalEntity == editEntity) {
-  //     // 変更がない場合は何もしない
-  //     throw const AppException('変更がありません');
-  //   }
+  Future<void> edit(
+      {required FixedCostEntity originalEntity,
+      required FixedCostEntity editEntity}) async {
+    //エラーチェック
+    if (originalEntity == editEntity) {
+      // 変更がない場合は何もしない
+      throw const AppException('変更がありません');
+    }
 
-  //   // データを追加する
-  //   _fixedCostRepositoryProvider.update(editEntity);
+    // カテゴリーが変わったら
+    if (originalEntity.fixedCostCategoryId != editEntity.fixedCostCategoryId) {
+      // 過去のfixed_cost_entityのレコードを修正する
+      await _fixedCostExpenseServiceProvider.changeCategoryOfExistingRecord(
+          originalEntity: originalEntity,
+          fixedCostCategoryId: editEntity.fixedCostCategoryId);
+    }
 
-  //   // DBの更新回数をインクリメント
-  //   updateDBCountNotifier.incrementState();
-  // }
+    // データを編集する
+    final newEntity = originalEntity.copyWith(fixedCostCategoryId:editEntity.fixedCostCategoryId);
+    await _fixedCostRepositoryProvider.update(newEntity);
 
-  // Future<void> delete({required int id}) async {
-  //   // データを削除する
-  //   _fixedCostRepositoryProvider.delete(id);
+    // DBの更新回数をインクリメント
+    updateDBCountNotifier.incrementState();
+  }
 
-  //   // DBの更新回数をインクリメント
-  //   updateDBCountNotifier.incrementState();
-  // }
+  // レコードは削除せず、deleteFlagを1にする
+  Future<void> delete({required int id}) async {
+    // データを削除する
+    _fixedCostRepositoryProvider.delete(id);
+
+    // DBの更新回数をインクリメント
+    updateDBCountNotifier.incrementState();
+  }
 }

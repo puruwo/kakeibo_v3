@@ -144,9 +144,9 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
                       await fixedCostUsecase.add(fixedCostEntity: entity);
                       break;
                     case RegisterScreenMode.edit:
-                      // await fixedCostUsecase.edit(
-                      //     originalEntity: originalFixedCostEntity!,
-                      //     editEntity: entity);
+                      await fixedCostUsecase.edit(
+                          originalEntity: originalFixedCostEntity!,
+                          editEntity: entity);
                       break;
                   }
                   break;

@@ -28,6 +28,6 @@ abstract interface class FixedCostRepository {
   Future<int> insert(FixedCostEntity entity);
 
   Future<void> update(FixedCostEntity entity);
-
+  
   Future<void> delete(int id);
 }

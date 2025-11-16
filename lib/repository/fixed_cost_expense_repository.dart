@@ -128,7 +128,7 @@ class ImplementsFixedCostExpenseRepository
 
   @override
   Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriodAndCategory(
-      {required PeriodValue period,required int fixedCostCategoryId}) async {
+      {required PeriodValue period, required int fixedCostCategoryId}) async {
     final sql = '''
       SELECT COALESCE(SUM(${SqfFixedCostExpense.price}), 0) as total
       FROM ${SqfFixedCostExpense.tableName}
@@ -145,8 +145,9 @@ class ImplementsFixedCostExpenseRepository
   }
 
   @override
-  Future<List<FixedCostExpenseEntity>> fetchUnconfirmedFixedCostExpenseWithPeriod(
-      {required PeriodValue period}) async {
+  Future<List<FixedCostExpenseEntity>>
+      fetchUnconfirmedFixedCostExpenseWithPeriod(
+          {required PeriodValue period}) async {
     final sql = '''
       SELECT
         ${SqfFixedCostExpense.id} as id,
@@ -168,8 +169,10 @@ class ImplementsFixedCostExpenseRepository
   }
 
   @override
-  Future<List<FixedCostExpenseEntity>> fetchUnconfirmedFixedCostExpenseWithPeriodAndCategory(
-      {required PeriodValue period,required int fixedCostCategoryId}) async {
+  Future<List<FixedCostExpenseEntity>>
+      fetchUnconfirmedFixedCostExpenseWithPeriodAndCategory(
+          {required PeriodValue period,
+          required int fixedCostCategoryId}) async {
     final sql = '''
       SELECT
         ${SqfFixedCostExpense.id} as id,
@@ -256,5 +259,26 @@ class ImplementsFixedCostExpenseRepository
       logger.e('[FAIL]: $e');
       return 0;
     }
+  }
+
+  // カテゴリー指定ですでに記録済みのレコードをリスト取得する
+  @override
+  Future<List<FixedCostExpenseEntity>> fetchFixedCostExpenseWithCostId(
+      {required int fixedCostId}) async {
+    final sql = '''
+      SELECT
+        ${SqfFixedCostExpense.id} as id,
+        ${SqfFixedCostExpense.fixedCostId} as fixedCostId,
+        ${SqfFixedCostExpense.fixedCostCategoryId} as fixedCostCategoryId,
+        ${SqfFixedCostExpense.date} as date,
+        ${SqfFixedCostExpense.price} as price,
+        ${SqfFixedCostExpense.name} as name,
+        ${SqfFixedCostExpense.confirmedCostType} as confirmedCostType,
+        ${SqfFixedCostExpense.isConfirmed} as isConfirmed
+      FROM ${SqfFixedCostExpense.tableName}
+      WHERE ${SqfFixedCostExpense.fixedCostId} = $fixedCostId
+    ''';
+    final results = await DatabaseHelper.instance.query(sql);
+    return results.map((e) => FixedCostExpenseEntity.fromJson(e)).toList();
   }
 }

@@ -46,4 +46,8 @@ abstract class FixedCostExpenseRepository {
 
   // 日付を指定して固定費支出の合計を取得する
   Future<int> fetchDailyFixedCostExpenseByPeriod({required DateTime date});
+
+  // 固定費ID指定ですでに記録済みのレコードをリスト取得する
+  Future<List<FixedCostExpenseEntity>> fetchFixedCostExpenseWithCostId(
+      {required int fixedCostId});
 }
