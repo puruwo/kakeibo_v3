@@ -50,7 +50,7 @@ class MyFonts {
       fontSize: 14,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
-  
+
   // 円
   static TextStyle topCardYenLabel = GoogleFonts.notoSans(
       fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w600);
@@ -59,7 +59,9 @@ class MyFonts {
       fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w300);
 
   static TextStyle topCardTirtiaryYenLabel = GoogleFonts.notoSans(
-      fontSize: 11, color: MyColors.secondaryLabel, fontWeight: FontWeight.w300);
+      fontSize: 11,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
 
   // Calndar Page
   static TextStyle calendarDateBoxLarge = const TextStyle(
@@ -181,9 +183,7 @@ class MyFonts {
       fontWeight: FontWeight.w400);
 
   static TextStyle whiteButtonText = GoogleFonts.notoSans(
-      fontSize: 17,
-      color: MyColors.white,
-      fontWeight: FontWeight.w600);
+      fontSize: 17, color: MyColors.white, fontWeight: FontWeight.w600);
 
   /// ================CategoryExpenseHistoryPage================
   /// カテゴリー別利用状況ページ
@@ -240,4 +240,59 @@ class MyFonts {
   // 月ラベル
   static TextStyle annualBalanceChartPageMonthLabel = GoogleFonts.notoSans(
       fontSize: 15, color: MyColors.label, fontWeight: FontWeight.w300);
+
+  /// ================================================
+  ///
+  /// ================AnnualBalanceChartPage================
+  /// 収入一覧
+  /// これをカードの汎用的スタイルにしたい
+
+  // タイトルラベル
+  static TextStyle appCardTitleLabel = GoogleFonts.notoSans(
+    fontSize: 14,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
+
+  // 数値(金額など)
+  static TextStyle appCardPriceLabel = GoogleFonts.notoSans(
+    fontSize: 20,
+    color: MyColors.white,
+    fontWeight: FontWeight.w600,
+  );
+  
+  // 単位(円など)
+  static TextStyle appCardPriceUnit = GoogleFonts.notoSans(
+    fontSize: 16,
+    color: MyColors.white,
+    fontWeight: FontWeight.w600,
+  );
+
+  // 円グラフ内のテキスト
+  static TextStyle appCardGraphLabel = GoogleFonts.notoSans(
+    fontSize: 11,
+    color: MyColors.white,
+    fontWeight: FontWeight.w600,
+  );
+
+  // セカンダリータイトルラベル
+  static TextStyle appCardSecondaryTitleLabel = GoogleFonts.notoSans(
+    fontSize: 14,
+    color: MyColors.white,
+    fontWeight: FontWeight.w500,
+  );
+
+  // セカンダリー数値(金額など)
+  static TextStyle appCardSecondaryPriceLabel = GoogleFonts.notoSans(
+    fontSize: 16,
+    color: MyColors.white,
+    fontWeight: FontWeight.w500,
+  );
+  
+  // セカンダリー単位(円など)
+  static TextStyle appCardSecondaryPriceUnit = GoogleFonts.notoSans(
+    fontSize: 12,
+    color: MyColors.white,
+    fontWeight: FontWeight.w500,
+  );
 }

@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 
 class IncomeGraphArea extends ConsumerStatefulWidget {
@@ -62,21 +63,13 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        '総収入',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Text(
-                        '${formatter.format(incomeDatas.totalIncome)} 円',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 20,
-                          color: MyColors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Text('総収入', style: MyFonts.appCardTitleLabel),
+                      Row(
+                        children: [
+                          Text('${formatter.format(incomeDatas.totalIncome)} ',
+                              style: MyFonts.appCardPriceLabel),
+                          Text('円', style: MyFonts.appCardPriceUnit),
+                        ],
                       ),
                     ],
                   ),
@@ -108,11 +101,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                   value: category.totalAmount.toDouble(),
                                   titlePositionPercentageOffset: 0.3,
                                   title: category.categoryName,
-                                  titleStyle: GoogleFonts.notoSans(
-                                    fontSize: 11,
-                                    color: MyColors.white,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  titleStyle: MyFonts.appCardGraphLabel,
                                   radius: 25,
                                 );
                               }).toList(),
@@ -146,6 +135,9 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                     return Padding(
                                       padding: const EdgeInsets.only(bottom: 8),
                                       child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.baseline,
+                                        textBaseline: TextBaseline.alphabetic,
                                         children: [
                                           // アイコン
                                           SvgPicture.asset(
@@ -163,22 +155,19 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                           Expanded(
                                             child: Text(
                                               category.categoryName,
-                                              style: GoogleFonts.notoSans(
-                                                fontSize: 14,
-                                                color: MyColors.white,
-                                                fontWeight: FontWeight.w500,
-                                              ),
+                                              style: MyFonts.appCardSecondaryTitleLabel
                                             ),
                                           ),
                                           const SizedBox(width: 8),
                                           // 金額
                                           Text(
-                                            '${formatter.format(category.totalAmount)} 円',
-                                            style: GoogleFonts.notoSans(
-                                              fontSize: 14,
-                                              color: MyColors.white,
-                                              fontWeight: FontWeight.w500,
-                                            ),
+                                            '${formatter.format(category.totalAmount)} ',
+                                            style: MyFonts.appCardSecondaryPriceLabel
+                                          ),
+                                          // 円
+                                          Text(
+                                            '円',
+                                            style: MyFonts.appCardSecondaryPriceUnit
                                           ),
                                         ],
                                       ),

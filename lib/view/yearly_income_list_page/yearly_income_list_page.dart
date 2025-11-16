@@ -24,6 +24,7 @@ class YearlyIncomeListPage extends ConsumerWidget {
           ),
           title: Text(
             '収入一覧',
+            // TODO: スタイルをまとめる
             style: GoogleFonts.notoSans(
               fontSize: 18,
               color: MyColors.white,
@@ -34,7 +35,7 @@ class YearlyIncomeListPage extends ConsumerWidget {
         body: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.fromLTRB(16,16,16,0),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: IncomeGraphArea(
                 dateScope: dateScope,
               ),
