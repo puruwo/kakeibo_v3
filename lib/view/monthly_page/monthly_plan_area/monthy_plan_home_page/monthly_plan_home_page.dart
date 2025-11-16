@@ -81,7 +81,7 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
             // 上部（ここに通常の内容など追加）
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: SizedBox(child: MonthlyPlanArea()),
+              child: SizedBox(child: MonthlyPlanArea(hasButtonArea: false,)),
             ),
             DraggableScrollableSheet(
                 // 初期の表示割合
