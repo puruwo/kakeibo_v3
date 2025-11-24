@@ -1,4 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
@@ -7,7 +9,6 @@ import 'package:kakeibo/util/extension/datetime_extension.dart';
 class FixedCostService {
   // 次の支払い日を設定しentityを返す
   FixedCostEntity populateNextPaymentEntity(FixedCostEntity entity) {
-
     // 次支払い日が設定されている場合はそれを基準にする、なければ最初の支払い日を基準にする
     final recentPaymentDate = entity.nextPaymentDate ?? entity.firstPaymentDate;
 
@@ -34,13 +35,19 @@ class FixedCostService {
   }
 
   /// 固定費の支出エンティティを作成し、fixed_cost_expenseに挿入する
-  insertToFixedCostExpense(Ref ref, FixedCostEntity fixedCostEntity, String paymentDate,) {
+  insertToFixedCostExpense(
+    Ref ref,
+    FixedCostEntity fixedCostEntity,
+    String paymentDate,
+  ) {
     // FixedCostExpenseEntityを作成
     final fixedCostExpenseEntity = FixedCostExpenseEntity(
         fixedCostId: fixedCostEntity.id!, // 固定費ID
         fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId, // 固定費カテゴリーID
         date: paymentDate,
-        price: fixedCostEntity.variable == 0 ? fixedCostEntity.price : 0, // 変動費なら価格は0
+        price: fixedCostEntity.variable == 0
+            ? fixedCostEntity.price
+            : 0, // 変動費なら価格は0
         name: fixedCostEntity.name,
         confirmedCostType: fixedCostEntity.variable, // 0: 金額確定, 1: 金額未確定
         isConfirmed:
@@ -49,5 +56,29 @@ class FixedCostService {
 
     // 挿入
     ref.read(fixedCostExpenseRepositoryProvider).insert(fixedCostExpenseEntity);
+  }
+
+  /// 確定した固定費の合計と未確定の固定費の合計値をまとめて返却する
+  Future<int> getFixedCostTotal(Ref ref, DateScopeEntity dateScope) async {
+    // 支払いがある固定費の合計を取得
+    // 支払額未定の固定費は推定額を使用する
+    final confirmedFixedCostExpenseTotal = await ref
+        .read(fixedCostExpenseRepositoryProvider)
+        .fetchTotalConfirmedFixedCostExpenseWithPeriod(
+            period: dateScope.monthPeriod);
+    final unconfirmedFixedCostList = await ref
+        .read(fixedCostExpenseRepositoryProvider)
+        .fetchUnconfirmedFixedCostExpenseWithPeriod(
+            period: dateScope.monthPeriod);
+    final unconfirmedFixedCostEstimatedTotal = await Future.wait(
+        unconfirmedFixedCostList.map((element) async {
+      final estimatePrice = await ref
+          .read(fixedCostRepositoryProvider)
+          .fetchEstimatedPriceById(id: element.fixedCostId);
+      return estimatePrice;
+    })).then((values) => values.fold<int>(
+        0, (previousValue, estimatePrice) => previousValue + estimatePrice));
+
+    return confirmedFixedCostExpenseTotal + unconfirmedFixedCostEstimatedTotal;
   }
 }

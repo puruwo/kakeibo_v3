@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
@@ -97,6 +98,14 @@ class PredictionGraphUsecase {
     final budget =
         await _budgetRepo.fetchMonthlyAll(month: dateScope.representativeMonth);
 
+    // 今月の固定費支出を取得
+    final fixedCostExpenseTotal =
+        await FixedCostService().getFixedCostTotal(ref, dateScope);
+
+    // 予算と固定費を合算
+    final budgetIncludeFixedCost =
+        budget == 0 ? 0 : budget + fixedCostExpenseTotal;
+
     // 累積支出データをチャート用に変換
     final expensePoints = <PredictionGraphPoint>[];
     int lastPrice = 0;
@@ -146,25 +155,28 @@ class PredictionGraphUsecase {
       lastPrice,
       predictionPrice,
       income,
-      budget,
+      budgetIncludeFixedCost,
     );
 
     // 横軸ラベルを生成
     final xAxisLabels = _generateXAxisLabels(fromDate, toDate);
 
     // ラベル表示ロジック（重なりを考慮）
-    final labelDisplayDecision = _decideLabelDisplay(income, budget, maxValue);
+    final labelDisplayDecision =
+        _decideLabelDisplay(income, budgetIncludeFixedCost, maxValue);
     final shouldShowIncomeLine = labelDisplayDecision.shouldShowIncomeLine;
     final shouldShowBudgetLine = labelDisplayDecision.shouldShowBudgetLine;
 
     // 収入ラベルの位置を計算
     final incomeLabelPosition = shouldShowIncomeLine
-        ? _calculateIncomeLabelPosition(income, budget, shouldShowBudgetLine)
+        ? _calculateIncomeLabelPosition(
+            income, budgetIncludeFixedCost, shouldShowBudgetLine)
         : null;
 
     // 予算ラベルの位置を計算
     final budgetLabelPosition = shouldShowBudgetLine
-        ? _calculateBudgetLabelPosition(income, budget, shouldShowIncomeLine)
+        ? _calculateBudgetLabelPosition(
+            income, budgetIncludeFixedCost, shouldShowIncomeLine)
         : null;
 
     return PredictionGraphValue(
@@ -175,7 +187,7 @@ class PredictionGraphUsecase {
       expensePoints: expensePoints,
       predictionPoints: predictionPoints,
       income: income,
-      budget: budget,
+      budget: budgetIncludeFixedCost,
       maxValue: maxValue,
       latestPrice: lastPrice,
       predictionPrice: predictionPrice,
