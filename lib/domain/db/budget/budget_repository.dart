@@ -10,8 +10,7 @@ final budgetRepositoryProvider = Provider<BudgetRepository>(
 /// 支出情報に関するリポジトリ
 abstract interface class BudgetRepository {
 
-  /// 期間指定して各カテゴリーの月間予算を取得する
-  /// カテゴリーの指定はしない
+  /// 期間とカテゴリーを指定して各カテゴリーの月間予算を取得する
   Future<BudgetEntity> fetchMonthlyByBigCategory({required MonthValue month,required int expenseBigCategoryId});
 
   /// 期間指定してを月間予算の全カテゴリー合計を取得する

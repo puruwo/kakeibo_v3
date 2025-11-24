@@ -7,10 +7,10 @@ import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_da
 final resolvedBudgetEditValueProvider =
     FutureProvider<List<BudgetEditValue>>((ref) async {
 
-  // 選択された日付から代表月を取得する
-  final representativeMonth = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.representativeMonth));
+  // 選択された日付情報を取得する
+  final dateScope = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data));
 
   // 選択された代表月を元に、Valuesを取得する
-  final values = ref.watch(budgetProvider(representativeMonth).future);
+  final values = ref.watch(budgetProvider(dateScope).future);
   return values;
 });

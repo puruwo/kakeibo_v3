@@ -1,8 +1,10 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/budget/budget_provider.dart';
-import 'package:kakeibo/domain/core/month_value/month_value.dart';
+import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -21,6 +23,12 @@ class BudgetUsecase {
   ExpenseBigCategoryRepository get _bigCategoryRepository =>
       _ref.read(expensebigCategoryRepositoryProvider);
 
+  ExpenseSmallCategoryRepository get _smallCategoryRepository =>
+      _ref.read(expenseSmallCategoryRepositoryProvider);
+
+  ExpenseRepository get _expenseRepository =>
+      _ref.read(expenseRepositoryProvider);
+
   void _invalidateBudgetRepositoryProvider() => _ref.invalidate(budgetProvider);
 
   // DBの更新を管理するnotifierを取得
@@ -29,7 +37,7 @@ class BudgetUsecase {
 
   /// [fetchAll] メソッドは、全てのエクスポートの情報を取得する
   Future<List<BudgetEditValue>> fetchAll(
-      {required MonthValue monthValue}) async {
+      {required DateScopeEntity dateScope}) async {
     // 大カテゴリーの一覧情報を取得する
     final expenseBigCategoryList = await _bigCategoryRepository.fetchAll();
 
@@ -41,11 +49,20 @@ class BudgetUsecase {
       // SqfBudgetから大カテゴリーを指定して予算データを取得する
       final budgetEntity =
           await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
-              month: monthValue, expenseBigCategoryId: bigCategory.id);
-      final lastMonthBudgetEntity =
-          await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
-              month: monthValue.beforMonth,
-              expenseBigCategoryId: bigCategory.id);
+              month: dateScope.representativeMonth, expenseBigCategoryId: bigCategory.id);
+
+      // 大カテゴリーの支出合計を取得する
+      final smallCategoryList = await _smallCategoryRepository
+          .fetchByBigCategory(bigCategoryId: bigCategory.id);
+      final lastMonthExpenseTotal =
+          await Future.wait(smallCategoryList.map((e) async {
+        return await _expenseRepository
+            .fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
+                incomeSourceBigCategory: 0,
+                fromDate: dateScope.monthPeriod.startDatetime,
+                toDate: dateScope.monthPeriod.endDatetime,
+                smallCategoryId: e.id);
+      })).then((values) => values.fold<int>(0, (a, b) => a + b));
 
       final budgetEditValue = BudgetEditValue(
         id: budgetEntity.id,
@@ -56,7 +73,7 @@ class BudgetUsecase {
         expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
         month: budgetEntity.month,
         price: budgetEntity.price,
-        lastMonthBudgetPrice: lastMonthBudgetEntity.price,
+        lastMonthBudgetPrice: lastMonthExpenseTotal,
         expenseBigCategoryName: bigCategory.bigCategoryName,
         colorCode: bigCategory.colorCode,
         resourcePath: bigCategory.resourcePath,

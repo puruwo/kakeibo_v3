@@ -76,7 +76,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // カテゴリーと拠出元を指定して取得する
   @override
-  Future<List<ExpenseEntity>> fetchWithCategory(
+  Future<List<ExpenseEntity>> fetchWithSmallCategory(
       {required int incomeSourceBigId,
       required PeriodValue period,
       required int smallCategoryId}) async {
@@ -140,6 +140,32 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName}
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
       AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory;
+      ''';
+
+    try {
+      final result = await db.queryFirstIntValue(sql);
+      // logger.i(
+      //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchTotalExpenseByPeriodWithBigCategory(int $incomeSourceBigCategory, DateTime $fromDate, DateTime $toDate)\n$sql');
+
+      return result ?? 0; // nullの場合は0を返す
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return 0;
+    }
+  }
+
+  // 期間とカテゴリーを指定して支出の合計を取得する
+  @override
+  Future<int> fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
+      {required int incomeSourceBigCategory,
+      required int smallCategoryId,
+      required DateTime fromDate,
+      required DateTime toDate}) async {
+    final sql = '''
+      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName}
+      WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
+      AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory
+      AND ${SqfExpense.expenseSmallCategoryId} = $smallCategoryId;
       ''';
 
     try {

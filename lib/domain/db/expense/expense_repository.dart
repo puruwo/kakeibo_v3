@@ -10,7 +10,7 @@ final expenseRepositoryProvider = Provider<ExpenseRepository>(
 
 /// 支出情報に関するリポジトリ
 abstract interface class ExpenseRepository {
-  // / 全ての支出情報を取得する
+  /// 全ての支出情報を取得する
   Future<List<ExpenseEntity>> fetchAll();
 
   /// 期間指定してデータを取得する
@@ -18,20 +18,27 @@ abstract interface class ExpenseRepository {
   Future<List<ExpenseEntity>> fetchWithSourceCategory(
       {required int incomeSourceBigId, required PeriodValue period});
 
+  /// 期間を指定して支出の合計を取得する
+  Future<int> fetchTotalExpenseByPeriod(
+      {required DateTime fromDate, required DateTime toDate});
+
   /// 期間指定してデータを取得する
-  /// カテゴリーと拠出元の指定あり
-  Future<List<ExpenseEntity>> fetchWithCategory(
+  /// 小カテゴリーと拠出元の指定あり
+  Future<List<ExpenseEntity>> fetchWithSmallCategory(
       {required int incomeSourceBigId,
       required PeriodValue period,
       required int smallCategoryId});
 
-  // 期間を指定して支出の合計を取得する
-  Future<int> fetchTotalExpenseByPeriod(
-      {required DateTime fromDate, required DateTime toDate});
-
-  // 期間とカテゴリーを指定して支出の合計を取得する
+  /// 期間と拠出元カテゴリーを指定して支出の合計を取得する
   Future<int> fetchTotalExpenseByPeriodWithBigCategory(
       {required int incomeSourceBigCategory,
+      required DateTime fromDate,
+      required DateTime toDate});
+
+  /// 期間と小カテゴリーと拠出元カテゴリーを指定して支出の合計を取得する
+  Future<int> fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
+      {required int incomeSourceBigCategory,
+      required int smallCategoryId,
       required DateTime fromDate,
       required DateTime toDate});
 

@@ -28,7 +28,7 @@ class ExpenseHistoryService {
           incomeSourceBigId: incomeSourceBigId, period: period);
     } // カテゴリーも指定して支出情報を取得する
     else {
-      expenseList = await expenseRepo.fetchWithCategory(
+      expenseList = await expenseRepo.fetchWithSmallCategory(
           incomeSourceBigId: incomeSourceBigId,
           period: period,
           smallCategoryId: smallId);
