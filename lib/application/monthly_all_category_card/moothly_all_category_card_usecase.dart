@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
@@ -59,20 +60,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
 
     // 支払いがある固定費の合計を取得
     // 支払額未定の固定費は推定額を使用する
-    final confirmedFixedCostExpenseTotal =
-        await _fixedCostExpenseRepositoryProvider
-            .fetchTotalConfirmedFixedCostExpenseWithPeriod(
-                period: dateScope.monthPeriod);
-    final unconfirmedFixedCostList = await _fixedCostExpenseRepositoryProvider
-        .fetchUnconfirmedFixedCostExpenseWithPeriod(
-            period: dateScope.monthPeriod);
-    final unconfirmedFixedCostEstimatedTotal = await Future.wait(
-        unconfirmedFixedCostList.map((element) async {
-      final estimatePrice = await _fixedCostRepositoryProvider
-          .fetchEstimatedPriceById(id: element.fixedCostId);
-      return estimatePrice;
-    })).then((values) => values.fold<int>(
-        0, (previousValue, estimatePrice) => previousValue + estimatePrice));
+    final fixedCostTotal =
+        await FixedCostService().getFixedCostTotal(ref, dateScope);
 
     // 全カテゴリーの支出を取得
     // 大カテゴリーIDを0にすることで、ボーナスを除くカテゴリーの支出を取得する
@@ -87,9 +76,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
     final allNormalCategoryBudget = await _budgetRepositoryProvider
         .fetchMonthlyAll(month: dateScope.representativeMonth);
 
-    final totalBudgetIncudeFixedCost = allNormalCategoryBudget +
-        confirmedFixedCostExpenseTotal +
-        unconfirmedFixedCostEstimatedTotal;
+    final totalBudgetIncudeFixedCost = allNormalCategoryBudget + fixedCostTotal;
 
     final allBudget =
         allNormalCategoryBudget != 0 ? totalBudgetIncudeFixedCost : 0;
@@ -151,9 +138,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
             bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
 
     // 固定費も一般支出も全て足した支出
-    final allCategoryTotalExpense = allCategoryExpense +
-        confirmedFixedCostExpenseTotal +
-        unconfirmedFixedCostEstimatedTotal;
+    final allCategoryTotalExpense = allCategoryExpense + fixedCostTotal;
 
     // ============================================
     // 棒グラフのタイプの最大値を決める
@@ -290,8 +275,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
       allCategoryTotalExpense: allCategoryTotalExpense,
       allCategoryTotalBudget: allBudget,
       allCategoryTotalIncome: allCategoryIncome,
-      allFixedCostExpense:
-          confirmedFixedCostExpenseTotal + unconfirmedFixedCostEstimatedTotal,
+      allFixedCostExpense: fixedCostTotal,
       realSavings: allCategoryIncome - allCategoryTotalExpense,
       denominator: denominator,
       totalBadgetRatio: totalBadgetRatio,
