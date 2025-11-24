@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_cotegory_area.dart';
+import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_footer.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/income_list_area/income_list_area.dart';
@@ -180,16 +181,8 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
                                     child: Column(
                                       children: [
                                         // タブ
-                                        TabBar(
-                                          controller: _tabController,
-                                          indicatorSize:
-                                              TabBarIndicatorSize.tab,
-                                          indicatorColor: MyColors.themeColor,
-                                          unselectedLabelStyle:
-                                              MyFonts.unselectedLabelStyle,
-                                          labelStyle:
-                                              MyFonts.selectedLabelStyle,
-                                          indicatorWeight: 2,
+                                        AppTab(
+                                          tabController: _tabController,
                                           tabs: const [
                                             Tab(text: '予算'),
                                             Tab(text: '収入'),

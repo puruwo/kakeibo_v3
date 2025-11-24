@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_list_area.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_footer.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_income_list_area/bonus_income_list_area.dart';
@@ -35,8 +36,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
 
     // タブ変更時にフッターの状態を更新（スワイプにも対応）
     _tabController.addListener(() {
-      final notifier =
-          ref.read(selectedTabControllerNotifierProvider.notifier);
+      final notifier = ref.read(selectedTabControllerNotifierProvider.notifier);
       if (_tabController.index == 1) {
         notifier.updateState(SelectedTab.bonusIncome);
       } else {
@@ -46,8 +46,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
 
     // initialTabに応じてフッターの状態を初期化
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final notifier =
-          ref.read(selectedTabControllerNotifierProvider.notifier);
+      final notifier = ref.read(selectedTabControllerNotifierProvider.notifier);
       if (widget.initialTab == 1) {
         notifier.updateState(SelectedTab.bonusIncome);
       } else {
@@ -146,14 +145,8 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                                 child: Column(
                                   children: [
                                     // タブ
-                                    TabBar(
-                                      controller: _tabController,
-                                      indicatorSize: TabBarIndicatorSize.tab,
-                                      indicatorColor: MyColors.themeColor,
-                                      unselectedLabelStyle:
-                                          MyFonts.unselectedLabelStyle,
-                                      labelStyle: MyFonts.selectedLabelStyle,
-                                      indicatorWeight: 2,
+                                    AppTab(
+                                      tabController: _tabController,
                                       tabs: const [
                                         Tab(text: 'ボーナス支出'),
                                         Tab(text: 'ボーナス収入'),
@@ -171,8 +164,8 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                                   children: const [
                                     // ボーナス支出のエリア
                                     Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16.0),
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 16.0),
                                       child: BonusExpenseListArea(),
                                     ),
 

@@ -8,6 +8,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_list_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_footer.dart';
+import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_edit_page/editting_fixed_cost_category_list/editting_fixed_cost_category_list.dart';
@@ -16,8 +17,8 @@ import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 
 // カテゴリータイプのEnum
 enum CategoryType {
-  expense,     // 一般（支出）
-  fixedCost,   // 固定費
+  expense, // 一般（支出）
+  fixedCost, // 固定費
 }
 
 class CategorySettingPage extends ConsumerStatefulWidget {
@@ -28,8 +29,7 @@ class CategorySettingPage extends ConsumerStatefulWidget {
       _BigCategorySettingPageState();
 }
 
-class _BigCategorySettingPageState
-    extends ConsumerState<CategorySettingPage>
+class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
@@ -44,6 +44,7 @@ class _BigCategorySettingPageState
     _tabController.dispose();
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     final editmodeProvider = ref.watch(editModeNotifierProvider);
@@ -81,11 +82,8 @@ class _BigCategorySettingPageState
           ),
 
           // タブバー
-          bottom: TabBar(
-            controller: _tabController,
-            indicatorColor: MyColors.systemGreen,
-            labelColor: MyColors.systemGreen,
-            unselectedLabelColor: MyColors.secondaryLabel,
+          bottom: AppTab(
+            tabController: _tabController,
             tabs: const [
               Tab(text: '一般'),
               Tab(text: '固定費'),

@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
@@ -107,17 +108,11 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
               color: MyColors.white,
             ),
           ),
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: '支出'),
-              Tab(text: '固定費'),
-              Tab(text: '収入'),
-            ],
-            onTap: (value) {
-              print(value);
-            },
-          ),
+          bottom: AppTab(tabController: _tabController, tabs: const [
+            Tab(text: '支出'),
+            Tab(text: '固定費'),
+            Tab(text: '収入'),
+          ]),
         ),
 
         //body
