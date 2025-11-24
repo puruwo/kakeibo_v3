@@ -23,6 +23,8 @@ class MonthlyPlanHomePage extends ConsumerStatefulWidget {
 class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final GlobalKey _monthlyPlanKey = GlobalKey();
+  double _monthlyPlanHeight = 0;
 
   @override
   void initState() {
@@ -51,7 +53,19 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
       } else {
         notifier.updateState(TabState.budgetNormal);
       }
+
+      // MonthlyPlanAreaの高さを取得
+      _measureMonthlyPlanHeight();
     });
+  }
+
+  void _measureMonthlyPlanHeight() {
+    final RenderBox? renderBox = _monthlyPlanKey.currentContext?.findRenderObject() as RenderBox?;
+    if (renderBox != null) {
+      setState(() {
+        _monthlyPlanHeight = renderBox.size.height;
+      });
+    }
   }
 
   @override
@@ -76,25 +90,40 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
         ),
 
         // 本体
-        body: Stack(
-          children: [
-            // 上部（ここに通常の内容など追加）
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
-              child: SizedBox(child: MonthlyPlanArea(hasButtonArea: false,)),
-            ),
-            DraggableScrollableSheet(
-                // 初期の表示割合
-                initialChildSize: 0.7,
-                // 最小の表示割合
-                minChildSize: 0,
-                // 最大の表示割合
-                maxChildSize: 1.0,
-                // ドラッグを離した時に一番近いsnapSizeになるか
-                snap: true,
-                // snapで止める時の割合
-                snapSizes: const [0.7, 1.0],
-                builder: (context, scrollController) {
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            // MonthlyPlanAreaの実際の高さ + パディング
+            const topPadding = 16.0;
+            final totalTopHeight = _monthlyPlanHeight + topPadding;
+
+            // DraggableScrollableSheetの初期サイズを計算
+            // MonthlyPlanAreaのすぐ下から表示（被らないギリギリの位置）
+            final initialSize = _monthlyPlanHeight > 0
+                ? (constraints.maxHeight - totalTopHeight) / constraints.maxHeight
+                : 0.6; // 高さ取得前のデフォルト値
+
+            return Stack(
+              children: [
+                // 上部（ここに通常の内容など追加）
+                Padding(
+                  padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0),
+                  child: SizedBox(
+                    key: _monthlyPlanKey,
+                    child: const MonthlyPlanArea(hasButtonArea: false),
+                  ),
+                ),
+                DraggableScrollableSheet(
+                    // 初期の表示割合（MonthlyPlanAreaの下から開始）
+                    initialChildSize: initialSize,
+                    // 最小の表示割合
+                    minChildSize: initialSize,
+                    // 最大の表示割合
+                    maxChildSize: 1.0,
+                    // ドラッグを離した時に一番近いsnapSizeになるか
+                    snap: true,
+                    // snapで止める時の割合
+                    snapSizes: [initialSize, 1.0],
+                    builder: (context, scrollController) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -190,7 +219,9 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
                     ],
                   );
                 }),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );

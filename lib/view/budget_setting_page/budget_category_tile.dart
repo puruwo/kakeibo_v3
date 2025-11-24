@@ -197,7 +197,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                               // //領域外をタップでproviderを更新する
                               onTapOutside: (event) {
                                 //キーボードを閉じる
-                                FocusScope.of(context).unfocus();
+                                // FocusScope.of(context).unfocus();
                               },
                               onEditingComplete: () {
                                 //キーボードを閉じる
