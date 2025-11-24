@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 
@@ -138,7 +139,9 @@ class _NewSmallCategoryInputNameDialog
                     style: MyFonts.secondaryButtonText,
                   ),
                 ),
-                ElevatedButton(
+                MainButton(
+                  buttonType: ButtonType.main,
+                  buttonText: 'OK',
                   onPressed: () {
                     // 入力が空の場合は何もしない
                     if (_textContoroller.text.isEmpty) {
@@ -185,13 +188,6 @@ class _NewSmallCategoryInputNameDialog
                     // OKボタンを押した時の処理
                     Navigator.of(context).pop();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.buttonPrimary,
-                  ),
-                  child: Text(
-                    'OK',
-                    style: MyFonts.secondaryButtonText,
-                  ),
                 ),
               ],
             ),

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 import 'package:kakeibo/view_model/state/bonus_home_page/selected_tab_controller/selected_tab_controller.dart';
@@ -27,7 +26,9 @@ class BonusHomeFooter extends ConsumerWidget {
   Widget _newExpenseButton(BuildContext context, WidgetRef ref) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
+      child: MainButton(
+        buttonType: ButtonType.main,
+        buttonText: '新しい支出を追加',
         onPressed: () {
           final today = DateTime.now();
           ExpenseEntity newExpense = ExpenseEntity(
@@ -62,13 +63,6 @@ class BonusHomeFooter extends ConsumerWidget {
             },
           );
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.buttonPrimary,
-        ),
-        child: Text(
-          '新しい支出を追加',
-          style: MyFonts.mainButtonText,
-        ),
       ),
     );
   }
@@ -76,47 +70,41 @@ class BonusHomeFooter extends ConsumerWidget {
   Widget _newIncomeButton(BuildContext context, WidgetRef ref) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
-        onPressed: () {
-          showModalBottomSheet(
-            //sccafoldの上に出すか
-            useRootNavigator: true,
-            isScrollControlled: true,
-            useSafeArea: true,
-            constraints: const BoxConstraints(
-              maxWidth: 2000,
-            ),
-            context: context,
-            // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-            builder: (context) {
-              final today = DateTime.now();
-              IncomeEntity newIncome = IncomeEntity(
-                date: DateFormat('yyyyMMdd').format(today),
-                categoryId: 1, //　1を指定することで、でボーナスを選択する
-              );
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData.dark(),
-                themeMode: ThemeMode.dark,
-                darkTheme: ThemeData.dark(),
-                home: MediaQuery.withClampedTextScaling(
-                  child: RegisterIncomePage(
-                    incomeEntity: newIncome,
-                    isTabVisible: true, // タブを非表示にする
+      child: MainButton(
+          buttonType: ButtonType.main,
+          buttonText: '新しい収入を追加',
+          onPressed: () {
+            showModalBottomSheet(
+              //sccafoldの上に出すか
+              useRootNavigator: true,
+              isScrollControlled: true,
+              useSafeArea: true,
+              constraints: const BoxConstraints(
+                maxWidth: 2000,
+              ),
+              context: context,
+              // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
+              builder: (context) {
+                final today = DateTime.now();
+                IncomeEntity newIncome = IncomeEntity(
+                  date: DateFormat('yyyyMMdd').format(today),
+                  categoryId: 1, //　1を指定することで、でボーナスを選択する
+                );
+                return MaterialApp(
+                  debugShowCheckedModeBanner: false,
+                  theme: ThemeData.dark(),
+                  themeMode: ThemeMode.dark,
+                  darkTheme: ThemeData.dark(),
+                  home: MediaQuery.withClampedTextScaling(
+                    child: RegisterIncomePage(
+                      incomeEntity: newIncome,
+                      isTabVisible: true, // タブを非表示にする
+                    ),
                   ),
-                ),
-              );
-            },
-          );
-        },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.buttonPrimary,
-        ),
-        child: Text(
-          '新しい収入を追加',
-          style: MyFonts.mainButtonText,
-        ),
-      ),
+                );
+              },
+            );
+          }),
     );
   }
 }

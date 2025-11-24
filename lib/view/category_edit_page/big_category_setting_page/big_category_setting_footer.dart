@@ -4,9 +4,8 @@ import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -41,19 +40,14 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
   Widget _normalButtons(BuildContext context, WidgetRef ref) {
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
+      child: MainButton(
+        buttonType: ButtonType.main,
+        buttonText: '表示・並び替え',
         onPressed: () {
           // 編集モードの状態を更新
           final notifier = ref.read(editModeNotifierProvider.notifier);
           notifier.updateState();
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.buttonPrimary,
-        ),
-        child: Text(
-          '表示・並び替え',
-          style: MyFonts.mainButtonText,
-        ),
       ),
     );
   }
@@ -63,7 +57,9 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
     return Row(
       children: [
         Expanded(
-          child: ElevatedButton(
+          child: MainButton(
+            buttonType: ButtonType.secondary,
+            buttonText: '編集をキャンセル',
             onPressed: () {
               // 編集モードなら、providerを破棄して状態を非編集モードに変更
               if (categoryType == CategoryType.expense) {
@@ -75,20 +71,15 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
               }
               ref.read(editModeNotifierProvider.notifier).updateState();
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: MyColors.buttonSecondary,
-            ),
-            child: Text(
-              '編集をキャンセル',
-              style: MyFonts.secondaryButtonText,
-            ),
           ),
         ),
 
         const SizedBox(width: 8.0), // ボタン間のスペース
 
         Expanded(
-          child: ElevatedButton(
+          child: MainButton(
+            buttonType: ButtonType.main,
+            buttonText: '編集を完了',
             onPressed: () async {
               if (categoryType == CategoryType.expense) {
                 await _saveExpenseCategoryChanges(context, ref);
@@ -96,13 +87,6 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
                 await _saveFixedCostCategoryChanges(context, ref);
               }
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: MyColors.buttonPrimary,
-            ),
-            child: Text(
-              '編集を完了',
-              style: MyFonts.mainButtonText,
-            ),
           ),
         ),
       ],

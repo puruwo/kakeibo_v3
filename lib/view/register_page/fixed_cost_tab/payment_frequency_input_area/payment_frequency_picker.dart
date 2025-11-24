@@ -6,13 +6,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
 
 // 支出登録画面の拠出元選択画面
 // 拠出元表示部分をタップしたら出現する
 
 class PaymentFrequencyPicker extends ConsumerStatefulWidget {
-  const PaymentFrequencyPicker({super.key, required this.originalPaymentFrequency});
+  const PaymentFrequencyPicker(
+      {super.key, required this.originalPaymentFrequency});
 
   final PaymentFrequencyValue originalPaymentFrequency;
 
@@ -39,7 +41,6 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
 
   @override
   Widget build(BuildContext context) {
-
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
@@ -62,7 +63,6 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               // 支払い頻度の間隔
               DropdownMenu<int>(
                 inputDecorationTheme: const InputDecorationTheme(
@@ -118,7 +118,8 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
                   }
                 },
                 dropdownMenuEntries: items
-                    .map((item) => DropdownMenuEntry(value: item, label: item.japaneseName))
+                    .map((item) => DropdownMenuEntry(
+                        value: item, label: item.japaneseName))
                     .toList(),
               ),
               const Text("に1回"),
@@ -128,7 +129,6 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
           ButtonBar(
             alignment: MainAxisAlignment.end,
             children: [
-
               // キャンセルボタン
               TextButton(
                 // キャンセルボタンを押した時の処理
@@ -145,24 +145,21 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
               ),
 
               // OKボタン
-              ElevatedButton(
+              MainButton(
+                buttonType: ButtonType.main,
+                buttonText: 'OK',
                 // OKボタンを押した時の処理
                 onPressed: () {
-                  ref.read(paymentFrequencyControllerNotifierProvider.notifier)
+                  ref
+                      .read(paymentFrequencyControllerNotifierProvider.notifier)
                       .setData(PaymentFrequencyValue.fromDB(
-                        intervalNumber:selectedFrequencyNumber,
-                        intervalUnitNumber: selectedIntervalUnit.inturvalUnitNumber,
+                        intervalNumber: selectedFrequencyNumber,
+                        intervalUnitNumber:
+                            selectedIntervalUnit.inturvalUnitNumber,
                       ));
 
                   Navigator.of(context).pop();
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.buttonPrimary,
-                ),
-                child: Text(
-                  'OK',
-                  style: MyFonts.secondaryButtonText,
-                ),
               ),
             ],
           ),

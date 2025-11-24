@@ -8,6 +8,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 
 class PriceInputDialog extends ConsumerStatefulWidget {
   const PriceInputDialog({
@@ -152,7 +153,9 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
                 ),
 
                 // OKボタン
-                ElevatedButton(
+                MainButton(
+                  buttonType: ButtonType.main,
+                  buttonText: 'OK',
                   onPressed: () {
                     // 入力が空の場合は何もしない
                     if (_textContoroller.text.isEmpty ||
@@ -183,13 +186,6 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
                     // OKボタンを押した時の処理
                     Navigator.of(context).pop();
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.buttonPrimary,
-                  ),
-                  child: Text(
-                    'OK',
-                    style: MyFonts.secondaryButtonText,
-                  ),
                 ),
               ],
             ),

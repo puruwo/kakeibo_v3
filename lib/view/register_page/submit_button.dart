@@ -4,11 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
@@ -50,7 +49,9 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
 
     return SizedBox(
       width: double.infinity,
-      child: ElevatedButton(
+      child: MainButton(
+        buttonType: ButtonType.main,
+        buttonText: screenMode == RegisterScreenMode.edit ? '更新' : '追加',
         onPressed: () async {
           execute(
             context,
@@ -172,17 +173,6 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
             },
           );
         },
-        style: ElevatedButton.styleFrom(
-          backgroundColor: MyColors.buttonPrimary,
-        ),
-        child: Text(
-          screenMode == RegisterScreenMode.edit
-              ? '更新'
-              : // 編集モードなら「更新」
-              '追加' // 新規モードなら「追加」
-          ,
-          style: MyFonts.mainButtonText,
-        ),
       ),
     );
   }

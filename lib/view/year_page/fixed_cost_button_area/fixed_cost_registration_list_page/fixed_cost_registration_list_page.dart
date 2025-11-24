@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
@@ -76,7 +76,9 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
                 child: SizedBox(
                   width: double.infinity,
-                  child: ElevatedButton(
+                  child: MainButton(
+                    buttonType: ButtonType.main,
+                    buttonText: '固定費を追加',
                     onPressed: () {
                       showModalBottomSheet(
                         //sccafoldの上に出すか
@@ -106,13 +108,6 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
                         },
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: MyColors.buttonPrimary,
-                    ),
-                    child: Text(
-                      '固定費を追加',
-                      style: MyFonts.mainButtonText,
-                    ),
                   ),
                 ),
               ),
