@@ -37,8 +37,8 @@ class _PriceInputFieldState extends ConsumerState<PriceInputField> {
 
       // ビルドして最初の一回だけ設定
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        // 購入金額の初期値をセット
-        _enteredPriceController.text = widget.originalPrice.toString();
+        // 購入金額の初期値をセット（カンマ区切りでフォーマット）
+        _enteredPriceController.text = NumberTextInputFormatter.formatInitialValue(widget.originalPrice);
       });
     });
   }

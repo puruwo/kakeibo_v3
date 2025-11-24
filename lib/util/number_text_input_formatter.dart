@@ -4,6 +4,14 @@ import 'package:intl/intl.dart';
 class NumberTextInputFormatter extends TextInputFormatter {
   final _exceptNumberAndComma = RegExp(r'[^0-9,]+');
   final _numberFormatter = NumberFormat('#,###');
+
+  /// 初期値として数値をカンマ区切りの文字列に変換
+  static String formatInitialValue(int value) {
+    if (value == 0) return '';
+    final formatter = NumberFormat('#,###');
+    return formatter.format(value);
+  }
+
   @override
   TextEditingValue formatEditUpdate(
     TextEditingValue oldValue,

@@ -121,7 +121,8 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
                         children: [
                           SizedBox(
                             width: 100,
@@ -160,9 +161,12 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                 filled: false,
 
                                 // ヒントテキスト
-                                hintText: "金額を入力",
+                                // 空文字かどうかを判定することで、入力時際描画のちらつきを防止する
+                                hintText:
+                                    controller.text.isNotEmpty ? "" : "金額を入力",
                                 hintStyle: const TextStyle(
                                   fontSize: 16,
+                                  color: MyColors.tirtiaryLabel,
                                 ),
 
                                 // テキストの余白
@@ -184,15 +188,26 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                     color: MyColors.jet.withOpacity(0.0),
                                   ),
                                 ),
+
+                                // 入力テキストの末尾に「円」を表示
+                                suffix: controller.text.isNotEmpty
+                                    ? Text(
+                                        ' 円',
+                                        style: MyFonts.yenText,
+                                      )
+                                    : null,
                               ),
                               keyboardType: TextInputType.number,
 
                               // 編集されたら編集フラグをtrueに
                               onChanged: (value) {
-                                ref
-                                    .read(
-                                        isPriceEditedNotifierProvider.notifier)
-                                    .updateState(true);
+                                // setStateをかますことでwidgetが再描画される
+                                setState(() {
+                                  ref
+                                      .read(isPriceEditedNotifierProvider
+                                          .notifier)
+                                      .updateState(true);
+                                });
                               },
                               // //領域外をタップでproviderを更新する
                               onTapOutside: (event) {
@@ -205,14 +220,6 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                               },
                             ),
                           ),
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 12.0, bottom: 8.0),
-                            child: Text(
-                              ' 円',
-                              style: MyFonts.yenText,
-                            ),
-                          )
                         ],
                       ),
                     ),

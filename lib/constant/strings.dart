@@ -123,9 +123,7 @@ class MyFonts {
       fontWeight: FontWeight.w300);
 
   static TextStyle yenText = GoogleFonts.notoSans(
-      fontSize: 14,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w300);
+      fontSize: 14, color: MyColors.tirtiaryLabel, fontWeight: FontWeight.w300);
 
   static TextStyle textField = const TextStyle(
       fontFamily: 'sf_ui',
@@ -260,7 +258,7 @@ class MyFonts {
     color: MyColors.white,
     fontWeight: FontWeight.w600,
   );
-  
+
   // 単位(円など)
   static TextStyle appCardPriceUnit = GoogleFonts.notoSans(
     fontSize: 16,
@@ -288,7 +286,7 @@ class MyFonts {
     color: MyColors.white,
     fontWeight: FontWeight.w500,
   );
-  
+
   // セカンダリー単位(円など)
   static TextStyle appCardSecondaryPriceUnit = GoogleFonts.notoSans(
     fontSize: 12,
