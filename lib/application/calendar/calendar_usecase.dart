@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -7,6 +8,8 @@ import 'package:kakeibo/domain_service/month_period_service/month_period_service
 
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
+import 'package:kakeibo/domain/db/income/income_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final calendarUsecaseNotifierProvider =
@@ -16,7 +19,9 @@ final calendarUsecaseNotifierProvider =
 
 // AsyncNotifierFamily を使うために <状態型, 引数型> を指定する
 class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTileEntity>>, int> {
-  late  DailyExpenseRepository _repository;
+  late  DailyExpenseRepository _expenseRepository;
+  late  IncomeRepository _incomeRepository;
+  late  FixedCostExpenseRepository _fixedCostExpenseRepository;
   late  MonthPeriodService _periodService;
   late  AggregationStartDayService _aggregationStartDayService;
 
@@ -26,7 +31,9 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
-    _repository = ref.read(dailyExpenseRepositoryProvider);
+    _expenseRepository = ref.read(dailyExpenseRepositoryProvider);
+    _incomeRepository = ref.read(incomeRepositoryProvider);
+    _fixedCostExpenseRepository = ref.read(fixedCostExpenseRepositoryProvider);
     _periodService = ref.read(monthPeriodServiceProvider);
     _aggregationStartDayService = ref.read(aggregationStartDayProvider);
 
@@ -59,21 +66,53 @@ class CalendarUsecaseNotifier extends FamilyAsyncNotifier<List<List<CalendarTile
     for (var i = 0; thisLoopDatetime.isBefore(shiftedPeriod.endDatetime); i++) {
       thisLoopDatetime = shiftedPeriod.startDatetime.add(Duration(days: i));
 
-      // incomeSourceBigIdは0を指定して、月次カテゴリーのデータを取得する
-      final DailyExpenseEntity dailyExpenseEntity =
-          await _repository.fetchWithCategory(incomeSourceBigId: 0, dateTime: thisLoopDatetime);
+      // 複数のデータソースから一日分のデータを取得する
+      // 1. 支出(月次)と支出(ボーナス)
+      final DailyExpenseEntity monthlyExpenseEntity =
+          await _expenseRepository.fetchWithCategory(incomeSourceBigId: 0, dateTime: thisLoopDatetime);
+      final DailyExpenseEntity bonusExpenseEntity =
+          await _expenseRepository.fetchWithCategory(incomeSourceBigId: 1, dateTime: thisLoopDatetime);
+
+      // 2. 収入 - Period指定で取得して合計を計算
+      int totalIncome = 0;
+      final dateStringFormatted = DateFormat('yyyyMMdd').format(thisLoopDatetime);
+      try {
+        // 実装注：IncomeRepositoryには日付指定メソッドが必要かもしれません
+        // 暫定的に、期間指定で取得後にフィルタリングします
+        final incomePeriod = PeriodValue(
+          startDatetime: thisLoopDatetime,
+          endDatetime: thisLoopDatetime.add(const Duration(days: 1))
+        );
+        final incomeList = await _incomeRepository.fetchWithoutCategory(period: incomePeriod);
+        totalIncome = incomeList.fold<int>(0, (sum, income) => sum + income.price);
+      } catch (e) {
+        totalIncome = 0;
+      }
+
+      // 3. 固定費 - fetchDailyFixedCostExpenseByPeriodで取得
+      int totalFixedCostExpense = 0;
+      try {
+        totalFixedCostExpense = await _fixedCostExpenseRepository.fetchDailyFixedCostExpenseByPeriod(date: thisLoopDatetime);
+      } catch (e) {
+        totalFixedCostExpense = 0;
+      }
 
       // カレンダーの日づげ表示に月を表示するかどうか
       bool shouldDisplayMonth = false;
-      if (dailyExpenseEntity.date.day == 1 || dailyExpenseEntity.date.day == startDay.day)shouldDisplayMonth = true;
+      if (monthlyExpenseEntity.date.day == 1 || monthlyExpenseEntity.date.day == startDay.day) {
+        shouldDisplayMonth = true;
+      }
 
       // CalendarTileEntityを作成
       final CalendarTileEntity calendarTileEntity = CalendarTileEntity(
-        year: dailyExpenseEntity.date.year,
-        month: dailyExpenseEntity.date.month,
-        day: dailyExpenseEntity.date.day,
-        weekday: dailyExpenseEntity.date.weekday,
-        totalExpense: dailyExpenseEntity.totalExpense,
+        year: monthlyExpenseEntity.date.year,
+        month: monthlyExpenseEntity.date.month,
+        day: monthlyExpenseEntity.date.day,
+        weekday: monthlyExpenseEntity.date.weekday,
+        totalExpense: monthlyExpenseEntity.totalExpense,
+        totalBonusExpense: bonusExpenseEntity.totalExpense,
+        totalIncome: totalIncome,
+        totalFixedCostExpense: totalFixedCostExpense,
         isWithinAggregationRange: true,
         shouldDisplayMonth: shouldDisplayMonth,
       );
@@ -111,6 +150,9 @@ List<CalendarTileEntity> fillOutOfPeriod(
       day: previousDate.day,
       weekday: previousDate.weekday,
       totalExpense: 0,
+      totalBonusExpense: 0,
+      totalIncome: 0,
+      totalFixedCostExpense: 0,
       isWithinAggregationRange: false,
       shouldDisplayMonth: false,
     );
@@ -127,6 +169,9 @@ List<CalendarTileEntity> fillOutOfPeriod(
       day: nextDate.day,
       weekday: nextDate.weekday,
       totalExpense: 0,
+      totalBonusExpense: 0,
+      totalIncome: 0,
+      totalFixedCostExpense: 0,
       isWithinAggregationRange: false,
       shouldDisplayMonth: false,
     );
