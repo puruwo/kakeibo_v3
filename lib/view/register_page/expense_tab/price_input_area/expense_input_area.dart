@@ -26,7 +26,7 @@ class _ExpenseInputArea extends ConsumerState<ExpenseInputArea> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: EdgeInsets.fromLTRB(16, 0, 16, 2),
+        padding: const EdgeInsets.fromLTRB(16, 6, 16, 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -37,7 +37,7 @@ class _ExpenseInputArea extends ConsumerState<ExpenseInputArea> {
             ),
 
             const SizedBox(
-              height: 14,
+              height: 8,
             ),
 
             // 区切り線

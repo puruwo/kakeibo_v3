@@ -6,7 +6,8 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 
 class InitialPaymentDateInputField extends ConsumerStatefulWidget {
-  const InitialPaymentDateInputField({super.key, required this.originalDate, this.titleLabel = "日付"});
+  const InitialPaymentDateInputField(
+      {super.key, required this.originalDate, this.titleLabel = "日付"});
   final String originalDate;
   final String titleLabel;
 
@@ -35,7 +36,7 @@ class _DateInputFieldState extends ConsumerState<InitialPaymentDateInputField> {
         height: 40,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          textBaseline: TextBaseline.alphabetic,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               widget.titleLabel,

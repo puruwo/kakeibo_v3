@@ -5,7 +5,8 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 
 class MemoInputField extends ConsumerStatefulWidget {
-  const MemoInputField({super.key, required this.originalMemo,this.titleLabel = "メモ"});
+  const MemoInputField(
+      {super.key, required this.originalMemo, this.titleLabel = "メモ"});
 
   final String originalMemo;
   final String titleLabel;
@@ -21,7 +22,6 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       // 初期値をセット
       _enteredMemoController.text = widget.originalMemo;
     });
@@ -38,7 +38,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 3, 16, 6),
+        padding: const EdgeInsets.fromLTRB(16, 6, 16, 5),
         child: SizedBox(
           height: 36,
           child: Row(

@@ -97,12 +97,14 @@ class MyFonts {
     fontWeight: FontWeight.w500,
     color: MyColors.label,
     fontFamily: 'sf_ui',
+    height: 1.0, // テキストとカーソルの高さを揃える
   );
 
   static TextStyle inputText = GoogleFonts.notoSans(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     color: MyColors.label,
+    height: 1.0, // テキストとカーソルの高さを揃える
   );
 
   // Dialog

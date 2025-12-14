@@ -21,7 +21,7 @@ class _IncomeInputArea extends ConsumerState<IncomeInputArea> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 2),
+        padding: const EdgeInsets.fromLTRB(16, 6, 16, 5),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

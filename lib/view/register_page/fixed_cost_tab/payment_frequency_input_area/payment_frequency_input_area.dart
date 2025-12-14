@@ -26,11 +26,10 @@ class _FixedCostPriceInputArea
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 2),
+        padding: const EdgeInsets.fromLTRB(16, 4, 16, 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-
             // 支払い頻度入力
             PaymentFrequencyInputField(
               originalPaymentFrequency: PaymentFrequencyValue.fromDB(
@@ -38,7 +37,6 @@ class _FixedCostPriceInputArea
                 intervalUnitNumber: widget.initialFixedData.intervalUnit,
               ),
             ),
-
 
             // 区切り線
             const Divider(

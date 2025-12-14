@@ -9,7 +9,8 @@ import 'package:kakeibo/view_model/state/register_page/payment_frequency_control
 // 支出登録ページにおける拠出元の入力部分
 
 class PaymentFrequencyInputField extends ConsumerStatefulWidget {
-  const PaymentFrequencyInputField({super.key,required this.originalPaymentFrequency});
+  const PaymentFrequencyInputField(
+      {super.key, required this.originalPaymentFrequency});
   final PaymentFrequencyValue originalPaymentFrequency;
 
   @override
@@ -17,13 +18,13 @@ class PaymentFrequencyInputField extends ConsumerStatefulWidget {
       _PaymentFrequencyInputField();
 }
 
-class _PaymentFrequencyInputField extends ConsumerState<PaymentFrequencyInputField> {
+class _PaymentFrequencyInputField
+    extends ConsumerState<PaymentFrequencyInputField> {
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       // 拠出元予算カテゴリーの初期値をセット
       ref
           .read(paymentFrequencyControllerNotifierProvider.notifier)
@@ -44,7 +45,6 @@ class _PaymentFrequencyInputField extends ConsumerState<PaymentFrequencyInputFie
         height: 40,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          
           children: [
             // プレースホルダー
             Text(
@@ -81,7 +81,8 @@ class _PaymentFrequencyInputField extends ConsumerState<PaymentFrequencyInputFie
         showDialog(
             context: context,
             builder: (context) {
-              return PaymentFrequencyPicker(originalPaymentFrequency: paymentFrequency);
+              return PaymentFrequencyPicker(
+                  originalPaymentFrequency: paymentFrequency);
             });
       },
     );
