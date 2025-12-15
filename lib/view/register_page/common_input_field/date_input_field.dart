@@ -39,37 +39,39 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
             Radius.circular(8),
           ),
         ),
-        height: 44,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 6, 16, 5),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(
-                widget.titleLabel,
-                textAlign: TextAlign.left,
-                style: MyFonts.placeHolder,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(right: 4),
-                    child: Text(
-                      '${enteredDate.year}年${enteredDate.month}月${enteredDate.day}日',
-                      textAlign: TextAlign.right,
-                      style: MyFonts.inputText,
+          child: SizedBox(
+            height: 34,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  widget.titleLabel,
+                  textAlign: TextAlign.left,
+                  style: MyFonts.placeHolder,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(right: 4),
+                      child: Text(
+                        '${enteredDate.year}年${enteredDate.month}月${enteredDate.day}日',
+                        textAlign: TextAlign.right,
+                        style: MyFonts.inputText,
+                      ),
                     ),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 14,
-                    color: MyColors.secondaryLabel,
-                  )
-                ],
-              ),
-            ],
+                    const Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 14,
+                      color: MyColors.secondaryLabel,
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

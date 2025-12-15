@@ -26,7 +26,7 @@ class _ExpenseInputArea extends ConsumerState<ExpenseInputArea> {
         borderRadius: BorderRadius.circular(8),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 6, 16, 2),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 2),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

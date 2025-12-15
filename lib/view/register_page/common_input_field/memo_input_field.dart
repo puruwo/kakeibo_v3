@@ -40,10 +40,9 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 6, 16, 5),
         child: SizedBox(
-          height: 36,
+          height: 34,
           child: Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
                 widget.titleLabel,
@@ -81,32 +80,15 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
                   },
 
                   // 枠や背景などのデザイン
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     // trueにするとテキストフィールド全体の密度が下がる
                     isDense: true,
-
                     // 背景の塗りつぶし
                     filled: false,
-
-                    // テキストの余白
-                    contentPadding: const EdgeInsets.only(
-                        top: 10, bottom: 10, left: 0, right: 0),
-
-                    // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
-                    // 何もしていない時の境界線
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: MyColors.transparent,
-                      ),
-                    ),
-                    // 入力時の境界線
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: const BorderSide(
-                        color: MyColors.transparent,
-                      ),
-                    ),
+                    // テキストの余白をゼロにして中央揃えを実現
+                    contentPadding: EdgeInsets.zero,
+                    // 境界線なし
+                    border: InputBorder.none,
                   ),
 
                   keyboardAppearance: Brightness.dark,
