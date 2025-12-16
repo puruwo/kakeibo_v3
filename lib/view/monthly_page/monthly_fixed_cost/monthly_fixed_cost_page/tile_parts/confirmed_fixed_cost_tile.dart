@@ -42,17 +42,17 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
           // 編集機能は将来実装
         },
         onLongPress: () async {
-          return await showCustomListDialog(context, actions: [
-            DialogActionItem(
+          return await showMenuDialog(context, items: [
+            MenuDialogItem(
                 label: '削除',
+                icon: Icons.delete_outline,
                 onPressed: () async {
-                  if (Navigator.of(context, rootNavigator: true).canPop()) {
-                    Navigator.of(context, rootNavigator: true).pop();
-                  }
                   showDeleteConfirmationDialog(
                     context,
                     onConfirm: () {
-                      ref.read(fixedCostExpenseUsecaseProvider).delete(id: value.id);
+                      ref
+                          .read(fixedCostExpenseUsecaseProvider)
+                          .delete(id: value.id);
                     },
                   );
                 }),

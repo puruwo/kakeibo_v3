@@ -52,21 +52,17 @@ class IncomeHistoryTile extends ConsumerWidget {
         _showModalBottomSheet(context);
       },
       onLongPress: () async {
-        return await showCustomListDialog(context, actions: [
-          DialogActionItem(
+        return await showMenuDialog(context, items: [
+          MenuDialogItem(
               label: '編集',
+              icon: Icons.edit_outlined,
               onPressed: () async {
-                if (Navigator.of(context, rootNavigator: true).canPop()) {
-                  Navigator.of(context, rootNavigator: true).pop();
-                }
                 _showModalBottomSheet(context);
               }),
-          DialogActionItem(
+          MenuDialogItem(
               label: '削除',
+              icon: Icons.delete_outline,
               onPressed: () async {
-                if (Navigator.of(context, rootNavigator: true).canPop()) {
-                  Navigator.of(context, rootNavigator: true).pop();
-                }
                 showDeleteConfirmationDialog(
                   context,
                   onConfirm: () {

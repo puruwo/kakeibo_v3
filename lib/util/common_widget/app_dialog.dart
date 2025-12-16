@@ -1,81 +1,173 @@
-// ダイアログのアクション項目データクラス
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 
-class DialogActionItem {
+/// メニューダイアログの各項目を表すデータクラス
+class MenuDialogItem {
+  /// メニュー項目のラベル
   final String label;
-  Color? labelColor;
+
+  /// メニュー項目のアイコン
+  final IconData icon;
+
+  /// アイコンの色（指定しない場合はテーマカラー）
+  final Color? iconColor;
+
+  /// タップ時のコールバック
   final VoidCallback onPressed;
-  DialogActionItem({required this.label, required this.onPressed});
+
+  const MenuDialogItem({
+    required this.label,
+    required this.icon,
+    this.iconColor,
+    required this.onPressed,
+  });
 }
 
-// 汎用カスタムダイアログを表示する関数
-Future<void> showCustomListDialog(
+/// 下からスライドアップするメニューダイアログを表示する
+///
+/// [items] - メニュー項目のリスト
+/// [cancelLabel] - キャンセルボタンのラベル（デフォルト: "キャンセル"）
+Future<void> showMenuDialog(
   BuildContext context, {
-  String? title,
-  String? content,
-  required List<DialogActionItem> actions,
+  required List<MenuDialogItem> items,
+  String cancelLabel = "キャンセル",
 }) {
-  return showDialog(
+  return showModalBottomSheet(
     context: context,
-    barrierDismissible: true, // 外側タップで閉じるか
-    builder: (_) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8)), // 角丸などスタイル
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    useRootNavigator: true, // グローバルナビゲーションにも被せる
+    builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         child: Column(
-          mainAxisSize: MainAxisSize.min, // 子の高さに合わせる
+          mainAxisSize: MainAxisSize.min,
           children: [
-            title == null && content == null
-                ? Column(
-                    children: [
-                      // タイトル
-                      title != null
-                          ? Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Text(title,
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold)),
-                            )
-                          : const SizedBox.shrink(),
-                      // 本文テキスト（任意で表示）
-                      content != null
-                          ? Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Text(content),
-                            )
-                          : const SizedBox.shrink(),
-                      const SizedBox(height: 8),
-                    ],
-                  )
-                : const SizedBox.shrink(),
-
-            // アクション項目リスト
-            for (int i = 0; i < actions.length; i++) ...[
-              Column(
+            // メニュー項目リスト
+            Container(
+              decoration: BoxDecoration(
+                color: MyColors.tirtiarySystemBackground,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  InkWell(
-                    onTap: () {
-                      actions[i].onPressed(); // コールバック実行
-                    },
-                    child: SizedBox(
-                      height: 58,
-                      child: Center(
-                          child: Text(actions[i].label,
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: actions[i].labelColor,
-                                  fontWeight: FontWeight.w500))),
+                  for (int i = 0; i < items.length; i++) ...[
+                    _MenuItemTile(
+                      item: items[i],
+                      isFirst: i == 0,
+                      isLast: i == items.length - 1,
                     ),
-                  ),
+                    if (i != items.length - 1)
+                      const Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: MyColors.separater,
+                      ),
+                  ],
                 ],
               ),
-              if (i != actions.length - 1) const Divider(height: 1),
-            ]
+            ),
+
+            const SizedBox(height: 16),
+
+            // キャンセルボタン（固定・別枠）
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: MyColors.tirtiarySystemBackground,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(12),
+                  onTap: () => Navigator.of(context).pop(),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    child: Center(
+                      child: Text(
+                        cancelLabel,
+                        style: MyFonts.dialogList.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       );
     },
   );
+}
+
+/// メニュー項目の個別タイル
+class _MenuItemTile extends StatelessWidget {
+  final MenuDialogItem item;
+  final bool isFirst;
+  final bool isLast;
+
+  const _MenuItemTile({
+    required this.item,
+    required this.isFirst,
+    required this.isLast,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    // 最初と最後の項目に応じた角丸を計算
+    const radius = Radius.circular(12);
+    BorderRadius borderRadius;
+    if (isFirst && isLast) {
+      // 1つだけの場合は全角丸
+      borderRadius = BorderRadius.all(radius);
+    } else if (isFirst) {
+      // 最初の項目は上部のみ角丸
+      borderRadius = const BorderRadius.only(topLeft: radius, topRight: radius);
+    } else if (isLast) {
+      // 最後の項目は下部のみ角丸
+      borderRadius =
+          const BorderRadius.only(bottomLeft: radius, bottomRight: radius);
+    } else {
+      // 中間の項目は角丸なし
+      borderRadius = BorderRadius.zero;
+    }
+
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: borderRadius,
+        onTap: () {
+          Navigator.of(context).pop(); // ダイアログを閉じる
+          item.onPressed(); // コールバック実行
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: Row(
+            children: [
+              // アイコン
+              Icon(
+                item.icon,
+                size: 24,
+                color: item.iconColor ?? MyColors.themeColor,
+              ),
+              const SizedBox(width: 16),
+              // ラベル
+              Expanded(
+                child: Text(
+                  item.label,
+                  style: MyFonts.dialogList,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
