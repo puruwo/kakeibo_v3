@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
@@ -31,14 +32,17 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      child: Container(
+    return AppInkWell(
+      color: MyColors.quarternarySystemfill,
+      borderRadius: BorderRadius.circular(10),
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => CategoryExpenseHistoryPage(
+              bigId: monthlyExpenseByCategoryEntity.id),
+        ));
+      },
+      child: SizedBox(
         width: 343 * context.screenHorizontalMagnification,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: MyColors.quarternarySystemfill,
-          borderRadius: BorderRadius.circular(10),
-        ),
         child: Theme(
           data: Theme.of(context).copyWith(
             dividerColor: Colors.transparent,
@@ -77,7 +81,7 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
                       ),
                     ),
                     AllNoBudgetTypePriceLabel(
-                      gapBetweenGraphAndLabel:gapBetweenGraphAndLabel,
+                      gapBetweenGraphAndLabel: gapBetweenGraphAndLabel,
                       width: priceLabelWidth,
                       categoryTile: categoryTile,
                     ),
@@ -90,12 +94,6 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
               )),
         ),
       ),
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => CategoryExpenseHistoryPage(
-              bigId: monthlyExpenseByCategoryEntity.id),
-        ));
-      },
     );
   }
 }

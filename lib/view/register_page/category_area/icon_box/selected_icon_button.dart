@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 class SelectedIconButton extends ConsumerWidget {
@@ -18,14 +19,11 @@ class SelectedIconButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     final color = MyColors().getColorFromHex(categoryEntity.colorCode);
 
-    return GestureDetector(
-
-      onTap: () {
-      },
-
+    return AppInkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () {},
       child: Column(
         children: [
           SizedBox(

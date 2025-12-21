@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/util/util.dart';
@@ -108,7 +109,8 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
 
                     // 金額入力フィールド
 
-                    GestureDetector(
+                    AppInkWell(
+                      borderRadius: BorderRadius.circular(8),
                       // readOnly時のタップで編集モードに切り替え
                       onTap: () {
                         if (state != TabState.budgetEdditing) {
@@ -140,7 +142,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                               ],
 
                               // TextFieldのタップイベント
-                              // 親のGestureDetectorでもonTap制御しているが、テキストフィールドは別途制御を記載しないと反応しない
+                              // 親AppInkWellでもonTap制御しているが、テキストフィールドは別途制御を記載しないと反応しない
                               onTap: () {
                                 if (state != TabState.budgetEdditing) {
                                   ref
@@ -161,7 +163,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                 filled: false,
 
                                 // ヒントテキスト
-                                // 空文字かどうかを判定することで、入力時際描画のちらつきを防止する
+                                // 空文字かどうかを判定することで、入力時再描画のちらつきを防止する
                                 hintText:
                                     controller.text.isNotEmpty ? "" : "金額を入力",
                                 hintStyle: const TextStyle(

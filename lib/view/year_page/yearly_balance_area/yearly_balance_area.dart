@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
@@ -105,7 +106,8 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         height: 8,
                       ),
 
-                      GestureDetector(
+                      AppInkWell(
+                        borderRadius: BorderRadius.circular(8),
                         onTap: () {
                           final dateScope =
                               ref.read(homeDateScopeEntityProvider).value!;

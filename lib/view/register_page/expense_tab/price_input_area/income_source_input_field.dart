@@ -3,13 +3,15 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/register_page/expense_tab/price_input_area/income_souce_picker.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 
 // 支出登録ページにおける拠出元の入力部分
 
 class IncomeSourceInputField extends ConsumerStatefulWidget {
-  const IncomeSourceInputField({super.key,required this.originalIncomeSourceBigCategory});
+  const IncomeSourceInputField(
+      {super.key, required this.originalIncomeSourceBigCategory});
   final int originalIncomeSourceBigCategory;
 
   @override
@@ -23,7 +25,6 @@ class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-
       // 拠出元予算カテゴリーの初期値をセット
       ref
           .read(enteredIncomeSourceControllerNotifierProvider.notifier)
@@ -37,14 +38,16 @@ class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
     final incomeSourceBigCategory =
         ref.watch(enteredIncomeSourceControllerNotifierProvider);
 
-    return GestureDetector(
-      child: Container(
-        decoration: const BoxDecoration(
-          color: MyColors.transparent,
-          borderRadius: BorderRadius.all(
-            Radius.circular(8),
-          ),
-        ),
+    return AppInkWell(
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) {
+              return const IncomeSourcePicker();
+            });
+      },
+      child: SizedBox(
         height: 40,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,7 +67,8 @@ class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
                 // 拠出元選択状態
                 Text(
                   ref
-                      .watch(anIncomeBigCategoryProvider(incomeSourceBigCategory))
+                      .watch(
+                          anIncomeBigCategoryProvider(incomeSourceBigCategory))
                       .when(
                           data: (data) => data.name,
                           loading: () => '',
@@ -85,13 +89,6 @@ class _IncomeSourceInputField extends ConsumerState<IncomeSourceInputField> {
           ],
         ),
       ),
-      onTap: () {
-        showDialog(
-            context: context,
-            builder: (context) {
-              return const IncomeSourcePicker();
-            });
-      },
     );
   }
 }

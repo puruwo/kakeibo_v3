@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
@@ -59,7 +60,7 @@ class DateBox extends ConsumerWidget {
     // 金額ラベルを作成
     final priceLabel = caluculatePriceLabel(totalExpenseBuff);
 
-    return InkWell(
+    return AppInkWell(
         borderRadius: BorderRadius.circular(6),
         onTap: switch (tileStatus) {
           CalendarTileStatus.unselected => () {

@@ -5,10 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_icon_contoroller/big_category_icon_contoroller.dart';
 
 class IconSelectDialog extends ConsumerStatefulWidget {
-  const IconSelectDialog({super.key,});
+  const IconSelectDialog({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _IconSelectDialog();
@@ -29,11 +32,10 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
     'assets/images/icon_star.svg',
     'assets/images/icon_smartphone.svg',
     'assets/images/icon_travel.svg',
-    ];
+  ];
 
   @override
   Widget build(BuildContext context) {
-
     // ====状態管理====
 
     // アイコンのパスを取得
@@ -61,11 +63,12 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
               children: List.generate(5, (upperRowIndex) {
                 final index = upperRowIndex;
                 final url = iconPathList[index];
-                return GestureDetector(
-                    child: iconWidget(url, iconPath),
+                return AppInkWell(
+                    borderRadius: BorderRadius.circular(8),
                     onTap: () {
                       urlSelectFunction(url);
-                    });
+                    },
+                    child: iconWidget(url, iconPath));
               }),
             ),
             Row(
@@ -73,11 +76,12 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
               children: List.generate(5, (upperRowIndex) {
                 final index = 5 + upperRowIndex;
                 final url = iconPathList[index];
-                return GestureDetector(
-                    child: iconWidget(url, iconPath),
+                return AppInkWell(
+                    borderRadius: BorderRadius.circular(8),
                     onTap: () {
                       urlSelectFunction(url);
-                    });
+                    },
+                    child: iconWidget(url, iconPath));
               }),
             ),
           ],
@@ -91,7 +95,8 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
       iconPath = url;
     });
     Navigator.of(context).pop();
-    final notifier = ref.read(bigCategroyIconControllerNotifierProvider.notifier);
+    final notifier =
+        ref.read(bigCategroyIconControllerNotifierProvider.notifier);
     notifier.updateState(url);
   }
 }

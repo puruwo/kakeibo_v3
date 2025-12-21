@@ -4,10 +4,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
 
 class ColorSelectDialog extends ConsumerStatefulWidget {
-  const ColorSelectDialog({super.key,});
+  const ColorSelectDialog({
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -33,7 +36,6 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
 
   @override
   Widget build(BuildContext context) {
-
     // ====状態管理====
 
     // アイコンのパスを取得
@@ -46,7 +48,7 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
         borderRadius: BorderRadius.circular(20),
       ),
       child: Container(
-        alignment:Alignment.center,
+        alignment: Alignment.center,
         height: 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -61,7 +63,12 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
               children: List.generate(5, (upperRowIndex) {
                 final index = upperRowIndex;
                 final color = colorList[index];
-                return GestureDetector(child: colorCircle(color,selectedColor), onTap: () {colorSelectFunction(color);});
+                return AppInkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      colorSelectFunction(color);
+                    },
+                    child: colorCircle(color, selectedColor));
               }),
             ),
             Row(
@@ -69,7 +76,12 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
               children: List.generate(5, (underRowIndex) {
                 final index = 5 + underRowIndex;
                 final color = colorList[index];
-                return GestureDetector(child: colorCircle(color,selectedColor), onTap: () {colorSelectFunction(color);});
+                return AppInkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      colorSelectFunction(color);
+                    },
+                    child: colorCircle(color, selectedColor));
               }),
             ),
           ],
@@ -77,13 +89,14 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
       ),
     );
   }
-  
+
   void colorSelectFunction(Color color) {
     setState(() {
       selectedColor = color;
     });
     Navigator.of(context).pop();
-    final notifier = ref.read(bigCategroyColorControllerNotifierProvider.notifier);
+    final notifier =
+        ref.read(bigCategroyColorControllerNotifierProvider.notifier);
     notifier.updateState(color);
   }
 }
@@ -95,8 +108,8 @@ Widget colorCircle(Color color, Color? selectedColor) {
   return isSelected
       // 選択時
       ? Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
             height: 35,
             width: 35,
             decoration: BoxDecoration(
@@ -104,11 +117,11 @@ Widget colorCircle(Color color, Color? selectedColor) {
               shape: BoxShape.rectangle,
             ),
           ),
-      )
+        )
       // 非選択時
       : Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
             height: 35,
             width: 35,
             decoration: BoxDecoration(
@@ -116,5 +129,5 @@ Widget colorCircle(Color color, Color? selectedColor) {
               shape: BoxShape.circle,
             ),
           ),
-      );
+        );
 }

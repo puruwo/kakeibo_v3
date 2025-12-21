@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 
 class InitialPaymentDateInputField extends ConsumerStatefulWidget {
@@ -31,7 +32,23 @@ class _DateInputFieldState extends ConsumerState<InitialPaymentDateInputField> {
     // 入力された日付を監視
     final enteredDate = ref.watch(inputDateControllerNotifierProvider);
 
-    return GestureDetector(
+    return AppInkWell(
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      onTap: () async {
+        //カレンダーピッカーで日付を選択し取得
+        final DateTime? picked = await showDatePicker(
+          context: context,
+          initialEntryMode: DatePickerEntryMode.calendarOnly,
+          initialDate: enteredDate, // 最初に表示する日付
+          firstDate: DateTime(2020), // 選択できる日付の最小値
+          lastDate: DateTime(2040), // 選択できる日付の最大値
+        );
+
+        //notifierを取得
+        final notifier = ref.read(inputDateControllerNotifierProvider.notifier);
+        //nullじゃなければcontrollerを更新
+        if (picked != null) notifier.setData(picked);
+      },
       child: SizedBox(
         height: 40,
         child: Row(
@@ -64,21 +81,6 @@ class _DateInputFieldState extends ConsumerState<InitialPaymentDateInputField> {
           ],
         ),
       ),
-      onTap: () async {
-        //カレンダーピッカーで日付を選択し取得
-        final DateTime? picked = await showDatePicker(
-          context: context,
-          initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: enteredDate, // 最初に表示する日付
-          firstDate: DateTime(2020), // 選択できる日付の最小値
-          lastDate: DateTime(2040), // 選択できる日付の最大値
-        );
-
-        //notifierを取得
-        final notifier = ref.read(inputDateControllerNotifierProvider.notifier);
-        //nullじゃなければcontrollerを更新
-        if (picked != null) notifier.setData(picked);
-      },
     );
   }
 }

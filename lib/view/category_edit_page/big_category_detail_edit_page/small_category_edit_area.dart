@@ -9,6 +9,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/check_box.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_name_dialog.dart';
@@ -41,7 +42,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
         // 新規作成の時は初期化しない
         return;
       }
-      
+
       // 一度だけ取得してセット
       Future(() async {
         // 一度だけ取得してセット
@@ -158,7 +159,8 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                               // チェックボックス
                               Padding(
                                 padding: const EdgeInsets.all(12.5),
-                                child: GestureDetector(
+                                child: AppInkWell(
+                                  borderRadius: BorderRadius.circular(8),
                                   onTap: () {
                                     // チェックボックスのタップ処理
                                     setState(() {
@@ -228,8 +230,19 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                   );
                 } else {
                   // 末尾の追加Widget
-                  return GestureDetector(
+                  return AppInkWell(
                     key: Key('$index'),
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return NewSmallCategoryInputNameDialog(
+                              bigCategoryId: widget.bigId,
+                              displayedOrderInBig: itemList.length + 1);
+                        },
+                      );
+                    },
                     child: SizedBox(
                       height: 50,
                       child: Column(
@@ -264,16 +277,6 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                         ],
                       ),
                     ),
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return NewSmallCategoryInputNameDialog(
-                              bigCategoryId: widget.bigId,
-                              displayedOrderInBig: itemList.length + 1);
-                        },
-                      );
-                    },
                   );
                 }
               },

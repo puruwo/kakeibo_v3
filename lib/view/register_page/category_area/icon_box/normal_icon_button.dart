@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 
@@ -24,12 +25,11 @@ class NormalIconButton extends ConsumerWidget {
 
     final color = MyColors().getColorFromHex(categoryEntity.colorCode);
 
-    return GestureDetector(
-      
+    return AppInkWell(
+      borderRadius: BorderRadius.circular(8),
       onTap: () {
         notifier.setData(categoryEntity);
       },
-
       child: Column(
         children: [
           SizedBox(

@@ -9,6 +9,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
@@ -56,7 +57,8 @@ class ExpenseHistoryTile extends ConsumerWidget {
             ? '未確定'
             : yenmarkFormattedPriceGetter(tileValue.price);
 
-        return GestureDetector(
+        return AppInkWell(
+          borderRadius: BorderRadius.circular(8),
           onTap: () async {
             showModalBottomSheet(
               //sccafoldの上に出すか
@@ -228,8 +230,7 @@ class ExpenseHistoryTile extends ConsumerWidget {
             //タイルを横にスライドした時の処理
             confirmDismiss: (direction) async {
               if (direction == DismissDirection.endToStart) {
-                return await 
-                showDeleteConfirmationDialog(context);
+                return await showDeleteConfirmationDialog(context);
               }
               return null;
             },

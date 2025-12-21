@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/export/export_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
@@ -41,9 +42,16 @@ class ConfigTop extends ConsumerWidget {
               ),
               child: Column(
                 children: [
-                  GestureDetector(
-                    // 透明な領域もタップできるようにする
-                    behavior: HitTestBehavior.translucent,
+                  AppInkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      // 設定画面からエクスポートを実行
+                      ref.read(exportProvider).when(
+                          data: (data) => null,
+                          error: (e, _) => null,
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()));
+                    },
                     child: const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 16.0),
                       child: SizedBox(
@@ -59,14 +67,6 @@ class ConfigTop extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    onTap: () {
-                      // 設定画面からエクスポートを実行
-                      ref.read(exportProvider).when(
-                          data: (data) => null,
-                          error: (e, _) => null,
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()));
-                    },
                   ),
                 ],
               ),

@@ -10,6 +10,7 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/category_detail_edit_page.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -47,7 +48,8 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
   }
 
   // 一般カテゴリーリスト
-  Widget _buildExpenseCategoryList(double leftsidePadding, double listSTextBoxOffset) {
+  Widget _buildExpenseCategoryList(
+      double leftsidePadding, double listSTextBoxOffset) {
     return ref.watch(allBigCategoriesWithSmallListProvider).when(
       data: (itemList) {
         return Column(
@@ -110,9 +112,8 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                 itemCount: itemList.length + 1, // 末尾に追加ボタンを表示するために1つ多くする
                 itemBuilder: (BuildContext context, int index) {
                   if (index < itemList.length) {
-                    return GestureDetector(
-                      // ヒット範囲を拡大
-                      behavior: HitTestBehavior.opaque,
+                    return AppInkWell(
+                      borderRadius: BorderRadius.circular(8),
                       onTap: () async {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
@@ -205,8 +206,18 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                     );
                   } else {
                     // 末尾の追加Widget
-                    return GestureDetector(
+                    return AppInkWell(
                       key: Key('$index'),
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => CategoryDetailEditPage(
+                                  screenMode: BigCategoryDetailEditScreenMode
+                                      .newCategoryAdd,
+                                  categoryType: CategoryType.expense,
+                                  categoryOrder: itemList.length - 1 + 1,
+                                )));
+                      },
                       child: SizedBox(
                         height: 50,
                         child: Column(
@@ -242,15 +253,6 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                           ],
                         ),
                       ),
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => CategoryDetailEditPage(
-                                  screenMode: BigCategoryDetailEditScreenMode
-                                      .newCategoryAdd,
-                                  categoryType: CategoryType.expense,
-                                  categoryOrder: itemList.length - 1 + 1,
-                                )));
-                      },
                     );
                   }
                 },
@@ -269,7 +271,8 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
   }
 
   // 固定費カテゴリーリスト
-  Widget _buildFixedCostCategoryList(double leftsidePadding, double listSTextBoxOffset) {
+  Widget _buildFixedCostCategoryList(
+      double leftsidePadding, double listSTextBoxOffset) {
     return ref.watch(allFixedCostCategoriesProvider).when(
       data: (itemList) {
         return Column(
@@ -323,27 +326,30 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                 itemCount: itemList.length + 1,
                 itemBuilder: (BuildContext context, int index) {
                   if (index < itemList.length) {
-                    return GestureDetector(
-                      behavior: HitTestBehavior.opaque,
+                    return AppInkWell(
+                      borderRadius: BorderRadius.circular(8),
                       onTap: () async {
                         await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: ((context) => CategoryDetailEditPage(
-                              screenMode: BigCategoryDetailEditScreenMode.edit,
-                              categoryType: CategoryType.fixedCost,
-                              bigCategoryId: itemList[index].id,
-                            )),
+                                  screenMode:
+                                      BigCategoryDetailEditScreenMode.edit,
+                                  categoryType: CategoryType.fixedCost,
+                                  bigCategoryId: itemList[index].id,
+                                )),
                           ),
                         );
                       },
                       child: Column(
                         children: [
                           Padding(
-                            padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: leftsidePadding),
                             child: SizedBox(
                               height: 50,
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 key: Key('$index'),
                                 children: [
                                   // アイコン
@@ -352,7 +358,8 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                     child: SvgPicture.asset(
                                       itemList[index].resourcePath,
                                       colorFilter: ColorFilter.mode(
-                                        MyColors().getColorFromHex(itemList[index].colorCode),
+                                        MyColors().getColorFromHex(
+                                            itemList[index].colorCode),
                                         BlendMode.srcIn,
                                       ),
                                       semanticsLabel: 'categoryIcon',
@@ -364,7 +371,9 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                   // カテゴリー名
                                   Expanded(
                                     child: Text(
-                                      itemList.isEmpty ? '' : itemList[index].categoryName,
+                                      itemList.isEmpty
+                                          ? ''
+                                          : itemList[index].categoryName,
                                       style: GoogleFonts.notoSans(
                                         fontSize: 16,
                                         color: MyColors.label,
@@ -398,8 +407,21 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                     );
                   } else {
                     // 末尾の追加Widget
-                    return GestureDetector(
+                    return AppInkWell(
                       key: Key('$index'),
+                      borderRadius: BorderRadius.circular(8),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CategoryDetailEditPage(
+                              screenMode: BigCategoryDetailEditScreenMode
+                                  .newCategoryAdd,
+                              categoryType: CategoryType.fixedCost,
+                              categoryOrder: itemList.length,
+                            ),
+                          ),
+                        );
+                      },
                       child: SizedBox(
                         height: 50,
                         child: Column(
@@ -409,7 +431,8 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                             Expanded(
                               child: Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(80, 0, 0, 0),
+                                  padding:
+                                      const EdgeInsets.fromLTRB(80, 0, 0, 0),
                                   child: SizedBox(
                                     width: double.infinity,
                                     child: Text(
@@ -433,17 +456,6 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                           ],
                         ),
                       ),
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => CategoryDetailEditPage(
-                              screenMode: BigCategoryDetailEditScreenMode.newCategoryAdd,
-                              categoryType: CategoryType.fixedCost,
-                              categoryOrder: itemList.length,
-                            ),
-                          ),
-                        );
-                      },
                     );
                   }
                 },
