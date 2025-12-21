@@ -27,7 +27,7 @@ class BonusHomeFooter extends ConsumerWidget {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
-        buttonType: ButtonType.main,
+        buttonType: ButtonColorType.main,
         buttonText: '新しい支出を追加',
         onPressed: () {
           final today = DateTime.now();
@@ -71,7 +71,7 @@ class BonusHomeFooter extends ConsumerWidget {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
-          buttonType: ButtonType.main,
+          buttonType: ButtonColorType.main,
           buttonText: '新しい収入を追加',
           onPressed: () {
             showModalBottomSheet(

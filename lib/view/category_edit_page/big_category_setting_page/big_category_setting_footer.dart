@@ -41,7 +41,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
-        buttonType: ButtonType.main,
+        buttonType: ButtonColorType.main,
         buttonText: '表示・並び替え',
         onPressed: () {
           // 編集モードの状態を更新
@@ -58,7 +58,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
       children: [
         Expanded(
           child: MainButton(
-            buttonType: ButtonType.secondary,
+            buttonType: ButtonColorType.secondary,
             buttonText: '編集をキャンセル',
             onPressed: () {
               // 編集モードなら、providerを破棄して状態を非編集モードに変更
@@ -78,7 +78,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
         Expanded(
           child: MainButton(
-            buttonType: ButtonType.main,
+            buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
             onPressed: () async {
               if (categoryType == CategoryType.expense) {

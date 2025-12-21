@@ -25,7 +25,7 @@ class SubmitBudgetButton extends ConsumerWidget with PresentationMixin {
       data: (budgetEditList) {
         return Expanded(
           child: MainButton(
-              buttonType: ButtonType.main,
+              buttonType: ButtonColorType.main,
               buttonText: '編集を完了',
               onPressed: () async {
                 // 実行

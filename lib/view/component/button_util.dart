@@ -2,39 +2,76 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 
-enum ButtonType {
+enum ButtonColorType {
   main(MyColors.buttonPrimary),
   secondary(MyColors.buttonSecondary);
 
   final Color color;
 
-  const ButtonType(this.color);
+  const ButtonColorType(this.color);
 }
 
 class MainButton extends StatelessWidget {
   const MainButton({
     super.key,
-    this.buttonType = ButtonType.main,
+    this.buttonType = ButtonColorType.main,
     required this.onPressed,
     required this.buttonText,
   });
 
-  final ButtonType buttonType;
+  final ButtonColorType buttonType;
   final Function()? onPressed;
   final String buttonText;
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: buttonType.color,
+    return SizedBox(
+      height: 40,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: buttonType.color,
+          elevation: 0,
+        ),
+        child: Text(
+          buttonText,
+          style: buttonType == ButtonColorType.main
+              ? MyFonts.mainButtonText
+              : MyFonts.secondaryButtonText,
+        ),
       ),
-      child: Text(
-        buttonText,
-        style: buttonType == ButtonType.main
-            ? MyFonts.mainButtonText
-            : MyFonts.secondaryButtonText,
+    );
+  }
+}
+
+class SubButton extends StatelessWidget {
+  const SubButton({
+    super.key,
+    this.buttonType = ButtonColorType.main,
+    required this.onPressed,
+    required this.buttonText,
+  });
+
+  final ButtonColorType buttonType;
+  final Function()? onPressed;
+  final String buttonText;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 30,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: buttonType.color,
+          elevation: 0,
+        ),
+        child: Text(
+          buttonText,
+          style: buttonType == ButtonColorType.main
+              ? MyFonts.mainButtonText
+              : MyFonts.secondaryButtonText,
+        ),
       ),
     );
   }

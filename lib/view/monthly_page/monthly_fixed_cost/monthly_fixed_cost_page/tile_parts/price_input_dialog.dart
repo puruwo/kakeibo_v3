@@ -154,7 +154,7 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
 
                 // OKボタン
                 MainButton(
-                  buttonType: ButtonType.main,
+                  buttonType: ButtonColorType.main,
                   buttonText: 'OK',
                   onPressed: () {
                     // 入力が空の場合は何もしない

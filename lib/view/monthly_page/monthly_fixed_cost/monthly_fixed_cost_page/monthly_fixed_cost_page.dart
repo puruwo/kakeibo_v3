@@ -48,7 +48,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
                 // 固定費を管理ボタン
                 Expanded(
                   child: MainButton(
-                    buttonType: ButtonType.secondary,
+                    buttonType: ButtonColorType.secondary,
                     buttonText: '固定費を管理',
                     onPressed: () async {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -66,7 +66,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
                 // 固定費を新しく登録する
                 Expanded(
                   child: MainButton(
-                    buttonType: ButtonType.main,
+                    buttonType: ButtonColorType.main,
                     buttonText: '固定費を登録',
                     onPressed: () {
                       showModalBottomSheet(

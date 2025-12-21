@@ -146,7 +146,7 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
 
               // OKボタン
               MainButton(
-                buttonType: ButtonType.main,
+                buttonType: ButtonColorType.main,
                 buttonText: 'OK',
                 // OKボタンを押した時の処理
                 onPressed: () {

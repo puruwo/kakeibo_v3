@@ -50,7 +50,7 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
-        buttonType: ButtonType.main,
+        buttonType: ButtonColorType.main,
         buttonText: screenMode == RegisterScreenMode.edit ? '更新' : '追加',
         onPressed: () async {
           execute(

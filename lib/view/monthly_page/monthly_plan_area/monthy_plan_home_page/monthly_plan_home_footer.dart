@@ -38,7 +38,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
       children: [
         Expanded(
           child: MainButton(
-            buttonType: ButtonType.secondary,
+            buttonType: ButtonColorType.secondary,
             buttonText: 'カテゴリー編集・追加',
             onPressed: () {
               showModalBottomSheetFunc(context, const CategorySettingPage());
@@ -50,7 +50,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
 
         Expanded(
           child: MainButton(
-            buttonType: ButtonType.main,
+            buttonType: ButtonColorType.main,
             buttonText: '予算を編集する',
             onPressed: () {
               ref
@@ -73,7 +73,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         return SizedBox(
           width: double.infinity,
           child: MainButton(
-              buttonType: ButtonType.main,
+              buttonType: ButtonColorType.main,
               buttonText: '編集を完了',
               onPressed: () async {
                 // 実行
@@ -134,7 +134,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
       error: (error, stackTrace) {
         return Expanded(
           child: MainButton(
-            buttonType: ButtonType.main,
+            buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
             onPressed: null, // エラー時はボタンを無効化
           ),
@@ -143,7 +143,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
       loading: () {
         return Expanded(
           child: MainButton(
-            buttonType: ButtonType.main,
+            buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
             onPressed: null, // エラー時はボタンを無効化
           ),
@@ -156,7 +156,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
-        buttonType: ButtonType.main,
+        buttonType: ButtonColorType.main,
         buttonText: '新しい収入を追加',
         onPressed: () {
           showModalBottomSheet(

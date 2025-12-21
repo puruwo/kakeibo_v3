@@ -77,7 +77,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
                 child: SizedBox(
                   width: double.infinity,
                   child: MainButton(
-                    buttonType: ButtonType.main,
+                    buttonType: ButtonColorType.main,
                     buttonText: '固定費を追加',
                     onPressed: () {
                       showModalBottomSheet(

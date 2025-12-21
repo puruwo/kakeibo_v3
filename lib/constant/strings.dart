@@ -107,9 +107,12 @@ class MyFonts {
     height: 1.0, // テキストとカーソルの高さを揃える
   );
 
-  // Dialog
+  // ダイアログ
   static TextStyle dialogTitle = GoogleFonts.notoSans(
-      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w400);
+      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w600);
+
+  static TextStyle dialogLabel = GoogleFonts.notoSans(
+      fontSize: 14, color: MyColors.white, fontWeight: FontWeight.w300);
 
   static TextStyle dialogList = GoogleFonts.notoSans(
       fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w300);
