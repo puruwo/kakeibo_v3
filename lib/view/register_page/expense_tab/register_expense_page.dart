@@ -3,15 +3,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/register_page/expense_tab/price_input_area/expense_input_area.dart';
 import 'package:kakeibo/view/register_page/common_input_field/memo_input_field.dart';
 import 'package:kakeibo/view/register_page/submit_button.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
-
 import 'package:kakeibo/view/register_page/common_input_field/date_input_field.dart';
 
 class RegisterExpensePage extends ConsumerStatefulWidget {
