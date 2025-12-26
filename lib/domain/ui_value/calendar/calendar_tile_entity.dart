@@ -11,6 +11,9 @@ class CalendarTileEntity with _$CalendarTileEntity {
     required int day,
     required int weekday,
     @Default(0) int totalExpense,
+    @Default(0) int totalBonusExpense,
+    @Default(0) int totalIncome,
+    @Default(0) int totalFixedCostExpense,
     required bool isWithinAggregationRange,
     required bool shouldDisplayMonth
   }) = _CalendarTileEntity;
