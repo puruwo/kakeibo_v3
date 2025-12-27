@@ -128,7 +128,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           ),
           title: SizedBox(
             child: Text(
-              widget.registerMode == RegisterScreenMode.add ? '記録' : '記録を編集する',
+              widget.registerMode == RegisterScreenMode.add ? '記録' : '編集',
               style: MyFonts.regesterHeaderLabel,
             ),
           ),

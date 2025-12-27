@@ -14,6 +14,7 @@ enum ButtonColorType {
 class MainButton extends StatelessWidget {
   const MainButton({
     super.key,
+    this.buttonColor,
     this.buttonType = ButtonColorType.main,
     required this.onPressed,
     required this.buttonText,
@@ -22,6 +23,7 @@ class MainButton extends StatelessWidget {
   final ButtonColorType buttonType;
   final Function()? onPressed;
   final String buttonText;
+  final Color? buttonColor;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class MainButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: buttonType.color,
+          backgroundColor: buttonColor ?? buttonType.color,
           elevation: 0,
         ),
         child: Text(

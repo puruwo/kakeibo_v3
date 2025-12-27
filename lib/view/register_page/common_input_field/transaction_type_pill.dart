@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
-import 'package:kakeibo/view/register_page/common_input_field/color_getter.dart/color_getter.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 /// 支出/収入を切り替えるピルボタン
 ///
@@ -9,16 +12,21 @@ import 'package:kakeibo/view/register_page/common_input_field/color_getter.dart/
 class TransactionTypePill extends StatelessWidget {
   const TransactionTypePill({
     super.key,
+    required this.mode,
     required this.currentMode,
     required this.onModeChanged,
   });
 
+  final RegisterScreenMode mode;
   final TransactionMode currentMode;
   final ValueChanged<TransactionMode> onModeChanged;
 
   @override
   Widget build(BuildContext context) {
+    final enabled = mode == RegisterScreenMode.add &&
+        currentMode != TransactionMode.fixedCost;
     return AppPopupMenu<TransactionMode>(
+      enabled: enabled,
       onSelected: onModeChanged,
       itemBuilder: (context) => [
         buildCheckableMenuItem(
@@ -33,15 +41,18 @@ class TransactionTypePill extends StatelessWidget {
         ),
       ],
       child: Container(
-        height: 40,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        height: InputPageWidgetSize.pillHeight,
+        width: InputPageWidgetSize.pillWidth,
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
           color: getPillBackgroundColor(currentMode),
           border: Border.all(color: getPillColor(currentMode)),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(50),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // ドットインジケーター
             Container(
@@ -56,18 +67,17 @@ class TransactionTypePill extends StatelessWidget {
             // ラベル
             Text(
               _getLabel(currentMode),
-              style: TextStyle(
-                color: getPillColor(currentMode),
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+              style: RegisterPageStyles.pillLabel(getPillColor(currentMode)),
             ),
-            const SizedBox(width: 4),
+            const SizedBox(width: 6),
             // ドロップダウン矢印
-            Icon(
-              Icons.keyboard_arrow_down_rounded,
-              color: getPillColor(currentMode),
-              size: 20,
+            Visibility(
+              visible: enabled,
+              child: Icon(
+                Icons.keyboard_arrow_down_rounded,
+                color: getPillColor(currentMode),
+                size: 14,
+              ),
             ),
           ],
         ),

@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 
 class NormalIconButton extends ConsumerWidget {
   const NormalIconButton({
@@ -26,19 +27,19 @@ class NormalIconButton extends ConsumerWidget {
     final color = MyColors().getColorFromHex(categoryEntity.colorCode);
 
     return AppInkWell(
-      borderRadius: BorderRadius.circular(8),
+      borderRadius: BorderRadius.circular(22),
       onTap: () {
         notifier.setData(categoryEntity);
       },
       child: Column(
         children: [
           SizedBox(
-              height: 44 * context.screenVerticalMagnification,
-              width: 62.2 * context.screenHorizontalMagnification,
+              height: 58 * context.screenVerticalMagnification,
+              width: 58 * context.screenVerticalMagnification,
               child: Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: MyColors.secondarySystemfill,
-                  borderRadius: BorderRadius.circular(8),
+                  shape: BoxShape.circle,
                 ),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
@@ -58,13 +59,11 @@ class NormalIconButton extends ConsumerWidget {
             child: Center(
               child: Text(
                 categoryEntity.categoryName,
-                style: const TextStyle(
-                  color: MyColors.white,
-                ),
+                style: RegisterPageStyles.categoryLabel,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-          )
+          ),
         ],
       ),
     );

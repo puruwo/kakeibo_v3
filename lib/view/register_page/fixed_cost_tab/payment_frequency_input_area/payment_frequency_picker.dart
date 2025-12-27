@@ -7,6 +7,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
 
 // 支出登録画面の拠出元選択画面
@@ -69,11 +70,7 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),
-                textStyle: const TextStyle(
-                  fontSize: 24, // 文字サイズ
-                  color: MyColors.label, // 文字色
-                  fontWeight: FontWeight.bold, // 太字
-                ),
+                textStyle: RegisterPageStyles.pickerLargeNumber,
                 trailingIcon: const Icon(
                   Icons.arrow_drop_down_rounded,
                   color: MyColors.secondaryLabel,
@@ -99,11 +96,7 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
                   border: InputBorder.none,
                   contentPadding: EdgeInsets.zero,
                 ),
-                textStyle: const TextStyle(
-                  fontSize: 20, // 文字サイズ
-                  color: MyColors.label, // 文字色
-                  fontWeight: FontWeight.bold, // 太字
-                ),
+                textStyle: RegisterPageStyles.pickerMediumText,
                 trailingIcon: const Icon(
                   Icons.arrow_drop_down_rounded,
                   color: MyColors.secondaryLabel,
