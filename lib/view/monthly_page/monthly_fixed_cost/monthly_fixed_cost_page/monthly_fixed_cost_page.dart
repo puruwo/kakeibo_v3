@@ -3,9 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_summary_header.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_by_category_list_area.dart';
-import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
-import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class MonthlyFixedCostPage extends ConsumerWidget {
   const MonthlyFixedCostPage({super.key});
@@ -89,9 +88,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
                               // テキストサイズの制御
                               minScaleFactor: 0.7,
                               maxScaleFactor: 0.95,
-                              child: const RegisterFixedCostPage(
-                                  mode: RegisterScreenMode.add,
-                                  isAppBarVisible: true),
+                              child: const RegisaterPageBase.addFixedCost(),
                             ),
                           );
                         },

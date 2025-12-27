@@ -157,8 +157,8 @@ void _showExpenseEntrySheet(BuildContext context) {
         themeMode: ThemeMode.dark,
         darkTheme: ThemeData.dark(),
         home: MediaQuery.withClampedTextScaling(
-          child: const RegisaterPageBase(
-              shouldDisplayTab: true, transactionMode: TransactionMode.expense),
+          child: const RegisaterPageBase.addExpense(
+              transactionMode: TransactionMode.expense),
         ),
       );
     },

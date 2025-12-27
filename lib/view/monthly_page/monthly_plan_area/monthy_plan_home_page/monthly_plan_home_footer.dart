@@ -8,7 +8,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
-import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
@@ -176,9 +176,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
                 themeMode: ThemeMode.dark,
                 darkTheme: ThemeData.dark(),
                 home: MediaQuery.withClampedTextScaling(
-                  child: const RegisterIncomePage(
-                    isTabVisible: true, // タブを非表示にする
-                  ),
+                  child: const RegisaterPageBase.addIncome(),
                 ),
               );
             },

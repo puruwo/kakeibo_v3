@@ -7,10 +7,9 @@ import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
-import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 enum CalendarTileStatus {
   selected,
@@ -220,12 +219,10 @@ void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
             // テキストサイズの制御
             minScaleFactor: 0.7,
             maxScaleFactor: 0.95,
-            child: RegisterExpensePage(
+            child: RegisaterPageBase.addExpense(
               expenseEntity: ExpenseEntity(
                 date: DateFormat('yyyyMMdd').format(selectedDate),
               ),
-              mode: RegisterScreenMode.add,
-              isTabVisible: true,
             )),
       );
     },
