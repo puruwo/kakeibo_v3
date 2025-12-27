@@ -7,7 +7,7 @@ part of 'input_mode_controller.dart';
 // **************************************************************************
 
 String _$inputModeControllerHash() =>
-    r'01b3fcc9a92ce6fedb91fa5098d0507b4e75db0b';
+    r'a8982be64b556bb665e8b5dd0557c2cdfc236f24';
 
 /// See also [InputModeController].
 @ProviderFor(InputModeController)

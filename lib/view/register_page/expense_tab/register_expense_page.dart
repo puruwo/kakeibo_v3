@@ -6,15 +6,14 @@ import 'package:kakeibo/domain/core/category_selection/category_selection_types.
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
-import 'package:kakeibo/view/register_page/expense_tab/price_input_area/expense_input_area.dart';
-import 'package:kakeibo/view/register_page/common_input_field/memo_input_field.dart';
+import 'package:kakeibo/view/register_page/common_input_field/budget_row.dart';
+import 'package:kakeibo/view/register_page/common_input_field/date_memo_row.dart';
+import 'package:kakeibo/view/register_page/common_input_field/price_input_row/price_input_row.dart';
 import 'package:kakeibo/view/register_page/submit_button.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
-import 'package:kakeibo/view/register_page/common_input_field/date_input_field.dart';
 
 class RegisterExpensePage extends ConsumerStatefulWidget {
   final RegisterScreenMode mode;
-
   final ExpenseEntity? expenseEntity;
 
   const RegisterExpensePage(
@@ -30,14 +29,12 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
 
   @override
   void initState() {
-    // entityを受け取っていなければ初期データで宣言、受け取っていればそれを宣言
     initialExpenseData = widget.expenseEntity ??
         ExpenseEntity(
           date: DateFormat('yyyyMMdd').format(DateTime.now()),
         );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 編集モードか？
       ref
           .read(registerScreenModeNotifierProvider.notifier)
           .setData(widget.mode);
@@ -48,61 +45,70 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
 
   @override
   Widget build(BuildContext context) {
-    // カレンダーサイズから左の空白の大きさを計算
-    final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
-
-    //レイアウト------------------------------------------------------------------------------------
+    final leftsidePadding = 16.0 * context.screenHorizontalMagnification;
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
-          backgroundColor: MyColors.secondarySystemBackground,
+        backgroundColor: MyColors.secondarySystemBackground,
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const SizedBox(height: 16),
 
-          //body
-          body: SingleChildScrollView(
-            child: Center(
-              child: Padding(
-                padding: EdgeInsets.all(leftsidePadding),
-                child: Column(
-                  children: [
-                    SizedBox(height: 5),
-
-                    SizedBox(height: 8),
-
-                    ExpenseInputArea(
-                      originalPrice: initialExpenseData.price,
-                      originalIncomeSourceBigCategory:
-                          initialExpenseData.incomeSourceBigCategory,
-                    ),
-
-                    SizedBox(height: 8),
-
-                    MemoInputField(originalMemo: initialExpenseData.memo),
-
-                    SizedBox(height: 8),
-
-                    DateInputField(originalDate: initialExpenseData.date),
-
-                    SizedBox(height: 16),
-
-                    // カテゴリー選択エリア
-                    CategoryArea(
-                        transactionMode: TransactionMode.expense,
-                        originalCategoryId:
-                            initialExpenseData.paymentCategoryId),
-                  ],
+                // 上部：支出ピル + 大きな金額表示
+                // 購入金額入力
+                PriceInputRow(
+                  originalPrice: widget.expenseEntity?.price ?? 0,
                 ),
-              ),
+
+                const SizedBox(height: 16),
+
+                // 予算行
+                BudgetRow(
+                  originalIncomeSourceBigCategory:
+                      initialExpenseData.incomeSourceBigCategory,
+                ),
+
+                const SizedBox(height: 8),
+
+                // 日付+メモ行
+                DateMemoRow(
+                  originalDate: initialExpenseData.date,
+                  originalMemo: initialExpenseData.memo,
+                ),
+
+                const SizedBox(height: 24),
+
+                // カテゴリー選択エリア（ページインジケーター付き）
+                Center(
+                  child: CategoryArea(
+                    transactionMode: TransactionMode.expense,
+                    originalCategoryId: initialExpenseData.paymentCategoryId,
+                    showRearrangeLink: true,
+                  ),
+                ),
+
+                // 完了ボタン用のスペース
+                const SizedBox(height: 100),
+              ],
             ),
           ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerDocked,
-          floatingActionButton: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        ),
+        // 固定フッターの完了ボタン
+        bottomNavigationBar: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
             child: SubmitButton(
-                transactionMode: TransactionMode.expense,
-                originalExpenseEntity: initialExpenseData),
-          )),
+              transactionMode: TransactionMode.expense,
+              originalExpenseEntity: initialExpenseData,
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -147,23 +147,41 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         ),
 
         //body
-        body: switch (widget.transactionMode) {
-          TransactionMode.expense => RegisterExpensePage(
-              mode: widget.registerMode,
-              expenseEntity: widget.expenseEntity,
-            ),
-          TransactionMode.fixedCost => RegisterFixedCostPage(
-              mode: widget.registerMode,
-              fixedCostEntity: widget.fixedCostEntity,
-              isAppBarVisible: false,
-            ),
-          TransactionMode.income => RegisterIncomePage(
-              mode: widget.registerMode,
-              incomeEntity: widget.incomeEntity,
-              isTabVisible: false,
-            ),
-        },
+        body: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
+        ),
       ),
     );
+  }
+
+  /// モードに応じたページを返す
+  /// AnimatedSwitcherが正しく動作するようにKeyを設定
+  Widget _buildPageByMode(TransactionMode mode) {
+    return switch (mode) {
+      TransactionMode.expense => RegisterExpensePage(
+          key: const ValueKey('expense'),
+          mode: widget.registerMode,
+          expenseEntity: widget.expenseEntity,
+        ),
+      TransactionMode.fixedCost => RegisterFixedCostPage(
+          key: const ValueKey('fixedCost'),
+          mode: widget.registerMode,
+          fixedCostEntity: widget.fixedCostEntity,
+          isAppBarVisible: false,
+        ),
+      TransactionMode.income => RegisterIncomePage(
+          key: const ValueKey('income'),
+          mode: widget.registerMode,
+          incomeEntity: widget.incomeEntity,
+          isTabVisible: false,
+        ),
+    };
   }
 }

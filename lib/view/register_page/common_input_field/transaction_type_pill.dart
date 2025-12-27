@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
+import 'package:kakeibo/view/register_page/common_input_field/color_getter.dart/color_getter.dart';
 
 /// 支出/収入を切り替えるピルボタン
 ///
@@ -17,21 +18,26 @@ class TransactionTypePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<TransactionMode>(
-      offset: const Offset(0, 40),
-      color: MyColors.tertiarySystemBackground,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+    return AppPopupMenu<TransactionMode>(
       onSelected: onModeChanged,
       itemBuilder: (context) => [
-        _buildMenuItem(TransactionMode.expense, '支出'),
-        _buildMenuItem(TransactionMode.income, '収入'),
+        buildCheckableMenuItem(
+          value: TransactionMode.expense,
+          label: '支出',
+          isSelected: currentMode == TransactionMode.expense,
+        ),
+        buildCheckableMenuItem(
+          value: TransactionMode.income,
+          label: '収入',
+          isSelected: currentMode == TransactionMode.income,
+        ),
       ],
       child: Container(
+        height: 40,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: _getPillColor(currentMode),
+          color: getPillBackgroundColor(currentMode),
+          border: Border.all(color: getPillColor(currentMode)),
           borderRadius: BorderRadius.circular(20),
         ),
         child: Row(
@@ -42,7 +48,7 @@ class TransactionTypePill extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: getPillColor(currentMode),
                 shape: BoxShape.circle,
               ),
             ),
@@ -50,55 +56,23 @@ class TransactionTypePill extends StatelessWidget {
             // ラベル
             Text(
               _getLabel(currentMode),
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: getPillColor(currentMode),
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
               ),
             ),
             const SizedBox(width: 4),
             // ドロップダウン矢印
-            const Icon(
+            Icon(
               Icons.keyboard_arrow_down_rounded,
-              color: Colors.white,
+              color: getPillColor(currentMode),
               size: 20,
             ),
           ],
         ),
       ),
     );
-  }
-
-  PopupMenuItem<TransactionMode> _buildMenuItem(
-      TransactionMode mode, String label) {
-    return PopupMenuItem<TransactionMode>(
-      value: mode,
-      child: Row(
-        children: [
-          if (currentMode == mode)
-            Icon(Icons.check, color: MyColors.themeColor, size: 20)
-          else
-            const SizedBox(width: 20),
-          const SizedBox(width: 8),
-          Text(
-            label,
-            style: TextStyle(
-              color: MyColors.white,
-              fontWeight:
-                  currentMode == mode ? FontWeight.bold : FontWeight.normal,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _getPillColor(TransactionMode mode) {
-    return switch (mode) {
-      TransactionMode.expense => MyColors.themeColor,
-      TransactionMode.income => Colors.green,
-      TransactionMode.fixedCost => Colors.blue,
-    };
   }
 
   String _getLabel(TransactionMode mode) {
