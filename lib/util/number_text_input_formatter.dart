@@ -7,7 +7,7 @@ class NumberTextInputFormatter extends TextInputFormatter {
 
   /// 初期値として数値をカンマ区切りの文字列に変換
   static String formatInitialValue(int value) {
-    if (value == 0) return '';
+    if (value == 0) return '0';
     final formatter = NumberFormat('#,###');
     return formatter.format(value);
   }

@@ -1,82 +1,90 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 
+/// 初回支払い日入力フィールド（ピル形式）
+///
+/// UIデザイン: [📅 初回   12/29]
 class InitialPaymentDateInputField extends ConsumerStatefulWidget {
-  const InitialPaymentDateInputField(
-      {super.key, required this.originalDate, this.titleLabel = "日付"});
+  const InitialPaymentDateInputField({
+    super.key,
+    required this.originalDate,
+  });
+
+  /// 初期日付（yyyyMMdd形式）
   final String originalDate;
-  final String titleLabel;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _DateInputFieldState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _InitialPaymentDateInputFieldState();
 }
 
-class _DateInputFieldState extends ConsumerState<InitialPaymentDateInputField> {
+class _InitialPaymentDateInputFieldState
+    extends ConsumerState<InitialPaymentDateInputField> {
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(inputDateControllerNotifierProvider.notifier).setData(DateTime.parse(
-          '${widget.originalDate.substring(0, 4)}-${widget.originalDate.substring(4, 6)}-${widget.originalDate.substring(6, 8)}'));
+      ref.read(inputDateControllerNotifierProvider.notifier).setData(
+            DateTime.parse(
+              '${widget.originalDate.substring(0, 4)}-${widget.originalDate.substring(4, 6)}-${widget.originalDate.substring(6, 8)}',
+            ),
+          );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    // 入力された日付を監視
     final enteredDate = ref.watch(inputDateControllerNotifierProvider);
 
     return AppInkWell(
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      borderRadius: BorderRadius.circular(50),
       onTap: () async {
-        //カレンダーピッカーで日付を選択し取得
+        // 既存のカレンダーピッカーを表示
         final DateTime? picked = await showDatePicker(
           context: context,
           initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: enteredDate, // 最初に表示する日付
-          firstDate: DateTime(2020), // 選択できる日付の最小値
-          lastDate: DateTime(2040), // 選択できる日付の最大値
+          initialDate: enteredDate,
+          firstDate: DateTime(2020),
+          lastDate: DateTime(2040),
         );
 
-        //notifierを取得
-        final notifier = ref.read(inputDateControllerNotifierProvider.notifier);
-        //nullじゃなければcontrollerを更新
-        if (picked != null) notifier.setData(picked);
+        if (picked != null) {
+          ref
+              .read(inputDateControllerNotifierProvider.notifier)
+              .setData(picked);
+        }
       },
-      child: SizedBox(
-        height: 40,
+      child: Container(
+        height: InputPageWidgetSize.pillHeight,
+        width: InputPageWidgetSize.pillWidth,
+        padding: const EdgeInsets.fromLTRB(16, 8, 20, 8),
+        decoration: BoxDecoration(
+          color: MyColors.secondarySystemfill,
+          borderRadius: BorderRadius.circular(50),
+        ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(
-              widget.titleLabel,
-              textAlign: TextAlign.left,
-              style: MyFonts.placeHolder,
+            const Icon(
+              Icons.calendar_today_outlined,
+              size: 16,
+              color: MyColors.label,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 4),
-                  child: Text(
-                    '${enteredDate.year}年${enteredDate.month}月${enteredDate.day}日',
-                    textAlign: TextAlign.right,
-                    style: MyFonts.inputText,
-                  ),
-                ),
-                const Icon(
-                  Icons.arrow_forward_ios_rounded,
-                  size: 14,
-                  color: MyColors.secondaryLabel,
-                )
-              ],
+            const SizedBox(width: 8),
+            Text(
+              '初回',
+              style: RegisterPageStyles.budgetLabel,
+            ),
+            const Spacer(),
+            Text(
+              '${enteredDate.month}/${enteredDate.day}',
+              style: RegisterPageStyles.dateButton,
             ),
           ],
         ),

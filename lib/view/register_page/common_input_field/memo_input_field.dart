@@ -2,14 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 
 class MemoInputField extends ConsumerStatefulWidget {
-  const MemoInputField(
-      {super.key, required this.originalMemo, this.titleLabel = "メモ"});
+  const MemoInputField({
+    super.key,
+    required this.originalMemo,
+    this.titleLabel = "メモ",
+    this.showIcon = false,
+  });
 
   final String originalMemo;
   final String titleLabel;
+
+  /// アイコンを表示するかどうか（DateMemoRow内で使用時はtrue）
+  final bool showIcon;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MemoInputFieldState();
@@ -31,45 +39,49 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
   Widget build(BuildContext context) {
     _enteredMemoController = ref.watch(enteredMemoControllerProvider);
 
-    return // メモinputField
-        Container(
+    return Container(
+      height: InputPageWidgetSize.pillHeight,
+      width: InputPageWidgetSize.pillWidth,
       decoration: BoxDecoration(
         color: MyColors.secondarySystemfill,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(50),
       ),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 6, 16, 5),
+        padding: const EdgeInsets.fromLTRB(16, 6, 20, 5),
         child: SizedBox(
           height: 34,
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // アイコン表示（オプション）
+              if (widget.showIcon) ...[
+                const Icon(
+                  Icons.notes_rounded,
+                  size: 18,
+                  color: MyColors.label,
+                ),
+                const SizedBox(width: 6),
+              ],
+              // ラベル
               Text(
                 widget.titleLabel,
                 textAlign: TextAlign.left,
-                style: MyFonts.placeHolder,
+                style: MyFonts.placeHolder.copyWith(fontSize: 15),
               ),
+              const SizedBox(width: 16),
+              // 入力フィールド
               Expanded(
                 child: TextFormField(
                   controller: _enteredMemoController,
-                  // オートフォーカスさせるか
-                  autofocus: true,
-                  // テキストの揃え(上下)
+                  autofocus: false,
                   textAlignVertical: TextAlignVertical.center,
-                  // テキストの揃え(左右)
-                  textAlign: TextAlign.end,
-                  // カーソルの色
+                  textAlign: TextAlign.right,
                   cursorColor: MyColors.themeColor,
-                  // カーソルの先の太さ
                   cursorWidth: 2,
-                  // 入力するテキストのstyle
                   style: MyFonts.inputText,
-                  // 行数の制約
                   minLines: 1,
                   maxLines: 1,
-                  // 最大文字数の制約
                   maxLength: 20,
-                  // 右下のカウンターを非表示にする
                   buildCounter: (
                     BuildContext context, {
                     required int currentLength,
@@ -78,29 +90,17 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
                   }) {
                     return null;
                   },
-
-                  // 枠や背景などのデザイン
                   decoration: const InputDecoration(
-                    // trueにするとテキストフィールド全体の密度が下がる
                     isDense: true,
-                    // 背景の塗りつぶし
                     filled: false,
-                    // テキストの余白をゼロにして中央揃えを実現
                     contentPadding: EdgeInsets.zero,
-                    // 境界線なし
                     border: InputBorder.none,
                   ),
-
                   keyboardAppearance: Brightness.dark,
-
-                  //キーボードcloseで再描画が走っているので変更を更新してあげる必要あり
-                  //領域外をタップでproviderを更新する
                   onTapOutside: (event) {
-                    //キーボードを閉じる
                     FocusScope.of(context).unfocus();
                   },
                   onEditingComplete: () {
-                    //キーボードを閉じる
                     FocusScope.of(context).unfocus();
                   },
                 ),

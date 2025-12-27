@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
 
 /// 金額入力フィールドの状態
@@ -11,8 +14,6 @@ enum PriceInputFieldStatus {
 }
 
 /// 大きな金額表示・入力フィールド
-///
-/// 画像デザインの「¥ 34,420」部分
 class LargePriceDisplay extends ConsumerStatefulWidget {
   const LargePriceDisplay({
     super.key,
@@ -21,7 +22,7 @@ class LargePriceDisplay extends ConsumerStatefulWidget {
   });
 
   final int originalPrice;
-  final PriceInputFieldStatus status;
+  final PriceInputFieldStatus? status;
 
   @override
   ConsumerState<LargePriceDisplay> createState() => _LargePriceDisplayState();
@@ -47,16 +48,16 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
-      crossAxisAlignment: CrossAxisAlignment.baseline,
+      crossAxisAlignment: CrossAxisAlignment.end,
       textBaseline: TextBaseline.alphabetic,
       children: [
         // 円マーク
         Text(
           '¥',
-          style: TextStyle(
-            color: MyColors.themeColor,
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
+          style: RegisterPageStyles.yenSymbol(
+            getPillColor(ref.watch(inputModeControllerProvider)),
+          ).copyWith(
+            height: 1,
           ),
         ),
         const SizedBox(width: 8),
@@ -69,50 +70,51 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
   }
 
   Widget _buildInputField() {
-    return IntrinsicWidth(
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(minWidth: 50),
-        child: TextFormField(
-          controller: _controller,
-          autofocus: true,
-          textAlign: TextAlign.right,
-          style: const TextStyle(
-            color: MyColors.white,
-            fontSize: 42,
-            fontWeight: FontWeight.bold,
-            height: 1.0,
+    return Flexible(
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.bottomRight,
+        child: IntrinsicWidth(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 50),
+            child: TextFormField(
+              controller: _controller,
+              autofocus: true,
+              textAlign: TextAlign.right,
+              style: RegisterPageStyles.priceInput,
+              cursorColor: MyColors.themeColor,
+              cursorWidth: 3,
+              cursorHeight: 42,
+              maxLines: 1,
+              maxLength: 12,
+              buildCounter: (context,
+                  {required currentLength,
+                  required isFocused,
+                  required maxLength}) {
+                return null;
+              },
+              inputFormatters: [NumberTextInputFormatter()],
+              keyboardType: TextInputType.number,
+              keyboardAppearance: Brightness.dark,
+              decoration: const InputDecoration(
+                isDense: true,
+                filled: false,
+                contentPadding: EdgeInsets.zero,
+                border: InputBorder.none,
+              ),
+              onChanged: (value) {
+                if (value == '') {
+                  _controller.text = '0';
+                }
+              },
+              onTapOutside: (event) {
+                FocusScope.of(context).unfocus();
+              },
+              onEditingComplete: () {
+                FocusScope.of(context).unfocus();
+              },
+            ),
           ),
-          cursorColor: MyColors.themeColor,
-          cursorWidth: 3,
-          cursorHeight: 42,
-          maxLines: 1,
-          maxLength: 12,
-          buildCounter: (context,
-              {required currentLength,
-              required isFocused,
-              required maxLength}) {
-            return null;
-          },
-          inputFormatters: [NumberTextInputFormatter()],
-          keyboardType: TextInputType.number,
-          keyboardAppearance: Brightness.dark,
-          decoration: const InputDecoration(
-            isDense: true,
-            filled: false,
-            contentPadding: EdgeInsets.zero,
-            border: InputBorder.none,
-          ),
-          onChanged: (value) {
-            if (value == '0') {
-              _controller.clear();
-            }
-          },
-          onTapOutside: (event) {
-            FocusScope.of(context).unfocus();
-          },
-          onEditingComplete: () {
-            FocusScope.of(context).unfocus();
-          },
         ),
       ),
     );
@@ -121,12 +123,7 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
   Widget _buildUnconfirmedDisplay() {
     return const Text(
       '---',
-      style: TextStyle(
-        color: MyColors.secondaryLabel,
-        fontSize: 42,
-        fontWeight: FontWeight.bold,
-        height: 1.0,
-      ),
+      style: RegisterPageStyles.priceUnconfirmed,
     );
   }
 }

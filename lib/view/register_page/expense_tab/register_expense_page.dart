@@ -62,10 +62,11 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                 // 上部：支出ピル + 大きな金額表示
                 // 購入金額入力
                 PriceInputRow(
+                  mode: widget.mode,
                   originalPrice: widget.expenseEntity?.price ?? 0,
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 32),
 
                 // 予算行
                 BudgetRow(
@@ -73,7 +74,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                       initialExpenseData.incomeSourceBigCategory,
                 ),
 
-                const SizedBox(height: 8),
+                const SizedBox(height: 16),
 
                 // 日付+メモ行
                 DateMemoRow(
@@ -91,9 +92,6 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                     showRearrangeLink: true,
                   ),
                 ),
-
-                // 完了ボタン用のスペース
-                const SizedBox(height: 100),
               ],
             ),
           ),

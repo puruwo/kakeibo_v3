@@ -11,6 +11,8 @@ import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
+import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';
+import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
@@ -50,6 +52,7 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
+        buttonColor: getPillColor(ref.watch(inputModeControllerProvider)),
         buttonType: ButtonColorType.main,
         buttonText: screenMode == RegisterScreenMode.edit ? '更新' : '追加',
         onPressed: () async {

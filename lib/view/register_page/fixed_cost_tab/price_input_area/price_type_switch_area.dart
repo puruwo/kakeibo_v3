@@ -40,7 +40,7 @@ class _PriceTypeSwitchArea extends ConsumerState<PriceTypeSwitchArea> {
         children: [
           // プレースホルダー
           Text(
-            "支払い額変動",
+            "支払い額変あり",
             textAlign: TextAlign.right,
             style: MyFonts.placeHolder,
           ),
