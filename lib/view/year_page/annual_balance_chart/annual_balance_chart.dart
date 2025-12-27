@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
 
 class AnnualBalanceChart extends ConsumerStatefulWidget {
@@ -32,23 +33,19 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
     return ref.watch(resolvedAnnualBalanceChartValueProvider).when(
       data: (chartData) {
         // チャートのデータがない場合の処理
-        if(chartData.hasNoRecord){
-          return Container(
-                width: double.infinity,
-                height: 30,
-                decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
-                child: Center(
-                  child: Text(
-                    'まだ記録がありません',
-                    style: MyFonts.topCardSubYenLabel,
-                  ),
-                ),
-              );
+        if (chartData.hasNoRecord) {
+          return CardContainer(
+            width: double.infinity,
+            height: 30,
+            child: Center(
+              child: Text(
+                'まだ記録がありません',
+                style: MyFonts.topCardSubYenLabel,
+              ),
+            ),
+          );
         }
-        
+
         // 収入のリストを作成
         // 未来の収入はリストに格納しない
         final List<double> income = [
@@ -160,13 +157,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
           }
         });
 
-
-        return Container(
+        return CardContainer(
           width: scrollAreaWidth,
-          decoration: BoxDecoration(
-            color: MyColors.quarternarySystemfill,
-            borderRadius: BorderRadius.circular(8.0),
-          ),
           child: SingleChildScrollView(
             controller: _scrollController,
             scrollDirection: Axis.horizontal,

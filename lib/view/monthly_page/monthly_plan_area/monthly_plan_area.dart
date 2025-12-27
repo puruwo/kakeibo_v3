@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_income_graph_area/monthly_income_graph_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
@@ -15,11 +16,7 @@ class MonthlyPlanArea extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      decoration: BoxDecoration(
-        color: MyColors.quarternarySystemfill,
-        borderRadius: BorderRadius.circular(8.0),
-      ),
+    return CardContainer(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -48,7 +45,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                           // 予算ボタン
                           Padding(
                             padding: const EdgeInsets.only(bottom: 6.0),
-                            child: SubButton(
+                            child: PlanAreaButton(
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -76,7 +73,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                           // 収入ボタン
                           Padding(
                             padding: const EdgeInsets.only(bottom: 6.0),
-                            child: SubButton(
+                            child: PlanAreaButton(
                               onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
@@ -106,8 +103,8 @@ class MonthlyPlanArea extends ConsumerWidget {
   }
 }
 
-class SubButton extends StatelessWidget {
-  const SubButton({
+class PlanAreaButton extends StatelessWidget {
+  const PlanAreaButton({
     super.key,
     required this.onTap,
     required this.icon,
@@ -129,7 +126,7 @@ class SubButton extends StatelessWidget {
         alignment: Alignment.center,
         decoration: BoxDecoration(
           color: MyColors.tirtiarySystemfill,
-          borderRadius: BorderRadius.circular(8),
+          borderRadius: BorderRadius.circular(50),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14.0),

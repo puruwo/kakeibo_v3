@@ -10,6 +10,7 @@ import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -89,12 +90,8 @@ class FixedCostItemTile extends ConsumerWidget {
         ]);
       },
       onTap: () {},
-      child: Container(
+      child: CardContainer(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        decoration: BoxDecoration(
-          color: MyColors.quarternarySystemfill,
-          borderRadius: BorderRadius.circular(8),
-        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,

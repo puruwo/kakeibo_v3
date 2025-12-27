@@ -8,6 +8,7 @@ import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecas
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 
 class IncomeGraphArea extends ConsumerStatefulWidget {
   const IncomeGraphArea({super.key, required this.dateScope});
@@ -26,13 +27,9 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
     return ref.watch(yearlyIncomeListNotifierProvider(widget.dateScope)).when(
           data: (incomeDatas) {
             if (incomeDatas.monthlyGroups.isEmpty) {
-              return Container(
+              return CardContainer(
                 constraints: const BoxConstraints(maxHeight: 200),
                 padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(12),
-                ),
                 child: Center(
                   child: Text(
                     '収入データがありません',
@@ -49,13 +46,9 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
 
             final formatter = NumberFormat('#,###');
 
-            return Container(
+            return CardContainer(
               constraints: const BoxConstraints(maxHeight: 200),
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: MyColors.quarternarySystemfill,
-                borderRadius: BorderRadius.circular(12),
-              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -153,22 +146,20 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                           const SizedBox(width: 4),
                                           // カテゴリー名
                                           Expanded(
-                                            child: Text(
-                                              category.categoryName,
-                                              style: MyFonts.appCardSecondaryTitleLabel
-                                            ),
+                                            child: Text(category.categoryName,
+                                                style: MyFonts
+                                                    .appCardSecondaryTitleLabel),
                                           ),
                                           const SizedBox(width: 8),
                                           // 金額
                                           Text(
-                                            '${formatter.format(category.totalAmount)} ',
-                                            style: MyFonts.appCardSecondaryPriceLabel
-                                          ),
+                                              '${formatter.format(category.totalAmount)} ',
+                                              style: MyFonts
+                                                  .appCardSecondaryPriceLabel),
                                           // 円
-                                          Text(
-                                            '円',
-                                            style: MyFonts.appCardSecondaryPriceUnit
-                                          ),
+                                          Text('円',
+                                              style: MyFonts
+                                                  .appCardSecondaryPriceUnit),
                                         ],
                                       ),
                                     );

@@ -9,6 +9,7 @@ import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/small_category_expanded_history_page/small_category_expanded_history_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_category_tile_entity_provider.dart';
 
@@ -90,12 +91,8 @@ class ExpandedCategoryTile extends HookConsumerWidget {
       final String budgetLabel = formattedPriceGetter(budget);
 
       isSetBudget = budget == 0 ? false : true;
-      return Container(
+      return CardContainer(
         alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: MyColors.quarternarySystemfill,
-          borderRadius: BorderRadius.circular(10),
-        ),
         child: Theme(
           data: Theme.of(context).copyWith(
             dividerColor: Colors.transparent,

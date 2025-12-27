@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
@@ -32,13 +33,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
           data: (yearlyBalanceValue) {
             if (yearlyBalanceValue.yearlyBalanceType ==
                 YearlyBalanceType.noRecorod) {
-              return Container(
+              return CardContainer(
                 width: double.infinity,
                 height: 30,
-                decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
                 child: Center(
                   child: Text(
                     'まだ記録がありません',
@@ -90,12 +87,8 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
               }
               // =============グラフサイズ計算ここまで================
 
-              return Container(
+              return CardContainer(
                 width: double.infinity,
-                decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(8.0),
-                ),
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
                   child: Column(

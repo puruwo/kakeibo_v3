@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_category_summary_list.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
 
@@ -13,11 +13,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(resolvedFixedCostSammaryValueProvider).when(
           data: (summaryValue) {
-            return Container(
-              decoration: BoxDecoration(
-                color: MyColors.quarternarySystemfill,
-                borderRadius: BorderRadius.circular(8.0),
-              ),
+            return CardContainer(
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
                 child: Column(
@@ -121,4 +117,3 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
         );
   }
 }
-

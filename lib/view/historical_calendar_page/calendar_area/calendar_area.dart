@@ -10,6 +10,7 @@ import 'package:logger/logger.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
 
 final logger = Logger();
@@ -23,7 +24,6 @@ class CalendarArea extends ConsumerStatefulWidget {
 
 class _CalendarAreaState extends ConsumerState<CalendarArea> {
   late DateTime initialDate;
-
 
   @override
   Widget build(
@@ -46,7 +46,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
     // providerが破棄されていないことが多いので、初期化を強制的に行う
     // 初期化することで、pageManagerNotifierProviderの値を取り込んで初期化する
     ref.invalidate(calendarPageControllerNotifierProvider);
-    
+
     // pageViewのコントローラ
     final PageController pageController =
         ref.watch(calendarPageControllerNotifierProvider);
@@ -54,10 +54,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
 //----------------------------------------------------------------------------------------------
 
 //描写-------------------------------------------------------------------------------------------
-    return Container(
-      decoration: BoxDecoration(
-          color: MyColors.quarternarySystemfill,
-          borderRadius: BorderRadius.circular(18)),
+    return CardContainer(
       width: 346 * screenHorizontalMagnification,
       height: 302 * screenVerticalMagnification,
       child: PageView.builder(
@@ -99,7 +96,6 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
 
         // 表示部分記述
         itemBuilder: (context, index) {
-
           return ref.watch(calendarUsecaseNotifierProvider(index)).when(
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (error, stackTrace) => Center(child: Text('$error')),

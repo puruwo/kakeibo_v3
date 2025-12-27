@@ -20,6 +20,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 
 class MonthlyPage extends ConsumerStatefulWidget {
   const MonthlyPage({super.key});
@@ -104,22 +105,14 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 final dateScope = ref.watch(analyzePageDateScopeEntityProvider);
                 return dateScope.when(
                   data: (scope) => PredictionGraph(dateScope: scope),
-                  loading: () => Container(
+                  loading: () => CardContainer(
                     height: 213,
                     width: 343 * context.screenHorizontalMagnification,
-                    decoration: BoxDecoration(
-                      color: MyColors.quarternarySystemfill,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
                     child: const Center(child: CircularProgressIndicator()),
                   ),
-                  error: (error, stack) => Container(
+                  error: (error, stack) => CardContainer(
                     height: 213,
                     width: 343 * context.screenHorizontalMagnification,
-                    decoration: BoxDecoration(
-                      color: MyColors.quarternarySystemfill,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
                     child: const Center(
                       child: Text(
                         'エラーが発生しました',

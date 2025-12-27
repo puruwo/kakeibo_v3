@@ -12,6 +12,7 @@ import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class IncomeHistoryTile extends ConsumerWidget {
@@ -45,7 +46,7 @@ class IncomeHistoryTile extends ConsumerWidget {
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
     return AppInkWell(
-      borderRadius: const BorderRadius.all(Radius.circular(12)),
+      borderRadius: appCardRadius,
       color: MyColors.quarternarySystemfill,
       onTap: () async {
         _showModalBottomSheet(context);

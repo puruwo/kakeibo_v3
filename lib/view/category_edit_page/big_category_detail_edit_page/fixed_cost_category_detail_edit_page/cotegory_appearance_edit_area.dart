@@ -163,9 +163,7 @@ class _BigCategoryAppearanceEditAreaState
                       suffixIcon: Padding(
                         // contentPaddingの影響を受けないので、余白を追加
                         padding: const EdgeInsets.only(right: 0),
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
+                        child: Stack(alignment: Alignment.center, children: [
                           Container(
                             width: 20,
                             height: 20,
@@ -258,7 +256,7 @@ class _BigCategoryAppearanceEditAreaState
               height: 42,
               decoration: BoxDecoration(
                   color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(50)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,

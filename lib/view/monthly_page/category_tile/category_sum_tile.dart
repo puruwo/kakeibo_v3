@@ -7,6 +7,7 @@ import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/category_expense_hisotry_page.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_graph.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_text.dart';
@@ -26,7 +27,7 @@ class CategorySumTile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AppInkWell(
       color: MyColors.quarternarySystemfill,
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: appCardRadius,
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => CategoryExpenseHistoryPage(

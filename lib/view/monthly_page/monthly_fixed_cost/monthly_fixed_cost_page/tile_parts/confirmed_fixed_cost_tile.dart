@@ -9,6 +9,7 @@ import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 
 class ConfirmedFixedCostTile extends ConsumerWidget {
   const ConfirmedFixedCostTile({
@@ -36,7 +37,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: AppInkWell(
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
+        borderRadius: appCardRadius,
         color: MyColors.quarternarySystemfill,
         onTap: () async {
           // 編集機能は将来実装

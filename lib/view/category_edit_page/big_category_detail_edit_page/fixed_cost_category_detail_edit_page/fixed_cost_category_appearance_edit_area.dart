@@ -191,9 +191,8 @@ class _FixedCostCategoryAppearanceEditAreaState
                     keyboardAppearance: Brightness.dark,
                     onChanged: (value) {
                       ref
-                          .read(
-                              fixedCostCategoryNameControllerNotifierProvider
-                                  .notifier)
+                          .read(fixedCostCategoryNameControllerNotifierProvider
+                              .notifier)
                           .updateState(value);
                     },
                     onTapOutside: (event) {
@@ -219,7 +218,7 @@ class _FixedCostCategoryAppearanceEditAreaState
               height: 42,
               decoration: BoxDecoration(
                   color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(10)),
+                  borderRadius: BorderRadius.circular(50)),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -266,8 +265,8 @@ class _FixedCostCategoryAppearanceEditAreaState
               itemCount: FixedCostIcons.iconPathList.length,
               itemBuilder: (context, index) {
                 final iconPath = FixedCostIcons.iconPathList[index];
-                final color = ref
-                    .watch(fixedCostCategoryColorControllerNotifierProvider);
+                final color =
+                    ref.watch(fixedCostCategoryColorControllerNotifierProvider);
                 return GestureDetector(
                   onTap: () {
                     ref

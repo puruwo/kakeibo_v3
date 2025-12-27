@@ -9,6 +9,7 @@ import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/price_input_dialog.dart';
 
 class UnconfirmedFixedCostTile extends ConsumerWidget {
@@ -39,7 +40,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
     return Padding(
         padding: const EdgeInsets.only(bottom: 8.0),
         child: AppInkWell(
-          borderRadius: const BorderRadius.all(Radius.circular(12)),
+          borderRadius: appCardRadius,
           color: MyColors.quarternarySystemfill,
           onLongPress: () async {
             return await showMenuDialog(context, items: [

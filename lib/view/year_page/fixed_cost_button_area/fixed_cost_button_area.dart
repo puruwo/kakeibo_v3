@@ -33,6 +33,7 @@ class FixedCostManagePageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       color: MyColors.quarternarySystemfill,
+      borderRadius: BorderRadius.circular(50.0),
       onTap: () async {
         Navigator.of(context).push(MaterialPageRoute(
             builder: ((context) => const FixedCostRegistrationListPage())));
@@ -40,7 +41,7 @@ class FixedCostManagePageButton extends StatelessWidget {
       child: Container(
         height: 46,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(50.0),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -104,7 +105,7 @@ class FixedCostAddButton extends StatelessWidget {
         height: 46,
         decoration: BoxDecoration(
           color: MyColors.quarternarySystemfill,
-          borderRadius: BorderRadius.circular(8.0),
+          borderRadius: BorderRadius.circular(50.0),
         ),
         child: const Icon(
           size: 18,

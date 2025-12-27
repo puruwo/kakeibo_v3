@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 
 class PredictionGraph extends ConsumerWidget {
   const PredictionGraph({super.key, required this.dateScope});
@@ -17,18 +18,16 @@ class PredictionGraph extends ConsumerWidget {
     final screenHorizontalMagnification =
         screenHorizontalMagnificationGetter(screenWidthSize);
 
-    final predictionGraphData = ref.watch(predictionGraphDataProvider(dateScope));
+    final predictionGraphData =
+        ref.watch(predictionGraphDataProvider(dateScope));
 
-    return Container(
+    return CardContainer(
       height: 213,
       width: 343 * screenHorizontalMagnification,
-      decoration: BoxDecoration(
-        color: MyColors.quarternarySystemfill,
-        borderRadius: BorderRadius.circular(8),
-      ),
       child: predictionGraphData.when(
         data: (data) {
-          if (data.predictionGraphLineType == PredictionGraphLineType.futureMonth) {
+          if (data.predictionGraphLineType ==
+              PredictionGraphLineType.futureMonth) {
             return const Center(
               child: Text(
                 '選択月の支出の入力がありません',
@@ -103,7 +102,9 @@ class _PredictionGraphPainter extends CustomPainter {
     }
 
     // 予測ラインを描画（点線）
-    if (data.shouldShowPredictionLine && data.predictionPoints == null && data.predictionPoints.isNotEmpty) {
+    if (data.shouldShowPredictionLine &&
+        data.predictionPoints == null &&
+        data.predictionPoints.isNotEmpty) {
       _drawPredictionLine(canvas, leftMargin, topMargin, graphWidth,
           graphHeight, maxValue, data.predictionPoints, data.predictionPrice);
     }
@@ -118,7 +119,6 @@ class _PredictionGraphPainter extends CustomPainter {
   /// X軸を描画
   void _drawXAxis(Canvas canvas, Size size, double leftMargin, double topMargin,
       double graphWidth, double graphHeight) {
-    
     // X軸メモリラベルの位置調節
     const xAxisLabelVerticalOffset = 5;
 
@@ -253,7 +253,7 @@ class _PredictionGraphPainter extends CustomPainter {
     );
     textPainter.layout();
 
-    final labelY = y  - textPainter.height ;
+    final labelY = y - textPainter.height;
     textPainter.paint(canvas, Offset(leftMargin + 5, labelY));
   }
 
@@ -279,9 +279,8 @@ class _PredictionGraphPainter extends CustomPainter {
       final point = predictionPoints[i];
       final daysDiff = point.date.difference(data.fromDate).inDays;
       final x = leftMargin + (daysDiff / totalDays) * graphWidth;
-      final y = topMargin +
-          graphHeight -
-          (point.price / maxValue) * graphHeight;
+      final y =
+          topMargin + graphHeight - (point.price / maxValue) * graphHeight;
 
       if (i == 0) {
         path.moveTo(x, y);
@@ -298,9 +297,8 @@ class _PredictionGraphPainter extends CustomPainter {
       final lastPoint = predictionPoints.last;
       final daysDiff = lastPoint.date.difference(data.fromDate).inDays;
       final x = leftMargin + (daysDiff / totalDays) * graphWidth;
-      final y = topMargin +
-          graphHeight -
-          (lastPoint.price / maxValue) * graphHeight;
+      final y =
+          topMargin + graphHeight - (lastPoint.price / maxValue) * graphHeight;
 
       final textSpan = TextSpan(
         text: data.predictionLabel,
@@ -341,9 +339,8 @@ class _PredictionGraphPainter extends CustomPainter {
       final point = expensePoints[i];
       final daysDiff = point.date.difference(data.fromDate).inDays;
       final x = leftMargin + (daysDiff / totalDays) * graphWidth;
-      final y = topMargin +
-          graphHeight -
-          (point.price / maxValue) * graphHeight;
+      final y =
+          topMargin + graphHeight - (point.price / maxValue) * graphHeight;
 
       if (i == 0) {
         path.moveTo(x, y);
@@ -368,8 +365,7 @@ class _PredictionGraphPainter extends CustomPainter {
       while (distance < metric.length) {
         final length = draw ? dashWidth : dashSpace;
         if (draw) {
-          final extractPath =
-              metric.extractPath(distance, distance + length);
+          final extractPath = metric.extractPath(distance, distance + length);
           canvas.drawPath(extractPath, paint);
         }
         distance += length;
