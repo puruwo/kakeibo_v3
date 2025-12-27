@@ -63,8 +63,8 @@ Future<bool> showConfirmationDialog(
                           buttonType: ButtonColorType.secondary,
                           buttonText: "キャンセル",
                           onPressed: () {
-                            onConfirm?.call();
-                            Navigator.of(context).pop(true);
+                            onCancel?.call();
+                            Navigator.of(context).pop(false);
                           },
                         ),
                       ),
