@@ -11,8 +11,7 @@ import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
-import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
-import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class FixedCostItemTile extends ConsumerWidget {
   const FixedCostItemTile({
@@ -69,10 +68,8 @@ class FixedCostItemTile extends ConsumerWidget {
                         // テキストサイズの制御
                         minScaleFactor: 0.7,
                         maxScaleFactor: 0.95,
-                        child: RegisterFixedCostPage(
-                            mode: RegisterScreenMode.edit,
-                            fixedCostEntity: item,
-                            isAppBarVisible: true),
+                        child: RegisaterPageBase.editFixedCost(
+                            fixedCostEntity: item),
                       ),
                     );
                   },

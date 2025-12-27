@@ -6,15 +6,13 @@ import 'package:kakeibo/domain/core/category_selection/category_selection_types.
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
-import 'package:kakeibo/view/component/app_component.dart';
-import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
+import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class RegisaterPageBase extends ConsumerStatefulWidget {
-  final bool shouldDisplayTab;
   final TransactionMode transactionMode;
   final RegisterScreenMode registerMode;
 
@@ -22,14 +20,65 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
   final IncomeEntity? incomeEntity;
   final FixedCostEntity? fixedCostEntity;
 
-  const RegisaterPageBase(
-      {required this.shouldDisplayTab,
-      required this.transactionMode,
-      this.registerMode = RegisterScreenMode.add,
-      this.expenseEntity,
-      this.incomeEntity,
-      this.fixedCostEntity,
-      super.key});
+  /// 支出追加
+  const RegisaterPageBase.addExpense({
+    this.transactionMode = TransactionMode.expense,
+    this.registerMode = RegisterScreenMode.add,
+    this.expenseEntity,
+    this.incomeEntity,
+    this.fixedCostEntity,
+    super.key,
+  });
+
+  /// 支出編集
+  const RegisaterPageBase.editExpense({
+    this.transactionMode = TransactionMode.expense,
+    this.registerMode = RegisterScreenMode.edit,
+    required this.expenseEntity,
+    this.incomeEntity,
+    this.fixedCostEntity,
+    super.key,
+  });
+
+  /// 収入追加
+  const RegisaterPageBase.addIncome({
+    this.transactionMode = TransactionMode.income,
+    this.registerMode = RegisterScreenMode.add,
+    this.expenseEntity,
+    this.incomeEntity,
+    this.fixedCostEntity,
+    super.key,
+  });
+
+  /// 収入編集
+  const RegisaterPageBase.editIncome({
+    this.transactionMode = TransactionMode.income,
+    this.registerMode = RegisterScreenMode.edit,
+    this.expenseEntity,
+    required this.incomeEntity,
+    this.fixedCostEntity,
+    super.key,
+  });
+
+  /// 固定費追加
+  const RegisaterPageBase.addFixedCost({
+    this.transactionMode = TransactionMode.fixedCost,
+    this.registerMode = RegisterScreenMode.add,
+    this.expenseEntity,
+    this.incomeEntity,
+    this.fixedCostEntity,
+    super.key,
+  });
+
+  /// 固定費編集
+  const RegisaterPageBase.editFixedCost({
+    this.transactionMode = TransactionMode.fixedCost,
+    this.registerMode = RegisterScreenMode.edit,
+    this.expenseEntity,
+    this.incomeEntity,
+    required this.fixedCostEntity,
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -42,23 +91,11 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
   @override
   void initState() {
-    final initialIndex = widget.transactionMode.modeNumber;
-
-    // タブを2つに設定
-    _tabController =
-        TabController(initialIndex: initialIndex, length: 3, vsync: this);
-
-    // 編集モードなのにoriginalEntityを受け取っていない
-    if (widget.registerMode == RegisterScreenMode.edit) {
-      if ((widget.transactionMode == TransactionMode.expense &&
-              widget.expenseEntity == null) &&
-          (widget.transactionMode == TransactionMode.fixedCost &&
-              widget.fixedCostEntity == null) &&
-          (widget.transactionMode == TransactionMode.income &&
-              widget.incomeEntity == null)) {
-        throw const AppException('編集モードで編集前データが入力されていません');
-      }
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref
+          .read(inputModeControllerProvider.notifier)
+          .initialize(widget.transactionMode);
+    });
 
     super.initState();
   }
@@ -107,31 +144,25 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
               color: MyColors.white,
             ),
           ),
-          bottom: AppTab(tabController: _tabController, tabs: const [
-            Tab(text: '支出'),
-            Tab(text: '固定費'),
-            Tab(text: '収入'),
-          ]),
         ),
 
         //body
-        body: TabBarView(controller: _tabController, children: [
-          RegisterExpensePage(
-            mode: RegisterScreenMode.add,
-            expenseEntity: widget.expenseEntity,
-            isTabVisible: false,
-          ),
-          RegisterFixedCostPage(
-            mode: RegisterScreenMode.add,
-            fixedCostEntity: widget.fixedCostEntity,
-            isAppBarVisible: false,
-          ),
-          RegisterIncomePage(
-            mode: RegisterScreenMode.add,
-            incomeEntity: widget.incomeEntity,
-            isTabVisible: false, // タブを非表示にする
-          ),
-        ]),
+        body: switch (widget.transactionMode) {
+          TransactionMode.expense => RegisterExpensePage(
+              mode: widget.registerMode,
+              expenseEntity: widget.expenseEntity,
+            ),
+          TransactionMode.fixedCost => RegisterFixedCostPage(
+              mode: widget.registerMode,
+              fixedCostEntity: widget.fixedCostEntity,
+              isAppBarVisible: false,
+            ),
+          TransactionMode.income => RegisterIncomePage(
+              mode: widget.registerMode,
+              incomeEntity: widget.incomeEntity,
+              isTabVisible: false,
+            ),
+        },
       ),
     );
   }

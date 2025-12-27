@@ -5,8 +5,7 @@ import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
-import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
-import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class FixedCostRegistrationListPage extends ConsumerWidget {
   const FixedCostRegistrationListPage({super.key});
@@ -100,9 +99,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
                               // テキストサイズの制御
                               minScaleFactor: 0.7,
                               maxScaleFactor: 0.95,
-                              child: const RegisterFixedCostPage(
-                                  mode: RegisterScreenMode.add,
-                                  isAppBarVisible: true),
+                              child: const RegisaterPageBase.addFixedCost(),
                             ),
                           );
                         },

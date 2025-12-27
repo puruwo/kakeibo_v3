@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -18,13 +17,8 @@ class RegisterExpensePage extends ConsumerStatefulWidget {
 
   final ExpenseEntity? expenseEntity;
 
-  final bool isTabVisible;
-
   const RegisterExpensePage(
-      {this.mode = RegisterScreenMode.add,
-      this.expenseEntity,
-      required this.isTabVisible,
-      super.key});
+      {this.mode = RegisterScreenMode.add, this.expenseEntity, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -63,38 +57,6 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
           backgroundColor: MyColors.secondarySystemBackground,
-          appBar: widget.isTabVisible
-              ? AppBar(
-                  // ヘッダーの色
-                  backgroundColor: MyColors.secondarySystemBackground,
-
-                  // ヘッダーの形
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10),
-                    ),
-                  ),
-                  title: SizedBox(
-                    child: Text(
-                      widget.mode == RegisterScreenMode.add ? '記録' : '記録を編集する',
-                      style: MyFonts.regesterHeaderLabel,
-                    ),
-                  ),
-
-                  //ヘッダーの左ボタン
-                  leading: IconButton(
-                    onPressed: () {
-                      Navigator.of(context, rootNavigator: true).pop();
-                    },
-                    icon: const Icon(
-                      //バッテン
-                      Icons.close_rounded,
-                      color: MyColors.white,
-                    ),
-                  ),
-                )
-              : null,
 
           //body
           body: SingleChildScrollView(

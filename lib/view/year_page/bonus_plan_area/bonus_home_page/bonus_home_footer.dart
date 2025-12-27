@@ -4,8 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/view/component/button_util.dart';
-import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
-import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/state/bonus_home_page/selected_tab_controller/selected_tab_controller.dart';
 
 class BonusHomeFooter extends ConsumerWidget {
@@ -54,9 +53,8 @@ class BonusHomeFooter extends ConsumerWidget {
                 themeMode: ThemeMode.dark,
                 darkTheme: ThemeData.dark(),
                 home: MediaQuery.withClampedTextScaling(
-                  child: RegisterExpensePage(
+                  child: RegisaterPageBase.addExpense(
                     expenseEntity: newExpense,
-                    isTabVisible: true, // タブを非表示にする
                   ),
                 ),
               );
@@ -96,9 +94,8 @@ class BonusHomeFooter extends ConsumerWidget {
                   themeMode: ThemeMode.dark,
                   darkTheme: ThemeData.dark(),
                   home: MediaQuery.withClampedTextScaling(
-                    child: RegisterIncomePage(
+                    child: RegisaterPageBase.addIncome(
                       incomeEntity: newIncome,
-                      isTabVisible: true, // タブを非表示にする
                     ),
                   ),
                 );

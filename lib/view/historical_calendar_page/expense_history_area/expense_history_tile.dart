@@ -11,8 +11,7 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
-import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class ExpenseHistoryTile extends ConsumerWidget {
   const ExpenseHistoryTile({
@@ -88,10 +87,8 @@ class ExpenseHistoryTile extends ConsumerWidget {
                     // テキストサイズの制御
                     minScaleFactor: 0.7,
                     maxScaleFactor: 0.95,
-                    child: RegisterExpensePage(
+                    child: RegisaterPageBase.editExpense(
                       expenseEntity: expenseEntity,
-                      mode: RegisterScreenMode.edit,
-                      isTabVisible: true,
                     ),
                   ),
                 );

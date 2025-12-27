@@ -12,8 +12,7 @@ import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
-import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class IncomeHistoryTile extends ConsumerWidget {
   const IncomeHistoryTile({
@@ -214,10 +213,8 @@ class IncomeHistoryTile extends ConsumerWidget {
             // テキストサイズの制御
             minScaleFactor: 0.7,
             maxScaleFactor: 0.95,
-            child: RegisterIncomePage(
+            child: RegisaterPageBase.editIncome(
               incomeEntity: incomeEntity,
-              mode: RegisterScreenMode.edit,
-              isTabVisible: true,
             ),
           ),
         );
