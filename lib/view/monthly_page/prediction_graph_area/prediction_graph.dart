@@ -83,36 +83,36 @@ class _PredictionGraphPainter extends CustomPainter {
     final graphHeight = size.height - topMargin - bottomMargin;
 
     // 最大値を計算（1.2倍の余裕を持たせる）
-    // maxValueが0の場合は最低値として100を設定
-    final maxValue = data.maxValue > 0 ? data.maxValue * 1.2 : 100.0;
+    // maxValueが0またはnullの場合は最低値として100を設定
+    final maxValue = (data.maxValue ?? 0) > 0 ? data.maxValue! * 1.2 : 100.0;
 
     // X軸を描画
     _drawXAxis(canvas, size, leftMargin, topMargin, graphWidth, graphHeight);
 
     // 収入ラインを描画
-    if (data.income > 0) {
+    if ((data.income ?? 0) > 0) {
       _drawIncomeLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
-          maxValue, data.income, data.budget);
+          maxValue, data.income!, data.budget ?? 0);
     }
 
     // 予算ラインを描画
-    if (data.budget > 0) {
+    if ((data.budget ?? 0) > 0) {
       _drawBudgetLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
-          maxValue, data.budget, data.income);
+          maxValue, data.budget!, data.income ?? 0);
     }
 
     // 予測ラインを描画（点線）
     if (data.shouldShowPredictionLine &&
-        data.predictionPoints == null &&
-        data.predictionPoints.isNotEmpty) {
+        data.predictionPoints != null &&
+        data.predictionPoints!.isNotEmpty) {
       _drawPredictionLine(canvas, leftMargin, topMargin, graphWidth,
-          graphHeight, maxValue, data.predictionPoints, data.predictionPrice);
+          graphHeight, maxValue, data.predictionPoints!, data.predictionPrice!);
     }
 
     // 支出ラインを描画
-    if (data.expensePoints.isNotEmpty) {
+    if (data.expensePoints != null && data.expensePoints!.isNotEmpty) {
       _drawExpenseLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
-          maxValue, data.expensePoints);
+          maxValue, data.expensePoints!);
     }
   }
 
@@ -134,9 +134,10 @@ class _PredictionGraphPainter extends CustomPainter {
     );
 
     // usecaseで生成されたラベルを使用
+    if (data.xAxisLabels == null) return;
     final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
 
-    for (final xLabel in data.xAxisLabels) {
+    for (final xLabel in data.xAxisLabels!) {
       final daysDiff = xLabel.date.difference(data.fromDate).inDays;
       final x = leftMargin + (daysDiff / totalDays) * graphWidth;
 

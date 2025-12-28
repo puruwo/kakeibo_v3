@@ -54,26 +54,6 @@ class PredictionGraphUsecase {
     PredictionGraphLineType predictionGraphLineType;
     if (toDate.isBefore(today)) {
       predictionGraphLineType = PredictionGraphLineType.lastMonth;
-      return PredictionGraphValue(
-        predictionGraphLineType: predictionGraphLineType,
-        fromDate: fromDate,
-        toDate: toDate,
-        today: today,
-        expensePoints: null,
-        predictionPoints: null,
-        income: null,
-        budget: null,
-        maxValue: null,
-        latestPrice: null,
-        predictionPrice: null,
-        xAxisLabels: null,
-        incomeLabelPosition: null,
-        budgetLabelPosition: null,
-        predictionLabel: null,
-        shouldShowPredictionLine: false,
-        shouldShowBudgetLine: false,
-        shouldShowIncomeLine: false,
-      );
     } else if (fromDate.isAfter(today)) {
       predictionGraphLineType = PredictionGraphLineType.futureMonth;
       return PredictionGraphValue(
@@ -153,8 +133,9 @@ class PredictionGraphUsecase {
     bool shouldShowPredictionLine;
     List<PredictionGraphPoint>? predictionPoints;
     String? predictionLabel;
-    // 予測支出額を表示しない条件
+    // 予測支出額を表示しない条件（過去月、未来月、経過日数5日以下、データなし）
     if (elapsedDays <= 5 ||
+        predictionGraphLineType == PredictionGraphLineType.lastMonth ||
         predictionGraphLineType == PredictionGraphLineType.futureMonth ||
         cumulativePriceData.isEmpty) {
       predictionPrice = null;
