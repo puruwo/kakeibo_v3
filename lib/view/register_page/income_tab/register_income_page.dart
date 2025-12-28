@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/register_page/common_input_field/date_memo_row.dart';
@@ -37,7 +38,8 @@ class _RegisterIncomePageState extends ConsumerState<RegisterIncomePage> {
   void initState() {
     initialIncomeData = widget.incomeEntity ??
         IncomeEntity(
-          date: DateFormat('yyyyMMdd').format(DateTime.now()),
+          date: DateFormat('yyyyMMdd')
+              .format(ref.read(systemDatetimeNotifierProvider)),
         );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

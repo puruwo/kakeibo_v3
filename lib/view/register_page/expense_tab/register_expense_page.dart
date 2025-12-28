@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/register_page/common_input_field/budget_row.dart';
@@ -31,7 +32,8 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
   void initState() {
     initialExpenseData = widget.expenseEntity ??
         ExpenseEntity(
-          date: DateFormat('yyyyMMdd').format(DateTime.now()),
+          date: DateFormat('yyyyMMdd')
+              .format(ref.read(systemDatetimeNotifierProvider)),
         );
 
     WidgetsBinding.instance.addPostFrameCallback((_) {

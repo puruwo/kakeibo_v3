@@ -9,11 +9,11 @@ part of 'input_date_controller.dart';
 String _$inputDateControllerNotifierHash() =>
     r'09655ebad8743f391ca1dfe1e69a15aefadfc1d6';
 
-/// See also [inputDateControllerNotifier].
-@ProviderFor(inputDateControllerNotifier)
+/// See also [InputDateControllerNotifier].
+@ProviderFor(InputDateControllerNotifier)
 final inputDateControllerNotifierProvider =
-    AutoDisposeNotifierProvider<inputDateControllerNotifier, DateTime>.internal(
-  inputDateControllerNotifier.new,
+    AutoDisposeNotifierProvider<InputDateControllerNotifier, DateTime>.internal(
+  InputDateControllerNotifier.new,
   name: r'inputDateControllerNotifierProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null

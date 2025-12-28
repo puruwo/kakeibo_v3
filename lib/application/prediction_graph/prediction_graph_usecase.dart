@@ -8,6 +8,7 @@ import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:kakeibo/util/util.dart';
 
@@ -47,12 +48,32 @@ class PredictionGraphUsecase {
     // 期間を取得
     final fromDate = dateScope.monthPeriod.startDatetime;
     final toDate = dateScope.monthPeriod.endDatetime;
-    final today = DateTime.now();
+    final today = ref.read(systemDatetimeNotifierProvider);
 
     // 予測グラフの種類を判定
     PredictionGraphLineType predictionGraphLineType;
     if (toDate.isBefore(today)) {
       predictionGraphLineType = PredictionGraphLineType.lastMonth;
+      return PredictionGraphValue(
+        predictionGraphLineType: predictionGraphLineType,
+        fromDate: fromDate,
+        toDate: toDate,
+        today: today,
+        expensePoints: null,
+        predictionPoints: null,
+        income: null,
+        budget: null,
+        maxValue: null,
+        latestPrice: null,
+        predictionPrice: null,
+        xAxisLabels: null,
+        incomeLabelPosition: null,
+        budgetLabelPosition: null,
+        predictionLabel: null,
+        shouldShowPredictionLine: false,
+        shouldShowBudgetLine: false,
+        shouldShowIncomeLine: false,
+      );
     } else if (fromDate.isAfter(today)) {
       predictionGraphLineType = PredictionGraphLineType.futureMonth;
       return PredictionGraphValue(

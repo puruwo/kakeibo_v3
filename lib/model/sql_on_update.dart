@@ -3,7 +3,6 @@ import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseMigrate {
-
   // 固定費機能追加のためのマイグレーション
   toV3(Database db) async {
     await db.execute('''CREATE TABLE ${SqfFixedCost.tableName} (
@@ -151,7 +150,8 @@ class DataBaseMigrate {
     await db.execute('DROP TABLE ${SqfExpense.tableName};');
 
     // 新テーブルをリネーム
-    await db.execute('ALTER TABLE expense_new RENAME TO ${SqfExpense.tableName};');
+    await db
+        .execute('ALTER TABLE expense_new RENAME TO ${SqfExpense.tableName};');
 
     print('=== v6マイグレーション完了 ===');
   }
