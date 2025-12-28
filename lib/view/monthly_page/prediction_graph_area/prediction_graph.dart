@@ -52,7 +52,7 @@ class PredictionGraph extends ConsumerWidget {
 class _PredictionGraphWidget extends StatelessWidget {
   const _PredictionGraphWidget({required this.data});
 
-  final dynamic data;
+  final PredictionGraphValue data;
 
   @override
   Widget build(BuildContext context) {
@@ -177,17 +177,7 @@ class _PredictionGraphPainter extends CustomPainter {
       return;
     }
 
-    final paint = Paint()
-      ..color = MyColors.separater
-      ..strokeWidth = 1.0;
-
     final y = topMargin + graphHeight - (income / maxValue) * graphHeight;
-
-    canvas.drawLine(
-      Offset(leftMargin, y),
-      Offset(leftMargin + graphWidth, y),
-      paint,
-    );
 
     // usecaseで計算されたラベル位置を使用
     final labelPosition = data.incomeLabelPosition!;
@@ -206,8 +196,21 @@ class _PredictionGraphPainter extends CustomPainter {
     );
     textPainter.layout();
 
-    final labelY = y + labelPosition.yOffset;
-    textPainter.paint(canvas, Offset(leftMargin + 5, labelY));
+    // ラベルを線の垂直中央に配置
+    final labelY = y - textPainter.height / 2;
+    textPainter.paint(canvas, Offset(leftMargin, labelY));
+
+    // ラインをラベルの右端から描画
+    final lineStartX = leftMargin + textPainter.width + 8;
+    final paint = Paint()
+      ..color = MyColors.separater
+      ..strokeWidth = 1.0;
+
+    canvas.drawLine(
+      Offset(lineStartX, y),
+      Offset(leftMargin + graphWidth, y),
+      paint,
+    );
   }
 
   /// 予算ラインを描画
@@ -225,17 +228,7 @@ class _PredictionGraphPainter extends CustomPainter {
       return;
     }
 
-    final paint = Paint()
-      ..color = MyColors.separater
-      ..strokeWidth = 1.0;
-
     final y = topMargin + graphHeight - (budget / maxValue) * graphHeight;
-
-    canvas.drawLine(
-      Offset(leftMargin, y),
-      Offset(leftMargin + graphWidth, y),
-      paint,
-    );
 
     // usecaseで計算されたラベル位置を使用
     final labelPosition = data.budgetLabelPosition!;
@@ -254,8 +247,21 @@ class _PredictionGraphPainter extends CustomPainter {
     );
     textPainter.layout();
 
-    final labelY = y - textPainter.height;
-    textPainter.paint(canvas, Offset(leftMargin + 5, labelY));
+    // ラベルを線の垂直中央に配置
+    final labelY = y - textPainter.height / 2;
+    textPainter.paint(canvas, Offset(leftMargin, labelY));
+
+    // ラインをラベルの右端から描画
+    final lineStartX = leftMargin + textPainter.width + 8;
+    final paint = Paint()
+      ..color = MyColors.separater
+      ..strokeWidth = 1.0;
+
+    canvas.drawLine(
+      Offset(lineStartX, y),
+      Offset(leftMargin + graphWidth, y),
+      paint,
+    );
   }
 
   /// 予測ラインを描画（点線）
