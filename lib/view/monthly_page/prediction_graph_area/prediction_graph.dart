@@ -23,7 +23,7 @@ class PredictionGraph extends ConsumerWidget {
         ref.watch(predictionGraphDataProvider(dateScope));
 
     return CardContainer(
-      height: 213,
+      height: 240,
       width: 343 * screenHorizontalMagnification,
       child: predictionGraphData.when(
         data: (data) {
@@ -57,12 +57,9 @@ class _PredictionGraphWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: CustomPaint(
-        painter: _PredictionGraphPainter(data: data),
-        child: Container(),
-      ),
+    return CustomPaint(
+      painter: _PredictionGraphPainter(data: data),
+      child: Container(),
     );
   }
 }
@@ -75,62 +72,173 @@ class _PredictionGraphPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     // グラフエリアのマージン
-    const double topMargin = 30;
-    const double bottomMargin = 30;
-    const double leftMargin = 8;
-    const double rightMargin = 8;
+    const double topMargin = 8;
+    const double bottomMargin = 40;
+    const double leftMargin = 6;
+    const double rightMargin = 12;
 
-    final graphWidth = size.width - leftMargin - rightMargin;
+    // ラベルの左端位置（すべてのラベルで統一）
+    const double labelLeftPadding = 8.0;
+
+    // ラベル幅を考慮したグラフ描画エリアの左端オフセット
+    // 「日別」ラベルが入る幅を確保（約40px）
+    const double graphLeftOffset = 40.0;
+
+    final totalWidth = size.width - leftMargin - rightMargin;
     final graphHeight = size.height - topMargin - bottomMargin;
+
+    // グラフ描画エリアの幅（ラベルエリアを除いた部分）
+    final graphWidth = totalWidth - graphLeftOffset;
+
+    // 棒グラフの最大高さ（グラフ高さの1/5）とマージン
+    final barAreaHeight = graphHeight / 4;
+    const double barLineGap = 6.0; // 棒グラフと折れ線グラフの間隔
+
+    // 折れ線グラフ用のエリア（棒グラフの上）
+    final lineGraphHeight = graphHeight - barAreaHeight - barLineGap;
+
+    // 折れ線グラフのy=0地点
+    final lineZeroY = topMargin + lineGraphHeight;
 
     // 最大値を計算（1.2倍の余裕を持たせる）
     // maxValueが0またはnullの場合は最低値として100を設定
     final maxValue = (data.maxValue ?? 0) > 0 ? data.maxValue! * 1.2 : 100.0;
 
-    // X軸を描画
-    _drawXAxis(canvas, size, leftMargin, topMargin, graphWidth, graphHeight);
+    // X軸を描画（グラフ開始位置から）
+    _drawXAxis(canvas, size, leftMargin + graphLeftOffset, topMargin,
+        graphWidth, graphHeight);
 
-    // 棒グラフを描画（折れ線グラフの後ろに描画）
+    // 折れ線グラフの0円軸とラベルを描画
+    _drawZeroLine(canvas, leftMargin, lineZeroY, totalWidth, labelLeftPadding,
+        graphLeftOffset);
+
+    // 棒グラフの「日別」ラベルを描画
+    _drawDailyLabel(
+        canvas, leftMargin, topMargin + graphHeight, labelLeftPadding);
+
+    // 棒グラフを描画（グラフ開始位置から）
     if (data.dailyBarDataList != null && data.dailyBarDataList!.isNotEmpty) {
-      _drawDailyBars(canvas, leftMargin, topMargin, graphWidth, graphHeight);
+      _drawDailyBars(canvas, leftMargin + graphLeftOffset, topMargin,
+          graphWidth, graphHeight, barAreaHeight);
     }
 
-    // 収入ラインを描画
+    // 収入ラインを描画（グラフ開始位置から）
     if ((data.income ?? 0) > 0) {
-      _drawIncomeLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
-          maxValue, data.income!, data.budget ?? 0);
+      _drawIncomeLine(
+          canvas,
+          leftMargin + graphLeftOffset,
+          topMargin,
+          graphWidth,
+          lineGraphHeight,
+          maxValue,
+          data.income!,
+          data.budget ?? 0,
+          labelLeftPadding - graphLeftOffset); // ラベルは左端に配置
     }
 
-    // 予算ラインを描画
+    // 予算ラインを描画（グラフ開始位置から）
     if ((data.budget ?? 0) > 0) {
-      _drawBudgetLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
-          maxValue, data.budget!, data.income ?? 0);
+      _drawBudgetLine(
+          canvas,
+          leftMargin + graphLeftOffset,
+          topMargin,
+          graphWidth,
+          lineGraphHeight,
+          maxValue,
+          data.budget!,
+          data.income ?? 0,
+          labelLeftPadding - graphLeftOffset); // ラベルは左端に配置
     }
 
     // 予測ラインを描画（点線）
     if (data.shouldShowPredictionLine &&
         data.predictionPoints != null &&
         data.predictionPoints!.isNotEmpty) {
-      _drawPredictionLine(canvas, leftMargin, topMargin, graphWidth,
-          graphHeight, maxValue, data.predictionPoints!, data.predictionPrice!);
+      _drawPredictionLine(
+          canvas,
+          leftMargin + graphLeftOffset,
+          topMargin,
+          graphWidth,
+          lineGraphHeight,
+          maxValue,
+          data.predictionPoints!,
+          data.predictionPrice!);
     }
 
-    // 支出ラインを描画
+    // 支出ラインを描画（グラフ開始位置から）
     if (data.expensePoints != null && data.expensePoints!.isNotEmpty) {
-      _drawExpenseLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
-          maxValue, data.expensePoints!);
+      _drawExpenseLine(canvas, leftMargin + graphLeftOffset, topMargin,
+          graphWidth, lineGraphHeight, maxValue, data.expensePoints!);
     }
+  }
+
+  /// 折れ線グラフの0円軸とラベルを描画
+  void _drawZeroLine(Canvas canvas, double leftMargin, double y,
+      double totalWidth, double labelLeftPadding, double graphLeftOffset) {
+    const textSpan = TextSpan(
+      text: '0円',
+      style: TextStyle(
+        fontSize: 14,
+        color: MyColors.secondaryLabel,
+        fontFamily: 'sf_ui',
+      ),
+    );
+
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+
+    // ラベルを線の垂直中央に配置
+    final labelY = y - textPainter.height / 2;
+    textPainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
+
+    // ラインをグラフ開始位置から描画
+    final lineStartX = leftMargin + graphLeftOffset;
+    final paint = Paint()
+      ..color = MyColors.separater
+      ..strokeWidth = 1.0;
+
+    canvas.drawLine(
+      Offset(lineStartX, y),
+      Offset(leftMargin + totalWidth, y),
+      paint,
+    );
+  }
+
+  /// 棒グラフの「日別」ラベルを描画
+  void _drawDailyLabel(
+      Canvas canvas, double leftMargin, double y, double labelLeftPadding) {
+    const textSpan = TextSpan(
+      text: '日別',
+      style: TextStyle(
+        fontSize: 14,
+        color: MyColors.secondaryLabel,
+        fontFamily: 'sf_ui',
+      ),
+    );
+
+    final textPainter = TextPainter(
+      text: textSpan,
+      textDirection: TextDirection.ltr,
+    );
+    textPainter.layout();
+
+    // ラベルの中の中心がと同じ高さになるように
+    final labelY = y - textPainter.height / 2;
+    textPainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
   }
 
   /// 日別棒グラフを描画
   void _drawDailyBars(Canvas canvas, double leftMargin, double topMargin,
-      double graphWidth, double graphHeight) {
+      double graphWidth, double graphHeight, double barAreaHeight) {
     final dailyBarDataList = data.dailyBarDataList!;
     final barMaxValue = data.barMaxValue ?? 20000;
     final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
 
     // 棒グラフの最大高さ（グラフ高さの1/3）
-    final maxBarHeight = graphHeight / 3;
+    final maxBarHeight = barAreaHeight;
 
     // 最小棒高さ（支出がある日は最低でもこの高さを確保）
     const minBarHeight = 4.0;
@@ -234,7 +342,8 @@ class _PredictionGraphPainter extends CustomPainter {
     if (data.xAxisLabels == null) return;
     final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
 
-    for (final xLabel in data.xAxisLabels!) {
+    for (int i = 0; i < data.xAxisLabels!.length; i++) {
+      final xLabel = data.xAxisLabels![i];
       final daysDiff = xLabel.date.difference(data.fromDate).inDays;
       final x = leftMargin + (daysDiff / totalDays) * graphWidth;
 
@@ -252,9 +361,18 @@ class _PredictionGraphPainter extends CustomPainter {
         textDirection: TextDirection.ltr,
       );
       textPainter.layout();
+
+      // 最初のラベルは左端揃え、それ以外は中央揃え
+      double labelX;
+      if (i == 0) {
+        labelX = x; // 左端揃え
+      } else {
+        labelX = x - textPainter.width / 2; // 中央揃え
+      }
+
       textPainter.paint(
         canvas,
-        Offset(x - textPainter.width / 2, y + xAxisLabelVerticalOffset),
+        Offset(labelX, y + xAxisLabelVerticalOffset),
       );
     }
   }
@@ -268,7 +386,8 @@ class _PredictionGraphPainter extends CustomPainter {
       double graphHeight,
       double maxValue,
       int income,
-      int budget) {
+      int budget,
+      double labelLeftPadding) {
     // usecaseで判定された表示フラグを使用
     if (!data.shouldShowIncomeLine || data.incomeLabelPosition == null) {
       return;
@@ -295,10 +414,10 @@ class _PredictionGraphPainter extends CustomPainter {
 
     // ラベルを線の垂直中央に配置
     final labelY = y - textPainter.height / 2;
-    textPainter.paint(canvas, Offset(leftMargin, labelY));
+    textPainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
 
     // ラインをラベルの右端から描画
-    final lineStartX = leftMargin + textPainter.width + 8;
+    final lineStartX = leftMargin + labelLeftPadding + textPainter.width + 8;
     final paint = Paint()
       ..color = MyColors.separater
       ..strokeWidth = 1.0;
@@ -319,7 +438,8 @@ class _PredictionGraphPainter extends CustomPainter {
       double graphHeight,
       double maxValue,
       int budget,
-      int income) {
+      int income,
+      double labelLeftPadding) {
     // usecaseで判定された表示フラグを使用
     if (!data.shouldShowBudgetLine || data.budgetLabelPosition == null) {
       return;
@@ -346,10 +466,10 @@ class _PredictionGraphPainter extends CustomPainter {
 
     // ラベルを線の垂直中央に配置
     final labelY = y - textPainter.height / 2;
-    textPainter.paint(canvas, Offset(leftMargin, labelY));
+    textPainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
 
     // ラインをラベルの右端から描画
-    final lineStartX = leftMargin + textPainter.width + 8;
+    final lineStartX = leftMargin + labelLeftPadding + textPainter.width + 8;
     final paint = Paint()
       ..color = MyColors.separater
       ..strokeWidth = 1.0;
