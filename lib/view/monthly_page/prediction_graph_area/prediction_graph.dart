@@ -69,7 +69,7 @@ class _PredictionGraphWidget extends StatelessWidget {
 class _PredictionGraphPainter extends CustomPainter {
   _PredictionGraphPainter({required this.data});
 
-  final dynamic data;
+  final PredictionGraphValue data;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -88,6 +88,11 @@ class _PredictionGraphPainter extends CustomPainter {
 
     // X軸を描画
     _drawXAxis(canvas, size, leftMargin, topMargin, graphWidth, graphHeight);
+
+    // 棒グラフを描画（折れ線グラフの後ろに描画）
+    if (data.dailyBarDataList != null && data.dailyBarDataList!.isNotEmpty) {
+      _drawDailyBars(canvas, leftMargin, topMargin, graphWidth, graphHeight);
+    }
 
     // 収入ラインを描画
     if ((data.income ?? 0) > 0) {
@@ -113,6 +118,82 @@ class _PredictionGraphPainter extends CustomPainter {
     if (data.expensePoints != null && data.expensePoints!.isNotEmpty) {
       _drawExpenseLine(canvas, leftMargin, topMargin, graphWidth, graphHeight,
           maxValue, data.expensePoints!);
+    }
+  }
+
+  /// 日別棒グラフを描画
+  void _drawDailyBars(Canvas canvas, double leftMargin, double topMargin,
+      double graphWidth, double graphHeight) {
+    final dailyBarDataList = data.dailyBarDataList!;
+    final barMaxValue = data.barMaxValue ?? 20000;
+    final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
+
+    // 棒グラフの最大高さ（グラフ高さの1/3）
+    final maxBarHeight = graphHeight / 3;
+
+    // 棒の幅を計算（日数に応じて調整）
+    const barWidthRatio = 0.6;
+    final barWidth = (graphWidth / totalDays) * barWidthRatio;
+
+    for (final barData in dailyBarDataList) {
+      final daysDiff = barData.date.difference(data.fromDate).inDays;
+      final x = leftMargin +
+          (daysDiff / totalDays) * graphWidth +
+          (graphWidth / totalDays) * (1 - barWidthRatio) / 2;
+
+      // その日の総支出を計算
+      int dailyTotal = 0;
+      for (final expense in barData.categoryExpenses) {
+        dailyTotal += expense.price.toInt();
+      }
+
+      // 総支出から棒の高さを計算
+      final totalBarHeight = (dailyTotal / barMaxValue) * maxBarHeight;
+
+      // 積み上げ棒グラフを描画
+      double currentY = topMargin + graphHeight; // グラフの底
+
+      for (final expense in barData.categoryExpenses) {
+        // カテゴリーの棒の高さを計算
+        final barHeight = (expense.price / dailyTotal) * totalBarHeight;
+
+        // 色をパース
+        final colorCode = expense.colorCode.replaceAll('#', '');
+        int colorValue;
+        try {
+          colorValue = int.parse(colorCode, radix: 16);
+        } catch (e) {
+          colorValue = 0xFF888888;
+        }
+        // アルファ値が含まれていない場合は追加
+        if (colorCode.length == 6) {
+          colorValue = 0xFF000000 | colorValue;
+        }
+
+        var barColor = Color(colorValue);
+
+        // 未来日付の場合は透明度を下げる
+        if (barData.isFutureDate) {
+          barColor = barColor.withOpacity(0.4);
+        }
+
+        final paint = Paint()
+          ..color = barColor
+          ..style = PaintingStyle.fill;
+
+        // 棒を描画（下から積み上げ）
+        canvas.drawRect(
+          Rect.fromLTWH(
+            x,
+            currentY - barHeight,
+            barWidth,
+            barHeight,
+          ),
+          paint,
+        );
+
+        currentY -= barHeight;
+      }
     }
   }
 

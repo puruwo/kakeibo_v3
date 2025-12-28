@@ -5,8 +5,11 @@ import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
+import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
@@ -38,6 +41,10 @@ class PredictionGraphUsecase {
   late final FixedCostExpenseRepository _fixedCostExpenseRepo =
       ref.read(fixedCostExpenseRepositoryProvider);
   late final BudgetRepository _budgetRepo = ref.read(budgetRepositoryProvider);
+  late final ExpenseSmallCategoryRepository _smallCategoryRepo =
+      ref.read(expenseSmallCategoryRepositoryProvider);
+  late final ExpenseBigCategoryRepository _bigCategoryRepo =
+      ref.read(expensebigCategoryRepositoryProvider);
 
   /// 横軸ラベルの間隔（日数）
   static const int _xAxisLabelInterval = 7;
@@ -181,6 +188,11 @@ class PredictionGraphUsecase {
             income, budgetIncludeFixedCost, shouldShowIncomeLine)
         : null;
 
+    // 棒グラフデータを取得
+    final dailyBarResult = await _getDailyBarData(fromDate, toDate, today);
+    final dailyBarDataList = dailyBarResult.dailyBarDataList;
+    final barMaxValue = dailyBarResult.barMaxValue;
+
     return PredictionGraphValue(
       predictionGraphLineType: predictionGraphLineType,
       fromDate: fromDate,
@@ -200,6 +212,8 @@ class PredictionGraphUsecase {
       shouldShowPredictionLine: shouldShowPredictionLine,
       shouldShowBudgetLine: shouldShowBudgetLine,
       shouldShowIncomeLine: shouldShowIncomeLine,
+      dailyBarDataList: dailyBarDataList,
+      barMaxValue: barMaxValue,
     );
   }
 
@@ -398,4 +412,100 @@ class PredictionGraphUsecase {
 
     return mergedDataList;
   }
+
+  /// 日別カテゴリー別支出データを取得
+  Future<_DailyBarResult> _getDailyBarData(
+      DateTime fromDate, DateTime toDate, DateTime today) async {
+    // 棒グラフのスケール閾値（2万円）
+    const int barThreshold = 20000;
+
+    // 大カテゴリー情報を取得してキャッシュ
+    final bigCategories = await _bigCategoryRepo.fetchAll();
+    final bigCategoryMap = <int, String>{};
+    for (final cat in bigCategories) {
+      bigCategoryMap[cat.id] = cat.colorCode;
+    }
+
+    // 小カテゴリー情報を取得してキャッシュ（小ID -> 大ID）
+    final smallCategories = await _smallCategoryRepo.fetchAll();
+    final smallToBigMap = <int, int>{};
+    for (final cat in smallCategories) {
+      smallToBigMap[cat.id] = cat.bigCategoryKey;
+    }
+
+    final dailyBarDataList = <DailyBarData>[];
+    int maxDailyTotal = 0;
+
+    // 期間内の各日のデータを取得
+    var currentDate = fromDate;
+    while (!currentDate.isAfter(toDate)) {
+      // その日の支出リストを取得
+      final expenses = await _expenseRepo.fetchDailyExpenseListByDate(
+        date: currentDate,
+      );
+
+      if (expenses.isEmpty) {
+        currentDate = currentDate.add(const Duration(days: 1));
+        continue;
+      }
+
+      // 大カテゴリー別に集計
+      final categoryTotals = <int, int>{};
+      for (final expense in expenses) {
+        final smallCategoryId = expense.paymentCategoryId;
+        final bigCategoryId = smallToBigMap[smallCategoryId] ?? 0;
+        categoryTotals[bigCategoryId] =
+            (categoryTotals[bigCategoryId] ?? 0) + expense.price;
+      }
+
+      // カテゴリー別支出リストを作成
+      final categoryExpenses = <CategoryExpense>[];
+      int dailyTotal = 0;
+      for (final entry in categoryTotals.entries) {
+        final colorCode = bigCategoryMap[entry.key] ?? 'FF888888';
+        categoryExpenses.add(CategoryExpense(
+          bigCategoryId: entry.key,
+          price: entry.value,
+          colorCode: colorCode,
+        ));
+        dailyTotal += entry.value;
+      }
+
+      // 日別最大値を更新
+      if (dailyTotal > maxDailyTotal) {
+        maxDailyTotal = dailyTotal;
+      }
+
+      // 未来日付かどうか判定
+      final isFutureDate = currentDate.isAfter(today);
+
+      dailyBarDataList.add(DailyBarData(
+        date: currentDate,
+        isFutureDate: isFutureDate,
+        categoryExpenses: categoryExpenses,
+      ));
+
+      currentDate = currentDate.add(const Duration(days: 1));
+    }
+
+    // 棒グラフの最大値を計算（閾値を超えたらその最大値、それ以外は閾値）
+    final barMaxValue =
+        maxDailyTotal > barThreshold ? maxDailyTotal : barThreshold;
+
+    return _DailyBarResult(
+      dailyBarDataList: dailyBarDataList,
+      barMaxValue: barMaxValue,
+    );
+  }
+}
+
+/// 棒グラフデータ取得結果
+class _DailyBarResult {
+  final List<DailyBarData> dailyBarDataList;
+  final int barMaxValue;
+
+  _DailyBarResult({
+    required this.dailyBarDataList,
+    required this.barMaxValue,
+  });
 }

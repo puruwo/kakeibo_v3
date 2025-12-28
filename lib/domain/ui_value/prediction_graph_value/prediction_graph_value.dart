@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 
 part 'prediction_graph_value.freezed.dart';
 
@@ -43,19 +44,22 @@ class PredictionGraphValue with _$PredictionGraphValue {
     required DateTime fromDate,
     required DateTime toDate,
     required DateTime today,
-     List<PredictionGraphPoint>? expensePoints,
+    List<PredictionGraphPoint>? expensePoints,
     List<PredictionGraphPoint>? predictionPoints,
     required int? income,
     required int? budget,
     required double? maxValue,
     required int? latestPrice,
     required int? predictionPrice,
-    required List<XAxisLabel>?  xAxisLabels,
+    required List<XAxisLabel>? xAxisLabels,
     required LabelPosition? incomeLabelPosition,
     required LabelPosition? budgetLabelPosition,
     required String? predictionLabel,
-    required bool shouldShowPredictionLine, 
+    required bool shouldShowPredictionLine,
     required bool shouldShowBudgetLine,
     required bool shouldShowIncomeLine,
+    // 棒グラフ用データ
+    List<DailyBarData>? dailyBarDataList,
+    int? barMaxValue,
   }) = _PredictionGraphValue;
 }

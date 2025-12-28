@@ -182,8 +182,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // 期間を指定して日毎の支出データを取得する（通常支出のみ）
   @override
-  Future<int> fetchDailyExpenseByPeriod(
-      {required DateTime date}) async {
+  Future<int> fetchDailyExpenseByPeriod({required DateTime date}) async {
     final sql = '''
       SELECT
         SUM(${SqfExpense.price}) AS sum_price_daily
@@ -203,6 +202,35 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     } catch (e) {
       logger.e('[FAIL]: $e');
       return 0;
+    }
+  }
+
+  /// 日付を指定して支出リストを取得する（生活支出のみ）
+  @override
+  Future<List<ExpenseEntity>> fetchDailyExpenseListByDate(
+      {required DateTime date}) async {
+    final sql = '''
+      SELECT
+        a.${SqfExpense.id} AS id,
+        a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId,
+        a.${SqfExpense.date} AS date,
+        a.${SqfExpense.price} AS price,
+        a.${SqfExpense.memo} AS memo,
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+      FROM ${SqfExpense.tableName} a
+      WHERE a.${SqfExpense.date} = ${DateFormat('yyyyMMdd').format(date)}
+      AND a.${SqfExpense.incomeSourceBigCategory} = ${IncomeBigCategoryConstants.incomeSourceIdSalary}
+      ORDER BY a.${SqfExpense.id} ASC
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      final results =
+          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+      return results;
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
     }
   }
 
