@@ -1,3 +1,4 @@
+import 'dart:math' show pow, sqrt;
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
@@ -131,9 +132,16 @@ class _PredictionGraphPainter extends CustomPainter {
     // 棒グラフの最大高さ（グラフ高さの1/3）
     final maxBarHeight = graphHeight / 3;
 
+    // 最小棒高さ（支出がある日は最低でもこの高さを確保）
+    const minBarHeight = 4.0;
+
     // 棒の幅を計算（日数に応じて調整）
-    const barWidthRatio = 0.6;
+    const barWidthRatio = 0.7;
     final barWidth = (graphWidth / totalDays) * barWidthRatio;
+
+    // 平方根スケール用の最大値
+    // final sqrtMaxValue = sqrt(barMaxValue.toDouble());
+    final sqrtMaxValue = pow(barMaxValue, 1 / 2).toDouble();
 
     for (final barData in dailyBarDataList) {
       final daysDiff = barData.date.difference(data.fromDate).inDays;
@@ -147,14 +155,22 @@ class _PredictionGraphPainter extends CustomPainter {
         dailyTotal += expense.price.toInt();
       }
 
-      // 総支出から棒の高さを計算
-      final totalBarHeight = (dailyTotal / barMaxValue) * maxBarHeight;
+      if (dailyTotal == 0) continue;
+
+      // 平方根スケールで全体の棒の高さを計算
+      final sqrtDailyTotal = sqrt(dailyTotal.toDouble());
+      double totalBarHeight = (sqrtDailyTotal / sqrtMaxValue) * maxBarHeight;
+
+      // 最小高さを確保
+      if (totalBarHeight < minBarHeight) {
+        totalBarHeight = minBarHeight;
+      }
 
       // 積み上げ棒グラフを描画
       double currentY = topMargin + graphHeight; // グラフの底
 
       for (final expense in barData.categoryExpenses) {
-        // カテゴリーの棒の高さを計算
+        // カテゴリーの棒の高さを計算（比率で分割）
         final barHeight = (expense.price / dailyTotal) * totalBarHeight;
 
         // 色をパース
