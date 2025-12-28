@@ -11,8 +11,7 @@ part 'system_datetime.g.dart';
 class SystemDatetimeNotifier extends _$SystemDatetimeNotifier {
   @override
   DateTime build() {
-    final now = DateTime(2025, 12, 31);
-    // final now = DateTime.now();
+    final now = DateTime.now();
     return now;
   }
 }

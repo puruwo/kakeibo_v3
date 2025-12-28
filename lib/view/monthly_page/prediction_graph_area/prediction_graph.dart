@@ -95,7 +95,7 @@ class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
 
     final totalWidth = size.width - leftMargin - rightMargin;
     final graphWidth = totalWidth - graphLeftOffset;
-    final graphStartX = leftMargin + graphLeftOffset;
+    const graphStartX = leftMargin + graphLeftOffset;
 
     // グラフエリア内かチェック
     if (position.dx < graphStartX || position.dx > graphStartX + graphWidth) {
@@ -151,8 +151,9 @@ class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
     const tooltipWidth = 200.0;
     double tooltipX = tapPosition.dx - tooltipWidth / 2;
     if (tooltipX < 0) tooltipX = 8;
-    if (tooltipX + tooltipWidth > screenWidth)
+    if (tooltipX + tooltipWidth > screenWidth) {
       tooltipX = screenWidth - tooltipWidth - 8;
+    }
 
     return Positioned(
       left: tooltipX,
@@ -337,7 +338,7 @@ class _PredictionGraphPainter extends CustomPainter {
 
     // 棒グラフの最大高さ（グラフ高さの1/5）とマージン
     final barAreaHeight = graphHeight / 4;
-    const double barLineGap = 6.0; // 棒グラフと折れ線グラフの間隔
+    const double barLineGap = 8.0; // 棒グラフと折れ線グラフの間隔
 
     // 折れ線グラフ用のエリア（棒グラフの上）
     final lineGraphHeight = graphHeight - barAreaHeight - barLineGap;
@@ -747,7 +748,9 @@ class _PredictionGraphPainter extends CustomPainter {
     for (int i = 0; i < predictionPoints.length; i++) {
       final point = predictionPoints[i];
       final daysDiff = point.date.difference(data.fromDate).inDays;
-      final x = leftMargin + (daysDiff / totalDays) * graphWidth;
+      // 最終日がX軸の右端に揃うように(totalDays-1)で除算
+      final x = leftMargin +
+          (totalDays > 1 ? (daysDiff / (totalDays - 1)) : 0.5) * graphWidth;
       final y =
           topMargin + graphHeight - (point.price / maxValue) * graphHeight;
 
@@ -765,7 +768,8 @@ class _PredictionGraphPainter extends CustomPainter {
     if (predictionPoints.length >= 2) {
       final lastPoint = predictionPoints.last;
       final daysDiff = lastPoint.date.difference(data.fromDate).inDays;
-      final x = leftMargin + (daysDiff / totalDays) * graphWidth;
+      final x = leftMargin +
+          (totalDays > 1 ? (daysDiff / (totalDays - 1)) : 0.5) * graphWidth;
       final y =
           topMargin + graphHeight - (lastPoint.price / maxValue) * graphHeight;
 
@@ -807,7 +811,9 @@ class _PredictionGraphPainter extends CustomPainter {
     for (int i = 0; i < expensePoints.length; i++) {
       final point = expensePoints[i];
       final daysDiff = point.date.difference(data.fromDate).inDays;
-      final x = leftMargin + (daysDiff / totalDays) * graphWidth;
+      // 最終日がX軸の右端に揃うように(totalDays-1)で除算
+      final x = leftMargin +
+          (totalDays > 1 ? (daysDiff / (totalDays - 1)) : 0.5) * graphWidth;
       final y =
           topMargin + graphHeight - (point.price / maxValue) * graphHeight;
 
