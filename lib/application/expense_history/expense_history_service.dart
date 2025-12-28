@@ -109,7 +109,7 @@ class ExpenseHistoryService {
 
         for (var income in incomeList) {
           final small = await incomeSmallCategoryRepo!.fetchBySmallCategory(
-            smallCategoryId: income.incomeCategoryId,
+            smallCategoryId: income.categoryId,
           );
           final big = await incomeBigCategoryRepo!.fetchByBigCategory(
             bigCategoryId: small.bigCategoryKey,
@@ -122,12 +122,12 @@ class ExpenseHistoryService {
                 '${income.date.substring(0, 4)}-${income.date.substring(4, 6)}-${income.date.substring(6, 8)}'
               ),
               price: income.price,
-              paymentCategoryId: income.incomeCategoryId,
+              paymentCategoryId: income.categoryId,
               memo: income.memo ?? '',
-              smallCategoryName: small.incomeCategoryName,
-              bigCategoryName: big.incomeCategoryName,
+              smallCategoryName: small.smallCategoryName,
+              bigCategoryName: big.name,
               colorCode: big.colorCode,
-              iconPath: big.resourcePath,
+              iconPath: big.iconPath,
               incomeSourceBigCategory: 0,
               transactionType: TransactionHistoryType.income,
             ),
@@ -146,8 +146,8 @@ class ExpenseHistoryService {
         );
 
         for (var fixedCost in fixedCostList) {
-          final category = await fixedCostCategoryRepo!.fetchByFixedCostCategoryId(
-            fixedCostCategoryId: fixedCost.fixedCostCategoryId,
+          final category = await fixedCostCategoryRepo!.fetch(
+            id: fixedCost.fixedCostCategoryId,
           );
 
           allTransactions.add(
@@ -159,8 +159,8 @@ class ExpenseHistoryService {
               price: fixedCost.price,
               paymentCategoryId: fixedCost.fixedCostCategoryId,
               memo: fixedCost.name ?? '',
-              smallCategoryName: category.categoryName,
-              bigCategoryName: category.categoryName,
+              smallCategoryName: category.name,
+              bigCategoryName: category.name,
               colorCode: category.colorCode,
               iconPath: category.resourcePath,
               incomeSourceBigCategory: 0,
