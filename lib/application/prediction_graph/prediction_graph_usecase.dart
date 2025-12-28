@@ -419,11 +419,15 @@ class PredictionGraphUsecase {
     // 棒グラフのスケール閾値（2万円）
     const int barThreshold = 20000;
 
-    // 大カテゴリー情報を取得してキャッシュ
+    // 大カテゴリー情報を取得してキャッシュ（colorCode, iconPath, name）
     final bigCategories = await _bigCategoryRepo.fetchAll();
-    final bigCategoryMap = <int, String>{};
+    final bigCategoryMap = <int, _BigCategoryInfo>{};
     for (final cat in bigCategories) {
-      bigCategoryMap[cat.id] = cat.colorCode;
+      bigCategoryMap[cat.id] = _BigCategoryInfo(
+        colorCode: cat.colorCode,
+        iconPath: cat.resourcePath,
+        name: cat.bigCategoryName,
+      );
     }
 
     // 小カテゴリー情報を取得してキャッシュ（小ID -> 大ID）
@@ -462,11 +466,13 @@ class PredictionGraphUsecase {
       final categoryExpenses = <CategoryExpense>[];
       int dailyTotal = 0;
       for (final entry in categoryTotals.entries) {
-        final colorCode = bigCategoryMap[entry.key] ?? 'FF888888';
+        final catInfo = bigCategoryMap[entry.key];
         categoryExpenses.add(CategoryExpense(
           bigCategoryId: entry.key,
           price: entry.value,
-          colorCode: colorCode,
+          colorCode: catInfo?.colorCode ?? 'FF888888',
+          iconPath: catInfo?.iconPath ?? '',
+          categoryName: catInfo?.name ?? '',
         ));
         dailyTotal += entry.value;
       }
@@ -507,5 +513,18 @@ class _DailyBarResult {
   _DailyBarResult({
     required this.dailyBarDataList,
     required this.barMaxValue,
+  });
+}
+
+/// 大カテゴリー情報キャッシュ用クラス
+class _BigCategoryInfo {
+  final String colorCode;
+  final String iconPath;
+  final String name;
+
+  _BigCategoryInfo({
+    required this.colorCode,
+    required this.iconPath,
+    required this.name,
   });
 }

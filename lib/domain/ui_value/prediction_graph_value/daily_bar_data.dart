@@ -19,5 +19,7 @@ class CategoryExpense with _$CategoryExpense {
     required int bigCategoryId,
     required int price,
     required String colorCode,
+    required String iconPath,
+    required String categoryName,
   }) = _CategoryExpense;
 }

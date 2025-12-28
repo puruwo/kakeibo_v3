@@ -192,6 +192,8 @@ mixin _$CategoryExpense {
   int get bigCategoryId => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
+  String get iconPath => throw _privateConstructorUsedError;
+  String get categoryName => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CategoryExpenseCopyWith<CategoryExpense> get copyWith =>
@@ -204,7 +206,12 @@ abstract class $CategoryExpenseCopyWith<$Res> {
           CategoryExpense value, $Res Function(CategoryExpense) then) =
       _$CategoryExpenseCopyWithImpl<$Res, CategoryExpense>;
   @useResult
-  $Res call({int bigCategoryId, int price, String colorCode});
+  $Res call(
+      {int bigCategoryId,
+      int price,
+      String colorCode,
+      String iconPath,
+      String categoryName});
 }
 
 /// @nodoc
@@ -223,6 +230,8 @@ class _$CategoryExpenseCopyWithImpl<$Res, $Val extends CategoryExpense>
     Object? bigCategoryId = null,
     Object? price = null,
     Object? colorCode = null,
+    Object? iconPath = null,
+    Object? categoryName = null,
   }) {
     return _then(_value.copyWith(
       bigCategoryId: null == bigCategoryId
@@ -237,6 +246,14 @@ class _$CategoryExpenseCopyWithImpl<$Res, $Val extends CategoryExpense>
           ? _value.colorCode
           : colorCode // ignore: cast_nullable_to_non_nullable
               as String,
+      iconPath: null == iconPath
+          ? _value.iconPath
+          : iconPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -249,7 +266,12 @@ abstract class _$$CategoryExpenseImplCopyWith<$Res>
       __$$CategoryExpenseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int bigCategoryId, int price, String colorCode});
+  $Res call(
+      {int bigCategoryId,
+      int price,
+      String colorCode,
+      String iconPath,
+      String categoryName});
 }
 
 /// @nodoc
@@ -266,6 +288,8 @@ class __$$CategoryExpenseImplCopyWithImpl<$Res>
     Object? bigCategoryId = null,
     Object? price = null,
     Object? colorCode = null,
+    Object? iconPath = null,
+    Object? categoryName = null,
   }) {
     return _then(_$CategoryExpenseImpl(
       bigCategoryId: null == bigCategoryId
@@ -280,6 +304,14 @@ class __$$CategoryExpenseImplCopyWithImpl<$Res>
           ? _value.colorCode
           : colorCode // ignore: cast_nullable_to_non_nullable
               as String,
+      iconPath: null == iconPath
+          ? _value.iconPath
+          : iconPath // ignore: cast_nullable_to_non_nullable
+              as String,
+      categoryName: null == categoryName
+          ? _value.categoryName
+          : categoryName // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -290,7 +322,9 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
   const _$CategoryExpenseImpl(
       {required this.bigCategoryId,
       required this.price,
-      required this.colorCode});
+      required this.colorCode,
+      required this.iconPath,
+      required this.categoryName});
 
   @override
   final int bigCategoryId;
@@ -298,10 +332,14 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
   final int price;
   @override
   final String colorCode;
+  @override
+  final String iconPath;
+  @override
+  final String categoryName;
 
   @override
   String toString() {
-    return 'CategoryExpense(bigCategoryId: $bigCategoryId, price: $price, colorCode: $colorCode)';
+    return 'CategoryExpense(bigCategoryId: $bigCategoryId, price: $price, colorCode: $colorCode, iconPath: $iconPath, categoryName: $categoryName)';
   }
 
   @override
@@ -313,11 +351,16 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
                 other.bigCategoryId == bigCategoryId) &&
             (identical(other.price, price) || other.price == price) &&
             (identical(other.colorCode, colorCode) ||
-                other.colorCode == colorCode));
+                other.colorCode == colorCode) &&
+            (identical(other.iconPath, iconPath) ||
+                other.iconPath == iconPath) &&
+            (identical(other.categoryName, categoryName) ||
+                other.categoryName == categoryName));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, bigCategoryId, price, colorCode);
+  int get hashCode => Object.hash(
+      runtimeType, bigCategoryId, price, colorCode, iconPath, categoryName);
 
   @JsonKey(ignore: true)
   @override
@@ -331,7 +374,9 @@ abstract class _CategoryExpense implements CategoryExpense {
   const factory _CategoryExpense(
       {required final int bigCategoryId,
       required final int price,
-      required final String colorCode}) = _$CategoryExpenseImpl;
+      required final String colorCode,
+      required final String iconPath,
+      required final String categoryName}) = _$CategoryExpenseImpl;
 
   @override
   int get bigCategoryId;
@@ -339,6 +384,10 @@ abstract class _CategoryExpense implements CategoryExpense {
   int get price;
   @override
   String get colorCode;
+  @override
+  String get iconPath;
+  @override
+  String get categoryName;
   @override
   @JsonKey(ignore: true)
   _$$CategoryExpenseImplCopyWith<_$CategoryExpenseImpl> get copyWith =>

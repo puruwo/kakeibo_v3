@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/component/card_container.dart';
@@ -50,17 +51,261 @@ class PredictionGraph extends ConsumerWidget {
   }
 }
 
-class _PredictionGraphWidget extends StatelessWidget {
+class _PredictionGraphWidget extends StatefulWidget {
   const _PredictionGraphWidget({required this.data});
 
   final PredictionGraphValue data;
 
   @override
+  State<_PredictionGraphWidget> createState() => _PredictionGraphWidgetState();
+}
+
+class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
+  DateTime? _selectedDate;
+  Offset? _tapPosition;
+
+  @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      painter: _PredictionGraphPainter(data: data),
-      child: Container(),
+    return GestureDetector(
+      onTapDown: (details) {
+        _handleTap(details.localPosition, context);
+      },
+      onTapUp: (_) {},
+      child: Stack(
+        children: [
+          CustomPaint(
+            painter: _PredictionGraphPainter(data: widget.data),
+            child: Container(),
+          ),
+          if (_selectedDate != null && _tapPosition != null)
+            _buildTooltip(context),
+        ],
+      ),
     );
+  }
+
+  void _handleTap(Offset position, BuildContext context) {
+    final size = context.size;
+    if (size == null) return;
+
+    // グラフエリアのマージン（_PredictionGraphPainterと同じ値）
+    const double leftMargin = 6;
+    const double rightMargin = 12;
+    const double graphLeftOffset = 40.0;
+
+    final totalWidth = size.width - leftMargin - rightMargin;
+    final graphWidth = totalWidth - graphLeftOffset;
+    final graphStartX = leftMargin + graphLeftOffset;
+
+    // グラフエリア内かチェック
+    if (position.dx < graphStartX || position.dx > graphStartX + graphWidth) {
+      setState(() {
+        _selectedDate = null;
+        _tapPosition = null;
+      });
+      return;
+    }
+
+    // タップ位置から日付を算出
+    final totalDays =
+        widget.data.toDate.difference(widget.data.fromDate).inDays + 1;
+    final relativeX = position.dx - graphStartX;
+    final dayIndex = (relativeX / graphWidth * totalDays).floor();
+    final selectedDate = widget.data.fromDate.add(Duration(days: dayIndex));
+
+    setState(() {
+      _selectedDate = selectedDate;
+      _tapPosition = position;
+    });
+  }
+
+  Widget _buildTooltip(BuildContext context) {
+    final selectedDate = _selectedDate!;
+    final tapPosition = _tapPosition!;
+
+    // 累計支出を計算
+    int cumulativeExpense = 0;
+    if (widget.data.expensePoints != null) {
+      for (final point in widget.data.expensePoints!) {
+        if (!point.date.isAfter(selectedDate)) {
+          cumulativeExpense = point.price;
+        }
+      }
+    }
+
+    // その日のカテゴリー別支出を取得
+    final dailyBarData = widget.data.dailyBarDataList?.firstWhere(
+      (d) =>
+          d.date.year == selectedDate.year &&
+          d.date.month == selectedDate.month &&
+          d.date.day == selectedDate.day,
+      orElse: () => DailyBarData(
+        date: selectedDate,
+        isFutureDate: false,
+        categoryExpenses: [],
+      ),
+    );
+
+    // ツールチップの位置を計算（画面外にはみ出さないように）
+    final screenWidth = MediaQuery.of(context).size.width;
+    const tooltipWidth = 200.0;
+    double tooltipX = tapPosition.dx - tooltipWidth / 2;
+    if (tooltipX < 0) tooltipX = 8;
+    if (tooltipX + tooltipWidth > screenWidth)
+      tooltipX = screenWidth - tooltipWidth - 8;
+
+    return Positioned(
+      left: tooltipX,
+      top: 8,
+      child: _GraphTooltip(
+        date: selectedDate,
+        cumulativeExpense: cumulativeExpense,
+        categoryExpenses: dailyBarData?.categoryExpenses ?? [],
+        onClose: () {
+          setState(() {
+            _selectedDate = null;
+            _tapPosition = null;
+          });
+        },
+      ),
+    );
+  }
+}
+
+/// ツールチップウィジェット
+class _GraphTooltip extends StatelessWidget {
+  const _GraphTooltip({
+    required this.date,
+    required this.cumulativeExpense,
+    required this.categoryExpenses,
+    required this.onClose,
+  });
+
+  final DateTime date;
+  final int cumulativeExpense;
+  final List<CategoryExpense> categoryExpenses;
+  final VoidCallback onClose;
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onClose,
+      child: Container(
+        width: 200,
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: const Color(0xFF2C2C2E), // ダークグレー背景
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 日付
+            Text(
+              '${date.month}/${date.day}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            // 累計支出
+            Text(
+              '累計: ¥${_formatNumber(cumulativeExpense)}',
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.white70,
+              ),
+            ),
+            if (categoryExpenses.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Divider(height: 1, color: Colors.white24),
+              const SizedBox(height: 8),
+              // カテゴリー別支出
+              ...categoryExpenses.map((expense) => _buildCategoryRow(expense)),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCategoryRow(CategoryExpense expense) {
+    // 色をパース
+    final colorCode = expense.colorCode.replaceAll('#', '');
+    int colorValue;
+    try {
+      colorValue = int.parse(colorCode, radix: 16);
+    } catch (e) {
+      colorValue = 0xFF888888;
+    }
+    if (colorCode.length == 6) {
+      colorValue = 0xFF000000 | colorValue;
+    }
+    final color = Color(colorValue);
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: Row(
+        children: [
+          // アイコン（SVGの代わりに色付き円）
+          Container(
+            width: 20,
+            height: 20,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+            child: expense.iconPath.isNotEmpty
+                ? ClipOval(
+                    child: Image.asset(
+                      expense.iconPath,
+                      width: 20,
+                      height: 20,
+                      errorBuilder: (_, __, ___) => const SizedBox(),
+                    ),
+                  )
+                : null,
+          ),
+          const SizedBox(width: 8),
+          // カテゴリー名
+          Expanded(
+            child: Text(
+              expense.categoryName,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.white,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+          // 金額
+          Text(
+            '¥${_formatNumber(expense.price)}',
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.white,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatNumber(int number) {
+    return number.toString().replaceAllMapped(
+          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
+          (Match m) => '${m[1]},',
+        );
   }
 }
 
