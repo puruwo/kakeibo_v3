@@ -8,6 +8,7 @@ import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.da
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/component/card_container.dart';
+import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_text_styles.dart';
 
 class PredictionGraph extends ConsumerWidget {
   const PredictionGraph({super.key, required this.dateScope});
@@ -33,7 +34,7 @@ class PredictionGraph extends ConsumerWidget {
             return const Center(
               child: Text(
                 '選択月の支出の入力がありません',
-                style: TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+                style: PredictionGraphTextStyles.message,
               ),
             );
           }
@@ -43,7 +44,7 @@ class PredictionGraph extends ConsumerWidget {
         error: (error, stack) => const Center(
           child: Text(
             'エラーが発生しました',
-            style: TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+            style: PredictionGraphTextStyles.message,
           ),
         ),
       ),
@@ -212,20 +213,13 @@ class _GraphTooltip extends StatelessWidget {
             // 日付
             Text(
               '${date.month}/${date.day}',
-              style: const TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+              style: PredictionGraphTextStyles.tooltipDate,
             ),
             const SizedBox(height: 8),
             // 累計支出
             Text(
               '累計: ¥${_formatNumber(cumulativeExpense)}',
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.white70,
-              ),
+              style: PredictionGraphTextStyles.tooltipSubtitle,
             ),
             if (categoryExpenses.isNotEmpty) ...[
               const SizedBox(height: 8),
@@ -282,20 +276,14 @@ class _GraphTooltip extends StatelessWidget {
           Expanded(
             child: Text(
               expense.categoryName,
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.white,
-              ),
+              style: PredictionGraphTextStyles.tooltipCategory,
               overflow: TextOverflow.ellipsis,
             ),
           ),
           // 金額
           Text(
             '¥${_formatNumber(expense.price)}',
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.white,
-            ),
+            style: PredictionGraphTextStyles.tooltipCategory,
           ),
         ],
       ),
@@ -423,11 +411,7 @@ class _PredictionGraphPainter extends CustomPainter {
       double totalWidth, double labelLeftPadding, double graphLeftOffset) {
     const textSpan = TextSpan(
       text: '0円',
-      style: TextStyle(
-        fontSize: 14,
-        color: MyColors.secondaryLabel,
-        fontFamily: 'sf_ui',
-      ),
+      style: PredictionGraphTextStyles.graphLabel,
     );
 
     final textPainter = TextPainter(
@@ -458,11 +442,7 @@ class _PredictionGraphPainter extends CustomPainter {
       Canvas canvas, double leftMargin, double y, double labelLeftPadding) {
     const textSpan = TextSpan(
       text: '日別',
-      style: TextStyle(
-        fontSize: 14,
-        color: MyColors.secondaryLabel,
-        fontFamily: 'sf_ui',
-      ),
+      style: PredictionGraphTextStyles.graphLabel,
     );
 
     final textPainter = TextPainter(
@@ -595,11 +575,7 @@ class _PredictionGraphPainter extends CustomPainter {
 
       final textSpan = TextSpan(
         text: xLabel.label,
-        style: const TextStyle(
-          fontSize: 14,
-          color: MyColors.secondaryLabel,
-          fontFamily: 'sf_ui',
-        ),
+        style: PredictionGraphTextStyles.graphLabel,
       );
 
       final textPainter = TextPainter(
@@ -645,11 +621,7 @@ class _PredictionGraphPainter extends CustomPainter {
     final labelPosition = data.incomeLabelPosition!;
     final textSpan = TextSpan(
       text: labelPosition.label,
-      style: const TextStyle(
-        fontSize: 14,
-        color: MyColors.secondaryLabel,
-        fontFamily: 'sf_ui',
-      ),
+      style: PredictionGraphTextStyles.graphLabel,
     );
 
     final textPainter = TextPainter(
@@ -697,11 +669,7 @@ class _PredictionGraphPainter extends CustomPainter {
     final labelPosition = data.budgetLabelPosition!;
     final textSpan = TextSpan(
       text: labelPosition.label,
-      style: const TextStyle(
-        fontSize: 14,
-        color: MyColors.secondaryLabel,
-        fontFamily: 'sf_ui',
-      ),
+      style: PredictionGraphTextStyles.graphLabel,
     );
 
     final textPainter = TextPainter(
@@ -775,11 +743,7 @@ class _PredictionGraphPainter extends CustomPainter {
 
       final textSpan = TextSpan(
         text: data.predictionLabel,
-        style: const TextStyle(
-          fontSize: 14,
-          color: MyColors.secondaryLabel,
-          fontFamily: 'sf_ui',
-        ),
+        style: PredictionGraphTextStyles.graphLabel,
       );
 
       final textPainter = TextPainter(
