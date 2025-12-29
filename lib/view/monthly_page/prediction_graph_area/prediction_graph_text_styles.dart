@@ -9,8 +9,15 @@ class PredictionGraphTextStyles {
   // グラフラベル（0円、日別、収入、予算、予測、X軸）
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /// グラフ軸ラベル（0円、日別、収入、予算、予測、X軸日付）
+  /// グラフ軸ラベル（"0円"、"日別"、"収入"、"予算"、"予測"、X軸日付）
   static const graphLabel = TextStyle(
+    fontSize: 12,
+    color: MyColors.secondaryLabel,
+    fontFamily: 'sf_ui',
+  );
+
+  /// グラフ金額ラベル（収入金額、予算金額、予測金額）
+  static const graphPriceLabel = TextStyle(
     fontSize: 14,
     color: MyColors.secondaryLabel,
     fontFamily: 'sf_ui',
@@ -32,7 +39,7 @@ class PredictionGraphTextStyles {
 
   /// ツールチップ日付（太字白文字）
   static const tooltipDate = TextStyle(
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: FontWeight.bold,
     color: Colors.white,
   );

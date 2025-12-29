@@ -231,63 +231,79 @@ class _GraphTooltip extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onClose,
-      child: Container(
-        width: 200,
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: const Color(0xFF2C2C2E), // ダークグレー背景
-          borderRadius: BorderRadius.circular(8),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.3),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // 日付と累計（同じ行）
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${date.month}/${date.day}',
-                  style: PredictionGraphTextStyles.tooltipDate,
-                ),
-                Text(
-                  '累計 ¥${_formatNumber(cumulativeExpense)}',
-                  style: PredictionGraphTextStyles.tooltipSubtitle,
-                ),
-              ],
-            ),
-            // 固定費（0円の場合は非表示、小さく表示）
-            if (totalFixedCostExpense > 0)
-              Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 2),
-                  child: Text(
-                    '(固定費 ¥${_formatNumber(totalFixedCostExpense)})',
-                    style: const TextStyle(
-                      color: Colors.white54,
-                      fontSize: 10,
+      child: IntrinsicWidth(
+        child: Container(
+          constraints: const BoxConstraints(minWidth: 140),
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color(0xFF2C2C2E), // ダークグレー背景
+            borderRadius: BorderRadius.circular(8),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // 日付と累計（同じ行）
+              Row(
+                children: [
+                  Text(
+                    '${date.month}/${date.day}',
+                    style: PredictionGraphTextStyles.tooltipDate,
+                  ),
+                  const SizedBox(width: 8),
+                  const Spacer(),
+                  RichText(
+                    text: TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: '累計 ',
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 10,
+                          ),
+                        ),
+                        TextSpan(
+                          text: '¥${_formatNumber(cumulativeExpense)}',
+                          style: PredictionGraphTextStyles.tooltipSubtitle,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              // 固定費（0円の場合は非表示、小さく表示）
+              if (totalFixedCostExpense > 0)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Text(
+                      '(固定費 ¥${_formatNumber(totalFixedCostExpense)})',
+                      style: const TextStyle(
+                        color: Colors.white54,
+                        fontSize: 10,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            if (categoryExpenses.isNotEmpty) ...[
-              const SizedBox(height: 8),
-              Divider(height: 1, color: Colors.white24),
-              const SizedBox(height: 8),
-              // カテゴリー別支出（金額の降順でソート）
-              ...(List<CategoryExpense>.from(categoryExpenses)
-                    ..sort((a, b) => b.price.compareTo(a.price)))
-                  .map((expense) => _buildCategoryRow(expense)),
+              if (categoryExpenses.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                Divider(height: 1, color: Colors.white24),
+                const SizedBox(height: 8),
+                // カテゴリー別支出（金額の降順でソート）
+                ...(List<CategoryExpense>.from(categoryExpenses)
+                      ..sort((a, b) => b.price.compareTo(a.price)))
+                    .map((expense) => _buildCategoryRow(expense)),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
@@ -313,34 +329,35 @@ class _GraphTooltip extends StatelessWidget {
         children: [
           // カテゴリーアイコン（カテゴリー色で表示）
           SizedBox(
-            width: 20,
-            height: 20,
+            width: 16,
+            height: 16,
             child: expense.iconPath.isNotEmpty
                 ? SvgPicture.asset(
                     expense.iconPath,
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                     colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                   )
                 : Container(
-                    width: 20,
-                    height: 20,
+                    width: 16,
+                    height: 16,
                     decoration: BoxDecoration(
                       color: color,
                       shape: BoxShape.circle,
                     ),
                   ),
           ),
-          const SizedBox(width: 8),
+          const SizedBox(width: 6),
           // カテゴリー名
-          Expanded(
-            child: Text(
-              expense.categoryName,
-              style: PredictionGraphTextStyles.tooltipCategory,
-              overflow: TextOverflow.ellipsis,
+          Text(
+            expense.categoryName,
+            style: const TextStyle(
+              fontSize: 10,
+              color: Colors.white70,
             ),
           ),
-          // 金額
+          const Spacer(),
+          // 金額（右揃え）
           Text(
             '¥${_formatNumber(expense.price)}',
             style: PredictionGraphTextStyles.tooltipCategory,
@@ -470,7 +487,7 @@ class _PredictionGraphPainter extends CustomPainter {
   void _drawZeroLine(Canvas canvas, double leftMargin, double y,
       double totalWidth, double labelLeftPadding, double graphLeftOffset) {
     const textSpan = TextSpan(
-      text: '0円',
+      text: '￥0',
       style: PredictionGraphTextStyles.graphLabel,
     );
 
@@ -562,6 +579,8 @@ class _PredictionGraphPainter extends CustomPainter {
 
       // 積み上げ棒グラフを描画
       double currentY = topMargin + graphHeight; // グラフの底
+      final categoryCount = barData.categoryExpenses.length;
+      int categoryIndex = 0;
 
       for (final expense in barData.categoryExpenses) {
         // カテゴリーの棒の高さを計算（比率で分割）
@@ -591,18 +610,37 @@ class _PredictionGraphPainter extends CustomPainter {
           ..color = barColor
           ..style = PaintingStyle.fill;
 
-        // 棒を描画（下から積み上げ）
-        canvas.drawRect(
-          Rect.fromLTWH(
-            x,
-            currentY - barHeight,
-            barWidth,
-            barHeight,
-          ),
-          paint,
-        );
+        // 棒を描画（下から積み上げ、最上部のみ角丸）
+        final isTopBar = categoryIndex == categoryCount - 1;
+        if (isTopBar && barHeight > 2) {
+          // 最上部の棒は上辺のみ角丸
+          canvas.drawRRect(
+            RRect.fromRectAndCorners(
+              Rect.fromLTWH(
+                x,
+                currentY - barHeight,
+                barWidth,
+                barHeight,
+              ),
+              topLeft: const Radius.circular(3),
+              topRight: const Radius.circular(3),
+            ),
+            paint,
+          );
+        } else {
+          canvas.drawRect(
+            Rect.fromLTWH(
+              x,
+              currentY - barHeight,
+              barWidth,
+              barHeight,
+            ),
+            paint,
+          );
+        }
 
         currentY -= barHeight;
+        categoryIndex++;
       }
     }
   }
@@ -635,7 +673,7 @@ class _PredictionGraphPainter extends CustomPainter {
 
       final textSpan = TextSpan(
         text: xLabel.label,
-        style: PredictionGraphTextStyles.graphLabel,
+        style: PredictionGraphTextStyles.graphPriceLabel,
       );
 
       final textPainter = TextPainter(
@@ -677,11 +715,20 @@ class _PredictionGraphPainter extends CustomPainter {
 
     final y = topMargin + graphHeight - (income / maxValue) * graphHeight;
 
-    // usecaseで計算されたラベル位置を使用
+    // usecaseで計算されたラベル位置を使用（金額のみ）
     final labelPosition = data.incomeLabelPosition!;
+
     final textSpan = TextSpan(
-      text: labelPosition.label,
-      style: PredictionGraphTextStyles.graphLabel,
+      children: [
+        const TextSpan(
+          text: '収入 ',
+          style: PredictionGraphTextStyles.graphLabel,
+        ),
+        TextSpan(
+          text: labelPosition.label,
+          style: PredictionGraphTextStyles.graphPriceLabel,
+        ),
+      ],
     );
 
     final textPainter = TextPainter(
@@ -729,7 +776,7 @@ class _PredictionGraphPainter extends CustomPainter {
     final labelPosition = data.budgetLabelPosition!;
     final textSpan = TextSpan(
       text: labelPosition.label,
-      style: PredictionGraphTextStyles.graphLabel,
+      style: PredictionGraphTextStyles.graphPriceLabel,
     );
 
     final textPainter = TextPainter(
@@ -803,7 +850,7 @@ class _PredictionGraphPainter extends CustomPainter {
 
       final textSpan = TextSpan(
         text: data.predictionLabel,
-        style: PredictionGraphTextStyles.graphLabel,
+        style: PredictionGraphTextStyles.graphPriceLabel,
       );
 
       final textPainter = TextPainter(
