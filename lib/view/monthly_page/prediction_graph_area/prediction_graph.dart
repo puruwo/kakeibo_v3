@@ -1,5 +1,6 @@
 import 'dart:math' show pow, sqrt;
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
@@ -64,24 +65,35 @@ class _PredictionGraphWidget extends StatefulWidget {
 class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
   DateTime? _selectedDate;
   Offset? _tapPosition;
+  Size _widgetSize = Size.zero;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (details) {
-        _handleTap(details.localPosition, context);
-      },
-      onTapUp: (_) {},
-      child: Stack(
-        children: [
-          CustomPaint(
-            painter: _PredictionGraphPainter(data: widget.data),
-            child: Container(),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        _widgetSize = Size(constraints.maxWidth, constraints.maxHeight);
+        return GestureDetector(
+          onTapDown: (details) {
+            _handleTap(details.localPosition, context);
+          },
+          onTapUp: (_) {},
+          // スライドで日付切り替え
+          onPanUpdate: (details) {
+            _handleTap(details.localPosition, context);
+          },
+          onPanEnd: (_) {},
+          child: Stack(
+            children: [
+              CustomPaint(
+                painter: _PredictionGraphPainter(data: widget.data),
+                child: Container(),
+              ),
+              if (_selectedDate != null && _tapPosition != null)
+                _buildTooltip(),
+            ],
           ),
-          if (_selectedDate != null && _tapPosition != null)
-            _buildTooltip(context),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -111,8 +123,31 @@ class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
     final totalDays =
         widget.data.toDate.difference(widget.data.fromDate).inDays + 1;
     final relativeX = position.dx - graphStartX;
-    final dayIndex = (relativeX / graphWidth * totalDays).floor();
+    final dayIndex =
+        (relativeX / graphWidth * totalDays).floor().clamp(0, totalDays - 1);
     final selectedDate = widget.data.fromDate.add(Duration(days: dayIndex));
+
+    // その日の支出が0円かチェック（0円の日はツールチップ表示しない）
+    final dailyBarData = widget.data.dailyBarDataList?.firstWhere(
+      (d) =>
+          d.date.year == selectedDate.year &&
+          d.date.month == selectedDate.month &&
+          d.date.day == selectedDate.day,
+      orElse: () => DailyBarData(
+        date: selectedDate,
+        isFutureDate: false,
+        categoryExpenses: [],
+      ),
+    );
+
+    // カテゴリー別支出が空の場合はツールチップを表示しない
+    if (dailyBarData == null || dailyBarData.categoryExpenses.isEmpty) {
+      setState(() {
+        _selectedDate = null;
+        _tapPosition = null;
+      });
+      return;
+    }
 
     setState(() {
       _selectedDate = selectedDate;
@@ -120,7 +155,7 @@ class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
     });
   }
 
-  Widget _buildTooltip(BuildContext context) {
+  Widget _buildTooltip() {
     final selectedDate = _selectedDate!;
     final tapPosition = _tapPosition!;
 
@@ -148,12 +183,13 @@ class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
     );
 
     // ツールチップの位置を計算（画面外にはみ出さないように）
-    final screenWidth = MediaQuery.of(context).size.width;
     const tooltipWidth = 200.0;
     double tooltipX = tapPosition.dx - tooltipWidth / 2;
-    if (tooltipX < 0) tooltipX = 8;
-    if (tooltipX + tooltipWidth > screenWidth) {
-      tooltipX = screenWidth - tooltipWidth - 8;
+    // 左端見切れ防止
+    if (tooltipX < 8) tooltipX = 8;
+    // 右端見切れ防止（ウィジェット内での位置）
+    if (tooltipX + tooltipWidth > _widgetSize.width - 8) {
+      tooltipX = _widgetSize.width - tooltipWidth - 8;
     }
 
     return Positioned(
@@ -162,6 +198,7 @@ class _PredictionGraphWidgetState extends State<_PredictionGraphWidget> {
       child: _GraphTooltip(
         date: selectedDate,
         cumulativeExpense: cumulativeExpense,
+        totalFixedCostExpense: widget.data.totalFixedCostExpense ?? 0,
         categoryExpenses: dailyBarData?.categoryExpenses ?? [],
         onClose: () {
           setState(() {
@@ -179,12 +216,14 @@ class _GraphTooltip extends StatelessWidget {
   const _GraphTooltip({
     required this.date,
     required this.cumulativeExpense,
+    required this.totalFixedCostExpense,
     required this.categoryExpenses,
     required this.onClose,
   });
 
   final DateTime date;
   final int cumulativeExpense;
+  final int totalFixedCostExpense;
   final List<CategoryExpense> categoryExpenses;
   final VoidCallback onClose;
 
@@ -210,23 +249,43 @@ class _GraphTooltip extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // 日付
-            Text(
-              '${date.month}/${date.day}',
-              style: PredictionGraphTextStyles.tooltipDate,
+            // 日付と累計（同じ行）
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${date.month}/${date.day}',
+                  style: PredictionGraphTextStyles.tooltipDate,
+                ),
+                Text(
+                  '累計 ¥${_formatNumber(cumulativeExpense)}',
+                  style: PredictionGraphTextStyles.tooltipSubtitle,
+                ),
+              ],
             ),
-            const SizedBox(height: 8),
-            // 累計支出
-            Text(
-              '累計: ¥${_formatNumber(cumulativeExpense)}',
-              style: PredictionGraphTextStyles.tooltipSubtitle,
-            ),
+            // 固定費（0円の場合は非表示、小さく表示）
+            if (totalFixedCostExpense > 0)
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 2),
+                  child: Text(
+                    '(固定費 ¥${_formatNumber(totalFixedCostExpense)})',
+                    style: const TextStyle(
+                      color: Colors.white54,
+                      fontSize: 10,
+                    ),
+                  ),
+                ),
+              ),
             if (categoryExpenses.isNotEmpty) ...[
               const SizedBox(height: 8),
               Divider(height: 1, color: Colors.white24),
               const SizedBox(height: 8),
-              // カテゴリー別支出
-              ...categoryExpenses.map((expense) => _buildCategoryRow(expense)),
+              // カテゴリー別支出（金額の降順でソート）
+              ...(List<CategoryExpense>.from(categoryExpenses)
+                    ..sort((a, b) => b.price.compareTo(a.price)))
+                  .map((expense) => _buildCategoryRow(expense)),
             ],
           ],
         ),
@@ -252,24 +311,25 @@ class _GraphTooltip extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 4),
       child: Row(
         children: [
-          // アイコン（SVGの代わりに色付き円）
-          Container(
+          // カテゴリーアイコン（カテゴリー色で表示）
+          SizedBox(
             width: 20,
             height: 20,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
             child: expense.iconPath.isNotEmpty
-                ? ClipOval(
-                    child: Image.asset(
-                      expense.iconPath,
-                      width: 20,
-                      height: 20,
-                      errorBuilder: (_, __, ___) => const SizedBox(),
-                    ),
+                ? SvgPicture.asset(
+                    expense.iconPath,
+                    width: 20,
+                    height: 20,
+                    colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                   )
-                : null,
+                : Container(
+                    width: 20,
+                    height: 20,
+                    decoration: BoxDecoration(
+                      color: color,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
           ),
           const SizedBox(width: 8),
           // カテゴリー名

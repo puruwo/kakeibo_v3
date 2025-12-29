@@ -3,10 +3,13 @@ import 'package:intl/intl.dart' show DateFormat;
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
@@ -45,6 +48,8 @@ class PredictionGraphUsecase {
       ref.read(expenseSmallCategoryRepositoryProvider);
   late final ExpenseBigCategoryRepository _bigCategoryRepo =
       ref.read(expensebigCategoryRepositoryProvider);
+  late final FixedCostCategoryRepository _fixedCostCategoryRepo =
+      ref.read(fixedCostCategoryRepositoryProvider);
 
   /// 横軸ラベルの間隔（日数）
   static const int _xAxisLabelInterval = 7;
@@ -214,6 +219,7 @@ class PredictionGraphUsecase {
       shouldShowIncomeLine: shouldShowIncomeLine,
       dailyBarDataList: dailyBarDataList,
       barMaxValue: barMaxValue,
+      totalFixedCostExpense: fixedCostExpenseTotal,
     );
   }
 
@@ -373,30 +379,39 @@ class PredictionGraphUsecase {
   }
 
   /// 日毎の支出データリストを取得
+  /// 固定費は日付に関係なく初日にまとめて含める
   Future<List<Map<String, dynamic>>> getDailyDataList(
       PredictionGraphLineType predictionGraphLineType,
       DateTime fromDate,
       DateTime toDate) async {
     // 日付をキーとしたマップに変換してマージ
     final Map<DateTime, int> dailyExpenseSumMap = {};
-    dailyExpenseSumMap.addAll({fromDate: 0}); // 開始日を初期値として追加
 
-    // 一般支出と固定費を日毎に取得してマップに追加
+    // 月全体の固定費合計を取得（初日に一括で加算するため）
+    final period = PeriodValue(startDatetime: fromDate, endDatetime: toDate);
+    final fixedCostExpenses =
+        await _fixedCostExpenseRepo.fetchByPeriod(period: period);
+    int totalFixedCost = 0;
+    for (final expense in fixedCostExpenses) {
+      totalFixedCost += expense.price;
+    }
+
+    // 開始日を初期値として追加（固定費を含む）
+    dailyExpenseSumMap.addAll({fromDate: totalFixedCost});
+
+    // 一般支出のみ日毎に取得してマップに追加（固定費は初日に含めたので除外）
     var loopSelectedDate = fromDate;
     while (loopSelectedDate.isBefore(toDate) ||
         loopSelectedDate.isSameDate(toDate)) {
       final dailyExpense = await _expenseRepo.fetchDailyExpenseByPeriod(
         date: loopSelectedDate,
       );
-      final dailyFixedCost =
-          await _fixedCostExpenseRepo.fetchDailyFixedCostExpenseByPeriod(
-        date: loopSelectedDate,
-      );
 
-      final totalExpense = dailyExpense + dailyFixedCost;
-      if (totalExpense > 0) {
-        dailyExpenseSumMap[loopSelectedDate] = totalExpense;
-      } else if (loopSelectedDate.isSameDate(toDate)) {
+      if (dailyExpense > 0) {
+        dailyExpenseSumMap[loopSelectedDate] =
+            (dailyExpenseSumMap[loopSelectedDate] ?? 0) + dailyExpense;
+      } else if (loopSelectedDate.isSameDate(toDate) &&
+          !dailyExpenseSumMap.containsKey(loopSelectedDate)) {
         // 最終日で支出が0の場合も追加
         dailyExpenseSumMap[loopSelectedDate] = 0;
       }
@@ -437,24 +452,45 @@ class PredictionGraphUsecase {
       smallToBigMap[cat.id] = cat.bigCategoryKey;
     }
 
+    // 固定費カテゴリー情報を取得してキャッシュ
+    final fixedCostCategories = await _fixedCostCategoryRepo.fetchAll();
+    final fixedCostCategoryMap = <int, _BigCategoryInfo>{};
+    for (final cat in fixedCostCategories) {
+      fixedCostCategoryMap[cat.id] = _BigCategoryInfo(
+        colorCode: cat.colorCode,
+        iconPath: cat.resourcePath,
+        name: cat.categoryName,
+      );
+    }
+
+    // 期間内の固定費支出を取得
+    final period = PeriodValue(startDatetime: fromDate, endDatetime: toDate);
+    final fixedCostExpenses =
+        await _fixedCostExpenseRepo.fetchByPeriod(period: period);
+
+    // 固定費支出を日付別にグループ化
+    final fixedCostByDate = <String, List<FixedCostExpenseEntity>>{};
+    for (final expense in fixedCostExpenses) {
+      final dateKey = expense.date;
+      fixedCostByDate.putIfAbsent(dateKey, () => []);
+      fixedCostByDate[dateKey]!.add(expense);
+    }
+
     final dailyBarDataList = <DailyBarData>[];
     int maxDailyTotal = 0;
 
     // 期間内の各日のデータを取得
     var currentDate = fromDate;
     while (!currentDate.isAfter(toDate)) {
-      // その日の支出リストを取得
+      // その日の一般支出リストを取得
       final expenses = await _expenseRepo.fetchDailyExpenseListByDate(
         date: currentDate,
       );
 
-      if (expenses.isEmpty) {
-        currentDate = currentDate.add(const Duration(days: 1));
-        continue;
-      }
-
-      // 大カテゴリー別に集計
+      // 大カテゴリー別に集計（一般支出のみ、固定費は含めない）
       final categoryTotals = <int, int>{};
+
+      // 一般支出を集計
       for (final expense in expenses) {
         final smallCategoryId = expense.paymentCategoryId;
         final bigCategoryId = smallToBigMap[smallCategoryId] ?? 0;
@@ -462,9 +498,16 @@ class PredictionGraphUsecase {
             (categoryTotals[bigCategoryId] ?? 0) + expense.price;
       }
 
-      // カテゴリー別支出リストを作成
+      // 支出がない日はスキップ
+      if (categoryTotals.isEmpty) {
+        currentDate = currentDate.add(const Duration(days: 1));
+        continue;
+      }
+
+      // カテゴリー別支出リストを作成（一般支出のみ）
       final categoryExpenses = <CategoryExpense>[];
       int dailyTotal = 0;
+
       for (final entry in categoryTotals.entries) {
         final catInfo = bigCategoryMap[entry.key];
         categoryExpenses.add(CategoryExpense(
