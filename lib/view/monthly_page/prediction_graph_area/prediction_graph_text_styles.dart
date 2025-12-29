@@ -40,19 +40,33 @@ class PredictionGraphTextStyles {
   /// ツールチップ日付（太字白文字）
   static const tooltipDate = TextStyle(
     fontSize: 14,
-    fontWeight: FontWeight.bold,
+    // fontWeight: FontWeight.bold,
     color: Colors.white,
   );
 
   /// ツールチップ累計支出
   static const tooltipSubtitle = TextStyle(
     fontSize: 14,
+    // fontWeight: FontWeight.bold,
+    color: MyColors.label,
+  );
+
+  /// ツールチップカテゴリー行（金額）
+  static const tooltipCategory = TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.bold,
+    color: Colors.white,
+  );
+
+  /// ツールチップカテゴリー名（小さめ、薄め）
+  static const tooltipCategoryName = TextStyle(
+    fontSize: 10,
     color: Colors.white70,
   );
 
-  /// ツールチップカテゴリー行（カテゴリー名、金額）
-  static const tooltipCategory = TextStyle(
-    fontSize: 12,
-    color: Colors.white,
+  /// ツールチップ累計ラベル（「累計」文字用）
+  static const tooltipCumulativeLabel = TextStyle(
+    fontSize: 10,
+    color: Colors.white70,
   );
 }

@@ -264,10 +264,8 @@ class _GraphTooltip extends StatelessWidget {
                       children: [
                         const TextSpan(
                           text: '累計 ',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 10,
-                          ),
+                          style:
+                              PredictionGraphTextStyles.tooltipCumulativeLabel,
                         ),
                         TextSpan(
                           text: '¥${_formatNumber(cumulativeExpense)}',
@@ -286,10 +284,7 @@ class _GraphTooltip extends StatelessWidget {
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       '(固定費 ¥${_formatNumber(totalFixedCostExpense)})',
-                      style: const TextStyle(
-                        color: Colors.white54,
-                        fontSize: 10,
-                      ),
+                      style: PredictionGraphTextStyles.tooltipCumulativeLabel,
                     ),
                   ),
                 ),
@@ -346,15 +341,6 @@ class _GraphTooltip extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
                   ),
-          ),
-          const SizedBox(width: 6),
-          // カテゴリー名
-          Text(
-            expense.categoryName,
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.white70,
-            ),
           ),
           const Spacer(),
           // 金額（右揃え）
