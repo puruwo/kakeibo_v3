@@ -758,11 +758,20 @@ class _PredictionGraphPainter extends CustomPainter {
 
     final y = topMargin + graphHeight - (budget / maxValue) * graphHeight;
 
-    // usecaseで計算されたラベル位置を使用
+    // usecaseで計算されたラベル位置を使用（金額のみ）
     final labelPosition = data.budgetLabelPosition!;
+
     final textSpan = TextSpan(
-      text: labelPosition.label,
-      style: PredictionGraphTextStyles.graphPriceLabel,
+      children: [
+        const TextSpan(
+          text: '予算 ',
+          style: PredictionGraphTextStyles.graphLabel,
+        ),
+        TextSpan(
+          text: labelPosition.label,
+          style: PredictionGraphTextStyles.graphPriceLabel,
+        ),
+      ],
     );
 
     final textPainter = TextPainter(

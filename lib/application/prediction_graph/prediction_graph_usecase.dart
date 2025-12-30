@@ -298,22 +298,21 @@ class PredictionGraphUsecase {
     return LabelPosition(label: priceLabel, yOffset: yOffset);
   }
 
-  /// 予算ラベルの表示位置を計算
+  /// 予算ラベルの表示位置を計算（金額のみ返却）
   /// 収入との位置関係でラベル位置を調整
   LabelPosition _calculateBudgetLabelPosition(
       int income, int budget, bool shouldShowIncomeLine) {
     final priceLabel = yenFormattedPriceGetter(budget);
-    final label = '予算 $priceLabel';
 
     // 収入が表示されない場合は上に表示
     if (!shouldShowIncomeLine) {
-      return LabelPosition(label: label, yOffset: -7.0);
+      return LabelPosition(label: priceLabel, yOffset: -7.0);
     }
 
     // 収入が予算以下の場合は上に、収入が予算より大きい場合は下に表示
     final yOffset = income <= budget ? -23.0 : 0.0;
 
-    return LabelPosition(label: label, yOffset: yOffset);
+    return LabelPosition(label: priceLabel, yOffset: yOffset);
   }
 
   /// 予想支出ラベルを生成

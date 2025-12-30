@@ -6,17 +6,17 @@ class PredictionGraphTextStyles {
   PredictionGraphTextStyles._();
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // グラフラベル（0円、日別、収入、予算、予測、X軸）
+  // グラフ本体のラベル
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /// グラフ軸ラベル（"0円"、"日別"、"収入"、"予算"、"予測"、X軸日付）
+  /// グラフ軸ラベル（「￥0」「日別」「収入」「予算」「予測」）
   static const graphLabel = TextStyle(
     fontSize: 12,
     color: MyColors.secondaryLabel,
     fontFamily: 'sf_ui',
   );
 
-  /// グラフ金額ラベル（収入金額、予算金額、予測金額）
+  /// グラフ金額ラベル（収入・予算・予測の金額部分、X軸日付）
   static const graphPriceLabel = TextStyle(
     fontSize: 14,
     color: MyColors.secondaryLabel,
@@ -24,10 +24,10 @@ class PredictionGraphTextStyles {
   );
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // メッセージ（エラー、空状態）
+  // グラフエリアのメッセージ
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /// エラー・空状態メッセージ（「選択月の支出の入力がありません」「エラーが発生しました」）
+  /// 空状態・エラーメッセージ
   static const message = TextStyle(
     color: MyColors.secondaryLabel,
     fontSize: 16,
@@ -37,36 +37,28 @@ class PredictionGraphTextStyles {
   // ツールチップ
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /// ツールチップ日付（太字白文字）
+  /// ツールチップ日付（例: 12/29）
   static const tooltipDate = TextStyle(
     fontSize: 14,
-    // fontWeight: FontWeight.bold,
-    color: Colors.white,
-  );
-
-  /// ツールチップ累計支出
-  static const tooltipSubtitle = TextStyle(
-    fontSize: 14,
-    // fontWeight: FontWeight.bold,
     color: MyColors.label,
   );
 
-  /// ツールチップカテゴリー行（金額）
+  /// ツールチップ累計金額（例: ¥12,345）
+  static const tooltipSubtitle = TextStyle(
+    fontSize: 14,
+    color: MyColors.label,
+  );
+
+  /// ツールチップカテゴリー金額（例: ¥1,234）
   static const tooltipCategory = TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.bold,
-    color: Colors.white,
+    color: MyColors.label,
   );
 
-  /// ツールチップカテゴリー名（小さめ、薄め）
-  static const tooltipCategoryName = TextStyle(
-    fontSize: 10,
-    color: Colors.white70,
-  );
-
-  /// ツールチップ累計ラベル（「累計」文字用）
+  /// ツールチップ補助ラベル（「累計」「固定費」など小さめのラベル）
   static const tooltipCumulativeLabel = TextStyle(
     fontSize: 10,
-    color: Colors.white70,
+    color: MyColors.secondaryLabel,
   );
 }
