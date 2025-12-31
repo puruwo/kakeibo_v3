@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 
 class FixedCostCategoryHeader extends StatelessWidget {
   const FixedCostCategoryHeader({
@@ -35,11 +35,7 @@ class FixedCostCategoryHeader extends StatelessWidget {
           // カテゴリー名
           Text(
             categoryName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-            ),
+            style: MonthlyPageStyles.fixedCostHeaderCategoryName,
           ),
         ],
       ),

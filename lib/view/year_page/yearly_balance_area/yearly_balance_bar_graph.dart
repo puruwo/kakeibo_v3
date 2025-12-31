@@ -15,7 +15,6 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    
     YearlyBalanceBarGraphStatus barGraphStatus;
     // 入力した値よりグラフの状態を出す
     if (budget == 0) {
@@ -34,7 +33,6 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
     });
 
     return LayoutBuilder(builder: ((context, constraints) {
-
       // 画面の横幅を取得し、棒グラフの幅を設定
       final double barFrameWidth = constraints.maxWidth;
 
@@ -43,7 +41,8 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
 
       // 画面の倍率を計算
       // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
-      final screenHorizontalMagnification =context.screenHorizontalMagnification;
+      final screenHorizontalMagnification =
+          context.screenHorizontalMagnification;
 
       // アニメーション後の横棒グラフの幅を計算
       int lastPrice = budget - expense;
@@ -83,9 +82,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
 
       // 予算よりも利用額が多い場合
       if (barGraphStatus == YearlyBalanceBarGraphStatus.overBudget) {
-        return Stack(
-          alignment: Alignment.centerRight,
-          children: [
+        return Stack(alignment: Alignment.centerRight, children: [
           // バーの中身
           AnimatedContainer(
             height: 10,
@@ -98,14 +95,15 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
           ),
           // バーの超過分マスク
           SizedBox(
-            width: (barFrameWidth * (-lastPrice)/(budget - lastPrice)) * screenHorizontalMagnification,
+            width: (barFrameWidth * (-lastPrice) / (budget - lastPrice)) *
+                screenHorizontalMagnification,
             child: AnimatedOpacity(
               opacity: isBuilt.value ? 1.0 : 0.0,
               curve: Curves.easeInExpo,
               duration: const Duration(milliseconds: 700),
               child: ClipRRect(
                   borderRadius: const BorderRadius.horizontal(
-                      right: Radius.circular(10),left: Radius.circular(10)),
+                      right: Radius.circular(10), left: Radius.circular(10)),
                   child: ClipRect(
                     child: Align(
                       alignment: Alignment.centerRight,

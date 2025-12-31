@@ -58,7 +58,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
           backgroundColor: MyColors.secondarySystemBackground,
           title: Text(
             'カテゴリー設定',
-            style: MyFonts.pageHeaderText,
+            style: AppTextStyles.pageHeaderText,
           ),
 
           //ヘッダー左のアイコンボタン

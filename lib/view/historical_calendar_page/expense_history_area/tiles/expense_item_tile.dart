@@ -137,7 +137,8 @@ class ExpenseItemTile extends ConsumerWidget {
                               value.bigCategoryName,
                               textAlign: TextAlign.start,
                               overflow: TextOverflow.ellipsis,
-                              style: MyFonts.historyTileBigCategoryLabel,
+                              style:
+                                  HistoryListStyles.historyTileBigCategoryLabel,
                             ),
                           ),
 
@@ -151,7 +152,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.smallCategoryName}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: MyFonts.historyTileSubLabel,
+                                  style: HistoryListStyles.historyTileSubLabel,
                                 ),
                               ),
                               // メモ
@@ -161,9 +162,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.memo}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      color: MyColors.secondaryLabel),
+                                  style: HistoryListStyles.historyTileSubLabel,
                                 ),
                               ),
                             ],
@@ -181,7 +180,7 @@ class ExpenseItemTile extends ConsumerWidget {
                           priceLabel,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
-                          style: MyFonts.historyTilePriceLabel,
+                          style: HistoryListStyles.historyTilePriceLabel,
                         ),
                       ),
                     ),

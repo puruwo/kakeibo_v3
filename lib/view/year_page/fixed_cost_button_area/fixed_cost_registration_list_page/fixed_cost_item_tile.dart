@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
@@ -102,11 +100,7 @@ class FixedCostItemTile extends ConsumerWidget {
                 // 左側: 名前
                 Text(
                   item.name,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    color: MyColors.white,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: MonthlyPageStyles.fixedCostCategoryListName,
                 ),
                 // 金額
                 Row(
@@ -118,11 +112,11 @@ class FixedCostItemTile extends ConsumerWidget {
                           if (isVariable)
                             TextSpan(
                               text: '平均　',
-                              style: MyFonts.cardSecondaryTitle,
+                              style: AppTextStyles.cardSecondaryTitle,
                             ),
                           TextSpan(
                             text: yenmarkFormattedPriceGetter(displayPrice),
-                            style: MyFonts.cardPriceLabel,
+                            style: AppTextStyles.cardPriceLabel,
                           ),
                         ],
                       ),
@@ -138,7 +132,7 @@ class FixedCostItemTile extends ConsumerWidget {
               children: [
                 Text(
                   '次回：$formattedNextPaymentDate',
-                  style: MyFonts.cardSecondaryTitle,
+                  style: AppTextStyles.cardSecondaryTitle,
                 ),
                 const SizedBox(width: 8),
                 Row(
@@ -150,7 +144,7 @@ class FixedCostItemTile extends ConsumerWidget {
                     ),
                     Text(
                       frequencyValue.dateLabel,
-                      style: MyFonts.cardSecondaryTitle,
+                      style: AppTextStyles.cardSecondaryTitle,
                     ),
                   ],
                 ),

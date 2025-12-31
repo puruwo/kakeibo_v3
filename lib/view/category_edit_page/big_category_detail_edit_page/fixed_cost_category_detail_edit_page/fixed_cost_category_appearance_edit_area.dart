@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/fixed_cost_constants.dart';
+import 'package:kakeibo/constant/styles/category_styles.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_name_controller/fixed_cost_category_name_controller.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_icon_controller/fixed_cost_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_color_controller/fixed_cost_category_color_controller.dart';
@@ -138,7 +139,7 @@ class _FixedCostCategoryAppearanceEditAreaState
                     textAlignVertical: TextAlignVertical.center,
                     textAlign: TextAlign.center,
                     cursorWidth: 2,
-                    style: const TextStyle(fontSize: 20, color: MyColors.label),
+                    style: CategoryStyles.categoryEditNameInput,
                     minLines: 1,
                     maxLines: 1,
                     decoration: InputDecoration(
@@ -146,8 +147,7 @@ class _FixedCostCategoryAppearanceEditAreaState
                       filled: true,
                       fillColor: MyColors.secondarySystemfill,
                       hintText: "カテゴリー名を入力",
-                      hintStyle: const TextStyle(
-                          fontSize: 16, color: MyColors.secondaryLabel),
+                      hintStyle: CategoryStyles.categoryEditNameHint,
                       contentPadding: const EdgeInsets.only(
                           top: 16, bottom: 0, left: 40, right: 16),
                       suffixIcon: Padding(
@@ -236,7 +236,7 @@ class _FixedCostCategoryAppearanceEditAreaState
                   ),
                   const Text(
                     'カテゴリーカラー',
-                    style: TextStyle(fontSize: 14, color: MyColors.label),
+                    style: CategoryStyles.categoryEditColorLabel,
                   )
                 ],
               ),

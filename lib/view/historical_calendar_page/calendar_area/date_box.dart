@@ -97,8 +97,9 @@ Widget calculatePriceLabel(int amount,
     return const SizedBox.shrink();
   } else {
     // isCompactに応じてフォントスタイルを切り替え
-    final style =
-        isCompact ? MyFonts.calendarDateBoxSmall : MyFonts.calendarDateBoxLarge;
+    final style = isCompact
+        ? CalendarStyles.calendarDateBoxSmall
+        : CalendarStyles.calendarDateBoxLarge;
 
     // FittedBoxでラップして、オーバーフロー時に自動縮小
     return FittedBox(
@@ -138,10 +139,10 @@ Container activeDateBox(int weekday, String dateLabel, Widget expenseLabel,
           Text(
             dateLabel,
             style: weekday == 6
-                ? MyFonts.calendarDateLabelSaturday
+                ? CalendarStyles.calendarDateLabelSaturday
                 : weekday == 7
-                    ? MyFonts.calendarDateLabelSunday
-                    : MyFonts.calendarDateLabel,
+                    ? CalendarStyles.calendarDateLabelSunday
+                    : CalendarStyles.calendarDateLabel,
           ),
           // 支出
           if (expenseLabel is! SizedBox)
@@ -181,10 +182,10 @@ Container normalDateBox(int weekday, String dateLabel, Widget expenseLabel,
           Text(
             dateLabel,
             style: weekday == 6
-                ? MyFonts.calendarDateLabelSaturday
+                ? CalendarStyles.calendarDateLabelSaturday
                 : weekday == 7
-                    ? MyFonts.calendarDateLabelSunday
-                    : MyFonts.calendarDateLabel,
+                    ? CalendarStyles.calendarDateLabelSunday
+                    : CalendarStyles.calendarDateLabel,
           ),
           // 支出
           if (expenseLabel is! SizedBox)
@@ -221,7 +222,7 @@ Container vacantDateBox(int weekday, String dateLabel, double boxHeight,
     child: Center(
       child: Column(
         children: [
-          Text(dateLabel, style: MyFonts.calendarOutOfPeriodDateLabel),
+          Text(dateLabel, style: CalendarStyles.calendarOutOfPeriodDateLabel),
         ],
       ),
     ),

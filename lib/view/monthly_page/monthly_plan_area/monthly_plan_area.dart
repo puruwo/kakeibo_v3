@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_area.dart';
@@ -137,10 +137,7 @@ class PlanAreaButton extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 label,
-                style: const TextStyle(
-                    color: MyColors.themeColor,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600),
+                style: MonthlyPageStyles.planAreaButtonLabel,
                 textHeightBehavior: const TextHeightBehavior(
                   applyHeightToFirstAscent: true,
                   applyHeightToLastDescent: true,

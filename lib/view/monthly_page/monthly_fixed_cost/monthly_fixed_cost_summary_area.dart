@@ -26,7 +26,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                         children: [
                           Text(
                             '支払い予定',
-                            style: MyFonts.topCardTitleLabel,
+                            style: AppTextStyles.cardPrimaryTitle,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -36,11 +36,11 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                                 ///月の総支出
                                 formattedPriceGetter(
                                     summaryValue.scheduledPaymentAmount),
-                                style: MyFonts.topCardPriceLabel,
+                                style: AppTextStyles.cardPriceLabel,
                               ),
                               Text(
                                 ' 円',
-                                style: MyFonts.topCardYenLabel,
+                                style: AppTextStyles.cardSecondaryTitle,
                               ),
                             ],
                           ),
@@ -57,18 +57,18 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                           children: [
                             Text(
                               '確定分',
-                              style: MyFonts.topCardTirtiaryTitleLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                             ),
                             const SizedBox(width: 6),
                             Text(
                               formattedPriceGetter(summaryValue.fixedCostSum),
                               overflow: TextOverflow.ellipsis,
-                              style: MyFonts.topCardTirtiaryPriceLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                               textAlign: TextAlign.end,
                             ),
                             Text(
                               ' 円',
-                              style: MyFonts.topCardTirtiaryYenLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                               textAlign: TextAlign.end,
                             ),
                           ],
@@ -83,7 +83,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                           children: [
                             Text(
                               '予想分',
-                              style: MyFonts.topCardTirtiaryTitleLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                             ),
                             const SizedBox(width: 6),
                             Text(
@@ -92,12 +92,12 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                                   : formattedPriceGetter(
                                       summaryValue.unconfirmedFixedCostSum),
                               overflow: TextOverflow.ellipsis,
-                              style: MyFonts.topCardTirtiaryPriceLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                               textAlign: TextAlign.end,
                             ),
                             Text(
                               ' 円',
-                              style: MyFonts.topCardTirtiaryYenLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                               textAlign: TextAlign.end,
                             ),
                           ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 import 'package:kakeibo/util/util.dart';
@@ -26,7 +25,7 @@ class PriceLabel extends StatelessWidget {
     // 予算のLabel
     final String budgetLabel = formattedPriceGetter(budget);
     return Padding(
-      padding: const EdgeInsets.only(left:12.0),
+      padding: const EdgeInsets.only(left: 12.0),
       child: SizedBox(
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -40,20 +39,14 @@ class PriceLabel extends StatelessWidget {
                 text: TextSpan(children: [
                   TextSpan(
                     text: paymentSumLabel,
-                    style: GoogleFonts.notoSans(
-                        fontSize: 18,
-                        color: MyColors.white,
-                        fontWeight: FontWeight.w400),
+                    style: MonthlyPageStyles.categoryTilePriceLabel,
                   ),
                   TextSpan(
                     text: ' 円',
-                    style: GoogleFonts.notoSans(
-                        fontSize: 14,
-                        color: MyColors.white,
-                        fontWeight: FontWeight.w400),
+                    style: MonthlyPageStyles.categoryTileYenLabel,
                   ),
                 ])),
-        
+
             // 予算
             categoryTile.graphType == GraphType.hasBudget ||
                     categoryTile.graphType == GraphType.hasBudgetButOver
@@ -64,33 +57,23 @@ class PriceLabel extends StatelessWidget {
                         text: TextSpan(children: [
                           TextSpan(
                             text: ' /',
-                            style: GoogleFonts.notoSans(
-                                fontSize: 14,
-                                color: MyColors.secondaryLabel,
-                                fontWeight: FontWeight.w400),
+                            style:
+                                MonthlyPageStyles.categoryTileBudgetSeparator,
                           ),
                           TextSpan(
                             text: '予算 ',
-                            style: GoogleFonts.notoSans(
-                                fontSize: 13,
-                                color: MyColors.secondaryLabel,
-                                fontWeight: FontWeight.w400),
+                            style:
+                                MonthlyPageStyles.categoryTileBudgetTextLabel,
                           ),
                           // カテゴリー予算
                           TextSpan(
                             text: budgetLabel,
-                            style: GoogleFonts.notoSans(
-                                fontSize: 14,
-                                color: MyColors.secondaryLabel,
-                                fontWeight: FontWeight.w400),
+                            style:
+                                MonthlyPageStyles.categoryTileBudgetPriceLabel,
                           ),
                           TextSpan(
                             text: ' 円',
-                            style: GoogleFonts.notoSans(
-                              fontSize: 11,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w400,
-                            ),
+                            style: MonthlyPageStyles.categoryTileBudgetYenLabel,
                           ),
                         ])),
                   )

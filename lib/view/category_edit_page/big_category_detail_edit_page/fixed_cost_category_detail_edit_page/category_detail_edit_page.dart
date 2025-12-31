@@ -40,8 +40,7 @@ class CategoryDetailEditPage extends ConsumerStatefulWidget {
       _BigCategoryDetailEditPage();
 }
 
-class _BigCategoryDetailEditPage
-    extends ConsumerState<CategoryDetailEditPage> {
+class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -53,7 +52,7 @@ class _BigCategoryDetailEditPage
         appBar: AppBar(
           title: Text(
             'カテゴリーの設定',
-            style: MyFonts.pageHeaderText,
+            style: AppTextStyles.pageHeaderText,
           ),
 
           backgroundColor: MyColors.secondarySystemBackground,
@@ -67,9 +66,12 @@ class _BigCategoryDetailEditPage
                   ref.invalidate(isSmallCategoryListEditedNotifierProvider);
                   ref.invalidate(edittingSmallCategoryListNotifierProvider);
                 } else {
-                  ref.invalidate(fixedCostCategoryNameControllerNotifierProvider);
-                  ref.invalidate(fixedCostCategoryIconControllerNotifierProvider);
-                  ref.invalidate(fixedCostCategoryColorControllerNotifierProvider);
+                  ref.invalidate(
+                      fixedCostCategoryNameControllerNotifierProvider);
+                  ref.invalidate(
+                      fixedCostCategoryIconControllerNotifierProvider);
+                  ref.invalidate(
+                      fixedCostCategoryColorControllerNotifierProvider);
                 }
               },
               icon: const Icon(Icons.arrow_back_ios_rounded,

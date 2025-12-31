@@ -3,7 +3,7 @@ import 'package:kakeibo/domain/core/category_selection/category_selection_types.
 import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
-import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 /// 支出/収入を切り替えるピルボタン

@@ -13,7 +13,7 @@ class SmallCategoryExpenseHistoryPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'カテゴリー別利用状況',
-          style: MyFonts.pageHeaderText,
+          style: AppTextStyles.pageHeaderText,
         ),
       ),
       body: Column(

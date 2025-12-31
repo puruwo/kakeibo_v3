@@ -40,7 +40,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
             child: Center(
               child: Text(
                 'まだ記録がありません',
-                style: MyFonts.topCardSubYenLabel,
+                style: MonthlyPageStyles.topCardSubYenLabel,
               ),
             ),
           );
@@ -236,7 +236,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                     // それ以外の時は二桁に丸めて表示
                                     return Text(
                                         '${(value / 10000).truncate()}万',
-                                        style: MyFonts
+                                        style: AnnualBalanceStyles
                                             .annualBalanceChartPageVerticalLabel);
                                   },
                                 ),
@@ -317,7 +317,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                             child: SizedBox(
                               width: reservedSize,
                               child: Text('収支',
-                                  style: MyFonts
+                                  style: AnnualBalanceStyles
                                       .annualBalanceChartPageVerticalLabel),
                             )),
                         // 基準線: バーエリアの中央
@@ -359,7 +359,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                               child: Text(
                                                 '${diff.abs().toInt()}',
                                                 // 収支の絶対値を表示
-                                                style: MyFonts
+                                                style: AnnualBalanceStyles
                                                     .annualBalanceChartPageVerticalLabel,
                                                 textAlign: TextAlign.center,
                                               ),
@@ -370,7 +370,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                                   child: Text(
                                                     '    ${diff.abs().toInt()}',
                                                     // 収支の絶対値を表示
-                                                    style: MyFonts
+                                                    style: AnnualBalanceStyles
                                                         .annualBalanceChartPageVerticalLabel,
                                                     textAlign: TextAlign.center,
                                                   ),
@@ -380,7 +380,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                                   child: Text(
                                                     '${diff.abs().toInt()}',
                                                     // 収支の絶対値を表示
-                                                    style: MyFonts
+                                                    style: AnnualBalanceStyles
                                                         .annualBalanceChartPageVerticalLabel,
                                                     textAlign: TextAlign.center,
                                                   )),
@@ -452,7 +452,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                   width: firstCellWidth,
                                   child: Text(
                                     '  ${chartData.monthlyBalanceValues[i].month}月',
-                                    style: MyFonts
+                                    style: AnnualBalanceStyles
                                         .annualBalanceChartPageMonthLabel,
                                     textAlign: TextAlign.left,
                                   ),
@@ -462,7 +462,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                       width: endCellWidth,
                                       child: Text(
                                         '     ${chartData.monthlyBalanceValues[i].month}月',
-                                        style: MyFonts
+                                        style: AnnualBalanceStyles
                                             .annualBalanceChartPageMonthLabel,
                                         textAlign: TextAlign.left,
                                       ),
@@ -471,7 +471,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                       width: cellWidth,
                                       child: Text(
                                         '${chartData.monthlyBalanceValues[i].month}月',
-                                        style: MyFonts
+                                        style: AnnualBalanceStyles
                                             .annualBalanceChartPageMonthLabel,
                                         textAlign: TextAlign.center,
                                       ));

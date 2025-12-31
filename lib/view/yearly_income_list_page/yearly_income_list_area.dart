@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_card.dart';
 
@@ -25,11 +24,7 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
               return Center(
                 child: Text(
                   '収入が登録されていません',
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    color: MyColors.secondaryLabel,
-                    fontWeight: FontWeight.w400,
-                  ),
+                  style: YearlyIncomeListStyles.noDataMessage,
                 ),
               );
             }
@@ -49,11 +44,7 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
                           const EdgeInsets.only(left: 4, bottom: 8, top: 8),
                       child: Text(
                         group.monthLabel,
-                        style: GoogleFonts.notoSans(
-                          fontSize: 14,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: YearlyIncomeListStyles.listMonthHeader,
                       ),
                     ),
                     const Divider(
@@ -61,7 +52,7 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
                       thickness: 1,
                     ),
 
-                    const SizedBox(height:8),
+                    const SizedBox(height: 8),
                     // 収入のリスト
                     ...group.incomes.map((income) {
                       return YearlyIncomeCard(value: income);
@@ -78,11 +69,7 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
           error: (error, stack) => Center(
             child: Text(
               'エラーが発生しました: $error',
-              style: GoogleFonts.notoSans(
-                fontSize: 16,
-                color: MyColors.red,
-                fontWeight: FontWeight.w400,
-              ),
+              style: YearlyIncomeListStyles.errorMessage,
             ),
           ),
         );

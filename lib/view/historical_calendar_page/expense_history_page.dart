@@ -30,12 +30,14 @@ class ExpenseHistoryPage extends StatelessWidget {
                 //左矢印ボタン、押すと前の月に移動
                 const CalendarPreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final monthPeriodAsync = ref.watch(historicalDateScopeEntityProvider);
-                  final monthPeriod = monthPeriodAsync.whenOrNull(data: (data) => data.monthPeriod);
-                  final label =yyyyMMtoMMGetter(monthPeriod);
+                  final monthPeriodAsync =
+                      ref.watch(historicalDateScopeEntityProvider);
+                  final monthPeriod = monthPeriodAsync.whenOrNull(
+                      data: (data) => data.monthPeriod);
+                  final label = yyyyMMtoMMGetter(monthPeriod);
                   return Text(
                     label ?? '',
-                    style: MyFonts.pageHeaderText,
+                    style: AppTextStyles.pageHeaderText,
                   );
                 }),
                 //右矢印ボタン、押すと次の月に移動
@@ -68,5 +70,3 @@ class ExpenseHistoryPage extends StatelessWidget {
     );
   }
 }
-
-

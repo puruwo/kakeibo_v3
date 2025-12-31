@@ -65,7 +65,7 @@ class _NewSmallCategoryInputNameDialog
               // カーソルの先の太さ
               cursorWidth: 2,
               // 入力するテキストのstyle
-              style: MyFonts.inputText,
+              style: RegisterPageStyles.inputText,
               // 行数の制約
               minLines: 1,
               maxLines: 1,
@@ -136,7 +136,7 @@ class _NewSmallCategoryInputNameDialog
                   ),
                   child: Text(
                     'キャンセル',
-                    style: MyFonts.secondaryButtonText,
+                    style: AppTextStyles.secondaryButtonText,
                   ),
                 ),
                 MainButton(

@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
@@ -31,11 +30,7 @@ class CategorySumText extends HookConsumerWidget {
         // カテゴリー名
         Text(
           monthlyExpenseByCategoryEntity.bigCategoryName,
-          style: GoogleFonts.notoSans(
-            fontSize: 16,
-            color: MyColors.white,
-            fontWeight: FontWeight.w300,
-          ),
+          style: MonthlyPageStyles.categoryTileCategoryNameLabel,
           overflow: TextOverflow.ellipsis,
         ),
       ],

@@ -90,7 +90,7 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
           backgroundColor: MyColors.secondarySystemBackground,
           title: Text(
             '毎月の予算',
-            style: MyFonts.pageHeaderText,
+            style: AppTextStyles.pageHeaderText,
           ),
         ),
 

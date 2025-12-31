@@ -29,7 +29,7 @@ class ConfigTop extends ConsumerWidget {
                 Text(
                   '設定画面',
                   textAlign: TextAlign.start,
-                  style: MyFonts.pageHeaderText,
+                  style: AppTextStyles.pageHeaderText,
                 ),
               ],
             ),

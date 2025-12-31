@@ -14,13 +14,13 @@ class CategoryExpenseHistoryPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           'カテゴリー別利用状況',
-          style: MyFonts.pageHeaderText,
+          style: AppTextStyles.pageHeaderText,
         ),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal:16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ExpandedCategoryTile(
               bigId: bigId,
             ),

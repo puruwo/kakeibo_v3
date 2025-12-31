@@ -99,7 +99,8 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                             value.name,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.historyTileBigCategoryLabel,
+                            style:
+                                HistoryListStyles.historyTileBigCategoryLabel,
                           ),
                         ),
                         // 固定費（未確定）ラベル
@@ -109,7 +110,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                             '固定費(未確定)',
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.historyTileSubLabel,
+                            style: HistoryListStyles.historyTileSubLabel,
                           ),
                         ),
                       ],
@@ -125,7 +126,8 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                         priceLabel,
                         textAlign: TextAlign.end,
                         overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: 19, color: priceColor),
+                        style: HistoryListStyles.historyTilePriceLabelWithColor(
+                            priceColor),
                       ),
                     ),
                   ),

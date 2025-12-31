@@ -18,8 +18,8 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_fixed_c
 final resolvedFixedCostByCategoryProvider =
     FutureProvider<List<MonthlyFixedCostByCategoryGroup>>((ref) async {
   // 選択された日付から集計期間を取得する
-  final monthPeriod = await ref.watch(
-      analyzePageDateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider
+      .selectAsync((data) => data.monthPeriod));
 
   // 選択された集計期間を元に、Valuesを取得する
   final values =
@@ -76,7 +76,8 @@ class _FixedCostByCategoryListAreaState
                           // 確定済みか未確定かで表示するタイルを変える
                           if (item is MonthlyConfirmedFixedCostTileValue) {
                             return ConfirmedFixedCostTile(value: item);
-                          } else if (item is MonthlyUnconfirmedFixedCostTileValue) {
+                          } else if (item
+                              is MonthlyUnconfirmedFixedCostTileValue) {
                             return UnconfirmedFixedCostTile(value: item);
                           } else {
                             return const SizedBox.shrink();

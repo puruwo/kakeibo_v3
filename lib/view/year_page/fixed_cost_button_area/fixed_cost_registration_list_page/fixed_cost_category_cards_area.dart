@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/fixed_cost_registration_list_value/fixed_cost_registration_list_entity.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_item_tile.dart';
 
@@ -22,7 +21,7 @@ class FixedCostCategoryCardsArea extends StatelessWidget {
         children: [
           // カテゴリーヘッダー（アイコン + 名前）
           Padding(
-            padding: const EdgeInsets.only( bottom: 8),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Row(
               children: [
                 // カテゴリーアイコン
@@ -39,11 +38,7 @@ class FixedCostCategoryCardsArea extends StatelessWidget {
                 // カテゴリー名
                 Text(
                   group.categoryName,
-                  style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    color: MyColors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: MonthlyPageStyles.fixedCostCategoryListName,
                 ),
               ],
             ),

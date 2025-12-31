@@ -110,7 +110,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                             value.bigCategoryName,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.cardPrimaryTitle,
+                            style: AppTextStyles.cardPrimaryTitle,
                           ),
 
                           const SizedBox(height: 4),
@@ -124,7 +124,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                                 '${value.date.month}月${value.date.day}日',
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
-                                style: MyFonts.cardSecondaryTitle,
+                                style: AppTextStyles.cardSecondaryTitle,
                               ),
                               if (value.memo.isNotEmpty) ...[
                                 const SizedBox(width: 8),
@@ -133,7 +133,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                                     value.memo,
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
-                                    style: MyFonts.cardSecondaryTitle,
+                                    style: AppTextStyles.cardSecondaryTitle,
                                   ),
                                 ),
                               ],
@@ -152,7 +152,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                             priceLabel,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.cardPriceLabel,
+                            style: AppTextStyles.cardPriceLabel,
                           ),
                         ),
                         const SizedBox(
@@ -160,7 +160,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                         ),
                         Text(
                           '+',
-                          style: MyFonts.cardPlusLabel,
+                          style: AppTextStyles.cardPlusLabel,
                         ),
                       ],
                     ),

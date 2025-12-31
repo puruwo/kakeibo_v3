@@ -51,7 +51,7 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
             TextFormField(
               controller: _textContoroller,
               // 入力するテキストのstyle
-              style: MyFonts.inputExpenseText,
+              style: RegisterPageStyles.inputExpenseText,
 
               // オートフォーカスさせるか
               autofocus: true,
@@ -148,7 +148,7 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
                   ),
                   child: Text(
                     'キャンセル',
-                    style: MyFonts.secondaryButtonText,
+                    style: AppTextStyles.secondaryButtonText,
                   ),
                 ),
 

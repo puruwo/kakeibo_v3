@@ -7,7 +7,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/view/component/button_util.dart';
-import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
 
 // 支出登録画面の拠出元選択画面
@@ -56,7 +56,7 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
             padding: const EdgeInsets.all(16.0),
             child: Text(
               '支払い頻度を設定',
-              style: MyFonts.dialogTitle,
+              style: AppTextStyles.dialogTitle,
               textAlign: TextAlign.center,
             ),
           ),
@@ -133,7 +133,7 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
                 ),
                 child: Text(
                   'キャンセル',
-                  style: MyFonts.secondaryButtonText,
+                  style: AppTextStyles.secondaryButtonText,
                 ),
               ),
 

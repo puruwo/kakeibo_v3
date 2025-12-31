@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_income_graph_area/monthly_income_graph_parts.dart';
@@ -31,7 +29,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                               children: [
                                 Text(
                                   '総収入',
-                                  style: MyFonts.topCardTitleLabel,
+                                  style: MonthlyPageStyles.topCardTitleLabel,
                                 ),
                                 const SizedBox(
                                   width: 8,
@@ -45,17 +43,13 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                         text: formattedPriceGetter(
                                             allCategoryCardEntity
                                                 .allCategoryTotalIncome),
-                                        style: GoogleFonts.notoSans(
-                                            fontSize: 18,
-                                            color: MyColors.white,
-                                            fontWeight: FontWeight.w400),
+                                        style: MonthlyPageStyles
+                                            .categoryTilePriceLabel,
                                       ),
                                       TextSpan(
                                         text: ' 円',
-                                        style: GoogleFonts.notoSans(
-                                            fontSize: 14,
-                                            color: MyColors.white,
-                                            fontWeight: FontWeight.w400),
+                                        style: MonthlyPageStyles
+                                            .categoryTileYenLabel,
                                       ),
                                     ])),
                               ],
@@ -69,28 +63,21 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                         text: TextSpan(children: [
                                           TextSpan(
                                             text: '残金 ',
-                                            style: GoogleFonts.notoSans(
-                                                fontSize: 13,
-                                                color: MyColors.secondaryLabel,
-                                                fontWeight: FontWeight.w400),
+                                            style: MonthlyPageStyles
+                                                .categoryTileBudgetTextLabel,
                                           ),
                                           // カテゴリー予算
                                           TextSpan(
                                             text: formattedPriceGetter(
                                                 allCategoryCardEntity
                                                     .realSavings),
-                                            style: GoogleFonts.notoSans(
-                                                fontSize: 14,
-                                                color: MyColors.secondaryLabel,
-                                                fontWeight: FontWeight.w400),
+                                            style: MonthlyPageStyles
+                                                .categoryTileBudgetPriceLabel,
                                           ),
                                           TextSpan(
                                             text: ' 円',
-                                            style: GoogleFonts.notoSans(
-                                              fontSize: 11,
-                                              color: MyColors.secondaryLabel,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                            style: MonthlyPageStyles
+                                                .categoryTileBudgetYenLabel,
                                           ),
                                         ])),
                                   )

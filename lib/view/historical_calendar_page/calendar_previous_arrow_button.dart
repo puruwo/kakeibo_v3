@@ -12,7 +12,9 @@ class CalendarPreviousArrowButton extends ConsumerWidget {
     return IconButton(
       onPressed: () async {
         // selectedDatetimeの更新はonPageChanged内でselectedDatetimeを更新する
-        ref.read(calendarPageControllerNotifierProvider.notifier).previousPage();
+        ref
+            .read(calendarPageControllerNotifierProvider.notifier)
+            .previousPage();
       },
       iconSize: 15,
       icon: const Icon(Icons.arrow_back_ios_rounded),

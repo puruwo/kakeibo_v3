@@ -237,7 +237,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                       Expanded(
                         child: Text(
                           categoryName,
-                          style: MyFonts.categoryExpenseHistoryPageCategoryName,
+                          style: MonthlyPageStyles.categoryExpandedCategoryName,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -249,12 +249,12 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                           Text(
                             paymentSumLabel,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.categoryExpenseHistoryPagePrice,
+                            style: MonthlyPageStyles.categoryExpandedPrice,
                             textAlign: TextAlign.end,
                           ),
                           Text(
                             ' 円',
-                            style: MyFonts.categoryExpenseHistoryPageYen,
+                            style: MonthlyPageStyles.categoryExpandedYen,
                           ),
 
                           // 予算が設定されているかどうか
@@ -264,15 +264,15 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                   children: [
                                     Text(
                                       '  /予算 ',
-                                      style: MyFonts
-                                          .categoryExpenseHistoryPageSubText,
+                                      style: MonthlyPageStyles
+                                          .categoryExpandedSubText,
                                     ),
                                     // カテゴリー予算
                                     Text(
                                       budgetLabel,
                                       overflow: TextOverflow.ellipsis,
-                                      style: MyFonts
-                                          .categoryExpenseHistoryPageBudgetPrice,
+                                      style: MonthlyPageStyles
+                                          .categoryExpandedBudgetPrice,
                                       textAlign: TextAlign.end,
                                     ),
                                     Padding(
@@ -281,8 +281,8 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                           const EdgeInsets.only(right: 2.0),
                                       child: Text(
                                         ' 円',
-                                        style: MyFonts
-                                            .categoryExpenseHistoryPageYen,
+                                        style: MonthlyPageStyles
+                                            .categoryExpandedYen,
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
@@ -356,8 +356,8 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                               // 小カテゴリー名
                               Text(
                                 smallCategoryList[index].smallCategoryName,
-                                style: MyFonts
-                                    .categoryExpenseHistoryPageCategoryName,
+                                style: MonthlyPageStyles
+                                    .categoryExpandedCategoryName,
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -371,7 +371,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                             child: Text(
                               '${smallCategoryList[index].recordCount}件',
                               style:
-                                  MyFonts.categoryExpenseHistoryPageRecordCount,
+                                  MonthlyPageStyles.categoryExpandedRecordCount,
                               textAlign: TextAlign.right,
                               overflow: TextOverflow.ellipsis,
                             )),
@@ -387,13 +387,13 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                             children: [
                               Text(
                                 totalExpenseBySmallCategory,
-                                style: MyFonts.categoryExpenseHistoryPagePrice,
+                                style: MonthlyPageStyles.categoryExpandedPrice,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 ' 円',
-                                style: MyFonts.categoryExpenseHistoryPageYen,
+                                style: MonthlyPageStyles.categoryExpandedYen,
                                 textAlign: TextAlign.end,
                               ),
                               const SizedBox(

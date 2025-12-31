@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+import 'package:kakeibo/constant/strings.dart';
 
 class NoneIconBox extends StatelessWidget {
   const NoneIconBox({super.key});

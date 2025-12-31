@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_parts.dart';
@@ -27,7 +25,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                           children: [
                             Text(
                               '総支出',
-                              style: MyFonts.topCardTitleLabel,
+                              style: MonthlyPageStyles.topCardTitleLabel,
                             ),
                             const SizedBox(
                               width: 8,
@@ -41,17 +39,13 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                                     text: formattedPriceGetter(
                                         allCategoryCardEntity
                                             .allCategoryTotalExpense),
-                                    style: GoogleFonts.notoSans(
-                                        fontSize: 18,
-                                        color: MyColors.white,
-                                        fontWeight: FontWeight.w400),
+                                    style: MonthlyPageStyles
+                                        .categoryTilePriceLabel,
                                   ),
                                   TextSpan(
                                     text: ' 円',
-                                    style: GoogleFonts.notoSans(
-                                        fontSize: 14,
-                                        color: MyColors.white,
-                                        fontWeight: FontWeight.w400),
+                                    style:
+                                        MonthlyPageStyles.categoryTileYenLabel,
                                   ),
                                 ])),
 
@@ -64,35 +58,26 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                                         text: TextSpan(children: [
                                           TextSpan(
                                             text: ' /',
-                                            style: GoogleFonts.notoSans(
-                                                fontSize: 14,
-                                                color: MyColors.secondaryLabel,
-                                                fontWeight: FontWeight.w400),
+                                            style: MonthlyPageStyles
+                                                .categoryTileBudgetSeparator,
                                           ),
                                           TextSpan(
                                             text: '予算 ',
-                                            style: GoogleFonts.notoSans(
-                                                fontSize: 13,
-                                                color: MyColors.secondaryLabel,
-                                                fontWeight: FontWeight.w400),
+                                            style: MonthlyPageStyles
+                                                .categoryTileBudgetTextLabel,
                                           ),
                                           // カテゴリー予算
                                           TextSpan(
                                             text: formattedPriceGetter(
                                                 allCategoryCardEntity
                                                     .allCategoryTotalBudget),
-                                            style: GoogleFonts.notoSans(
-                                                fontSize: 14,
-                                                color: MyColors.secondaryLabel,
-                                                fontWeight: FontWeight.w400),
+                                            style: MonthlyPageStyles
+                                                .categoryTileBudgetPriceLabel,
                                           ),
                                           TextSpan(
                                             text: ' 円',
-                                            style: GoogleFonts.notoSans(
-                                              fontSize: 11,
-                                              color: MyColors.secondaryLabel,
-                                              fontWeight: FontWeight.w400,
-                                            ),
+                                            style: MonthlyPageStyles
+                                                .categoryTileBudgetYenLabel,
                                           ),
                                         ])),
                                   )

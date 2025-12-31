@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 
 /// アプリ共通のPopupMenuButton
 ///
@@ -100,9 +101,9 @@ PopupMenuItem<T> buildCheckableMenuItem<T>({
             const SizedBox(width: 8),
             Text(
               label,
-              style: TextStyle(
-                color: textColor ?? MyColors.white,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              style: AppTextStyles.popupMenuItemLabel(
+                textColor: textColor,
+                isSelected: isSelected,
               ),
             ),
           ],
@@ -134,9 +135,9 @@ class CheckablePopupMenuItem<T> extends PopupMenuItem<T> {
               const SizedBox(width: 8),
               Text(
                 label,
-                style: TextStyle(
-                  color: textColor ?? MyColors.white,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                style: AppTextStyles.popupMenuItemLabel(
+                  textColor: textColor,
+                  isSelected: isSelected,
                 ),
               ),
             ],

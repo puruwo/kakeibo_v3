@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -23,11 +22,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
         ),
         title: Text(
           '固定費',
-          style: GoogleFonts.notoSans(
-            fontSize: 18,
-            color: MyColors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: AppTextStyles.pageHeaderText,
         ),
         actions: [
           IconButton(
@@ -44,11 +39,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             return Center(
               child: Text(
                 '固定費が登録されていません',
-                style: GoogleFonts.notoSans(
-                  fontSize: 16,
-                  color: MyColors.secondaryLabel,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: AppTextStyles.listEmptyMessage,
               ),
             );
           }
@@ -117,11 +108,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
         error: (error, stack) => Center(
           child: Text(
             'エラーが発生しました: $error',
-            style: GoogleFonts.notoSans(
-              fontSize: 16,
-              color: MyColors.red,
-              fontWeight: FontWeight.w400,
-            ),
+            style: AppTextStyles.errorMessage,
           ),
         ),
       ),
