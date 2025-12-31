@@ -143,7 +143,8 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
                                 ref,
                                 calendarTileEntityList[weekIndex],
                                 boxHeight,
-                                boxWidth),
+                                boxWidth,
+                                calendarTileEntityList.length == 6),
                             // 区切り線
                             Divider(
                               height: 0,
@@ -189,6 +190,7 @@ Row _weekRow(
   List<CalendarTileEntity> calendarTileEntityList,
   double boxHeight,
   double boxWidth,
+  bool isCompact,
 ) {
   return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -196,7 +198,8 @@ Row _weekRow(
         return DateBox(
             calendarTileEntity: calendarTileEntityList[dayIndex],
             boxHeight: boxHeight,
-            boxWidth: boxWidth);
+            boxWidth: boxWidth,
+            isCompact: isCompact);
       }));
 }
 

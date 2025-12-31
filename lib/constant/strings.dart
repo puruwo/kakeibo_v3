@@ -64,15 +64,20 @@ class MyFonts {
       fontWeight: FontWeight.w300);
 
   // Calndar Page
+  // カレンダー5行用
   static TextStyle calendarDateBoxLarge = const TextStyle(
     color: MyColors.white,
     fontSize: 12,
+    fontWeight: FontWeight.w600,
     fontFamily: 'sf_ui',
   );
 
+  // カレンダー6行用
   static TextStyle calendarDateBoxSmall = const TextStyle(
     color: MyColors.white,
     fontSize: 11,
+    fontWeight: FontWeight.w600,
+    height: 1.0,
     fontFamily: 'sf_ui',
   );
 

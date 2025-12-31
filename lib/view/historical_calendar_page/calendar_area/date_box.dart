@@ -23,6 +23,7 @@ class DateBox extends ConsumerWidget {
     required this.calendarTileEntity,
     required this.boxHeight,
     required this.boxWidth,
+    this.isCompact = false,
   });
 
   final CalendarTileEntity calendarTileEntity;
@@ -30,6 +31,9 @@ class DateBox extends ConsumerWidget {
   final double boxHeight;
 
   final double boxWidth;
+
+  /// 6行表示の場合はtrue（コンパクトモード）
+  final bool isCompact;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -57,10 +61,11 @@ class DateBox extends ConsumerWidget {
     final dateLabel = shouldDisplayMonth ? '$month/$day' : '$day';
 
     // 支出ラベルを作成
-    final expenseLabel = calculatePriceLabel(totalExpenseBuff, isIncome: false);
+    final expenseLabel = calculatePriceLabel(totalExpenseBuff,
+        isIncome: false, isCompact: isCompact);
     // 収入ラベルを作成
-    final incomeLabel =
-        calculatePriceLabel(calendarTileEntity.totalIncome, isIncome: true);
+    final incomeLabel = calculatePriceLabel(calendarTileEntity.totalIncome,
+        isIncome: true, isCompact: isCompact);
 
     return AppInkWell(
         borderRadius: BorderRadius.circular(6),
@@ -77,57 +82,50 @@ class DateBox extends ConsumerWidget {
         },
         child: switch (tileStatus) {
           CalendarTileStatus.selected => activeDateBox(weekday, dateLabel,
-              expenseLabel, incomeLabel, boxHeight, boxWidth),
+              expenseLabel, incomeLabel, boxHeight, boxWidth, isCompact),
           CalendarTileStatus.unselected => normalDateBox(weekday, dateLabel,
-              expenseLabel, incomeLabel, boxHeight, boxWidth),
+              expenseLabel, incomeLabel, boxHeight, boxWidth, isCompact),
           CalendarTileStatus.outOfPeriod =>
-            vacantDateBox(weekday, dateLabel, boxHeight, boxWidth),
+            vacantDateBox(weekday, dateLabel, boxHeight, boxWidth, isCompact),
         });
   }
 }
 
-Widget calculatePriceLabel(int amount, {required bool isIncome}) {
+Widget calculatePriceLabel(int amount,
+    {required bool isIncome, required bool isCompact}) {
   if (amount == 0) {
     return const SizedBox.shrink();
   } else {
-    final buff = formattedPriceGetter(amount);
+    // isCompactに応じてフォントスタイルを切り替え
+    final style =
+        isCompact ? MyFonts.calendarDateBoxSmall : MyFonts.calendarDateBoxLarge;
 
-    if (amount > 1888888) {
-      return const SizedBox.shrink(); // overflow対策の既存ロジック
-    }
-
-    // 支出用のフォントスタイルを使用（収入も同じフォント）
-    TextStyle style;
-    if (amount <= 99999) {
-      style = MyFonts.calendarDateBoxLarge;
-    } else {
-      style = MyFonts.calendarDateBoxSmall;
-    }
-
-    // アイコンとテキストを横並びで表示
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // 収入は青い+アイコン、支出は赤い-アイコン
-        Icon(
-          isIncome ? Icons.add : Icons.remove,
-          color: isIncome ? MyColors.mintBlue : MyColors.pink,
-          size: 10,
-        ),
-        Text(
-          buff,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.fade,
-          style: style,
-        ),
-      ],
+    // FittedBoxでラップして、オーバーフロー時に自動縮小
+    return FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 収入は青い+アイコン、支出は赤い-アイコン
+          Icon(
+            isIncome ? Icons.add : Icons.remove,
+            color: isIncome ? MyColors.mintBlue : MyColors.pink,
+            size: isCompact ? 8 : 10,
+          ),
+          Text(
+            formattedPriceGetter(amount),
+            textAlign: TextAlign.center,
+            style: style,
+          ),
+        ],
+      ),
     );
   }
 }
 
 Container activeDateBox(int weekday, String dateLabel, Widget expenseLabel,
-    Widget incomeLabel, double boxHeight, double boxWidth) {
+    Widget incomeLabel, double boxHeight, double boxWidth, bool isCompact) {
   return Container(
     width: boxWidth,
     height: boxHeight,
@@ -170,7 +168,7 @@ Container activeDateBox(int weekday, String dateLabel, Widget expenseLabel,
 }
 
 Container normalDateBox(int weekday, String dateLabel, Widget expenseLabel,
-    Widget incomeLabel, double boxHeight, double boxWidth) {
+    Widget incomeLabel, double boxHeight, double boxWidth, bool isCompact) {
   return Container(
     width: boxWidth,
     height: boxHeight,
@@ -212,8 +210,8 @@ Container normalDateBox(int weekday, String dateLabel, Widget expenseLabel,
   );
 }
 
-Container vacantDateBox(
-    int weekday, String dateLabel, double boxHeight, double boxWidth) {
+Container vacantDateBox(int weekday, String dateLabel, double boxHeight,
+    double boxWidth, bool isCompact) {
   return Container(
     width: boxWidth,
     height: boxHeight,
