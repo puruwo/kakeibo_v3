@@ -28,7 +28,7 @@ class BonusPlanArea extends ConsumerWidget {
                         children: [
                           Text(
                             'ボーナス',
-                            style: MyFonts.topCardTitleLabel,
+                            style: AppTextStyles.cardPrimaryTitle,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -37,11 +37,11 @@ class BonusPlanArea extends ConsumerWidget {
                               Text(
                                 formattedPriceGetter(
                                     bonusPlanValue.yearlyBonusIncome),
-                                style: MyFonts.topCardPriceLabel,
+                                style: AppTextStyles.cardPriceLabel,
                               ),
                               Text(
                                 ' 円',
-                                style: MyFonts.topCardYenLabel,
+                                style: AppTextStyles.cardSecondaryTitle,
                               ),
                             ],
                           ),
@@ -53,7 +53,7 @@ class BonusPlanArea extends ConsumerWidget {
                       children: [
                         Text(
                           '利用額',
-                          style: MyFonts.topCardTitleLabel,
+                          style: AppTextStyles.cardPrimaryTitle,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -62,10 +62,10 @@ class BonusPlanArea extends ConsumerWidget {
                             Text(
                                 formattedPriceGetter(
                                     bonusPlanValue.yearlyBonusExpense),
-                                style: MyFonts.topCardPriceLabel),
+                                style: AppTextStyles.cardPriceLabel),
                             Text(
                               ' 円',
-                              style: MyFonts.topCardYenLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                             ),
                           ],
                         ),
@@ -93,7 +93,7 @@ class BonusPlanArea extends ConsumerWidget {
                       children: [
                         Text(
                           'ボーナス残額',
-                          style: MyFonts.topCardTitleLabel,
+                          style: AppTextStyles.cardPrimaryTitle,
                         ),
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -102,11 +102,11 @@ class BonusPlanArea extends ConsumerWidget {
                             Text(
                               formattedPriceGetter(
                                   bonusPlanValue.lastBonusPrice),
-                              style: MyFonts.topCardPriceLabel,
+                              style: AppTextStyles.cardPriceLabel,
                             ),
                             Text(
                               ' 円',
-                              style: MyFonts.topCardYenLabel,
+                              style: AppTextStyles.cardSecondaryTitle,
                             ),
                           ],
                         ),

@@ -1,5 +1,5 @@
 /// libraryImport
-import 'package:google_fonts/google_fonts.dart';
+/// libraryImport
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 
@@ -32,7 +32,7 @@ class _BudgetSettingPageState extends ConsumerState<BudgetSettingPage> {
         appBar: AppBar(
           title: Text(
             '今月の予算を入力',
-            style: MyFonts.pageHeaderText,
+            style: AppTextStyles.pageHeaderText,
           ),
 
           backgroundColor: MyColors.secondarySystemBackground,
@@ -61,30 +61,21 @@ class _BudgetSettingPageState extends ConsumerState<BudgetSettingPage> {
                     padding: const EdgeInsets.only(left: 56),
                     child: Text(
                       'カテゴリー',
-                      style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w400),
+                      style: BudgetSettingsStyles.columnHeaderLabel,
                     ),
                   ),
                   Row(
                     children: [
                       Text(
                         '先月の支出',
-                        style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w400),
+                        style: BudgetSettingsStyles.columnHeaderLabel,
                       ),
                       SizedBox(
                         width: 123,
                         child: Text(
                           '今月の予算',
                           textAlign: TextAlign.right,
-                          style: GoogleFonts.notoSans(
-                              fontSize: 16,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w400),
+                          style: BudgetSettingsStyles.columnHeaderLabel,
                         ),
                       ),
                     ],

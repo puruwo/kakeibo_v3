@@ -89,7 +89,7 @@ Future<void> showMenuDialog(
                     child: Center(
                       child: Text(
                         cancelLabel,
-                        style: MyFonts.dialogList.copyWith(
+                        style: AppTextStyles.dialogList.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -161,7 +161,7 @@ class _MenuItemTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   item.label,
-                  style: MyFonts.dialogList,
+                  style: AppTextStyles.dialogList,
                 ),
               ),
             ],

@@ -66,7 +66,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
               Text(
                 widget.titleLabel,
                 textAlign: TextAlign.left,
-                style: MyFonts.placeHolder.copyWith(fontSize: 15),
+                style: RegisterPageStyles.placeHolder.copyWith(fontSize: 15),
               ),
               const SizedBox(width: 16),
               // 入力フィールド
@@ -78,7 +78,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
                   textAlign: TextAlign.right,
                   cursorColor: MyColors.themeColor,
                   cursorWidth: 2,
-                  style: MyFonts.inputText,
+                  style: RegisterPageStyles.inputText,
                   minLines: 1,
                   maxLines: 1,
                   maxLength: 20,

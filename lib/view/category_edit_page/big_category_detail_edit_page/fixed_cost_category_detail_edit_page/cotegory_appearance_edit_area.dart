@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/styles/category_styles.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/icon_select_dialog.dart';
@@ -134,7 +135,7 @@ class _BigCategoryAppearanceEditAreaState
                     // カーソルの先の太さ
                     cursorWidth: 2,
                     // 入力するテキストのstyle
-                    style: const TextStyle(fontSize: 20, color: MyColors.label),
+                    style: CategoryStyles.categoryEditNameInput,
                     // 行数の制約
                     minLines: 1,
                     maxLines: 1,
@@ -152,8 +153,7 @@ class _BigCategoryAppearanceEditAreaState
 
                       // ヒントテキスト
                       hintText: "カテゴリー名を入力",
-                      hintStyle: const TextStyle(
-                          fontSize: 16, color: MyColors.secondaryLabel),
+                      hintStyle: CategoryStyles.categoryEditNameHint,
 
                       // テキストの余白
                       contentPadding: const EdgeInsets.only(
@@ -274,7 +274,7 @@ class _BigCategoryAppearanceEditAreaState
                   ),
                   const Text(
                     'カテゴリーカラー',
-                    style: TextStyle(fontSize: 14, color: MyColors.label),
+                    style: CategoryStyles.categoryEditColorLabel,
                   )
                 ],
               ),

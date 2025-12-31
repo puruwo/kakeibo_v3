@@ -11,7 +11,9 @@ class PreviousArrowButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
       onPressed: () async {
-        ref.read(analyzePageSelectedDatetimeNotifierProvider.notifier).updateToPreviousMonth();
+        ref
+            .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
+            .updateToPreviousMonth();
       },
       iconSize: 15,
       icon: const Icon(Icons.arrow_back_ios_rounded),

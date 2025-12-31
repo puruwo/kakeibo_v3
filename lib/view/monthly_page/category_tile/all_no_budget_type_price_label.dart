@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 import 'package:kakeibo/util/util.dart';
@@ -38,17 +37,11 @@ class AllNoBudgetTypePriceLabel extends StatelessWidget {
             text: TextSpan(children: [
               TextSpan(
                 text: paymentSumLabel,
-                style: GoogleFonts.notoSans(
-                    fontSize: 18,
-                    color: MyColors.white,
-                    fontWeight: FontWeight.w400),
+                style: MonthlyPageStyles.categoryTilePriceLabel,
               ),
               TextSpan(
                 text: ' 円',
-                style: GoogleFonts.notoSans(
-                    fontSize: 14,
-                    color: MyColors.white,
-                    fontWeight: FontWeight.w400),
+                style: MonthlyPageStyles.categoryTileYenLabel,
               ),
             ])),
       ),

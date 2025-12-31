@@ -76,7 +76,8 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                           child: Text(
                               DateFormat('yyyy年M月d日(E)', 'ja_JP')
                                   .format(tileGroupList[index].date),
-                              style: MyFonts.expenseHistoryDateHeaderLabel),
+                              style: HistoryListStyles
+                                  .expenseHistoryDateHeaderLabel),
                         ),
                       ],
                     ),
@@ -105,16 +106,16 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
           ),
         );
       } else {
-        return const Column(
+        return Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             Center(
               child: Text(
                 '記録がまだありません',
-                style: MyFonts.historyEmptyMessage,
+                style: AppTextStyles.listEmptyMessage,
               ),
             ),
           ],

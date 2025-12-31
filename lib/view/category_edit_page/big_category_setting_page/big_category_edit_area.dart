@@ -1,6 +1,5 @@
 /// packegeImport
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
@@ -9,6 +8,7 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/fixed_cost_category_value/edit_fixed_cost_category_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/check_box.dart';
@@ -80,7 +80,8 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
     if (widget.categoryType == CategoryType.expense) {
       return _buildExpenseCategoryEditArea(leftsidePadding, listSTextBoxOffset);
     } else {
-      return _buildFixedCostCategoryEditArea(leftsidePadding, listSTextBoxOffset);
+      return _buildFixedCostCategoryEditArea(
+          leftsidePadding, listSTextBoxOffset);
     }
   }
 
@@ -102,10 +103,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                   children: [
                     Text(
                       '表示',
-                      style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w400),
+                      style: CategoryStyles.listHeaderLabel,
                     ),
                     const SizedBox(
                       width: 18,
@@ -114,28 +112,19 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                       width: 110 + listSTextBoxOffset,
                       child: Text(
                         'カテゴリー',
-                        style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w400),
+                        style: CategoryStyles.listHeaderLabel,
                       ),
                     ),
                     Text(
                       '項目',
-                      style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w400),
+                      style: CategoryStyles.listHeaderLabel,
                     ),
                   ],
                 ),
               ),
               Text(
                 '並べ替え',
-                style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    color: MyColors.secondaryLabel,
-                    fontWeight: FontWeight.w400),
+                style: CategoryStyles.listHeaderLabel,
               ),
             ],
           ),
@@ -228,10 +217,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                           width: 72 + listSTextBoxOffset,
                           child: Text(
                             itemList[index].bigCategoryName,
-                            style: GoogleFonts.notoSans(
-                                fontSize: 18,
-                                color: MyColors.label,
-                                fontWeight: FontWeight.w400),
+                            style: CategoryStyles.editListTitle,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -241,10 +227,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                           width: 120 + listSTextBoxOffset,
                           child: Text(
                             itemList[index].expenseSmallCategoryNameText,
-                            style: GoogleFonts.notoSans(
-                                fontSize: 14,
-                                color: MyColors.secondaryLabel,
-                                fontWeight: FontWeight.w300),
+                            style: CategoryStyles.editListSubTitle,
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -301,20 +284,14 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                   children: [
                     Text(
                       '表示',
-                      style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w400),
+                      style: CategoryStyles.listHeaderLabel,
                     ),
                     const SizedBox(width: 18),
                     SizedBox(
                       width: 110 + listSTextBoxOffset,
                       child: Text(
                         'カテゴリー',
-                        style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w400),
+                        style: CategoryStyles.listHeaderLabel,
                       ),
                     ),
                   ],
@@ -322,10 +299,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
               ),
               Text(
                 '並べ替え',
-                style: GoogleFonts.notoSans(
-                    fontSize: 16,
-                    color: MyColors.secondaryLabel,
-                    fontWeight: FontWeight.w400),
+                style: CategoryStyles.listHeaderLabel,
               ),
             ],
           ),
@@ -395,8 +369,8 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             child: SvgPicture.asset(
                               itemList[index].resourcePath,
                               colorFilter: ColorFilter.mode(
-                                  MyColors()
-                                      .getColorFromHex(itemList[index].colorCode),
+                                  MyColors().getColorFromHex(
+                                      itemList[index].colorCode),
                                   BlendMode.srcIn),
                               semanticsLabel: 'categoryIcon',
                               width: 25,
@@ -408,10 +382,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                           Expanded(
                             child: Text(
                               itemList[index].name,
-                              style: GoogleFonts.notoSans(
-                                  fontSize: 18,
-                                  color: MyColors.label,
-                                  fontWeight: FontWeight.w400),
+                              style: CategoryStyles.editListTitle,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

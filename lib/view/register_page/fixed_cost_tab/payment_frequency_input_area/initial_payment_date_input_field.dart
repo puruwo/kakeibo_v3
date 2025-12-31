@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
-import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 
 /// 初回支払い日入力フィールド（ピル形式）

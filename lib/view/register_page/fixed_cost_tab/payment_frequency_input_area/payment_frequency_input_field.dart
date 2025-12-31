@@ -4,7 +4,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
-import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/register_page/fixed_cost_tab/payment_frequency_input_area/payment_frequency_picker.dart';
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
 

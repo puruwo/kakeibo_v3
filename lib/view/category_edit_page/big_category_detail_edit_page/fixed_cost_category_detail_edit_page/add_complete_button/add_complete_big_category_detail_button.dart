@@ -106,7 +106,8 @@ class AddCompleteBigCategoryDetailButton extends ConsumerWidget
               // 大カテゴリーのデータを保持するproviderをinvalidateする
               // pop元の画面で表示されている大カテゴリーのデータを更新するため
               ref.invalidate(allBigCategoriesWithSmallListProvider);
-              ref.invalidate(allSmallCategoriesListProvider(addedBigCategoryId));
+              ref.invalidate(
+                  allSmallCategoriesListProvider(addedBigCategoryId));
 
               // 呼び出し元画面でスナックバーを表示
               SuccessSnackBar.show(

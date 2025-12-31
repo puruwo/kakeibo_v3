@@ -2,7 +2,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
@@ -34,11 +33,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                   child: Text(
                     '収入データがありません',
                     // TODO: スタイルをまとめる
-                    style: GoogleFonts.notoSans(
-                      fontSize: 14,
-                      color: MyColors.secondaryLabel,
-                      fontWeight: FontWeight.w400,
-                    ),
+                    style: YearlyIncomeListStyles.noDataMessage,
                   ),
                 ),
               );
@@ -56,12 +51,12 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('総収入', style: MyFonts.appCardTitleLabel),
+                      Text('総収入', style: AppTextStyles.appCardTitleLabel),
                       Row(
                         children: [
                           Text('${formatter.format(incomeDatas.totalIncome)} ',
-                              style: MyFonts.appCardPriceLabel),
-                          Text('円', style: MyFonts.appCardPriceUnit),
+                              style: AppTextStyles.appCardPriceLabel),
+                          Text('円', style: AppTextStyles.appCardPriceUnit),
                         ],
                       ),
                     ],
@@ -94,7 +89,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                   value: category.totalAmount.toDouble(),
                                   titlePositionPercentageOffset: 0.3,
                                   title: category.categoryName,
-                                  titleStyle: MyFonts.appCardGraphLabel,
+                                  titleStyle: AppTextStyles.appCardGraphLabel,
                                   radius: 25,
                                 );
                               }).toList(),
@@ -147,18 +142,18 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                           // カテゴリー名
                                           Expanded(
                                             child: Text(category.categoryName,
-                                                style: MyFonts
+                                                style: AppTextStyles
                                                     .appCardSecondaryTitleLabel),
                                           ),
                                           const SizedBox(width: 8),
                                           // 金額
                                           Text(
                                               '${formatter.format(category.totalAmount)} ',
-                                              style: MyFonts
+                                              style: AppTextStyles
                                                   .appCardSecondaryPriceLabel),
                                           // 円
                                           Text('円',
-                                              style: MyFonts
+                                              style: AppTextStyles
                                                   .appCardSecondaryPriceUnit),
                                         ],
                                       ),
@@ -197,11 +192,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
             child: Center(
               child: Text(
                 'エラーが発生しました',
-                style: GoogleFonts.notoSans(
-                  fontSize: 14,
-                  color: MyColors.red,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: YearlyIncomeListStyles.errorMessage,
               ),
             ),
           ),

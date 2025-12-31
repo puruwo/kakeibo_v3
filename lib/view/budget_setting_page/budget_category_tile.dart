@@ -81,7 +81,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                       width: 70 + listSTextBoxOffset * 2,
                       child: Text(
                         widget.budgetEditValue.expenseBigCategoryName,
-                        style: MyFonts.categoryTitle,
+                        style: BudgetSettingsStyles.categoryTitle,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
@@ -96,13 +96,13 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                           child: Text(
                             formattedPriceGetterAndZeroAsHyphen(
                                 widget.budgetEditValue.lastMonthBudgetPrice),
-                            style: MyFonts.subPrice,
+                            style: BudgetSettingsStyles.subPrice,
                             textAlign: TextAlign.right,
                           ),
                         ),
                         Text(
                           ' 円',
-                          style: MyFonts.yenText,
+                          style: BudgetSettingsStyles.yenText,
                         )
                       ],
                     ),
@@ -135,7 +135,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                               // テキストフィールドのプロパティ
                               textAlign: TextAlign.right,
                               textAlignVertical: TextAlignVertical.top,
-                              style: MyFonts.textField,
+                              style: BudgetSettingsStyles.textField,
                               inputFormatters: [
                                 // カンマのフォーマット
                                 NumberTextInputFormatter()
@@ -166,10 +166,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                 // 空文字かどうかを判定することで、入力時再描画のちらつきを防止する
                                 hintText:
                                     controller.text.isNotEmpty ? "" : "金額を入力",
-                                hintStyle: const TextStyle(
-                                  fontSize: 16,
-                                  color: MyColors.tirtiaryLabel,
-                                ),
+                                hintStyle: BudgetSettingsStyles.textFieldHint,
 
                                 // テキストの余白
                                 contentPadding: const EdgeInsets.only(
@@ -195,7 +192,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                 suffix: controller.text.isNotEmpty
                                     ? Text(
                                         ' 円',
-                                        style: MyFonts.yenText,
+                                        style: BudgetSettingsStyles.yenText,
                                       )
                                     : null,
                               ),

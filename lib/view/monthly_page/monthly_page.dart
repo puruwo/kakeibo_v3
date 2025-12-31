@@ -59,7 +59,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   final label = yyyyMMtoMMGetter(monthPeriod);
                   return Text(
                     label,
-                    style: MyFonts.pageHeaderText,
+                    style: AppTextStyles.pageHeaderText,
                   );
                 }),
                 //右矢印ボタン、押すと次の月に移動
@@ -94,7 +94,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' 支出グラフ',
-                      style: MyFonts.thirdPageSubheading,
+                      style: MonthlyPageStyles.thirdPageSubheading,
                     ),
                   ],
                 ),
@@ -113,11 +113,10 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   error: (error, stack) => CardContainer(
                     height: 213,
                     width: 343 * context.screenHorizontalMagnification,
-                    child: const Center(
+                    child: Center(
                       child: Text(
-                        'エラーが発生しました',
-                        style: TextStyle(
-                            color: MyColors.secondaryLabel, fontSize: 16),
+                        '記録がまだありません',
+                        style: AppTextStyles.listEmptyMessage,
                       ),
                     ),
                   ),
@@ -136,7 +135,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' 今月の計画',
-                      style: MyFonts.thirdPageSubheading,
+                      style: MonthlyPageStyles.thirdPageSubheading,
                     ),
                   ],
                 ),
@@ -156,7 +155,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' カテゴリー別',
-                      style: MyFonts.thirdPageSubheading,
+                      style: MonthlyPageStyles.thirdPageSubheading,
                     ),
                     TextButton(
                         onPressed: () {
@@ -165,7 +164,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         },
                         child: const Text(
                           'カテゴリー設定',
-                          style: MyFonts.thirdPageTextButton,
+                          style: MonthlyPageStyles.thirdPageTextButton,
                         )),
                   ],
                 ),
@@ -185,7 +184,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' 固定費',
-                      style: MyFonts.thirdPageSubheading,
+                      style: MonthlyPageStyles.thirdPageSubheading,
                     ),
                     TextButton(
                         onPressed: () {
@@ -195,7 +194,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         },
                         child: const Text(
                           'さらに表示',
-                          style: MyFonts.thirdPageTextButton,
+                          style: MonthlyPageStyles.thirdPageTextButton,
                         )),
                   ],
                 ),

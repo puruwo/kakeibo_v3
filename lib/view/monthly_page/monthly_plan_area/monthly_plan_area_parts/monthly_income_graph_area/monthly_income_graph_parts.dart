@@ -26,27 +26,27 @@ class MonthlyIncomeGraph extends HookConsumerWidget {
     return
         // バーグラフ
         ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            constraints: const BoxConstraints(
-              minWidth: 0,
-            ),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              ...List.generate(
-                  allCategoryCardEntity.incomeCategoryNameList.length, (i) {
-                return AnimatedContainer(
-                  height: 10,
-                  width: isBuilt.value
-                      ? allCategoryCardEntity.incomeCategoryRatioList[i] *
-                          maxGraphWidth
-                      : 0,
-                  color: MyColors().getColorFromHex(
-                      allCategoryCardEntity.incomeCategoryColorList[i]),
-                  duration: const Duration(milliseconds: 500),
-                );
-              }),
-            ]),
-          ),
-        );
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        constraints: const BoxConstraints(
+          minWidth: 0,
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          ...List.generate(allCategoryCardEntity.incomeCategoryNameList.length,
+              (i) {
+            return AnimatedContainer(
+              height: 10,
+              width: isBuilt.value
+                  ? allCategoryCardEntity.incomeCategoryRatioList[i] *
+                      maxGraphWidth
+                  : 0,
+              color: MyColors().getColorFromHex(
+                  allCategoryCardEntity.incomeCategoryColorList[i]),
+              duration: const Duration(milliseconds: 500),
+            );
+          }),
+        ]),
+      ),
+    );
   }
 }

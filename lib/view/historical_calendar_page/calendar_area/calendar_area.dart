@@ -172,13 +172,13 @@ SizedBox _calendarHeader(double boxWidth) {
     child: const Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text('日', style: MyFonts.calendarWeekdaySunday),
-        Text('月', style: MyFonts.calendarWeekdayLabel),
-        Text('火', style: MyFonts.calendarWeekdayLabel),
-        Text('水', style: MyFonts.calendarWeekdayLabel),
-        Text('木', style: MyFonts.calendarWeekdayLabel),
-        Text('金', style: MyFonts.calendarWeekdayLabel),
-        Text('土', style: MyFonts.calendarWeekdaySaturday),
+        Text('日', style: CalendarStyles.calendarWeekdaySunday),
+        Text('月', style: CalendarStyles.calendarWeekdayLabel),
+        Text('火', style: CalendarStyles.calendarWeekdayLabel),
+        Text('水', style: CalendarStyles.calendarWeekdayLabel),
+        Text('木', style: CalendarStyles.calendarWeekdayLabel),
+        Text('金', style: CalendarStyles.calendarWeekdayLabel),
+        Text('土', style: CalendarStyles.calendarWeekdaySaturday),
       ],
     ),
   );

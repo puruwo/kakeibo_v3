@@ -8,7 +8,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/register_page_styles.dart';
+import 'package:kakeibo/constant/strings.dart';
 
 class SelectedIconButton extends ConsumerWidget {
   const SelectedIconButton({

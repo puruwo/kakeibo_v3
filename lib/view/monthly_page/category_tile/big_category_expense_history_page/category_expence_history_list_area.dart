@@ -17,12 +17,13 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 /// Local imports
 import 'package:kakeibo/util/screen_size_func.dart';
 
-enum ListAreaMode {bigCategory, smallCategory}
+enum ListAreaMode { bigCategory, smallCategory }
 
 // カテゴリー指定して支出履歴を表示するエリア
 
 class CategoryExpenceHistoryArea extends ConsumerStatefulWidget {
-  CategoryExpenceHistoryArea({super.key,required this.listAreaMode, this.bigId,this.smallId});
+  CategoryExpenceHistoryArea(
+      {super.key, required this.listAreaMode, this.bigId, this.smallId});
   final ListAreaMode listAreaMode;
   final int? bigId;
   final int? smallId;
@@ -34,13 +35,12 @@ class CategoryExpenceHistoryArea extends ConsumerStatefulWidget {
   final AutoScrollController _scrollController = AutoScrollController();
 }
 
-class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryArea> {
-
+class _CategoryExpenceHistoryArea
+    extends ConsumerState<CategoryExpenceHistoryArea> {
   List<DateTime> itemKeys = [];
 
   @override
   Widget build(BuildContext context) {
-
     // 画面の倍率を計算
     // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final screenHorizontalMagnification =
@@ -60,20 +60,21 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
 
     // selectedDatetimeが更新されたら動く
     ref.listen(historicalSelectedDatetimeNotifierProvider, (previous, next) {
-        final updatedSelectedDateTime = next;
-        _scrollToItem(
-            updatedSelectedDateTime, itemKeys, widget._scrollController);
+      final updatedSelectedDateTime = next;
+      _scrollToItem(
+          updatedSelectedDateTime, itemKeys, widget._scrollController);
     });
 
 //----------------------------------------------------------------------------------------------
 
-    final provider = switch (widget.listAreaMode){
-      ListAreaMode.bigCategory => resolvedCategoryExpenseHistoryDigestValueProvider(widget.bigId!),
-      ListAreaMode.smallCategory => resolvedSmallCategoryExpenseHistoryDigestValueProvider(widget.smallId!),
+    final provider = switch (widget.listAreaMode) {
+      ListAreaMode.bigCategory =>
+        resolvedCategoryExpenseHistoryDigestValueProvider(widget.bigId!),
+      ListAreaMode.smallCategory =>
+        resolvedSmallCategoryExpenseHistoryDigestValueProvider(widget.smallId!),
     };
 
-    return ref.watch(provider).when(
-        data: (tileGroupList) {
+    return ref.watch(provider).when(data: (tileGroupList) {
       Widget children;
 
       if (tileGroupList.isNotEmpty) {
@@ -82,7 +83,6 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
             controller: widget._scrollController,
             itemCount: tileGroupList.length,
             itemBuilder: (BuildContext context, int index) {
-
               itemKeys = tileGroupList.map((e) => e.date).toList();
 
               return AutoScrollTag(
@@ -103,8 +103,10 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
                         Padding(
                           padding: EdgeInsets.only(left: leftsidePadding),
                           child: Text(
-                              DateFormat('yyyy年M月d日(E)', 'ja_JP').format(tileGroupList[index].date),
-                              style: MyFonts.expenseHistoryDateHeaderLabel),
+                              DateFormat('yyyy年M月d日(E)', 'ja_JP')
+                                  .format(tileGroupList[index].date),
+                              style: HistoryListStyles
+                                  .expenseHistoryDateHeaderLabel),
                         ),
                         //右余白
                       ],
@@ -121,7 +123,8 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
 
                     //タイル
                     ExpenseHistoryTile(
-                      tileValueList: tileGroupList[index].expenseHistoryTileValueList,
+                      tileValueList:
+                          tileGroupList[index].expenseHistoryTileValueList,
                       leftsidePadding: leftsidePadding,
                       listSmallcategoryMemoOffset: listSmallcategoryMemoOffset,
                       screenHorizontalMagnification:
@@ -134,7 +137,7 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
           ),
         );
       } else {
-        children = const Column(
+        children = Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
@@ -143,7 +146,7 @@ class _CategoryExpenceHistoryArea extends ConsumerState<CategoryExpenceHistoryAr
             Center(
               child: Text(
                 '記録がまだありません',
-                style: TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+                style: AppTextStyles.listEmptyMessage,
               ),
             ),
           ],

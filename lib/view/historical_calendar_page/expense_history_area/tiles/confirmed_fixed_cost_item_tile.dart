@@ -87,7 +87,8 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                             value.name,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.historyTileBigCategoryLabel,
+                            style:
+                                HistoryListStyles.historyTileBigCategoryLabel,
                           ),
                         ),
                         // 固定費（確定済み）ラベル
@@ -97,7 +98,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                             '固定費',
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.historyTileSubLabel,
+                            style: HistoryListStyles.historyTileSubLabel,
                           ),
                         ),
                       ],
@@ -113,7 +114,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                         priceLabel,
                         textAlign: TextAlign.end,
                         overflow: TextOverflow.ellipsis,
-                        style: MyFonts.historyTilePriceLabel,
+                        style: HistoryListStyles.historyTilePriceLabel,
                       ),
                     ),
                   ),

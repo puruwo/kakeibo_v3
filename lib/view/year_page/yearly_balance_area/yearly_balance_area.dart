@@ -39,7 +39,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                 child: Center(
                   child: Text(
                     'まだ記録がありません',
-                    style: MyFonts.topCardSubYenLabel,
+                    style: AppTextStyles.cardSecondaryTitle,
                   ),
                 ),
               );
@@ -119,7 +119,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             children: [
                               Text(
                                 '総収入',
-                                style: MyFonts.topCardSubTitleLabel,
+                                style: AppTextStyles.cardSecondaryTitle,
                               ),
                               const Icon(
                                 size: 12,
@@ -141,16 +141,17 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                                 yearlyBalanceValue
                                                     .yearlyIncome),
                                             style:
-                                                MyFonts.topCardSubPriceLabel),
+                                                AppTextStyles.cardPriceLabel),
                                         Text(
                                           ' 円',
-                                          style: MyFonts.topCardSubYenLabel,
+                                          style:
+                                              AppTextStyles.cardSecondaryTitle,
                                         ),
                                       ],
                                     )
                                   : Text(
                                       'まだ記録がありません',
-                                      style: MyFonts.topCardSubYenLabel,
+                                      style: AppTextStyles.cardSecondaryTitle,
                                     ),
                             ]),
                       ),
@@ -181,7 +182,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         children: [
                           Text(
                             '総支出  ',
-                            style: MyFonts.topCardSubTitleLabel,
+                            style: AppTextStyles.cardSecondaryTitle,
                           ),
                           yearlyBalanceValue.yearlyBalanceType !=
                                   YearlyBalanceType.noExpense
@@ -193,17 +194,17 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     Text(
                                       formattedPriceGetter(
                                           yearlyBalanceValue.yearlyExpense),
-                                      style: MyFonts.topCardSubPriceLabel,
+                                      style: AppTextStyles.cardPriceLabel,
                                     ),
                                     Text(
                                       ' 円',
-                                      style: MyFonts.topCardSubYenLabel,
+                                      style: AppTextStyles.cardSecondaryTitle,
                                     ),
                                   ],
                                 )
                               : Text(
                                   'まだ記録がありません',
-                                  style: MyFonts.topCardSubYenLabel,
+                                  style: AppTextStyles.cardSecondaryTitle,
                                 ),
                         ],
                       ),
@@ -243,7 +244,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         children: [
                           Text(
                             '残金',
-                            style: MyFonts.topCardTitleLabel,
+                            style: AppTextStyles.cardPrimaryTitle,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -252,11 +253,11 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                               Text(
                                 formattedPriceGetter(
                                     yearlyBalanceValue.savings),
-                                style: MyFonts.topCardPriceLabel,
+                                style: AppTextStyles.cardPriceLabel,
                               ),
                               Text(
                                 ' 円',
-                                style: MyFonts.topCardYenLabel,
+                                style: AppTextStyles.cardSecondaryTitle,
                               ),
                             ],
                           ),

@@ -37,7 +37,7 @@ class _YearPageState extends ConsumerState<YearPage> {
           final label = yyyyToyyyyGetter(activeDt);
           return Text(
             label,
-            style: MyFonts.pageHeaderText,
+            style: AppTextStyles.pageHeaderText,
           );
         }),
         actions: [
@@ -72,7 +72,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                   children: [
                     Text(
                       ' 年間収支',
-                      style: MyFonts.thirdPageSubheading,
+                      style: AppTextStyles.cardPrimaryTitle,
                     ),
                   ],
                 ),
@@ -97,7 +97,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                   children: [
                     Text(
                       ' ボーナス利用状況',
-                      style: MyFonts.thirdPageSubheading,
+                      style: AppTextStyles.cardPrimaryTitle,
                     ),
                     TextButton(
                         onPressed: () {
@@ -107,9 +107,9 @@ class _YearPageState extends ConsumerState<YearPage> {
                             ),
                           );
                         },
-                        child: const Text(
+                        child: Text(
                           'さらに表示する',
-                          style: MyFonts.thirdPageTextButton,
+                          style: AppTextStyles.secondaryButtonText,
                         )),
                   ],
                 ),
@@ -128,7 +128,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                   children: [
                     Text(
                       ' 生活収支',
-                      style: MyFonts.thirdPageSubheading,
+                      style: AppTextStyles.cardPrimaryTitle,
                     ),
                   ],
                 ),

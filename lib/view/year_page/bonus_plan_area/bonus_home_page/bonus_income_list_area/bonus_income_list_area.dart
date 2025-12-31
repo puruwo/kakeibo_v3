@@ -1,18 +1,18 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
-
-/// Local imports
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_income_list_area/bonus_income_history_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_income_history_value_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
+
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class BonusIncomeListArea extends ConsumerStatefulWidget {
   const BonusIncomeListArea({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _BonusIncomeListAreaState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _BonusIncomeListAreaState();
 }
 
 class _BonusIncomeListAreaState extends ConsumerState<BonusIncomeListArea> {
@@ -38,11 +38,10 @@ class _BonusIncomeListAreaState extends ConsumerState<BonusIncomeListArea> {
                 },
               );
             } else {
-              return const Center(
+              return Center(
                 child: Text(
                   '記録がまだありません',
-                  style:
-                      TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+                  style: AppTextStyles.listEmptyMessage,
                 ),
               );
             }

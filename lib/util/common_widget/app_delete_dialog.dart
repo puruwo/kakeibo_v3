@@ -39,7 +39,7 @@ Future<bool> showConfirmationDialog(
                   // タイトル
                   Text(
                     title,
-                    style: MyFonts.dialogTitle,
+                    style: AppTextStyles.dialogTitle,
                     textAlign: TextAlign.center,
                   ),
 
@@ -48,7 +48,7 @@ Future<bool> showConfirmationDialog(
                   // メッセージ
                   Text(
                     message,
-                    style: MyFonts.dialogLabel,
+                    style: AppTextStyles.dialogLabel,
                     textAlign: TextAlign.center,
                   ),
 
@@ -118,7 +118,7 @@ class _DialogButton extends StatelessWidget {
           child: Center(
             child: Text(
               label,
-              style: MyFonts.mainButtonText.copyWith(
+              style: AppTextStyles.mainButtonText.copyWith(
                 color: isPrimary ? MyColors.white : MyColors.white,
               ),
             ),

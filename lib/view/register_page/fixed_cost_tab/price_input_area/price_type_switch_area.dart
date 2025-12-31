@@ -42,7 +42,7 @@ class _PriceTypeSwitchArea extends ConsumerState<PriceTypeSwitchArea> {
           Text(
             "支払い額変あり",
             textAlign: TextAlign.right,
-            style: MyFonts.placeHolder,
+            style: RegisterPageStyles.placeHolder,
           ),
 
           // 選択状態

@@ -1,5 +1,5 @@
 /// packegeImport
-import 'package:google_fonts/google_fonts.dart';
+/// packegeImport
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
@@ -82,10 +82,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                     children: [
                       Text(
                         '表示',
-                        style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w400),
+                        style: CategoryStyles.listHeaderLabel,
                       ),
                       const SizedBox(
                         width: 20,
@@ -94,10 +91,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                         width: 110 + listSTextBoxOffset,
                         child: Text(
                           '項目',
-                          style: GoogleFonts.notoSans(
-                              fontSize: 16,
-                              color: MyColors.secondaryLabel,
-                              fontWeight: FontWeight.w400),
+                          style: CategoryStyles.listHeaderLabel,
                         ),
                       ),
                     ],
@@ -105,10 +99,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                 ),
                 Text(
                   '並べ替え',
-                  style: GoogleFonts.notoSans(
-                      fontSize: 16,
-                      color: MyColors.secondaryLabel,
-                      fontWeight: FontWeight.w400),
+                  style: CategoryStyles.listHeaderLabel,
                 ),
               ],
             ),
@@ -192,10 +183,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                               Expanded(
                                 child: Text(
                                   itemList[index].name,
-                                  style: GoogleFonts.notoSans(
-                                      fontSize: 18,
-                                      color: MyColors.label,
-                                      fontWeight: FontWeight.w400),
+                                  style: CategoryStyles.editListTitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -258,7 +246,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                   width: double.infinity,
                                   child: Text(
                                     '+ 新しい項目を追加',
-                                    style: MyFonts.newCategoryAdd,
+                                    style: CategoryStyles.newCategoryAdd,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

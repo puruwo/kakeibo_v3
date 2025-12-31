@@ -77,7 +77,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                       value.name,
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
-                      style: MyFonts.cardPrimaryTitle,
+                      style: AppTextStyles.cardPrimaryTitle,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -85,7 +85,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                   Text(
                     priceLabel,
                     textAlign: TextAlign.end,
-                    style: MyFonts.cardPriceLabel,
+                    style: AppTextStyles.cardPriceLabel,
                   ),
                 ],
               ),
@@ -97,12 +97,12 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                   // 日付
                   Text(
                     paymentDateLabel,
-                    style: MyFonts.cardSecondaryTitle,
+                    style: AppTextStyles.cardSecondaryTitle,
                   ),
                   // 支払い頻度
                   Text(
                     value.frequencyLabel,
-                    style: MyFonts.cardSecondaryTitle,
+                    style: AppTextStyles.cardSecondaryTitle,
                   ),
                 ],
               ),

@@ -56,7 +56,8 @@ class UpdateCompleteFixedCostCategoryDetailButton extends ConsumerWidget
             // 変更があるかチェック
             if (originalEntity.categoryName == categoryName &&
                 originalEntity.resourcePath == iconPath &&
-                originalEntity.colorCode == MyColors().getHexFromColor(colorCode)) {
+                originalEntity.colorCode ==
+                    MyColors().getHexFromColor(colorCode)) {
               throw const AppException('編集がされていません');
             }
 

@@ -1,6 +1,5 @@
 /// packegeImport
 import 'package:flutter_svg/svg.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
@@ -10,6 +9,7 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/category_styles.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/category_detail_edit_page.dart';
@@ -67,19 +67,13 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                           width: 37 + 90 + listSTextBoxOffset,
                           child: Text(
                             'カテゴリー',
-                            style: GoogleFonts.notoSans(
-                                fontSize: 16,
-                                color: MyColors.secondaryLabel,
-                                fontWeight: FontWeight.w400),
+                            style: CategoryStyles.listHeaderLabel,
                           ),
                         ),
                       ),
                       Text(
                         '項目',
-                        style: GoogleFonts.notoSans(
-                            fontSize: 16,
-                            color: MyColors.secondaryLabel,
-                            fontWeight: FontWeight.w400),
+                        style: CategoryStyles.listHeaderLabel,
                       ),
                     ],
                   ),
@@ -87,10 +81,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       '詳細',
-                      style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w400),
+                      style: CategoryStyles.listHeaderLabel,
                     ),
                   ),
                 ],
@@ -159,10 +150,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                       itemList.isEmpty
                                           ? ''
                                           : itemList[index].bigCategoryName,
-                                      style: GoogleFonts.notoSans(
-                                          fontSize: 16,
-                                          color: MyColors.label,
-                                          fontWeight: FontWeight.w400),
+                                      style: CategoryStyles.editListTitle,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -174,10 +162,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                           ? ''
                                           : itemList[index]
                                               .expenseSmallCategoryNameText,
-                                      style: GoogleFonts.notoSans(
-                                          fontSize: 14,
-                                          color: MyColors.secondaryLabel,
-                                          fontWeight: FontWeight.w300),
+                                      style: CategoryStyles.editListSubTitle,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -234,7 +219,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                     width: double.infinity,
                                     child: Text(
                                       '+ 新しいカテゴリーを追加',
-                                      style: MyFonts.newCategoryAdd,
+                                      style: CategoryStyles.newCategoryAdd,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -288,11 +273,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                       width: 37 + 90 + listSTextBoxOffset,
                       child: Text(
                         'カテゴリー',
-                        style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w400,
-                        ),
+                        style: CategoryStyles.listHeaderLabel,
                       ),
                     ),
                   ),
@@ -300,11 +281,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       '詳細',
-                      style: GoogleFonts.notoSans(
-                        fontSize: 16,
-                        color: MyColors.secondaryLabel,
-                        fontWeight: FontWeight.w400,
-                      ),
+                      style: CategoryStyles.listHeaderLabel,
                     ),
                   ),
                 ],
@@ -374,11 +351,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                       itemList.isEmpty
                                           ? ''
                                           : itemList[index].categoryName,
-                                      style: GoogleFonts.notoSans(
-                                        fontSize: 16,
-                                        color: MyColors.label,
-                                        fontWeight: FontWeight.w400,
-                                      ),
+                                      style: CategoryStyles.editListTitle,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),
@@ -437,7 +410,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                     width: double.infinity,
                                     child: Text(
                                       '+ 新しいカテゴリーを追加',
-                                      style: MyFonts.newCategoryAdd,
+                                      style: CategoryStyles.newCategoryAdd,
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                   ),

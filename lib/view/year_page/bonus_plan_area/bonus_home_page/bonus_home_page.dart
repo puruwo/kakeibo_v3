@@ -72,7 +72,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
           backgroundColor: MyColors.secondarySystemBackground,
           title: Text(
             'ボーナス利用状況',
-            style: MyFonts.pageHeaderText,
+            style: AppTextStyles.pageHeaderText,
           ),
         ),
 

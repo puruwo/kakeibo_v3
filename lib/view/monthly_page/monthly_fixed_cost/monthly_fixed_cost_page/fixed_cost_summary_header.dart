@@ -16,7 +16,8 @@ class FixedCostSummaryHeader extends ConsumerStatefulWidget {
       _FixedCostSummaryHeaderState();
 }
 
-class _FixedCostSummaryHeaderState extends ConsumerState<FixedCostSummaryHeader> {
+class _FixedCostSummaryHeaderState
+    extends ConsumerState<FixedCostSummaryHeader> {
   @override
   Widget build(BuildContext context) {
     //状態管理---------------------------------------------------------------------------------------
@@ -62,7 +63,7 @@ class _FixedCostSummaryHeaderState extends ConsumerState<FixedCostSummaryHeader>
                 Container(
                   height: 40,
                   color: MyColors.quarternarySystemfill,
-                  child:  Padding(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -90,7 +91,7 @@ class _FixedCostSummaryHeaderState extends ConsumerState<FixedCostSummaryHeader>
                 Container(
                   height: 40,
                   color: MyColors.quarternarySystemfill,
-                  child:  Padding(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       children: [

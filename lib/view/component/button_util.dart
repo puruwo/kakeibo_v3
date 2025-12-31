@@ -38,8 +38,8 @@ class MainButton extends StatelessWidget {
         child: Text(
           buttonText,
           style: buttonType == ButtonColorType.main
-              ? MyFonts.mainButtonText
-              : MyFonts.secondaryButtonText,
+              ? AppTextStyles.mainButtonText
+              : AppTextStyles.secondaryButtonText,
         ),
       ),
     );
@@ -71,8 +71,8 @@ class SubButton extends StatelessWidget {
         child: Text(
           buttonText,
           style: buttonType == ButtonColorType.main
-              ? MyFonts.mainButtonText
-              : MyFonts.secondaryButtonText,
+              ? AppTextStyles.mainButtonText
+              : AppTextStyles.secondaryButtonText,
         ),
       ),
     );

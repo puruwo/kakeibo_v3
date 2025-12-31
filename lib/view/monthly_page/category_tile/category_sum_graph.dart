@@ -54,9 +54,7 @@ class CategorySumGraph extends HookConsumerWidget {
               // バーの中身
               AnimatedContainer(
                 height: barFrameHeight,
-                width: isBuilt.value
-                    ? barWidth
-                    : 0,
+                width: isBuilt.value ? barWidth : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: MyColors().getColorFromHex(
@@ -85,9 +83,7 @@ class CategorySumGraph extends HookConsumerWidget {
               // バーの中身
               AnimatedContainer(
                 height: barFrameHeight,
-                width: isBuilt.value
-                    ? barWidth
-                    : 0,
+                width: isBuilt.value ? barWidth : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: MyColors().getColorFromHex(
@@ -106,9 +102,7 @@ class CategorySumGraph extends HookConsumerWidget {
             // バーの中身
             AnimatedContainer(
               height: barFrameHeight,
-              width: isBuilt.value
-                  ? barFrameMaxWidth
-                  : 0,
+              width: isBuilt.value ? barFrameMaxWidth : 0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: MyColors().getColorFromHex(

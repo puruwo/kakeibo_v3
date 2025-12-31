@@ -114,7 +114,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
                                 child: Text(value.bigCategoryName,
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
-                                    style: MyFonts.cardPrimaryTitle),
+                                    style: AppTextStyles.cardPrimaryTitle),
                               ),
                               SizedBox(
                                 width: 70 * screenHorizontalMagnification,
@@ -122,7 +122,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
                                   '${value.date.month}月${value.date.day}日',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: MyFonts.cardSecondaryTitle,
+                                  style: AppTextStyles.cardSecondaryTitle,
                                 ),
                               ),
                             ],
@@ -140,7 +140,8 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
                                       child: Text('${value.memo}',
                                           textAlign: TextAlign.start,
                                           overflow: TextOverflow.ellipsis,
-                                          style: MyFonts.cardPrimaryTitle),
+                                          style:
+                                              AppTextStyles.cardPrimaryTitle),
                                     ),
                                   ],
                                 )
@@ -157,7 +158,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
                             priceLabel,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.cardPriceLabel,
+                            style: AppTextStyles.cardPriceLabel,
                           ),
                         ),
                         const SizedBox(
@@ -165,7 +166,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
                         ),
                         Text(
                           '+',
-                          style: MyFonts.cardPlusLabel,
+                          style: AppTextStyles.cardPlusLabel,
                         ),
                       ],
                     ),

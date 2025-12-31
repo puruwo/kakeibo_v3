@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -25,30 +25,21 @@ class BudgetCategoryArea extends ConsumerWidget {
                 padding: const EdgeInsets.only(left: 56),
                 child: Text(
                   'カテゴリー',
-                  style: GoogleFonts.notoSans(
-                      fontSize: 16,
-                      color: MyColors.secondaryLabel,
-                      fontWeight: FontWeight.w400),
+                  style: BudgetSettingsStyles.columnHeaderLabel,
                 ),
               ),
               Row(
                 children: [
                   Text(
                     '先月の支出',
-                    style: GoogleFonts.notoSans(
-                        fontSize: 16,
-                        color: MyColors.secondaryLabel,
-                        fontWeight: FontWeight.w400),
+                    style: BudgetSettingsStyles.columnHeaderLabel,
                   ),
                   SizedBox(
                     width: 123,
                     child: Text(
                       '今月の予算',
                       textAlign: TextAlign.right,
-                      style: GoogleFonts.notoSans(
-                          fontSize: 16,
-                          color: MyColors.secondaryLabel,
-                          fontWeight: FontWeight.w400),
+                      style: BudgetSettingsStyles.columnHeaderLabel,
                     ),
                   ),
                 ],
