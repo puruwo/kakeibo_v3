@@ -2,8 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain_service/month_period_service/aggregation_start_day_provider.dart';
-import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
@@ -19,8 +17,6 @@ final calendarUsecaseNotifierProvider = AsyncNotifierProvider.family<
 class CalendarUsecaseNotifier
     extends FamilyAsyncNotifier<List<List<CalendarTileEntity>>, int> {
   late DailyExpenseRepository _repository;
-  late MonthPeriodService _periodService;
-  late AggregationStartDayService _aggregationStartDayService;
 
   @override
   Future<List<List<CalendarTileEntity>>> build(int calendarPage) async {
@@ -28,13 +24,11 @@ class CalendarUsecaseNotifier
     ref.watch(updateDBCountNotifierProvider);
 
     _repository = ref.read(dailyExpenseRepositoryProvider);
-    _periodService = ref.read(monthPeriodServiceProvider);
-    _aggregationStartDayService = ref.read(aggregationStartDayProvider);
 
     return await fetch(calendarPage: calendarPage);
   }
 
-  // 入力した日付を含む集計期間のデータを取得する
+  // 入力した日付を含む月のデータを取得する（月単位表示）
   Future<List<List<CalendarTileEntity>>> fetch(
       {required int calendarPage}) async {
     // データを取得する間はローディング状態にする
@@ -43,20 +37,18 @@ class CalendarUsecaseNotifier
     // カレンダーページと初期カレンダーページの差分を取得
     final distance = calendarPage - CalendarProperties().initialCalendarPage;
 
-    // その日の日付をルートとして集計期間を取得する
-    final PeriodValue rootPeriod = await _periodService
-        .fetchMonthPeriod(ref.read(systemDatetimeNotifierProvider));
-
-    // ページ分を移動して集計期間を取得する
+    // 今日の日付を基準に月単位で期間を計算
+    final systemDate = ref.read(systemDatetimeNotifierProvider);
+    final targetDate =
+        DateTime(systemDate.year, systemDate.month + distance, 1);
+    final startDatetime = DateTime(targetDate.year, targetDate.month, 1);
+    final endDatetime =
+        DateTime(targetDate.year, targetDate.month + 1, 0); // 月末
     final PeriodValue shiftedPeriod =
-        _periodService.fetchShiftedMonthPeriod(rootPeriod, distance);
+        PeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
 
     // 期間内の日毎の支出データを取得する
     final List<CalendarTileEntity> inPeriodCalendarTileList = [];
-
-    // 集計開始日を取得する
-    final startDay =
-        await _aggregationStartDayService.fetchAggregationStartDay();
 
     // 期間開始日から終了日までのデータを取得する
     DateTime thisLoopDatetime = shiftedPeriod.startDatetime;
@@ -67,11 +59,8 @@ class CalendarUsecaseNotifier
       final DailyExpenseEntity dailyExpenseEntity = await _repository
           .fetchWithCategory(incomeSourceBigId: 0, dateTime: thisLoopDatetime);
 
-      // カレンダーの日づげ表示に月を表示するかどうか
-      bool shouldDisplayMonth = false;
-      if (dailyExpenseEntity.date.day == 1 ||
-          dailyExpenseEntity.date.day == startDay.day)
-        shouldDisplayMonth = true;
+      // カレンダーの日付表示に月を表示するかどうか（1日のみ）
+      bool shouldDisplayMonth = dailyExpenseEntity.date.day == 1;
 
       // CalendarTileEntityを作成
       final CalendarTileEntity calendarTileEntity = CalendarTileEntity(

@@ -1,10 +1,12 @@
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
+import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'analyze_page_selected_datetime.g.dart';
 
 @Riverpod(keepAlive: true)
-class AnalyzePageSelectedDatetimeNotifier extends _$AnalyzePageSelectedDatetimeNotifier {
+class AnalyzePageSelectedDatetimeNotifier
+    extends _$AnalyzePageSelectedDatetimeNotifier {
   @override
   DateTime build() {
     // 最初のデータ
@@ -18,12 +20,10 @@ class AnalyzePageSelectedDatetimeNotifier extends _$AnalyzePageSelectedDatetimeN
   }
 
   void updateToNextMonth() {
-    final newDt = DateTime(state.year, state.month + 1, state.day);
-    state = newDt;
+    state = state.addMonths(1);
   }
 
   void updateToPreviousMonth() {
-    final newDt = DateTime(state.year, state.month - 1, state.day);
-    state = newDt;
+    state = state.addMonths(-1);
   }
 }

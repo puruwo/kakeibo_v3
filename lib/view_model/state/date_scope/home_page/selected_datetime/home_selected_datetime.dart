@@ -1,4 +1,5 @@
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
+import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_selected_datetime.g.dart';
@@ -18,12 +19,10 @@ class HomeSelectedDatetimeNotifier extends _$HomeSelectedDatetimeNotifier {
   }
 
   void updateToNextMonth() {
-    final newDt = DateTime(state.year, state.month + 1, state.day);
-    state = newDt;
+    state = state.addMonths(1);
   }
 
   void updateToPreviousMonth() {
-    final newDt = DateTime(state.year, state.month - 1, state.day);
-    state = newDt;
+    state = state.addMonths(-1);
   }
 }

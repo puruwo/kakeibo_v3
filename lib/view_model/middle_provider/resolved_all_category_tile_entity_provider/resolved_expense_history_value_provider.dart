@@ -4,8 +4,10 @@ import 'package:kakeibo/application/expense_history/big_category_expense_history
 import 'package:kakeibo/application/expense_history/historical_transaction_usecase.dart';
 import 'package:kakeibo/application/expense_history/small_category_expense_history_usecase/request_small_expense_history.dart';
 import 'package:kakeibo/application/expense_history/small_category_expense_history_usecase/small_category_expense_history_usecase.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/daily_transaction_group/daily_transaction_group.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_group_value.dart';
+import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/historical_date_scope.dart';
 
@@ -13,13 +15,14 @@ import 'package:kakeibo/view_model/state/date_scope/historical_page/historical_d
 // 全トランザクションデータ（支出、ボーナス支出、収入、固定費確定/未確定）を取得
 final resolvedExpenseHistoryValueProvider =
     FutureProvider<List<DailyTransactionGroup>>((ref) async {
-  // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(historicalDateScopeEntityProvider
-      .selectAsync((data) => data.monthPeriod));
+  // 選択された日付から月単位期間を取得する（1日〜月末）
+  final dateScope = await ref
+      .watch(historicalDateScopeEntityProvider.selectAsync((data) => data));
 
-  // 選択された集計期間を元に、全トランザクションデータを取得する
+  // 選択された月単位期間を元に、全トランザクションデータを取得する
+  PeriodValue periodValue = dateScope.selectedDate.getMonthPeriod();
   final result = await ref
-      .watch(historicalTransactionNotifierProvider(monthPeriodValue).future);
+      .watch(historicalTransactionNotifierProvider(periodValue).future);
 
   // 日付順にグループ分けして返す
   return groupTransactionsByDate(result);

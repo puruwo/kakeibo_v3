@@ -1,3 +1,5 @@
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+
 extension DateTimeAdditions on DateTime {
   // nヶ月後を計算
   DateTime addMonths(int months) {
@@ -22,6 +24,14 @@ extension DateTimeAdditions on DateTime {
   String toFormattedString() {
     return '${year.toString().padLeft(4, '0')}${month.toString().padLeft(2, '0')}${day.toString().padLeft(2, '0')}';
   }
+
+  // その月の期間を返却
+  PeriodValue getMonthPeriod() {
+    final startDatetime = DateTime(year, month, 1);
+    final endDatetime =
+        DateTime(year, month + 1, 1).subtract(const Duration(days: 1));
+    return PeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
+  }
 }
 
 extension DateTimeParsing on String {
@@ -29,7 +39,7 @@ extension DateTimeParsing on String {
   DateTime toDateTime() {
     DateTime dateTime = DateTime.parse(
         '${substring(0, 4)}${substring(4, 6)}${substring(6, 8)}');
-      
+
     return dateTime;
   }
 }

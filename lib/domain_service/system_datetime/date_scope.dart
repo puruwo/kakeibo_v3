@@ -7,14 +7,14 @@ import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 
-final systemDateScopeEntityProvider = AsyncNotifierProvider<SystemDateScopeNotifier,DateScopeEntity>(
+final systemDateScopeEntityProvider =
+    AsyncNotifierProvider<SystemDateScopeNotifier, DateScopeEntity>(
   SystemDateScopeNotifier.new,
 );
 
 class SystemDateScopeNotifier extends AsyncNotifier<DateScopeEntity> {
   @override
   Future<DateScopeEntity> build() async {
-
     // 選択期間を取得する
     final selectedDate = ref.watch(systemDatetimeNotifierProvider);
 
@@ -35,7 +35,8 @@ class SystemDateScopeNotifier extends AsyncNotifier<DateScopeEntity> {
     final representativeYear = await aRYService.fetchYear(selectedDate);
 
     // 選択している日付の月が、何番目の月かを取得する
-    final monthIndex = await ref.read(monthIndexServiceProvider).fetchMonthIndex(selectedDate);
+    final monthIndex =
+        await ref.read(monthIndexServiceProvider).fetchMonthIndex(selectedDate);
 
     return DateScopeEntity(
       selectedDate: selectedDate,
