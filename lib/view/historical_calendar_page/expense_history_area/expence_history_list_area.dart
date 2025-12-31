@@ -1,21 +1,15 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/widgets.dart';
-import 'package:intl/date_symbol_data_local.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/properties.dart';
-import 'package:kakeibo/constant/strings.dart';
-// DateTimeの日本語対応
-import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
+import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/historical_calendar_page/expense_history_area/expense_history_tile.dart';
+import 'package:kakeibo/util/screen_size_func.dart';
+import 'package:kakeibo/view/historical_calendar_page/expense_history_area/transaction_group_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-
-/// Local imports
-import 'package:kakeibo/util/screen_size_func.dart';
 
 class ExpenceHistoryArea extends ConsumerStatefulWidget {
   ExpenceHistoryArea({super.key});
@@ -33,12 +27,10 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
   @override
   Widget build(BuildContext context) {
     // 画面の倍率を計算
-    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final screenHorizontalMagnification =
         screenHorizontalMagnificationGetter(context.screenWidth);
 
     // リスト内テキストボックスの倍率を計算
-    // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     final listSmallcategoryMemoOffset = context.listSmallcategoryMemoOffset;
 
     // カレンダーサイズから左の空白の大きさを計算
@@ -47,8 +39,6 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
     // DateTimeの日本語対応
     initializeDateFormatting();
 
-//状態管理---------------------------------------------------------------------------------------
-
     // selectedDatetimeが更新されたら動く
     ref.listen(historicalSelectedDatetimeNotifierProvider, (previous, next) {
       final updatedSelectedDateTime = next;
@@ -56,15 +46,8 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
           updatedSelectedDateTime, itemKeys, widget._scrollController);
     });
 
-//----------------------------------------------------------------------------------------------
-
     return ref.watch(resolvedExpenseHistoryValueProvider).when(
-        data: (transactionData) {
-      Widget children;
-
-      // 全トランザクションデータから支出のグループリストを取得
-      final tileGroupList = transactionData.expenses;
-
+        data: (tileGroupList) {
       if (tileGroupList.isNotEmpty) {
         return Expanded(
           child: ListView.builder(
@@ -95,7 +78,6 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                                   .format(tileGroupList[index].date),
                               style: MyFonts.expenseHistoryDateHeaderLabel),
                         ),
-                        //右余白
                       ],
                     ),
 
@@ -109,9 +91,8 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                     ),
 
                     //タイル
-                    ExpenseHistoryTile(
-                      tileValueList:
-                          tileGroupList[index].expenseHistoryTileValueList,
+                    TransactionHistoryGroupTile(
+                      group: tileGroupList[index],
                       leftsidePadding: leftsidePadding,
                       listSmallcategoryMemoOffset: listSmallcategoryMemoOffset,
                       screenHorizontalMagnification:
@@ -124,7 +105,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
           ),
         );
       } else {
-        children = const Column(
+        return const Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
@@ -139,8 +120,6 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
           ],
         );
       }
-
-      return children;
     }, error: (error, stackTrace) {
       return const Center(
         child: Text('データの取得に失敗しました'),
@@ -161,10 +140,5 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
       preferPosition: AutoScrollPosition.begin,
     );
     await controller.highlight(index);
-  }
-
-  double listSmallcategoryMemoOffsetGetter(double screenWidthSize) {
-    final defaultWidth = ScreenLayoutProperties().defaultWidth;
-    return screenWidthSize - defaultWidth;
   }
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:collection/collection.dart';
@@ -11,6 +12,7 @@ import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_histo
 import 'package:kakeibo/domain/ui_value/historical_all_transactions_value/historical_all_transactions_value.dart';
 import 'dart:collection';
 
+import 'package:kakeibo/domain/ui_value/daily_transaction_group/daily_transaction_group.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -107,4 +109,71 @@ class HistoricalTransactionUsecaseNotifier
 
     return result;
   }
+}
+
+/// HistoricalAllTransactionsValue を DailyTransactionGroup のリストに変換して日付順にソートする
+List<DailyTransactionGroup> groupTransactionsByDate(
+    HistoricalAllTransactionsValue transactionData) {
+  final Set<DateTime> dates = {};
+
+  // 各データのdateを集約
+  for (var g in transactionData.expenses) {
+    dates.add(g.date);
+  }
+  for (var item in transactionData.bonusExpenses) {
+    dates.add(DateUtils.dateOnly(item.date));
+  }
+  for (var item in transactionData.incomes) {
+    dates.add(DateUtils.dateOnly(item.date));
+  }
+  for (var item in transactionData.bonusIncomes) {
+    dates.add(DateUtils.dateOnly(item.date));
+  }
+  for (var item in transactionData.confirmedFixedCosts) {
+    dates.add(DateUtils.dateOnly(item.date));
+  }
+  for (var item in transactionData.unconfirmedFixedCosts) {
+    dates.add(DateUtils.dateOnly(item.date));
+  }
+
+  final sortedDates = dates.toList()..sort((a, b) => b.compareTo(a));
+
+  List<DailyTransactionGroup> tileGroupList = sortedDates.map((date) {
+    final expenses = transactionData.expenses
+            .firstWhereOrNull((g) => DateUtils.isSameDay(g.date, date))
+            ?.expenseHistoryTileValueList ??
+        [];
+
+    final bonusExpenses = transactionData.bonusExpenses
+        .where((e) => DateUtils.isSameDay(e.date, date))
+        .toList();
+
+    final incomes = transactionData.incomes
+        .where((e) => DateUtils.isSameDay(e.date, date))
+        .toList();
+
+    final bonusIncomes = transactionData.bonusIncomes
+        .where((e) => DateUtils.isSameDay(e.date, date))
+        .toList();
+
+    final confirmedFixedCosts = transactionData.confirmedFixedCosts
+        .where((e) => DateUtils.isSameDay(e.date, date))
+        .toList();
+
+    final unconfirmedFixedCosts = transactionData.unconfirmedFixedCosts
+        .where((e) => DateUtils.isSameDay(e.date, date))
+        .toList();
+
+    return DailyTransactionGroup(
+      date: date,
+      expenses: expenses,
+      bonusExpenses: bonusExpenses,
+      incomes: incomes,
+      bonusIncomes: bonusIncomes,
+      confirmedFixedCosts: confirmedFixedCosts,
+      unconfirmedFixedCosts: unconfirmedFixedCosts,
+    );
+  }).toList();
+
+  return tileGroupList;
 }

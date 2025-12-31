@@ -33,16 +33,16 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
 
         -- 固定費支出（確定分はprice、未確定分はestimatedPrice）
         SELECT
-          ${SqfFixedCostExpense.date} as date,
+          ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} as date,
           CASE 
-            WHEN ${SqfFixedCostExpense.isConfirmed} = 1 THEN ${SqfFixedCostExpense.price}
-            ELSE ${SqfFixedCost.estimatedPrice}
+            WHEN ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.isConfirmed} = 1 THEN ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.price}
+            ELSE ${SqfFixedCost.tableName}.${SqfFixedCost.estimatedPrice}
           END as price,
           0 AS incomePrice
         FROM ${SqfFixedCostExpense.tableName}
         LEFT JOIN ${SqfFixedCost.tableName} 
           ON ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.fixedCostId} = ${SqfFixedCost.tableName}.${SqfFixedCost.id}
-        WHERE ${SqfFixedCostExpense.date} = $whereArgs
+        WHERE ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} = $whereArgs
 
         UNION ALL
 
