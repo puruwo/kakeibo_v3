@@ -322,7 +322,7 @@ class PredictionGraphUsecase {
   /// 予想支出ラベルを生成
   String _generatePredictionLabel(int predictionPrice) {
     final priceLabel = yenFormattedPriceGetter(predictionPrice);
-    return '予想支出 $priceLabel';
+    return priceLabel;
   }
 
   /// ラベル表示判定（重なりを考慮）

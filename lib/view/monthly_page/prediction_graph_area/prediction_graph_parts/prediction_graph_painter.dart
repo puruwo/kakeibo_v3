@@ -40,9 +40,39 @@ class PredictionGraphPainter extends CustomPainter {
     // 折れ線グラフのy=0地点
     final lineZeroY = topMargin + lineGraphHeight;
 
+    // 収入と予算の大きい方を取得
+    final maxBudgetOrIncome = [data.income ?? 0, data.budget ?? 0]
+        .reduce((curr, next) => curr > next ? curr : next);
+
+    // 累積支出の最大値を取得
+    int maxExpense = 0;
+    if (data.expensePoints != null && data.expensePoints!.isNotEmpty) {
+      for (final point in data.expensePoints!) {
+        if (point.price > maxExpense) {
+          maxExpense = point.price.toInt();
+        }
+      }
+    }
+
+    final predictionPrice = data.predictionPrice ?? 0;
+
+    // 条件: 収入・予算が存在し、どちらか大きい方の金額が予想支出の半分以下
+    final bool shouldHideLineAndMoveLabel = (data.income ?? 0) > 0 &&
+        (data.budget ?? 0) > 0 &&
+        predictionPrice > 0 &&
+        maxBudgetOrIncome <= predictionPrice / 2;
+
     // 最大値を計算（1.2倍の余裕を持たせる）
     // maxValueが0またはnullの場合は最低値として100を設定
-    final maxValue = data.displayMaxValue ?? 100.0;
+    double maxValue;
+    if (shouldHideLineAndMoveLabel) {
+      // 予算・収入・累積支出の一番高い額を基準にする
+      final maxVal = [maxBudgetOrIncome, maxExpense]
+          .reduce((curr, next) => curr > next ? curr : next);
+      maxValue = maxVal > 0 ? maxVal * 1.2 : 100.0;
+    } else {
+      maxValue = (data.maxValue ?? 0) > 0 ? data.maxValue! * 1.2 : 100.0;
+    }
 
     // X軸を描画（グラフ開始位置から）
     _drawXAxis(canvas, size, leftMargin + graphLeftOffset, topMargin,
@@ -158,7 +188,8 @@ class PredictionGraphPainter extends CustomPainter {
           lineGraphHeight,
           maxValue,
           data.predictionPoints!,
-          data.predictionPrice!);
+          data.predictionPrice!,
+          shouldHideLineAndMoveLabel);
     }
 
     // 支出ラインを描画（グラフ開始位置から）
@@ -397,6 +428,17 @@ class PredictionGraphPainter extends CustomPainter {
     );
     textPainter.layout();
 
+    // 項目名のみのTextPainterを作成（重なった場合の描画用）
+    const titleSpan = TextSpan(
+      text: '収入 ',
+      style: PredictionGraphTextStyles.graphLabel,
+    );
+    final titlePainter = TextPainter(
+      text: titleSpan,
+      textDirection: TextDirection.ltr,
+    );
+    titlePainter.layout();
+
     // ラベルを線の垂直中央に配置
     final labelY = y - textPainter.height / 2;
     final labelBottom = labelY + textPainter.height;
@@ -425,15 +467,20 @@ class PredictionGraphPainter extends CustomPainter {
     final labelOverlapsWithLine =
         labelOverlapsWithPredictionLine || labelOverlapsWithExpenseLine;
 
-    // 予測ラインまたは支出ラインと重なる場合はラベルを描画しない
-    if (!labelOverlapsWithLine) {
+    // 描画処理
+    if (labelOverlapsWithLine) {
+      // 重なる場合：項目名のみ表示
+      titlePainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
+    } else {
+      // 重ならない場合：全表示
       textPainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
     }
 
-    // ラインをラベルの右端から描画（ラベルが表示されていない場合はグラフ開始位置から）
+    // ラインをラベルの右端から描画
     final lineStartX = labelOverlapsWithLine
         ? leftMargin
         : leftMargin + labelLeftPadding + textPainter.width + 8;
+
     final paint = Paint()
       ..color = MyColors.separater
       ..strokeWidth = 1.0;
@@ -485,6 +532,17 @@ class PredictionGraphPainter extends CustomPainter {
     );
     textPainter.layout();
 
+    // 項目名のみのTextPainterを作成（重なった場合の描画用）
+    const titleSpan = TextSpan(
+      text: '予算 ',
+      style: PredictionGraphTextStyles.graphLabel,
+    );
+    final titlePainter = TextPainter(
+      text: titleSpan,
+      textDirection: TextDirection.ltr,
+    );
+    titlePainter.layout();
+
     // ラベルを線の垂直中央に配置
     final labelY = y - textPainter.height / 2;
     final labelBottom = labelY + textPainter.height;
@@ -513,12 +571,16 @@ class PredictionGraphPainter extends CustomPainter {
     final labelOverlapsWithLine =
         labelOverlapsWithPredictionLine || labelOverlapsWithExpenseLine;
 
-    // 予測ラインまたは支出ラインと重なる場合はラベルを描画しない
-    if (!labelOverlapsWithLine) {
+    // 描画処理
+    if (labelOverlapsWithLine) {
+      // 重なる場合：項目名のみ表示
+      titlePainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
+    } else {
+      // 重ならない場合：全表示
       textPainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
     }
 
-    // ラインをラベルの右端から描画（ラベルが表示されていない場合はグラフ開始位置から）
+    // ラインをラベルの右端から描画
     final lineStartX = labelOverlapsWithLine
         ? leftMargin
         : leftMargin + labelLeftPadding + textPainter.width + 8;
@@ -542,7 +604,8 @@ class PredictionGraphPainter extends CustomPainter {
       double graphHeight,
       double maxValue,
       List<dynamic> predictionPoints,
-      int predictionPrice) {
+      int predictionPrice,
+      bool shouldHideLineAndMoveLabel) {
     final paint = Paint()
       ..color = MyColors.separater
       ..strokeWidth = 0.8
@@ -567,29 +630,57 @@ class PredictionGraphPainter extends CustomPainter {
       }
     }
 
-    // 点線を描画
-    _drawDashedPath(canvas, path, paint);
+    // ラベルをラインの終点付近に表示
+    final textSpan = TextSpan(
+      children: [
+        const TextSpan(
+          text: '予想支出 ',
+          style: PredictionGraphTextStyles.graphLabel,
+        ),
+        TextSpan(
+          text: data.predictionLabel,
+          style: PredictionGraphTextStyles.graphPriceLabel,
+        ),
+      ],
+    );
 
-    // usecaseで生成されたラベルを使用
-    if (predictionPoints.length >= 2) {
-      final lastPoint = predictionPoints.last;
-      final daysDiff = lastPoint.date.difference(data.fromDate).inDays;
-      final x = leftMargin +
-          (totalDays > 1 ? (daysDiff / (totalDays - 1)) : 0.5) * graphWidth;
-      final y =
-          topMargin + graphHeight - (lastPoint.price / maxValue) * graphHeight;
+    if (!shouldHideLineAndMoveLabel) {
+      // 通常の描画（点線を表示）
+      _drawDashedPath(canvas, path, paint);
 
-      final textSpan = TextSpan(
-        text: data.predictionLabel,
-        style: PredictionGraphTextStyles.graphPriceLabel,
-      );
+      // ラベルをラインの終点付近に表示
+      if (predictionPoints.length >= 2) {
+        final lastPoint = predictionPoints.last;
+        final daysDiff = lastPoint.date.difference(data.fromDate).inDays;
+        final x = leftMargin +
+            (totalDays > 1 ? (daysDiff / (totalDays - 1)) : 0.5) * graphWidth;
+        final y = topMargin +
+            graphHeight -
+            (lastPoint.price / maxValue) * graphHeight;
+
+        final textPainter = TextPainter(
+          text: textSpan,
+          textDirection: TextDirection.ltr,
+        );
+        textPainter.layout();
+        textPainter.paint(canvas, Offset(x - 130, y - 18));
+      }
+    } else {
+      // 条件に合致する場合：ライン非表示、ラベルをグラフ右上に表示
 
       final textPainter = TextPainter(
         text: textSpan,
         textDirection: TextDirection.ltr,
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(x - 130, y - 18));
+
+      // 右上に配置（マージンを考慮）
+      // graphWidthの右端、topMargin付近
+      // テキストの幅分だけ左にずらす
+      final labelX = leftMargin + graphWidth - 12 - textPainter.width;
+      final labelY = topMargin + 12;
+
+      textPainter.paint(canvas, Offset(labelX, labelY));
     }
   }
 
