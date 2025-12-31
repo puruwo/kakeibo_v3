@@ -8,52 +8,66 @@ import 'package:kakeibo/model/table_calmn_name.dart';
 
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsDailyExpenseRepository implements DailyExpenseRepository{
-
+class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
   @override
-  Future<DailyExpenseEntity> fetchWithCategory({required int incomeSourceBigId, required DateTime dateTime}) async {
-
+  Future<DailyExpenseEntity> fetchWithCategory(
+      {required int incomeSourceBigId, required DateTime dateTime}) async {
     // 日付指定
     final whereArgs = DateFormat('yyyyMMdd').format(dateTime);
 
     final sql = '''
       SELECT
         date,
-        SUM(price) AS totalExpense
+        SUM(price) AS totalExpense,
+        SUM(incomePrice) AS totalIncome
       FROM (
-        -- 通常の支出
+        -- 通常の支出（ボーナス含む）
         SELECT
           ${SqfExpense.date} as date,
-          ${SqfExpense.price} as price
+          ${SqfExpense.price} as price,
+          0 AS incomePrice
         FROM ${SqfExpense.tableName}
         WHERE ${SqfExpense.date} = $whereArgs
-        AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
 
         UNION ALL
 
-        -- 固定費支出
+        -- 固定費支出（確定分はprice、未確定分はestimatedPrice）
         SELECT
           ${SqfFixedCostExpense.date} as date,
-          ${SqfFixedCostExpense.price} as price
+          CASE 
+            WHEN ${SqfFixedCostExpense.isConfirmed} = 1 THEN ${SqfFixedCostExpense.price}
+            ELSE ${SqfFixedCost.estimatedPrice}
+          END as price,
+          0 AS incomePrice
         FROM ${SqfFixedCostExpense.tableName}
+        LEFT JOIN ${SqfFixedCost.tableName} 
+          ON ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.fixedCostId} = ${SqfFixedCost.tableName}.${SqfFixedCost.id}
         WHERE ${SqfFixedCostExpense.date} = $whereArgs
+
+        UNION ALL
+
+        -- 収入
+        SELECT
+          ${SqfIncome.date} as date,
+          0 as price,
+          ${SqfIncome.price} AS incomePrice
+        FROM ${SqfIncome.tableName}
+        WHERE ${SqfIncome.date} = $whereArgs
       )
       GROUP BY date
     ''';
 
     // 実行
     final dailyExpense = await db.query(sql);
-    
+
     // logger.i('====SQLが実行されました====\n ImplementsDailyExpenseRepository\n$sql');
-    
+
     // もしデータがない場合
-    if(dailyExpense.isEmpty){
-      return DailyExpenseEntity(date: dateTime, totalExpense: 0);
+    if (dailyExpense.isEmpty) {
+      return DailyExpenseEntity(
+          date: dateTime, totalExpense: 0, totalIncome: 0);
     }
     // データがある場合
     return DailyExpenseEntity.fromJson(dailyExpense.first);
-  
   }
 }
-
-  

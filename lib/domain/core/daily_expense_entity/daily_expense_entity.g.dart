@@ -11,6 +11,7 @@ _$DailyExpenseEntityImpl _$$DailyExpenseEntityImplFromJson(
     _$DailyExpenseEntityImpl(
       date: DateTime.parse(json['date'] as String),
       totalExpense: (json['totalExpense'] as num?)?.toInt() ?? 0,
+      totalIncome: (json['totalIncome'] as num?)?.toInt() ?? 0,
     );
 
 Map<String, dynamic> _$$DailyExpenseEntityImplToJson(
@@ -18,4 +19,5 @@ Map<String, dynamic> _$$DailyExpenseEntityImplToJson(
     <String, dynamic>{
       'date': instance.date.toIso8601String(),
       'totalExpense': instance.totalExpense,
+      'totalIncome': instance.totalIncome,
     };

@@ -80,6 +80,7 @@ class CalendarUsecaseNotifier
         day: dailyExpenseEntity.date.day,
         weekday: dailyExpenseEntity.date.weekday,
         totalExpense: dailyExpenseEntity.totalExpense,
+        totalIncome: dailyExpenseEntity.totalIncome,
         isWithinAggregationRange: true,
         shouldDisplayMonth: shouldDisplayMonth,
       );
@@ -117,6 +118,7 @@ List<CalendarTileEntity> fillOutOfPeriod(
       day: previousDate.day,
       weekday: previousDate.weekday,
       totalExpense: 0,
+      totalIncome: 0,
       isWithinAggregationRange: false,
       shouldDisplayMonth: false,
     );
@@ -133,6 +135,7 @@ List<CalendarTileEntity> fillOutOfPeriod(
       day: nextDate.day,
       weekday: nextDate.weekday,
       totalExpense: 0,
+      totalIncome: 0,
       isWithinAggregationRange: false,
       shouldDisplayMonth: false,
     );
