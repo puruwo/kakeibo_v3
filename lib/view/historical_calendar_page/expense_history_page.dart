@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/calendar_area.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_next_arrow_button.dart';
@@ -30,13 +29,15 @@ class ExpenseHistoryPage extends StatelessWidget {
                 //左矢印ボタン、押すと前の月に移動
                 const CalendarPreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final monthPeriodAsync =
+                  final dateScopeAsync =
                       ref.watch(historicalDateScopeEntityProvider);
-                  final monthPeriod = monthPeriodAsync.whenOrNull(
-                      data: (data) => data.monthPeriod);
-                  final label = yyyyMMtoMMGetter(monthPeriod);
+                  final selectedDate = dateScopeAsync.whenOrNull(
+                      data: (data) => data.selectedDate);
+                  final label = selectedDate != null
+                      ? '${selectedDate.year}年 ${selectedDate.month}月'
+                      : '';
                   return Text(
-                    label ?? '',
+                    label,
                     style: AppTextStyles.pageHeaderText,
                   );
                 }),

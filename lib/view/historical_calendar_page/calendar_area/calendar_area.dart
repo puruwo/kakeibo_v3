@@ -103,13 +103,23 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
                 data: (calendarTileEntityList) {
                   // データ取得------------------------------------------------------
 
-                  // dateBoxの高さ
-                  final boxHeight = (calendarTileEntityList.length == 5)
-                      ?
-                      // 5週間表示なら高さは
-                      54.0 * screenVerticalMagnification
-                      // 6週間表示なら高さは
-                      : 45.0 * screenVerticalMagnification;
+                  // dateBoxの高さ（週の数に応じて調整）
+                  final double boxHeight;
+                  switch (calendarTileEntityList.length) {
+                    case 4:
+                      // 4週間表示（2月が日曜始まりの場合など）
+                      boxHeight = 67.5 * screenVerticalMagnification;
+                      break;
+                    case 5:
+                      // 5週間表示
+                      boxHeight = 54.0 * screenVerticalMagnification;
+                      break;
+                    case 6:
+                    default:
+                      // 6週間表示
+                      boxHeight = 45.0 * screenVerticalMagnification;
+                      break;
+                  }
 
                   // dateBoxの横幅
                   final boxWidth = 46.0 * screenHorizontalMagnification;

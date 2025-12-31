@@ -1,10 +1,12 @@
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 
 extension DateTimeAdditions on DateTime {
-  // nヶ月後を計算
+  // nヶ月後を計算（負の値も対応）
   DateTime addMonths(int months) {
-    final int newYear = year + ((month - 1 + months) ~/ 12);
-    final int newMonth = ((month - 1 + months) % 12) + 1;
+    // 月の総数を計算（0ベース）
+    final totalMonths = (year * 12 + month - 1) + months;
+    final int newYear = totalMonths ~/ 12;
+    final int newMonth = (totalMonths % 12) + 1;
     // 対象月の最終日を取得
     final lastDay = DateTime(newYear, newMonth + 1, 0).day;
     final newDay = day > lastDay ? lastDay : day;
