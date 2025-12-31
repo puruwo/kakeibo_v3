@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -136,10 +137,7 @@ class ExpenseItemTile extends ConsumerWidget {
                               value.bigCategoryName,
                               textAlign: TextAlign.start,
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                fontSize: 15,
-                                color: MyColors.label,
-                              ),
+                              style: MyFonts.historyTileBigCategoryLabel,
                             ),
                           ),
 
@@ -153,9 +151,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.smallCategoryName}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      color: MyColors.secondaryLabel),
+                                  style: MyFonts.historyTileSubLabel,
                                 ),
                               ),
                               // メモ
@@ -185,8 +181,7 @@ class ExpenseItemTile extends ConsumerWidget {
                           priceLabel,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              fontSize: 19, color: MyColors.label),
+                          style: MyFonts.historyTilePriceLabel,
                         ),
                       ),
                     ),

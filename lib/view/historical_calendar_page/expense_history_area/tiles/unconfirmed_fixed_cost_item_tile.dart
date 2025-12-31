@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
@@ -98,10 +99,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                             value.name,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: MyColors.label,
-                            ),
+                            style: MyFonts.historyTileBigCategoryLabel,
                           ),
                         ),
                         // 固定費（未確定）ラベル
@@ -111,10 +109,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                             '固定費(未確定)',
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: MyColors.secondaryLabel,
-                            ),
+                            style: MyFonts.historyTileSubLabel,
                           ),
                         ),
                       ],
