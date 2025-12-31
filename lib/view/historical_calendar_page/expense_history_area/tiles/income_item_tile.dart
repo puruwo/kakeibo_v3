@@ -94,7 +94,8 @@ class IncomeItemTile extends ConsumerWidget {
                             value.bigCategoryName,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.historyTileBigCategoryLabel,
+                            style:
+                                HistoryListStyles.historyTileBigCategoryLabel,
                           ),
                         ),
 
@@ -108,7 +109,7 @@ class IncomeItemTile extends ConsumerWidget {
                                 ' ${value.smallCategoryName}',
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
-                                style: MyFonts.historyTileSubLabel,
+                                style: HistoryListStyles.historyTileSubLabel,
                               ),
                             ),
                             // メモ
@@ -141,7 +142,8 @@ class IncomeItemTile extends ConsumerWidget {
                             priceLabel,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style: MyFonts.historyTileIncomePriceLabel,
+                            style:
+                                HistoryListStyles.historyTileIncomePriceLabel,
                           ),
                         ],
                       ),

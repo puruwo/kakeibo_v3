@@ -5,7 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/history_list_styles.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
