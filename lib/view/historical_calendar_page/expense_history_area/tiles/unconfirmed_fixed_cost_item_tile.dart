@@ -25,11 +25,14 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final color = MyColors().getColorFromHex(value.colorCode);
+
     // アイコン
     final icon = FittedBox(
       fit: BoxFit.scaleDown,
       child: SvgPicture.asset(
         value.resourcePath,
+        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
         semanticsLabel: 'categoryIcon',
         width: 25,
         height: 25,
@@ -118,7 +121,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
 
                   // 値段
                   Padding(
-                    padding: const EdgeInsets.only(right: 22.0),
+                    padding: const EdgeInsets.only(right: 2.0),
                     child: SizedBox(
                       width: 100,
                       child: Text(
@@ -135,8 +138,8 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                     padding: EdgeInsets.only(right: 4),
                     child: Icon(
                       size: 18,
-                      Icons.arrow_forward_ios_rounded,
-                      color: MyColors.white,
+                      Icons.remove,
+                      color: MyColors.pink,
                     ),
                   )
                 ],

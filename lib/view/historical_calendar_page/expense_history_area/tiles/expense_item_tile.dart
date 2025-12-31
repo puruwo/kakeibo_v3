@@ -174,7 +174,7 @@ class ExpenseItemTile extends ConsumerWidget {
 
                     // 値段
                     Padding(
-                      padding: const EdgeInsets.only(right: 22.0),
+                      padding: const EdgeInsets.only(right: 2.0),
                       child: SizedBox(
                         width: 100,
                         child: Text(
@@ -191,8 +191,8 @@ class ExpenseItemTile extends ConsumerWidget {
                       padding: EdgeInsets.only(right: 4),
                       child: Icon(
                         size: 18,
-                        Icons.arrow_forward_ios_rounded,
-                        color: MyColors.white,
+                        Icons.remove,
+                        color: MyColors.pink,
                       ),
                     )
                   ],
