@@ -139,14 +139,11 @@ Container activeDateBox(int weekday, String dateLabel, Widget expenseLabel,
         children: [
           Text(
             dateLabel,
-            style: TextStyle(
-              fontSize: 10, // 日付のフォントサイズを少し小さくしてスペース確保
-              color: weekday == 6
-                  ? MyColors.blue
-                  : weekday == 7
-                      ? MyColors.red
-                      : MyColors.secondaryLabel,
-            ),
+            style: weekday == 6
+                ? MyFonts.calendarDateLabelSaturday
+                : weekday == 7
+                    ? MyFonts.calendarDateLabelSunday
+                    : MyFonts.calendarDateLabel,
           ),
           // 支出
           if (expenseLabel is! SizedBox)
@@ -185,14 +182,11 @@ Container normalDateBox(int weekday, String dateLabel, Widget expenseLabel,
         children: [
           Text(
             dateLabel,
-            style: TextStyle(
-              fontSize: 10,
-              color: weekday == 6
-                  ? MyColors.blue
-                  : weekday == 7
-                      ? MyColors.red
-                      : MyColors.secondaryLabel,
-            ),
+            style: weekday == 6
+                ? MyFonts.calendarDateLabelSaturday
+                : weekday == 7
+                    ? MyFonts.calendarDateLabelSunday
+                    : MyFonts.calendarDateLabel,
           ),
           // 支出
           if (expenseLabel is! SizedBox)
@@ -229,8 +223,7 @@ Container vacantDateBox(
     child: Center(
       child: Column(
         children: [
-          Text(dateLabel,
-              style: const TextStyle(color: MyColors.tirtiaryLabel)),
+          Text(dateLabel, style: MyFonts.calendarOutOfPeriodDateLabel),
         ],
       ),
     ),

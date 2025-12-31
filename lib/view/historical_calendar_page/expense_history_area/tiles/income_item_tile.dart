@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -93,10 +94,7 @@ class IncomeItemTile extends ConsumerWidget {
                             value.bigCategoryName,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: MyColors.label,
-                            ),
+                            style: MyFonts.historyTileBigCategoryLabel,
                           ),
                         ),
 
@@ -110,9 +108,7 @@ class IncomeItemTile extends ConsumerWidget {
                                 ' ${value.smallCategoryName}',
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: MyColors.secondaryLabel),
+                                style: MyFonts.historyTileSubLabel,
                               ),
                             ),
                             // メモ
@@ -145,13 +141,11 @@ class IncomeItemTile extends ConsumerWidget {
                             priceLabel,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                                fontSize: 19, color: MyColors.systemGreen),
+                            style: MyFonts.historyTileIncomePriceLabel,
                           ),
                           const Text(
                             '+',
-                            style: TextStyle(
-                                fontSize: 15, color: MyColors.systemGreen),
+                            style: MyFonts.historyTileIncomePlusLabel,
                           ),
                         ],
                       ),

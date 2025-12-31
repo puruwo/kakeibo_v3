@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
@@ -83,10 +84,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                             value.name,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              color: MyColors.label,
-                            ),
+                            style: MyFonts.historyTileBigCategoryLabel,
                           ),
                         ),
                         // 固定費（確定済み）ラベル
@@ -96,10 +94,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                             '固定費',
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: MyColors.secondaryLabel,
-                            ),
+                            style: MyFonts.historyTileSubLabel,
                           ),
                         ),
                       ],
@@ -115,8 +110,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                         priceLabel,
                         textAlign: TextAlign.end,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            fontSize: 19, color: MyColors.label),
+                        style: MyFonts.historyTilePriceLabel,
                       ),
                     ),
                   ),

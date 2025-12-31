@@ -9,6 +9,7 @@ import 'package:logger/logger.dart';
 /// LocalImport
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
@@ -170,18 +171,13 @@ SizedBox _calendarHeader(double boxWidth) {
     child: const Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text('日', style: TextStyle(color: MyColors.red, fontSize: 12)),
-        Text('月',
-            style: TextStyle(color: MyColors.secondaryLabel, fontSize: 12)),
-        Text('火',
-            style: TextStyle(color: MyColors.secondaryLabel, fontSize: 12)),
-        Text('水',
-            style: TextStyle(color: MyColors.secondaryLabel, fontSize: 12)),
-        Text('木',
-            style: TextStyle(color: MyColors.secondaryLabel, fontSize: 12)),
-        Text('金',
-            style: TextStyle(color: MyColors.secondaryLabel, fontSize: 12)),
-        Text('土', style: TextStyle(color: MyColors.blue, fontSize: 12)),
+        Text('日', style: MyFonts.calendarWeekdaySunday),
+        Text('月', style: MyFonts.calendarWeekdayLabel),
+        Text('火', style: MyFonts.calendarWeekdayLabel),
+        Text('水', style: MyFonts.calendarWeekdayLabel),
+        Text('木', style: MyFonts.calendarWeekdayLabel),
+        Text('金', style: MyFonts.calendarWeekdayLabel),
+        Text('土', style: MyFonts.calendarWeekdaySaturday),
       ],
     ),
   );

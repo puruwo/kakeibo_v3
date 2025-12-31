@@ -76,10 +76,77 @@ class MyFonts {
     fontFamily: 'sf_ui',
   );
 
-  // ecpense history
-  static TextStyle expenseHistoryDateHeaderLabel = const TextStyle(
+  // カレンダーヘッダー（曜日）
+  static const TextStyle calendarWeekdayLabel = TextStyle(
+    color: MyColors.secondaryLabel,
+    fontSize: 12,
+  );
+
+  static const TextStyle calendarWeekdaySunday = TextStyle(
+    color: MyColors.red,
+    fontSize: 12,
+  );
+
+  static const TextStyle calendarWeekdaySaturday = TextStyle(
+    color: MyColors.blue,
+    fontSize: 12,
+  );
+
+  // カレンダー日付セル
+  static const TextStyle calendarDateLabel = TextStyle(
+    color: MyColors.secondaryLabel,
+  );
+  static const TextStyle calendarDateLabelSunday = TextStyle(
+    color: MyColors.red,
+  );
+  static const TextStyle calendarDateLabelSaturday = TextStyle(
+    color: MyColors.blue,
+  );
+
+  static const TextStyle calendarOutOfPeriodDateLabel = TextStyle(
+    color: MyColors.tirtiaryLabel,
+  );
+
+  // Expense History Area
+  static const TextStyle expenseHistoryDateHeaderLabel = TextStyle(
     color: MyColors.secondaryLabel,
     fontSize: 14,
+  );
+
+  // 履歴タイルの大カテゴリ名
+  static const TextStyle historyTileBigCategoryLabel = TextStyle(
+    fontSize: 15,
+    color: MyColors.label,
+  );
+
+  // 履歴タイルのサブラベル（小カテゴリ/メモ/固定費ラベル）
+  static const TextStyle historyTileSubLabel = TextStyle(
+    fontSize: 12,
+    color: MyColors.secondaryLabel,
+  );
+
+  // 履歴タイルの金額（デフォルト）
+  static const TextStyle historyTilePriceLabel = TextStyle(
+    fontSize: 19,
+    color: MyColors.label,
+  );
+
+  // 履歴タイルの金額（収入）
+  static const TextStyle historyTileIncomePriceLabel = TextStyle(
+    fontSize: 19,
+    color: MyColors.systemGreen,
+  );
+
+  // 履歴タイルの金額（収入の+記号）
+  static const TextStyle historyTileIncomePlusLabel = TextStyle(
+    fontSize: 15,
+    color: MyColors.systemGreen,
+  );
+
+  // 履歴エリアの「記録がありません」メッセージ
+  static const TextStyle historyEmptyMessage = TextStyle(
+    color: MyColors.secondaryLabel,
+    fontSize: 16,
   );
 
   // Register Page

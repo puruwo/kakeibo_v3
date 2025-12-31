@@ -114,7 +114,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
             Center(
               child: Text(
                 '記録がまだありません',
-                style: TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+                style: MyFonts.historyEmptyMessage,
               ),
             ),
           ],
