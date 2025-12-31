@@ -9,6 +9,8 @@ class DailyBarData with _$DailyBarData {
     required DateTime date,
     required bool isFutureDate,
     required List<CategoryExpense> categoryExpenses,
+    // BarAreaHeightに対する比率 (0.0 ~ 1.0)
+    required double normalizedTotalHeight,
   }) = _DailyBarData;
 }
 
@@ -21,5 +23,7 @@ class CategoryExpense with _$CategoryExpense {
     required String colorCode,
     required String iconPath,
     required String categoryName,
+    // BarAreaHeightに対する比率 (0.0 ~ 1.0)
+    required double normalizedHeight,
   }) = _CategoryExpense;
 }

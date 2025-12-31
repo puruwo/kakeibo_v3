@@ -19,7 +19,8 @@ mixin _$DailyBarData {
   DateTime get date => throw _privateConstructorUsedError;
   bool get isFutureDate => throw _privateConstructorUsedError;
   List<CategoryExpense> get categoryExpenses =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  double get normalizedTotalHeight => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DailyBarDataCopyWith<DailyBarData> get copyWith =>
@@ -35,7 +36,8 @@ abstract class $DailyBarDataCopyWith<$Res> {
   $Res call(
       {DateTime date,
       bool isFutureDate,
-      List<CategoryExpense> categoryExpenses});
+      List<CategoryExpense> categoryExpenses,
+      double normalizedTotalHeight});
 }
 
 /// @nodoc
@@ -54,6 +56,7 @@ class _$DailyBarDataCopyWithImpl<$Res, $Val extends DailyBarData>
     Object? date = null,
     Object? isFutureDate = null,
     Object? categoryExpenses = null,
+    Object? normalizedTotalHeight = null,
   }) {
     return _then(_value.copyWith(
       date: null == date
@@ -68,6 +71,10 @@ class _$DailyBarDataCopyWithImpl<$Res, $Val extends DailyBarData>
           ? _value.categoryExpenses
           : categoryExpenses // ignore: cast_nullable_to_non_nullable
               as List<CategoryExpense>,
+      normalizedTotalHeight: null == normalizedTotalHeight
+          ? _value.normalizedTotalHeight
+          : normalizedTotalHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -83,7 +90,8 @@ abstract class _$$DailyBarDataImplCopyWith<$Res>
   $Res call(
       {DateTime date,
       bool isFutureDate,
-      List<CategoryExpense> categoryExpenses});
+      List<CategoryExpense> categoryExpenses,
+      double normalizedTotalHeight});
 }
 
 /// @nodoc
@@ -100,6 +108,7 @@ class __$$DailyBarDataImplCopyWithImpl<$Res>
     Object? date = null,
     Object? isFutureDate = null,
     Object? categoryExpenses = null,
+    Object? normalizedTotalHeight = null,
   }) {
     return _then(_$DailyBarDataImpl(
       date: null == date
@@ -114,6 +123,10 @@ class __$$DailyBarDataImplCopyWithImpl<$Res>
           ? _value._categoryExpenses
           : categoryExpenses // ignore: cast_nullable_to_non_nullable
               as List<CategoryExpense>,
+      normalizedTotalHeight: null == normalizedTotalHeight
+          ? _value.normalizedTotalHeight
+          : normalizedTotalHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -124,7 +137,8 @@ class _$DailyBarDataImpl implements _DailyBarData {
   const _$DailyBarDataImpl(
       {required this.date,
       required this.isFutureDate,
-      required final List<CategoryExpense> categoryExpenses})
+      required final List<CategoryExpense> categoryExpenses,
+      required this.normalizedTotalHeight})
       : _categoryExpenses = categoryExpenses;
 
   @override
@@ -140,9 +154,13 @@ class _$DailyBarDataImpl implements _DailyBarData {
     return EqualUnmodifiableListView(_categoryExpenses);
   }
 
+// BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  @override
+  final double normalizedTotalHeight;
+
   @override
   String toString() {
-    return 'DailyBarData(date: $date, isFutureDate: $isFutureDate, categoryExpenses: $categoryExpenses)';
+    return 'DailyBarData(date: $date, isFutureDate: $isFutureDate, categoryExpenses: $categoryExpenses, normalizedTotalHeight: $normalizedTotalHeight)';
   }
 
   @override
@@ -154,12 +172,18 @@ class _$DailyBarDataImpl implements _DailyBarData {
             (identical(other.isFutureDate, isFutureDate) ||
                 other.isFutureDate == isFutureDate) &&
             const DeepCollectionEquality()
-                .equals(other._categoryExpenses, _categoryExpenses));
+                .equals(other._categoryExpenses, _categoryExpenses) &&
+            (identical(other.normalizedTotalHeight, normalizedTotalHeight) ||
+                other.normalizedTotalHeight == normalizedTotalHeight));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, date, isFutureDate,
-      const DeepCollectionEquality().hash(_categoryExpenses));
+  int get hashCode => Object.hash(
+      runtimeType,
+      date,
+      isFutureDate,
+      const DeepCollectionEquality().hash(_categoryExpenses),
+      normalizedTotalHeight);
 
   @JsonKey(ignore: true)
   @override
@@ -170,10 +194,10 @@ class _$DailyBarDataImpl implements _DailyBarData {
 
 abstract class _DailyBarData implements DailyBarData {
   const factory _DailyBarData(
-          {required final DateTime date,
-          required final bool isFutureDate,
-          required final List<CategoryExpense> categoryExpenses}) =
-      _$DailyBarDataImpl;
+      {required final DateTime date,
+      required final bool isFutureDate,
+      required final List<CategoryExpense> categoryExpenses,
+      required final double normalizedTotalHeight}) = _$DailyBarDataImpl;
 
   @override
   DateTime get date;
@@ -181,6 +205,8 @@ abstract class _DailyBarData implements DailyBarData {
   bool get isFutureDate;
   @override
   List<CategoryExpense> get categoryExpenses;
+  @override // BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  double get normalizedTotalHeight;
   @override
   @JsonKey(ignore: true)
   _$$DailyBarDataImplCopyWith<_$DailyBarDataImpl> get copyWith =>
@@ -193,7 +219,9 @@ mixin _$CategoryExpense {
   int get price => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get iconPath => throw _privateConstructorUsedError;
-  String get categoryName => throw _privateConstructorUsedError;
+  String get categoryName =>
+      throw _privateConstructorUsedError; // BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  double get normalizedHeight => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $CategoryExpenseCopyWith<CategoryExpense> get copyWith =>
@@ -211,7 +239,8 @@ abstract class $CategoryExpenseCopyWith<$Res> {
       int price,
       String colorCode,
       String iconPath,
-      String categoryName});
+      String categoryName,
+      double normalizedHeight});
 }
 
 /// @nodoc
@@ -232,6 +261,7 @@ class _$CategoryExpenseCopyWithImpl<$Res, $Val extends CategoryExpense>
     Object? colorCode = null,
     Object? iconPath = null,
     Object? categoryName = null,
+    Object? normalizedHeight = null,
   }) {
     return _then(_value.copyWith(
       bigCategoryId: null == bigCategoryId
@@ -254,6 +284,10 @@ class _$CategoryExpenseCopyWithImpl<$Res, $Val extends CategoryExpense>
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      normalizedHeight: null == normalizedHeight
+          ? _value.normalizedHeight
+          : normalizedHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ) as $Val);
   }
 }
@@ -271,7 +305,8 @@ abstract class _$$CategoryExpenseImplCopyWith<$Res>
       int price,
       String colorCode,
       String iconPath,
-      String categoryName});
+      String categoryName,
+      double normalizedHeight});
 }
 
 /// @nodoc
@@ -290,6 +325,7 @@ class __$$CategoryExpenseImplCopyWithImpl<$Res>
     Object? colorCode = null,
     Object? iconPath = null,
     Object? categoryName = null,
+    Object? normalizedHeight = null,
   }) {
     return _then(_$CategoryExpenseImpl(
       bigCategoryId: null == bigCategoryId
@@ -312,6 +348,10 @@ class __$$CategoryExpenseImplCopyWithImpl<$Res>
           ? _value.categoryName
           : categoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      normalizedHeight: null == normalizedHeight
+          ? _value.normalizedHeight
+          : normalizedHeight // ignore: cast_nullable_to_non_nullable
+              as double,
     ));
   }
 }
@@ -324,7 +364,8 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
       required this.price,
       required this.colorCode,
       required this.iconPath,
-      required this.categoryName});
+      required this.categoryName,
+      required this.normalizedHeight});
 
   @override
   final int bigCategoryId;
@@ -336,10 +377,13 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
   final String iconPath;
   @override
   final String categoryName;
+// BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  @override
+  final double normalizedHeight;
 
   @override
   String toString() {
-    return 'CategoryExpense(bigCategoryId: $bigCategoryId, price: $price, colorCode: $colorCode, iconPath: $iconPath, categoryName: $categoryName)';
+    return 'CategoryExpense(bigCategoryId: $bigCategoryId, price: $price, colorCode: $colorCode, iconPath: $iconPath, categoryName: $categoryName, normalizedHeight: $normalizedHeight)';
   }
 
   @override
@@ -355,12 +399,14 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
             (identical(other.iconPath, iconPath) ||
                 other.iconPath == iconPath) &&
             (identical(other.categoryName, categoryName) ||
-                other.categoryName == categoryName));
+                other.categoryName == categoryName) &&
+            (identical(other.normalizedHeight, normalizedHeight) ||
+                other.normalizedHeight == normalizedHeight));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType, bigCategoryId, price, colorCode, iconPath, categoryName);
+  int get hashCode => Object.hash(runtimeType, bigCategoryId, price, colorCode,
+      iconPath, categoryName, normalizedHeight);
 
   @JsonKey(ignore: true)
   @override
@@ -376,7 +422,8 @@ abstract class _CategoryExpense implements CategoryExpense {
       required final int price,
       required final String colorCode,
       required final String iconPath,
-      required final String categoryName}) = _$CategoryExpenseImpl;
+      required final String categoryName,
+      required final double normalizedHeight}) = _$CategoryExpenseImpl;
 
   @override
   int get bigCategoryId;
@@ -388,6 +435,8 @@ abstract class _CategoryExpense implements CategoryExpense {
   String get iconPath;
   @override
   String get categoryName;
+  @override // BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  double get normalizedHeight;
   @override
   @JsonKey(ignore: true)
   _$$CategoryExpenseImplCopyWith<_$CategoryExpenseImpl> get copyWith =>

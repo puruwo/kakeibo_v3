@@ -435,7 +435,8 @@ mixin _$PredictionGraphValue {
       throw _privateConstructorUsedError;
   int? get income => throw _privateConstructorUsedError;
   int? get budget => throw _privateConstructorUsedError;
-  double? get maxValue => throw _privateConstructorUsedError;
+  double? get maxValue => throw _privateConstructorUsedError; // 表示用の最大値（バッファ込み）
+  double? get displayMaxValue => throw _privateConstructorUsedError;
   int? get latestPrice => throw _privateConstructorUsedError;
   int? get predictionPrice => throw _privateConstructorUsedError;
   List<XAxisLabel>? get xAxisLabels => throw _privateConstructorUsedError;
@@ -473,6 +474,7 @@ abstract class $PredictionGraphValueCopyWith<$Res> {
       int? income,
       int? budget,
       double? maxValue,
+      double? displayMaxValue,
       int? latestPrice,
       int? predictionPrice,
       List<XAxisLabel>? xAxisLabels,
@@ -513,6 +515,7 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
     Object? income = freezed,
     Object? budget = freezed,
     Object? maxValue = freezed,
+    Object? displayMaxValue = freezed,
     Object? latestPrice = freezed,
     Object? predictionPrice = freezed,
     Object? xAxisLabels = freezed,
@@ -562,6 +565,10 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
       maxValue: freezed == maxValue
           ? _value.maxValue
           : maxValue // ignore: cast_nullable_to_non_nullable
+              as double?,
+      displayMaxValue: freezed == displayMaxValue
+          ? _value.displayMaxValue
+          : displayMaxValue // ignore: cast_nullable_to_non_nullable
               as double?,
       latestPrice: freezed == latestPrice
           ? _value.latestPrice
@@ -657,6 +664,7 @@ abstract class _$$PredictionGraphValueImplCopyWith<$Res>
       int? income,
       int? budget,
       double? maxValue,
+      double? displayMaxValue,
       int? latestPrice,
       int? predictionPrice,
       List<XAxisLabel>? xAxisLabels,
@@ -696,6 +704,7 @@ class __$$PredictionGraphValueImplCopyWithImpl<$Res>
     Object? income = freezed,
     Object? budget = freezed,
     Object? maxValue = freezed,
+    Object? displayMaxValue = freezed,
     Object? latestPrice = freezed,
     Object? predictionPrice = freezed,
     Object? xAxisLabels = freezed,
@@ -745,6 +754,10 @@ class __$$PredictionGraphValueImplCopyWithImpl<$Res>
       maxValue: freezed == maxValue
           ? _value.maxValue
           : maxValue // ignore: cast_nullable_to_non_nullable
+              as double?,
+      displayMaxValue: freezed == displayMaxValue
+          ? _value.displayMaxValue
+          : displayMaxValue // ignore: cast_nullable_to_non_nullable
               as double?,
       latestPrice: freezed == latestPrice
           ? _value.latestPrice
@@ -811,6 +824,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
       required this.income,
       required this.budget,
       required this.maxValue,
+      required this.displayMaxValue,
       required this.latestPrice,
       required this.predictionPrice,
       required final List<XAxisLabel>? xAxisLabels,
@@ -863,6 +877,9 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
   final int? budget;
   @override
   final double? maxValue;
+// 表示用の最大値（バッファ込み）
+  @override
+  final double? displayMaxValue;
   @override
   final int? latestPrice;
   @override
@@ -910,7 +927,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
 
   @override
   String toString() {
-    return 'PredictionGraphValue(predictionGraphLineType: $predictionGraphLineType, fromDate: $fromDate, toDate: $toDate, today: $today, expensePoints: $expensePoints, predictionPoints: $predictionPoints, income: $income, budget: $budget, maxValue: $maxValue, latestPrice: $latestPrice, predictionPrice: $predictionPrice, xAxisLabels: $xAxisLabels, incomeLabelPosition: $incomeLabelPosition, budgetLabelPosition: $budgetLabelPosition, predictionLabel: $predictionLabel, shouldShowPredictionLine: $shouldShowPredictionLine, shouldShowBudgetLine: $shouldShowBudgetLine, shouldShowIncomeLine: $shouldShowIncomeLine, dailyBarDataList: $dailyBarDataList, barMaxValue: $barMaxValue, totalFixedCostExpense: $totalFixedCostExpense)';
+    return 'PredictionGraphValue(predictionGraphLineType: $predictionGraphLineType, fromDate: $fromDate, toDate: $toDate, today: $today, expensePoints: $expensePoints, predictionPoints: $predictionPoints, income: $income, budget: $budget, maxValue: $maxValue, displayMaxValue: $displayMaxValue, latestPrice: $latestPrice, predictionPrice: $predictionPrice, xAxisLabels: $xAxisLabels, incomeLabelPosition: $incomeLabelPosition, budgetLabelPosition: $budgetLabelPosition, predictionLabel: $predictionLabel, shouldShowPredictionLine: $shouldShowPredictionLine, shouldShowBudgetLine: $shouldShowBudgetLine, shouldShowIncomeLine: $shouldShowIncomeLine, dailyBarDataList: $dailyBarDataList, barMaxValue: $barMaxValue, totalFixedCostExpense: $totalFixedCostExpense)';
   }
 
   @override
@@ -933,6 +950,8 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
             (identical(other.budget, budget) || other.budget == budget) &&
             (identical(other.maxValue, maxValue) ||
                 other.maxValue == maxValue) &&
+            (identical(other.displayMaxValue, displayMaxValue) ||
+                other.displayMaxValue == displayMaxValue) &&
             (identical(other.latestPrice, latestPrice) ||
                 other.latestPrice == latestPrice) &&
             (identical(other.predictionPrice, predictionPrice) ||
@@ -972,6 +991,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
         income,
         budget,
         maxValue,
+        displayMaxValue,
         latestPrice,
         predictionPrice,
         const DeepCollectionEquality().hash(_xAxisLabels),
@@ -1006,6 +1026,7 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
       required final int? income,
       required final int? budget,
       required final double? maxValue,
+      required final double? displayMaxValue,
       required final int? latestPrice,
       required final int? predictionPrice,
       required final List<XAxisLabel>? xAxisLabels,
@@ -1037,6 +1058,8 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
   int? get budget;
   @override
   double? get maxValue;
+  @override // 表示用の最大値（バッファ込み）
+  double? get displayMaxValue;
   @override
   int? get latestPrice;
   @override

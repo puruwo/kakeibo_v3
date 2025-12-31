@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
@@ -87,6 +88,7 @@ class PredictionGraphUsecase {
         shouldShowPredictionLine: false,
         shouldShowBudgetLine: false,
         shouldShowIncomeLine: false,
+        displayMaxValue: 100.0, // デフォルト値
       );
     } else {
       predictionGraphLineType = PredictionGraphLineType.thisMonth;
@@ -171,6 +173,7 @@ class PredictionGraphUsecase {
       income,
       budgetIncludeFixedCost,
     );
+    final displayMaxValue = maxValue * 1.2;
 
     // 横軸ラベルを生成
     final xAxisLabels = _generateXAxisLabels(fromDate, toDate);
@@ -208,6 +211,7 @@ class PredictionGraphUsecase {
       income: income,
       budget: budgetIncludeFixedCost,
       maxValue: maxValue,
+      displayMaxValue: displayMaxValue,
       latestPrice: lastPrice,
       predictionPrice: predictionPrice,
       xAxisLabels: xAxisLabels,
@@ -514,6 +518,7 @@ class PredictionGraphUsecase {
           colorCode: catInfo?.colorCode ?? 'FF888888',
           iconPath: catInfo?.iconPath ?? '',
           categoryName: catInfo?.name ?? '',
+          normalizedHeight: 0, // 後で設定
         ));
         dailyTotal += entry.value;
       }
@@ -526,10 +531,12 @@ class PredictionGraphUsecase {
       // 未来日付かどうか判定
       final isFutureDate = currentDate.isAfter(today);
 
+      // 一時的なデータとして保持（後で正規化する）
       dailyBarDataList.add(DailyBarData(
         date: currentDate,
         isFutureDate: isFutureDate,
         categoryExpenses: categoryExpenses,
+        normalizedTotalHeight: dailyTotal.toDouble(), // 一時的に合計値を入れる
       ));
 
       currentDate = currentDate.add(const Duration(days: 1));
@@ -539,8 +546,33 @@ class PredictionGraphUsecase {
     final barMaxValue =
         maxDailyTotal > barThreshold ? maxDailyTotal : barThreshold;
 
+    // 正規化とデータ再構築
+    final sqrtMaxValue = math.sqrt(barMaxValue);
+    final normalizedList = <DailyBarData>[];
+
+    for (final data in dailyBarDataList) {
+      final dailyTotal = data.normalizedTotalHeight; // 一時的に入れた合計値
+      final sqrtDaily = math.sqrt(dailyTotal);
+      final normalizedTotalHeight = sqrtDaily / sqrtMaxValue;
+
+      final normalizedExpenses = <CategoryExpense>[];
+      for (final expense in data.categoryExpenses) {
+        // 高さ比率 (合計に対する比率)
+        final heightRatio = dailyTotal > 0 ? expense.price / dailyTotal : 0.0;
+
+        normalizedExpenses.add(expense.copyWith(
+          normalizedHeight: heightRatio,
+        ));
+      }
+
+      normalizedList.add(data.copyWith(
+        categoryExpenses: normalizedExpenses,
+        normalizedTotalHeight: normalizedTotalHeight,
+      ));
+    }
+
     return _DailyBarResult(
-      dailyBarDataList: dailyBarDataList,
+      dailyBarDataList: normalizedList,
       barMaxValue: barMaxValue,
     );
   }

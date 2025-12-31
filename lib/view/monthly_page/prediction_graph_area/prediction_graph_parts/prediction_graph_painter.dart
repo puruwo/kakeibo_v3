@@ -1,4 +1,4 @@
-import 'dart:math' show pow, sqrt;
+// import 'dart:math' show pow, sqrt; // Removed
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
@@ -42,7 +42,7 @@ class PredictionGraphPainter extends CustomPainter {
 
     // 最大値を計算（1.2倍の余裕を持たせる）
     // maxValueが0またはnullの場合は最低値として100を設定
-    final maxValue = (data.maxValue ?? 0) > 0 ? data.maxValue! * 1.2 : 100.0;
+    final maxValue = data.displayMaxValue ?? 100.0;
 
     // X軸を描画（グラフ開始位置から）
     _drawXAxis(canvas, size, leftMargin + graphLeftOffset, topMargin,
@@ -222,7 +222,6 @@ class PredictionGraphPainter extends CustomPainter {
   void _drawDailyBars(Canvas canvas, double leftMargin, double topMargin,
       double graphWidth, double graphHeight, double barAreaHeight) {
     final dailyBarDataList = data.dailyBarDataList!;
-    final barMaxValue = data.barMaxValue ?? 20000;
     final totalDays = data.toDate.difference(data.fromDate).inDays + 1;
 
     // 棒グラフの最大高さ（グラフ高さの1/3）
@@ -235,26 +234,14 @@ class PredictionGraphPainter extends CustomPainter {
     const barWidthRatio = 0.7;
     final barWidth = (graphWidth / totalDays) * barWidthRatio;
 
-    // 平方根スケール用の最大値
-    final sqrtMaxValue = pow(barMaxValue, 1 / 2).toDouble();
-
     for (final barData in dailyBarDataList) {
       final daysDiff = barData.date.difference(data.fromDate).inDays;
       final x = leftMargin +
           (daysDiff / totalDays) * graphWidth +
           (graphWidth / totalDays) * (1 - barWidthRatio) / 2;
 
-      // その日の総支出を計算
-      int dailyTotal = 0;
-      for (final expense in barData.categoryExpenses) {
-        dailyTotal += expense.price.toInt();
-      }
-
-      if (dailyTotal == 0) continue;
-
-      // 平方根スケールで全体の棒の高さを計算
-      final sqrtDailyTotal = sqrt(dailyTotal.toDouble());
-      double totalBarHeight = (sqrtDailyTotal / sqrtMaxValue) * maxBarHeight;
+      // UseCaseで計算された正規化高さを使用 (0.0 ~ 1.0)
+      double totalBarHeight = barData.normalizedTotalHeight * maxBarHeight;
 
       // 最小高さを確保
       if (totalBarHeight < minBarHeight) {
@@ -267,23 +254,12 @@ class PredictionGraphPainter extends CustomPainter {
       int categoryIndex = 0;
 
       for (final expense in barData.categoryExpenses) {
-        // カテゴリーの棒の高さを計算（比率で分割）
-        final barHeight = (expense.price / dailyTotal) * totalBarHeight;
+        // UseCaseで計算された比率と色を使用
+        // カテゴリーの棒の高さを計算
+        final barHeight = expense.normalizedHeight * totalBarHeight;
 
-        // 色をパース
-        final colorCode = expense.colorCode.replaceAll('#', '');
-        int colorValue;
-        try {
-          colorValue = int.parse(colorCode, radix: 16);
-        } catch (e) {
-          colorValue = 0xFF888888;
-        }
-        // アルファ値が含まれていない場合は追加
-        if (colorCode.length == 6) {
-          colorValue = 0xFF000000 | colorValue;
-        }
-
-        var barColor = Color(colorValue);
+        // UseCaseで計算された色を使用
+        var barColor = MyColors().getColorFromHex(expense.colorCode);
 
         // 未来日付の場合は透明度を下げる
         if (barData.isFutureDate) {

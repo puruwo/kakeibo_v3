@@ -88,6 +88,7 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
         date: selectedDate,
         isFutureDate: false,
         categoryExpenses: [],
+        normalizedTotalHeight: 0,
       ),
     );
 
@@ -130,6 +131,7 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
         date: selectedDate,
         isFutureDate: false,
         categoryExpenses: [],
+        normalizedTotalHeight: 0,
       ),
     );
 

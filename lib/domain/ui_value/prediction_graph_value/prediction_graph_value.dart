@@ -49,6 +49,8 @@ class PredictionGraphValue with _$PredictionGraphValue {
     required int? income,
     required int? budget,
     required double? maxValue,
+    // 表示用の最大値（バッファ込み）
+    required double? displayMaxValue,
     required int? latestPrice,
     required int? predictionPrice,
     required List<XAxisLabel>? xAxisLabels,
