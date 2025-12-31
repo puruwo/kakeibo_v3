@@ -11,19 +11,21 @@ class GraphTooltip extends StatelessWidget {
     required this.cumulativeExpense,
     required this.totalFixedCostExpense,
     required this.categoryExpenses,
-    required this.onClose,
+    required this.onTapTooltip,
   });
 
   final DateTime date;
   final int cumulativeExpense;
   final int totalFixedCostExpense;
   final List<CategoryExpense> categoryExpenses;
-  final VoidCallback onClose;
+
+  /// ツールチップ本体をタップした時のコールバック（ページ遷移用）
+  final VoidCallback onTapTooltip;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onClose,
+      onTap: onTapTooltip,
       child: IntrinsicWidth(
         child: Container(
           constraints: const BoxConstraints(minWidth: 140),

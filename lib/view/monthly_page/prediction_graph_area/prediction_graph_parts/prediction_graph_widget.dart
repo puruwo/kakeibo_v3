@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
+import 'package:kakeibo/view/daily_expense_summary_page/daily_expense_summary_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_parts/prediction_graph_painter.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_parts/prediction_graph_tooltip.dart';
 
@@ -24,7 +25,19 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
       builder: (context, constraints) {
         _widgetSize = Size(constraints.maxWidth, constraints.maxHeight);
         return GestureDetector(
+          behavior: HitTestBehavior.opaque, // タップを確実に検知
           onTapDown: (details) {
+            // ツールチップ表示中に外をタップしたら閉じる
+            if (_selectedDate != null) {
+              // タップ位置がツールチップ領域外かチェック
+              if (!_isPositionInsideTooltip(details.localPosition)) {
+                setState(() {
+                  _selectedDate = null;
+                  _tapPosition = null;
+                });
+                return;
+              }
+            }
             _handleTap(details.localPosition, context);
           },
           onTapUp: (_) {},
@@ -46,6 +59,26 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
         );
       },
     );
+  }
+
+  /// タップ位置がツールチップ領域内かチェック
+  bool _isPositionInsideTooltip(Offset position) {
+    if (_tapPosition == null) return false;
+
+    const tooltipWidth = 200.0;
+    const tooltipHeight = 150.0; // おおよそのツールチップ高さ
+    const tooltipTop = 8.0;
+
+    double tooltipX = _tapPosition!.dx - tooltipWidth / 2;
+    if (tooltipX < 8) tooltipX = 8;
+    if (tooltipX + tooltipWidth > _widgetSize.width - 8) {
+      tooltipX = _widgetSize.width - tooltipWidth - 8;
+    }
+
+    return position.dx >= tooltipX &&
+        position.dx <= tooltipX + tooltipWidth &&
+        position.dy >= tooltipTop &&
+        position.dy <= tooltipTop + tooltipHeight;
   }
 
   void _handleTap(Offset position, BuildContext context) {
@@ -153,11 +186,15 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
         cumulativeExpense: cumulativeExpense,
         totalFixedCostExpense: widget.data.totalFixedCostExpense ?? 0,
         categoryExpenses: dailyBarData?.categoryExpenses ?? [],
-        onClose: () {
+        onTapTooltip: () {
+          // ツールチップを閉じてからナビゲーション
           setState(() {
             _selectedDate = null;
             _tapPosition = null;
           });
+          Navigator.of(context).push(
+            DailyExpenseSummaryPage.route(selectedDate),
+          );
         },
       ),
     );
