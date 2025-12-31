@@ -60,6 +60,8 @@ class PredictionGraphValue with _$PredictionGraphValue {
     required bool shouldShowPredictionLine,
     required bool shouldShowBudgetLine,
     required bool shouldShowIncomeLine,
+    required bool shouldShowExpenseLabel,
+    required LabelPosition? expenseLabelPosition,
     // 棒グラフ用データ
     List<DailyBarData>? dailyBarDataList,
     int? barMaxValue,

@@ -445,7 +445,9 @@ mixin _$PredictionGraphValue {
   String? get predictionLabel => throw _privateConstructorUsedError;
   bool get shouldShowPredictionLine => throw _privateConstructorUsedError;
   bool get shouldShowBudgetLine => throw _privateConstructorUsedError;
-  bool get shouldShowIncomeLine =>
+  bool get shouldShowIncomeLine => throw _privateConstructorUsedError;
+  bool get shouldShowExpenseLabel => throw _privateConstructorUsedError;
+  LabelPosition? get expenseLabelPosition =>
       throw _privateConstructorUsedError; // 棒グラフ用データ
   List<DailyBarData>? get dailyBarDataList =>
       throw _privateConstructorUsedError;
@@ -484,12 +486,15 @@ abstract class $PredictionGraphValueCopyWith<$Res> {
       bool shouldShowPredictionLine,
       bool shouldShowBudgetLine,
       bool shouldShowIncomeLine,
+      bool shouldShowExpenseLabel,
+      LabelPosition? expenseLabelPosition,
       List<DailyBarData>? dailyBarDataList,
       int? barMaxValue,
       int? totalFixedCostExpense});
 
   $LabelPositionCopyWith<$Res>? get incomeLabelPosition;
   $LabelPositionCopyWith<$Res>? get budgetLabelPosition;
+  $LabelPositionCopyWith<$Res>? get expenseLabelPosition;
 }
 
 /// @nodoc
@@ -525,6 +530,8 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
     Object? shouldShowPredictionLine = null,
     Object? shouldShowBudgetLine = null,
     Object? shouldShowIncomeLine = null,
+    Object? shouldShowExpenseLabel = null,
+    Object? expenseLabelPosition = freezed,
     Object? dailyBarDataList = freezed,
     Object? barMaxValue = freezed,
     Object? totalFixedCostExpense = freezed,
@@ -606,6 +613,14 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
           ? _value.shouldShowIncomeLine
           : shouldShowIncomeLine // ignore: cast_nullable_to_non_nullable
               as bool,
+      shouldShowExpenseLabel: null == shouldShowExpenseLabel
+          ? _value.shouldShowExpenseLabel
+          : shouldShowExpenseLabel // ignore: cast_nullable_to_non_nullable
+              as bool,
+      expenseLabelPosition: freezed == expenseLabelPosition
+          ? _value.expenseLabelPosition
+          : expenseLabelPosition // ignore: cast_nullable_to_non_nullable
+              as LabelPosition?,
       dailyBarDataList: freezed == dailyBarDataList
           ? _value.dailyBarDataList
           : dailyBarDataList // ignore: cast_nullable_to_non_nullable
@@ -644,6 +659,18 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
       return _then(_value.copyWith(budgetLabelPosition: value) as $Val);
     });
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $LabelPositionCopyWith<$Res>? get expenseLabelPosition {
+    if (_value.expenseLabelPosition == null) {
+      return null;
+    }
+
+    return $LabelPositionCopyWith<$Res>(_value.expenseLabelPosition!, (value) {
+      return _then(_value.copyWith(expenseLabelPosition: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -674,6 +701,8 @@ abstract class _$$PredictionGraphValueImplCopyWith<$Res>
       bool shouldShowPredictionLine,
       bool shouldShowBudgetLine,
       bool shouldShowIncomeLine,
+      bool shouldShowExpenseLabel,
+      LabelPosition? expenseLabelPosition,
       List<DailyBarData>? dailyBarDataList,
       int? barMaxValue,
       int? totalFixedCostExpense});
@@ -682,6 +711,8 @@ abstract class _$$PredictionGraphValueImplCopyWith<$Res>
   $LabelPositionCopyWith<$Res>? get incomeLabelPosition;
   @override
   $LabelPositionCopyWith<$Res>? get budgetLabelPosition;
+  @override
+  $LabelPositionCopyWith<$Res>? get expenseLabelPosition;
 }
 
 /// @nodoc
@@ -714,6 +745,8 @@ class __$$PredictionGraphValueImplCopyWithImpl<$Res>
     Object? shouldShowPredictionLine = null,
     Object? shouldShowBudgetLine = null,
     Object? shouldShowIncomeLine = null,
+    Object? shouldShowExpenseLabel = null,
+    Object? expenseLabelPosition = freezed,
     Object? dailyBarDataList = freezed,
     Object? barMaxValue = freezed,
     Object? totalFixedCostExpense = freezed,
@@ -795,6 +828,14 @@ class __$$PredictionGraphValueImplCopyWithImpl<$Res>
           ? _value.shouldShowIncomeLine
           : shouldShowIncomeLine // ignore: cast_nullable_to_non_nullable
               as bool,
+      shouldShowExpenseLabel: null == shouldShowExpenseLabel
+          ? _value.shouldShowExpenseLabel
+          : shouldShowExpenseLabel // ignore: cast_nullable_to_non_nullable
+              as bool,
+      expenseLabelPosition: freezed == expenseLabelPosition
+          ? _value.expenseLabelPosition
+          : expenseLabelPosition // ignore: cast_nullable_to_non_nullable
+              as LabelPosition?,
       dailyBarDataList: freezed == dailyBarDataList
           ? _value._dailyBarDataList
           : dailyBarDataList // ignore: cast_nullable_to_non_nullable
@@ -834,6 +875,8 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
       required this.shouldShowPredictionLine,
       required this.shouldShowBudgetLine,
       required this.shouldShowIncomeLine,
+      required this.shouldShowExpenseLabel,
+      required this.expenseLabelPosition,
       final List<DailyBarData>? dailyBarDataList,
       this.barMaxValue,
       this.totalFixedCostExpense})
@@ -906,6 +949,10 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
   final bool shouldShowBudgetLine;
   @override
   final bool shouldShowIncomeLine;
+  @override
+  final bool shouldShowExpenseLabel;
+  @override
+  final LabelPosition? expenseLabelPosition;
 // 棒グラフ用データ
   final List<DailyBarData>? _dailyBarDataList;
 // 棒グラフ用データ
@@ -927,7 +974,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
 
   @override
   String toString() {
-    return 'PredictionGraphValue(predictionGraphLineType: $predictionGraphLineType, fromDate: $fromDate, toDate: $toDate, today: $today, expensePoints: $expensePoints, predictionPoints: $predictionPoints, income: $income, budget: $budget, maxValue: $maxValue, displayMaxValue: $displayMaxValue, latestPrice: $latestPrice, predictionPrice: $predictionPrice, xAxisLabels: $xAxisLabels, incomeLabelPosition: $incomeLabelPosition, budgetLabelPosition: $budgetLabelPosition, predictionLabel: $predictionLabel, shouldShowPredictionLine: $shouldShowPredictionLine, shouldShowBudgetLine: $shouldShowBudgetLine, shouldShowIncomeLine: $shouldShowIncomeLine, dailyBarDataList: $dailyBarDataList, barMaxValue: $barMaxValue, totalFixedCostExpense: $totalFixedCostExpense)';
+    return 'PredictionGraphValue(predictionGraphLineType: $predictionGraphLineType, fromDate: $fromDate, toDate: $toDate, today: $today, expensePoints: $expensePoints, predictionPoints: $predictionPoints, income: $income, budget: $budget, maxValue: $maxValue, displayMaxValue: $displayMaxValue, latestPrice: $latestPrice, predictionPrice: $predictionPrice, xAxisLabels: $xAxisLabels, incomeLabelPosition: $incomeLabelPosition, budgetLabelPosition: $budgetLabelPosition, predictionLabel: $predictionLabel, shouldShowPredictionLine: $shouldShowPredictionLine, shouldShowBudgetLine: $shouldShowBudgetLine, shouldShowIncomeLine: $shouldShowIncomeLine, shouldShowExpenseLabel: $shouldShowExpenseLabel, expenseLabelPosition: $expenseLabelPosition, dailyBarDataList: $dailyBarDataList, barMaxValue: $barMaxValue, totalFixedCostExpense: $totalFixedCostExpense)';
   }
 
   @override
@@ -971,6 +1018,10 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
                 other.shouldShowBudgetLine == shouldShowBudgetLine) &&
             (identical(other.shouldShowIncomeLine, shouldShowIncomeLine) ||
                 other.shouldShowIncomeLine == shouldShowIncomeLine) &&
+            (identical(other.shouldShowExpenseLabel, shouldShowExpenseLabel) ||
+                other.shouldShowExpenseLabel == shouldShowExpenseLabel) &&
+            (identical(other.expenseLabelPosition, expenseLabelPosition) ||
+                other.expenseLabelPosition == expenseLabelPosition) &&
             const DeepCollectionEquality()
                 .equals(other._dailyBarDataList, _dailyBarDataList) &&
             (identical(other.barMaxValue, barMaxValue) ||
@@ -1001,6 +1052,8 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
         shouldShowPredictionLine,
         shouldShowBudgetLine,
         shouldShowIncomeLine,
+        shouldShowExpenseLabel,
+        expenseLabelPosition,
         const DeepCollectionEquality().hash(_dailyBarDataList),
         barMaxValue,
         totalFixedCostExpense
@@ -1036,6 +1089,8 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
       required final bool shouldShowPredictionLine,
       required final bool shouldShowBudgetLine,
       required final bool shouldShowIncomeLine,
+      required final bool shouldShowExpenseLabel,
+      required final LabelPosition? expenseLabelPosition,
       final List<DailyBarData>? dailyBarDataList,
       final int? barMaxValue,
       final int? totalFixedCostExpense}) = _$PredictionGraphValueImpl;
@@ -1078,6 +1133,10 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
   bool get shouldShowBudgetLine;
   @override
   bool get shouldShowIncomeLine;
+  @override
+  bool get shouldShowExpenseLabel;
+  @override
+  LabelPosition? get expenseLabelPosition;
   @override // 棒グラフ用データ
   List<DailyBarData>? get dailyBarDataList;
   @override

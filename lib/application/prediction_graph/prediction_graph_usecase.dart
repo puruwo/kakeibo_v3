@@ -23,17 +23,6 @@ final predictionGraphUsecaseProvider = Provider<PredictionGraphUsecase>(
   PredictionGraphUsecase.new,
 );
 
-/// ラベル表示判定結果
-class _LabelDisplayDecision {
-  final bool shouldShowIncomeLine;
-  final bool shouldShowBudgetLine;
-
-  _LabelDisplayDecision({
-    required this.shouldShowIncomeLine,
-    required this.shouldShowBudgetLine,
-  });
-}
-
 class PredictionGraphUsecase {
   PredictionGraphUsecase(this.ref);
 
@@ -88,6 +77,8 @@ class PredictionGraphUsecase {
         shouldShowPredictionLine: false,
         shouldShowBudgetLine: false,
         shouldShowIncomeLine: false,
+        shouldShowExpenseLabel: false,
+        expenseLabelPosition: null, // 追加
         displayMaxValue: 100.0, // デフォルト値
       );
     } else {
@@ -146,7 +137,7 @@ class PredictionGraphUsecase {
     int? predictionPrice;
     bool shouldShowPredictionLine;
     List<PredictionGraphPoint>? predictionPoints;
-    String? predictionLabel;
+    String? predictionPriceLabel;
     // 予測支出額を表示しない条件（過去月、未来月、経過日数5日以下、データなし）
     if (elapsedDays <= 5 ||
         predictionGraphLineType == PredictionGraphLineType.lastMonth ||
@@ -163,7 +154,7 @@ class PredictionGraphUsecase {
         PredictionGraphPoint(date: toDate, price: predictionPrice),
       ];
       // 予想支出ラベルを生成
-      predictionLabel = _generatePredictionLabel(predictionPrice);
+      predictionPriceLabel = _generatePredictionLabel(predictionPrice);
     }
 
     // グラフの最大値を計算
@@ -179,10 +170,11 @@ class PredictionGraphUsecase {
     final xAxisLabels = _generateXAxisLabels(fromDate, toDate);
 
     // ラベル表示ロジック（重なりを考慮）
-    final labelDisplayDecision =
-        _decideLabelDisplay(income, budgetIncludeFixedCost, maxValue);
+    final labelDisplayDecision = _decideLabelDisplay(
+        income, budgetIncludeFixedCost, maxValue, predictionGraphLineType);
     final shouldShowIncomeLine = labelDisplayDecision.shouldShowIncomeLine;
     final shouldShowBudgetLine = labelDisplayDecision.shouldShowBudgetLine;
+    final shouldShowExpenseLabel = labelDisplayDecision.shouldShowExpenseLabel;
 
     // 収入ラベルの位置を計算
     final incomeLabelPosition = shouldShowIncomeLine
@@ -194,6 +186,11 @@ class PredictionGraphUsecase {
     final budgetLabelPosition = shouldShowBudgetLine
         ? _calculateBudgetLabelPosition(
             income, budgetIncludeFixedCost, shouldShowIncomeLine)
+        : null;
+
+    // 支出ラベルの位置を計算
+    final expenseLabelPosition = shouldShowExpenseLabel
+        ? _calculateExpenseLabelPosition(lastPrice)
         : null;
 
     // 棒グラフデータを取得
@@ -217,10 +214,12 @@ class PredictionGraphUsecase {
       xAxisLabels: xAxisLabels,
       incomeLabelPosition: incomeLabelPosition,
       budgetLabelPosition: budgetLabelPosition,
-      predictionLabel: predictionLabel,
+      predictionLabel: predictionPriceLabel,
       shouldShowPredictionLine: shouldShowPredictionLine,
       shouldShowBudgetLine: shouldShowBudgetLine,
       shouldShowIncomeLine: shouldShowIncomeLine,
+      shouldShowExpenseLabel: shouldShowExpenseLabel,
+      expenseLabelPosition: expenseLabelPosition,
       dailyBarDataList: dailyBarDataList,
       barMaxValue: barMaxValue,
       totalFixedCostExpense: fixedCostExpenseTotal,
@@ -319,6 +318,14 @@ class PredictionGraphUsecase {
     return LabelPosition(label: priceLabel, yOffset: yOffset);
   }
 
+  /// 支出ラベルの表示位置を計算（金額のみ返却）
+  LabelPosition _calculateExpenseLabelPosition(int expense) {
+    final priceLabel = yenFormattedPriceGetter(expense);
+    // 特に他のラベルとの重なり考慮がなければデフォルト位置（少し上）
+    // 過去月かつ収入・予算なしの場合のみ表示される前提なので、固定位置でOK
+    return LabelPosition(label: priceLabel, yOffset: -7.0);
+  }
+
   /// 予想支出ラベルを生成
   String _generatePredictionLabel(int predictionPrice) {
     final priceLabel = yenFormattedPriceGetter(predictionPrice);
@@ -328,47 +335,55 @@ class PredictionGraphUsecase {
   /// ラベル表示判定（重なりを考慮）
   /// グラフの最大値に対する収入と予算の位置関係から、ラベルが重なるかを判定
   _LabelDisplayDecision _decideLabelDisplay(
-      int income, int budget, double maxValue) {
+    int income,
+    int budget,
+    double maxValue,
+    PredictionGraphLineType predictionGraphLineType,
+  ) {
+    // 支出ラベルは常に表示を試みる（実際の重なり判定はPainter側で実施）
+    const shouldShowExpenseLabel = true;
+
     // どちらかが0の場合は、値がある方のみ表示
     if (income == 0 && budget == 0) {
       return _LabelDisplayDecision(
         shouldShowIncomeLine: false,
         shouldShowBudgetLine: false,
+        shouldShowExpenseLabel: shouldShowExpenseLabel,
       );
     }
     if (income == 0) {
       return _LabelDisplayDecision(
         shouldShowIncomeLine: false,
         shouldShowBudgetLine: true,
+        shouldShowExpenseLabel: shouldShowExpenseLabel,
       );
     }
     if (budget == 0) {
       return _LabelDisplayDecision(
         shouldShowIncomeLine: true,
         shouldShowBudgetLine: false,
+        shouldShowExpenseLabel: shouldShowExpenseLabel,
       );
     }
 
     // 両方とも値がある場合、グラフ上の位置の差を計算
-    // グラフの高さを100%として、収入と予算の位置を計算
-    final incomePosition = income / maxValue; // 0.0 ~ 1.0
-    final budgetPosition = budget / maxValue; // 0.0 ~ 1.0
-
-    // 位置の差の絶対値を計算（グラフ上の距離）
+    final incomePosition = income / maxValue;
+    final budgetPosition = budget / maxValue;
     final positionDiff = (incomePosition - budgetPosition).abs();
 
     // 位置の差が10%未満の場合、ラベルが重なると判定
-    // この場合、大きい方の値を優先して表示
     if (positionDiff < 0.1) {
       if (income >= budget) {
         return _LabelDisplayDecision(
           shouldShowIncomeLine: true,
           shouldShowBudgetLine: false,
+          shouldShowExpenseLabel: shouldShowExpenseLabel,
         );
       } else {
         return _LabelDisplayDecision(
           shouldShowIncomeLine: false,
           shouldShowBudgetLine: true,
+          shouldShowExpenseLabel: shouldShowExpenseLabel,
         );
       }
     }
@@ -377,6 +392,7 @@ class PredictionGraphUsecase {
     return _LabelDisplayDecision(
       shouldShowIncomeLine: true,
       shouldShowBudgetLine: true,
+      shouldShowExpenseLabel: shouldShowExpenseLabel,
     );
   }
 
@@ -599,5 +615,18 @@ class _BigCategoryInfo {
     required this.colorCode,
     required this.iconPath,
     required this.name,
+  });
+}
+
+/// ラベル表示判定結果
+class _LabelDisplayDecision {
+  final bool shouldShowIncomeLine;
+  final bool shouldShowBudgetLine;
+  final bool shouldShowExpenseLabel;
+
+  _LabelDisplayDecision({
+    required this.shouldShowIncomeLine,
+    required this.shouldShowBudgetLine,
+    required this.shouldShowExpenseLabel,
   });
 }

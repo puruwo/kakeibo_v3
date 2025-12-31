@@ -195,7 +195,17 @@ class PredictionGraphPainter extends CustomPainter {
     // 支出ラインを描画（グラフ開始位置から）
     if (data.expensePoints != null && data.expensePoints!.isNotEmpty) {
       _drawExpenseLine(canvas, leftMargin + graphLeftOffset, topMargin,
-          graphWidth, lineGraphHeight, maxValue, data.expensePoints!);
+          graphWidth, lineGraphHeight, maxValue, data.expensePoints!,
+          shouldShowExpenseLabel: data.shouldShowExpenseLabel,
+          expenseLabelPosition: data.expenseLabelPosition,
+          // ラベル描画に必要なパラメータを追加で渡す必要があるため、
+          // シグネチャ変更に合わせて呼び出し側も調整しても良いが、
+          // 引数が増えすぎるので、_drawExpenseLine内で必要な計算をするか、
+          // 既存の引数を利用する。
+          // 重なり判定のために labelLeftPadding などが必要だが、
+          // ここでは渡していない。
+          // 引数を追加する。
+          labelLeftPadding: labelLeftPadding - graphLeftOffset);
     }
   }
 
@@ -686,13 +696,17 @@ class PredictionGraphPainter extends CustomPainter {
 
   /// 支出ラインを描画
   void _drawExpenseLine(
-      Canvas canvas,
-      double leftMargin,
-      double topMargin,
-      double graphWidth,
-      double graphHeight,
-      double maxValue,
-      List<dynamic> expensePoints) {
+    Canvas canvas,
+    double leftMargin,
+    double topMargin,
+    double graphWidth,
+    double graphHeight,
+    double maxValue,
+    List<dynamic> expensePoints, {
+    required bool shouldShowExpenseLabel,
+    required LabelPosition? expenseLabelPosition,
+    required double labelLeftPadding,
+  }) {
     final paint = Paint()
       ..color = MyColors.pink
       ..strokeWidth = 1.0
@@ -717,7 +731,128 @@ class PredictionGraphPainter extends CustomPainter {
       }
     }
 
-    canvas.drawPath(path, paint);
+    // ラベル表示処理（水平線→折れ線→ラベルの順で描画）
+    if (shouldShowExpenseLabel && expenseLabelPosition != null) {
+      // 最終点のY座標を計算
+      final lastPoint = expensePoints.last;
+      final lastY =
+          topMargin + graphHeight - (lastPoint.price / maxValue) * graphHeight;
+
+      final labelY = lastY + expenseLabelPosition.yOffset;
+
+      // テキストスパンの作成
+      final textSpan = TextSpan(
+        children: [
+          const TextSpan(
+            text: '支出 ',
+            style: PredictionGraphTextStyles.graphLabel,
+          ),
+          TextSpan(
+            text: expenseLabelPosition.label,
+            style: PredictionGraphTextStyles.graphPriceLabel,
+          ),
+        ],
+      );
+
+      final titleSpan = const TextSpan(
+        text: '支出 ',
+        style: PredictionGraphTextStyles.graphLabel,
+      );
+
+      final textPainter = TextPainter(
+        text: textSpan,
+        textDirection: TextDirection.ltr,
+      );
+      textPainter.layout();
+
+      final titlePainter = TextPainter(
+        text: titleSpan,
+        textDirection: TextDirection.ltr,
+      );
+      titlePainter.layout();
+
+      final labelBottom = labelY + textPainter.height;
+      final labelRightX = leftMargin + labelLeftPadding + textPainter.width + 8;
+
+      // 収入・予算ラベルとの重なりをチェック
+      bool overlapsWithIncome = false;
+      bool overlapsWithBudget = false;
+      const labelHeight = 16.0; // おおよそのラベル高さ
+
+      // 収入ラベルとの重なりチェック
+      if (data.shouldShowIncomeLine && data.incomeLabelPosition != null) {
+        final incomeY = topMargin +
+            graphHeight -
+            ((data.income ?? 0) / maxValue) * graphHeight;
+        final incomeLabelTop = incomeY - labelHeight / 2;
+        final incomeLabelBottom = incomeY + labelHeight / 2;
+        // 支出ラベルの範囲が収入ラベルの範囲と重なるかチェック
+        if (labelY < incomeLabelBottom && labelBottom > incomeLabelTop) {
+          overlapsWithIncome = true;
+        }
+      }
+
+      // 予算ラベルとの重なりチェック
+      if (data.shouldShowBudgetLine && data.budgetLabelPosition != null) {
+        final budgetY = topMargin +
+            graphHeight -
+            ((data.budget ?? 0) / maxValue) * graphHeight;
+        final budgetLabelTop = budgetY - labelHeight / 2;
+        final budgetLabelBottom = budgetY + labelHeight / 2;
+        // 支出ラベルの範囲が予算ラベルの範囲と重なるかチェック
+        if (labelY < budgetLabelBottom && labelBottom > budgetLabelTop) {
+          overlapsWithBudget = true;
+        }
+      }
+
+      // 収入・予算ラベルと重なる場合は支出ラベル/ラインを非表示
+      if (overlapsWithIncome || overlapsWithBudget) {
+        // 折れ線グラフのみ描画
+        canvas.drawPath(path, paint);
+        return;
+      }
+
+      // 折れ線グラフとの重なりチェック
+      final overlapsWithExpenseLine = _doesExpenseLineOverlapWithLabel(
+        labelY: labelY,
+        labelBottom: labelBottom,
+        labelRightX: labelRightX,
+        leftMargin: leftMargin,
+        topMargin: topMargin,
+        graphWidth: graphWidth,
+        graphHeight: graphHeight,
+        maxValue: maxValue,
+      );
+
+      // 折れ線と重なる場合も非表示
+      if (overlapsWithExpenseLine) {
+        canvas.drawPath(path, paint);
+        return;
+      }
+
+      // 1. 水平線を先に描画（最背面）
+      final lineY = lastY;
+      final lineStartX = leftMargin + labelLeftPadding + textPainter.width + 8;
+
+      final linePaint = Paint()
+        ..color = MyColors.separater
+        ..strokeWidth = 1.0;
+
+      canvas.drawLine(
+        Offset(lineStartX, lineY),
+        Offset(leftMargin + graphWidth, lineY),
+        linePaint,
+      );
+
+      // 2. 折れ線グラフを描画（水平線より手前）
+      canvas.drawPath(path, paint);
+
+      // 3. ラベルを描画（最前面）
+      textPainter.paint(canvas, Offset(leftMargin + labelLeftPadding, labelY));
+    } else {
+      // ラベル非表示の場合は折れ線グラフのみ描画
+      canvas.drawPath(path, paint);
+    }
   }
 
   /// 点線を描画
