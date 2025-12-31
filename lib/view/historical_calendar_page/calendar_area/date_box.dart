@@ -56,8 +56,11 @@ class DateBox extends ConsumerWidget {
     // 月を表示するかどうか判定して、日付ラベルを作成
     final dateLabel = shouldDisplayMonth ? '$month/$day' : '$day';
 
-    // 金額ラベルを作成
-    final priceLabel = caluculatePriceLabel(totalExpenseBuff);
+    // 支出ラベルを作成
+    final expenseLabel = calculatePriceLabel(totalExpenseBuff, isIncome: false);
+    // 収入ラベルを作成
+    final incomeLabel =
+        calculatePriceLabel(calendarTileEntity.totalIncome, isIncome: true);
 
     return AppInkWell(
         borderRadius: BorderRadius.circular(6),
@@ -73,46 +76,58 @@ class DateBox extends ConsumerWidget {
           CalendarTileStatus.outOfPeriod => () {},
         },
         child: switch (tileStatus) {
-          CalendarTileStatus.selected =>
-            activeDateBox(weekday, dateLabel, priceLabel, boxHeight, boxWidth),
-          CalendarTileStatus.unselected =>
-            normalDateBox(weekday, dateLabel, priceLabel, boxHeight, boxWidth),
+          CalendarTileStatus.selected => activeDateBox(weekday, dateLabel,
+              expenseLabel, incomeLabel, boxHeight, boxWidth),
+          CalendarTileStatus.unselected => normalDateBox(weekday, dateLabel,
+              expenseLabel, incomeLabel, boxHeight, boxWidth),
           CalendarTileStatus.outOfPeriod =>
             vacantDateBox(weekday, dateLabel, boxHeight, boxWidth),
         });
   }
 }
 
-Text caluculatePriceLabel(int totalExpenseBuff) {
-  if (totalExpenseBuff == 0) {
-    return const Text('');
+Widget calculatePriceLabel(int amount, {required bool isIncome}) {
+  if (amount == 0) {
+    return const SizedBox.shrink();
   } else {
-    if (totalExpenseBuff > 1888888) {
-      return const Text('');
-    } else if (totalExpenseBuff <= 9999) {
-      final buff = formattedPriceGetter(totalExpenseBuff);
-      return Text('¥$buff',
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.fade,
-          style: MyFonts.calendarDateBoxLarge);
-    } else if (totalExpenseBuff <= 99999) {
-      final buff = formattedPriceGetter(totalExpenseBuff);
-      return Text(buff,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.fade,
-          style: MyFonts.calendarDateBoxLarge);
-    } else {
-      final buff = formattedPriceGetter(totalExpenseBuff);
-      return Text(buff,
-          textAlign: TextAlign.center,
-          overflow: TextOverflow.fade,
-          style: MyFonts.calendarDateBoxSmall);
+    final buff = formattedPriceGetter(amount);
+
+    if (amount > 1888888) {
+      return const SizedBox.shrink(); // overflow対策の既存ロジック
     }
+
+    // 支出用のフォントスタイルを使用（収入も同じフォント）
+    TextStyle style;
+    if (amount <= 99999) {
+      style = MyFonts.calendarDateBoxLarge;
+    } else {
+      style = MyFonts.calendarDateBoxSmall;
+    }
+
+    // アイコンとテキストを横並びで表示
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // 収入は青い+アイコン、支出は赤い-アイコン
+        Icon(
+          isIncome ? Icons.add : Icons.remove,
+          color: isIncome ? MyColors.mintBlue : MyColors.pink,
+          size: 10,
+        ),
+        Text(
+          buff,
+          textAlign: TextAlign.center,
+          overflow: TextOverflow.fade,
+          style: style,
+        ),
+      ],
+    );
   }
 }
 
-Container activeDateBox(int weekday, String dateLabel, Text priceLabel,
-    double boxHeight, double boxWidth) {
+Container activeDateBox(int weekday, String dateLabel, Widget expenseLabel,
+    Widget incomeLabel, double boxHeight, double boxWidth) {
   return Container(
     width: boxWidth,
     height: boxHeight,
@@ -125,6 +140,7 @@ Container activeDateBox(int weekday, String dateLabel, Text priceLabel,
           Text(
             dateLabel,
             style: TextStyle(
+              fontSize: 10, // 日付のフォントサイズを少し小さくしてスペース確保
               color: weekday == 6
                   ? MyColors.blue
                   : weekday == 7
@@ -132,21 +148,32 @@ Container activeDateBox(int weekday, String dateLabel, Text priceLabel,
                       : MyColors.secondaryLabel,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 1.0),
-            child: SizedBox(
-              width: boxWidth,
-              child: priceLabel,
+          // 支出
+          if (expenseLabel is! SizedBox)
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SizedBox(
+                width: boxWidth,
+                child: expenseLabel,
+              ),
             ),
-          )
+          // 収入
+          if (incomeLabel is! SizedBox)
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SizedBox(
+                width: boxWidth,
+                child: incomeLabel,
+              ),
+            )
         ],
       ),
     ),
   );
 }
 
-Container normalDateBox(int weekday, String dateLabel, Text priceLabel,
-    double boxHeight, double boxWidth) {
+Container normalDateBox(int weekday, String dateLabel, Widget expenseLabel,
+    Widget incomeLabel, double boxHeight, double boxWidth) {
   return Container(
     width: boxWidth,
     height: boxHeight,
@@ -159,6 +186,7 @@ Container normalDateBox(int weekday, String dateLabel, Text priceLabel,
           Text(
             dateLabel,
             style: TextStyle(
+              fontSize: 10,
               color: weekday == 6
                   ? MyColors.blue
                   : weekday == 7
@@ -166,13 +194,24 @@ Container normalDateBox(int weekday, String dateLabel, Text priceLabel,
                       : MyColors.secondaryLabel,
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 1.0),
-            child: SizedBox(
-              width: boxWidth,
-              child: priceLabel,
+          // 支出
+          if (expenseLabel is! SizedBox)
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SizedBox(
+                width: boxWidth,
+                child: expenseLabel,
+              ),
             ),
-          )
+          // 収入
+          if (incomeLabel is! SizedBox)
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SizedBox(
+                width: boxWidth,
+                child: incomeLabel,
+              ),
+            )
         ],
       ),
     ),
