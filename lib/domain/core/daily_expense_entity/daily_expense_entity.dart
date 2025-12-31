@@ -11,6 +11,7 @@ class DailyExpenseEntity with _$DailyExpenseEntity {
   const factory DailyExpenseEntity({
     required DateTime date,
     @Default(0) int totalExpense,
+    @Default(0) int totalIncome,
   }) = _DailyExpenseEntity;
 
   @override

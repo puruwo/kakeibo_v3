@@ -22,6 +22,7 @@ DailyExpenseEntity _$DailyExpenseEntityFromJson(Map<String, dynamic> json) {
 mixin _$DailyExpenseEntity {
   DateTime get date => throw _privateConstructorUsedError;
   int get totalExpense => throw _privateConstructorUsedError;
+  int get totalIncome => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -35,7 +36,7 @@ abstract class $DailyExpenseEntityCopyWith<$Res> {
           DailyExpenseEntity value, $Res Function(DailyExpenseEntity) then) =
       _$DailyExpenseEntityCopyWithImpl<$Res, DailyExpenseEntity>;
   @useResult
-  $Res call({DateTime date, int totalExpense});
+  $Res call({DateTime date, int totalExpense, int totalIncome});
 }
 
 /// @nodoc
@@ -53,6 +54,7 @@ class _$DailyExpenseEntityCopyWithImpl<$Res, $Val extends DailyExpenseEntity>
   $Res call({
     Object? date = null,
     Object? totalExpense = null,
+    Object? totalIncome = null,
   }) {
     return _then(_value.copyWith(
       date: null == date
@@ -62,6 +64,10 @@ class _$DailyExpenseEntityCopyWithImpl<$Res, $Val extends DailyExpenseEntity>
       totalExpense: null == totalExpense
           ? _value.totalExpense
           : totalExpense // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalIncome: null == totalIncome
+          ? _value.totalIncome
+          : totalIncome // ignore: cast_nullable_to_non_nullable
               as int,
     ) as $Val);
   }
@@ -75,7 +81,7 @@ abstract class _$$DailyExpenseEntityImplCopyWith<$Res>
       __$$DailyExpenseEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({DateTime date, int totalExpense});
+  $Res call({DateTime date, int totalExpense, int totalIncome});
 }
 
 /// @nodoc
@@ -91,6 +97,7 @@ class __$$DailyExpenseEntityImplCopyWithImpl<$Res>
   $Res call({
     Object? date = null,
     Object? totalExpense = null,
+    Object? totalIncome = null,
   }) {
     return _then(_$DailyExpenseEntityImpl(
       date: null == date
@@ -101,6 +108,10 @@ class __$$DailyExpenseEntityImplCopyWithImpl<$Res>
           ? _value.totalExpense
           : totalExpense // ignore: cast_nullable_to_non_nullable
               as int,
+      totalIncome: null == totalIncome
+          ? _value.totalIncome
+          : totalIncome // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -108,7 +119,8 @@ class __$$DailyExpenseEntityImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$DailyExpenseEntityImpl implements _DailyExpenseEntity {
-  const _$DailyExpenseEntityImpl({required this.date, this.totalExpense = 0});
+  const _$DailyExpenseEntityImpl(
+      {required this.date, this.totalExpense = 0, this.totalIncome = 0});
 
   factory _$DailyExpenseEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$DailyExpenseEntityImplFromJson(json);
@@ -118,10 +130,13 @@ class _$DailyExpenseEntityImpl implements _DailyExpenseEntity {
   @override
   @JsonKey()
   final int totalExpense;
+  @override
+  @JsonKey()
+  final int totalIncome;
 
   @override
   String toString() {
-    return 'DailyExpenseEntity(date: $date, totalExpense: $totalExpense)';
+    return 'DailyExpenseEntity(date: $date, totalExpense: $totalExpense, totalIncome: $totalIncome)';
   }
 
   @override
@@ -131,12 +146,14 @@ class _$DailyExpenseEntityImpl implements _DailyExpenseEntity {
             other is _$DailyExpenseEntityImpl &&
             (identical(other.date, date) || other.date == date) &&
             (identical(other.totalExpense, totalExpense) ||
-                other.totalExpense == totalExpense));
+                other.totalExpense == totalExpense) &&
+            (identical(other.totalIncome, totalIncome) ||
+                other.totalIncome == totalIncome));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, date, totalExpense);
+  int get hashCode => Object.hash(runtimeType, date, totalExpense, totalIncome);
 
   @JsonKey(ignore: true)
   @override
@@ -156,7 +173,8 @@ class _$DailyExpenseEntityImpl implements _DailyExpenseEntity {
 abstract class _DailyExpenseEntity implements DailyExpenseEntity {
   const factory _DailyExpenseEntity(
       {required final DateTime date,
-      final int totalExpense}) = _$DailyExpenseEntityImpl;
+      final int totalExpense,
+      final int totalIncome}) = _$DailyExpenseEntityImpl;
 
   factory _DailyExpenseEntity.fromJson(Map<String, dynamic> json) =
       _$DailyExpenseEntityImpl.fromJson;
@@ -165,6 +183,8 @@ abstract class _DailyExpenseEntity implements DailyExpenseEntity {
   DateTime get date;
   @override
   int get totalExpense;
+  @override
+  int get totalIncome;
   @override
   @JsonKey(ignore: true)
   _$$DailyExpenseEntityImplCopyWith<_$DailyExpenseEntityImpl> get copyWith =>

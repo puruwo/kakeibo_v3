@@ -21,6 +21,7 @@ mixin _$CalendarTileEntity {
   int get day => throw _privateConstructorUsedError;
   int get weekday => throw _privateConstructorUsedError;
   int get totalExpense => throw _privateConstructorUsedError;
+  int get totalIncome => throw _privateConstructorUsedError;
   bool get isWithinAggregationRange => throw _privateConstructorUsedError;
   bool get shouldDisplayMonth => throw _privateConstructorUsedError;
 
@@ -41,6 +42,7 @@ abstract class $CalendarTileEntityCopyWith<$Res> {
       int day,
       int weekday,
       int totalExpense,
+      int totalIncome,
       bool isWithinAggregationRange,
       bool shouldDisplayMonth});
 }
@@ -63,6 +65,7 @@ class _$CalendarTileEntityCopyWithImpl<$Res, $Val extends CalendarTileEntity>
     Object? day = null,
     Object? weekday = null,
     Object? totalExpense = null,
+    Object? totalIncome = null,
     Object? isWithinAggregationRange = null,
     Object? shouldDisplayMonth = null,
   }) {
@@ -86,6 +89,10 @@ class _$CalendarTileEntityCopyWithImpl<$Res, $Val extends CalendarTileEntity>
       totalExpense: null == totalExpense
           ? _value.totalExpense
           : totalExpense // ignore: cast_nullable_to_non_nullable
+              as int,
+      totalIncome: null == totalIncome
+          ? _value.totalIncome
+          : totalIncome // ignore: cast_nullable_to_non_nullable
               as int,
       isWithinAggregationRange: null == isWithinAggregationRange
           ? _value.isWithinAggregationRange
@@ -113,6 +120,7 @@ abstract class _$$CalendarTileEntityImplCopyWith<$Res>
       int day,
       int weekday,
       int totalExpense,
+      int totalIncome,
       bool isWithinAggregationRange,
       bool shouldDisplayMonth});
 }
@@ -133,6 +141,7 @@ class __$$CalendarTileEntityImplCopyWithImpl<$Res>
     Object? day = null,
     Object? weekday = null,
     Object? totalExpense = null,
+    Object? totalIncome = null,
     Object? isWithinAggregationRange = null,
     Object? shouldDisplayMonth = null,
   }) {
@@ -157,6 +166,10 @@ class __$$CalendarTileEntityImplCopyWithImpl<$Res>
           ? _value.totalExpense
           : totalExpense // ignore: cast_nullable_to_non_nullable
               as int,
+      totalIncome: null == totalIncome
+          ? _value.totalIncome
+          : totalIncome // ignore: cast_nullable_to_non_nullable
+              as int,
       isWithinAggregationRange: null == isWithinAggregationRange
           ? _value.isWithinAggregationRange
           : isWithinAggregationRange // ignore: cast_nullable_to_non_nullable
@@ -178,6 +191,7 @@ class _$CalendarTileEntityImpl implements _CalendarTileEntity {
       required this.day,
       required this.weekday,
       this.totalExpense = 0,
+      this.totalIncome = 0,
       required this.isWithinAggregationRange,
       required this.shouldDisplayMonth});
 
@@ -193,13 +207,16 @@ class _$CalendarTileEntityImpl implements _CalendarTileEntity {
   @JsonKey()
   final int totalExpense;
   @override
+  @JsonKey()
+  final int totalIncome;
+  @override
   final bool isWithinAggregationRange;
   @override
   final bool shouldDisplayMonth;
 
   @override
   String toString() {
-    return 'CalendarTileEntity(year: $year, month: $month, day: $day, weekday: $weekday, totalExpense: $totalExpense, isWithinAggregationRange: $isWithinAggregationRange, shouldDisplayMonth: $shouldDisplayMonth)';
+    return 'CalendarTileEntity(year: $year, month: $month, day: $day, weekday: $weekday, totalExpense: $totalExpense, totalIncome: $totalIncome, isWithinAggregationRange: $isWithinAggregationRange, shouldDisplayMonth: $shouldDisplayMonth)';
   }
 
   @override
@@ -213,6 +230,8 @@ class _$CalendarTileEntityImpl implements _CalendarTileEntity {
             (identical(other.weekday, weekday) || other.weekday == weekday) &&
             (identical(other.totalExpense, totalExpense) ||
                 other.totalExpense == totalExpense) &&
+            (identical(other.totalIncome, totalIncome) ||
+                other.totalIncome == totalIncome) &&
             (identical(
                     other.isWithinAggregationRange, isWithinAggregationRange) ||
                 other.isWithinAggregationRange == isWithinAggregationRange) &&
@@ -222,7 +241,7 @@ class _$CalendarTileEntityImpl implements _CalendarTileEntity {
 
   @override
   int get hashCode => Object.hash(runtimeType, year, month, day, weekday,
-      totalExpense, isWithinAggregationRange, shouldDisplayMonth);
+      totalExpense, totalIncome, isWithinAggregationRange, shouldDisplayMonth);
 
   @JsonKey(ignore: true)
   @override
@@ -239,6 +258,7 @@ abstract class _CalendarTileEntity implements CalendarTileEntity {
       required final int day,
       required final int weekday,
       final int totalExpense,
+      final int totalIncome,
       required final bool isWithinAggregationRange,
       required final bool shouldDisplayMonth}) = _$CalendarTileEntityImpl;
 
@@ -252,6 +272,8 @@ abstract class _CalendarTileEntity implements CalendarTileEntity {
   int get weekday;
   @override
   int get totalExpense;
+  @override
+  int get totalIncome;
   @override
   bool get isWithinAggregationRange;
   @override
