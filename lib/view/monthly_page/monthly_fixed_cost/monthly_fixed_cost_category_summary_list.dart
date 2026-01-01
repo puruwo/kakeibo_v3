@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
 
@@ -48,27 +49,32 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
                             height: 24,
                           ),
                           const SizedBox(width: 12),
-                          Text(
-                            summary.categoryName,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          Text(summary.categoryName,
+                              style: AppTextStyles.appCardSecondaryTitleLabel),
                         ],
                       ),
                       // 金額 or 未確定
-                      Text(
-                        summary.isAllConfirmed
-                            ? '${formattedPriceGetter(summary.totalAmount)} 円'
-                            : '未確定',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      summary.isAllConfirmed
+                          ? RichText(
+                              textAlign: TextAlign.end,
+                              overflow: TextOverflow.ellipsis,
+                              text: TextSpan(children: [
+                                TextSpan(
+                                  text:
+                                      formattedPriceGetter(summary.totalAmount),
+                                  style:
+                                      AppTextStyles.appCardSecondaryPriceLabel,
+                                ),
+                                TextSpan(
+                                  text: ' 円',
+                                  style:
+                                      AppTextStyles.appCardSecondaryPriceUnit,
+                                ),
+                              ]))
+                          : Text(
+                              '未確定',
+                              style: AppTextStyles.appCardSecondaryPriceUnit,
+                            ),
                     ],
                   ),
                 );

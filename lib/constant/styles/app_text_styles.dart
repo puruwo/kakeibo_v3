@@ -11,49 +11,8 @@ class AppTextStyles {
   // ==========================================================================
 
   /// ページタイトル用のスタイル
-  ///
-  /// 【使用箇所】
-  /// - ページ: year_page.dart (年間ページ)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 「2024」などの年表示
-  ///
-  /// - ページ: monthly_page.dart (月間ページ)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 月の表示タイトル
-  ///
-  /// - ページ: expense_history_page.dart (履歴ページ)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 履歴ページのタイトル
-  ///
-  /// - ページ: category_setting_page.dart (カテゴリー設定ページ)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 「カテゴリー設定」タイトル
-  ///
-  /// - ページ: category_expense_history_page.dart (カテゴリー別支出履歴)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: カテゴリー名表示
-  ///
-  /// - ページ: small_category_expanded_history_page.dart (小カテゴリー詳細)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 小カテゴリー名表示
-  ///
-  /// - ページ: budget_setting_page.dart (予算設定ページ)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 「予算設定」タイトル
-  ///
-  /// - ページ: category_detail_edit_page.dart (カテゴリー詳細編集)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: カテゴリー編集タイトル
-  ///
-  /// - ページ: monthly_plan_home_page.dart (月間計画ホーム)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 「月間計画」タイトル
-  ///
-  /// - ページ: bonus_home_page.dart (ボーナスホーム)
-  ///   - エリア: AppBarのタイトル
-  ///   - 詳細: 「ボーナス」タイトル
   static TextStyle pageHeaderText = GoogleFonts.notoSans(
-      fontSize: 19, color: MyColors.white, fontWeight: FontWeight.w400);
+      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w600);
 
   // ==========================================================================
   // ダイアログ
@@ -117,6 +76,11 @@ class AppTextStyles {
   static TextStyle mainButtonText = GoogleFonts.notoSans(
       fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w600);
 
+  /// 一行ボタン用のテキスト
+  ///
+  static TextStyle oneLineButtonText = GoogleFonts.notoSans(
+      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w400);
+
   // ==========================================================================
   // リスト共通
   // ==========================================================================
@@ -166,10 +130,19 @@ class AppTextStyles {
       fontSize: 17, color: MyColors.white, fontWeight: FontWeight.w600);
 
   // ==========================================================================
-  // カード（汎用）
+  // セクションタイトル
   // ==========================================================================
 
-  /// カードのメインタイトル用スタイル
+  /// カードセクションタイトル用スタイル
+
+  static TextStyle cardSectionTitle = GoogleFonts.notoSans(
+      fontSize: 18, color: MyColors.label, fontWeight: FontWeight.w600);
+
+  // ==========================================================================
+  // リストタイル（汎用）
+  // ==========================================================================
+
+  /// リストタイルのメインタイトル用スタイル
   ///
   /// 【使用箇所】
   /// - ファイル: bonus_income_history_tile.dart (ボーナス収入履歴タイル)
@@ -195,7 +168,7 @@ class AppTextStyles {
   /// - ファイル: yearly_income_card.dart (年間収入カード)
   ///   - エリア: カード内タイトル
   ///   - 詳細: 収入カテゴリー名表示
-  static TextStyle cardPrimaryTitle = GoogleFonts.notoSans(
+  static TextStyle listTilePrimaryTitle = GoogleFonts.notoSans(
       fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w300);
 
   /// カードのサブタイトル用スタイル
@@ -224,7 +197,7 @@ class AppTextStyles {
   /// - ファイル: yearly_income_card.dart
   ///   - エリア: カード内サブテキスト
   ///   - 詳細: 日付や備考
-  static TextStyle cardSecondaryTitle = GoogleFonts.notoSans(
+  static TextStyle listTileSecondaryTitle = GoogleFonts.notoSans(
       fontSize: 12,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w300);
@@ -235,7 +208,7 @@ class AppTextStyles {
   /// - ファイル: bonus_expense_history_tile.dart
   ///   - エリア: タイル内金額横のマイナスラベル
   ///   - 詳細: 「-」表示
-  static TextStyle cardMinusLabel = const TextStyle(
+  static TextStyle listTileMinusLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 16,
       color: MyColors.mintBlue,
@@ -255,35 +228,14 @@ class AppTextStyles {
   /// - ファイル: yearly_income_card.dart
   ///   - エリア: カード内金額横のプラスラベル
   ///   - 詳細: 「+」表示
-  static TextStyle cardPlusLabel = const TextStyle(
+  static TextStyle listTilePlusLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 16,
       color: MyColors.pink,
       fontWeight: FontWeight.w600);
 
   /// カード内金額表示用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: fixed_cost_item_tile.dart
-  ///   - エリア: タイル内金額
-  ///   - 詳細: 固定費金額表示
-  ///
-  /// - ファイル: bonus_income_history_tile.dart / bonus_expense_history_tile.dart
-  ///   - エリア: タイル内金額
-  ///   - 詳細: ボーナス金額表示
-  ///
-  /// - ファイル: income_history_tile.dart
-  ///   - エリア: タイル内金額
-  ///   - 詳細: 収入金額表示
-  ///
-  /// - ファイル: confirmed_fixed_cost_tile.dart / unconfirmed_fixed_cost_tile.dart
-  ///   - エリア: タイル内金額
-  ///   - 詳細: 固定費金額表示
-  ///
-  /// - ファイル: yearly_income_card.dart
-  ///   - エリア: カード内金額
-  ///   - 詳細: 年間収入金額表示
-  static TextStyle cardPriceLabel = const TextStyle(
+  static TextStyle listTilePriceLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 19,
       color: MyColors.label,
@@ -293,12 +245,9 @@ class AppTextStyles {
   // アプリカード（収入グラフエリアなど）
   // ==========================================================================
 
+  /// Primary=========
+
   /// アプリカードのタイトルラベル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: income_graph_area.dart (年間収入グラフエリア)
-  ///   - エリア: グラフ上部タイトル
-  ///   - 詳細: 「総収入」ラベル
   static TextStyle appCardTitleLabel = GoogleFonts.notoSans(
     fontSize: 14,
     color: MyColors.secondaryLabel,
@@ -306,11 +255,6 @@ class AppTextStyles {
   );
 
   /// アプリカードの金額表示用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: income_graph_area.dart
-  ///   - エリア: グラフ上部金額
-  ///   - 詳細: 総収入金額表示
   static TextStyle appCardPriceLabel = GoogleFonts.notoSans(
     fontSize: 20,
     color: MyColors.white,
@@ -318,16 +262,64 @@ class AppTextStyles {
   );
 
   /// アプリカードの金額単位（円）用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: income_graph_area.dart
-  ///   - エリア: グラフ上部金額単位
-  ///   - 詳細: 「円」表示
   static TextStyle appCardPriceUnit = GoogleFonts.notoSans(
     fontSize: 16,
     color: MyColors.white,
     fontWeight: FontWeight.w600,
   );
+
+  /// Secondary=========
+
+  /// アプリカードのセカンダリタイトルラベル用スタイル
+  static TextStyle appCardSecondaryTitleLabel = GoogleFonts.notoSans(
+    fontSize: 14,
+    color: MyColors.white,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// アプリカードのセカンダリ金額ラベル用スタイル
+  static TextStyle appCardSecondaryPriceLabel = GoogleFonts.notoSans(
+    fontSize: 16,
+    color: MyColors.white,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// アプリカードのセカンダリ金額単位（円）用スタイル
+  static TextStyle appCardSecondaryPriceUnit = GoogleFonts.notoSans(
+    fontSize: 12,
+    color: MyColors.white,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// Tertiary=========
+
+  /// アプリカードのTertiaryタイトルラベル用スタイル
+  static TextStyle appCardTertiaryTitleLabel = GoogleFonts.notoSans(
+      fontSize: 13,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
+
+  /// アプリカードのTertiary金額ラベル用スタイル
+  static TextStyle appCardTertiaryPriceLabel = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
+
+  /// アプリカードのTertiary金額単位（円）用スタイル
+  static TextStyle appCardTertiaryPriceUnit = GoogleFonts.notoSans(
+      fontSize: 11,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
+
+  /// OptionalSecondary=========
+
+  /// アプリカードのセカンダリ金額ラベル用スタイル
+  static TextStyle appCardOptionalSecondaryPriceLabel = GoogleFonts.notoSans(
+      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w400);
+
+  /// アプリカードのセカンダリ金額単位（円）用スタイル
+  static TextStyle appCardOptionalSecondaryPriceUnit = GoogleFonts.notoSans(
+      fontSize: 14, color: MyColors.white, fontWeight: FontWeight.w400);
 
   /// アプリカードのグラフラベル用スタイル
   ///
@@ -339,42 +331,6 @@ class AppTextStyles {
     fontSize: 11,
     color: MyColors.white,
     fontWeight: FontWeight.w600,
-  );
-
-  /// アプリカードのセカンダリタイトルラベル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: income_graph_area.dart
-  ///   - エリア: カテゴリー別リスト
-  ///   - 詳細: カテゴリー名表示
-  static TextStyle appCardSecondaryTitleLabel = GoogleFonts.notoSans(
-    fontSize: 14,
-    color: MyColors.white,
-    fontWeight: FontWeight.w500,
-  );
-
-  /// アプリカードのセカンダリ金額ラベル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: income_graph_area.dart
-  ///   - エリア: カテゴリー別リスト
-  ///   - 詳細: カテゴリー別金額表示
-  static TextStyle appCardSecondaryPriceLabel = GoogleFonts.notoSans(
-    fontSize: 16,
-    color: MyColors.white,
-    fontWeight: FontWeight.w500,
-  );
-
-  /// アプリカードのセカンダリ金額単位（円）用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: income_graph_area.dart
-  ///   - エリア: カテゴリー別リスト
-  ///   - 詳細: 「円」表示
-  static TextStyle appCardSecondaryPriceUnit = GoogleFonts.notoSans(
-    fontSize: 12,
-    color: MyColors.white,
-    fontWeight: FontWeight.w500,
   );
 
   /// ポップアップメニューアイテムのラベルスタイル
@@ -390,4 +346,10 @@ class AppTextStyles {
       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
     );
   }
+
+  // ==========================================================================
+  // テキストボタン ("さらに表示する"など)
+  // ==========================================================================
+  static TextStyle textButtonTextStyle =
+      const TextStyle(color: MyColors.themeColor, fontSize: 14);
 }

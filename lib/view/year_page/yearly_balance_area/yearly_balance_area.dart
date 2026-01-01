@@ -39,7 +39,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                 child: Center(
                   child: Text(
                     'まだ記録がありません',
-                    style: AppTextStyles.cardSecondaryTitle,
+                    style: AppTextStyles.listTileSecondaryTitle,
                   ),
                 ),
               );
@@ -99,6 +99,60 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         height: 8,
                       ),
 
+                      // 支出
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
+                        children: [
+                          Text(
+                            '総支出  ',
+                            style: AppTextStyles.appCardTitleLabel,
+                          ),
+                          yearlyBalanceValue.yearlyBalanceType !=
+                                  YearlyBalanceType.noExpense
+                              ? Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Text(
+                                      formattedPriceGetter(
+                                          yearlyBalanceValue.yearlyExpense),
+                                      style: AppTextStyles.listTilePriceLabel,
+                                    ),
+                                    Text(
+                                      ' 円',
+                                      style: AppTextStyles
+                                          .appCardSecondaryPriceUnit,
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  'まだ記録がありません',
+                                  style: AppTextStyles.listTileSecondaryTitle,
+                                ),
+                        ],
+                      ),
+
+                      // 支出バー
+                      yearlyBalanceValue.yearlyBalanceType !=
+                              YearlyBalanceType.noExpense
+                          ? AnimatedContainer(
+                              height: 10,
+                              width: isBuilt ? expenseBar : barInitialWidth,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: MyColors.pink,
+                              ),
+                              duration: const Duration(milliseconds: 500),
+                            )
+                          : Container(),
+
+                      const SizedBox(
+                        height: 12.0,
+                      ),
+
                       AppInkWell(
                         borderRadius: BorderRadius.circular(8),
                         onTap: () {
@@ -119,7 +173,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             children: [
                               Text(
                                 '総収入',
-                                style: AppTextStyles.cardSecondaryTitle,
+                                style: AppTextStyles.appCardTitleLabel,
                               ),
                               const Icon(
                                 size: 12,
@@ -140,18 +194,19 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                             formattedPriceGetter(
                                                 yearlyBalanceValue
                                                     .yearlyIncome),
-                                            style:
-                                                AppTextStyles.cardPriceLabel),
+                                            style: AppTextStyles
+                                                .listTilePriceLabel),
                                         Text(
                                           ' 円',
-                                          style:
-                                              AppTextStyles.cardSecondaryTitle,
+                                          style: AppTextStyles
+                                              .appCardSecondaryPriceUnit,
                                         ),
                                       ],
                                     )
                                   : Text(
                                       'まだ記録がありません',
-                                      style: AppTextStyles.cardSecondaryTitle,
+                                      style:
+                                          AppTextStyles.listTileSecondaryTitle,
                                     ),
                             ]),
                       ),
@@ -165,59 +220,6 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
                                 color: MyColors.mintBlue,
-                              ),
-                              duration: const Duration(milliseconds: 500),
-                            )
-                          : Container(),
-
-                      const SizedBox(
-                        height: 12.0,
-                      ),
-
-                      // 支出
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            '総支出  ',
-                            style: AppTextStyles.cardSecondaryTitle,
-                          ),
-                          yearlyBalanceValue.yearlyBalanceType !=
-                                  YearlyBalanceType.noExpense
-                              ? Row(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.baseline,
-                                  textBaseline: TextBaseline.alphabetic,
-                                  children: [
-                                    Text(
-                                      formattedPriceGetter(
-                                          yearlyBalanceValue.yearlyExpense),
-                                      style: AppTextStyles.cardPriceLabel,
-                                    ),
-                                    Text(
-                                      ' 円',
-                                      style: AppTextStyles.cardSecondaryTitle,
-                                    ),
-                                  ],
-                                )
-                              : Text(
-                                  'まだ記録がありません',
-                                  style: AppTextStyles.cardSecondaryTitle,
-                                ),
-                        ],
-                      ),
-
-                      // 支出バー
-                      yearlyBalanceValue.yearlyBalanceType !=
-                              YearlyBalanceType.noExpense
-                          ? AnimatedContainer(
-                              height: 10,
-                              width: isBuilt ? expenseBar : barInitialWidth,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: MyColors.pink,
                               ),
                               duration: const Duration(milliseconds: 500),
                             )
@@ -244,7 +246,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         children: [
                           Text(
                             '残金',
-                            style: AppTextStyles.cardPrimaryTitle,
+                            style: AppTextStyles.appCardTitleLabel,
                           ),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -253,11 +255,11 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                               Text(
                                 formattedPriceGetter(
                                     yearlyBalanceValue.savings),
-                                style: AppTextStyles.cardPriceLabel,
+                                style: AppTextStyles.appCardPriceLabel,
                               ),
                               Text(
                                 ' 円',
-                                style: AppTextStyles.cardSecondaryTitle,
+                                style: AppTextStyles.appCardPriceUnit,
                               ),
                             ],
                           ),

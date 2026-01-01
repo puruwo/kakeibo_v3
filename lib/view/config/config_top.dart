@@ -52,8 +52,8 @@ class ConfigTop extends ConsumerWidget {
                           loading: () =>
                               const Center(child: CircularProgressIndicator()));
                     },
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: SizedBox(
                         height: 50,
                         child: Row(
@@ -61,7 +61,7 @@ class ConfigTop extends ConsumerWidget {
                           children: [
                             Text(
                               '入力履歴をエクスポートする',
-                              style: TextStyle(color: Colors.white),
+                              style: AppTextStyles.oneLineButtonText,
                             ),
                           ],
                         ),

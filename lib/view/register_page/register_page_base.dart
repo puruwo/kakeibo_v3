@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
@@ -129,7 +130,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           title: SizedBox(
             child: Text(
               widget.registerMode == RegisterScreenMode.add ? '記録' : '編集',
-              style: RegisterPageStyles.regesterHeaderLabel,
+              style: AppTextStyles.pageHeaderText,
             ),
           ),
 

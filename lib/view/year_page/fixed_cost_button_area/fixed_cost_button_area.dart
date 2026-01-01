@@ -50,7 +50,7 @@ class FixedCostManagePageButton extends StatelessWidget {
             children: [
               Text(
                 '固定費一覧',
-                style: AppTextStyles.cardSecondaryTitle,
+                style: AppTextStyles.oneLineButtonText,
               ),
               const Icon(
                 size: 16,

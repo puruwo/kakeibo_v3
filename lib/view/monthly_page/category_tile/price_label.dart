@@ -39,11 +39,11 @@ class PriceLabel extends StatelessWidget {
                 text: TextSpan(children: [
                   TextSpan(
                     text: paymentSumLabel,
-                    style: MonthlyPageStyles.categoryTilePriceLabel,
+                    style: AppTextStyles.appCardSecondaryPriceLabel,
                   ),
                   TextSpan(
                     text: ' 円',
-                    style: MonthlyPageStyles.categoryTileYenLabel,
+                    style: AppTextStyles.appCardOptionalSecondaryPriceUnit,
                   ),
                 ])),
 

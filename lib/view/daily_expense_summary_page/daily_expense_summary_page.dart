@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 
 /// 日次支出サマリーページ（仮実装）
 /// DateTimeを表示するだけのシンプルなページ
@@ -19,9 +20,10 @@ class DailyExpenseSummaryPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: MyColors.systemBackground,
       appBar: AppBar(
-        title: const Text('支出情報'),
-        backgroundColor: MyColors.systemBackground,
-        foregroundColor: MyColors.white,
+        title: Text(
+          '支出情報',
+          style: AppTextStyles.pageHeaderText,
+        ),
       ),
       body: Center(
         child: Column(

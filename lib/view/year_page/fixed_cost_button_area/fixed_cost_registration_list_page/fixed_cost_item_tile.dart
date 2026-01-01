@@ -112,11 +112,11 @@ class FixedCostItemTile extends ConsumerWidget {
                           if (isVariable)
                             TextSpan(
                               text: '平均　',
-                              style: AppTextStyles.cardSecondaryTitle,
+                              style: AppTextStyles.listTileSecondaryTitle,
                             ),
                           TextSpan(
                             text: yenmarkFormattedPriceGetter(displayPrice),
-                            style: AppTextStyles.cardPriceLabel,
+                            style: AppTextStyles.listTilePriceLabel,
                           ),
                         ],
                       ),
@@ -132,7 +132,7 @@ class FixedCostItemTile extends ConsumerWidget {
               children: [
                 Text(
                   '次回：$formattedNextPaymentDate',
-                  style: AppTextStyles.cardSecondaryTitle,
+                  style: AppTextStyles.listTileSecondaryTitle,
                 ),
                 const SizedBox(width: 8),
                 Row(
@@ -144,7 +144,7 @@ class FixedCostItemTile extends ConsumerWidget {
                     ),
                     Text(
                       frequencyValue.dateLabel,
-                      style: AppTextStyles.cardSecondaryTitle,
+                      style: AppTextStyles.listTileSecondaryTitle,
                     ),
                   ],
                 ),

@@ -29,7 +29,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                               children: [
                                 Text(
                                   '総収入',
-                                  style: MonthlyPageStyles.topCardTitleLabel,
+                                  style: AppTextStyles.appCardTitleLabel,
                                 ),
                                 const SizedBox(
                                   width: 8,
@@ -43,13 +43,13 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                         text: formattedPriceGetter(
                                             allCategoryCardEntity
                                                 .allCategoryTotalIncome),
-                                        style: MonthlyPageStyles
-                                            .categoryTilePriceLabel,
+                                        style: AppTextStyles
+                                            .appCardOptionalSecondaryPriceLabel,
                                       ),
                                       TextSpan(
                                         text: ' 円',
-                                        style: MonthlyPageStyles
-                                            .categoryTileYenLabel,
+                                        style: AppTextStyles
+                                            .appCardOptionalSecondaryPriceUnit,
                                       ),
                                     ])),
                               ],
@@ -63,21 +63,21 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                         text: TextSpan(children: [
                                           TextSpan(
                                             text: '残金 ',
-                                            style: MonthlyPageStyles
-                                                .categoryTileBudgetTextLabel,
+                                            style: AppTextStyles
+                                                .appCardTertiaryTitleLabel,
                                           ),
                                           // カテゴリー予算
                                           TextSpan(
                                             text: formattedPriceGetter(
                                                 allCategoryCardEntity
                                                     .realSavings),
-                                            style: MonthlyPageStyles
-                                                .categoryTileBudgetPriceLabel,
+                                            style: AppTextStyles
+                                                .appCardTertiaryPriceLabel,
                                           ),
                                           TextSpan(
                                             text: ' 円',
-                                            style: MonthlyPageStyles
-                                                .categoryTileBudgetYenLabel,
+                                            style: AppTextStyles
+                                                .appCardTertiaryPriceUnit,
                                           ),
                                         ])),
                                   )

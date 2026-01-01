@@ -94,7 +94,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' 支出グラフ',
-                      style: MonthlyPageStyles.thirdPageSubheading,
+                      style: AppTextStyles.cardSectionTitle,
                     ),
                   ],
                 ),
@@ -135,7 +135,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' 今月の計画',
-                      style: MonthlyPageStyles.thirdPageSubheading,
+                      style: AppTextStyles.cardSectionTitle,
                     ),
                   ],
                 ),
@@ -155,16 +155,16 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' カテゴリー別',
-                      style: MonthlyPageStyles.thirdPageSubheading,
+                      style: AppTextStyles.cardSectionTitle,
                     ),
                     TextButton(
                         onPressed: () {
                           showModalBottomSheetFunc(
                               context, const CategorySettingPage());
                         },
-                        child: const Text(
+                        child: Text(
                           'カテゴリー設定',
-                          style: MonthlyPageStyles.thirdPageTextButton,
+                          style: AppTextStyles.textButtonTextStyle,
                         )),
                   ],
                 ),
@@ -184,7 +184,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   children: [
                     Text(
                       ' 固定費',
-                      style: MonthlyPageStyles.thirdPageSubheading,
+                      style: AppTextStyles.cardSectionTitle,
                     ),
                     TextButton(
                         onPressed: () {
@@ -192,9 +192,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                               builder: (context) =>
                                   const MonthlyFixedCostPage()));
                         },
-                        child: const Text(
+                        child: Text(
                           'さらに表示',
-                          style: MonthlyPageStyles.thirdPageTextButton,
+                          style: AppTextStyles.textButtonTextStyle,
                         )),
                   ],
                 ),

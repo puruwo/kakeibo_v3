@@ -23,19 +23,6 @@ class MonthlyPageStyles {
   static TextStyle thirdPageSubheading = GoogleFonts.notoSans(
       fontSize: 18, color: MyColors.label, fontWeight: FontWeight.w600);
 
-  /// セクション内テキストボタン用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ページ: year_page.dart (年間ページ)
-  ///   - エリア: 固定費セクション
-  ///   - 詳細: 「すべて見る」リンク
-  ///
-  /// - ページ: monthly_page.dart (月間ページ)
-  ///   - エリア: カテゴリー別支出セクション、固定費セクション
-  ///   - 詳細: 「すべて見る」リンク
-  static const thirdPageTextButton =
-      TextStyle(color: MyColors.themeColor, fontSize: 14);
-
   // ==========================================================================
   // トップカード（サマリーカード）
   // ==========================================================================
@@ -281,24 +268,6 @@ class MonthlyPageStyles {
   // ==========================================================================
   // カテゴリータイル（支出バー）
   // ==========================================================================
-
-  /// カテゴリータイルの支出金額ラベル
-  ///
-  /// 【使用箇所】
-  /// - ページ: monthly_page.dart
-  ///   - エリア: price_label.dart, all_no_budget_type_price_label.dart
-  ///   - 詳細: カテゴリーごとの支出金額
-  static TextStyle categoryTilePriceLabel = GoogleFonts.notoSans(
-      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w400);
-
-  /// カテゴリータイルの「円」ラベル
-  ///
-  /// 【使用箇所】
-  /// - ページ: monthly_page.dart
-  ///   - エリア: price_label.dart, all_no_budget_type_price_label.dart
-  ///   - 詳細: 金額後の「円」
-  static TextStyle categoryTileYenLabel = GoogleFonts.notoSans(
-      fontSize: 14, color: MyColors.white, fontWeight: FontWeight.w400);
 
   /// カテゴリータイルの予算ラベル（区切り）
   ///

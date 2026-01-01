@@ -72,13 +72,10 @@ class _YearPageState extends ConsumerState<YearPage> {
                   children: [
                     Text(
                       ' 年間収支',
-                      style: AppTextStyles.cardPrimaryTitle,
+                      style: AppTextStyles.cardSectionTitle,
                     ),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 4,
               ),
               const YearlyBalanceArea(),
               const SizedBox(
@@ -97,7 +94,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                   children: [
                     Text(
                       ' ボーナス利用状況',
-                      style: AppTextStyles.cardPrimaryTitle,
+                      style: AppTextStyles.cardSectionTitle,
                     ),
                     TextButton(
                         onPressed: () {
@@ -109,13 +106,10 @@ class _YearPageState extends ConsumerState<YearPage> {
                         },
                         child: Text(
                           'さらに表示する',
-                          style: AppTextStyles.secondaryButtonText,
+                          style: AppTextStyles.textButtonTextStyle,
                         )),
                   ],
                 ),
-              ),
-              const SizedBox(
-                height: 4,
               ),
               const BonusPlanArea(),
               const SizedBox(
@@ -128,15 +122,15 @@ class _YearPageState extends ConsumerState<YearPage> {
                   children: [
                     Text(
                       ' 生活収支',
-                      style: AppTextStyles.cardPrimaryTitle,
+                      style: AppTextStyles.cardSectionTitle,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(
-                height: 4,
-              ),
               const AnnualBalanceChart(),
+              const SizedBox(
+                height: 16,
+              ),
             ],
           ),
         ),
