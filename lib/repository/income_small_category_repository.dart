@@ -7,7 +7,8 @@ import 'package:kakeibo/logger.dart';
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
-class ImplementsIncomeSmallCategoryRepository implements IncomeSmallCategoryRepository {
+class ImplementsIncomeSmallCategoryRepository
+    implements IncomeSmallCategoryRepository {
   // カテゴリーNumberを指定して取得する
   @override
   Future<IncomeSmallCategoryEntity> fetchBySmallCategory(
@@ -28,7 +29,7 @@ class ImplementsIncomeSmallCategoryRepository implements IncomeSmallCategoryRepo
       final jsonList = await db.query(sql);
 
       // logger.i('====SQLが実行されました====\n ImplementsIncomeSmallCategoryRepository fetchBySmallCategory(int smallCategoryId)\n$sql');
-      
+
       final results = IncomeSmallCategoryEntity.fromJson(jsonList[0]);
 
       return results;
@@ -55,7 +56,8 @@ class ImplementsIncomeSmallCategoryRepository implements IncomeSmallCategoryRepo
         a.${SqfIncomeSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfIncomeSmallCategory.name} AS smallCategoryName,
         a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed
-      FROM ${SqfIncomeSmallCategory.tableName} a;
+      FROM ${SqfIncomeSmallCategory.tableName} a
+      ORDER BY a.${SqfIncomeSmallCategory.id} ASC;
     ''';
 
     // SQLを実行して結果を取得

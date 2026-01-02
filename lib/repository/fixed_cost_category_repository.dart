@@ -31,6 +31,7 @@ class ImplementsFixedCostCategoryRepository
         ${SqfFixedCostCategory.displayOrder} as displayOrder,
         ${SqfFixedCostCategory.isDisplayed} as isDisplayed
       FROM ${SqfFixedCostCategory.tableName}
+      ORDER BY ${SqfFixedCostCategory.id} ASC;
     ''';
     final result = await DatabaseHelper.instance.query(sql);
     return result.map((e) => FixedCostCategoryEntity.fromJson(e)).toList();

@@ -39,15 +39,15 @@ class DataBaseHelperHandling {
 
     await db.execute('''
           INSERT INTO ${SqfBudget.tableName}
-          (${SqfBudget.id}, ${SqfBudget.expenseBigCategoryId}, ${SqfBudget.month}, ${SqfBudget.price})
+          (${SqfBudget.expenseBigCategoryId}, ${SqfBudget.month}, ${SqfBudget.price})
           VALUES
-          (0, 0, '202504', 35000),
-          (1, 1, '202504', 5000),
-          (2, 2, '202504', 32000),
-          (3, 3, '202504', 9000),
-          (4, 4, '202504', 15000),
-          (5, 5, '202504', 0),
-          (6, 6, '202504', 5000);
+          (0, '202504', 35000),
+          (1, '202504', 5000),
+          (2, '202504', 32000),
+          (3, '202504', 9000),
+          (4, '202504', 15000),
+          (5, '202504', 0),
+          (6, '202504', 5000);
           ''');
 
     await db.execute('''
@@ -63,27 +63,26 @@ class DataBaseHelperHandling {
 
     await db.execute('''
           INSERT INTO ${SqfExpenseSmallCategory.tableName} (
-            ${SqfExpenseSmallCategory.id},
             ${SqfExpenseSmallCategory.bigCategoryKey},
             ${SqfExpenseSmallCategory.name},
             ${SqfExpenseSmallCategory.smallCategoryOrderKey},
             ${SqfExpenseSmallCategory.displayedOrderInBig},
             ${SqfExpenseSmallCategory.defaultDisplayed}) 
-            VALUES(0, 0, '食費', 0, 0, 1),
-                  (1, 0, 'コンビニ', 1, 1, 1),
-                  (2, 0, '外食', 2, 2, 1),
-                  (3, 0, '社食', 3, 3, 1),
-                  (4, 1, '消耗品', 4, 0, 1),
-                  (5, 1, '雑貨', 5, 1, 1),
-                  (6, 2, '遊び', 6, 0, 1),
-                  (7, 2, '飲み', 7, 1, 1),
-                  (8, 2, 'ライブ', 8, 2, 1),
-                  (9, 2, 'ご褒美', 9, 3, 1),
-                  (10, 3, '交通費', 10, 0, 1),
-                  (11, 3, '帰省', 11, 1, 1),
-                  (12, 4, 'カット', 12, 0, 1),
-                  (13, 5, '医療費', 13, 0, 1),
-                  (14, 6, 'その他', 14, 0, 1);
+            VALUES(0, '食費', 0, 0, 1),
+                  (0, 'コンビニ', 1, 1, 1),
+                  (0, '外食', 2, 2, 1),
+                  (0, '社食', 3, 3, 1),
+                  (1, '消耗品', 4, 0, 1),
+                  (1, '雑貨', 5, 1, 1),
+                  (2, '遊び', 6, 0, 1),
+                  (2, '飲み', 7, 1, 1),
+                  (2, 'ライブ', 8, 2, 1),
+                  (2, 'ご褒美', 9, 3, 1),
+                  (3, '交通費', 10, 0, 1),
+                  (3, '帰省', 11, 1, 1),
+                  (4, 'カット', 12, 0, 1),
+                  (5, '医療費', 13, 0, 1),
+                  (6, 'その他', 14, 0, 1);
           ''');
 
     await db.execute('''
@@ -99,19 +98,18 @@ class DataBaseHelperHandling {
 
     await db.execute('''
           INSERT INTO ${SqfExpenseBigCategory.tableName} (
-          ${SqfExpenseBigCategory.id},
           ${SqfExpenseBigCategory.name},
           ${SqfExpenseBigCategory.colorCode},
           ${SqfExpenseBigCategory.resourcePath},
           ${SqfExpenseBigCategory.displayOrder},
           ${SqfExpenseBigCategory.isDisplayed}) 
-          VALUES(0, '食費', 'FF7070', 'assets/images/icon_meal.svg', 0, 1),
-                (1, '日用品', '21D19F', 'assets/images/icon_commodity.svg', 1, 1),
-                (2, '遊び娯楽', 'ED112B', 'assets/images/icon_favo.svg', 2, 1),
-                (3, '交通費', '2596FF', 'assets/images/icon_transportation.svg', 3, 1),
-                (4, '衣服美容', 'FFC857', 'assets/images/icon_clothes.svg', 4, 1),
-                (5, '医療費', 'B118C8', 'assets/images/icon_medical.svg', 5, 1),
-                (6, '雑費', '3E2F5B', 'assets/images/icon_others.svg', 6, 1);
+          VALUES('食費', 'FF7070', 'assets/images/icon_meal.svg', 0, 1),
+                ('日用品', '21D19F', 'assets/images/icon_commodity.svg', 1, 1),
+                ('遊び娯楽', 'ED112B', 'assets/images/icon_favo.svg', 2, 1),
+                ('交通費', '2596FF', 'assets/images/icon_transportation.svg', 3, 1),
+                ('衣服美容', 'FFC857', 'assets/images/icon_clothes.svg', 4, 1),
+                ('医療費', 'B118C8', 'assets/images/icon_medical.svg', 5, 1),
+                ('雑費', '3E2F5B', 'assets/images/icon_others.svg', 6, 1);
           ''');
 
     await db.execute('''
@@ -127,16 +125,15 @@ class DataBaseHelperHandling {
 
     await db.execute('''
           INSERT INTO ${SqfIncomeSmallCategory.tableName} (
-            ${SqfIncomeSmallCategory.id},
             ${SqfIncomeSmallCategory.bigCategoryKey},
             ${SqfIncomeSmallCategory.name},
             ${SqfIncomeSmallCategory.smallCategoryOrderKey},
             ${SqfIncomeSmallCategory.displayedOrderInBig},
             ${SqfIncomeSmallCategory.defaultDisplayed}) 
-            VALUES(0, 0, '給与', 0, 0, 1),
-                  (1, 1, 'ボーナス', 1, 1, 1),
-                  (2, 0, '小遣い', 2, 2, 1),
-                  (3, 0, '臨時収入', 3, 3, 1);
+            VALUES(0, '給与', 0, 0, 1),
+                  (1, 'ボーナス', 1, 1, 1),
+                  (0, '小遣い', 2, 2, 1),
+                  (0, '臨時収入', 3, 3, 1);
           ''');
 
     await db.execute('''
@@ -150,13 +147,12 @@ class DataBaseHelperHandling {
 
     await db.execute('''
           INSERT INTO ${SqfIncomeBigCategory.tableName} (
-          ${SqfIncomeBigCategory.id},
           ${SqfIncomeBigCategory.name},
           ${SqfIncomeBigCategory.colorCode},
           ${SqfIncomeBigCategory.resourcePath}) 
           VALUES
-          (0, '月次収入', 'FFC857', 'assets/images/icon_regular_income.svg'),
-          (1, 'ボーナス', 'ECB22D', 'assets/images/icon_extra_income.svg');
+          ('月次収入', 'FFC857', 'assets/images/icon_regular_income.svg'),
+          ('ボーナス', 'ECB22D', 'assets/images/icon_extra_income.svg');
           ''');
 
     await db.execute('''CREATE TABLE ${SqfFixedCost.tableName} (
@@ -285,7 +281,7 @@ class DataBaseHelperHandling {
         ('20251019', 20000, '帰省', 2);
         ''');
     });
-    
+
     await db.transaction((txn) async {
       await txn.execute('''
         INSERT INTO expense (date, price, memo, expense_small_category_id, income_source_big_category)

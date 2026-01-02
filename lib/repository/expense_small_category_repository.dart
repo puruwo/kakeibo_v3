@@ -56,7 +56,8 @@ class ImplementsExpenseSmallCategoryRepository
         a.${SqfExpenseSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
         a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
-      FROM ${SqfExpenseSmallCategory.tableName} a;
+      FROM ${SqfExpenseSmallCategory.tableName} a
+      ORDER BY a.${SqfExpenseSmallCategory.id} ASC;
     ''';
 
     // SQLを実行して結果を取得
