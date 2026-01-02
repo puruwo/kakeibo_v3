@@ -57,6 +57,9 @@ class FixedCostUsecase {
     if (fixedCostEntity.price >= 99999999) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
+    if (fixedCostEntity.fixedCostCategoryId <= 0) {
+      throw const AppException('カテゴリーを選択してください');
+    }
 
     FixedCostEntity insertRecord;
     if (enteredDate.isAfter(currentMonthPeriod.endDatetime)) {
@@ -166,8 +169,14 @@ class FixedCostUsecase {
           fixedCostCategoryId: editEntity.fixedCostCategoryId);
     }
 
-    // データを編集する
-    final newEntity = originalEntity.copyWith(fixedCostCategoryId:editEntity.fixedCostCategoryId);
+    // データを編集する（全てのフィールドを更新）
+    final newEntity = originalEntity.copyWith(
+      name: editEntity.name,
+      price: editEntity.price,
+      variable: editEntity.variable,
+      estimatedPrice: editEntity.estimatedPrice,
+      fixedCostCategoryId: editEntity.fixedCostCategoryId,
+    );
     await _fixedCostRepositoryProvider.update(newEntity);
 
     // DBの更新回数をインクリメント

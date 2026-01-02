@@ -20,6 +20,14 @@ Future<ICategoryEntity> categoryByMode(
   required TransactionMode mode,
   required int categoryId,
 }) async {
+  // categoryIdが0以下（未選択）の場合は最初のカテゴリーを返す
+  if (categoryId <= 0) {
+    final categories = await ref.watch(categoriesByModeProvider(mode).future);
+    if (categories.isNotEmpty) {
+      return categories.first;
+    }
+  }
+
   return switch (mode) {
     TransactionMode.expense =>
       await ref.watch(categoryUsecaseProvider).fetchBySmallId(categoryId),
