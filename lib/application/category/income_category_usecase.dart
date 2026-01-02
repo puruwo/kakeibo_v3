@@ -40,8 +40,9 @@ class IncomeCategoryUsecase {
     for (IncomeSmallCategoryEntity smallCategoryEntity
         in smallCategoryEntityList) {
       // 大カテゴリーを取得する
-      final incomeBigCategoryEntity = await _bigCategoryRepositoryProvider
-          .fetchByBigCategory(bigCategoryId: smallCategoryEntity.bigCategoryKey);
+      final incomeBigCategoryEntity =
+          await _bigCategoryRepositoryProvider.fetchByBigCategory(
+              bigCategoryId: smallCategoryEntity.bigCategoryKey);
 
       // カテゴリー情報をまとめてentityに格納する
       final categoryEntity = IncomeCategoryEntity(
@@ -62,11 +63,12 @@ class IncomeCategoryUsecase {
     }
 
     // smallCategoryOrderKeyの昇順で並び替える
-    results.sort(((a, b)=>a.smallCategoryOrderKey.compareTo(b.smallCategoryOrderKey)));
+    results.sort(
+        ((a, b) => a.smallCategoryOrderKey.compareTo(b.smallCategoryOrderKey)));
 
-     // smallCategoryOrderKeyが歯抜けの場合の対策として整数連続値でsortKeyを付与する
-    int i=0;
-    for(IncomeCategoryEntity categoryEntity in results){
+    // smallCategoryOrderKeyが歯抜けの場合の対策として整数連続値でsortKeyを付与する
+    int i = 0;
+    for (IncomeCategoryEntity categoryEntity in results) {
       final updated = categoryEntity.copyWith(sortKey: i);
       results[i] = updated;
       i++;
@@ -83,7 +85,6 @@ class IncomeCategoryUsecase {
 
     return incomeBigCategoryEntity;
   }
-
 
   /// [fetchCategoryBySmallId] メソッドは、収入カテゴリーを取得する
   Future<IncomeCategoryEntity> fetchCategoryBySmallId(int id) async {
@@ -111,5 +112,29 @@ class IncomeCategoryUsecase {
     );
 
     return categoryEntity;
+  }
+
+  /// 表示順を一括更新（並び替え画面用）
+  /// [newOrders] は { カテゴリーID: 新しい表示順 } のMap
+  Future<void> updateDisplayOrders(Map<int, int> newOrders) async {
+    for (final entry in newOrders.entries) {
+      final categoryId = entry.key;
+      final newOrder = entry.value;
+
+      // 小カテゴリーを取得して更新
+      final smallCategory = await _smallCategoryRepositoryProvider
+          .fetchBySmallCategory(smallCategoryId: categoryId);
+
+      // エンティティに定義されているupdateメソッドを使用
+      final updatedEntity = IncomeSmallCategoryEntity(
+        id: smallCategory.id,
+        smallCategoryOrderKey: newOrder,
+        bigCategoryKey: smallCategory.bigCategoryKey,
+        displayedOrderInBig: smallCategory.displayedOrderInBig,
+        smallCategoryName: smallCategory.smallCategoryName,
+        defaultDisplayed: smallCategory.defaultDisplayed,
+      );
+      updatedEntity.update();
+    }
   }
 }

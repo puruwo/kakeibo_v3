@@ -9,6 +9,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
+import 'package:kakeibo/view/register_page/category_area/category_reorder_page.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 
@@ -172,16 +173,16 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
-        // TODO: アイコン並べ替え画面に遷移（現在は仮実装）
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('アイコン並び替え画面（未実装）'),
-            duration: Duration(seconds: 1),
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CategoryReorderPage(
+              transactionMode: widget.transactionMode,
+            ),
           ),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: const Padding(
+        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -190,7 +191,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               size: 16,
               color: MyColors.secondaryLabel,
             ),
-            const SizedBox(width: 6),
+            SizedBox(width: 6),
             Text(
               'アイコンを並べ替える',
               style: RegisterPageStyles.rearrangeLink,

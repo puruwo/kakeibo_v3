@@ -101,4 +101,20 @@ class FixedCostCategoryUsecase {
   ) async {
     return await _fixedCostCategoryRepository.fetch(id: id);
   }
+
+  /// 表示順を一括更新（並び替え画面用）
+  /// [newOrders] は { カテゴリーID: 新しい表示順 } のMap
+  Future<void> updateDisplayOrders(Map<int, int> newOrders) async {
+    for (final entry in newOrders.entries) {
+      final categoryId = entry.key;
+      final newOrder = entry.value;
+
+      final entity = await _fixedCostCategoryRepository.fetch(id: categoryId);
+      final updatedEntity = entity.copyWith(displayOrder: newOrder);
+      await _fixedCostCategoryRepository.update(updatedEntity);
+    }
+
+    // DBの更新回数をインクリメント
+    updateDBCountNotifier.incrementState();
+  }
 }

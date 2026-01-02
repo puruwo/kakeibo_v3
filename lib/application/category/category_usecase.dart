@@ -319,15 +319,42 @@ class CategoryUsecase {
     // 追加された大カテゴリーのIDを返す
     return addedBigId;
   }
-  
+
   // 小カテゴリーの追加処理
   Future<void> addSmall(ExpenseSmallCategoryEntity entity) async {
     // 受け取ったentityのsmallCategoryOrderKeyは仮の値であるため、表示順の最大値を取得する
     _smallCategoryRepositoryProvider.getMaxSmallCategoryOrderKey(
         bigCategoryId: entity.bigCategoryKey);
-    
+
     // 小カテゴリーの追加は、リポジトリのaddメソッドを呼び出す
     _smallCategoryRepositoryProvider.add(entity: entity);
+
+    // DBの更新回数をインクリメント
+    _updateDBCountNotifier.incrementState();
+  }
+
+  /// 表示順を一括更新（並び替え画面用）
+  /// [newOrders] は { カテゴリーID: 新しい表示順 } のMap
+  Future<void> updateDisplayOrders(Map<int, int> newOrders) async {
+    for (final entry in newOrders.entries) {
+      final categoryId = entry.key;
+      final newOrder = entry.value;
+
+      // 小カテゴリーを取得して更新
+      final smallCategory = await _smallCategoryRepositoryProvider
+          .fetchBySmallCategory(smallCategoryId: categoryId);
+
+      final updatedEntity = ExpenseSmallCategoryEntity(
+        id: smallCategory.id,
+        smallCategoryOrderKey: newOrder,
+        bigCategoryKey: smallCategory.bigCategoryKey,
+        displayedOrderInBig: smallCategory.displayedOrderInBig,
+        smallCategoryName: smallCategory.smallCategoryName,
+        defaultDisplayed: smallCategory.defaultDisplayed,
+      );
+
+      await _smallCategoryRepositoryProvider.update(entity: updatedEntity);
+    }
 
     // DBの更新回数をインクリメント
     _updateDBCountNotifier.incrementState();
