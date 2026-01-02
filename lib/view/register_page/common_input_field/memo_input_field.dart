@@ -25,6 +25,7 @@ class MemoInputField extends ConsumerStatefulWidget {
 
 class _MemoInputFieldState extends ConsumerState<MemoInputField> {
   late TextEditingController _enteredMemoController;
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -36,76 +37,88 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
   }
 
   @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     _enteredMemoController = ref.watch(enteredMemoControllerProvider);
 
-    return Container(
-      height: InputPageWidgetSize.pillHeight,
-      width: InputPageWidgetSize.pillWidth,
-      decoration: BoxDecoration(
-        color: MyColors.secondarySystemfill,
-        borderRadius: BorderRadius.circular(50),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 6, 20, 5),
-        child: SizedBox(
-          height: 34,
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // アイコン表示（オプション）
-              if (widget.showIcon) ...[
-                const Icon(
-                  Icons.notes_rounded,
-                  size: 18,
-                  color: MyColors.label,
-                ),
-                const SizedBox(width: 6),
-              ],
-              // ラベル
-              Text(
-                widget.titleLabel,
-                textAlign: TextAlign.left,
-                style: RegisterPageStyles.placeHolder.copyWith(fontSize: 15),
-              ),
-              const SizedBox(width: 16),
-              // 入力フィールド
-              Expanded(
-                child: TextFormField(
-                  controller: _enteredMemoController,
-                  autofocus: false,
-                  textAlignVertical: TextAlignVertical.center,
-                  textAlign: TextAlign.right,
-                  cursorColor: MyColors.themeColor,
-                  cursorWidth: 2,
-                  style: RegisterPageStyles.inputText,
-                  minLines: 1,
-                  maxLines: 1,
-                  maxLength: 20,
-                  buildCounter: (
-                    BuildContext context, {
-                    required int currentLength,
-                    required bool isFocused,
-                    required int? maxLength,
-                  }) {
-                    return null;
-                  },
-                  decoration: const InputDecoration(
-                    isDense: true,
-                    filled: false,
-                    contentPadding: EdgeInsets.zero,
-                    border: InputBorder.none,
+    return GestureDetector(
+      onTap: () {
+        _focusNode.requestFocus();
+      },
+      child: Container(
+        height: InputPageWidgetSize.pillHeight,
+        width: InputPageWidgetSize.pillWidth,
+        decoration: BoxDecoration(
+          color: MyColors.secondarySystemfill,
+          borderRadius: BorderRadius.circular(50),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 6, 20, 5),
+          child: SizedBox(
+            height: 34,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // アイコン表示（オプション）
+                if (widget.showIcon) ...[
+                  const Icon(
+                    Icons.notes_rounded,
+                    size: 18,
+                    color: MyColors.label,
                   ),
-                  keyboardAppearance: Brightness.dark,
-                  onTapOutside: (event) {
-                    FocusScope.of(context).unfocus();
-                  },
-                  onEditingComplete: () {
-                    FocusScope.of(context).unfocus();
-                  },
+                  const SizedBox(width: 6),
+                ],
+                // ラベル
+                Text(
+                  widget.titleLabel,
+                  textAlign: TextAlign.left,
+                  style: RegisterPageStyles.placeHolder.copyWith(fontSize: 15),
                 ),
-              ),
-            ],
+                const SizedBox(width: 16),
+                // 入力フィールド
+                Expanded(
+                  child: TextFormField(
+                    controller: _enteredMemoController,
+                    focusNode: _focusNode,
+                    autofocus: false,
+                    textAlignVertical: TextAlignVertical.center,
+                    textAlign: TextAlign.right,
+                    cursorColor: MyColors.themeColor,
+                    cursorWidth: 2,
+                    style: RegisterPageStyles.inputText,
+                    minLines: 1,
+                    maxLines: 1,
+                    maxLength: 20,
+                    buildCounter: (
+                      BuildContext context, {
+                      required int currentLength,
+                      required bool isFocused,
+                      required int? maxLength,
+                    }) {
+                      return null;
+                    },
+                    decoration: const InputDecoration(
+                      isDense: true,
+                      filled: false,
+                      contentPadding: EdgeInsets.zero,
+                      border: InputBorder.none,
+                    ),
+                    keyboardAppearance: Brightness.dark,
+                    onTapOutside: (event) {
+                      FocusScope.of(context).unfocus();
+                    },
+                    onEditingComplete: () {
+                      FocusScope.of(context).unfocus();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
