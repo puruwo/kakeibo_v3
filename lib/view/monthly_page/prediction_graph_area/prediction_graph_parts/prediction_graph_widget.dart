@@ -187,13 +187,30 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
         totalFixedCostExpense: widget.data.totalFixedCostExpense ?? 0,
         categoryExpenses: dailyBarData?.categoryExpenses ?? [],
         onTapTooltip: () {
-          // ツールチップを閉じてからナビゲーション
+          // ツールチップを閉じてからフルモーダル表示
           setState(() {
             _selectedDate = null;
             _tapPosition = null;
           });
-          Navigator.of(context).push(
-            DailyExpenseSummaryPage.route(selectedDate),
+          showModalBottomSheet(
+            useRootNavigator: true,
+            isScrollControlled: true,
+            useSafeArea: true,
+            constraints: const BoxConstraints(maxWidth: 2000),
+            context: context,
+            builder: (context) {
+              return MaterialApp(
+                debugShowCheckedModeBanner: false,
+                theme: ThemeData.dark(),
+                themeMode: ThemeMode.dark,
+                darkTheme: ThemeData.dark(),
+                home: MediaQuery.withClampedTextScaling(
+                  minScaleFactor: 0.7,
+                  maxScaleFactor: 0.95,
+                  child: DailyExpenseSummaryPage(date: selectedDate),
+                ),
+              );
+            },
           );
         },
       ),
