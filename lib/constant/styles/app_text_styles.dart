@@ -81,6 +81,13 @@ class AppTextStyles {
   static TextStyle oneLineButtonText = GoogleFonts.notoSans(
       fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w400);
 
+  /// 一行ボタン用のサブテキスト
+  ///
+  static TextStyle oneLineButtonSubText = GoogleFonts.notoSans(
+      fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w400);
+
   // ==========================================================================
   // リスト共通
   // ==========================================================================

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/application/fixed_cost/active_fixed_cost_count_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -24,13 +26,15 @@ class FixedCostButtonArea extends StatelessWidget {
   }
 }
 
-class FixedCostManagePageButton extends StatelessWidget {
+class FixedCostManagePageButton extends ConsumerWidget {
   const FixedCostManagePageButton({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeCountAsync = ref.watch(activeFixedCostCountProvider);
+
     return AppInkWell(
       color: MyColors.quarternarySystemfill,
       borderRadius: BorderRadius.circular(50.0),
@@ -52,10 +56,23 @@ class FixedCostManagePageButton extends StatelessWidget {
                 '固定費一覧',
                 style: AppTextStyles.oneLineButtonText,
               ),
-              const Icon(
-                size: 16,
-                Icons.arrow_forward_ios_rounded,
-                color: MyColors.secondaryLabel,
+              Row(
+                children: [
+                  activeCountAsync.when(
+                    data: (count) => Text(
+                      '$count件',
+                      style: AppTextStyles.oneLineButtonSubText,
+                    ),
+                    loading: () => const SizedBox.shrink(),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                  const SizedBox(width: 8),
+                  const Icon(
+                    size: 16,
+                    Icons.arrow_forward_ios_rounded,
+                    color: MyColors.secondaryLabel,
+                  ),
+                ],
               ),
             ],
           ),
