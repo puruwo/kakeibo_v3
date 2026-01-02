@@ -54,6 +54,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
       child: Scaffold(
         backgroundColor: MyColors.secondarySystemBackground,
         body: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
             child: Column(
