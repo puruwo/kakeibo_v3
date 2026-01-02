@@ -115,7 +115,9 @@ class FixedCostItemTile extends ConsumerWidget {
                               style: AppTextStyles.listTileSecondaryTitle,
                             ),
                           TextSpan(
-                            text: yenmarkFormattedPriceGetter(displayPrice),
+                            text: displayPrice == 0
+                                ? '---'
+                                : yenmarkFormattedPriceGetter(displayPrice),
                             style: AppTextStyles.listTilePriceLabel,
                           ),
                         ],
