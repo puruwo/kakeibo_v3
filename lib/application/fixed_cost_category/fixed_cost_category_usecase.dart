@@ -36,8 +36,15 @@ class FixedCostCategoryUsecase {
       throw const AppException('カテゴリー名を入力してください');
     }
 
+    // 受け取ったentityのdisplayOrderは仮の値であるため、表示順の最大値を取得する
+    final maxDisplayOrder =
+        await _fixedCostCategoryRepository.getMaxDisplayOrder();
+
+    // 既存の最大値 + 1 で新しいdisplayOrderを設定
+    final newEntity = entity.copyWith(displayOrder: maxDisplayOrder + 1);
+
     // データを追加
-    await _fixedCostCategoryRepository.insert(entity);
+    await _fixedCostCategoryRepository.insert(newEntity);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

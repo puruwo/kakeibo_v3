@@ -10,4 +10,5 @@ abstract class FixedCostCategoryRepository {
   Future<FixedCostCategoryEntity> fetch({required int id});
   Future<void> update(FixedCostCategoryEntity entity);
   Future<void> delete(int id);
+  Future<int> getMaxDisplayOrder();
 }

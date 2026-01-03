@@ -79,4 +79,18 @@ class ImplementsFixedCostCategoryRepository
       id,
     );
   }
+
+  @override
+  Future<int> getMaxDisplayOrder() async {
+    const sql = '''
+      SELECT MAX(${SqfFixedCostCategory.displayOrder}) as maxDisplayOrder
+      FROM ${SqfFixedCostCategory.tableName};
+    ''';
+    final result = await DatabaseHelper.instance.query(sql);
+    if (result.isNotEmpty && result[0]['maxDisplayOrder'] != null) {
+      return result[0]['maxDisplayOrder'] as int;
+    } else {
+      return 0; // デフォルト値
+    }
+  }
 }

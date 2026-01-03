@@ -134,13 +134,13 @@ class ImplementsExpenseSmallCategoryRepository
     return id;
   }
 
-  /// 小カテゴリーの最大の表示順序を取得する
+  /// 小カテゴリーの最大の表示順序を取得する（全カテゴリー対象）
   @override
   Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId}) async {
-    final sql = '''
+    // bigCategoryIdは互換性のため引数として残すが、全カテゴリーから最大値を取得する
+    const sql = '''
       SELECT MAX(${SqfExpenseSmallCategory.smallCategoryOrderKey}) AS maxOrderKey
-      FROM ${SqfExpenseSmallCategory.tableName}
-      WHERE ${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId;
+      FROM ${SqfExpenseSmallCategory.tableName};
     ''';
 
     final jsonList = await db.query(sql);

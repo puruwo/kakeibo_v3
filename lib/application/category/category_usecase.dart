@@ -290,17 +290,24 @@ class CategoryUsecase {
       // 追加された要素を取得する
       final addedElements = editValues.sublist(originalValues.length);
 
+      // 現在の最大smallCategoryOrderKeyを取得する
+      int maxOrderKey =
+          await _smallCategoryRepositoryProvider.getMaxSmallCategoryOrderKey(
+              bigCategoryId: addedElements.first.bigCategoryKey);
+
       // 追加された要素をDBに保存する
       for (var element in addedElements) {
+        // 最大値 + 1 で新しいsmallCategoryOrderKeyを設定
+        maxOrderKey++;
         final entity = ExpenseSmallCategoryEntity(
             id: element.id,
             bigCategoryKey: element.bigCategoryKey,
             smallCategoryName: element.name,
-            smallCategoryOrderKey: element.smallCategoryOrderKey,
+            smallCategoryOrderKey: maxOrderKey,
             displayedOrderInBig: element.editedStateDisplayOrder,
             defaultDisplayed: element.etitedStateIsChecked ? 1 : 0);
 
-        _smallCategoryRepositoryProvider.add(entity: entity);
+        await _smallCategoryRepositoryProvider.add(entity: entity);
       }
     }
 
@@ -323,11 +330,21 @@ class CategoryUsecase {
   // 小カテゴリーの追加処理
   Future<void> addSmall(ExpenseSmallCategoryEntity entity) async {
     // 受け取ったentityのsmallCategoryOrderKeyは仮の値であるため、表示順の最大値を取得する
-    _smallCategoryRepositoryProvider.getMaxSmallCategoryOrderKey(
-        bigCategoryId: entity.bigCategoryKey);
+    final maxOrderKey = await _smallCategoryRepositoryProvider
+        .getMaxSmallCategoryOrderKey(bigCategoryId: entity.bigCategoryKey);
+
+    // 既存の最大値 + 1 で新しいsmallCategoryOrderKeyを設定
+    final newEntity = ExpenseSmallCategoryEntity(
+      id: entity.id,
+      bigCategoryKey: entity.bigCategoryKey,
+      smallCategoryName: entity.smallCategoryName,
+      smallCategoryOrderKey: maxOrderKey + 1,
+      displayedOrderInBig: entity.displayedOrderInBig,
+      defaultDisplayed: entity.defaultDisplayed,
+    );
 
     // 小カテゴリーの追加は、リポジトリのaddメソッドを呼び出す
-    _smallCategoryRepositoryProvider.add(entity: entity);
+    await _smallCategoryRepositoryProvider.add(entity: newEntity);
 
     // DBの更新回数をインクリメント
     _updateDBCountNotifier.incrementState();
