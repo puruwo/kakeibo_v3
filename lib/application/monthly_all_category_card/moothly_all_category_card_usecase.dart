@@ -85,7 +85,10 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // カテゴリータイルのリストを取得する
     final categoryEntityList =
         await _categoryAccountingRepositoryProvider.fetchAll(
-            incomeSourceBigCategoryId: 0, fromDate: fromDate, toDate: toDate);
+            incomeSourceBigCategoryId:
+                IncomeBigCategoryConstants.incomeSourceIdSalary,
+            fromDate: fromDate,
+            toDate: toDate);
 
     // CategoryEntityから要素を取り出してリストにする
     List<String> categoryNameList =

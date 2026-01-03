@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/monthly_category_card/request_moothly_category_card.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
@@ -45,7 +46,8 @@ class MonthlySelectedCategoryCardUsecaseNotifier
     // 大カテゴリー(タイル情報つき)の情報を取得する
     final accountingValue =
         await _categoryAccountingRepositoryProvider.fetchSelectedCategory(
-            incomeSourceBigCategoryId: 0, // ボーナスを除く
+            incomeSourceBigCategoryId:
+                IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
             expenseBigCategoryId: request.bigId,
             fromDate: fromDate,
             toDate: toDate);
@@ -58,7 +60,8 @@ class MonthlySelectedCategoryCardUsecaseNotifier
 
     // タイル内の小カテゴリーのリスト情報を取得する
     final smallCategory = await _smallCategoryTileRepository.fetchAll(
-        incomeSourceBigCategoryId: 0, // ボーナスを除く
+        incomeSourceBigCategoryId:
+            IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
         bigCategoryId: accountingValue.id,
         fromDate: fromDate,
         toDate: toDate);

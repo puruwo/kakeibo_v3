@@ -44,15 +44,17 @@ class HistoricalTransactionUsecaseNotifier
     final bonusExpenses = await ref.watch(
         bonusExpenseHistoryDigestNotifierProvider(selectedMonthPeriod).future);
 
-    // 月次収入取得用のリクエスト（bigId=0）
+    // 月次収入取得用のリクエスト（bigId=1）
     final incomeRequest = RequestIncomeHistoryUsecase(
-        bigId: 0, selectedMonthPeriod: selectedMonthPeriod);
+        bigId: IncomeBigCategoryConstants.incomeSourceIdSalary,
+        selectedMonthPeriod: selectedMonthPeriod);
     final incomes =
         await ref.watch(incomeHistoryNotifierProvider(incomeRequest).future);
 
-    // ボーナス収入取得用のリクエスト（bigId=1）
+    // ボーナス収入取得用のリクエスト（bigId=2）
     final bonusIncomeRequest = RequestIncomeHistoryUsecase(
-        bigId: 1, selectedMonthPeriod: selectedMonthPeriod);
+        bigId: IncomeBigCategoryConstants.incomeSourceIdBonus,
+        selectedMonthPeriod: selectedMonthPeriod);
     final bonusIncomes = await ref
         .watch(incomeHistoryNotifierProvider(bonusIncomeRequest).future);
 
