@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:kakeibo/application/expense_history/expense_history_service.dart';
 import 'package:kakeibo/application/expense_history/small_category_expense_history_usecase/request_small_expense_history.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_group_value.dart';
 
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
@@ -35,7 +36,9 @@ class SmallCategoryExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
     );
 
     // 小カテゴリーIdを指定して、月次支出のタイル情報を取得する
-    final records = await _service.fetchTileList(0, request.monthPeriodValue,
+    final records = await _service.fetchTileList(
+        IncomeBigCategoryConstants.incomeSourceIdSalary,
+        request.monthPeriodValue,
         smallId: request.smallId);
 
     // 取得したタイルデータをDateTimeでグループ分けする

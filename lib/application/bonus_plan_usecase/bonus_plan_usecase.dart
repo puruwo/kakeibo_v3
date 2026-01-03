@@ -32,16 +32,17 @@ class BonusPlanUsecaseNotifier
 
   Future<BonusPlanValue> fetch(
       {required PeriodValue selectedYearPeriod}) async {
-
-    // カテゴリーIDを1で指定することで、ボーナス収入の合計を取得する
+    // カテゴリーIDを2で指定することで、ボーナス収入の合計を取得する
     final yearlyBonusIncome =
         await _incomeRepository.calcurateSumWithBigCategoryAndPeriod(
-            period: selectedYearPeriod, bigCategoryId: 1);
+            period: selectedYearPeriod,
+            bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdBonus);
 
     // カテゴリーIDを1で指定することで、ボーナス分の支出の合計を取得する
     final yearlyBonusExpense =
         await _expenseRepository.fetchTotalExpenseByPeriodWithBigCategory(
-            incomeSourceBigCategory: IncomeBigCategoryConstants.incomeSourceIdBonus,
+            incomeSourceBigCategory:
+                IncomeBigCategoryConstants.incomeSourceIdBonus,
             fromDate: selectedYearPeriod.startDatetime,
             toDate: selectedYearPeriod.endDatetime);
 

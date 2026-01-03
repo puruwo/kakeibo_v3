@@ -8,6 +8,7 @@ import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_usecase.d
 import 'package:kakeibo/application/fixed_cost_read/monthly_unconfirmed_fixed_cost_usecase.dart';
 import 'package:kakeibo/application/income_history/income_history_usecase.dart';
 import 'package:kakeibo/application/income_history/request_income_history_usecase.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_group_value.dart';
 import 'package:kakeibo/domain/ui_value/historical_all_transactions_value/historical_all_transactions_value.dart';
 import 'dart:collection';
@@ -80,8 +81,9 @@ class HistoricalTransactionUsecaseNotifier
       bigCategoryRepo: ref.read(expensebigCategoryRepositoryProvider),
     );
 
-    // incomeSourceBigIdは0を指定して、月次支出のみを取得する
-    final entities = await service.fetchTileList(0, selectedMonthPeriod);
+    // incomeSourceBigIdは1を指定して、月次支出のみを取得する
+    final entities = await service.fetchTileList(
+        IncomeBigCategoryConstants.incomeSourceIdSalary, selectedMonthPeriod);
 
     // 取得したタイルデータをDateTimeでグループ分けする
     final grouped = entities.groupListsBy<DateTime>((e) => e.date);

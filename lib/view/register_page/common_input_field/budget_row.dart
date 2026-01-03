@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -21,13 +22,17 @@ class BudgetRow extends ConsumerStatefulWidget {
   ConsumerState<BudgetRow> createState() => _BudgetRowState();
 }
 
-class _BudgetRowState extends ConsumerState<BudgetRow> {
-  // 拠出元のラベルリスト
-  static const incomeSourceLabels = [
-    '生活収支',
-    'ボーナス',
-  ];
+enum IncomeSourceBigCategory {
+  living('生活収支', IncomeBigCategoryConstants.incomeSourceIdSalary),
+  bonus('ボーナス', IncomeBigCategoryConstants.incomeSourceIdBonus);
 
+  const IncomeSourceBigCategory(this.label, this.value);
+
+  final String label;
+  final int value;
+}
+
+class _BudgetRowState extends ConsumerState<BudgetRow> {
   @override
   void initState() {
     super.initState();
@@ -38,28 +43,32 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
     });
   }
 
+  /// 選択されたvalueからenumを取得
+  IncomeSourceBigCategory _getEnumByValue(int value) {
+    return IncomeSourceBigCategory.values.firstWhere(
+      (e) => e.value == value,
+      orElse: () => IncomeSourceBigCategory.living,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final selectedIndex =
+    final selectedValue =
         ref.watch(enteredIncomeSourceControllerNotifierProvider);
-    final selectedLabel = selectedIndex < incomeSourceLabels.length
-        ? incomeSourceLabels[selectedIndex]
-        : incomeSourceLabels[0];
+    final selectedEnum = _getEnumByValue(selectedValue);
 
     return AppPopupMenu(
-      onSelected: (index) {
+      onSelected: (IncomeSourceBigCategory selected) {
         ref
             .read(enteredIncomeSourceControllerNotifierProvider.notifier)
-            .setData(index);
+            .setData(selected.value);
       },
-      itemBuilder: (context) => incomeSourceLabels
-          .asMap()
-          .entries
+      itemBuilder: (context) => IncomeSourceBigCategory.values
           .map(
-            (entry) => buildCheckableMenuItem(
-              value: entry.key,
-              label: entry.value,
-              isSelected: selectedIndex == entry.key,
+            (category) => buildCheckableMenuItem(
+              value: category,
+              label: category.label,
+              isSelected: selectedEnum == category,
             ),
           )
           .toList(),
@@ -92,7 +101,7 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  selectedLabel,
+                  selectedEnum.label,
                   style: RegisterPageStyles.budgetValue,
                 ),
                 const SizedBox(width: 4),

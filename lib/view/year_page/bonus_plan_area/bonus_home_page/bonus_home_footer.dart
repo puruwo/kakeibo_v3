@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
@@ -33,7 +34,8 @@ class BonusHomeFooter extends ConsumerWidget {
           final today = ref.read(systemDatetimeNotifierProvider);
           ExpenseEntity newExpense = ExpenseEntity(
             date: DateFormat('yyyyMMdd').format(today),
-            incomeSourceBigCategory: 1, //　1を指定することで、収入の大カテゴリーでボーナスを選択する
+            incomeSourceBigCategory:
+                IncomeBigCategoryConstants.incomeSourceIdBonus,
             memo: '',
           );
 
@@ -87,7 +89,7 @@ class BonusHomeFooter extends ConsumerWidget {
                 final today = ref.read(systemDatetimeNotifierProvider);
                 IncomeEntity newIncome = IncomeEntity(
                   date: DateFormat('yyyyMMdd').format(today),
-                  categoryId: 1, //　1を指定することで、でボーナスを選択する
+                  categoryId: IncomeBigCategoryConstants.incomeSourceIdBonus,
                 );
                 return MaterialApp(
                   debugShowCheckedModeBanner: false,

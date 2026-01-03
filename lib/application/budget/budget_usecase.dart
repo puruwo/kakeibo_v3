@@ -1,5 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/budget/budget_provider.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
@@ -49,7 +50,8 @@ class BudgetUsecase {
       // SqfBudgetから大カテゴリーを指定して予算データを取得する
       final budgetEntity =
           await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
-              month: dateScope.representativeMonth, expenseBigCategoryId: bigCategory.id);
+              month: dateScope.representativeMonth,
+              expenseBigCategoryId: bigCategory.id);
 
       // 大カテゴリーの支出合計を取得する
       final smallCategoryList = await _smallCategoryRepository
@@ -58,7 +60,8 @@ class BudgetUsecase {
           await Future.wait(smallCategoryList.map((e) async {
         return await _expenseRepository
             .fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
-                incomeSourceBigCategory: 0,
+                incomeSourceBigCategory:
+                    IncomeBigCategoryConstants.incomeSourceIdSalary,
                 fromDate: dateScope.monthPeriod.startDatetime,
                 toDate: dateScope.monthPeriod.endDatetime,
                 smallCategoryId: e.id);

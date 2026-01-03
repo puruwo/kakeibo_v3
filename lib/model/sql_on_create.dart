@@ -41,13 +41,13 @@ class DataBaseHelperHandling {
           INSERT INTO ${SqfBudget.tableName}
           (${SqfBudget.expenseBigCategoryId}, ${SqfBudget.month}, ${SqfBudget.price})
           VALUES
-          (0, '202504', 35000),
-          (1, '202504', 5000),
-          (2, '202504', 32000),
-          (3, '202504', 9000),
-          (4, '202504', 15000),
-          (5, '202504', 0),
-          (6, '202504', 5000);
+          (1, '202504', 35000),
+          (2, '202504', 5000),
+          (3, '202504', 32000),
+          (4, '202504', 9000),
+          (5, '202504', 15000),
+          (6, '202504', 0),
+          (7, '202504', 5000);
           ''');
 
     await db.execute('''
@@ -68,21 +68,21 @@ class DataBaseHelperHandling {
             ${SqfExpenseSmallCategory.smallCategoryOrderKey},
             ${SqfExpenseSmallCategory.displayedOrderInBig},
             ${SqfExpenseSmallCategory.defaultDisplayed}) 
-            VALUES(0, '食費', 0, 0, 1),
-                  (0, 'コンビニ', 1, 1, 1),
-                  (0, '外食', 2, 2, 1),
-                  (0, '社食', 3, 3, 1),
-                  (1, '消耗品', 4, 0, 1),
-                  (1, '雑貨', 5, 1, 1),
-                  (2, '遊び', 6, 0, 1),
-                  (2, '飲み', 7, 1, 1),
-                  (2, 'ライブ', 8, 2, 1),
-                  (2, 'ご褒美', 9, 3, 1),
-                  (3, '交通費', 10, 0, 1),
-                  (3, '帰省', 11, 1, 1),
-                  (4, 'カット', 12, 0, 1),
-                  (5, '医療費', 13, 0, 1),
-                  (6, 'その他', 14, 0, 1);
+            VALUES(1, '食費', 0, 0, 1),
+                  (1, 'コンビニ', 1, 1, 1),
+                  (1, '外食', 2, 2, 1),
+                  (1, '社食', 3, 3, 1),
+                  (2, '消耗品', 4, 0, 1),
+                  (2, '雑貨', 5, 1, 1),
+                  (3, '遊び', 6, 0, 1),
+                  (3, '飲み', 7, 1, 1),
+                  (3, 'ライブ', 8, 2, 1),
+                  (3, 'ご褒美', 9, 3, 1),
+                  (4, '交通費', 10, 0, 1),
+                  (4, '帰省', 11, 1, 1),
+                  (5, 'カット', 12, 0, 1),
+                  (6, '医療費', 13, 0, 1),
+                  (7, 'その他', 14, 0, 1);
           ''');
 
     await db.execute('''
@@ -130,10 +130,10 @@ class DataBaseHelperHandling {
             ${SqfIncomeSmallCategory.smallCategoryOrderKey},
             ${SqfIncomeSmallCategory.displayedOrderInBig},
             ${SqfIncomeSmallCategory.defaultDisplayed}) 
-            VALUES(0, '給与', 0, 0, 1),
-                  (1, 'ボーナス', 1, 1, 1),
-                  (0, '小遣い', 2, 2, 1),
-                  (0, '臨時収入', 3, 3, 1);
+            VALUES(1, '給与', 0, 0, 1),
+                  (2, 'ボーナス', 1, 1, 1),
+                  (1, '小遣い', 2, 2, 1),
+                  (1, '臨時収入', 3, 3, 1);
           ''');
 
     await db.execute('''

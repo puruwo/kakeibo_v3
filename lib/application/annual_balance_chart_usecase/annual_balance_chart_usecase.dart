@@ -62,12 +62,14 @@ class AnnualBalanceChartUsecaseNotifier
       // ボーナス以外の収入を取得
       final income =
           await _incomeRepository.calcurateSumWithBigCategoryAndPeriod(
-              period: pueryPeriod, bigCategoryId: 0);
+              period: pueryPeriod,
+              bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
 
       // ボーナス支出以外の支出を取得
       final expense =
           await _expenseRepository.fetchTotalExpenseByPeriodWithBigCategory(
-              incomeSourceBigCategory: IncomeBigCategoryConstants.incomeSourceIdSalary,
+              incomeSourceBigCategory:
+                  IncomeBigCategoryConstants.incomeSourceIdSalary,
               fromDate: pueryPeriod.startDatetime,
               toDate: pueryPeriod.endDatetime);
 
@@ -109,7 +111,7 @@ class AnnualBalanceChartUsecaseNotifier
       monthIndex: dateScope.monthIndex,
       currentMonth: dateScope.representativeMonth.monthNumber,
       monthlyBalanceValues: monthBalanceValues,
-      hasNoRecord:hasNoRecord,
+      hasNoRecord: hasNoRecord,
     );
 
     return result;

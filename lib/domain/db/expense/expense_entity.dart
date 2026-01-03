@@ -10,7 +10,7 @@ part 'expense_entity.g.dart';
 @freezed
 class ExpenseEntity with _$ExpenseEntity {
   const factory ExpenseEntity({
-    @Default(0) int id,
+    @Default(1) int id,
     required String date,
     @Default(0) int price,
     @Default(0) int paymentCategoryId,
