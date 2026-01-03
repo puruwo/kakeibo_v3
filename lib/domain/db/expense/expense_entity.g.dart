@@ -8,7 +8,7 @@ part of 'expense_entity.dart';
 
 _$ExpenseEntityImpl _$$ExpenseEntityImplFromJson(Map<String, dynamic> json) =>
     _$ExpenseEntityImpl(
-      id: (json['id'] as num?)?.toInt() ?? 0,
+      id: (json['id'] as num?)?.toInt() ?? 1,
       date: json['date'] as String,
       price: (json['price'] as num?)?.toInt() ?? 0,
       paymentCategoryId: (json['paymentCategoryId'] as num?)?.toInt() ?? 0,

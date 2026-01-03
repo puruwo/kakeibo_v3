@@ -12,7 +12,10 @@ class ConfigTop extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('設定'),
+        title: Text(
+          '設定',
+          style: AppTextStyles.pageHeaderText,
+        ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
       ),

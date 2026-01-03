@@ -7,7 +7,7 @@ part of 'entered_income_source_controller.dart';
 // **************************************************************************
 
 String _$enteredIncomeSourceControllerNotifierHash() =>
-    r'6485c03c2a51f9d595cfae80ebbb4ea78b6ed0a1';
+    r'bb356c8b3ce5fb8aba152a9c9eade5ca33046ee3';
 
 /// See also [EnteredIncomeSourceControllerNotifier].
 @ProviderFor(EnteredIncomeSourceControllerNotifier)

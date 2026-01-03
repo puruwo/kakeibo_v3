@@ -165,7 +165,7 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ExpenseEntityImpl implements _ExpenseEntity {
   const _$ExpenseEntityImpl(
-      {this.id = 0,
+      {this.id = 1,
       required this.date,
       this.price = 0,
       this.paymentCategoryId = 0,

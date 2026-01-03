@@ -14,7 +14,6 @@ import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_reposito
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/logger.dart';
 
-
 final exportUsecaseProvider = Provider<ExportUsecase>(ExportUsecase.new);
 
 class ExportUsecase {
@@ -49,18 +48,26 @@ class ExportUsecase {
     final expenseList = await _expenseRepositoryProvider.fetchAll();
     for (var expense in expenseList) {
       // 支出のレコードからカテゴリーidを取得し、小カテゴリーの情報を取得する
-      final expenseSmallCategory = await _smallCategoryRepository.fetchBySmallCategory(
-          smallCategoryId: expense.paymentCategoryId);
+      final expenseSmallCategory = await _smallCategoryRepository
+          .fetchBySmallCategory(smallCategoryId: expense.paymentCategoryId);
 
       // 小カテゴリーのレコードから大カテゴリーidを取得し、大カテゴリーの情報を取得する
-      final expenseBigCategory = await _bigCategoryRepository.fetchByBigCategory(
-          bigCategoryId: expenseSmallCategory.bigCategoryKey);
+      final expenseBigCategory =
+          await _bigCategoryRepository.fetchByBigCategory(
+              bigCategoryId: expenseSmallCategory.bigCategoryKey);
 
-      final incomeBigCategory = await _incomeBigCategoryRepository.fetchByBigCategory(bigCategoryId: expense.incomeSourceBigCategory);
+      final incomeBigCategory = await _incomeBigCategoryRepository
+          .fetchByBigCategory(bigCategoryId: expense.incomeSourceBigCategory);
 
       // iconPathを加工
       // assets/images/icon_〇〇.svg → 〇〇
-      final iconName = expenseBigCategory.resourcePath.split('/').last.split('.').first.split('_').last;
+      final iconName = expenseBigCategory.resourcePath
+          .split('/')
+          .last
+          .split('.')
+          .first
+          .split('_')
+          .last;
 
       final expenseHistoryTileValue = ExportValue(
         id: expense.id,
@@ -68,47 +75,70 @@ class ExportUsecase {
         price: expense.price,
         memo: expense.memo,
         bigCategoryName: expenseBigCategory.bigCategoryName,
+        bigCategoryId: expenseBigCategory.id,
         smallCategoryName: expenseSmallCategory.smallCategoryName,
+        smallCategoryId: expenseSmallCategory.id,
         colorCode: expenseBigCategory.colorCode,
         iconName: iconName,
         incomeSourceBigCategoryName: incomeBigCategory.name,
+        incomeSourceBigCategoryId: incomeBigCategory.id,
       );
 
       final list = toList(expenseHistoryTileValue);
       exportList.add(list);
     }
 
-    // 2. 固定費支出データを取得して追加
-    final fixedCostExpenseList = await _fixedCostExpenseRepository.fetchAll();
-    for (var fixedCostExpense in fixedCostExpenseList) {
-      // 固定費カテゴリーの情報を取得する
-      final fixedCostCategory = await _fixedCostCategoryRepository.fetch(
-          id: fixedCostExpense.fixedCostCategoryId);
+    // // // 2. 固定費支出データを取得して追加
+    // // final fixedCostExpenseList = await _fixedCostExpenseRepository.fetchAll();
+    // // for (var fixedCostExpense in fixedCostExpenseList) {
+    // //   // 固定費カテゴリーの情報を取得する
+    // //   final fixedCostCategory = await _fixedCostCategoryRepository.fetch(
+    // //       id: fixedCostExpense.fixedCostCategoryId);
 
-      // iconPathを加工
-      // assets/images/icon_〇〇.svg → 〇〇
-      final iconName = fixedCostCategory.resourcePath.split('/').last.split('.').first.split('_').last;
+    // //   // iconPathを加工
+    // //   // assets/images/icon_〇〇.svg → 〇〇
+    // //   final iconName = fixedCostCategory.resourcePath
+    // //       .split('/')
+    // //       .last
+    // //       .split('.')
+    // //       .first
+    // //       .split('_')
+    // //       .last;
 
-      final fixedCostExportValue = ExportValue(
-        id: fixedCostExpense.id,
-        date: fixedCostExpense.date,
-        price: fixedCostExpense.price,
-        memo: fixedCostExpense.name,
-        bigCategoryName: '固定費',
-        smallCategoryName: fixedCostCategory.categoryName,
-        colorCode: fixedCostCategory.colorCode,
-        iconName: iconName,
-        incomeSourceBigCategoryName: '', // 固定費には拠出元がないため空文字
-      );
+    // //   final fixedCostExportValue = ExportValue(
+    // //     id: fixedCostExpense.id,
+    // //     date: fixedCostExpense.date,
+    // //     price: fixedCostExpense.price,
+    // //     memo: fixedCostExpense.name,
+    // //     bigCategoryName: '固定費',
+    // //     smallCategoryName: fixedCostCategory.categoryName,
+    // //     colorCode: fixedCostCategory.colorCode,
+    // //     iconName: iconName,
+    // //     incomeSourceBigCategoryName: '', // 固定費には拠出元がないため空文字
+    // //   );
 
-      final list = toList(fixedCostExportValue);
-      exportList.add(list);
-    }
+    // //   final list = toList(fixedCostExportValue);
+    // //   exportList.add(list);
+    // }
 
     // csv用のヘッダーを作成
-    const header = ['ID', '日付', '購入金額', 'メモ', '大カテゴリー名', 'カテゴリー名', '色コード', 'アイコン情報', '拠出元'];
+    const header = [
+      'ID',
+      '日付',
+      '購入金額',
+      'メモ',
+      '大カテゴリー名',
+      '大カテゴリーID',
+      'カテゴリー名',
+      'カテゴリーID',
+      '色コード',
+      'アイコン情報',
+      '拠出元',
+      '拠出元ID'
+    ];
     // 全体をCSV形式に変換
-    final csvString = const ListToCsvConverter().convert([header, ...exportList]);
+    final csvString =
+        const ListToCsvConverter().convert([header, ...exportList]);
 
     // CSVファイルを作成
     await makeCsvFile('export.csv', csvString);
@@ -118,7 +148,7 @@ class ExportUsecase {
   }
 }
 
-Future<void>  makeCsvFile(String fileName,String csvString) async {
+Future<void> makeCsvFile(String fileName, String csvString) async {
   final directory = await getApplicationDocumentsDirectory();
   final path = '${directory.path}/$fileName';
 

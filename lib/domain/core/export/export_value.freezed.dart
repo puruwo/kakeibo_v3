@@ -21,10 +21,13 @@ mixin _$ExportValue {
   int get price => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
+  int get bigCategoryId => throw _privateConstructorUsedError;
   String get smallCategoryName => throw _privateConstructorUsedError;
+  int get smallCategoryId => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get iconName => throw _privateConstructorUsedError;
   String get incomeSourceBigCategoryName => throw _privateConstructorUsedError;
+  int get incomeSourceBigCategoryId => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $ExportValueCopyWith<ExportValue> get copyWith =>
@@ -43,10 +46,13 @@ abstract class $ExportValueCopyWith<$Res> {
       int price,
       String memo,
       String bigCategoryName,
+      int bigCategoryId,
       String smallCategoryName,
+      int smallCategoryId,
       String colorCode,
       String iconName,
-      String incomeSourceBigCategoryName});
+      String incomeSourceBigCategoryName,
+      int incomeSourceBigCategoryId});
 }
 
 /// @nodoc
@@ -67,10 +73,13 @@ class _$ExportValueCopyWithImpl<$Res, $Val extends ExportValue>
     Object? price = null,
     Object? memo = null,
     Object? bigCategoryName = null,
+    Object? bigCategoryId = null,
     Object? smallCategoryName = null,
+    Object? smallCategoryId = null,
     Object? colorCode = null,
     Object? iconName = null,
     Object? incomeSourceBigCategoryName = null,
+    Object? incomeSourceBigCategoryId = null,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -93,10 +102,18 @@ class _$ExportValueCopyWithImpl<$Res, $Val extends ExportValue>
           ? _value.bigCategoryName
           : bigCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      bigCategoryId: null == bigCategoryId
+          ? _value.bigCategoryId
+          : bigCategoryId // ignore: cast_nullable_to_non_nullable
+              as int,
       smallCategoryName: null == smallCategoryName
           ? _value.smallCategoryName
           : smallCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      smallCategoryId: null == smallCategoryId
+          ? _value.smallCategoryId
+          : smallCategoryId // ignore: cast_nullable_to_non_nullable
+              as int,
       colorCode: null == colorCode
           ? _value.colorCode
           : colorCode // ignore: cast_nullable_to_non_nullable
@@ -109,6 +126,10 @@ class _$ExportValueCopyWithImpl<$Res, $Val extends ExportValue>
           ? _value.incomeSourceBigCategoryName
           : incomeSourceBigCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      incomeSourceBigCategoryId: null == incomeSourceBigCategoryId
+          ? _value.incomeSourceBigCategoryId
+          : incomeSourceBigCategoryId // ignore: cast_nullable_to_non_nullable
+              as int,
     ) as $Val);
   }
 }
@@ -127,10 +148,13 @@ abstract class _$$ExportValueImplCopyWith<$Res>
       int price,
       String memo,
       String bigCategoryName,
+      int bigCategoryId,
       String smallCategoryName,
+      int smallCategoryId,
       String colorCode,
       String iconName,
-      String incomeSourceBigCategoryName});
+      String incomeSourceBigCategoryName,
+      int incomeSourceBigCategoryId});
 }
 
 /// @nodoc
@@ -149,10 +173,13 @@ class __$$ExportValueImplCopyWithImpl<$Res>
     Object? price = null,
     Object? memo = null,
     Object? bigCategoryName = null,
+    Object? bigCategoryId = null,
     Object? smallCategoryName = null,
+    Object? smallCategoryId = null,
     Object? colorCode = null,
     Object? iconName = null,
     Object? incomeSourceBigCategoryName = null,
+    Object? incomeSourceBigCategoryId = null,
   }) {
     return _then(_$ExportValueImpl(
       id: null == id
@@ -175,10 +202,18 @@ class __$$ExportValueImplCopyWithImpl<$Res>
           ? _value.bigCategoryName
           : bigCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      bigCategoryId: null == bigCategoryId
+          ? _value.bigCategoryId
+          : bigCategoryId // ignore: cast_nullable_to_non_nullable
+              as int,
       smallCategoryName: null == smallCategoryName
           ? _value.smallCategoryName
           : smallCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      smallCategoryId: null == smallCategoryId
+          ? _value.smallCategoryId
+          : smallCategoryId // ignore: cast_nullable_to_non_nullable
+              as int,
       colorCode: null == colorCode
           ? _value.colorCode
           : colorCode // ignore: cast_nullable_to_non_nullable
@@ -191,6 +226,10 @@ class __$$ExportValueImplCopyWithImpl<$Res>
           ? _value.incomeSourceBigCategoryName
           : incomeSourceBigCategoryName // ignore: cast_nullable_to_non_nullable
               as String,
+      incomeSourceBigCategoryId: null == incomeSourceBigCategoryId
+          ? _value.incomeSourceBigCategoryId
+          : incomeSourceBigCategoryId // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -204,10 +243,13 @@ class _$ExportValueImpl implements _ExportValue {
       required this.price,
       this.memo = '',
       required this.bigCategoryName,
+      required this.bigCategoryId,
       required this.smallCategoryName,
+      required this.smallCategoryId,
       required this.colorCode,
       required this.iconName,
-      required this.incomeSourceBigCategoryName});
+      required this.incomeSourceBigCategoryName,
+      required this.incomeSourceBigCategoryId});
 
   @override
   final int id;
@@ -221,17 +263,23 @@ class _$ExportValueImpl implements _ExportValue {
   @override
   final String bigCategoryName;
   @override
+  final int bigCategoryId;
+  @override
   final String smallCategoryName;
+  @override
+  final int smallCategoryId;
   @override
   final String colorCode;
   @override
   final String iconName;
   @override
   final String incomeSourceBigCategoryName;
+  @override
+  final int incomeSourceBigCategoryId;
 
   @override
   String toString() {
-    return 'ExportValue(id: $id, date: $date, price: $price, memo: $memo, bigCategoryName: $bigCategoryName, smallCategoryName: $smallCategoryName, colorCode: $colorCode, iconName: $iconName, incomeSourceBigCategoryName: $incomeSourceBigCategoryName)';
+    return 'ExportValue(id: $id, date: $date, price: $price, memo: $memo, bigCategoryName: $bigCategoryName, bigCategoryId: $bigCategoryId, smallCategoryName: $smallCategoryName, smallCategoryId: $smallCategoryId, colorCode: $colorCode, iconName: $iconName, incomeSourceBigCategoryName: $incomeSourceBigCategoryName, incomeSourceBigCategoryId: $incomeSourceBigCategoryId)';
   }
 
   @override
@@ -245,8 +293,12 @@ class _$ExportValueImpl implements _ExportValue {
             (identical(other.memo, memo) || other.memo == memo) &&
             (identical(other.bigCategoryName, bigCategoryName) ||
                 other.bigCategoryName == bigCategoryName) &&
+            (identical(other.bigCategoryId, bigCategoryId) ||
+                other.bigCategoryId == bigCategoryId) &&
             (identical(other.smallCategoryName, smallCategoryName) ||
                 other.smallCategoryName == smallCategoryName) &&
+            (identical(other.smallCategoryId, smallCategoryId) ||
+                other.smallCategoryId == smallCategoryId) &&
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
             (identical(other.iconName, iconName) ||
@@ -254,7 +306,10 @@ class _$ExportValueImpl implements _ExportValue {
             (identical(other.incomeSourceBigCategoryName,
                     incomeSourceBigCategoryName) ||
                 other.incomeSourceBigCategoryName ==
-                    incomeSourceBigCategoryName));
+                    incomeSourceBigCategoryName) &&
+            (identical(other.incomeSourceBigCategoryId,
+                    incomeSourceBigCategoryId) ||
+                other.incomeSourceBigCategoryId == incomeSourceBigCategoryId));
   }
 
   @override
@@ -265,10 +320,13 @@ class _$ExportValueImpl implements _ExportValue {
       price,
       memo,
       bigCategoryName,
+      bigCategoryId,
       smallCategoryName,
+      smallCategoryId,
       colorCode,
       iconName,
-      incomeSourceBigCategoryName);
+      incomeSourceBigCategoryName,
+      incomeSourceBigCategoryId);
 
   @JsonKey(ignore: true)
   @override
@@ -284,10 +342,13 @@ abstract class _ExportValue implements ExportValue {
       required final int price,
       final String memo,
       required final String bigCategoryName,
+      required final int bigCategoryId,
       required final String smallCategoryName,
+      required final int smallCategoryId,
       required final String colorCode,
       required final String iconName,
-      required final String incomeSourceBigCategoryName}) = _$ExportValueImpl;
+      required final String incomeSourceBigCategoryName,
+      required final int incomeSourceBigCategoryId}) = _$ExportValueImpl;
 
   @override
   int get id;
@@ -300,13 +361,19 @@ abstract class _ExportValue implements ExportValue {
   @override
   String get bigCategoryName;
   @override
+  int get bigCategoryId;
+  @override
   String get smallCategoryName;
+  @override
+  int get smallCategoryId;
   @override
   String get colorCode;
   @override
   String get iconName;
   @override
   String get incomeSourceBigCategoryName;
+  @override
+  int get incomeSourceBigCategoryId;
   @override
   @JsonKey(ignore: true)
   _$$ExportValueImplCopyWith<_$ExportValueImpl> get copyWith =>
