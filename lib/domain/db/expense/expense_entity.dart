@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 
 //Freezedで生成されるデータクラス
 part 'expense_entity.freezed.dart';
@@ -15,7 +16,8 @@ class ExpenseEntity with _$ExpenseEntity {
     @Default(0) int price,
     @Default(0) int paymentCategoryId,
     @Default('') String memo,
-    @Default(0) int incomeSourceBigCategory,
+    @Default(IncomeBigCategoryConstants.incomeSourceIdSalary)
+    int incomeSourceBigCategory,
   }) = _ExpenseEntity;
 
   @override

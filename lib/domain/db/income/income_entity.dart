@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 
 //Freezedで生成されるデータクラス
 part 'income_entity.freezed.dart';
@@ -11,7 +12,7 @@ part 'income_entity.g.dart';
 class IncomeEntity with _$IncomeEntity {
   const factory IncomeEntity({
     @Default(0) int id,
-    @Default(0) int categoryId,
+    @Default(IncomeBigCategoryConstants.incomeSourceIdSalary) int categoryId,
     required String date,
     @Default(0) int price,
     @Default('') String memo,
