@@ -14,7 +14,8 @@ _$ExpenseEntityImpl _$$ExpenseEntityImplFromJson(Map<String, dynamic> json) =>
       paymentCategoryId: (json['paymentCategoryId'] as num?)?.toInt() ?? 0,
       memo: json['memo'] as String? ?? '',
       incomeSourceBigCategory:
-          (json['incomeSourceBigCategory'] as num?)?.toInt() ?? 0,
+          (json['incomeSourceBigCategory'] as num?)?.toInt() ??
+              IncomeBigCategoryConstants.incomeSourceIdSalary,
     );
 
 Map<String, dynamic> _$$ExpenseEntityImplToJson(_$ExpenseEntityImpl instance) =>

@@ -9,7 +9,8 @@ part of 'income_entity.dart';
 _$IncomeEntityImpl _$$IncomeEntityImplFromJson(Map<String, dynamic> json) =>
     _$IncomeEntityImpl(
       id: (json['id'] as num?)?.toInt() ?? 0,
-      categoryId: (json['categoryId'] as num?)?.toInt() ?? 0,
+      categoryId: (json['categoryId'] as num?)?.toInt() ??
+          IncomeBigCategoryConstants.incomeSourceIdSalary,
       date: json['date'] as String,
       price: (json['price'] as num?)?.toInt() ?? 0,
       memo: json['memo'] as String? ?? '',

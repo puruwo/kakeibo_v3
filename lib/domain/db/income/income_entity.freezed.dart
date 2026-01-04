@@ -143,7 +143,7 @@ class __$$IncomeEntityImplCopyWithImpl<$Res>
 class _$IncomeEntityImpl implements _IncomeEntity {
   const _$IncomeEntityImpl(
       {this.id = 0,
-      this.categoryId = 0,
+      this.categoryId = IncomeBigCategoryConstants.incomeSourceIdSalary,
       required this.date,
       this.price = 0,
       this.memo = ''});
