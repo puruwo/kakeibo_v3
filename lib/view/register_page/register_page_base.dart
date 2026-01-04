@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
+import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
@@ -7,6 +10,8 @@ import 'package:kakeibo/domain/core/category_selection/category_selection_types.
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
+import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
@@ -145,6 +150,19 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
               color: MyColors.white,
             ),
           ),
+
+          // 編集モードの場合のみ削除ボタンを表示
+          actions: widget.registerMode == RegisterScreenMode.edit
+              ? [
+                  IconButton(
+                    onPressed: () => _showDeleteConfirmDialog(context),
+                    icon: const Icon(
+                      Icons.delete_outline,
+                      color: MyColors.white,
+                    ),
+                  ),
+                ]
+              : null,
         ),
 
         //body
@@ -184,5 +202,57 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           isTabVisible: false,
         ),
     };
+  }
+
+  /// 削除確認ダイアログを表示
+  void _showDeleteConfirmDialog(BuildContext context) async {
+    await showDeleteConfirmationDialog(
+      context,
+      onConfirm: () {
+        _executeDelete();
+      },
+    );
+  }
+
+  /// 削除処理を実行
+  Future<void> _executeDelete() async {
+    try {
+      switch (widget.transactionMode) {
+        case TransactionMode.expense:
+          if (widget.expenseEntity != null) {
+            await ref
+                .read(expenseUsecaseProvider)
+                .delete(id: widget.expenseEntity!.id);
+          }
+          break;
+        case TransactionMode.income:
+          if (widget.incomeEntity != null) {
+            await ref
+                .read(incomeUsecaseProvider)
+                .delete(id: widget.incomeEntity!.id);
+          }
+          break;
+        case TransactionMode.fixedCost:
+          if (widget.fixedCostEntity != null &&
+              widget.fixedCostEntity!.id != null) {
+            await ref
+                .read(fixedCostUsecaseProvider)
+                .delete(id: widget.fixedCostEntity!.id!);
+          }
+          break;
+      }
+      // 削除成功後、画面を閉じる
+      if (mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    } catch (e) {
+      // エラー時はスナックバーで表示
+      if (mounted) {
+        FailureSnackBar.show(
+          ScaffoldMessenger.of(context),
+          message: '削除に失敗しました: $e',
+        );
+      }
+    }
   }
 }

@@ -104,14 +104,14 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 大カテゴリーと日付
+                          // 小カテゴリーと日付
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               SizedBox(
                                 width: 70 * screenHorizontalMagnification,
-                                child: Text(value.bigCategoryName,
+                                child: Text(value.smallCategoryName,
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
                                     style: AppTextStyles.listTilePrimaryTitle),

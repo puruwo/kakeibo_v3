@@ -105,9 +105,9 @@ class YearlyIncomeCard extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 大カテゴリー
+                          // 小カテゴリー
                           Text(
-                            value.bigCategoryName,
+                            value.smallCategoryName,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
                             style: AppTextStyles.listTilePrimaryTitle,

@@ -100,14 +100,14 @@ class IncomeHistoryTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 大カテゴリーとメモ
+                          // 小カテゴリーとメモ
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               SizedBox(
                                 width: 70 * screenHorizontalMagnification,
-                                child: Text(value.bigCategoryName,
+                                child: Text(value.smallCategoryName,
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
                                     style: AppTextStyles.listTilePrimaryTitle),
@@ -126,21 +126,12 @@ class IncomeHistoryTile extends ConsumerWidget {
                             height: 4,
                           ),
 
-                          // 小カテゴリーと日付
+                          // 日付
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               SizedBox(
-                                width: 75 * screenHorizontalMagnification,
-                                child: Text(
-                                  value.smallCategoryName,
-                                  textAlign: TextAlign.start,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileSecondaryTitle,
-                                ),
-                              ),
-                              SizedBox(
-                                width: 73 * screenHorizontalMagnification,
+                                width: 148 * screenHorizontalMagnification,
                                 child: Text(
                                   '${value.date.month}月${value.date.day}日',
                                   textAlign: TextAlign.start,
