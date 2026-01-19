@@ -78,9 +78,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
     final screenHorizontalMagnification = context.screenHorizontalMagnification;
 
     // 合計金額を計算
-    final expenseTotal =
-        group.expenses.fold<int>(0, (sum, e) => sum + e.price) +
-            group.bonusExpenses.fold<int>(0, (sum, e) => sum + e.price);
+    final expenseTotal = group.expenses.fold<int>(0, (sum, e) => sum + e.price);
     final confirmedFixedCostTotal =
         group.confirmedFixedCosts.fold<int>(0, (sum, e) => sum + e.price);
     final unconfirmedFixedCostTotal = group.unconfirmedFixedCosts
@@ -90,13 +88,11 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
 
     // すべて空の場合
     final hasNoData = group.expenses.isEmpty &&
-        group.bonusExpenses.isEmpty &&
         group.confirmedFixedCosts.isEmpty &&
         group.unconfirmedFixedCosts.isEmpty;
 
     // 生活支出をカテゴリー別にグループ化
-    final allExpenses = [...group.expenses, ...group.bonusExpenses];
-    final expensesByCategory = _groupExpensesByCategory(allExpenses);
+    final expensesByCategory = _groupExpensesByCategory(group.expenses);
 
     return SingleChildScrollView(
       child: Padding(
@@ -112,12 +108,13 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
               DailyExpenseGraphArea(
                 totalExpense: totalExpense,
                 categorySummaries:
-                    DailyExpenseGraphArea.createCategorySummaries(allExpenses),
+                    DailyExpenseGraphArea.createCategorySummaries(
+                        group.expenses),
               ),
               const SizedBox(height: 24),
 
               // 生活支出セクション
-              if (allExpenses.isNotEmpty) ...[
+              if (group.expenses.isNotEmpty) ...[
                 // カテゴリー別グループ
                 ...expensesByCategory.entries.map((entry) {
                   return _buildCategoryGroup(
@@ -132,8 +129,10 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
 
               // 固定費（確定）セクション
               if (group.confirmedFixedCosts.isNotEmpty) ...[
-                _buildTotalCard('固定費合計', confirmedFixedCostTotal),
-                const SizedBox(height: 16),
+                DailyExpenseSummaryHeader(
+                  categoryName: '固定費合計',
+                  categoryTotal: confirmedFixedCostTotal,
+                ),
                 ...group.confirmedFixedCosts.map((fixedCost) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -151,8 +150,10 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
 
               // 固定費（未確定）セクション
               if (group.unconfirmedFixedCosts.isNotEmpty) ...[
-                _buildTotalCard('固定費(未確定)合計', unconfirmedFixedCostTotal),
-                const SizedBox(height: 16),
+                DailyExpenseSummaryHeader(
+                  categoryName: '固定費(未確定)合計',
+                  categoryTotal: unconfirmedFixedCostTotal,
+                ),
                 ...group.unconfirmedFixedCosts.map((fixedCost) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
@@ -243,26 +244,9 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // カテゴリーヘッダー（カテゴリー名 + 合計金額）
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 8),
-          child: Row(
-            children: [
-              // カテゴリー名
-              Expanded(
-                child: Text(
-                  categoryInfo.name,
-                  style: HistoryListStyles.historyTileBigCategoryLabel,
-                ),
-              ),
-              // カテゴリー合計金額
-              Text(
-                '${formattedPriceGetter(categoryTotal)}円',
-                style: HistoryListStyles.historyTileSubLabel.copyWith(
-                  fontSize: 14,
-                ),
-              ),
-            ],
-          ),
+        DailyExpenseSummaryHeader(
+          categoryName: categoryInfo.name,
+          categoryTotal: categoryTotal,
         ),
 
         // 個別アイテムリスト
@@ -408,6 +392,42 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
           'この日の支出はありません',
           style: HistoryListStyles.historyEmptyMessage,
         ),
+      ),
+    );
+  }
+}
+
+class DailyExpenseSummaryHeader extends StatelessWidget {
+  const DailyExpenseSummaryHeader({
+    super.key,
+    required this.categoryName,
+    required this.categoryTotal,
+  });
+
+  final String categoryName;
+  final int categoryTotal;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          // カテゴリー名
+          Expanded(
+            child: Text(
+              categoryName,
+              style: HistoryListStyles.historyTileBigCategoryLabel,
+            ),
+          ),
+          // カテゴリー合計金額
+          Text(
+            '${formattedPriceGetter(categoryTotal)}円',
+            style: HistoryListStyles.historyTileSubLabel.copyWith(
+              fontSize: 14,
+            ),
+          ),
+        ],
       ),
     );
   }

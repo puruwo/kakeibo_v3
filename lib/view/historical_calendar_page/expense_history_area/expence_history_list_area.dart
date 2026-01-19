@@ -7,7 +7,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/transaction_group_tile.dart';
-import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_transaction_history_value_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
@@ -46,7 +46,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
           updatedSelectedDateTime, itemKeys, widget._scrollController);
     });
 
-    return ref.watch(resolvedExpenseHistoryValueProvider).when(
+    return ref.watch(resolvedTransactionHistoryValueProvider).when(
         data: (tileGroupList) {
       if (tileGroupList.isNotEmpty) {
         return Expanded(
