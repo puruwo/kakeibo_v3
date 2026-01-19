@@ -214,6 +214,30 @@ class MonthlyAllCategoryTileUsecaseNotifier
     }
 
     // ============================================
+    // 収入が大きすぎる場合のスケール調整 (KAN-25)
+    // ============================================
+    const int highIncomeThreshold = 300000;
+    if (allCategoryIncome > highIncomeThreshold) {
+      // ①予算が設定されていて、収入が予算の5/3を超えている場合
+      // → 予算を横幅全体スケールの3/5にする
+      if (allBudget > 0 && allCategoryIncome > allBudget * 5 / 3) {
+        denominator = (allBudget * 5 / 3).round();
+      }
+      // ②予算が設定されておらず、収入が支出の4倍を超えている場合
+      // → 支出を横幅全体スケールの1/2にする
+      else if (allBudget == 0 &&
+          allCategoryTotalExpense > 0 &&
+          allCategoryIncome > allCategoryTotalExpense * 4) {
+        denominator = allCategoryTotalExpense * 2;
+      }
+      // ③予算が設定されていて、支出が予算をオーバーしている場合
+      // → 支出を横幅全体スケールの1にする
+      else if (allBudget > 0 && allCategoryTotalExpense > allBudget) {
+        denominator = allCategoryTotalExpense;
+      }
+    }
+
+    // ============================================
     // 収入カテゴリー別の集計
     // ============================================
 

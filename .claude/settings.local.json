@@ -11,8 +11,9 @@
       "Bash(git diff)",
       "Bash(git add *)",
       "Bash(git commit *)",
-
-      "mcp__atlassian__*"
+      "mcp__atlassian__*",
+      "Bash(git checkout:*)",
+      "Bash(git commit -m *)"
     ],
     "deny": [
       "Bash(git push *)",
