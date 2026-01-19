@@ -158,7 +158,8 @@ class AppListCard extends StatelessWidget {
         (subtitleTrailing?.isNotEmpty ?? false);
     final secondRow = hasSecondRow
         ? Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
               if (subtitleLeading != null && subtitleLeading!.isNotEmpty)
                 ConstrainedBox(
@@ -171,11 +172,14 @@ class AppListCard extends StatelessWidget {
                   ),
                 ),
               if (subtitleTrailing != null && subtitleTrailing!.isNotEmpty)
-                Text(
-                  subtitleTrailing!,
-                  textAlign: TextAlign.start,
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.listCardSecondaryTitle,
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 95, minWidth: 70),
+                  child: Text(
+                    subtitleTrailing!,
+                    textAlign: TextAlign.start,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.listCardSecondaryTitle,
+                  ),
                 ),
             ],
           )
