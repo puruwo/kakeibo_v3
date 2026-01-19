@@ -1,34 +1,26 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:docs.google.com)",
-      "Read(//Users/puruwo/dev/家計簿/設計書/テーブル設計書/old/**)",
-      "Bash(dart run build_runner build --delete-conflicting-outputs)",
-      "Bash(flutter analyze)",
-      "Bash(find lib -name \"*.dart\" -type f ! -path \"*/.*\" ! -name \"*.freezed.dart\" ! -name \"*.g.dart\" -exec grep -l \"fixedCostId\\|isConfirmed\" {})",
-      "Bash(flutter analyze lib/application/export/export_usecase.dart)",
-      "Bash(flutter analyze lib/)",
-      "Bash(flutter analyze lib/view/category_edit_page/category_setting_page_with_tab.dart lib/view/category_edit_page/fixed_cost_category_setting_page/ lib/view/category_edit_page/fixed_cost_category_detail_edit_page/ lib/constant/fixed_cost_constants.dart lib/application/fixed_cost_category/)",
-      "Bash(flutter analyze lib/view/category_edit_page/category_setting_page_with_tab.dart lib/view/category_edit_page/fixed_cost_category_setting_page/ lib/view/category_edit_page/fixed_cost_category_detail_edit_page/ lib/constant/fixed_cost_constants.dart lib/application/fixed_cost_category/ lib/constant/colors.dart lib/constant/strings.dart)",
-      "Bash(flutter analyze lib/view/category_edit_page/ lib/view_model/state/fixed_cost_category_detail_edit_page/)",
-      "Bash(flutter analyze lib/view/category_edit_page/ lib/view_model/state/fixed_cost_category_edit_page/ lib/domain/ui_value/fixed_cost_category_value/)",
-      "Bash(flutter analyze lib/view/category_edit_page/big_category_setting_page/)",
-      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/application/prediction_graph/)",
-      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/application/prediction_graph/ lib/domain/ui_value/prediction_graph_value/)",
-      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart)",
-      "Bash(flutter analyze lib/view/monthly_page/prediction_graph_area/prediction_graph.dart lib/view/monthly_page/monthly_page.dart lib/application/prediction_graph/ lib/domain/db/expense/expense_repository.dart lib/repository/expense_repository.dart)",
-      "WebSearch",
-      "Read(//Users/puruwo/一時保存/**)",
-      "Bash(mkdir:*)",
-      "Bash(flutter analyze:*)",
-      "mcp__atlassian__getAccessibleAtlassianResources",
-      "mcp__atlassian__getJiraIssue"
+      "Read(//Users/puruwo/dev/家計簿/**)",
+      "Write(//Users/puruwo/dev/家計簿/**)",
+
+      "Bash(flutter *)",
+      "Bash(dart *)",
+      "Bash(find *)",
+      "Bash(git status)",
+      "Bash(git diff)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+
+      "mcp__atlassian__*"
     ],
-    "deny": [],
+    "deny": [
+      "Bash(git push *)",
+      "Bash(rm -rf /)",
+      "WebFetch(*)"
+    ],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": [
-    "atlassian"
-  ]
+  "enabledMcpjsonServers": ["atlassian"]
 }
