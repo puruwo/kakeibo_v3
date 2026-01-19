@@ -1,5 +1,6 @@
 import 'package:kakeibo/domain_service/month_period_service/aggregation_representative_month_service.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_index_service.dart';
+import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/domain_service/year_period_service/aggregation_representative_year_service.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart';
@@ -45,6 +46,7 @@ class SystemDateScopeNotifier extends AsyncNotifier<DateScopeEntity> {
       representativeMonth: representativeMonth,
       yearPeriod: yearPeriod,
       representativeYear: representativeYear,
+      periodStatus: PeriodStatus.current, // システム日時は常に現在
     );
   }
 }

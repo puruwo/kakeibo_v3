@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/budget/budget_usecase.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
+import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/button_util.dart';
@@ -12,6 +13,7 @@ import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
@@ -34,6 +36,11 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
 
   // Tab=予算 の状態で予算編集じゃないときのボタン
   Widget _budgetNormalButtons(BuildContext context, WidgetRef ref) {
+    // 過去月かどうかを確認
+    final dateScopeAsync = ref.watch(analyzePageDateScopeEntityProvider);
+    final isPast =
+        dateScopeAsync.valueOrNull?.periodStatus == PeriodStatus.past;
+
     return Row(
       children: [
         Expanded(
@@ -46,19 +53,22 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
           ),
         ),
 
-        const SizedBox(width: 8.0), // ボタン間のスペース
+        // 過去月でない場合のみ「予算を編集する」ボタンを表示
+        if (!isPast) ...[
+          const SizedBox(width: 8.0), // ボタン間のスペース
 
-        Expanded(
-          child: MainButton(
-            buttonType: ButtonColorType.main,
-            buttonText: '予算を編集する',
-            onPressed: () {
-              ref
-                  .read(footerStateControllerNotifierProvider.notifier)
-                  .updateState(TabState.budgetEdditing);
-            },
+          Expanded(
+            child: MainButton(
+              buttonType: ButtonColorType.main,
+              buttonText: '予算を編集する',
+              onPressed: () {
+                ref
+                    .read(footerStateControllerNotifierProvider.notifier)
+                    .updateState(TabState.budgetEdditing);
+              },
+            ),
           ),
-        ),
+        ],
       ],
     );
   }
@@ -132,7 +142,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         );
       },
       error: (error, stackTrace) {
-        return Expanded(
+        return const Expanded(
           child: MainButton(
             buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
@@ -141,7 +151,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         );
       },
       loading: () {
-        return Expanded(
+        return const Expanded(
           child: MainButton(
             buttonType: ButtonColorType.main,
             buttonText: '編集を完了',

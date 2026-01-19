@@ -22,6 +22,7 @@ mixin _$DateScopeEntity {
   MonthValue get representativeMonth => throw _privateConstructorUsedError;
   PeriodValue get yearPeriod => throw _privateConstructorUsedError;
   YearValue get representativeYear => throw _privateConstructorUsedError;
+  PeriodStatus get periodStatus => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $DateScopeEntityCopyWith<DateScopeEntity> get copyWith =>
@@ -40,7 +41,8 @@ abstract class $DateScopeEntityCopyWith<$Res> {
       int monthIndex,
       MonthValue representativeMonth,
       PeriodValue yearPeriod,
-      YearValue representativeYear});
+      YearValue representativeYear,
+      PeriodStatus periodStatus});
 
   $PeriodValueCopyWith<$Res> get monthPeriod;
   $MonthValueCopyWith<$Res> get representativeMonth;
@@ -67,6 +69,7 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
     Object? representativeMonth = null,
     Object? yearPeriod = null,
     Object? representativeYear = null,
+    Object? periodStatus = null,
   }) {
     return _then(_value.copyWith(
       selectedDate: null == selectedDate
@@ -93,6 +96,10 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
           ? _value.representativeYear
           : representativeYear // ignore: cast_nullable_to_non_nullable
               as YearValue,
+      periodStatus: null == periodStatus
+          ? _value.periodStatus
+          : periodStatus // ignore: cast_nullable_to_non_nullable
+              as PeriodStatus,
     ) as $Val);
   }
 
@@ -143,7 +150,8 @@ abstract class _$$DateScopeEntityImplCopyWith<$Res>
       int monthIndex,
       MonthValue representativeMonth,
       PeriodValue yearPeriod,
-      YearValue representativeYear});
+      YearValue representativeYear,
+      PeriodStatus periodStatus});
 
   @override
   $PeriodValueCopyWith<$Res> get monthPeriod;
@@ -172,6 +180,7 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
     Object? representativeMonth = null,
     Object? yearPeriod = null,
     Object? representativeYear = null,
+    Object? periodStatus = null,
   }) {
     return _then(_$DateScopeEntityImpl(
       selectedDate: null == selectedDate
@@ -198,6 +207,10 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
           ? _value.representativeYear
           : representativeYear // ignore: cast_nullable_to_non_nullable
               as YearValue,
+      periodStatus: null == periodStatus
+          ? _value.periodStatus
+          : periodStatus // ignore: cast_nullable_to_non_nullable
+              as PeriodStatus,
     ));
   }
 }
@@ -211,7 +224,8 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
       required this.monthIndex,
       required this.representativeMonth,
       required this.yearPeriod,
-      required this.representativeYear});
+      required this.representativeYear,
+      required this.periodStatus});
 
   @override
   final DateTime selectedDate;
@@ -225,10 +239,12 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
   final PeriodValue yearPeriod;
   @override
   final YearValue representativeYear;
+  @override
+  final PeriodStatus periodStatus;
 
   @override
   String toString() {
-    return 'DateScopeEntity(selectedDate: $selectedDate, monthPeriod: $monthPeriod, monthIndex: $monthIndex, representativeMonth: $representativeMonth, yearPeriod: $yearPeriod, representativeYear: $representativeYear)';
+    return 'DateScopeEntity(selectedDate: $selectedDate, monthPeriod: $monthPeriod, monthIndex: $monthIndex, representativeMonth: $representativeMonth, yearPeriod: $yearPeriod, representativeYear: $representativeYear, periodStatus: $periodStatus)';
   }
 
   @override
@@ -247,12 +263,21 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
             (identical(other.yearPeriod, yearPeriod) ||
                 other.yearPeriod == yearPeriod) &&
             (identical(other.representativeYear, representativeYear) ||
-                other.representativeYear == representativeYear));
+                other.representativeYear == representativeYear) &&
+            (identical(other.periodStatus, periodStatus) ||
+                other.periodStatus == periodStatus));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, selectedDate, monthPeriod,
-      monthIndex, representativeMonth, yearPeriod, representativeYear);
+  int get hashCode => Object.hash(
+      runtimeType,
+      selectedDate,
+      monthPeriod,
+      monthIndex,
+      representativeMonth,
+      yearPeriod,
+      representativeYear,
+      periodStatus);
 
   @JsonKey(ignore: true)
   @override
@@ -269,7 +294,8 @@ abstract class _DateScopeEntity implements DateScopeEntity {
       required final int monthIndex,
       required final MonthValue representativeMonth,
       required final PeriodValue yearPeriod,
-      required final YearValue representativeYear}) = _$DateScopeEntityImpl;
+      required final YearValue representativeYear,
+      required final PeriodStatus periodStatus}) = _$DateScopeEntityImpl;
 
   @override
   DateTime get selectedDate;
@@ -283,6 +309,8 @@ abstract class _DateScopeEntity implements DateScopeEntity {
   PeriodValue get yearPeriod;
   @override
   YearValue get representativeYear;
+  @override
+  PeriodStatus get periodStatus;
   @override
   @JsonKey(ignore: true)
   _$$DateScopeEntityImplCopyWith<_$DateScopeEntityImpl> get copyWith =>

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
+import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
 
 class BudgetCategoryTile extends ConsumerStatefulWidget {
@@ -112,7 +114,19 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                     AppInkWell(
                       borderRadius: BorderRadius.circular(8),
                       // readOnly時のタップで編集モードに切り替え
-                      onTap: () {
+                      onTap: () async {
+                        // 過去月の場合は編集不可ダイアログを表示
+                        final dateScope = await ref
+                            .read(analyzePageDateScopeEntityProvider.future);
+                        if (dateScope.periodStatus == PeriodStatus.past) {
+                          if (context.mounted) {
+                            FailureSnackBar.show(
+                              ScaffoldMessenger.of(context),
+                              message: "過去の予算は編集できません",
+                            );
+                          }
+                          return;
+                        }
                         if (state != TabState.budgetEdditing) {
                           ref
                               .read(footerStateControllerNotifierProvider
@@ -143,7 +157,20 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
 
                               // TextFieldのタップイベント
                               // 親AppInkWellでもonTap制御しているが、テキストフィールドは別途制御を記載しないと反応しない
-                              onTap: () {
+                              onTap: () async {
+                                // 過去月の場合は編集不可ダイアログを表示
+                                final dateScope = await ref.read(
+                                    analyzePageDateScopeEntityProvider.future);
+                                if (dateScope.periodStatus ==
+                                    PeriodStatus.past) {
+                                  if (context.mounted) {
+                                    FailureSnackBar.show(
+                                      ScaffoldMessenger.of(context),
+                                      message: "過去の予算は編集できません",
+                                    );
+                                  }
+                                  return;
+                                }
                                 if (state != TabState.budgetEdditing) {
                                   ref
                                       .read(
