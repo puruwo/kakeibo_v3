@@ -21,6 +21,7 @@ import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/card_container.dart';
+import 'package:kakeibo/view/component/app_contents_header.dart';
 
 class MonthlyPage extends ConsumerStatefulWidget {
   const MonthlyPage({super.key});
@@ -86,19 +87,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
           padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
           child: Column(
             children: [
-              SizedBox(
-                width: 343 * context.screenHorizontalMagnification,
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      ' 支出グラフ',
-                      style: AppTextStyles.cardSectionTitle,
-                    ),
-                  ],
-                ),
-              ),
+              const AppContentsHeader(title: '支出グラフ'),
 
               // グラフ部分
               Consumer(builder: (context, ref, _) {
@@ -127,19 +116,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 height: 12,
               ),
 
-              SizedBox(
-                width: 343 * context.screenHorizontalMagnification,
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      ' 今月の計画',
-                      style: AppTextStyles.cardSectionTitle,
-                    ),
-                  ],
-                ),
-              ),
+              const AppContentsHeader(title: '今月の計画'),
 
               const MonthlyPlanArea(),
 
@@ -147,27 +124,14 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 height: 8,
               ),
 
-              SizedBox(
-                width: 343 * context.screenHorizontalMagnification,
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      ' カテゴリー別',
-                      style: AppTextStyles.cardSectionTitle,
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          showModalBottomSheetFunc(
-                              context, const CategorySettingPage());
-                        },
-                        child: Text(
-                          'カテゴリー設定',
-                          style: AppTextStyles.textButtonTextStyle,
-                        )),
-                  ],
-                ),
+              AppContentsHeader(
+                title: 'カテゴリー別',
+                subLabel: 'カテゴリー設定',
+                isLinkable: true,
+                onTap: () {
+                  showModalBottomSheetFunc(
+                      context, const CategorySettingPage());
+                },
               ),
 
               const CategorySumTileList(),
@@ -176,28 +140,14 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 height: 8,
               ),
 
-              SizedBox(
-                width: 343 * context.screenHorizontalMagnification,
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      ' 固定費',
-                      style: AppTextStyles.cardSectionTitle,
-                    ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) =>
-                                  const MonthlyFixedCostPage()));
-                        },
-                        child: Text(
-                          'さらに表示',
-                          style: AppTextStyles.textButtonTextStyle,
-                        )),
-                  ],
-                ),
+              AppContentsHeader(
+                title: '固定費',
+                subLabel: 'さらに表示',
+                isLinkable: true,
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const MonthlyFixedCostPage()));
+                },
               ),
 
               const MonthlyFixedCostSummaryArea(),

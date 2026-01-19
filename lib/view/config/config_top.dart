@@ -4,6 +4,7 @@ import 'package:kakeibo/application/export/export_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/app_contents_header.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
@@ -26,16 +27,7 @@ class ConfigTop extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Text(
-                  '設定画面',
-                  textAlign: TextAlign.start,
-                  style: AppTextStyles.pageHeaderText,
-                ),
-              ],
-            ),
+            const AppContentsHeader(title: '設定画面'),
             Container(
               width: double.infinity,
               height: 50,

@@ -15,6 +15,7 @@ import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
+import 'package:kakeibo/view/component/app_contents_header.dart';
 
 class YearPage extends ConsumerStatefulWidget {
   const YearPage({super.key});
@@ -63,20 +64,7 @@ class _YearPageState extends ConsumerState<YearPage> {
               const SizedBox(
                 height: 16,
               ),
-              SizedBox(
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      ' 年間収支',
-                      style: AppTextStyles.cardSectionTitle,
-                    ),
-                  ],
-                ),
-              ),
+              const AppContentsHeader(title: '年間収支'),
               const YearlyBalanceArea(),
               const SizedBox(
                 height: 8,
@@ -85,48 +73,23 @@ class _YearPageState extends ConsumerState<YearPage> {
               const SizedBox(
                 height: 16,
               ),
-              SizedBox(
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.baseline,
-                  textBaseline: TextBaseline.alphabetic,
-                  children: [
-                    Text(
-                      ' ボーナス利用状況',
-                      style: AppTextStyles.cardSectionTitle,
+              AppContentsHeader(
+                title: 'ボーナス利用状況',
+                subLabel: 'さらに表示する',
+                isLinkable: true,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const BonusHomePage(),
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const BonusHomePage(),
-                            ),
-                          );
-                        },
-                        child: Text(
-                          'さらに表示する',
-                          style: AppTextStyles.textButtonTextStyle,
-                        )),
-                  ],
-                ),
+                  );
+                },
               ),
               const BonusPlanArea(),
               const SizedBox(
                 height: 16,
               ),
-              SizedBox(
-                height: 35,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text(
-                      ' 生活収支',
-                      style: AppTextStyles.cardSectionTitle,
-                    ),
-                  ],
-                ),
-              ),
+              const AppContentsHeader(title: '生活収支'),
               const AnnualBalanceChart(),
               const SizedBox(
                 height: 16,
