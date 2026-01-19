@@ -132,6 +132,29 @@ flutter:
         - asset: assets/fonts/sf-ui-display-black.otf
           weight: 900
 
+    - family: noto_sans
+      fonts:
+        - asset: assets/fonts/noto-sans-jp-thin-100.ttf
+          weight: 100
+        - asset: assets/fonts/noto-sans-jp-extralight-200.ttf
+          weight: 200
+        - asset: assets/fonts/noto-sans-jp-light-300.ttf
+          weight: 300
+        - asset: assets/fonts/noto-sans-jp-regular-400.ttf
+          weight: 400
+        - asset: assets/fonts/noto-sans-jp-medium-500.ttf
+          weight: 500
+        - asset: assets/fonts/noto-sans-jp-semibold-600.ttf
+          weight: 600
+        - asset: assets/fonts/noto-sans-jp-bold-700.ttf
+          weight: 700
+        - asset: assets/fonts/noto-sans-jp-extrabold-800.ttf
+          weight: 800
+        - asset: assets/fonts/noto-sans-jp-black-900.ttf
+          weight: 900
+
+        
+
     # - family: Trajan Pro
     #   fonts:
     #     - asset: fonts/TrajanPro.ttf
