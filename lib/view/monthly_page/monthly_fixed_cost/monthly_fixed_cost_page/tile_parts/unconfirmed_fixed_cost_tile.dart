@@ -77,7 +77,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                         value.name,
                         textAlign: TextAlign.start,
                         overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.listTilePrimaryTitle,
+                        style: AppTextStyles.listCardTitleLabel,
                       ),
                     ),
                     const SizedBox(width: 8),
@@ -85,7 +85,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                     Text(
                       '未入力',
                       textAlign: TextAlign.end,
-                      style: AppTextStyles.listTilePriceLabel,
+                      style: AppTextStyles.listCardPriceLabel,
                     ),
                   ],
                 ),
@@ -97,12 +97,12 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
                     // 日付
                     Text(
                       paymentDateLabel,
-                      style: AppTextStyles.listTileSecondaryTitle,
+                      style: AppTextStyles.listCardSecondaryTitle,
                     ),
                     // 頻度（変動固定費の場合は平均金額も含む）
                     Text(
                       frequencyWithAverage,
-                      style: AppTextStyles.listTileSecondaryTitle,
+                      style: AppTextStyles.listCardSecondaryTitle,
                     ),
                   ],
                 ),

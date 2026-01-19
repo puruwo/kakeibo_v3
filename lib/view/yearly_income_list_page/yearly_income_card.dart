@@ -110,7 +110,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                             value.smallCategoryName,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.listTilePrimaryTitle,
+                            style: AppTextStyles.listCardTitleLabel,
                           ),
 
                           const SizedBox(height: 4),
@@ -124,7 +124,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                                 '${value.date.month}月${value.date.day}日',
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.listTileSecondaryTitle,
+                                style: AppTextStyles.listCardSecondaryTitle,
                               ),
                               if (value.memo.isNotEmpty) ...[
                                 const SizedBox(width: 8),
@@ -133,7 +133,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                                     value.memo,
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
-                                    style: AppTextStyles.listTileSecondaryTitle,
+                                    style: AppTextStyles.listCardSecondaryTitle,
                                   ),
                                 ),
                               ],
@@ -152,7 +152,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                             priceLabel,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.listTilePriceLabel,
+                            style: AppTextStyles.listCardPriceLabel,
                           ),
                         ),
                         const SizedBox(
@@ -160,7 +160,7 @@ class YearlyIncomeCard extends ConsumerWidget {
                         ),
                         Text(
                           '+',
-                          style: AppTextStyles.listTilePlusLabel,
+                          style: AppTextStyles.listCardPlusLabel,
                         ),
                       ],
                     ),

@@ -40,7 +40,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
         borderRadius: appCardRadius,
         color: MyColors.quarternarySystemfill,
         onTap: () async {
-          // 編集機能は将来実装
+          // TODO: 編集機能は将来実装
         },
         onLongPress: () async {
           return await showMenuDialog(context, items: [
@@ -77,7 +77,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                       value.name,
                       textAlign: TextAlign.start,
                       overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.listTilePrimaryTitle,
+                      style: AppTextStyles.listCardTitleLabel,
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -85,7 +85,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                   Text(
                     priceLabel,
                     textAlign: TextAlign.end,
-                    style: AppTextStyles.listTilePriceLabel,
+                    style: AppTextStyles.listCardPriceLabel,
                   ),
                 ],
               ),
@@ -97,12 +97,12 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
                   // 日付
                   Text(
                     paymentDateLabel,
-                    style: AppTextStyles.listTileSecondaryTitle,
+                    style: AppTextStyles.listCardSecondaryTitle,
                   ),
                   // 支払い頻度
                   Text(
                     value.frequencyLabel,
-                    style: AppTextStyles.listTileSecondaryTitle,
+                    style: AppTextStyles.listCardSecondaryTitle,
                   ),
                 ],
               ),

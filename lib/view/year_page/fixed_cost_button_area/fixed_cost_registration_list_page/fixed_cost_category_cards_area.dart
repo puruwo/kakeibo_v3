@@ -38,7 +38,7 @@ class FixedCostCategoryCardsArea extends StatelessWidget {
                 // カテゴリー名
                 Text(
                   group.categoryName,
-                  style: MonthlyPageStyles.fixedCostCategoryListName,
+                  style: AppTextStyles.fixedCostSectionSubTitle,
                 ),
               ],
             ),

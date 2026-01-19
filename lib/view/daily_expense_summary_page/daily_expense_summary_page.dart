@@ -312,14 +312,14 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
               children: [
                 Text(
                   expense.bigCategoryName,
-                  style: HistoryListStyles.historyTileBigCategoryLabel,
+                  style: AppTextStyles.listCardTitleLabel,
                 ),
                 if (expense.memo.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(top: 2),
                     child: Text(
                       expense.memo,
-                      style: HistoryListStyles.historyTileSubLabel,
+                      style: AppTextStyles.listCardSecondaryTitle,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
@@ -329,13 +329,13 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
           // 右側：金額とマイナスアイコン
           Text(
             priceLabel,
-            style: HistoryListStyles.historyTilePriceLabel,
+            style: AppTextStyles.listCardPriceLabel,
           ),
           const SizedBox(width: 4),
           const Icon(
             Icons.remove,
             size: 18,
-            color: MyColors.label,
+            color: MyColors.pink,
           ),
         ],
       ),
@@ -368,13 +368,13 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
               children: [
                 Text(
                   name,
-                  style: HistoryListStyles.historyTileBigCategoryLabel,
+                  style: AppTextStyles.listCardTitleLabel,
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 2),
                   child: Text(
                     subLabel,
-                    style: HistoryListStyles.historyTileSubLabel,
+                    style: AppTextStyles.listCardSecondaryTitle,
                   ),
                 ),
               ],
@@ -383,7 +383,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
           // 右側：金額とマイナスアイコン
           Text(
             priceLabel,
-            style: HistoryListStyles.historyTilePriceLabel.copyWith(
+            style: AppTextStyles.listCardPriceLabel.copyWith(
               color: priceColor,
             ),
           ),

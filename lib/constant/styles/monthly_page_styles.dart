@@ -241,18 +241,6 @@ class MonthlyPageStyles {
     fontSize: 16,
   );
 
-  /// 固定費カテゴリーリスト要素（カテゴリー名）
-  ///
-  /// 【使用箇所】
-  /// - ページ: monthly_fixed_cost_category_summary_list.dart
-  ///   - エリア: リストアイテム
-  ///   - 詳細: カテゴリー名
-  static const TextStyle fixedCostCategoryListName = TextStyle(
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: FontWeight.w500,
-  );
-
   /// 固定費カテゴリーリスト要素（金額）
   ///
   /// 【使用箇所】

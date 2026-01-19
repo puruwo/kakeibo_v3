@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/font_style.dart';
 
 /// ============================================================================
 /// アプリ全般で共通して使用するTextStyleを定義
@@ -11,8 +12,12 @@ class AppTextStyles {
   // ==========================================================================
 
   /// ページタイトル用のスタイル
-  static TextStyle pageHeaderText = GoogleFonts.notoSans(
-      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w600);
+  static TextStyle pageHeaderText = const TextStyle(
+    color: MyColors.white,
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    fontFamily: 'noto_sans',
+  );
 
   // ==========================================================================
   // ダイアログ
@@ -141,80 +146,36 @@ class AppTextStyles {
   // ==========================================================================
 
   /// カードセクションタイトル用スタイル
+  static TextStyle cardSectionTitle = const TextStyle(
+    color: MyColors.label,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'noto_sans',
+  );
 
-  static TextStyle cardSectionTitle = GoogleFonts.notoSans(
-      fontSize: 18, color: MyColors.label, fontWeight: FontWeight.w600);
+  /// 固定費一覧ションサブタイトル用スタイル(他に利用するなら名前を変更)
+  static TextStyle fixedCostSectionSubTitle = const TextStyle(
+    color: MyColors.label,
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    fontFamily: 'noto_sans',
+  );
 
   // ==========================================================================
   // リストタイル（汎用）
   // ==========================================================================
 
   /// リストタイルのメインタイトル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: bonus_income_history_tile.dart (ボーナス収入履歴タイル)
-  ///   - エリア: タイル内タイトル
-  ///   - 詳細: カテゴリー名表示
-  ///
-  /// - ファイル: bonus_expense_history_tile.dart (ボーナス支出履歴タイル)
-  ///   - エリア: タイル内タイトル
-  ///   - 詳細: カテゴリー名表示
-  ///
-  /// - ファイル: income_history_tile.dart (月間収入履歴タイル)
-  ///   - エリア: タイル内タイトル
-  ///   - 詳細: カテゴリー名表示
-  ///
-  /// - ファイル: confirmed_fixed_cost_tile.dart (確定固定費タイル)
-  ///   - エリア: タイル内タイトル
-  ///   - 詳細: 固定費名表示
-  ///
-  /// - ファイル: unconfirmed_fixed_cost_tile.dart (未確定固定費タイル)
-  ///   - エリア: タイル内タイトル
-  ///   - 詳細: 固定費名表示
-  ///
-  /// - ファイル: yearly_income_card.dart (年間収入カード)
-  ///   - エリア: カード内タイトル
-  ///   - 詳細: 収入カテゴリー名表示
   static TextStyle listTilePrimaryTitle = GoogleFonts.notoSans(
       fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w300);
 
   /// カードのサブタイトル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: fixed_cost_item_tile.dart (固定費一覧タイル)
-  ///   - エリア: タイル内サブタイトル
-  ///   - 詳細: 支払い頻度、次回支払い日など
-  ///
-  /// - ファイル: bonus_income_history_tile.dart
-  ///   - エリア: タイル内日付表示
-  ///   - 詳細: 登録日時
-  ///
-  /// - ファイル: bonus_expense_history_tile.dart
-  ///   - エリア: タイル内日付表示
-  ///   - 詳細: 登録日時
-  ///
-  /// - ファイル: income_history_tile.dart
-  ///   - エリア: タイル内日付表示
-  ///   - 詳細: 登録日時
-  ///
-  /// - ファイル: confirmed_fixed_cost_tile.dart / unconfirmed_fixed_cost_tile.dart
-  ///   - エリア: タイル内サブテキスト
-  ///   - 詳細: 確認状態や支払い情報
-  ///
-  /// - ファイル: yearly_income_card.dart
-  ///   - エリア: カード内サブテキスト
-  ///   - 詳細: 日付や備考
   static TextStyle listTileSecondaryTitle = GoogleFonts.notoSans(
       fontSize: 12,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w300);
 
   /// マイナス金額ラベル用スタイル（ミントブルー）
-  ///
-  /// 【使用箇所】
-  /// - ファイル: bonus_expense_history_tile.dart
-  ///   - エリア: タイル内金額横のマイナスラベル
-  ///   - 詳細: 「-」表示
   static TextStyle listTileMinusLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 16,
@@ -222,19 +183,6 @@ class AppTextStyles {
       fontWeight: FontWeight.w600);
 
   /// プラス金額ラベル用スタイル（ピンク）
-  ///
-  /// 【使用箇所】
-  /// - ファイル: bonus_income_history_tile.dart (ボーナス収入履歴タイル)
-  ///   - エリア: タイル内金額横のプラスラベル
-  ///   - 詳細: 「+」表示
-  ///
-  /// - ファイル: income_history_tile.dart (月間収入履歴タイル)
-  ///   - エリア: タイル内金額横のプラスラベル
-  ///   - 詳細: 「+」表示
-  ///
-  /// - ファイル: yearly_income_card.dart
-  ///   - エリア: カード内金額横のプラスラベル
-  ///   - 詳細: 「+」表示
   static TextStyle listTilePlusLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 16,
@@ -243,6 +191,41 @@ class AppTextStyles {
 
   /// カード内金額表示用スタイル
   static TextStyle listTilePriceLabel = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 19,
+      color: MyColors.label,
+      fontWeight: FontWeight.w600);
+
+  // ==========================================================================
+  // リストカード内スタイル
+  // ==========================================================================
+
+  /// リストカード内タイトルラベルスタイル
+  ///
+  static TextStyle listCardTitleLabel = MyFontStyle.notoSans.copyWith(
+    color: MyColors.label,
+    fontSize: 16,
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle listCardSecondaryTitle = GoogleFonts.notoSans(
+      fontSize: 12,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w300);
+
+  static TextStyle listCardMinusLabel = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 16,
+      color: MyColors.mintBlue,
+      fontWeight: FontWeight.w600);
+
+  static TextStyle listCardPlusLabel = const TextStyle(
+      fontFamily: 'sf_ui',
+      fontSize: 16,
+      color: MyColors.pink,
+      fontWeight: FontWeight.w600);
+
+  static TextStyle listCardPriceLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 19,
       color: MyColors.label,

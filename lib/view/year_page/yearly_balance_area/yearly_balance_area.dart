@@ -39,7 +39,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                 child: Center(
                   child: Text(
                     'まだ記録がありません',
-                    style: AppTextStyles.listTileSecondaryTitle,
+                    style: AppTextStyles.listCardSecondaryTitle,
                   ),
                 ),
               );
@@ -119,7 +119,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     Text(
                                       formattedPriceGetter(
                                           yearlyBalanceValue.yearlyExpense),
-                                      style: AppTextStyles.listTilePriceLabel,
+                                      style: AppTextStyles.listCardPriceLabel,
                                     ),
                                     Text(
                                       ' 円',
@@ -130,7 +130,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                 )
                               : Text(
                                   'まだ記録がありません',
-                                  style: AppTextStyles.listTileSecondaryTitle,
+                                  style: AppTextStyles.listCardSecondaryTitle,
                                 ),
                         ],
                       ),
@@ -195,7 +195,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                                 yearlyBalanceValue
                                                     .yearlyIncome),
                                             style: AppTextStyles
-                                                .listTilePriceLabel),
+                                                .listCardPriceLabel),
                                         Text(
                                           ' 円',
                                           style: AppTextStyles
@@ -206,7 +206,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   : Text(
                                       'まだ記録がありません',
                                       style:
-                                          AppTextStyles.listTileSecondaryTitle,
+                                          AppTextStyles.listCardSecondaryTitle,
                                     ),
                             ]),
                       ),
