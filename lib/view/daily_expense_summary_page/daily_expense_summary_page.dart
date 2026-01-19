@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/application/expense_history/historical_transaction_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/constant/styles/history_list_styles.dart';
-import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain/ui_value/daily_transaction_group/daily_transaction_group.dart';
-import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
+import 'package:kakeibo/domain/ui_value/daily_expense_summary_value/daily_expense_summary_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_graph_area.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_item_tile.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_fixed_cost_item_tile.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_daily_expense_summary_provider.dart';
 
 /// 日次支出サマリーページ（フルモーダル形式）
 /// ツールチップからタップで遷移し、1日の支出詳細を表示
@@ -23,15 +21,8 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 対象の月のPeriodValueを作成（月初から月末）
-    final periodValue = PeriodValue(
-      startDatetime: DateTime(date.year, date.month, 1),
-      endDatetime: DateTime(date.year, date.month + 1, 0),
-    );
-
-    // 月間のトランザクションデータを取得
-    final transactionsAsync =
-        ref.watch(historicalTransactionNotifierProvider(periodValue));
+    // 中間プロバイダーからデータを取得
+    final summaryAsync = ref.watch(resolvedDailyExpenseSummaryProvider(date));
 
     return Scaffold(
       backgroundColor: MyColors.secondarySystemBackground,
@@ -47,22 +38,8 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: transactionsAsync.when(
-        data: (transactions) {
-          // 月間データからDailyTransactionGroupリストを生成
-          final dailyGroups = groupTransactionsByDate(transactions);
-
-          // 対象日のグループを取得
-          final dailyGroup = dailyGroups.firstWhere(
-            (g) =>
-                g.date.year == date.year &&
-                g.date.month == date.month &&
-                g.date.day == date.day,
-            orElse: () => DailyTransactionGroup(date: date),
-          );
-
-          return _buildContent(context, dailyGroup);
-        },
+      body: summaryAsync.when(
+        data: (summary) => _buildContent(context, summary),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
           child: Text(
@@ -74,26 +51,8 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildContent(BuildContext context, DailyTransactionGroup group) {
+  Widget _buildContent(BuildContext context, DailyExpenseSummaryValue summary) {
     final leftsidePadding = context.leftsidePadding;
-    final screenHorizontalMagnification = context.screenHorizontalMagnification;
-
-    // 合計金額を計算
-    final expenseTotal = group.expenses.fold<int>(0, (sum, e) => sum + e.price);
-    final confirmedFixedCostTotal =
-        group.confirmedFixedCosts.fold<int>(0, (sum, e) => sum + e.price);
-    final unconfirmedFixedCostTotal = group.unconfirmedFixedCosts
-        .fold<int>(0, (sum, e) => sum + e.estimatedPrice);
-    final totalExpense =
-        expenseTotal + confirmedFixedCostTotal + unconfirmedFixedCostTotal;
-
-    // すべて空の場合
-    final hasNoData = group.expenses.isEmpty &&
-        group.confirmedFixedCosts.isEmpty &&
-        group.unconfirmedFixedCosts.isEmpty;
-
-    // 生活支出をカテゴリー別にグループ化
-    final expensesByCategory = _groupExpensesByCategory(group.expenses);
 
     return SingleChildScrollView(
       child: Padding(
@@ -102,39 +61,30 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 16),
-            if (hasNoData)
+            if (summary.hasNoData)
               _buildEmptyState()
             else ...[
               // グラフエリア（総支出とカテゴリー別）
               DailyExpenseGraphArea(
-                totalExpense: totalExpense,
-                categorySummaries:
-                    DailyExpenseGraphArea.createCategorySummaries(
-                        group.expenses),
+                totalExpense: summary.totalExpense,
+                categorySummaries: summary.categorySummaries,
               ),
               const SizedBox(height: 24),
 
-              // 生活支出セクション
-              if (group.expenses.isNotEmpty) ...[
-                // カテゴリー別グループ
-                ...expensesByCategory.entries.map((entry) {
-                  return _buildCategoryGroup(
-                    context,
-                    entry.key,
-                    entry.value,
-                    leftsidePadding,
-                    screenHorizontalMagnification,
-                  );
+              // 生活支出セクション（カテゴリー別グループ）
+              if (summary.expensesByCategory.isNotEmpty) ...[
+                ...summary.expensesByCategory.map((categoryGroup) {
+                  return _buildCategoryGroup(categoryGroup);
                 }),
               ],
 
               // 固定費（確定）セクション
-              if (group.confirmedFixedCosts.isNotEmpty) ...[
+              if (summary.confirmedFixedCosts.isNotEmpty) ...[
                 DailyExpenseSummaryHeader(
                   categoryName: '固定費合計',
-                  categoryTotal: confirmedFixedCostTotal,
+                  categoryTotal: summary.confirmedFixedCostTotal,
                 ),
-                ...group.confirmedFixedCosts.map((fixedCost) {
+                ...summary.confirmedFixedCosts.map((fixedCost) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: DailyConfirmedFixedCostItemTile(value: fixedCost),
@@ -143,12 +93,12 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
               ],
 
               // 固定費（未確定）セクション
-              if (group.unconfirmedFixedCosts.isNotEmpty) ...[
+              if (summary.unconfirmedFixedCosts.isNotEmpty) ...[
                 DailyExpenseSummaryHeader(
                   categoryName: '固定費(未確定)合計',
-                  categoryTotal: unconfirmedFixedCostTotal,
+                  categoryTotal: summary.unconfirmedFixedCostTotal,
                 ),
-                ...group.unconfirmedFixedCosts.map((fixedCost) {
+                ...summary.unconfirmedFixedCosts.map((fixedCost) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
                     child: DailyUnconfirmedFixedCostItemTile(value: fixedCost),
@@ -163,55 +113,19 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
     );
   }
 
-  /// 支出をカテゴリー別にグループ化
-  Map<_CategoryInfo, List<ExpenseHistoryTileValue>> _groupExpensesByCategory(
-      List<ExpenseHistoryTileValue> expenses) {
-    final Map<String, List<ExpenseHistoryTileValue>> grouped = {};
-
-    for (final expense in expenses) {
-      final key = expense.bigCategoryName;
-      if (!grouped.containsKey(key)) {
-        grouped[key] = [];
-      }
-      grouped[key]!.add(expense);
-    }
-
-    // _CategoryInfoをキーにしたMapに変換
-    final Map<_CategoryInfo, List<ExpenseHistoryTileValue>> result = {};
-    for (final entry in grouped.entries) {
-      final firstExpense = entry.value.first;
-      final categoryInfo = _CategoryInfo(
-        name: firstExpense.bigCategoryName,
-        iconPath: firstExpense.iconPath,
-        colorCode: firstExpense.colorCode,
-      );
-      result[categoryInfo] = entry.value;
-    }
-
-    return result;
-  }
-
   /// カテゴリーグループ
-  Widget _buildCategoryGroup(
-    BuildContext context,
-    _CategoryInfo categoryInfo,
-    List<ExpenseHistoryTileValue> expenses,
-    double leftsidePadding,
-    double screenHorizontalMagnification,
-  ) {
-    final categoryTotal = expenses.fold<int>(0, (sum, e) => sum + e.price);
-
+  Widget _buildCategoryGroup(ExpenseCategoryGroup categoryGroup) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         // カテゴリーヘッダー（カテゴリー名 + 合計金額）
         DailyExpenseSummaryHeader(
-          categoryName: categoryInfo.name,
-          categoryTotal: categoryTotal,
+          categoryName: categoryGroup.categoryName,
+          categoryTotal: categoryGroup.categoryTotal,
         ),
 
         // 個別アイテムリスト
-        ...expenses.map((expense) {
+        ...categoryGroup.expenses.map((expense) {
           return DailyExpenseItemTile(value: expense);
         }),
 
@@ -269,27 +183,4 @@ class DailyExpenseSummaryHeader extends StatelessWidget {
       ),
     );
   }
-}
-
-/// カテゴリー情報を保持するクラス
-class _CategoryInfo {
-  final String name;
-  final String iconPath;
-  final String colorCode;
-
-  _CategoryInfo({
-    required this.name,
-    required this.iconPath,
-    required this.colorCode,
-  });
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is _CategoryInfo &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
-
-  @override
-  int get hashCode => name.hashCode;
 }
