@@ -101,9 +101,17 @@ void main() {
       ],
       observers: const [ProviderLogger()],
       child: MaterialApp(
-        home: MediaQuery.withClampedTextScaling(
-          child: const Foundation(),
-        ),
+        builder: (context, child) {
+          final mediaQuery = MediaQuery.of(context);
+          return MediaQuery(
+            data: mediaQuery.copyWith(
+              textScaler: const TextScaler.linear(1.0),
+              boldText: false,
+            ),
+            child: child!,
+          );
+        },
+        home: const Foundation(),
         debugShowCheckedModeBanner: false,
         theme: ThemeData.dark(),
         themeMode: ThemeMode.dark,
