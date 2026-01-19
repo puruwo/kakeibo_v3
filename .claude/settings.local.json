@@ -3,7 +3,6 @@
     "allow": [
       "Read(//Users/puruwo/dev/家計簿/**)",
       "Write(//Users/puruwo/dev/家計簿/**)",
-
       "Bash(flutter *)",
       "Bash(dart *)",
       "Bash(find *)",
@@ -17,11 +16,12 @@
     ],
     "deny": [
       "Bash(git push *)",
-      "Bash(rm -rf /)",
-      "WebFetch(*)"
+      "Bash(rm -rf /)"
     ],
     "ask": []
   },
   "enableAllProjectMcpServers": true,
-  "enabledMcpjsonServers": ["atlassian"]
+  "enabledMcpjsonServers": [
+    "atlassian"
+  ]
 }

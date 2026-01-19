@@ -10,6 +10,8 @@ import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
+import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
 
 final budgetUsecaseProvider = Provider<BudgetUsecase>(BudgetUsecase.new);
 
@@ -29,6 +31,9 @@ class BudgetUsecase {
 
   ExpenseRepository get _expenseRepository =>
       _ref.read(expenseRepositoryProvider);
+
+  MonthPeriodService get _monthPeriodService =>
+      _ref.read(monthPeriodServiceProvider);
 
   void _invalidateBudgetRepositoryProvider() => _ref.invalidate(budgetProvider);
 
@@ -56,14 +61,20 @@ class BudgetUsecase {
       // 大カテゴリーの支出合計を取得する
       final smallCategoryList = await _smallCategoryRepository
           .fetchByBigCategory(bigCategoryId: bigCategory.id);
-      final lastMonthExpenseTotal =
+
+      // 現在月の場合は先月の支出、過去月の場合は当月の支出を表示
+      final targetPeriod = dateScope.periodStatus == PeriodStatus.current
+          ? _monthPeriodService.fetchShiftedMonthPeriod(dateScope.monthPeriod, -1)
+          : dateScope.monthPeriod;
+
+      final referenceExpenseTotal =
           await Future.wait(smallCategoryList.map((e) async {
         return await _expenseRepository
             .fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
                 incomeSourceBigCategory:
                     IncomeBigCategoryConstants.incomeSourceIdSalary,
-                fromDate: dateScope.monthPeriod.startDatetime,
-                toDate: dateScope.monthPeriod.endDatetime,
+                fromDate: targetPeriod.startDatetime,
+                toDate: targetPeriod.endDatetime,
                 smallCategoryId: e.id);
       })).then((values) => values.fold<int>(0, (a, b) => a + b));
 
@@ -76,7 +87,7 @@ class BudgetUsecase {
         expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
         month: budgetEntity.month,
         price: budgetEntity.price,
-        lastMonthBudgetPrice: lastMonthExpenseTotal,
+        lastMonthBudgetPrice: referenceExpenseTotal,
         expenseBigCategoryName: bigCategory.bigCategoryName,
         colorCode: bigCategory.colorCode,
         resourcePath: bigCategory.resourcePath,
