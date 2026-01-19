@@ -8,7 +8,7 @@ import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_histo
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/history_list_tile.dart';
+import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class BonusExpenseHistoryTile extends ConsumerWidget {
@@ -24,7 +24,7 @@ class BonusExpenseHistoryTile extends ConsumerWidget {
     final color = MyColors().getColorFromHex(value.colorCode);
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
-    return HistoryListTile(
+    return AppListCard(
       onTap: () => _showModalBottomSheet(context),
       onLongPress: () => _showMenuDialog(context, ref),
       iconPath: value.iconPath,

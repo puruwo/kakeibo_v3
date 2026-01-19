@@ -5,7 +5,7 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirm
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/history_list_tile.dart';
+import 'package:kakeibo/view/component/app_list_card.dart';
 
 class ConfirmedFixedCostTile extends ConsumerWidget {
   const ConfirmedFixedCostTile({
@@ -24,7 +24,7 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
     // 値段ラベル
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
-    return HistoryListTile(
+    return AppListCard(
       primaryTitle: value.name,
       subtitleLeading: paymentDateLabel,
       priceLabel: priceLabel,

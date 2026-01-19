@@ -3,7 +3,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/history_list_tile.dart';
+import 'package:kakeibo/view/component/app_list_card.dart';
 
 /// 日別支出サマリーページ用の固定費（確定）タイル（表示のみ）
 class DailyConfirmedFixedCostItemTile extends StatelessWidget {
@@ -19,7 +19,7 @@ class DailyConfirmedFixedCostItemTile extends StatelessWidget {
     final color = MyColors().getColorFromHex(value.colorCode);
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
-    return HistoryListTile(
+    return AppListCard(
       iconPath: value.resourcePath,
       iconColor: color,
       primaryTitle: value.name,
@@ -46,7 +46,7 @@ class DailyUnconfirmedFixedCostItemTile extends StatelessWidget {
         ? '未確定'
         : yenmarkFormattedPriceGetter(value.estimatedPrice);
 
-    return HistoryListTile(
+    return AppListCard(
       iconPath: value.resourcePath,
       iconColor: color,
       primaryTitle: value.name,

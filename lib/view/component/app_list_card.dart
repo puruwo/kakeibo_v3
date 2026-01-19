@@ -27,8 +27,8 @@ import 'package:kakeibo/view/component/card_container.dart';
 /// |        | [subtitleLeading] [subtitleTrailing] |           |
 /// |-------------------------------------------------------|
 /// ```
-class HistoryListTile extends StatelessWidget {
-  const HistoryListTile({
+class AppListCard extends StatelessWidget {
+  const AppListCard({
     super.key,
     this.iconPath,
     this.iconColor,

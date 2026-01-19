@@ -166,35 +166,26 @@ class AppTextStyles {
   // ==========================================================================
 
   /// リストタイルのメインタイトル用スタイル
-  static TextStyle listTilePrimaryTitle = GoogleFonts.notoSans(
+  static TextStyle listTilePrimaryTitle = MyFontStyle.notoSans.copyWith(
       fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w300);
 
   /// カードのサブタイトル用スタイル
-  static TextStyle listTileSecondaryTitle = GoogleFonts.notoSans(
+  static TextStyle listTileSecondaryTitle = MyFontStyle.notoSans.copyWith(
       fontSize: 12,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w300);
 
   /// マイナス金額ラベル用スタイル（ミントブルー）
-  static TextStyle listTileMinusLabel = const TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 16,
-      color: MyColors.mintBlue,
-      fontWeight: FontWeight.w600);
+  static TextStyle listTileMinusLabel = MyFontStyle.sfUi.copyWith(
+      fontSize: 16, color: MyColors.mintBlue, fontWeight: FontWeight.w600);
 
   /// プラス金額ラベル用スタイル（ピンク）
-  static TextStyle listTilePlusLabel = const TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 16,
-      color: MyColors.pink,
-      fontWeight: FontWeight.w600);
+  static TextStyle listTilePlusLabel = MyFontStyle.sfUi.copyWith(
+      fontSize: 16, color: MyColors.pink, fontWeight: FontWeight.w600);
 
   /// カード内金額表示用スタイル
-  static TextStyle listTilePriceLabel = const TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 19,
-      color: MyColors.label,
-      fontWeight: FontWeight.w600);
+  static TextStyle listTilePriceLabel = MyFontStyle.sfUi.copyWith(
+      fontSize: 19, color: MyColors.label, fontWeight: FontWeight.w600);
 
   // ==========================================================================
   // リストカード内スタイル
@@ -208,28 +199,19 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
-  static TextStyle listCardSecondaryTitle = GoogleFonts.notoSans(
+  static TextStyle listCardSecondaryTitle = MyFontStyle.notoSans.copyWith(
       fontSize: 12,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w300);
 
-  static TextStyle listCardMinusLabel = const TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 16,
-      color: MyColors.pink,
-      fontWeight: FontWeight.w600);
+  static TextStyle listCardMinusLabel = MyFontStyle.sfUi.copyWith(
+      fontSize: 16, color: MyColors.pink, fontWeight: FontWeight.w600);
 
-  static TextStyle listCardPlusLabel = const TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 16,
-      color: MyColors.mintBlue,
-      fontWeight: FontWeight.w600);
+  static TextStyle listCardPlusLabel = MyFontStyle.sfUi.copyWith(
+      fontSize: 16, color: MyColors.mintBlue, fontWeight: FontWeight.w600);
 
-  static TextStyle listCardPriceLabel = const TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 19,
-      color: MyColors.label,
-      fontWeight: FontWeight.w600);
+  static TextStyle listCardPriceLabel = MyFontStyle.sfUi.copyWith(
+      fontSize: 19, color: MyColors.label, fontWeight: FontWeight.w600);
 
   // ==========================================================================
   // アプリカード（収入グラフエリアなど）

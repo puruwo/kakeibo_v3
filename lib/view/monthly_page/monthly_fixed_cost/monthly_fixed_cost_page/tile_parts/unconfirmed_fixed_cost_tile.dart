@@ -5,7 +5,7 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfi
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/history_list_tile.dart';
+import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/price_input_dialog.dart';
 
 class UnconfirmedFixedCostTile extends ConsumerWidget {
@@ -22,7 +22,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
     final paymentDateLabel =
         '${value.date.year}/${value.date.month}/${value.date.day}';
 
-    return HistoryListTile(
+    return AppListCard(
       primaryTitle: value.name,
       subtitleLeading: paymentDateLabel,
       priceLabel: '未入力',
