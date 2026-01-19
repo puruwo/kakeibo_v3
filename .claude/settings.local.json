@@ -20,9 +20,15 @@
       "WebSearch",
       "Read(//Users/puruwo/一時保存/**)",
       "Bash(mkdir:*)",
-      "Bash(flutter analyze:*)"
+      "Bash(flutter analyze:*)",
+      "mcp__atlassian__getAccessibleAtlassianResources",
+      "mcp__atlassian__getJiraIssue"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "atlassian"
+  ]
 }
