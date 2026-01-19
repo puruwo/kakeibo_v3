@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/card_container.dart';
+import 'package:kakeibo/view/component/history_list_tile.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -40,7 +38,21 @@ class FixedCostItemTile extends ConsumerWidget {
       }
     }
 
-    return AppInkWell(
+    // 金額ラベル
+    final priceLabel =
+        displayPrice == 0 ? '---' : yenmarkFormattedPriceGetter(displayPrice);
+
+    return HistoryListTile(
+      primaryTitle: item.name,
+      subtitleLeading: formattedNextPaymentDate.isNotEmpty
+          ? '次回：$formattedNextPaymentDate'
+          : null,
+      priceSubtitle: isVariable ? '平均' : null,
+      priceLabel: priceLabel,
+      isIncome: false,
+      customWidget: isVariable ? const UnconfirmedFixedCostChipLabel() : null,
+      customUnderPriceLabel: frequencyValue.dateLabel,
+      onTap: () {},
       onLongPress: () async {
         return await showMenuDialog(context, items: [
           MenuDialogItem(
@@ -87,74 +99,6 @@ class FixedCostItemTile extends ConsumerWidget {
               }),
         ]);
       },
-      onTap: () {},
-      child: CardContainer(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // 左側: 名前
-                Text(
-                  item.name,
-                  style: AppTextStyles.listCardTitleLabel,
-                ),
-                // 金額
-                Row(
-                  children: [
-                    RichText(
-                      textAlign: TextAlign.end,
-                      text: TextSpan(
-                        children: [
-                          if (isVariable)
-                            TextSpan(
-                              text: '平均　',
-                              style: AppTextStyles.listCardSecondaryTitle,
-                            ),
-                          TextSpan(
-                            text: displayPrice == 0
-                                ? '---'
-                                : yenmarkFormattedPriceGetter(displayPrice),
-                            style: AppTextStyles.listCardPriceLabel,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            // 次回支払日と頻度
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '次回：$formattedNextPaymentDate',
-                  style: AppTextStyles.listCardSecondaryTitle,
-                ),
-                const SizedBox(width: 8),
-                Row(
-                  children: [
-                    // 変動ありの場合は「変動あり」ラベルを表示
-                    if (isVariable) const UnconfirmedFixedCostChipLabel(),
-                    const SizedBox(
-                      width: 4,
-                    ),
-                    Text(
-                      frequencyValue.dateLabel,
-                      style: AppTextStyles.listCardSecondaryTitle,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

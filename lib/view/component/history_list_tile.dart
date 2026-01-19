@@ -18,6 +18,7 @@ import 'package:kakeibo/view/component/card_container.dart';
 /// - [subtitleTrailing]: サブタイトル行の右側 (2行目右側、オプション)
 /// - [priceLabel]: 値段ラベル (フォーマット済み)
 /// - [isIncome]: 収入/支出フラグ
+/// - [customPriceWidget]: カスタム金額エリア（指定時はpriceLabel/isIncomeを無視）
 ///
 /// レイアウト構造:
 /// ```
@@ -29,14 +30,17 @@ import 'package:kakeibo/view/component/card_container.dart';
 class HistoryListTile extends StatelessWidget {
   const HistoryListTile({
     super.key,
-    required this.iconPath,
+    this.iconPath,
     this.iconColor,
     required this.primaryTitle,
     this.secondaryTitle,
     this.subtitleLeading,
     this.subtitleTrailing,
     required this.priceLabel,
+    this.priceSubtitle,
     required this.isIncome,
+    this.customUnderPriceLabel,
+    this.customWidget,
     this.onTap,
     this.onLongPress,
     this.backgroundColor,
@@ -45,8 +49,8 @@ class HistoryListTile extends StatelessWidget {
     this.priceWidth = 128.0,
   });
 
-  /// アイコンのSVGパス
-  final String iconPath;
+  /// アイコンのSVGパス（オプショナル）
+  final String? iconPath;
 
   /// アイコンの色 (nullの場合はデフォルト色)
   final Color? iconColor;
@@ -66,8 +70,17 @@ class HistoryListTile extends StatelessWidget {
   /// フォーマット済みの値段ラベル
   final String priceLabel;
 
+  /// 金額の左に表示するサブタイトル（例: "平均"）
+  final String? priceSubtitle;
+
   /// 収入の場合はtrue ('+')、支出の場合はfalse ('-')
   final bool isIncome;
+
+  /// カスタムラベルエリア
+  final String? customUnderPriceLabel;
+
+  /// カスタム金額エリア
+  final Widget? customWidget;
 
   /// タップ時のコールバック
   final VoidCallback? onTap;
@@ -93,22 +106,24 @@ class HistoryListTile extends StatelessWidget {
     final sidePadding = 14.5 * screenHorizontalMagnification;
 
     // アイコン
-    final icon = SizedBox(
-      height: 25,
-      width: 25,
-      child: FittedBox(
-        fit: BoxFit.scaleDown,
-        child: SvgPicture.asset(
-          iconPath,
-          colorFilter: iconColor != null
-              ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
-              : null,
-          semanticsLabel: 'categoryIcon',
-          width: 25,
-          height: 25,
-        ),
-      ),
-    );
+    final icon = iconPath != null
+        ? SizedBox(
+            height: 25,
+            width: 25,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SvgPicture.asset(
+                iconPath!,
+                colorFilter: iconColor != null
+                    ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
+                    : null,
+                semanticsLabel: 'categoryIcon',
+                width: 25,
+                height: 25,
+              ),
+            ),
+          )
+        : const SizedBox();
 
     // 1行目: primaryTitle + secondaryTitle
     final hasFirstRow =
@@ -167,11 +182,18 @@ class HistoryListTile extends StatelessWidget {
         : null;
 
     // 値段表示
-    // - 値段が短い場合: コンパクトに表示（左のRowが大きくなる）
-    // - 値段がpriceWidthを超える場合: テキストサイズが縮小される
+    // - 指定されていない場合はデフォルトの金額表示
     final priceWidget = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
+        // 金額のサブタイトル（例: "平均"）
+        if (priceSubtitle != null && priceSubtitle!.isNotEmpty) ...[
+          Text(
+            priceSubtitle!,
+            style: AppTextStyles.listCardSecondaryTitle,
+          ),
+          const SizedBox(width: 6),
+        ],
         ConstrainedBox(
           constraints: BoxConstraints(maxWidth: priceWidth),
           child: FittedBox(
@@ -191,6 +213,23 @@ class HistoryListTile extends StatelessWidget {
               ? AppTextStyles.listCardPlusLabel
               : AppTextStyles.listCardMinusLabel,
         ),
+      ],
+    );
+
+    // 値段表示エリアの下部
+    final underPriceWidget = Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (customWidget != null) ...[
+          customWidget!,
+          const SizedBox(width: 4),
+        ],
+        if (customUnderPriceLabel != null)
+          Text(
+            customUnderPriceLabel!,
+            textAlign: TextAlign.end,
+            style: AppTextStyles.listCardSecondaryTitle,
+          ),
       ],
     );
 
@@ -231,7 +270,11 @@ class HistoryListTile extends StatelessWidget {
                 ),
 
                 // 右端: 値段エリア
-                priceWidget,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [priceWidget, underPriceWidget],
+                ),
               ],
             ),
           ),
