@@ -205,7 +205,8 @@ class HistoryListTile extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: sidePadding),
           child: SizedBox(
-            height: height,
+            // 2行あれば通常の高さ、1行だけなら小さくする
+            height: (hasFirstRow && hasSecondRow) ? height : height / 1.3,
             width: double.infinity,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -216,13 +216,13 @@ class AppTextStyles {
   static TextStyle listCardMinusLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 16,
-      color: MyColors.mintBlue,
+      color: MyColors.pink,
       fontWeight: FontWeight.w600);
 
   static TextStyle listCardPlusLabel = const TextStyle(
       fontFamily: 'sf_ui',
       fontSize: 16,
-      color: MyColors.pink,
+      color: MyColors.mintBlue,
       fontWeight: FontWeight.w600);
 
   static TextStyle listCardPriceLabel = const TextStyle(

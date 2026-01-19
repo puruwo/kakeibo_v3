@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/expense_history/historical_transaction_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
@@ -12,6 +11,8 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_graph_area.dart';
+import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_item_tile.dart';
+import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_fixed_cost_item_tile.dart';
 
 /// 日次支出サマリーページ（フルモーダル形式）
 /// ツールチップからタップで遷移し、1日の支出詳細を表示
@@ -136,14 +137,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
                 ...group.confirmedFixedCosts.map((fixedCost) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: _buildFixedCostItem(
-                      fixedCost.name,
-                      fixedCost.resourcePath,
-                      fixedCost.colorCode,
-                      fixedCost.price,
-                      '固定費',
-                      leftsidePadding,
-                    ),
+                    child: DailyConfirmedFixedCostItemTile(value: fixedCost),
                   );
                 }),
               ],
@@ -157,15 +151,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
                 ...group.unconfirmedFixedCosts.map((fixedCost) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 8),
-                    child: _buildFixedCostItem(
-                      fixedCost.name,
-                      fixedCost.resourcePath,
-                      fixedCost.colorCode,
-                      fixedCost.estimatedPrice,
-                      '固定費(未確定)',
-                      leftsidePadding,
-                      isUnconfirmed: true,
-                    ),
+                    child: DailyUnconfirmedFixedCostItemTile(value: fixedCost),
                   );
                 }),
               ],
@@ -205,31 +191,6 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
     return result;
   }
 
-  /// 合計カード
-  Widget _buildTotalCard(String title, int total) {
-    return CardContainer(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: HistoryListStyles.historyTileSubLabel.copyWith(fontSize: 15),
-          ),
-          Text(
-            yenFormattedPriceGetter(total),
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: MyColors.label,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   /// カテゴリーグループ
   Widget _buildCategoryGroup(
     BuildContext context,
@@ -251,134 +212,11 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
 
         // 個別アイテムリスト
         ...expenses.map((expense) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: _buildExpenseItem(
-              expense,
-              leftsidePadding,
-              screenHorizontalMagnification,
-            ),
-          );
+          return DailyExpenseItemTile(value: expense);
         }),
 
         const SizedBox(height: 8),
       ],
-    );
-  }
-
-  /// 支出アイテムカード
-  Widget _buildExpenseItem(
-    ExpenseHistoryTileValue expense,
-    double leftsidePadding,
-    double screenHorizontalMagnification,
-  ) {
-    final priceLabel =
-        expense.price == 0 ? '未確定' : yenFormattedPriceGetter(expense.price);
-
-    return CardContainer(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          // カテゴリーアイコン
-          SvgPicture.asset(
-            expense.iconPath,
-            colorFilter: ColorFilter.mode(
-                MyColors().getColorFromHex(expense.colorCode), BlendMode.srcIn),
-            width: 24,
-            height: 24,
-          ),
-          const SizedBox(width: 12),
-          // 中央：大カテゴリー名とメモ
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  expense.bigCategoryName,
-                  style: AppTextStyles.listCardTitleLabel,
-                ),
-                if (expense.memo.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2),
-                    child: Text(
-                      expense.memo,
-                      style: AppTextStyles.listCardSecondaryTitle,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
-            ),
-          ),
-          // 右側：金額とマイナスアイコン
-          Text(
-            priceLabel,
-            style: AppTextStyles.listCardPriceLabel,
-          ),
-          const SizedBox(width: 4),
-          const Icon(
-            Icons.remove,
-            size: 18,
-            color: MyColors.pink,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 固定費アイテムカード
-  Widget _buildFixedCostItem(
-    String name,
-    String iconPath,
-    String colorCode,
-    int price,
-    String subLabel,
-    double leftsidePadding, {
-    bool isUnconfirmed = false,
-  }) {
-    final priceLabel = price == 0 ? '未確定' : yenFormattedPriceGetter(price);
-    final priceColor =
-        isUnconfirmed && price == 0 ? MyColors.red : MyColors.pink;
-
-    return CardContainer(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          // 左側：固定費名とサブラベル
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  name,
-                  style: AppTextStyles.listCardTitleLabel,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 2),
-                  child: Text(
-                    subLabel,
-                    style: AppTextStyles.listCardSecondaryTitle,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // 右側：金額とマイナスアイコン
-          Text(
-            priceLabel,
-            style: AppTextStyles.listCardPriceLabel.copyWith(
-              color: priceColor,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Icon(
-            Icons.remove,
-            size: 18,
-            color: priceColor,
-          ),
-        ],
-      ),
     );
   }
 
