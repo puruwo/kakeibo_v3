@@ -4,6 +4,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/transaction_group_tile.dart';
@@ -76,8 +77,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                           child: Text(
                               DateFormat('yyyy年M月d日(E)', 'ja_JP')
                                   .format(tileGroupList[index].date),
-                              style: HistoryListStyles
-                                  .expenseHistoryDateHeaderLabel),
+                              style: AppTextStyles.listTileSectionTitle),
                         ),
                       ],
                     ),

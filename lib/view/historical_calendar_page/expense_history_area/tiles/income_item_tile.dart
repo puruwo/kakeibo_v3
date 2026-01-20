@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -94,8 +95,7 @@ class IncomeItemTile extends ConsumerWidget {
                             value.bigCategoryName,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style:
-                                HistoryListStyles.historyTileBigCategoryLabel,
+                            style: AppTextStyles.listTilePrimaryTitle,
                           ),
                         ),
 
@@ -109,7 +109,7 @@ class IncomeItemTile extends ConsumerWidget {
                                 ' ${value.smallCategoryName}',
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
-                                style: HistoryListStyles.historyTileSubLabel,
+                                style: AppTextStyles.listTileSecondaryTitle,
                               ),
                             ),
                             // メモ
@@ -119,9 +119,7 @@ class IncomeItemTile extends ConsumerWidget {
                                 ' ${value.memo}',
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: MyColors.secondaryLabel),
+                                style: AppTextStyles.listTileSecondaryTitle,
                               ),
                             ),
                           ],
@@ -142,8 +140,7 @@ class IncomeItemTile extends ConsumerWidget {
                             priceLabel,
                             textAlign: TextAlign.end,
                             overflow: TextOverflow.ellipsis,
-                            style:
-                                HistoryListStyles.historyTileIncomePriceLabel,
+                            style: AppTextStyles.listTilePriceLabel,
                           ),
                         ],
                       ),

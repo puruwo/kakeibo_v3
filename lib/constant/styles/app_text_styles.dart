@@ -146,12 +146,29 @@ class AppTextStyles {
       fontSize: 17, color: MyColors.white, fontWeight: FontWeight.w600);
 
   // ==========================================================================
-  // セクションタイトル
+  // サブヘッダー系
   // ==========================================================================
 
-  /// カードセクションタイトル用スタイル
+  /// セクションタイトル用スタイル
+  /// 【使用箇所】
+  /// - カードヘッダー
+  /// - リストカードのヘッダー
   static final TextStyle cardSectionTitle = MyFontStyle.notoSans.copyWith(
-      fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w600);
+    fontSize: 16,
+    color: MyColors.label,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// リストタイルのセクションヘッダー
+  /// 【使用箇所】
+  /// - 収入一覧ページ
+  /// - ヒストリカルページ
+  /// - カテゴリー別支出リストページ
+  static final TextStyle listTileSectionTitle = MyFontStyle.sfUi.copyWith(
+    fontSize: 13,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
 
   // ==========================================================================
   // リストタイル（汎用）
@@ -159,25 +176,22 @@ class AppTextStyles {
 
   /// リストタイルのメインタイトル用スタイル
   static final TextStyle listTilePrimaryTitle = MyFontStyle.notoSans.copyWith(
-      fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w300);
+      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w500);
 
   /// カードのサブタイトル用スタイル
   static final TextStyle listTileSecondaryTitle = MyFontStyle.notoSans.copyWith(
-      fontSize: 12,
+      fontSize: 11,
       color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w300);
-
-  /// マイナス金額ラベル用スタイル（ミントブルー）
-  static final TextStyle listTileMinusLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 16, color: MyColors.mintBlue, fontWeight: FontWeight.w600);
-
-  /// プラス金額ラベル用スタイル（ピンク）
-  static final TextStyle listTilePlusLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 16, color: MyColors.pink, fontWeight: FontWeight.w600);
+      fontWeight: FontWeight.w400);
 
   /// カード内金額表示用スタイル
   static final TextStyle listTilePriceLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 19, color: MyColors.label, fontWeight: FontWeight.w600);
+      fontSize: 17, color: MyColors.label, fontWeight: FontWeight.w500);
+
+  /// カード内未確定金額用スタイル
+  static final TextStyle listTileUnconfirmedPriceLabel = MyFontStyle.notoSans
+      .copyWith(
+          fontSize: 15, color: MyColors.label, fontWeight: FontWeight.w500);
 
   // ==========================================================================
   // リストカード内スタイル

@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
-import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/price_input_dialog.dart';
 
 class UnconfirmedFixedCostItemTile extends ConsumerWidget {
@@ -38,14 +36,6 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
         height: 25,
       ),
     );
-    // 値段ラベル (未確定なので0円扱いか、固定費設定額を表示するかだが、MonthlyUnconfirmedFixedCostTileValueはpriceを持たないかも？ -> pricesがあるはず)
-    final priceLabel = value.estimatedPrice == 0
-        ? '未確定'
-        : yenmarkFormattedPriceGetter(value.estimatedPrice);
-
-    // 文字色
-    final Color priceColor =
-        value.estimatedPrice == 0 ? MyColors.red : MyColors.label;
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
@@ -102,18 +92,17 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                             value.name,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style:
-                                HistoryListStyles.historyTileBigCategoryLabel,
+                            style: AppTextStyles.listTilePrimaryTitle,
                           ),
                         ),
                         // 固定費（未確定）ラベル
                         SizedBox(
                           width: 153 * screenHorizontalMagnification,
-                          child: const Text(
+                          child: Text(
                             '固定費(未確定)',
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: HistoryListStyles.historyTileSubLabel,
+                            style: AppTextStyles.listTileSecondaryTitle,
                           ),
                         ),
                       ],
@@ -126,11 +115,10 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                     child: SizedBox(
                       width: 100,
                       child: Text(
-                        priceLabel,
+                        '未確定',
                         textAlign: TextAlign.end,
                         overflow: TextOverflow.ellipsis,
-                        style: HistoryListStyles.historyTilePriceLabelWithColor(
-                            priceColor),
+                        style: AppTextStyles.listTileUnconfirmedPriceLabel,
                       ),
                     ),
                   ),

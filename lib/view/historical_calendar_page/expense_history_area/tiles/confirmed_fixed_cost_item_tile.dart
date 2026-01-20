@@ -4,11 +4,12 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
+import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
-import 'package:kakeibo/util/util.dart';
 
 class ConfirmedFixedCostItemTile extends ConsumerWidget {
   const ConfirmedFixedCostItemTile({
@@ -87,18 +88,17 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                             value.name,
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style:
-                                HistoryListStyles.historyTileBigCategoryLabel,
+                            style: AppTextStyles.listTilePrimaryTitle,
                           ),
                         ),
                         // 固定費（確定済み）ラベル
                         SizedBox(
                           width: 153 * screenHorizontalMagnification,
-                          child: const Text(
+                          child: Text(
                             '固定費',
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: HistoryListStyles.historyTileSubLabel,
+                            style: AppTextStyles.listTileSecondaryTitle,
                           ),
                         ),
                       ],
@@ -114,7 +114,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                         priceLabel,
                         textAlign: TextAlign.end,
                         overflow: TextOverflow.ellipsis,
-                        style: HistoryListStyles.historyTilePriceLabel,
+                        style: AppTextStyles.listTilePriceLabel,
                       ),
                     ),
                   ),

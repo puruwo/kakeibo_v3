@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
-import 'package:kakeibo/constant/styles/history_list_styles.dart';
 import 'package:kakeibo/domain/ui_value/daily_expense_summary_value/daily_expense_summary_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
@@ -44,7 +43,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         error: (error, stack) => Center(
           child: Text(
             'データの取得に失敗しました',
-            style: HistoryListStyles.historyEmptyMessage,
+            style: AppTextStyles.errorMessage,
           ),
         ),
       ),
@@ -142,7 +141,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
       child: Center(
         child: Text(
           'この日の支出はありません',
-          style: HistoryListStyles.historyEmptyMessage,
+          style: AppTextStyles.errorMessage,
         ),
       ),
     );
@@ -169,13 +168,13 @@ class DailyExpenseSummaryHeader extends StatelessWidget {
           Expanded(
             child: Text(
               categoryName,
-              style: HistoryListStyles.historyTileBigCategoryLabel,
+              style: AppTextStyles.listTilePrimaryTitle,
             ),
           ),
           // カテゴリー合計金額
           Text(
             '${formattedPriceGetter(categoryTotal)}円',
-            style: HistoryListStyles.historyTileSubLabel.copyWith(
+            style: AppTextStyles.listTileSecondaryTitle.copyWith(
               fontSize: 14,
             ),
           ),

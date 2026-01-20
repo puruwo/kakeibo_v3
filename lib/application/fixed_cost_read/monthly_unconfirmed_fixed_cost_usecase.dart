@@ -7,7 +7,7 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-// 月の確定分固定費を取得するユースケース
+// 月の未確定分固定費を取得するユースケース
 
 final monthlyUnconfirmedFixedCostNotifierProvider =
     AsyncNotifierProvider.family<MonthlyUnconfirmedFixedCostUsecaseNotifier,
