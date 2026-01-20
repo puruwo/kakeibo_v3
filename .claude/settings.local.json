@@ -1,8 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/puruwo/dev/flutter/kakeibo_v3)",
-      "Write(//Users/puruwo/dev/flutter/kakeibo_v3)",
+      "Read(//Users/puruwo/dev/kakeibo_v3-claude/**)",
+      "Write(//Users/puruwo/dev/kakeibo_v3-claude/**)",
+      "Update(//Users/puruwo/dev/kakeibo_v3-claude/**)",
+      "Delete(//Users/puruwo/dev/kakeibo_v3-claude/**)",
       "Bash(flutter *)",
       "Bash(dart *)",
       "Bash(find *)",
