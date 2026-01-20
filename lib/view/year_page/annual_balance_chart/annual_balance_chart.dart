@@ -101,9 +101,21 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
         final maxY = (income + expense).reduce(max);
         final maxMinDifference = (maxY - minY).abs(); // 最大値と最小値の差を計算
 
-        // グリッドの間隔を計算（最大3本のグリッド線になるように）
-        final verticalInterval =
-            _calculateVerticalInterval(maxMinDifference);
+        // グリッドの間隔
+        double verticalInterval;
+        if (maxMinDifference >= 100000.0) {
+          // 100万以上の差分がある場合は、グリッドの間隔を10万に設定
+          verticalInterval = 100000.0;
+        } else if (maxMinDifference >= 50000.0) {
+          // 10万以上の差分がある場合は、グリッドの間
+          verticalInterval = 50000.0;
+        } else if (maxMinDifference >= 10000.0) {
+          // 5万以上の差分がある場合は、グリッドの間隔を1万に設定
+          verticalInterval = 20000.0;
+        } else {
+          // 1万以上の差分がある場合は、グリッドの間
+          verticalInterval = 10000.0;
+        }
 
         // 棒グラフのバーの幅
         const barWidth = 25.0;
@@ -480,43 +492,5 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
         return const Center(child: CircularProgressIndicator());
       },
     );
-  }
-
-  /// グリッド間隔を計算する（最大3本のグリッド線になるようきりのいい数値を返す）
-  double _calculateVerticalInterval(double range) {
-    if (range <= 0) return 10000.0;
-
-    // 最大3本のグリッド線にするための最小間隔
-    final minInterval = range / 3;
-
-    // きりのいい数値のリスト（万円単位）
-    const niceNumbers = [
-      10000.0, // 1万
-      20000.0, // 2万
-      50000.0, // 5万
-      100000.0, // 10万
-      200000.0, // 20万
-      500000.0, // 50万
-      1000000.0, // 100万
-      2000000.0, // 200万
-      5000000.0, // 500万
-      10000000.0, // 1000万
-    ];
-
-    // minInterval以上の最小のきりのいい数値を見つける
-    for (final nice in niceNumbers) {
-      if (nice >= minInterval) {
-        return nice;
-      }
-    }
-
-    // リストの最大値を超える場合は、桁数に応じて計算
-    final magnitude = pow(10, (log(minInterval) / ln10).floor()).toDouble();
-    final normalized = minInterval / magnitude;
-
-    if (normalized <= 1) return magnitude;
-    if (normalized <= 2) return 2 * magnitude;
-    if (normalized <= 5) return 5 * magnitude;
-    return 10 * magnitude;
   }
 }
