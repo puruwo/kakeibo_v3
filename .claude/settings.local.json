@@ -12,7 +12,10 @@
       "Bash(git add*)",
       "Bash(git commit*)",
       "Bash(git checkout*)",
-      "Bash(git commit -m *)"
+      "Bash(git commit -m *)",
+      "Bash(git pull*)",
+      "Bash(git fetch*)",
+      "Bash(git rebase*)"
     ],
     "deny": [
       "Bash(git push *)",

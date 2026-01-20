@@ -9,6 +9,7 @@
   claude/night
 - 作業はローカルのみで行う
 - git push devやgit push mainは絶対に行わない
+- git checkout devやgit checkout mainは絶対に行わない
 - すべての作業は Jira チケット単位でブランチを分ける
 - 各チケットごとに commit を作成する
 - 各チケットの作業が終了したら claude/night にマージする
