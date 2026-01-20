@@ -52,7 +52,7 @@ class GraphTooltip extends StatelessWidget {
                 children: [
                   Text(
                     '${date.month}/${date.day}',
-                    style: PredictionGraphTextStyles.tooltipDate,
+                    style: GraphTextStyles.tooltipDate,
                   ),
                   const SizedBox(width: 8),
                   const Spacer(),
@@ -61,12 +61,11 @@ class GraphTooltip extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: '累計 ',
-                          style:
-                              PredictionGraphTextStyles.tooltipCumulativeLabel,
+                          style: GraphTextStyles.tooltipCumulativeLabel,
                         ),
                         TextSpan(
                           text: '¥${_formatNumber(cumulativeExpense)}',
-                          style: PredictionGraphTextStyles.tooltipSubtitle,
+                          style: GraphTextStyles.tooltipSubtitle,
                         ),
                       ],
                     ),
@@ -131,7 +130,7 @@ class GraphTooltip extends StatelessWidget {
           // 金額（右揃え）
           Text(
             '¥${_formatNumber(expense.price)}',
-            style: PredictionGraphTextStyles.tooltipCategory,
+            style: GraphTextStyles.tooltipCategory,
           ),
         ],
       ),

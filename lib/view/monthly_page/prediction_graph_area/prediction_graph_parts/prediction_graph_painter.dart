@@ -215,7 +215,7 @@ class PredictionGraphPainter extends CustomPainter {
       double totalWidth, double labelLeftPadding, double graphLeftOffset) {
     final textSpan = TextSpan(
       text: '￥0',
-      style: PredictionGraphTextStyles.graphLabel,
+      style: GraphTextStyles.graphLabel,
     );
 
     final textPainter = TextPainter(
@@ -246,7 +246,7 @@ class PredictionGraphPainter extends CustomPainter {
       Canvas canvas, double leftMargin, double y, double labelLeftPadding) {
     final textSpan = TextSpan(
       text: '日別',
-      style: PredictionGraphTextStyles.graphLabel,
+      style: GraphTextStyles.graphLabel,
     );
 
     final textPainter = TextPainter(
@@ -375,7 +375,7 @@ class PredictionGraphPainter extends CustomPainter {
 
       final textSpan = TextSpan(
         text: xLabel.label,
-        style: PredictionGraphTextStyles.graphPriceLabel,
+        style: GraphTextStyles.graphPriceLabel,
       );
 
       final textPainter = TextPainter(
@@ -424,11 +424,11 @@ class PredictionGraphPainter extends CustomPainter {
       children: [
         TextSpan(
           text: '収入 ',
-          style: PredictionGraphTextStyles.graphLabel,
+          style: GraphTextStyles.graphLabel,
         ),
         TextSpan(
           text: labelPosition.label,
-          style: PredictionGraphTextStyles.graphPriceLabel,
+          style: GraphTextStyles.graphPriceLabel,
         ),
       ],
     );
@@ -442,7 +442,7 @@ class PredictionGraphPainter extends CustomPainter {
     // 項目名のみのTextPainterを作成（重なった場合の描画用）
     final titleSpan = TextSpan(
       text: '収入 ',
-      style: PredictionGraphTextStyles.graphLabel,
+      style: GraphTextStyles.graphLabel,
     );
     final titlePainter = TextPainter(
       text: titleSpan,
@@ -528,11 +528,11 @@ class PredictionGraphPainter extends CustomPainter {
       children: [
         TextSpan(
           text: '予算 ',
-          style: PredictionGraphTextStyles.graphLabel,
+          style: GraphTextStyles.graphLabel,
         ),
         TextSpan(
           text: labelPosition.label,
-          style: PredictionGraphTextStyles.graphPriceLabel,
+          style: GraphTextStyles.graphPriceLabel,
         ),
       ],
     );
@@ -546,7 +546,7 @@ class PredictionGraphPainter extends CustomPainter {
     // 項目名のみのTextPainterを作成（重なった場合の描画用）
     final titleSpan = TextSpan(
       text: '予算 ',
-      style: PredictionGraphTextStyles.graphLabel,
+      style: GraphTextStyles.graphLabel,
     );
     final titlePainter = TextPainter(
       text: titleSpan,
@@ -647,11 +647,11 @@ class PredictionGraphPainter extends CustomPainter {
       children: [
         TextSpan(
           text: '予想支出 ',
-          style: PredictionGraphTextStyles.graphLabel,
+          style: GraphTextStyles.graphLabel,
         ),
         TextSpan(
           text: data.predictionLabel,
-          style: PredictionGraphTextStyles.graphPriceLabel,
+          style: GraphTextStyles.graphPriceLabel,
         ),
       ],
     );
@@ -726,18 +726,18 @@ class PredictionGraphPainter extends CustomPainter {
         children: [
           TextSpan(
             text: '支出 ',
-            style: PredictionGraphTextStyles.graphLabel,
+            style: GraphTextStyles.graphLabel,
           ),
           TextSpan(
             text: expenseLabelPosition.label,
-            style: PredictionGraphTextStyles.graphPriceLabel,
+            style: GraphTextStyles.graphPriceLabel,
           ),
         ],
       );
 
       final titleSpan = TextSpan(
         text: '支出 ',
-        style: PredictionGraphTextStyles.graphLabel,
+        style: GraphTextStyles.graphLabel,
       );
 
       final textPainter = TextPainter(

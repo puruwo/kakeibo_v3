@@ -2,8 +2,8 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
@@ -40,7 +40,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
             child: Center(
               child: Text(
                 'まだ記録がありません',
-                style: MonthlyPageStyles.topCardSubYenLabel,
+                style: AppTextStyles.errorMessage,
               ),
             ),
           );
@@ -128,9 +128,10 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
         const rightMargin = 0.3;
 
         // 一つのセルの幅を計算
-        const cellWidth = chartAreaWidth / (11 + lewtMargin + rightMargin);
-        const firstCellWidth = cellWidth * (0.5 + lewtMargin);
-        const endCellWidth = cellWidth * (0.5 + rightMargin);
+        const normalCellWidth =
+            chartAreaWidth / (11 + lewtMargin + rightMargin);
+        const firstCellWidth = normalCellWidth * (0.5 + lewtMargin);
+        const endCellWidth = normalCellWidth * (0.5 + rightMargin);
 
         // 初期スクロール位置を設定するために、ビルド後にコールバックを追加
         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -234,10 +235,13 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                       return const SizedBox.shrink();
                                     }
                                     // それ以外の時は二桁に丸めて表示
-                                    return Text(
-                                        '${(value / 10000).truncate()}万',
-                                        style: AnnualBalanceStyles
-                                            .annualBalanceChartPageVerticalLabel);
+                                    return FittedBox(
+                                      fit: BoxFit.scaleDown,
+                                      child: Text(
+                                          '${(value / 10000).truncate()}万',
+                                          style:
+                                              GraphTextStyles.graphMiniLabel),
+                                    );
                                   },
                                 ),
                               ),
@@ -316,9 +320,11 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                             bottom: barCenterLinePosition - 6,
                             child: SizedBox(
                               width: reservedSize,
-                              child: Text('収支',
-                                  style: AnnualBalanceStyles
-                                      .annualBalanceChartPageVerticalLabel),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text('収支',
+                                    style: GraphTextStyles.graphMiniLabel),
+                              ),
                             )),
                         // 基準線: バーエリアの中央
                         Positioned(
@@ -344,12 +350,12 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                     ? firstCellWidth
                                     : i == 11
                                         ? endCellWidth
-                                        : cellWidth,
+                                        : normalCellWidth,
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
                                     Positioned(
-                                      width: cellWidth,
+                                      width: normalCellWidth,
                                       bottom: diff >= 0
                                           ? barCenterLinePosition + barHeight
                                           : barCenterLinePosition,
@@ -359,8 +365,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                               child: Text(
                                                 '${diff.abs().toInt()}',
                                                 // 収支の絶対値を表示
-                                                style: AnnualBalanceStyles
-                                                    .annualBalanceChartPageVerticalLabel,
+                                                style: GraphTextStyles
+                                                    .graphMiniLabel,
                                                 textAlign: TextAlign.center,
                                               ),
                                             )
@@ -370,18 +376,18 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                                   child: Text(
                                                     '    ${diff.abs().toInt()}',
                                                     // 収支の絶対値を表示
-                                                    style: AnnualBalanceStyles
-                                                        .annualBalanceChartPageVerticalLabel,
+                                                    style: GraphTextStyles
+                                                        .graphMiniLabel,
                                                     textAlign: TextAlign.center,
                                                   ),
                                                 )
                                               : SizedBox(
-                                                  width: cellWidth,
+                                                  width: normalCellWidth,
                                                   child: Text(
                                                     '${diff.abs().toInt()}',
                                                     // 収支の絶対値を表示
-                                                    style: AnnualBalanceStyles
-                                                        .annualBalanceChartPageVerticalLabel,
+                                                    style: GraphTextStyles
+                                                        .graphMiniLabel,
                                                     textAlign: TextAlign.center,
                                                   )),
                                     ),
@@ -406,16 +412,16 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                     ? firstCellWidth
                                     : i == 11
                                         ? endCellWidth
-                                        : cellWidth,
+                                        : normalCellWidth,
                                 child: Stack(
                                   alignment: Alignment.center,
                                   children: [
                                     Positioned(
                                       left: i == 0
                                           ? firstCellWidth -
-                                              (cellWidth - barWidth) / 2 -
+                                              (normalCellWidth - barWidth) / 2 -
                                               barWidth
-                                          : (cellWidth - barWidth) / 2,
+                                          : (normalCellWidth - barWidth) / 2,
                                       bottom: diff >= 0
                                           ? barCenterLinePosition
                                           : null,
@@ -452,8 +458,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                   width: firstCellWidth,
                                   child: Text(
                                     '  ${chartData.monthlyBalanceValues[i].month}月',
-                                    style: AnnualBalanceStyles
-                                        .annualBalanceChartPageMonthLabel,
+                                    style: GraphTextStyles.graphMiniLabel,
                                     textAlign: TextAlign.left,
                                   ),
                                 )
@@ -462,17 +467,15 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                       width: endCellWidth,
                                       child: Text(
                                         '     ${chartData.monthlyBalanceValues[i].month}月',
-                                        style: AnnualBalanceStyles
-                                            .annualBalanceChartPageMonthLabel,
+                                        style: GraphTextStyles.graphMiniLabel,
                                         textAlign: TextAlign.left,
                                       ),
                                     )
                                   : SizedBox(
-                                      width: cellWidth,
+                                      width: normalCellWidth,
                                       child: Text(
                                         '${chartData.monthlyBalanceValues[i].month}月',
-                                        style: AnnualBalanceStyles
-                                            .annualBalanceChartPageMonthLabel,
+                                        style: GraphTextStyles.graphMiniLabel,
                                         textAlign: TextAlign.center,
                                       ));
                         }),

@@ -3,9 +3,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/font_style.dart';
 
 /// 予測グラフで使用するテキストスタイル定義
-class PredictionGraphTextStyles {
-  PredictionGraphTextStyles._();
-
+class GraphTextStyles {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
   // グラフ本体のラベル
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -19,6 +17,12 @@ class PredictionGraphTextStyles {
   /// グラフ金額ラベル（収入・予算・予測の金額部分、X軸日付）
   static final TextStyle graphPriceLabel = MyFontStyle.sfUi.copyWith(
       fontSize: 14,
+      color: MyColors.secondaryLabel,
+      fontWeight: FontWeight.w500);
+
+  /// グラフ金額ラベル（収入・予算・予測の金額部分、X軸日付）
+  static final TextStyle graphMiniLabel = MyFontStyle.notoSans.copyWith(
+      fontSize: 11,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w500);
 
