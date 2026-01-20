@@ -6,12 +6,12 @@
       "Bash(flutter *)",
       "Bash(dart *)",
       "Bash(find *)",
-      "Bash(git status)",
-      "Bash(git diff)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
       "mcp__atlassian__*",
-      "Bash(git checkout:*)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git checkout*)",
       "Bash(git commit -m *)"
     ],
     "deny": [
