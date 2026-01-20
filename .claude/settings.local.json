@@ -1,10 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Read(//Users/puruwo/dev/家計簿/**)",
-      "Write(//Users/puruwo/dev/家計簿/**)",
-      "Update(//Users/puruwo/dev/家計簿/**)",
-      "Delete(//Users/puruwo/dev/家計簿/**)",
+      "Read(//Users/puruwo/dev/flutter/kakeibo_v3)",
+      "Write(//Users/puruwo/dev/flutter/kakeibo_v3)",
       "Bash(flutter *)",
       "Bash(dart *)",
       "Bash(find *)",
