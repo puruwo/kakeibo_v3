@@ -129,6 +129,8 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     ref.watch(enteredPriceControllerProvider);
     ref.watch(enteredMemoControllerProvider);
     ref.watch(inputDateControllerNotifierProvider);
+    // 初期化フラグも監視して維持する（autoDisposeのため）
+    ref.watch(inputInitializedControllerProvider);
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
