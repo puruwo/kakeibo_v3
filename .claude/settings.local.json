@@ -17,7 +17,16 @@
       "Bash(git pull*)",
       "Bash(git fetch*)",
       "Bash(git rebase*)",
-      "Bash(git merge*)"
+      "Bash(git merge*)",
+      "Bash(git branch:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git revert:*)",
+      "Bash(gh pr create --base dev --head claude/night --title \"🔧 KAN-17, KAN-27 修正\" --body \"$\\(cat <<''EOF''\n## Summary\n- **KAN-17**: 記録画面でpill切り替え時（支出↔収入）に入力値（金額、日付、メモ）が保持されるように修正\n- **KAN-27**: 予算取得時の空結果によるnullエラーを修正\n\n## Changes\n- `register_page_base.dart`: `inputInitializedControllerProvider`をwatchして維持\n- `year_page.dart`: AsyncValueの`.when\\(\\)`パターンを使用\n- `budget_repository.dart`: 空結果チェックを追加\n\n## Test plan\n- [ ] 記録画面で金額・日付・メモを入力後、pill切り替えで値が保持されることを確認\n- [ ] 予算未設定のカテゴリで予算画面がエラーなく表示されることを確認\n\n🤖 Generated with [Claude Code]\\(https://claude.com/claude-code\\)\nEOF\n\\)\")",
+      "Bash(gh auth:*)",
+      "Bash(gh repo view:*)",
+      "Bash(gh pr create:*)",
+      "Bash(gh pr view:*)"
     ],
     "deny": [
       "Bash(rm -rf /)"
