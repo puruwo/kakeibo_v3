@@ -5,12 +5,11 @@
 前提
 ====================
 
-- 夜間作業用のベースブランチに最新化したdevからチェックアウト
-  claude/night
+- 夜間作業用のベースブランチclaude/nightを利用する
 - 作業はローカルのみで行う
 - git push devやgit push mainは絶対に行わない
 - git checkout devやgit checkout mainは絶対に行わない
-- すべての作業は Jira チケット単位でブランチを分ける
+- すべての作業は Jira チケット単位でclaude/nightから切ったブランチに分ける
 - 各チケットごとに commit を作成する
 - 各チケットの作業が終了したら claude/night にマージする
 - Bash コマンドは必ず 1 操作ずつ実行すること
