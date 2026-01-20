@@ -6,6 +6,8 @@ import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 /// 金額入力フィールドの状態
 enum PriceInputFieldStatus {
@@ -35,10 +37,14 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _controller.text =
-            NumberTextInputFormatter.formatInitialValue(widget.originalPrice);
-      });
+      // 追加モードで既に初期化済みの場合は、入力値を保持するためスキップ
+      final isInitialized = ref.read(inputInitializedControllerProvider);
+      final mode = ref.read(registerScreenModeNotifierProvider);
+      if (mode == RegisterScreenMode.add && isInitialized) {
+        return;
+      }
+      _controller.text =
+          NumberTextInputFormatter.formatInitialValue(widget.originalPrice);
     });
   }
 
