@@ -54,6 +54,8 @@ class AppContentsHeader extends StatelessWidget {
           // 左側: アイコン + タイトル
           Row(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
               // カスタムアイコンウィジェット
               if (iconWidget != null) ...[

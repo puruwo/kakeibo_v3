@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_parts/prediction_graph_widget.dart';
-import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_text_styles.dart';
 
 class PredictionGraph extends ConsumerWidget {
   const PredictionGraph({super.key, required this.dateScope});
@@ -29,20 +29,20 @@ class PredictionGraph extends ConsumerWidget {
         data: (data) {
           if (data.predictionGraphLineType ==
               PredictionGraphLineType.futureMonth) {
-            return const Center(
+            return Center(
               child: Text(
                 '選択月の支出の入力がありません',
-                style: PredictionGraphTextStyles.message,
+                style: AppTextStyles.errorMessage,
               ),
             );
           }
           return PredictionGraphWidget(data: data);
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => const Center(
+        error: (error, stack) => Center(
           child: Text(
             'エラーが発生しました',
-            style: PredictionGraphTextStyles.message,
+            style: AppTextStyles.errorMessage,
           ),
         ),
       ),

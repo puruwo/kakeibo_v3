@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
-import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_text_styles.dart';
+import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 
 /// ツールチップウィジェット
 class GraphTooltip extends StatelessWidget {
@@ -47,6 +47,8 @@ class GraphTooltip extends StatelessWidget {
             children: [
               // 日付と累計（同じ行）
               Row(
+                // crossAxisAlignment: CrossAxisAlignment.baseline,
+                // textBaseline: TextBaseline.alphabetic,
                 children: [
                   Text(
                     '${date.month}/${date.day}',
@@ -57,7 +59,7 @@ class GraphTooltip extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       children: [
-                        const TextSpan(
+                        TextSpan(
                           text: '累計 ',
                           style:
                               PredictionGraphTextStyles.tooltipCumulativeLabel,
@@ -71,18 +73,6 @@ class GraphTooltip extends StatelessWidget {
                   ),
                 ],
               ),
-              // 固定費（0円の場合は非表示、小さく表示）
-              if (totalFixedCostExpense > 0)
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 2),
-                    child: Text(
-                      '(固定費 ¥${_formatNumber(totalFixedCostExpense)})',
-                      style: PredictionGraphTextStyles.tooltipCumulativeLabel,
-                    ),
-                  ),
-                ),
               if (categoryExpenses.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 const Divider(height: 1, color: Colors.white24),

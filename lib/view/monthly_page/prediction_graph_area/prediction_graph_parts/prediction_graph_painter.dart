@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
-import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_text_styles.dart';
+import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 
 class PredictionGraphPainter extends CustomPainter {
   PredictionGraphPainter({required this.data});
@@ -213,7 +213,7 @@ class PredictionGraphPainter extends CustomPainter {
   /// 折れ線グラフの0円軸とラベルを描画
   void _drawZeroLine(Canvas canvas, double leftMargin, double y,
       double totalWidth, double labelLeftPadding, double graphLeftOffset) {
-    const textSpan = TextSpan(
+    final textSpan = TextSpan(
       text: '￥0',
       style: PredictionGraphTextStyles.graphLabel,
     );
@@ -244,7 +244,7 @@ class PredictionGraphPainter extends CustomPainter {
   /// 棒グラフの「日別」ラベルを描画
   void _drawDailyLabel(
       Canvas canvas, double leftMargin, double y, double labelLeftPadding) {
-    const textSpan = TextSpan(
+    final textSpan = TextSpan(
       text: '日別',
       style: PredictionGraphTextStyles.graphLabel,
     );
@@ -422,7 +422,7 @@ class PredictionGraphPainter extends CustomPainter {
 
     final textSpan = TextSpan(
       children: [
-        const TextSpan(
+        TextSpan(
           text: '収入 ',
           style: PredictionGraphTextStyles.graphLabel,
         ),
@@ -440,7 +440,7 @@ class PredictionGraphPainter extends CustomPainter {
     textPainter.layout();
 
     // 項目名のみのTextPainterを作成（重なった場合の描画用）
-    const titleSpan = TextSpan(
+    final titleSpan = TextSpan(
       text: '収入 ',
       style: PredictionGraphTextStyles.graphLabel,
     );
@@ -526,7 +526,7 @@ class PredictionGraphPainter extends CustomPainter {
 
     final textSpan = TextSpan(
       children: [
-        const TextSpan(
+        TextSpan(
           text: '予算 ',
           style: PredictionGraphTextStyles.graphLabel,
         ),
@@ -544,7 +544,7 @@ class PredictionGraphPainter extends CustomPainter {
     textPainter.layout();
 
     // 項目名のみのTextPainterを作成（重なった場合の描画用）
-    const titleSpan = TextSpan(
+    final titleSpan = TextSpan(
       text: '予算 ',
       style: PredictionGraphTextStyles.graphLabel,
     );
@@ -645,7 +645,7 @@ class PredictionGraphPainter extends CustomPainter {
     // ラベルを表示
     final textSpan = TextSpan(
       children: [
-        const TextSpan(
+        TextSpan(
           text: '予想支出 ',
           style: PredictionGraphTextStyles.graphLabel,
         ),
@@ -724,7 +724,7 @@ class PredictionGraphPainter extends CustomPainter {
       // テキストスパンの作成
       final textSpan = TextSpan(
         children: [
-          const TextSpan(
+          TextSpan(
             text: '支出 ',
             style: PredictionGraphTextStyles.graphLabel,
           ),
@@ -735,7 +735,7 @@ class PredictionGraphPainter extends CustomPainter {
         ],
       );
 
-      final titleSpan = const TextSpan(
+      final titleSpan = TextSpan(
         text: '支出 ',
         style: PredictionGraphTextStyles.graphLabel,
       );
