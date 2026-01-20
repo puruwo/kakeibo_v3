@@ -3,6 +3,8 @@
     "allow": [
       "Read(//Users/puruwo/dev/家計簿/**)",
       "Write(//Users/puruwo/dev/家計簿/**)",
+      "Update(//Users/puruwo/dev/家計簿/**)",
+      "Delete(//Users/puruwo/dev/家計簿/**)",
       "Bash(flutter *)",
       "Bash(dart *)",
       "Bash(find *)",
@@ -18,7 +20,6 @@
       "Bash(git rebase*)"
     ],
     "deny": [
-      "Bash(git push *)",
       "Bash(rm -rf /)"
     ],
     "ask": []
