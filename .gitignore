@@ -46,3 +46,7 @@ android/.gradle/
 
 # ios related
 ios/Pods/
+
+# claude related
+.claude/
+
