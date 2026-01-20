@@ -34,11 +34,14 @@ class _YearPageState extends ConsumerState<YearPage> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         title: Consumer(builder: (context, ref, _) {
-          final activeDt = ref.watch(homeDateScopeEntityProvider).value!;
-          final label = yyyyToyyyyGetter(activeDt);
-          return Text(
-            label,
-            style: AppTextStyles.pageHeaderText,
+          final asyncValue = ref.watch(homeDateScopeEntityProvider);
+          return asyncValue.when(
+            data: (activeDt) => Text(
+              yyyyToyyyyGetter(activeDt),
+              style: AppTextStyles.pageHeaderText,
+            ),
+            loading: () => const SizedBox.shrink(),
+            error: (_, __) => const SizedBox.shrink(),
           );
         }),
         actions: [

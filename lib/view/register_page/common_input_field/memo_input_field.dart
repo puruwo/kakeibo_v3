@@ -4,6 +4,8 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class MemoInputField extends ConsumerStatefulWidget {
   const MemoInputField({
@@ -31,6 +33,12 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 追加モードで既に初期化済みの場合は、入力値を保持するためスキップ
+      final isInitialized = ref.read(inputInitializedControllerProvider);
+      final mode = ref.read(registerScreenModeNotifierProvider);
+      if (mode == RegisterScreenMode.add && isInitialized) {
+        return;
+      }
       // 初期値をセット
       _enteredMemoController.text = widget.originalMemo;
     });

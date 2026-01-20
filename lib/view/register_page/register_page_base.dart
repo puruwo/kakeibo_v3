@@ -16,6 +16,10 @@ import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_pa
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class RegisaterPageBase extends ConsumerStatefulWidget {
@@ -101,6 +105,11 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
       ref
           .read(inputModeControllerProvider.notifier)
           .initialize(widget.transactionMode);
+      // 最初のフレームで各入力フィールドが初期化された後、フラグを立てる
+      // これにより、pill切り替え時は入力値が保持される
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(inputInitializedControllerProvider.notifier).state = true;
+      });
     });
 
     super.initState();
@@ -114,7 +123,14 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
   @override
   Widget build(BuildContext context) {
-    //レイアウト------------------------------------------------------------------------------------
+    // 入力プロバイダーをここで監視することで、pill切り替え時に破棄されないようにする
+    // autoDisposeプロバイダーは監視しているウィジェットがなくなると破棄されるため、
+    // 親ウィジェットで監視を維持する必要がある
+    ref.watch(enteredPriceControllerProvider);
+    ref.watch(enteredMemoControllerProvider);
+    ref.watch(inputDateControllerNotifierProvider);
+    // 初期化フラグも監視して維持する（autoDisposeのため）
+    ref.watch(inputInitializedControllerProvider);
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
