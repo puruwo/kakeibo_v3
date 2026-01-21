@@ -23,9 +23,14 @@ class MonthlyIncomeGraph extends HookConsumerWidget {
       isBuilt.value = true;
     });
 
-    return
-        // バーグラフ
-        ClipRRect(
+    // 収入がオーバーフローしているかどうかを判定 (KAN-25条件)
+    // 収入の合計比率が1を超えている場合はオーバーフロー
+    final totalIncomeRatio = allCategoryCardEntity.incomeCategoryRatioList
+        .fold(0.0, (sum, ratio) => sum + ratio);
+    final isIncomeOverflow = totalIncomeRatio > 1.0;
+
+    // バーグラフ本体
+    Widget barGraph = ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: Container(
         constraints: const BoxConstraints(
@@ -48,5 +53,27 @@ class MonthlyIncomeGraph extends HookConsumerWidget {
         ]),
       ),
     );
+
+    // オーバーフロー時は右端にフェードアウト効果を追加
+    if (isIncomeOverflow) {
+      return ShaderMask(
+        shaderCallback: (Rect bounds) {
+          return const LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Colors.white,
+              Colors.white,
+              Colors.transparent,
+            ],
+            stops: [0.0, 0.85, 1.0],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: barGraph,
+      );
+    }
+
+    return barGraph;
   }
 }
