@@ -9,7 +9,7 @@ import 'package:kakeibo/view/historical_calendar_page/calendar_area/calendar_are
 import 'package:kakeibo/view/historical_calendar_page/calendar_next_arrow_button.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_previous_arrow_button.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/expence_history_list_area.dart';
-import 'package:kakeibo/view_model/state/date_scope/historical_page/historical_date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 
 class ExpenseHistoryPage extends StatelessWidget {
   const ExpenseHistoryPage({super.key});
@@ -29,13 +29,10 @@ class ExpenseHistoryPage extends StatelessWidget {
                 //左矢印ボタン、押すと前の月に移動
                 const CalendarPreviousArrowButton(),
                 Consumer(builder: (context, ref, _) {
-                  final dateScopeAsync =
-                      ref.watch(historicalDateScopeEntityProvider);
-                  final selectedDate = dateScopeAsync.whenOrNull(
-                      data: (data) => data.selectedDate);
-                  final label = selectedDate != null
-                      ? '${selectedDate.year}年 ${selectedDate.month}月'
-                      : '';
+                  // 同期プロバイダーを使用して、ローディング中の表示崩れを防止
+                  final selectedDate =
+                      ref.watch(historicalSelectedDatetimeNotifierProvider);
+                  final label = '${selectedDate.year}年 ${selectedDate.month}月';
                   return Text(
                     label,
                     style: AppTextStyles.pageHeaderText,
