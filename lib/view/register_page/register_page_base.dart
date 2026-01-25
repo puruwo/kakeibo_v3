@@ -158,6 +158,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           //ヘッダーの左ボタン
           leading: IconButton(
             onPressed: () {
+              _clearInputState();
               Navigator.of(context, rootNavigator: true).pop();
             },
             icon: const Icon(
@@ -257,8 +258,9 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           }
           break;
       }
-      // 削除成功後、画面を閉じる
+      // 削除成功後、入力状態をクリアして画面を閉じる
       if (mounted) {
+        _clearInputState();
         Navigator.of(context, rootNavigator: true).pop();
       }
     } catch (e) {
@@ -270,5 +272,14 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         );
       }
     }
+  }
+
+  /// 入力状態をクリアする
+  /// 画面を閉じる際や登録完了後に呼び出して、次回表示時に値がリセットされるようにする
+  void _clearInputState() {
+    ref.invalidate(enteredPriceControllerProvider);
+    ref.invalidate(enteredMemoControllerProvider);
+    ref.invalidate(inputDateControllerNotifierProvider);
+    ref.invalidate(inputInitializedControllerProvider);
   }
 }
