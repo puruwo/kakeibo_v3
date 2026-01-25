@@ -7,7 +7,7 @@ part of 'analyze_page_selected_datetime.dart';
 // **************************************************************************
 
 String _$analyzePageSelectedDatetimeNotifierHash() =>
-    r'52c8a1b1e7ba8e63c0e091414089301cd014c0cf';
+    r'ada5aad54057ed882b8f2c989afa97b179a34882';
 
 /// See also [AnalyzePageSelectedDatetimeNotifier].
 @ProviderFor(AnalyzePageSelectedDatetimeNotifier)

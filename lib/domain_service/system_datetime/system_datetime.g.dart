@@ -9,6 +9,7 @@ part of 'system_datetime.dart';
 String _$systemDatetimeNotifierHash() =>
     r'd81fc3a699206b0c582236034982e316146cdcd1';
 
+/// 運用日付
 /// アプリ立ち上げ時点での日時を提供するプロバイダ
 /// アプリ起動中は常に同じ日時を返す
 /// アプリ内ではこのプロバイダを基準にして日付を扱う

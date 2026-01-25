@@ -17,7 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DateScopeEntity {
   DateTime get selectedDate => throw _privateConstructorUsedError;
-  PeriodValue get monthPeriod => throw _privateConstructorUsedError;
+  PeriodValue get aggregationMonthPeriod => throw _privateConstructorUsedError;
+  PeriodValue get displayMonthPeriod => throw _privateConstructorUsedError;
   int get monthIndex => throw _privateConstructorUsedError;
   MonthValue get representativeMonth => throw _privateConstructorUsedError;
   PeriodValue get yearPeriod => throw _privateConstructorUsedError;
@@ -37,14 +38,16 @@ abstract class $DateScopeEntityCopyWith<$Res> {
   @useResult
   $Res call(
       {DateTime selectedDate,
-      PeriodValue monthPeriod,
+      PeriodValue aggregationMonthPeriod,
+      PeriodValue displayMonthPeriod,
       int monthIndex,
       MonthValue representativeMonth,
       PeriodValue yearPeriod,
       YearValue representativeYear,
       PeriodStatus periodStatus});
 
-  $PeriodValueCopyWith<$Res> get monthPeriod;
+  $PeriodValueCopyWith<$Res> get aggregationMonthPeriod;
+  $PeriodValueCopyWith<$Res> get displayMonthPeriod;
   $MonthValueCopyWith<$Res> get representativeMonth;
   $PeriodValueCopyWith<$Res> get yearPeriod;
   $YearValueCopyWith<$Res> get representativeYear;
@@ -64,7 +67,8 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
   @override
   $Res call({
     Object? selectedDate = null,
-    Object? monthPeriod = null,
+    Object? aggregationMonthPeriod = null,
+    Object? displayMonthPeriod = null,
     Object? monthIndex = null,
     Object? representativeMonth = null,
     Object? yearPeriod = null,
@@ -76,9 +80,13 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
           ? _value.selectedDate
           : selectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      monthPeriod: null == monthPeriod
-          ? _value.monthPeriod
-          : monthPeriod // ignore: cast_nullable_to_non_nullable
+      aggregationMonthPeriod: null == aggregationMonthPeriod
+          ? _value.aggregationMonthPeriod
+          : aggregationMonthPeriod // ignore: cast_nullable_to_non_nullable
+              as PeriodValue,
+      displayMonthPeriod: null == displayMonthPeriod
+          ? _value.displayMonthPeriod
+          : displayMonthPeriod // ignore: cast_nullable_to_non_nullable
               as PeriodValue,
       monthIndex: null == monthIndex
           ? _value.monthIndex
@@ -105,9 +113,17 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
 
   @override
   @pragma('vm:prefer-inline')
-  $PeriodValueCopyWith<$Res> get monthPeriod {
-    return $PeriodValueCopyWith<$Res>(_value.monthPeriod, (value) {
-      return _then(_value.copyWith(monthPeriod: value) as $Val);
+  $PeriodValueCopyWith<$Res> get aggregationMonthPeriod {
+    return $PeriodValueCopyWith<$Res>(_value.aggregationMonthPeriod, (value) {
+      return _then(_value.copyWith(aggregationMonthPeriod: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $PeriodValueCopyWith<$Res> get displayMonthPeriod {
+    return $PeriodValueCopyWith<$Res>(_value.displayMonthPeriod, (value) {
+      return _then(_value.copyWith(displayMonthPeriod: value) as $Val);
     });
   }
 
@@ -146,7 +162,8 @@ abstract class _$$DateScopeEntityImplCopyWith<$Res>
   @useResult
   $Res call(
       {DateTime selectedDate,
-      PeriodValue monthPeriod,
+      PeriodValue aggregationMonthPeriod,
+      PeriodValue displayMonthPeriod,
       int monthIndex,
       MonthValue representativeMonth,
       PeriodValue yearPeriod,
@@ -154,7 +171,9 @@ abstract class _$$DateScopeEntityImplCopyWith<$Res>
       PeriodStatus periodStatus});
 
   @override
-  $PeriodValueCopyWith<$Res> get monthPeriod;
+  $PeriodValueCopyWith<$Res> get aggregationMonthPeriod;
+  @override
+  $PeriodValueCopyWith<$Res> get displayMonthPeriod;
   @override
   $MonthValueCopyWith<$Res> get representativeMonth;
   @override
@@ -175,7 +194,8 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? selectedDate = null,
-    Object? monthPeriod = null,
+    Object? aggregationMonthPeriod = null,
+    Object? displayMonthPeriod = null,
     Object? monthIndex = null,
     Object? representativeMonth = null,
     Object? yearPeriod = null,
@@ -187,9 +207,13 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
           ? _value.selectedDate
           : selectedDate // ignore: cast_nullable_to_non_nullable
               as DateTime,
-      monthPeriod: null == monthPeriod
-          ? _value.monthPeriod
-          : monthPeriod // ignore: cast_nullable_to_non_nullable
+      aggregationMonthPeriod: null == aggregationMonthPeriod
+          ? _value.aggregationMonthPeriod
+          : aggregationMonthPeriod // ignore: cast_nullable_to_non_nullable
+              as PeriodValue,
+      displayMonthPeriod: null == displayMonthPeriod
+          ? _value.displayMonthPeriod
+          : displayMonthPeriod // ignore: cast_nullable_to_non_nullable
               as PeriodValue,
       monthIndex: null == monthIndex
           ? _value.monthIndex
@@ -220,7 +244,8 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
 class _$DateScopeEntityImpl implements _DateScopeEntity {
   const _$DateScopeEntityImpl(
       {required this.selectedDate,
-      required this.monthPeriod,
+      required this.aggregationMonthPeriod,
+      required this.displayMonthPeriod,
       required this.monthIndex,
       required this.representativeMonth,
       required this.yearPeriod,
@@ -230,7 +255,9 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
   @override
   final DateTime selectedDate;
   @override
-  final PeriodValue monthPeriod;
+  final PeriodValue aggregationMonthPeriod;
+  @override
+  final PeriodValue displayMonthPeriod;
   @override
   final int monthIndex;
   @override
@@ -244,7 +271,7 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
 
   @override
   String toString() {
-    return 'DateScopeEntity(selectedDate: $selectedDate, monthPeriod: $monthPeriod, monthIndex: $monthIndex, representativeMonth: $representativeMonth, yearPeriod: $yearPeriod, representativeYear: $representativeYear, periodStatus: $periodStatus)';
+    return 'DateScopeEntity(selectedDate: $selectedDate, aggregationMonthPeriod: $aggregationMonthPeriod, displayMonthPeriod: $displayMonthPeriod, monthIndex: $monthIndex, representativeMonth: $representativeMonth, yearPeriod: $yearPeriod, representativeYear: $representativeYear, periodStatus: $periodStatus)';
   }
 
   @override
@@ -254,8 +281,10 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
             other is _$DateScopeEntityImpl &&
             (identical(other.selectedDate, selectedDate) ||
                 other.selectedDate == selectedDate) &&
-            (identical(other.monthPeriod, monthPeriod) ||
-                other.monthPeriod == monthPeriod) &&
+            (identical(other.aggregationMonthPeriod, aggregationMonthPeriod) ||
+                other.aggregationMonthPeriod == aggregationMonthPeriod) &&
+            (identical(other.displayMonthPeriod, displayMonthPeriod) ||
+                other.displayMonthPeriod == displayMonthPeriod) &&
             (identical(other.monthIndex, monthIndex) ||
                 other.monthIndex == monthIndex) &&
             (identical(other.representativeMonth, representativeMonth) ||
@@ -272,7 +301,8 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
   int get hashCode => Object.hash(
       runtimeType,
       selectedDate,
-      monthPeriod,
+      aggregationMonthPeriod,
+      displayMonthPeriod,
       monthIndex,
       representativeMonth,
       yearPeriod,
@@ -290,7 +320,8 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
 abstract class _DateScopeEntity implements DateScopeEntity {
   const factory _DateScopeEntity(
       {required final DateTime selectedDate,
-      required final PeriodValue monthPeriod,
+      required final PeriodValue aggregationMonthPeriod,
+      required final PeriodValue displayMonthPeriod,
       required final int monthIndex,
       required final MonthValue representativeMonth,
       required final PeriodValue yearPeriod,
@@ -300,7 +331,9 @@ abstract class _DateScopeEntity implements DateScopeEntity {
   @override
   DateTime get selectedDate;
   @override
-  PeriodValue get monthPeriod;
+  PeriodValue get aggregationMonthPeriod;
+  @override
+  PeriodValue get displayMonthPeriod;
   @override
   int get monthIndex;
   @override

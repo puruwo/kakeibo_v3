@@ -56,7 +56,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   final monthPeriodAsync =
                       ref.watch(analyzePageDateScopeEntityProvider);
                   final monthPeriod = monthPeriodAsync.whenOrNull(
-                      data: (data) => data.monthPeriod);
+                      data: (data) => data.aggregationMonthPeriod);
                   final label = yyyyMMtoMMGetter(monthPeriod);
                   return Text(
                     label,

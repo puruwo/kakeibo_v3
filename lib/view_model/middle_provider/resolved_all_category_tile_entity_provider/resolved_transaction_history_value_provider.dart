@@ -1,8 +1,6 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/expense_history/historical_transaction_usecase.dart';
-import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/daily_transaction_group/daily_transaction_group.dart';
-import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/historical_date_scope.dart';
 
 // historical系のページで利用する
@@ -10,13 +8,12 @@ import 'package:kakeibo/view_model/state/date_scope/historical_page/historical_d
 final resolvedTransactionHistoryValueProvider =
     FutureProvider<List<DailyTransactionGroup>>((ref) async {
   // 選択された日付から月単位期間を取得する（1日〜月末）
-  final dateScope = await ref
-      .watch(historicalDateScopeEntityProvider.selectAsync((data) => data));
+  final monthPeriod = await ref
+      .watch(historicalDateScopeEntityProvider.selectAsync((data) => data.displayMonthPeriod));
 
   // 選択された月単位期間を元に、全トランザクションデータを取得する
-  PeriodValue periodValue = dateScope.selectedDate.getMonthPeriod();
   final result = await ref
-      .watch(historicalTransactionNotifierProvider(periodValue).future);
+      .watch(historicalTransactionNotifierProvider(monthPeriod).future);
 
   // 日付順にグループ分けして返す
   return groupTransactionsByDate(result);

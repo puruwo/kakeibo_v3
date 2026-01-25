@@ -9,7 +9,7 @@ final resolvedIncomeHistoryValueProvider =
     FutureProvider<List<IncomeHistoryTileValue>>((ref) async {
   // 選択された日付から集計期間を取得する
   final monthPeriodValue = await ref.watch(analyzePageDateScopeEntityProvider
-      .selectAsync((data) => data.monthPeriod));
+      .selectAsync((data) => data.aggregationMonthPeriod));
 
   // リクエスト用のEntityを作成する
   // idは1を指定して、月次収入の履歴を取得する

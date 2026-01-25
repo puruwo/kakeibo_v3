@@ -7,7 +7,7 @@ part of 'input_date_controller.dart';
 // **************************************************************************
 
 String _$inputDateControllerNotifierHash() =>
-    r'09655ebad8743f391ca1dfe1e69a15aefadfc1d6';
+    r'242da3128e02a79b9e714c2b73fee4dd976bf522';
 
 /// See also [InputDateControllerNotifier].
 @ProviderFor(InputDateControllerNotifier)
