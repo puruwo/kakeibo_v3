@@ -10,7 +10,7 @@ final resolvedFixedCostSammaryValueProvider =
     FutureProvider<MonthlyFixedCostSummaryValue>((ref) async {
 
   // 選択された日付から集計期間を取得する
-  final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.aggregationMonthPeriod));
 
   // 選択された集計期間を元に、Valuesを取得する
   final values = ref.watch(monthlyFixedCostSummaryNotifierProvider(monthPeriod).future);
@@ -22,7 +22,7 @@ final resolvedFixedCostCategorySummaryValueProvider =
     FutureProvider<List<MonthlyFixedCostCategorySummaryValue>>((ref) async {
 
   // 選択された日付から集計期間を取得する
-  final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.monthPeriod));
+  final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.aggregationMonthPeriod));
 
   // 選択された集計期間を元に、Valuesを取得する
   final values = ref.watch(monthlyFixedCostCategorySummaryNotifierProvider(monthPeriod).future);

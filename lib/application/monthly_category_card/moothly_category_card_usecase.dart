@@ -38,8 +38,8 @@ class MonthlyCategoryCardUsecaseNotifier
 
   Future<List<CategoryCardEntity>> fetch(DateScopeEntity dateScope) async {
     // 選択した月の集計期間から開始日と終了日を取得する
-    DateTime fromDate = dateScope.monthPeriod.startDatetime;
-    DateTime toDate = dateScope.monthPeriod.endDatetime;
+    DateTime fromDate = dateScope.aggregationMonthPeriod.startDatetime;
+    DateTime toDate = dateScope.aggregationMonthPeriod.endDatetime;
 
     // 大カテゴリー(タイル情報つき)のリストを取得する
     final categoryList = await _categoryAccountingRepositoryProvider.fetchAll(

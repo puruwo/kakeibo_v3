@@ -55,8 +55,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
   // 前カテゴリー合計のタイルデータを取得する
   Future<MonthPlanCardModel> fetch({required DateScopeEntity dateScope}) async {
     // 選択した月の集計期間から開始日と終了日を取得する
-    DateTime fromDate = dateScope.monthPeriod.startDatetime;
-    DateTime toDate = dateScope.monthPeriod.endDatetime;
+    DateTime fromDate = dateScope.aggregationMonthPeriod.startDatetime;
+    DateTime toDate = dateScope.aggregationMonthPeriod.endDatetime;
 
     // 支払いがある固定費の合計を取得
     // 支払額未定の固定費は推定額を使用する
@@ -109,12 +109,12 @@ class MonthlyAllCategoryTileUsecaseNotifier
       final confirmedFixedCostExpense =
           await _fixedCostExpenseRepositoryProvider
               .fetchTotalConfirmedFixedCostExpenseWithPeriodAndCategory(
-                  period: dateScope.monthPeriod, fixedCostCategoryId: e.id);
+                  period: dateScope.aggregationMonthPeriod, fixedCostCategoryId: e.id);
 
       // 各カテゴリーの未確定固定費を取得する
       final unconfirmedFixedCostList = await _fixedCostExpenseRepositoryProvider
           .fetchUnconfirmedFixedCostExpenseWithPeriodAndCategory(
-              period: dateScope.monthPeriod, fixedCostCategoryId: e.id);
+              period: dateScope.aggregationMonthPeriod, fixedCostCategoryId: e.id);
       // 未確定支出に対して推定支出を取得する
       final unconfirmedFixedCostEstimated = await Future.wait(
           unconfirmedFixedCostList.map((element) async {
@@ -137,7 +137,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // ボーナス除くカテゴリーの収入のみ取得する
     final allCategoryIncome =
         await _incomeRepositoryProvider.calcurateSumWithBigCategoryAndPeriod(
-            period: dateScope.monthPeriod,
+            period: dateScope.aggregationMonthPeriod,
             bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
 
     // 固定費も一般支出も全て足した支出
@@ -261,7 +261,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
       // カテゴリー別の収入合計をrepository経由で取得
       final int totalIncome = await _incomeRepositoryProvider
           .calcurateSumWithSmallCategoryAndPeriod(
-        period: dateScope.monthPeriod,
+        period: dateScope.aggregationMonthPeriod,
         smallCategoryId: category.id,
       );
 

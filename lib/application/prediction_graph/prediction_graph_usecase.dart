@@ -48,8 +48,8 @@ class PredictionGraphUsecase {
   Future<PredictionGraphValue> fetchPredictionGraphData(
       DateScopeEntity dateScope) async {
     // 期間を取得
-    final fromDate = dateScope.monthPeriod.startDatetime;
-    final toDate = dateScope.monthPeriod.endDatetime;
+    final fromDate = dateScope.aggregationMonthPeriod.startDatetime;
+    final toDate = dateScope.aggregationMonthPeriod.endDatetime;
     final today = ref.read(systemDatetimeNotifierProvider);
 
     // 予測グラフの種類を判定
@@ -97,7 +97,7 @@ class PredictionGraphUsecase {
 
     // 収入を取得
     final income = await _incomeRepo.calcurateSumWithBigCategoryAndPeriod(
-        period: dateScope.monthPeriod,
+        period: dateScope.aggregationMonthPeriod,
         bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
 
     // 予算を取得

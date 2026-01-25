@@ -19,7 +19,7 @@ final resolvedFixedCostByCategoryProvider =
     FutureProvider<List<MonthlyFixedCostByCategoryGroup>>((ref) async {
   // 選択された日付から集計期間を取得する
   final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider
-      .selectAsync((data) => data.monthPeriod));
+      .selectAsync((data) => data.aggregationMonthPeriod));
 
   // 選択された集計期間を元に、Valuesを取得する
   final values =

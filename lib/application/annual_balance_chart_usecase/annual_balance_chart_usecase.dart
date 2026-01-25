@@ -47,7 +47,7 @@ class AnnualBalanceChartUsecaseNotifier
     final monthBalanceValues = <MonthlyBalanceValue>[];
 
     // 現在の月の期間を取得
-    final currentMonthPeriod = dateScope.monthPeriod;
+    final currentMonthPeriod = dateScope.aggregationMonthPeriod;
 
     // 一番最初の月の期間を取得
     final firstMonthPeriod = await _monthPeriodService

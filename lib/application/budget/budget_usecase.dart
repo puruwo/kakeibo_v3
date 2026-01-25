@@ -64,8 +64,8 @@ class BudgetUsecase {
 
       // 現在月の場合は先月の支出、過去月の場合は当月の支出を表示
       final targetPeriod = dateScope.periodStatus == PeriodStatus.current
-          ? _monthPeriodService.fetchShiftedMonthPeriod(dateScope.monthPeriod, -1)
-          : dateScope.monthPeriod;
+          ? _monthPeriodService.fetchShiftedMonthPeriod(dateScope.aggregationMonthPeriod, -1)
+          : dateScope.aggregationMonthPeriod;
 
       final referenceExpenseTotal =
           await Future.wait(smallCategoryList.map((e) async {
