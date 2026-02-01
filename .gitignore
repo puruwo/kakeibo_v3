@@ -48,5 +48,4 @@ android/.gradle/
 ios/Pods/
 
 # claude related
-.claude/.config/task.txt
-
+.claude/
