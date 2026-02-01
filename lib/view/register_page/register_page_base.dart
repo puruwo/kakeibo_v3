@@ -118,6 +118,10 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
   @override
   void dispose() {
     _tabController.dispose();
+    // スワイプや×ボタンで閉じられた場合に入力状態をクリアする
+    // disposeは画面が破棄される際に必ず呼ばれるため、ここでクリアすることで
+    // 次回表示時に以前の入力値が残らないようにする
+    _clearInputState();
     super.dispose();
   }
 
@@ -158,7 +162,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           //ヘッダーの左ボタン
           leading: IconButton(
             onPressed: () {
-              _clearInputState();
               Navigator.of(context, rootNavigator: true).pop();
             },
             icon: const Icon(
@@ -258,9 +261,8 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           }
           break;
       }
-      // 削除成功後、入力状態をクリアして画面を閉じる
+      // 削除成功後、画面を閉じる（入力状態のクリアはdisposeで行われる）
       if (mounted) {
-        _clearInputState();
         Navigator.of(context, rootNavigator: true).pop();
       }
     } catch (e) {
@@ -275,7 +277,8 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
   }
 
   /// 入力状態をクリアする
-  /// 画面を閉じる際や登録完了後に呼び出して、次回表示時に値がリセットされるようにする
+  /// disposeで呼び出されることで、スワイプ・×ボタン・登録完了など
+  /// あらゆる方法で画面が閉じられた際に次回表示時の値をリセットする
   void _clearInputState() {
     ref.invalidate(enteredPriceControllerProvider);
     ref.invalidate(enteredMemoControllerProvider);
