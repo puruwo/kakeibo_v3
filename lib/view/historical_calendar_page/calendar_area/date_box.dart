@@ -133,37 +133,55 @@ Container activeDateBox(int weekday, String dateLabel, Widget expenseLabel,
     decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(6)),
         color: MyColors.tirtiarySystemfill),
-    child: Center(
-      child: Column(
-        children: [
-          Text(
-            dateLabel,
-            style: weekday == 6
-                ? CalendarStyles.calendarDateLabelSaturday
-                : weekday == 7
-                    ? CalendarStyles.calendarDateLabelSunday
-                    : CalendarStyles.calendarDateLabel,
-          ),
-          // 支出
-          if (expenseLabel is! SizedBox)
-            FittedBox(
+    child: Column(
+      children: [
+        // 日付ラベル
+        Text(
+          dateLabel,
+          style: weekday == 6
+              ? CalendarStyles.calendarDateLabelSaturday
+              : weekday == 7
+                  ? CalendarStyles.calendarDateLabelSunday
+                  : CalendarStyles.calendarDateLabel,
+        ),
+        // 1つ目の金額表示エリア(支出優先、なければ収入)
+        Center(
+          child: expenseLabel is! SizedBox
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    height: boxHeight * 0.3,
+                    width: boxWidth,
+                    child: expenseLabel,
+                  ),
+                )
+              : incomeLabel is! SizedBox
+                  ? FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SizedBox(
+                        height: boxHeight * 0.3,
+                        width: boxWidth,
+                        child: incomeLabel,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+        ),
+        // 2つ目の金額表示エリア(両方ある場合のみ収入を表示)
+        if (expenseLabel is! SizedBox && incomeLabel is! SizedBox)
+          Center(
+            child: FittedBox(
               fit: BoxFit.scaleDown,
               child: SizedBox(
-                width: boxWidth,
-                child: expenseLabel,
-              ),
-            ),
-          // 収入
-          if (incomeLabel is! SizedBox)
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: SizedBox(
+                height: boxHeight * 0.3,
                 width: boxWidth,
                 child: incomeLabel,
               ),
-            )
-        ],
-      ),
+            ),
+          )
+        else if (expenseLabel is! SizedBox || incomeLabel is! SizedBox)
+          // どちらか一方のみの場合は、下に空白を確保
+          const Spacer(),
+      ],
     ),
   );
 }
@@ -176,37 +194,56 @@ Container normalDateBox(int weekday, String dateLabel, Widget expenseLabel,
     decoration: const BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(6)),
     ),
-    child: Center(
-      child: Column(
-        children: [
-          Text(
-            dateLabel,
-            style: weekday == 6
-                ? CalendarStyles.calendarDateLabelSaturday
-                : weekday == 7
-                    ? CalendarStyles.calendarDateLabelSunday
-                    : CalendarStyles.calendarDateLabel,
-          ),
-          // 支出
-          if (expenseLabel is! SizedBox)
-            FittedBox(
+    child: Column(
+      children: [
+        // 日付ラベル
+        Text(
+          dateLabel,
+          style: weekday == 6
+              ? CalendarStyles.calendarDateLabelSaturday
+              : weekday == 7
+                  ? CalendarStyles.calendarDateLabelSunday
+                  : CalendarStyles.calendarDateLabel,
+        ),
+        // 1つ目の金額表示エリア(支出優先、なければ収入)
+        Center(
+          child: expenseLabel is! SizedBox
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    height: boxHeight * 0.3,
+                    width: boxWidth,
+                    child: expenseLabel,
+                  ),
+                )
+              : incomeLabel is! SizedBox
+                  ? FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: SizedBox(
+                        height: boxHeight * 0.3,
+                        width: boxWidth,
+                        child: incomeLabel,
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+        ),
+
+        // 2つ目の金額表示エリア(両方ある場合のみ収入を表示)
+        if (expenseLabel is! SizedBox && incomeLabel is! SizedBox)
+          Center(
+            child: FittedBox(
               fit: BoxFit.scaleDown,
               child: SizedBox(
-                width: boxWidth,
-                child: expenseLabel,
-              ),
-            ),
-          // 収入
-          if (incomeLabel is! SizedBox)
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: SizedBox(
+                height: boxHeight * 0.3,
                 width: boxWidth,
                 child: incomeLabel,
               ),
-            )
-        ],
-      ),
+            ),
+          )
+        else if (expenseLabel is! SizedBox || incomeLabel is! SizedBox)
+          // どちらか一方のみの場合は、下に空白を確保
+          const Spacer(),
+      ],
     ),
   );
 }

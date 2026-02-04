@@ -179,7 +179,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
 SizedBox _calendarHeader(double boxWidth) {
   return SizedBox(
     width: 322 * boxWidth,
-    child: const Row(
+    child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Text('日', style: CalendarStyles.calendarWeekdaySunday),
