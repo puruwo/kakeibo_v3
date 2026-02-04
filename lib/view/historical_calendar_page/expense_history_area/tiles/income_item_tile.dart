@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -8,7 +9,6 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
-import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -27,6 +27,8 @@ class IncomeItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final incomeUsecase = ref.read(incomeUsecaseProvider);
+
     // アイコン
     final icon = FittedBox(
       fit: BoxFit.scaleDown,
@@ -45,28 +47,33 @@ class IncomeItemTile extends ConsumerWidget {
       onTap: () async {
         _showModalBottomSheet(context);
       },
-      onLongPress: () async {
-        return await showMenuDialog(context, items: [
-          MenuDialogItem(
-              label: '編集',
-              icon: Icons.edit_outlined,
-              onPressed: () async {
-                _showModalBottomSheet(context);
-              }),
-          MenuDialogItem(
-              label: '削除',
-              icon: Icons.delete_outline,
-              onPressed: () async {
-                showDeleteConfirmationDialog(
-                  context,
-                  onConfirm: () {
-                    ref.read(incomeUsecaseProvider).delete(id: value.id);
-                  },
-                );
-              }),
-        ]);
-      },
-      child: Column(
+      child: Dismissible(
+        direction: DismissDirection.endToStart,
+        key: Key(value.id.toString()),
+        dragStartBehavior: DragStartBehavior.start,
+        background: Container(color: MyColors.black),
+        secondaryBackground: Container(
+          color: MyColors.red,
+          child: const Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 18.0),
+                child: Icon(
+                  Icons.delete,
+                  color: MyColors.systemGray,
+                ),
+              )),
+        ),
+        confirmDismiss: (direction) async {
+          if (direction == DismissDirection.endToStart) {
+            return await showDeleteConfirmationDialog(context);
+          }
+          return null;
+        },
+        onDismissed: (direction) {
+          incomeUsecase.delete(id: value.id);
+        },
+        child: Column(
         children: [
           Padding(
             padding:
@@ -171,6 +178,7 @@ class IncomeItemTile extends ConsumerWidget {
             color: MyColors.separater,
           )
         ],
+      ),
       ),
     );
   }
