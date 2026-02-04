@@ -153,7 +153,9 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         pageCount,
-        (index) => Container(
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
           margin: const EdgeInsets.symmetric(horizontal: 4),
           width: index == _currentPage ? 24 : 8,
           height: 8,
