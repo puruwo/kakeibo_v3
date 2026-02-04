@@ -109,7 +109,7 @@ class YearlyIncomeListUsecaseNotifier
       );
     }
 
-    // カテゴリー別の集計を計算
+    // カテゴリー別の集計を計算（小カテゴリー別）
     final Map<String, IncomeCategorySummaryValue> categoryMap = {};
     int totalIncome = 0;
 
@@ -117,7 +117,7 @@ class YearlyIncomeListUsecaseNotifier
       for (var income in group.incomes) {
         totalIncome += income.price;
 
-        final categoryKey = income.bigCategoryName;
+        final categoryKey = income.smallCategoryName;
         if (categoryMap.containsKey(categoryKey)) {
           final existing = categoryMap[categoryKey]!;
           categoryMap[categoryKey] = existing.copyWith(
@@ -125,7 +125,7 @@ class YearlyIncomeListUsecaseNotifier
           );
         } else {
           categoryMap[categoryKey] = IncomeCategorySummaryValue(
-            categoryName: income.bigCategoryName,
+            categoryName: income.smallCategoryName,
             colorCode: income.colorCode,
             iconPath: income.iconPath,
             totalAmount: income.price,
