@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-const animationDuration = Duration(milliseconds: 300);
-
 /// showModalBottomSheetの共通関数
 ///
 /// [context] - BuildContext
 /// [child] - モーダル内に表示するWidget
 /// [useRootNavigator] - ルートナビゲーターを使用するか（デフォルト: true）
 /// [isScrollControlled] - スクロール制御を有効にするか（デフォルト: true）
-/// [useSafeArea] - SafeAreaを使用するか（デフォルト: true）
+/// [useSafeArea] - SafeAreaを使用するか（デフォルト: false）
 /// [maxWidth] - 最大幅（デフォルト: 2000）
 /// [wrapWithMaterialApp] - MaterialAppでラップするか（デフォルト: true）
-/// [enableDrag] - ドラッグで閉じるか（デフォルト: true）
+/// [enableDrag] - ドラッグで閉じるか（デフォルト: false）
 /// [isDismissible] - 背景タップで閉じるか（デフォルト: false）
 /// [backgroundColor] - 背景色（デフォルト: null）
 /// [topRadius] - 上部の角丸半径（デフォルト: 0 = 角丸なし）
@@ -21,14 +19,14 @@ Future<T?> showAppModalBottomSheet<T>(
   required Widget child,
   bool useRootNavigator = true,
   bool isScrollControlled = true,
-  bool useSafeArea = true,
+  bool useSafeArea = false,
   double maxWidth = 2000,
   bool wrapWithMaterialApp = true,
-  bool enableDrag = true,
+  bool enableDrag = false,
   bool isDismissible = false,
   Color? backgroundColor,
-  double topRadius = 0,
-  AnimationController? transitionAnimationController,
+  double topRadius = 25,
+  Duration transitionDuration = const Duration(milliseconds: 450),
 }) {
   // 角丸設定
   final ShapeBorder? shape = topRadius > 0
@@ -53,41 +51,64 @@ Future<T?> showAppModalBottomSheet<T>(
     content = child;
   }
 
-  return showModalBottomSheet<T>(
+  // SafeArea対応
+  if (useSafeArea) {
+    content = SafeArea(top: false, child: content);
+  }
+
+  return showGeneralDialog<T>(
     context: context,
+    barrierDismissible: isDismissible,
+    barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
+    // barrierColor: const Color(0x80000000), // Colors.black54
+    transitionDuration: transitionDuration,
+    pageBuilder: (BuildContext context, Animation<double> animation,
+        Animation<double> secondaryAnimation) {
+      Widget dialogContent = Align(
+        alignment: Alignment.bottomCenter,
+        child: MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+                maxHeight: MediaQuery.sizeOf(context).height * 0.95),
+            child: Material(
+              color: backgroundColor ??
+                  Theme.of(context).bottomSheetTheme.modalBackgroundColor ??
+                  Theme.of(context).bottomSheetTheme.backgroundColor ??
+                  Theme.of(context).dialogBackgroundColor,
+              shape: shape,
+              clipBehavior: shape != null ? Clip.antiAlias : Clip.none,
+              child: content,
+            ),
+          ),
+        ),
+      );
+
+      // ドラッグで閉じられるようにする
+      if (enableDrag) {
+        dialogContent = Dismissible(
+          key: const Key('modal_dismissible'),
+          direction: DismissDirection.down,
+          onDismissed: (_) => Navigator.of(context).pop(),
+          child: dialogContent,
+        );
+      }
+
+      return dialogContent;
+    },
+    transitionBuilder: (context, animation, secondaryAnimation, child) {
+      return SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 1),
+          end: Offset.zero,
+        ).animate(CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutCubic,
+        )),
+        child: child,
+      );
+    },
     useRootNavigator: useRootNavigator,
-    isScrollControlled: isScrollControlled,
-    useSafeArea: useSafeArea,
-    enableDrag: enableDrag,
-    isDismissible: isDismissible,
-    backgroundColor: backgroundColor,
-    shape: shape,
-    constraints: BoxConstraints(maxWidth: maxWidth),
-    transitionAnimationController: transitionAnimationController,
-    builder: (context) => content,
-  );
-}
-
-/// アニメーションコントローラーを作成するヘルパー関数
-///
-/// [vsync] - TickerProvider（State with SingleTickerProviderStateMixinなど）
-/// [duration] - アニメーションの長さ（デフォルト: 300ms）
-AnimationController createModalAnimationController({
-  required TickerProvider vsync,
-  Duration duration = const Duration(milliseconds: 300),
-}) {
-  return AnimationController(
-    vsync: vsync,
-    duration: duration,
-  );
-}
-
-/// 後方互換性のための旧関数（非推奨）
-@Deprecated('Use showAppModalBottomSheet instead')
-Future<void> showModalBottomSheetFunc(BuildContext context, Widget page) async {
-  showAppModalBottomSheet(
-    context,
-    child: page,
-    wrapWithMaterialApp: false,
   );
 }
