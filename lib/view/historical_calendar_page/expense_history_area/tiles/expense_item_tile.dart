@@ -11,6 +11,7 @@ import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_histo
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class ExpenseItemTile extends ConsumerWidget {
@@ -50,37 +51,17 @@ class ExpenseItemTile extends ConsumerWidget {
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () async {
-        showModalBottomSheet(
-          useRootNavigator: true,
-          isScrollControlled: true,
-          useSafeArea: true,
-          constraints: const BoxConstraints(
-            maxWidth: 2000,
-          ),
-          context: context,
-          builder: (context) {
-            ExpenseEntity expenseEntity = ExpenseEntity(
-                id: value.id,
-                date: DateFormat('yyyyMMdd').format(value.date),
-                price: value.price,
-                paymentCategoryId: value.paymentCategoryId,
-                memo: value.memo,
-                incomeSourceBigCategory: value.incomeSourceBigCategory);
-
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData.dark(),
-              themeMode: ThemeMode.dark,
-              darkTheme: ThemeData.dark(),
-              home: MediaQuery.withClampedTextScaling(
-                minScaleFactor: 0.7,
-                maxScaleFactor: 0.95,
-                child: RegisaterPageBase.editExpense(
-                  expenseEntity: expenseEntity,
-                ),
-              ),
-            );
-          },
+        final expenseEntity = ExpenseEntity(
+          id: value.id,
+          date: DateFormat('yyyyMMdd').format(value.date),
+          price: value.price,
+          paymentCategoryId: value.paymentCategoryId,
+          memo: value.memo,
+          incomeSourceBigCategory: value.incomeSourceBigCategory,
+        );
+        showAppModalBottomSheet(
+          context,
+          child: RegisaterPageBase.editExpense(expenseEntity: expenseEntity),
         );
       },
       child: Dismissible(

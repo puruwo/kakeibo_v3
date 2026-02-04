@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -70,30 +71,9 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
                     buttonType: ButtonColorType.main,
                     buttonText: '固定費を追加',
                     onPressed: () {
-                      showModalBottomSheet(
-                        //sccafoldの上に出すか
-                        useRootNavigator: true,
-                        isScrollControlled: true,
-                        useSafeArea: true,
-                        constraints: const BoxConstraints(
-                          maxWidth: 2000,
-                        ),
-                        context: context,
-                        // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-                        builder: (context) {
-                          return MaterialApp(
-                            debugShowCheckedModeBanner: false,
-                            theme: ThemeData.dark(),
-                            themeMode: ThemeMode.dark,
-                            darkTheme: ThemeData.dark(),
-                            home: MediaQuery.withClampedTextScaling(
-                              // テキストサイズの制御
-                              minScaleFactor: 0.7,
-                              maxScaleFactor: 0.95,
-                              child: const RegisaterPageBase.addFixedCost(),
-                            ),
-                          );
-                        },
+                      showAppModalBottomSheet(
+                        context,
+                        child: const RegisaterPageBase.addFixedCost(),
                       );
                     },
                   ),
