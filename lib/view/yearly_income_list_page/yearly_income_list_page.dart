@@ -26,7 +26,7 @@ class YearlyIncomeListPage extends ConsumerWidget {
             style: AppTextStyles.pageHeaderText,
           ),
         ),
-        body: Column(
+        body: ListView(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
@@ -34,11 +34,11 @@ class YearlyIncomeListPage extends ConsumerWidget {
                 dateScope: dateScope,
               ),
             ),
-            Expanded(
-              child: YearlyIncomeListArea(
-                dateScope: dateScope,
-              ),
-            )
+            YearlyIncomeListArea(
+              dateScope: dateScope,
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+            ),
           ],
         ));
   }

@@ -6,9 +6,18 @@ import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_card.dart';
 
 class YearlyIncomeListArea extends ConsumerStatefulWidget {
-  const YearlyIncomeListArea({super.key, required this.dateScope});
+  const YearlyIncomeListArea({
+    super.key,
+    required this.dateScope,
+    this.shrinkWrap = false,
+    this.physics,
+    this.padding = const EdgeInsets.fromLTRB(16, 16, 16, 16),
+  });
 
   final DateScopeEntity dateScope;
+  final bool shrinkWrap;
+  final ScrollPhysics? physics;
+  final EdgeInsetsGeometry padding;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -30,7 +39,9 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
             }
 
             return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+              padding: widget.padding,
+              shrinkWrap: widget.shrinkWrap,
+              physics: widget.physics,
               itemCount: incomeList.monthlyGroups.length,
               itemBuilder: (context, groupIndex) {
                 final group = incomeList.monthlyGroups[groupIndex];
