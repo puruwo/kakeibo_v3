@@ -7,7 +7,7 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfi
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/price_input_dialog.dart';
+import 'package:kakeibo/util/common_widget/price_input_dialog.dart';
 
 class UnconfirmedFixedCostItemTile extends ConsumerWidget {
   const UnconfirmedFixedCostItemTile({
@@ -40,11 +40,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () async {
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return PriceInputDialog(value: value);
-            });
+        showPriceInputDialog(context, value);
       },
       onLongPress: () async {
         return await showMenuDialog(context, items: [

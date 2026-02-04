@@ -10,6 +10,19 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfi
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 
+// 金額入力ダイアログを表示する関数
+Future<void> showPriceInputDialog(
+  BuildContext context,
+  MonthlyUnconfirmedFixedCostTileValue value,
+) async {
+  await showDialog(
+    context: context,
+    builder: (context) {
+      return PriceInputDialog(value: value);
+    },
+  );
+}
+
 class PriceInputDialog extends ConsumerStatefulWidget {
   const PriceInputDialog({
     required this.value,
@@ -35,14 +48,14 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(24),
       ),
-      child: Container(
-        alignment: Alignment.center,
-        height: 150,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             const Padding(
               padding: EdgeInsets.all(8.0),
@@ -58,7 +71,7 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
               // テキストの揃え(上下)
               textAlignVertical: TextAlignVertical.center,
               // テキストの揃え(左右)
-              textAlign: TextAlign.end,
+              textAlign: TextAlign.center,
               // カーソルの色
               cursorColor: MyColors.themeColor,
               // カーソルの高さ
@@ -133,59 +146,33 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
               },
             ),
 
+            const SizedBox(height: 16),
+
             // ボタンエリア
-            ButtonBar(
-              alignment: MainAxisAlignment.end,
+            Row(
               children: [
                 // キャンセルボタン
-                TextButton(
-                  onPressed: () {
-                    // キャンセルボタンを押した時の処理
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.buttonSecondary,
-                  ),
-                  child: Text(
-                    'キャンセル',
-                    style: AppTextStyles.secondaryButtonText,
+                Expanded(
+                  child: SubButton(
+                    buttonType: ButtonColorType.secondary,
+                    buttonText: "キャンセル",
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
                   ),
                 ),
 
-                // OKボタン
-                MainButton(
-                  buttonType: ButtonColorType.main,
-                  buttonText: 'OK',
-                  onPressed: () {
-                    // 入力が空の場合は何もしない
-                    if (_textContoroller.text.isEmpty ||
-                        _textContoroller.text == '0') {
-                      // スナックバーを表示する
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text(
-                            '金額を入力してください',
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          duration: const Duration(seconds: 2),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
-                          ),
-                        ),
-                      );
-                      return;
-                    }
+                const SizedBox(width: 12),
 
-                    // 入力された金額を整数に変換して、FixedCostExpenseRepositoryを通じて更新
-                    ref.read(fixedCostExpenseUsecaseProvider).confirmExpense(
-                          tileValue: widget.value,
-                          confirmedPrice: int.parse(_textContoroller.text
-                              .replaceAll(RegExp(r'\D'), '')),
-                        );
-
-                    // OKボタンを押した時の処理
-                    Navigator.of(context).pop();
-                  },
+                // 確認ボタン
+                Expanded(
+                  child: SubButton(
+                    buttonType: ButtonColorType.main,
+                    buttonText: "OK",
+                    onPressed: () {
+                      onConfirm();
+                    },
+                  ),
                 ),
               ],
             ),
@@ -193,5 +180,35 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
         ),
       ),
     );
+  }
+
+  void onConfirm() {
+    // 入力が空の場合は何もしない
+    if (_textContoroller.text.isEmpty || _textContoroller.text == '0') {
+      // スナックバーを表示する
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+            '金額を入力してください',
+          ),
+          behavior: SnackBarBehavior.floating,
+          duration: const Duration(seconds: 2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+        ),
+      );
+      return;
+    }
+
+    // 入力された金額を整数に変換して、FixedCostExpenseRepositoryを通じて更新
+    ref.read(fixedCostExpenseUsecaseProvider).confirmExpense(
+          tileValue: widget.value,
+          confirmedPrice:
+              int.parse(_textContoroller.text.replaceAll(RegExp(r'\D'), '')),
+        );
+
+    // OKボタンを押した時の処理
+    Navigator.of(context).pop();
   }
 }
