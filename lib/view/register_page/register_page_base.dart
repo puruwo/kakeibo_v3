@@ -102,6 +102,10 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      // 画面を開く時に前回の入力状態をクリアする
+      // スワイプで閉じた場合など、明示的にクリアされなかった状態もリセットする
+      _clearInputState();
+
       ref
           .read(inputModeControllerProvider.notifier)
           .initialize(widget.transactionMode);
