@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_selection_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
@@ -173,11 +173,11 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => CategoryReorderPage(
-              transactionMode: widget.transactionMode,
-            ),
+        showAppModalBottomSheet(
+          context,
+          wrapWithMaterialApp: false,
+          child: CategoryReorderPage(
+            transactionMode: widget.transactionMode,
           ),
         );
       },

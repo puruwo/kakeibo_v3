@@ -68,6 +68,9 @@ class MyColors {
 
   static const barHandler = Color(0xFFD9D9D9);
 
+  // ホバー用
+  static const hoverColor = Color(0x33000000);
+
   Color getColorFromHex(String colorCode) {
     int intValue = int.parse('FF$colorCode', radix: 16);
     return Color(intValue);
@@ -84,7 +87,6 @@ class MyColors {
         color.green.toRadixString(16).padLeft(2, '0').toUpperCase() +
         color.blue.toRadixString(16).padLeft(2, '0').toUpperCase();
   }
-
 
   // Component colors
   static const buttonPrimary = themeColor;
