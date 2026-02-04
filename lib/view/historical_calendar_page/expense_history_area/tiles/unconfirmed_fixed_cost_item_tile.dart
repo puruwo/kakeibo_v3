@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -5,7 +6,6 @@ import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecas
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
-import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/common_widget/price_input_dialog.dart';
 
@@ -23,6 +23,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final fixedCostExpenseUsecase = ref.read(fixedCostExpenseUsecaseProvider);
     final color = MyColors().getColorFromHex(value.colorCode);
 
     // アイコン
@@ -42,25 +43,33 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
       onTap: () async {
         showPriceInputDialog(context, value);
       },
-      onLongPress: () async {
-        return await showMenuDialog(context, items: [
-          MenuDialogItem(
-              label: '削除',
-              icon: Icons.delete_outline,
-              onPressed: () async {
-                showDeleteConfirmationDialog(
-                  context,
-                  onConfirm: () {
-                    // 未確定の削除処理（実装に依存するがUsecaseにdeleteがあれば呼ぶ）
-                    ref
-                        .read(fixedCostExpenseUsecaseProvider)
-                        .delete(id: value.id);
-                  },
-                );
-              }),
-        ]);
-      },
-      child: Column(
+      child: Dismissible(
+        direction: DismissDirection.endToStart,
+        key: Key(value.id.toString()),
+        dragStartBehavior: DragStartBehavior.start,
+        background: Container(color: MyColors.black),
+        secondaryBackground: Container(
+          color: MyColors.red,
+          child: const Align(
+              alignment: Alignment.centerRight,
+              child: Padding(
+                padding: EdgeInsets.only(right: 18.0),
+                child: Icon(
+                  Icons.delete,
+                  color: MyColors.systemGray,
+                ),
+              )),
+        ),
+        confirmDismiss: (direction) async {
+          if (direction == DismissDirection.endToStart) {
+            return await showDeleteConfirmationDialog(context);
+          }
+          return null;
+        },
+        onDismissed: (direction) {
+          fixedCostExpenseUsecase.delete(id: value.id);
+        },
+        child: Column(
         children: [
           Padding(
             padding:
@@ -140,6 +149,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
             color: MyColors.separater,
           )
         ],
+      ),
       ),
     );
   }
