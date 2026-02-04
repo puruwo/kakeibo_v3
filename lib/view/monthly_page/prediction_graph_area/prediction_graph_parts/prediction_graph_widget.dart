@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/daily_expense_summary_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_parts/prediction_graph_painter.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_parts/prediction_graph_tooltip.dart';
@@ -192,25 +193,9 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
             _selectedDate = null;
             _tapPosition = null;
           });
-          showModalBottomSheet(
-            useRootNavigator: true,
-            isScrollControlled: true,
-            useSafeArea: true,
-            constraints: const BoxConstraints(maxWidth: 2000),
-            context: context,
-            builder: (context) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData.dark(),
-                themeMode: ThemeMode.dark,
-                darkTheme: ThemeData.dark(),
-                home: MediaQuery.withClampedTextScaling(
-                  minScaleFactor: 0.7,
-                  maxScaleFactor: 0.95,
-                  child: DailyExpenseSummaryPage(date: selectedDate),
-                ),
-              );
-            },
+          showAppModalBottomSheet(
+            context,
+            child: DailyExpenseSummaryPage(date: selectedDate),
           );
         },
       ),

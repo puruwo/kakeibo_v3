@@ -7,6 +7,7 @@ import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -59,31 +60,9 @@ class FixedCostItemTile extends ConsumerWidget {
               label: '編集',
               icon: Icons.edit_outlined,
               onPressed: () async {
-                showModalBottomSheet(
-                  //sccafoldの上に出すか
-                  useRootNavigator: true,
-                  isScrollControlled: true,
-                  useSafeArea: true,
-                  constraints: const BoxConstraints(
-                    maxWidth: 2000,
-                  ),
-                  context: context,
-                  // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-                  builder: (context) {
-                    return MaterialApp(
-                      debugShowCheckedModeBanner: false,
-                      theme: ThemeData.dark(),
-                      themeMode: ThemeMode.dark,
-                      darkTheme: ThemeData.dark(),
-                      home: MediaQuery.withClampedTextScaling(
-                        // テキストサイズの制御
-                        minScaleFactor: 0.7,
-                        maxScaleFactor: 0.95,
-                        child: RegisaterPageBase.editFixedCost(
-                            fixedCostEntity: item),
-                      ),
-                    );
-                  },
+                showAppModalBottomSheet(
+                  context,
+                  child: RegisaterPageBase.editFixedCost(fixedCostEntity: item),
                 );
               }),
           MenuDialogItem(

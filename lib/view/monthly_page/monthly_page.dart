@@ -129,8 +129,11 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 subLabel: 'カテゴリー設定',
                 isLinkable: true,
                 onTap: () {
-                  showModalBottomSheetFunc(
-                      context, const CategorySettingPage());
+                  showAppModalBottomSheet(
+                    context,
+                    child: const CategorySettingPage(),
+                    wrapWithMaterialApp: false,
+                  );
                 },
               ),
 

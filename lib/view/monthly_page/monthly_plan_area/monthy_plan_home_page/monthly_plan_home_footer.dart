@@ -48,7 +48,11 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
             buttonType: ButtonColorType.secondary,
             buttonText: 'カテゴリー編集・追加',
             onPressed: () {
-              showModalBottomSheetFunc(context, const CategorySettingPage());
+              showAppModalBottomSheet(
+                context,
+                child: const CategorySettingPage(),
+                wrapWithMaterialApp: false,
+              );
             },
           ),
         ),
@@ -169,27 +173,9 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         buttonType: ButtonColorType.main,
         buttonText: '新しい収入を追加',
         onPressed: () {
-          showModalBottomSheet(
-            //sccafoldの上に出すか
-            useRootNavigator: true,
-            isScrollControlled: true,
-            useSafeArea: true,
-            constraints: const BoxConstraints(
-              maxWidth: 2000,
-            ),
-            context: context,
-            // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-            builder: (context) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData.dark(),
-                themeMode: ThemeMode.dark,
-                darkTheme: ThemeData.dark(),
-                home: MediaQuery.withClampedTextScaling(
-                  child: const RegisaterPageBase.addIncome(),
-                ),
-              );
-            },
+          showAppModalBottomSheet(
+            context,
+            child: const RegisaterPageBase.addIncome(),
           );
         },
       ),

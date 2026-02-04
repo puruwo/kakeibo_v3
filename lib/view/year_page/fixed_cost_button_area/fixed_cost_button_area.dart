@@ -4,6 +4,7 @@ import 'package:kakeibo/application/fixed_cost/active_fixed_cost_count_provider.
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -91,30 +92,9 @@ class FixedCostAddButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppInkWell(
       onTap: () {
-        showModalBottomSheet(
-          //sccafoldの上に出すか
-          useRootNavigator: true,
-          isScrollControlled: true,
-          useSafeArea: true,
-          constraints: const BoxConstraints(
-            maxWidth: 2000,
-          ),
-          context: context,
-          // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-          builder: (context) {
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData.dark(),
-              themeMode: ThemeMode.dark,
-              darkTheme: ThemeData.dark(),
-              home: MediaQuery.withClampedTextScaling(
-                // テキストサイズの制御
-                minScaleFactor: 0.7,
-                maxScaleFactor: 0.95,
-                child: const RegisaterPageBase.addFixedCost(),
-              ),
-            );
-          },
+        showAppModalBottomSheet(
+          context,
+          child: const RegisaterPageBase.addFixedCost(),
         );
       },
       child: Container(

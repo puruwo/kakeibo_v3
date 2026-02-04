@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
@@ -140,27 +141,10 @@ void _onBuildComplete(BuildContext context, WidgetRef ref) async {
 }
 
 void _showExpenseEntrySheet(BuildContext context) {
-  showModalBottomSheet(
-    //sccafoldの上に出すか
-    useRootNavigator: true,
-    isScrollControlled: true,
-    useSafeArea: true,
-    constraints: const BoxConstraints(
-      maxWidth: 2000,
+  showAppModalBottomSheet(
+    context,
+    child: const RegisaterPageBase.addExpense(
+      transactionMode: TransactionMode.expense,
     ),
-    context: context,
-    // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-    builder: (context) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark(),
-        home: MediaQuery.withClampedTextScaling(
-          child: const RegisaterPageBase.addExpense(
-              transactionMode: TransactionMode.expense),
-        ),
-      );
-    },
   );
 }

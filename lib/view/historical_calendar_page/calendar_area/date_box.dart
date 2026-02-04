@@ -7,6 +7,7 @@ import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
@@ -230,32 +231,12 @@ Container vacantDateBox(int weekday, String dateLabel, double boxHeight,
 }
 
 void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
-  showModalBottomSheet(
-    //sccafoldの上に出すか
-    useRootNavigator: true,
-    isScrollControlled: true,
-    useSafeArea: true,
-    constraints: const BoxConstraints(
-      maxWidth: 2000,
+  showAppModalBottomSheet(
+    context,
+    child: RegisaterPageBase.addExpense(
+      expenseEntity: ExpenseEntity(
+        date: DateFormat('yyyyMMdd').format(selectedDate),
+      ),
     ),
-    context: context,
-    // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-    builder: (context) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark(),
-        home: MediaQuery.withClampedTextScaling(
-            // テキストサイズの制御
-            minScaleFactor: 0.7,
-            maxScaleFactor: 0.95,
-            child: RegisaterPageBase.addExpense(
-              expenseEntity: ExpenseEntity(
-                date: DateFormat('yyyyMMdd').format(selectedDate),
-              ),
-            )),
-      );
-    },
   );
 }
