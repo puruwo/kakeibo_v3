@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const animationDuration = Duration(milliseconds: 300);
+
 /// showModalBottomSheetの共通関数
 ///
 /// [context] - BuildContext
@@ -10,11 +12,9 @@ import 'package:flutter/material.dart';
 /// [maxWidth] - 最大幅（デフォルト: 2000）
 /// [wrapWithMaterialApp] - MaterialAppでラップするか（デフォルト: true）
 /// [enableDrag] - ドラッグで閉じるか（デフォルト: true）
-/// [isDismissible] - 背景タップで閉じるか（デフォルト: true）
+/// [isDismissible] - 背景タップで閉じるか（デフォルト: false）
 /// [backgroundColor] - 背景色（デフォルト: null）
 /// [topRadius] - 上部の角丸半径（デフォルト: 0 = 角丸なし）
-/// [minTextScaleFactor] - 最小テキストスケール（デフォルト: 0.7）
-/// [maxTextScaleFactor] - 最大テキストスケール（デフォルト: 0.95）
 /// [transitionAnimationController] - アニメーションコントローラー（カスタムduration用）
 Future<T?> showAppModalBottomSheet<T>(
   BuildContext context, {
@@ -25,11 +25,9 @@ Future<T?> showAppModalBottomSheet<T>(
   double maxWidth = 2000,
   bool wrapWithMaterialApp = true,
   bool enableDrag = true,
-  bool isDismissible = true,
+  bool isDismissible = false,
   Color? backgroundColor,
   double topRadius = 0,
-  double minTextScaleFactor = 0.7,
-  double maxTextScaleFactor = 0.95,
   AnimationController? transitionAnimationController,
 }) {
   // 角丸設定
@@ -49,11 +47,7 @@ Future<T?> showAppModalBottomSheet<T>(
       theme: ThemeData.dark(),
       themeMode: ThemeMode.dark,
       darkTheme: ThemeData.dark(),
-      home: MediaQuery.withClampedTextScaling(
-        minScaleFactor: minTextScaleFactor,
-        maxScaleFactor: maxTextScaleFactor,
-        child: child,
-      ),
+      home: child,
     );
   } else {
     content = child;
