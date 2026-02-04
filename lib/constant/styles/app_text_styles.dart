@@ -200,14 +200,19 @@ class AppTextStyles {
   /// リストカード内タイトルラベルスタイル
   static final TextStyle listCardTitleLabel = MyFontStyle.notoSans.copyWith(
     color: MyColors.label,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: FontWeight.w500,
   );
+
+  /// リストカード内タイトルラベルスタイル
+  static final TextStyle listCardUnconfirmedPriceLabel = MyFontStyle.notoSans
+      .copyWith(
+          fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w700);
 
   static final TextStyle listCardSecondaryTitle = MyFontStyle.notoSans.copyWith(
       fontSize: 12,
       color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w300);
+      fontWeight: FontWeight.w500);
 
   static final TextStyle listCardMinusLabel = MyFontStyle.sfUi.copyWith(
       fontSize: 16, color: MyColors.pink, fontWeight: FontWeight.w600);
@@ -216,7 +221,7 @@ class AppTextStyles {
       fontSize: 16, color: MyColors.mintBlue, fontWeight: FontWeight.w600);
 
   static final TextStyle listCardPriceLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 19, color: MyColors.label, fontWeight: FontWeight.w600);
+      fontSize: 17, color: MyColors.label, fontWeight: FontWeight.w600);
 
   // ==========================================================================
   // アプリカード（収入グラフエリアなど）
@@ -225,80 +230,79 @@ class AppTextStyles {
   /// Primary=========
 
   /// アプリカードのタイトルラベル用スタイル
-  static final TextStyle appCardTitleLabel = GoogleFonts.notoSans(
+  static final TextStyle appCardTitleLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 14,
     color: MyColors.secondaryLabel,
     fontWeight: FontWeight.w500,
   );
 
   /// アプリカードの金額表示用スタイル
-  static final TextStyle appCardPriceLabel = GoogleFonts.notoSans(
+  static final TextStyle appCardPriceLabel = MyFontStyle.sfUi.copyWith(
     fontSize: 20,
     color: MyColors.white,
     fontWeight: FontWeight.w600,
   );
 
   /// アプリカードの金額単位（円）用スタイル
-  static final TextStyle appCardPriceUnit = GoogleFonts.notoSans(
-    fontSize: 16,
-    color: MyColors.white,
-    fontWeight: FontWeight.w600,
+  static final TextStyle appCardPriceUnit = MyFontStyle.notoSans.copyWith(
+    fontSize: 13,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
   );
 
   /// Secondary=========
 
   /// アプリカードのセカンダリタイトルラベル用スタイル
-  static final TextStyle appCardSecondaryTitleLabel = GoogleFonts.notoSans(
+  static final TextStyle appCardSecondaryTitleLabel =
+      MyFontStyle.notoSans.copyWith(
     fontSize: 14,
     color: MyColors.white,
     fontWeight: FontWeight.w500,
   );
 
   /// アプリカードのセカンダリ金額ラベル用スタイル
-  static final TextStyle appCardSecondaryPriceLabel = GoogleFonts.notoSans(
+  static final TextStyle appCardSecondaryPriceLabel = MyFontStyle.sfUi.copyWith(
     fontSize: 16,
     color: MyColors.white,
     fontWeight: FontWeight.w500,
   );
 
   /// アプリカードのセカンダリ金額単位（円）用スタイル
-  static final TextStyle appCardSecondaryPriceUnit = GoogleFonts.notoSans(
-    fontSize: 12,
-    color: MyColors.white,
+  static final TextStyle appCardSecondaryPriceUnit =
+      MyFontStyle.notoSans.copyWith(
+    fontSize: 10,
+    color: MyColors.secondaryLabel,
     fontWeight: FontWeight.w500,
   );
 
   /// Tertiary=========
 
   /// アプリカードのTertiaryタイトルラベル用スタイル
-  static final TextStyle appCardTertiaryTitleLabel = GoogleFonts.notoSans(
-      fontSize: 13,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+  static final TextStyle appCardTertiaryTitleLabel = MyFontStyle.notoSans
+      .copyWith(
+          fontSize: 13,
+          color: MyColors.secondaryLabel,
+          fontWeight: FontWeight.w500);
 
   /// アプリカードのTertiary金額ラベル用スタイル
-  static final TextStyle appCardTertiaryPriceLabel = GoogleFonts.notoSans(
+  static final TextStyle appCardTertiaryPriceLabel = MyFontStyle.sfUi.copyWith(
       fontSize: 14,
       color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+      fontWeight: FontWeight.w500);
 
   /// アプリカードのTertiary金額単位（円）用スタイル
-  static final TextStyle appCardTertiaryPriceUnit = GoogleFonts.notoSans(
-      fontSize: 11,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+  static final TextStyle appCardTertiaryPriceUnit = MyFontStyle.notoSans
+      .copyWith(
+          fontSize: 11,
+          color: MyColors.secondaryLabel,
+          fontWeight: FontWeight.w500);
 
   /// OptionalSecondary=========
 
   /// アプリカードのセカンダリ金額ラベル用スタイル
-  static final TextStyle appCardOptionalSecondaryPriceLabel =
-      GoogleFonts.notoSans(
-          fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w400);
-
-  /// アプリカードのセカンダリ金額単位（円）用スタイル
-  static final TextStyle appCardOptionalSecondaryPriceUnit =
-      GoogleFonts.notoSans(
-          fontSize: 14, color: MyColors.white, fontWeight: FontWeight.w400);
+  static final TextStyle appCardOptionalSecondaryPriceLabel = MyFontStyle.sfUi
+      .copyWith(
+          fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w500);
 
   /// アプリカードのグラフラベル用スタイル
   ///

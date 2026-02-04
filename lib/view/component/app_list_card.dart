@@ -37,6 +37,7 @@ class AppListCard extends StatelessWidget {
     this.subtitleLeading,
     this.subtitleTrailing,
     required this.priceLabel,
+    this.priceLabelStyle,
     this.priceSubtitle,
     required this.isIncome,
     this.customUnderPriceLabel,
@@ -69,6 +70,9 @@ class AppListCard extends StatelessWidget {
 
   /// フォーマット済みの値段ラベル
   final String priceLabel;
+
+  /// 値段ラベルのスタイル
+  final TextStyle? priceLabelStyle;
 
   /// 金額の左に表示するサブタイトル（例: "平均"）
   final String? priceSubtitle;
@@ -206,7 +210,7 @@ class AppListCard extends StatelessWidget {
             child: Text(
               priceLabel,
               textAlign: TextAlign.end,
-              style: AppTextStyles.listCardPriceLabel,
+              style: priceLabelStyle ?? AppTextStyles.listCardPriceLabel,
             ),
           ),
         ),

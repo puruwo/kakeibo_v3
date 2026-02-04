@@ -41,7 +41,7 @@ class AllNoBudgetTypePriceLabel extends StatelessWidget {
               ),
               TextSpan(
                 text: ' 円',
-                style: AppTextStyles.appCardOptionalSecondaryPriceUnit,
+                style: AppTextStyles.appCardSecondaryPriceUnit,
               ),
             ])),
       ),

@@ -49,7 +49,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                       TextSpan(
                                         text: ' 円',
                                         style: AppTextStyles
-                                            .appCardOptionalSecondaryPriceUnit,
+                                            .appCardSecondaryPriceUnit,
                                       ),
                                     ])),
                               ],
