@@ -132,18 +132,9 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     // 初期化フラグも監視して維持する（autoDisposeのため）
     ref.watch(inputInitializedControllerProvider);
 
-    return PopScope(
-      canPop: true,
-      onPopInvoked: (didPop) {
-        // スワイプで閉じた時に入力状態をクリアする
-        // ×ボタンや削除ボタンでは既にクリア済みだが、二重呼び出しは問題ない
-        if (didPop) {
-          _clearInputState();
-        }
-      },
-      child: ClipRRect(
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        child: Scaffold(
+    return ClipRRect(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+      child: Scaffold(
         backgroundColor: MyColors.secondarySystemBackground,
 
         appBar: AppBar(
@@ -201,7 +192,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
             );
           },
           child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
-        ),
         ),
       ),
     );
