@@ -102,10 +102,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // 画面を開く時に前回の入力状態をクリアする
-      // スワイプで閉じた場合など、明示的にクリアされなかった状態もリセットする
-      _clearInputState();
-
       ref
           .read(inputModeControllerProvider.notifier)
           .initialize(widget.transactionMode);
@@ -136,9 +132,18 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     // 初期化フラグも監視して維持する（autoDisposeのため）
     ref.watch(inputInitializedControllerProvider);
 
-    return ClipRRect(
-      borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-      child: Scaffold(
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) {
+        // スワイプで閉じた時に入力状態をクリアする
+        // ×ボタンや削除ボタンでは既にクリア済みだが、二重呼び出しは問題ない
+        if (didPop) {
+          _clearInputState();
+        }
+      },
+      child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+        child: Scaffold(
         backgroundColor: MyColors.secondarySystemBackground,
 
         appBar: AppBar(
@@ -196,6 +201,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
             );
           },
           child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
+        ),
         ),
       ),
     );
