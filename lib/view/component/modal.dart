@@ -26,7 +26,7 @@ Future<T?> showAppModalBottomSheet<T>(
   bool isDismissible = false,
   Color? backgroundColor,
   double topRadius = 25,
-  Duration transitionDuration = const Duration(milliseconds: 450),
+  Duration transitionDuration = const Duration(milliseconds: 325),
 }) {
   // 角丸設定
   final ShapeBorder? shape = topRadius > 0
@@ -60,7 +60,6 @@ Future<T?> showAppModalBottomSheet<T>(
     context: context,
     barrierDismissible: isDismissible,
     barrierLabel: MaterialLocalizations.of(context).modalBarrierDismissLabel,
-    // barrierColor: const Color(0x80000000), // Colors.black54
     transitionDuration: transitionDuration,
     pageBuilder: (BuildContext context, Animation<double> animation,
         Animation<double> secondaryAnimation) {

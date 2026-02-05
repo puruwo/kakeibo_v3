@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
+import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
+import 'package:kakeibo/util/common_widget/app_dialog.dart';
+import 'package:kakeibo/util/common_widget/price_input_dialog.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 
-/// 日別支出サマリーページ用の固定費（確定）タイル（表示のみ）
-class DailyConfirmedFixedCostItemTile extends StatelessWidget {
+class DailyConfirmedFixedCostItemTile extends ConsumerWidget {
   const DailyConfirmedFixedCostItemTile({
     super.key,
     required this.value,
@@ -15,7 +19,7 @@ class DailyConfirmedFixedCostItemTile extends StatelessWidget {
   final MonthlyConfirmedFixedCostTileValue value;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final color = MyColors().getColorFromHex(value.colorCode);
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
@@ -26,12 +30,32 @@ class DailyConfirmedFixedCostItemTile extends StatelessWidget {
       subtitleLeading: '固定費',
       priceLabel: priceLabel,
       isIncome: false,
+      onLongPress: () => _showMenuDialog(context, ref),
+    );
+  }
+
+  Future<void> _showMenuDialog(BuildContext context, WidgetRef ref) async {
+    await showMenuDialog(
+      context,
+      items: [
+        MenuDialogItem(
+          label: '削除',
+          icon: Icons.delete_outline,
+          onPressed: () {
+            showDeleteConfirmationDialog(
+              context,
+              onConfirm: () {
+                ref.read(fixedCostExpenseUsecaseProvider).delete(id: value.id);
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }
 
-/// 日別支出サマリーページ用の固定費（未確定）タイル（表示のみ）
-class DailyUnconfirmedFixedCostItemTile extends StatelessWidget {
+class DailyUnconfirmedFixedCostItemTile extends ConsumerWidget {
   const DailyUnconfirmedFixedCostItemTile({
     super.key,
     required this.value,
@@ -40,7 +64,7 @@ class DailyUnconfirmedFixedCostItemTile extends StatelessWidget {
   final MonthlyUnconfirmedFixedCostTileValue value;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final color = MyColors().getColorFromHex(value.colorCode);
     final priceLabel = value.estimatedPrice == 0
         ? '未確定'
@@ -53,6 +77,37 @@ class DailyUnconfirmedFixedCostItemTile extends StatelessWidget {
       subtitleLeading: '固定費(未確定)',
       priceLabel: priceLabel,
       isIncome: false,
+      onTap: () {
+        showPriceInputDialog(context, value);
+      },
+      onLongPress: () => _showMenuDialog(context, ref),
+    );
+  }
+
+  Future<void> _showMenuDialog(BuildContext context, WidgetRef ref) async {
+    await showMenuDialog(
+      context,
+      items: [
+        MenuDialogItem(
+          label: '編集',
+          icon: Icons.edit_outlined,
+          onPressed: () {
+            showPriceInputDialog(context, value);
+          },
+        ),
+        MenuDialogItem(
+          label: '削除',
+          icon: Icons.delete_outline,
+          onPressed: () {
+            showDeleteConfirmationDialog(
+              context,
+              onConfirm: () {
+                ref.read(fixedCostExpenseUsecaseProvider).delete(id: value.id);
+              },
+            );
+          },
+        ),
+      ],
     );
   }
 }
