@@ -18,7 +18,8 @@ class Foundation extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _FoundationState();
 }
 
-class _FoundationState extends ConsumerState<Foundation> {
+class _FoundationState extends ConsumerState<Foundation>
+    with SingleTickerProviderStateMixin {
   // 各タブごとの Navigator にアクセスするための GlobalKey
   final List<GlobalKey<NavigatorState>> navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -35,14 +36,37 @@ class _FoundationState extends ConsumerState<Foundation> {
     const ExpenseHistoryPage(),
   ];
 
+  // フェードインアニメーション用のコントローラー
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+  int _previousIndex = 0;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
+    );
+    _fadeController.value = 1.0; // 初期状態では完全に表示
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onBuildComplete(context, ref);
-
       _showExpenseEntrySheet(context); // 起動時に入力画面を表示する
     });
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
+  }
+
+  void _playFadeAnimation() {
+    _fadeController.value = 0.0;
+    _fadeController.forward();
   }
 
   @override
@@ -50,11 +74,21 @@ class _FoundationState extends ConsumerState<Foundation> {
     //navigationBarの状態管理
     final navigationBarState = ref.watch(navigationBarNumberNotifierProvider);
 
+    // タブが切り替わったらフェードインアニメーションを再生
+    if (_previousIndex != navigationBarState && navigationBarState != 1) {
+      _previousIndex = navigationBarState;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _playFadeAnimation();
+      });
+    }
+
     return Scaffold(
       // IndexedStack によって、各タブの Navigator を保持
-      body: IndexedStack(
-        index: ref.watch(navigationBarNumberNotifierProvider),
-        children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: IndexedStack(
+          index: ref.watch(navigationBarNumberNotifierProvider),
+          children: [
           Navigator(
             key: navigatorKeys[0],
             onGenerateRoute: (RouteSettings settings) {
@@ -81,6 +115,7 @@ class _FoundationState extends ConsumerState<Foundation> {
             },
           ),
         ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
