@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/domain/ui_value/daily_expense_summary_value/daily_expense_summary_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
@@ -24,9 +26,11 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
     final summaryAsync = ref.watch(resolvedDailyExpenseSummaryProvider(date));
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           icon: const Icon(Icons.close),
@@ -37,15 +41,24 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: summaryAsync.when(
-        data: (summary) => _buildContent(context, summary),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text(
-            'データの取得に失敗しました',
-            style: AppTextStyles.errorMessage,
+      body: Column(
+        children: [
+          // AppBarのぶんだけスペースをあける
+          const AppbarBackgroundSpace(),
+
+          Expanded(
+            child: summaryAsync.when(
+              data: (summary) => _buildContent(context, summary),
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stack) => Center(
+                child: Text(
+                  'データの取得に失敗しました',
+                  style: AppTextStyles.errorMessage,
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

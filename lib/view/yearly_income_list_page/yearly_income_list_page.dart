@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view/yearly_income_list_page/income_graph_area.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_area.dart';
@@ -16,7 +18,10 @@ class YearlyIncomeListPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          flexibleSpace: const GlassAppBarBackground(),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.of(context).pop(),
@@ -28,6 +33,9 @@ class YearlyIncomeListPage extends ConsumerWidget {
         ),
         body: ListView(
           children: [
+            // AppBarのぶんだけスペースをあける
+            const AppbarBackgroundSpace(),
+
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: IncomeGraphArea(

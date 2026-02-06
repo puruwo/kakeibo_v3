@@ -9,6 +9,8 @@ import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/button_util.dart';
@@ -218,9 +220,11 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     final items = reorderingState.items;
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
-        backgroundColor: MyColors.secondarySystemBackground,
+        backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
         title: Text(
           'アイコンの並び替え',
           style: AppTextStyles.pageHeaderText,
@@ -235,7 +239,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  const SizedBox(height: 16),
+                  // AppBarのぶんだけスペースをあける
+                  const AppbarBackgroundSpace(),
 
                   // 説明テキスト
                   const Padding(

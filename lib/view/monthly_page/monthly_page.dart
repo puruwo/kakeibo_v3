@@ -23,6 +23,7 @@ import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 
 class MonthlyPage extends ConsumerStatefulWidget {
   const MonthlyPage({super.key});
@@ -90,9 +91,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
           padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
           child: Column(
             children: [
-              SizedBox(
-                height: MediaQuery.of(context).padding.top + kToolbarHeight,
-              ),
+              // AppBarのぶんだけスペースをあける
+              const AppbarBackgroundSpace(),
+
               const AppContentsHeader(title: '支出グラフ'),
 
               // グラフ部分

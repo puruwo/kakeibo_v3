@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
@@ -16,7 +18,10 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
         ref.watch(fixedCostRegistrationListNotifierProvider);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
@@ -34,7 +39,13 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: fixedCostListAsync.when(
+      body: Column(
+        children: [
+          // AppBarのぶんだけスペースをあける
+          const AppbarBackgroundSpace(),
+
+          Expanded(
+            child: fixedCostListAsync.when(
         data: (fixedCostList) {
           if (fixedCostList.categoryGroups.isEmpty) {
             return Center(
@@ -91,6 +102,9 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             style: AppTextStyles.errorMessage,
           ),
         ),
+      ),
+          ),
+        ],
       ),
     );
   }

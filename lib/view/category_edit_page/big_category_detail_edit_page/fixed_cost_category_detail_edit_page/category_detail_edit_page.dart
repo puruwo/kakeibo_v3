@@ -5,6 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // LocalImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/add_complete_button/add_complete_big_category_detail_button.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/cotegory_appearance_edit_area.dart';
@@ -46,6 +48,7 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         backgroundColor: MyColors.secondarySystemBackground,
 
         // ヘッダー
@@ -55,7 +58,8 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
             style: AppTextStyles.pageHeaderText,
           ),
 
-          backgroundColor: MyColors.secondarySystemBackground,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: const GlassAppBarBackground(),
           //ヘッダー左のアイコンボタン
           leading: IconButton(
               // 閉じるときはネストしているModal内のRouteではなく、root側のNavigatorを指定する必要がある
@@ -87,6 +91,9 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
+            // AppBarのぶんだけスペースをあける
+            const AppbarBackgroundSpace(),
+
             _buildAppearanceEditArea(),
 
             // 余白（固定費の場合は不要）

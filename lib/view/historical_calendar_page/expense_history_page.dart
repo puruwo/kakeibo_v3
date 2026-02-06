@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/calendar_area.dart';
@@ -63,9 +64,9 @@ class ExpenseHistoryPage extends StatelessWidget {
       // 本文
       backgroundColor: MyColors.secondarySystemBackground,
       body: Column(children: [
-        SizedBox(
-          height: MediaQuery.of(context).padding.top + kToolbarHeight,
-        ),
+        // AppBarのぶんだけスペースをあける
+        const AppbarBackgroundSpace(),
+
         const CalendarArea(),
         ExpenceHistoryArea(),
       ]),

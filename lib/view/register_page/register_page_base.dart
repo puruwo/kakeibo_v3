@@ -5,6 +5,8 @@ import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
@@ -135,11 +137,13 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         backgroundColor: MyColors.secondarySystemBackground,
 
         appBar: AppBar(
           // ヘッダーの色
-          backgroundColor: MyColors.secondarySystemBackground,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: const GlassAppBarBackground(),
 
           // ヘッダーの形
           shape: const RoundedRectangleBorder(
@@ -183,15 +187,24 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         ),
 
         //body
-        body: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 200),
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
-          },
-          child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
+        body: Column(
+          children: [
+            // AppBarのぶんだけスペースをあける
+            const AppbarBackgroundSpace(),
+
+            Expanded(
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) {
+                  return FadeTransition(
+                    opacity: animation,
+                    child: child,
+                  );
+                },
+                child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
+              ),
+            ),
+          ],
         ),
       ),
     );
