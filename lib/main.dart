@@ -113,9 +113,19 @@ void main() {
         },
         home: const Foundation(),
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(),
+        theme: ThemeData.dark().copyWith(
+          appBarTheme: const AppBarTheme(
+            scrolledUnderElevation: 0,
+            elevation: 0,
+          ),
+        ),
         themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark(),
+        darkTheme: ThemeData.dark().copyWith(
+          appBarTheme: const AppBarTheme(
+            scrolledUnderElevation: 0,
+            elevation: 0,
+          ),
+        ),
       ),
     ),
   );

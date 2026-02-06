@@ -16,6 +16,7 @@ import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.d
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 
 class YearPage extends ConsumerStatefulWidget {
   const YearPage({super.key});
@@ -30,9 +31,11 @@ class _YearPageState extends ConsumerState<YearPage> {
     //レイアウト------------------------------------------------------------------------------------
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
+        flexibleSpace: const GlassAppBarBackground(),
         title: Consumer(builder: (context, ref, _) {
           final asyncValue = ref.watch(homeDateScopeEntityProvider);
           return asyncValue.when(
@@ -64,8 +67,8 @@ class _YearPageState extends ConsumerState<YearPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 16,
+              SizedBox(
+                height: MediaQuery.of(context).padding.top + kToolbarHeight + 16,
               ),
               const AppContentsHeader(title: '年間収支'),
               const YearlyBalanceArea(),
