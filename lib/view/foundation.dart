@@ -39,7 +39,6 @@ class _FoundationState extends ConsumerState<Foundation>
   // フェードインアニメーション用のコントローラー
   late AnimationController _fadeController;
   late Animation<double> _fadeAnimation;
-  int _previousIndex = 0;
 
   @override
   void initState() {
@@ -64,23 +63,10 @@ class _FoundationState extends ConsumerState<Foundation>
     super.dispose();
   }
 
-  void _playFadeAnimation() {
-    _fadeController.value = 0.0;
-    _fadeController.forward();
-  }
-
   @override
   Widget build(BuildContext context) {
     //navigationBarの状態管理
     final navigationBarState = ref.watch(navigationBarNumberNotifierProvider);
-
-    // タブが切り替わったらフェードインアニメーションを再生
-    if (_previousIndex != navigationBarState && navigationBarState != 1) {
-      _previousIndex = navigationBarState;
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        _playFadeAnimation();
-      });
-    }
 
     return Scaffold(
       // IndexedStack によって、各タブの Navigator を保持
@@ -155,8 +141,13 @@ class _FoundationState extends ConsumerState<Foundation>
         // 同じタブが再タップされた場合、タブ内の Navigator を初期状態までポップしてリセットする
         navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
       } else {
+        // タブ切り替え前にopacityを0にする（ちらつき防止）
+        _fadeController.value = 0.0;
+        // タブを切り替える
         final notifier = ref.read(navigationBarNumberNotifierProvider.notifier);
         notifier.updateState(index);
+        // フェードインアニメーションを開始
+        _fadeController.forward();
       }
     }
   }
