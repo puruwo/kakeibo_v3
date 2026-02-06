@@ -102,7 +102,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                   )
                 : Container();
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          loading: () => const SizedBox.shrink(),
           error: (error, stack) => Center(child: Text('$error')),
         );
   }

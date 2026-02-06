@@ -18,7 +18,8 @@ class Foundation extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _FoundationState();
 }
 
-class _FoundationState extends ConsumerState<Foundation> {
+class _FoundationState extends ConsumerState<Foundation>
+    with SingleTickerProviderStateMixin {
   // 各タブごとの Navigator にアクセスするための GlobalKey
   final List<GlobalKey<NavigatorState>> navigatorKeys = [
     GlobalKey<NavigatorState>(),
@@ -35,14 +36,31 @@ class _FoundationState extends ConsumerState<Foundation> {
     const ExpenseHistoryPage(),
   ];
 
+  // フェードインアニメーション用のコントローラー
+  late AnimationController _fadeController;
+  late Animation<double> _fadeAnimation;
+
   @override
   void initState() {
     super.initState();
+    _fadeController = AnimationController(
+      duration: const Duration(milliseconds: 200),
+      vsync: this,
+    );
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
+    );
+    _fadeController.value = 1.0; // 初期状態では完全に表示
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onBuildComplete(context, ref);
-
       _showExpenseEntrySheet(context); // 起動時に入力画面を表示する
     });
+  }
+
+  @override
+  void dispose() {
+    _fadeController.dispose();
+    super.dispose();
   }
 
   @override
@@ -52,9 +70,11 @@ class _FoundationState extends ConsumerState<Foundation> {
 
     return Scaffold(
       // IndexedStack によって、各タブの Navigator を保持
-      body: IndexedStack(
-        index: ref.watch(navigationBarNumberNotifierProvider),
-        children: [
+      body: FadeTransition(
+        opacity: _fadeAnimation,
+        child: IndexedStack(
+          index: ref.watch(navigationBarNumberNotifierProvider),
+          children: [
           Navigator(
             key: navigatorKeys[0],
             onGenerateRoute: (RouteSettings settings) {
@@ -81,6 +101,7 @@ class _FoundationState extends ConsumerState<Foundation> {
             },
           ),
         ],
+        ),
       ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
@@ -120,8 +141,13 @@ class _FoundationState extends ConsumerState<Foundation> {
         // 同じタブが再タップされた場合、タブ内の Navigator を初期状態までポップしてリセットする
         navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
       } else {
+        // タブ切り替え前にopacityを0にする（ちらつき防止）
+        _fadeController.value = 0.0;
+        // タブを切り替える
         final notifier = ref.read(navigationBarNumberNotifierProvider.notifier);
         notifier.updateState(index);
+        // フェードインアニメーションを開始
+        _fadeController.forward();
       }
     }
   }

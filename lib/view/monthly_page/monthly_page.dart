@@ -18,6 +18,7 @@ import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
+import 'package:kakeibo/view/monthly_page/skeleton/prediction_graph_skeleton.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/card_container.dart';
@@ -94,13 +95,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 final dateScope = ref.watch(analyzePageDateScopeEntityProvider);
                 return dateScope.when(
                   data: (scope) => PredictionGraph(dateScope: scope),
-                  loading: () => CardContainer(
-                    height: 213,
-                    width: 343 * context.screenHorizontalMagnification,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
+                  loading: () => const PredictionGraphSkeleton(),
                   error: (error, stack) => CardContainer(
-                    height: 213,
+                    height: 240,
                     width: 343 * context.screenHorizontalMagnification,
                     child: Center(
                       child: Text(
