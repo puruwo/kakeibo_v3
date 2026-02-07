@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_list_area.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_footer.dart';
@@ -69,7 +70,8 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
         backgroundColor: MyColors.secondarySystemBackground,
         // ヘッダー
         appBar: AppBar(
-          backgroundColor: MyColors.secondarySystemBackground,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: const GlassAppBarBackground(),
           title: Text(
             'ボーナス利用状況',
             style: AppTextStyles.pageHeaderText,

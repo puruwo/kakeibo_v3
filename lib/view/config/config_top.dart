@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
@@ -19,6 +20,7 @@ class ConfigTop extends ConsumerWidget {
         ),
         centerTitle: true,
         backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),

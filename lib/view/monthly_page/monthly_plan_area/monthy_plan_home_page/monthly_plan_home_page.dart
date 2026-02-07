@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_cotegory_area.dart';
 import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
@@ -87,7 +88,8 @@ class _MonthlyPlanHomePage extends ConsumerState<MonthlyPlanHomePage>
         backgroundColor: MyColors.secondarySystemBackground,
         // ヘッダー
         appBar: AppBar(
-          backgroundColor: MyColors.secondarySystemBackground,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: const GlassAppBarBackground(),
           title: Text(
             '毎月の予算',
             style: AppTextStyles.pageHeaderText,

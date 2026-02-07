@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_list_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_footer.dart';
@@ -55,7 +56,8 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
         backgroundColor: MyColors.secondarySystemBackground,
         // ヘッダー
         appBar: AppBar(
-          backgroundColor: MyColors.secondarySystemBackground,
+          backgroundColor: Colors.transparent,
+          flexibleSpace: const GlassAppBarBackground(),
           title: Text(
             'カテゴリー設定',
             style: AppTextStyles.pageHeaderText,
