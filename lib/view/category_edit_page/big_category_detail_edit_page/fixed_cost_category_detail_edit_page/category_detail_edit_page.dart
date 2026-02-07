@@ -47,7 +47,6 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Scaffold(
-        extendBodyBehindAppBar: true,
         backgroundColor: MyColors.secondarySystemBackground,
 
         // ヘッダー
@@ -90,11 +89,6 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           mainAxisSize: MainAxisSize.max,
           children: [
-            // AppBarのぶんだけスペースをあける
-            SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight,
-            ),
-
             _buildAppearanceEditArea(),
 
             // 余白（固定費の場合は不要）

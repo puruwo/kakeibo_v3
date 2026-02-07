@@ -136,7 +136,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
-        extendBodyBehindAppBar: true,
         backgroundColor: MyColors.secondarySystemBackground,
 
         appBar: AppBar(
@@ -186,26 +185,15 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         ),
 
         //body
-        body: Column(
-          children: [
-            // AppBarのぶんだけスペースをあける
-            SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight,
-            ),
-
-            Expanded(
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                transitionBuilder: (child, animation) {
-                  return FadeTransition(
-                    opacity: animation,
-                    child: child,
-                  );
-                },
-                child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
-              ),
-            ),
-          ],
+        body: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 200),
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: child,
+            );
+          },
+          child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
         ),
       ),
     );

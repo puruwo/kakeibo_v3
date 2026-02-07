@@ -25,7 +25,6 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
     final summaryAsync = ref.watch(resolvedDailyExpenseSummaryProvider(date));
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -40,26 +39,15 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         ),
         centerTitle: true,
       ),
-      body: Column(
-        children: [
-          // AppBarのぶんだけスペースをあける
-          SizedBox(
-            height: MediaQuery.of(context).padding.top + kToolbarHeight,
+      body: summaryAsync.when(
+        data: (summary) => _buildContent(context, summary),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Text(
+            'データの取得に失敗しました',
+            style: AppTextStyles.errorMessage,
           ),
-
-          Expanded(
-            child: summaryAsync.when(
-              data: (summary) => _buildContent(context, summary),
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(
-                child: Text(
-                  'データの取得に失敗しました',
-                  style: AppTextStyles.errorMessage,
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

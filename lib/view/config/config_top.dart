@@ -13,7 +13,6 @@ class ConfigTop extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         title: Text(
           '設定',
@@ -30,11 +29,6 @@ class ConfigTop extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            // AppBarのぶんだけスペースをあける
-            SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight,
-            ),
-
             const AppContentsHeader(title: '設定画面'),
             Container(
               width: double.infinity,

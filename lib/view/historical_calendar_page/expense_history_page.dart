@@ -18,7 +18,6 @@ class ExpenseHistoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       // ヘッダー
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -63,11 +62,6 @@ class ExpenseHistoryPage extends StatelessWidget {
       // 本文
       backgroundColor: MyColors.secondarySystemBackground,
       body: Column(children: [
-        // AppBarのぶんだけスペースをあける
-        SizedBox(
-          height: MediaQuery.of(context).padding.top + kToolbarHeight,
-        ),
-
         const CalendarArea(),
         ExpenceHistoryArea(),
       ]),

@@ -12,7 +12,6 @@ class CategoryExpenseHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -23,11 +22,6 @@ class CategoryExpenseHistoryPage extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // AppBarのぶんだけスペースをあける
-          SizedBox(
-            height: MediaQuery.of(context).padding.top + kToolbarHeight,
-          ),
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: ExpandedCategoryTile(

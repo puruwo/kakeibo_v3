@@ -15,7 +15,6 @@ class MonthlyFixedCostPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
@@ -27,11 +26,6 @@ class MonthlyFixedCostPage extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // AppBarのぶんだけスペースをあける
-          SizedBox(
-            height: MediaQuery.of(context).padding.top + kToolbarHeight,
-          ),
-
           const Expanded(
             child: SingleChildScrollView(
               child: Column(

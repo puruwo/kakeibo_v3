@@ -17,7 +17,6 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
         ref.watch(fixedCostRegistrationListNotifierProvider);
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -38,15 +37,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // AppBarのぶんだけスペースをあける
-          SizedBox(
-            height: MediaQuery.of(context).padding.top + kToolbarHeight,
-          ),
-
-          Expanded(
-            child: fixedCostListAsync.when(
+      body: fixedCostListAsync.when(
         data: (fixedCostList) {
           if (fixedCostList.categoryGroups.isEmpty) {
             return Center(
@@ -103,9 +94,6 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             style: AppTextStyles.errorMessage,
           ),
         ),
-      ),
-          ),
-        ],
       ),
     );
   }

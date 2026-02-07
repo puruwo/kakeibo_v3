@@ -219,7 +219,6 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     final items = reorderingState.items;
 
     return Scaffold(
-      extendBodyBehindAppBar: true,
       backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -238,10 +237,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  // AppBarのぶんだけスペースをあける
-                  SizedBox(
-                    height: MediaQuery.of(context).padding.top + kToolbarHeight,
-                  ),
+                  const SizedBox(height: 16),
 
                   // 説明テキスト
                   const Padding(
