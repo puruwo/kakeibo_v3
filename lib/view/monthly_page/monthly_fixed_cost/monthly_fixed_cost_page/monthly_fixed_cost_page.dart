@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_summary_header.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_by_category_list_area.dart';
@@ -29,7 +28,9 @@ class MonthlyFixedCostPage extends ConsumerWidget {
       body: Column(
         children: [
           // AppBarのぶんだけスペースをあける
-          const AppbarBackgroundSpace(),
+          SizedBox(
+            height: MediaQuery.of(context).padding.top + kToolbarHeight,
+          ),
 
           const Expanded(
             child: SingleChildScrollView(

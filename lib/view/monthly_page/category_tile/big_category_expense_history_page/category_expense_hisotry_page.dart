@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/category_expence_history_list_area.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/expanded_category_sum_tile.dart';
 
@@ -25,7 +24,9 @@ class CategoryExpenseHistoryPage extends ConsumerWidget {
       body: Column(
         children: [
           // AppBarのぶんだけスペースをあける
-          const AppbarBackgroundSpace(),
+          SizedBox(
+            height: MediaQuery.of(context).padding.top + kToolbarHeight,
+          ),
 
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),

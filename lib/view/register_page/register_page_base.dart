@@ -6,7 +6,6 @@ import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
@@ -190,7 +189,9 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         body: Column(
           children: [
             // AppBarのぶんだけスペースをあける
-            const AppbarBackgroundSpace(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.top + kToolbarHeight,
+            ),
 
             Expanded(
               child: AnimatedSwitcher(

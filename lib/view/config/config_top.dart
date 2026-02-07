@@ -6,7 +6,6 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
@@ -32,7 +31,9 @@ class ConfigTop extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             // AppBarのぶんだけスペースをあける
-            const AppbarBackgroundSpace(),
+            SizedBox(
+              height: MediaQuery.of(context).padding.top + kToolbarHeight,
+            ),
 
             const AppContentsHeader(title: '設定画面'),
             Container(

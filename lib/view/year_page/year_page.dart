@@ -7,7 +7,6 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
@@ -70,8 +69,10 @@ class _YearPageState extends ConsumerState<YearPage> {
             children: [
 
               // AppBarのぶんだけスペースをあける
-              const AppbarBackgroundSpace(),
-              
+              SizedBox(
+                height: MediaQuery.of(context).padding.top + kToolbarHeight,
+              ),
+
               const AppContentsHeader(title: '年間収支'),
               const YearlyBalanceArea(),
               const SizedBox(

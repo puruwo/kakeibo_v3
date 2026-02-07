@@ -10,7 +10,6 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/appbar_backgoround_space.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/button_util.dart';
@@ -240,7 +239,9 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
             : Column(
                 children: [
                   // AppBarのぶんだけスペースをあける
-                  const AppbarBackgroundSpace(),
+                  SizedBox(
+                    height: MediaQuery.of(context).padding.top + kToolbarHeight,
+                  ),
 
                   // 説明テキスト
                   const Padding(
