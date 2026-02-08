@@ -52,8 +52,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const MonthlyPlanHomePage(
-                                            initialTab: 0),
+                                        const MonthlyPlanHomePage(),
                                   ),
                                 );
                               },
