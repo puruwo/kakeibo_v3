@@ -6,13 +6,13 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 
 class IncomeGraphArea extends ConsumerStatefulWidget {
-  const IncomeGraphArea({super.key, required this.dateScope});
+  const IncomeGraphArea({super.key, required this.period});
 
-  final DateScopeEntity dateScope;
+  final PeriodValue period;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -23,7 +23,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
   @override
   Widget build(BuildContext context) {
     // 円グラフエリア
-    return ref.watch(yearlyIncomeListNotifierProvider(widget.dateScope)).when(
+    return ref.watch(yearlyIncomeListNotifierProvider(widget.period)).when(
           data: (incomeDatas) {
             if (incomeDatas.monthlyGroups.isEmpty) {
               return CardContainer(
