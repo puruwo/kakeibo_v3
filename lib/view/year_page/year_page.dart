@@ -100,9 +100,8 @@ class _YearPageState extends ConsumerState<YearPage> {
               ),
               const AppContentsHeader(title: '生活収支'),
               const AnnualBalanceChart(),
-              SizedBox(
-                height: 16 + kBottomNavigationBarHeight +
-                    MediaQuery.of(context).padding.bottom,
+              const SizedBox(
+                height: 128
               ),
             ],
           ),

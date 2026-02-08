@@ -64,7 +64,6 @@ class ExpenseHistoryPage extends StatelessWidget {
       body: Column(children: [
         const CalendarArea(),
         ExpenceHistoryArea(),
-        const SizedBox(height: kBottomNavigationBarHeight),
       ]),
     );
   }

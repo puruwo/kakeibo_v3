@@ -163,9 +163,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
 
               const MonthlyFixedCostSummaryArea(),
 
-              SizedBox(
-                height: 32 + kBottomNavigationBarHeight +
-                    MediaQuery.of(context).padding.bottom,
+              const SizedBox(
+                height: 128
               ),
             ],
           ),
