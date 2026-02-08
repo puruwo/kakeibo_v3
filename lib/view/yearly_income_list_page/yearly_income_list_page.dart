@@ -32,11 +32,6 @@ class YearlyIncomeListPage extends ConsumerWidget {
         ),
         body: ListView(
           children: [
-            // AppBarのぶんだけスペースをあける
-            SizedBox(
-              height: MediaQuery.of(context).padding.top + kToolbarHeight,
-            ),
-
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: IncomeGraphArea(

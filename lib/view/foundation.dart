@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
@@ -69,6 +70,7 @@ class _FoundationState extends ConsumerState<Foundation>
     final navigationBarState = ref.watch(navigationBarNumberNotifierProvider);
 
     return Scaffold(
+      extendBody: true,
       // IndexedStack によって、各タブの Navigator を保持
       body: FadeTransition(
         opacity: _fadeAnimation,
@@ -103,27 +105,34 @@ class _FoundationState extends ConsumerState<Foundation>
         ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        selectedItemColor: MyColors.themeSecondaryColor,
-        backgroundColor: MyColors.quarternarySystemfill,
-        items: const [
-          BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined), label: 'ホーム'),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.add,
-              ),
-              label: '入力'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.auto_graph_rounded), label: '分析'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month_rounded), label: '履歴'),
-        ],
-        currentIndex: navigationBarState,
-        onTap: (int index) {
-          _selectTab(index, ref);
-        },
+      bottomNavigationBar: ClipRect(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+          child: BottomNavigationBar(
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: MyColors.themeSecondaryColor,
+            backgroundColor:
+                MyColors.secondarySystemBackground.withOpacity(0.7),
+            elevation: 0,
+            items: const [
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home_outlined), label: 'ホーム'),
+              BottomNavigationBarItem(
+                  icon: Icon(
+                    Icons.add,
+                  ),
+                  label: '入力'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.auto_graph_rounded), label: '分析'),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.calendar_month_rounded), label: '履歴'),
+            ],
+            currentIndex: navigationBarState,
+            onTap: (int index) {
+              _selectTab(index, ref);
+            },
+          ),
+        ),
       ),
     );
   }
