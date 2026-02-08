@@ -7,6 +7,8 @@ import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_income_graph_area/monthly_income_graph_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
+import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 
 class MonthlyPlanArea extends ConsumerWidget {
   const MonthlyPlanArea({Key? key, this.hasButtonArea = true})
@@ -50,8 +52,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const MonthlyPlanHomePage(
-                                            initialTab: 0),
+                                        const MonthlyPlanHomePage(),
                                   ),
                                 );
                               },
@@ -75,11 +76,16 @@ class MonthlyPlanArea extends ConsumerWidget {
                             padding: const EdgeInsets.only(bottom: 6.0),
                             child: PlanAreaButton(
                               onTap: () {
+                                final dateScope = ref
+                                    .read(analyzePageDateScopeEntityProvider)
+                                    .value;
+                                if (dateScope == null) return;
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
-                                        const MonthlyPlanHomePage(
-                                            initialTab: 1),
+                                        YearlyIncomeListPage(
+                                            period: dateScope
+                                                .aggregationMonthPeriod),
                                   ),
                                 );
                               },

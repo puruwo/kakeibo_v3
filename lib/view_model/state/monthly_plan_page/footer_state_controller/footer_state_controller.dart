@@ -4,7 +4,6 @@ part 'footer_state_controller.g.dart';
 enum TabState {
   budgetNormal,
   budgetEdditing,
-  income,
 }
 
 //登録できるかどうか

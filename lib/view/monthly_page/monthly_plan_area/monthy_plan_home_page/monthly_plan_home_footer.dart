@@ -9,12 +9,12 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
-import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
+import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
@@ -27,10 +27,8 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         return _budgetNormalButtons(context, ref);
       case TabState.budgetEdditing:
         return _budgetEdditingButton(context, ref);
-      case TabState.income:
-        return _incomeButton(context, ref);
       default:
-        return const SizedBox.shrink(); // 他のタブでは何も表示しない
+        return const SizedBox.shrink();
     }
   }
 
@@ -140,6 +138,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
                         .updateState(TabState.budgetNormal);
 
                     ref.invalidate(isPriceEditedNotifierProvider);
+                    ref.invalidate(editingBudgetPricesProvider);
                   },
                 );
               }),
@@ -166,19 +165,4 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
     );
   }
 
-  Widget _incomeButton(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: double.infinity,
-      child: MainButton(
-        buttonType: ButtonColorType.main,
-        buttonText: '新しい収入を追加',
-        onPressed: () {
-          showAppModalBottomSheet(
-            context,
-            child: const RegisaterPageBase.addIncome(),
-          );
-        },
-      ),
-    );
-  }
 }

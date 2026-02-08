@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/view/yearly_income_list_page/income_graph_area.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_area.dart';
 
 class YearlyIncomeListPage extends ConsumerWidget {
   const YearlyIncomeListPage({
     super.key,
-    required this.dateScope,
+    required this.period,
   });
 
-  final DateScopeEntity dateScope;
+  final PeriodValue period;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,11 +35,11 @@ class YearlyIncomeListPage extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: IncomeGraphArea(
-                dateScope: dateScope,
+                period: period,
               ),
             ),
             YearlyIncomeListArea(
-              dateScope: dateScope,
+              period: period,
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
             ),

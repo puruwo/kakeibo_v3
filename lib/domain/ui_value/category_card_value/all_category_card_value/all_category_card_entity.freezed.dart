@@ -42,6 +42,12 @@ mixin _$MonthPlanCardModel {
   List<String> get incomeCategoryIconPathList =>
       throw _privateConstructorUsedError;
   List<String> get incomeCategoryColorList =>
+      throw _privateConstructorUsedError; // 予算カテゴリー別のデータ
+  List<String> get budgetCategoryNameList => throw _privateConstructorUsedError;
+  List<int> get budgetCategoryList => throw _privateConstructorUsedError;
+  List<String> get budgetCategoryIconPathList =>
+      throw _privateConstructorUsedError;
+  List<String> get budgetCategoryColorList =>
       throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
@@ -73,7 +79,11 @@ abstract class $MonthPlanCardModelCopyWith<$Res> {
       List<int> incomeCategoryList,
       List<double> incomeCategoryRatioList,
       List<String> incomeCategoryIconPathList,
-      List<String> incomeCategoryColorList});
+      List<String> incomeCategoryColorList,
+      List<String> budgetCategoryNameList,
+      List<int> budgetCategoryList,
+      List<String> budgetCategoryIconPathList,
+      List<String> budgetCategoryColorList});
 }
 
 /// @nodoc
@@ -107,6 +117,10 @@ class _$MonthPlanCardModelCopyWithImpl<$Res, $Val extends MonthPlanCardModel>
     Object? incomeCategoryRatioList = null,
     Object? incomeCategoryIconPathList = null,
     Object? incomeCategoryColorList = null,
+    Object? budgetCategoryNameList = null,
+    Object? budgetCategoryList = null,
+    Object? budgetCategoryIconPathList = null,
+    Object? budgetCategoryColorList = null,
   }) {
     return _then(_value.copyWith(
       cardStatusType: null == cardStatusType
@@ -181,6 +195,22 @@ class _$MonthPlanCardModelCopyWithImpl<$Res, $Val extends MonthPlanCardModel>
           ? _value.incomeCategoryColorList
           : incomeCategoryColorList // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      budgetCategoryNameList: null == budgetCategoryNameList
+          ? _value.budgetCategoryNameList
+          : budgetCategoryNameList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      budgetCategoryList: null == budgetCategoryList
+          ? _value.budgetCategoryList
+          : budgetCategoryList // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      budgetCategoryIconPathList: null == budgetCategoryIconPathList
+          ? _value.budgetCategoryIconPathList
+          : budgetCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      budgetCategoryColorList: null == budgetCategoryColorList
+          ? _value.budgetCategoryColorList
+          : budgetCategoryColorList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ) as $Val);
   }
 }
@@ -211,7 +241,11 @@ abstract class _$$AllCategoryCardModelImplCopyWith<$Res>
       List<int> incomeCategoryList,
       List<double> incomeCategoryRatioList,
       List<String> incomeCategoryIconPathList,
-      List<String> incomeCategoryColorList});
+      List<String> incomeCategoryColorList,
+      List<String> budgetCategoryNameList,
+      List<int> budgetCategoryList,
+      List<String> budgetCategoryIconPathList,
+      List<String> budgetCategoryColorList});
 }
 
 /// @nodoc
@@ -243,6 +277,10 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
     Object? incomeCategoryRatioList = null,
     Object? incomeCategoryIconPathList = null,
     Object? incomeCategoryColorList = null,
+    Object? budgetCategoryNameList = null,
+    Object? budgetCategoryList = null,
+    Object? budgetCategoryIconPathList = null,
+    Object? budgetCategoryColorList = null,
   }) {
     return _then(_$AllCategoryCardModelImpl(
       cardStatusType: null == cardStatusType
@@ -317,6 +355,22 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
           ? _value._incomeCategoryColorList
           : incomeCategoryColorList // ignore: cast_nullable_to_non_nullable
               as List<String>,
+      budgetCategoryNameList: null == budgetCategoryNameList
+          ? _value._budgetCategoryNameList
+          : budgetCategoryNameList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      budgetCategoryList: null == budgetCategoryList
+          ? _value._budgetCategoryList
+          : budgetCategoryList // ignore: cast_nullable_to_non_nullable
+              as List<int>,
+      budgetCategoryIconPathList: null == budgetCategoryIconPathList
+          ? _value._budgetCategoryIconPathList
+          : budgetCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      budgetCategoryColorList: null == budgetCategoryColorList
+          ? _value._budgetCategoryColorList
+          : budgetCategoryColorList // ignore: cast_nullable_to_non_nullable
+              as List<String>,
     ));
   }
 }
@@ -342,7 +396,11 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
       required final List<int> incomeCategoryList,
       required final List<double> incomeCategoryRatioList,
       required final List<String> incomeCategoryIconPathList,
-      required final List<String> incomeCategoryColorList})
+      required final List<String> incomeCategoryColorList,
+      required final List<String> budgetCategoryNameList,
+      required final List<int> budgetCategoryList,
+      required final List<String> budgetCategoryIconPathList,
+      required final List<String> budgetCategoryColorList})
       : _expenseCategoryNameList = expenseCategoryNameList,
         _expenseCategoryList = expenseCategoryList,
         _expenseCategoryRatioList = expenseCategoryRatioList,
@@ -352,7 +410,11 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
         _incomeCategoryList = incomeCategoryList,
         _incomeCategoryRatioList = incomeCategoryRatioList,
         _incomeCategoryIconPathList = incomeCategoryIconPathList,
-        _incomeCategoryColorList = incomeCategoryColorList;
+        _incomeCategoryColorList = incomeCategoryColorList,
+        _budgetCategoryNameList = budgetCategoryNameList,
+        _budgetCategoryList = budgetCategoryList,
+        _budgetCategoryIconPathList = budgetCategoryIconPathList,
+        _budgetCategoryColorList = budgetCategoryColorList;
 
   @override
   final AllCategoryCardStatusType cardStatusType;
@@ -464,9 +526,47 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
     return EqualUnmodifiableListView(_incomeCategoryColorList);
   }
 
+// 予算カテゴリー別のデータ
+  final List<String> _budgetCategoryNameList;
+// 予算カテゴリー別のデータ
+  @override
+  List<String> get budgetCategoryNameList {
+    if (_budgetCategoryNameList is EqualUnmodifiableListView)
+      return _budgetCategoryNameList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_budgetCategoryNameList);
+  }
+
+  final List<int> _budgetCategoryList;
+  @override
+  List<int> get budgetCategoryList {
+    if (_budgetCategoryList is EqualUnmodifiableListView)
+      return _budgetCategoryList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_budgetCategoryList);
+  }
+
+  final List<String> _budgetCategoryIconPathList;
+  @override
+  List<String> get budgetCategoryIconPathList {
+    if (_budgetCategoryIconPathList is EqualUnmodifiableListView)
+      return _budgetCategoryIconPathList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_budgetCategoryIconPathList);
+  }
+
+  final List<String> _budgetCategoryColorList;
+  @override
+  List<String> get budgetCategoryColorList {
+    if (_budgetCategoryColorList is EqualUnmodifiableListView)
+      return _budgetCategoryColorList;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_budgetCategoryColorList);
+  }
+
   @override
   String toString() {
-    return 'MonthPlanCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, allFixedCostExpense: $allFixedCostExpense, denominator: $denominator, realSavings: $realSavings, totalBadgetRatio: $totalBadgetRatio, expenseCategoryNameList: $expenseCategoryNameList, expenseCategoryList: $expenseCategoryList, expenseCategoryRatioList: $expenseCategoryRatioList, expenseCategoryIconPathList: $expenseCategoryIconPathList, expenseCategoryColorList: $expenseCategoryColorList, incomeCategoryNameList: $incomeCategoryNameList, incomeCategoryList: $incomeCategoryList, incomeCategoryRatioList: $incomeCategoryRatioList, incomeCategoryIconPathList: $incomeCategoryIconPathList, incomeCategoryColorList: $incomeCategoryColorList)';
+    return 'MonthPlanCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, allFixedCostExpense: $allFixedCostExpense, denominator: $denominator, realSavings: $realSavings, totalBadgetRatio: $totalBadgetRatio, expenseCategoryNameList: $expenseCategoryNameList, expenseCategoryList: $expenseCategoryList, expenseCategoryRatioList: $expenseCategoryRatioList, expenseCategoryIconPathList: $expenseCategoryIconPathList, expenseCategoryColorList: $expenseCategoryColorList, incomeCategoryNameList: $incomeCategoryNameList, incomeCategoryList: $incomeCategoryList, incomeCategoryRatioList: $incomeCategoryRatioList, incomeCategoryIconPathList: $incomeCategoryIconPathList, incomeCategoryColorList: $incomeCategoryColorList, budgetCategoryNameList: $budgetCategoryNameList, budgetCategoryList: $budgetCategoryList, budgetCategoryIconPathList: $budgetCategoryIconPathList, budgetCategoryColorList: $budgetCategoryColorList)';
   }
 
   @override
@@ -512,30 +612,44 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
                 other._incomeCategoryIconPathList,
                 _incomeCategoryIconPathList) &&
             const DeepCollectionEquality().equals(
-                other._incomeCategoryColorList, _incomeCategoryColorList));
+                other._incomeCategoryColorList, _incomeCategoryColorList) &&
+            const DeepCollectionEquality().equals(
+                other._budgetCategoryNameList, _budgetCategoryNameList) &&
+            const DeepCollectionEquality()
+                .equals(other._budgetCategoryList, _budgetCategoryList) &&
+            const DeepCollectionEquality().equals(
+                other._budgetCategoryIconPathList,
+                _budgetCategoryIconPathList) &&
+            const DeepCollectionEquality().equals(
+                other._budgetCategoryColorList, _budgetCategoryColorList));
   }
 
   @override
-  int get hashCode => Object.hash(
-      runtimeType,
-      cardStatusType,
-      allCategoryTotalExpense,
-      allCategoryTotalBudget,
-      allCategoryTotalIncome,
-      allFixedCostExpense,
-      denominator,
-      realSavings,
-      totalBadgetRatio,
-      const DeepCollectionEquality().hash(_expenseCategoryNameList),
-      const DeepCollectionEquality().hash(_expenseCategoryList),
-      const DeepCollectionEquality().hash(_expenseCategoryRatioList),
-      const DeepCollectionEquality().hash(_expenseCategoryIconPathList),
-      const DeepCollectionEquality().hash(_expenseCategoryColorList),
-      const DeepCollectionEquality().hash(_incomeCategoryNameList),
-      const DeepCollectionEquality().hash(_incomeCategoryList),
-      const DeepCollectionEquality().hash(_incomeCategoryRatioList),
-      const DeepCollectionEquality().hash(_incomeCategoryIconPathList),
-      const DeepCollectionEquality().hash(_incomeCategoryColorList));
+  int get hashCode => Object.hashAll([
+        runtimeType,
+        cardStatusType,
+        allCategoryTotalExpense,
+        allCategoryTotalBudget,
+        allCategoryTotalIncome,
+        allFixedCostExpense,
+        denominator,
+        realSavings,
+        totalBadgetRatio,
+        const DeepCollectionEquality().hash(_expenseCategoryNameList),
+        const DeepCollectionEquality().hash(_expenseCategoryList),
+        const DeepCollectionEquality().hash(_expenseCategoryRatioList),
+        const DeepCollectionEquality().hash(_expenseCategoryIconPathList),
+        const DeepCollectionEquality().hash(_expenseCategoryColorList),
+        const DeepCollectionEquality().hash(_incomeCategoryNameList),
+        const DeepCollectionEquality().hash(_incomeCategoryList),
+        const DeepCollectionEquality().hash(_incomeCategoryRatioList),
+        const DeepCollectionEquality().hash(_incomeCategoryIconPathList),
+        const DeepCollectionEquality().hash(_incomeCategoryColorList),
+        const DeepCollectionEquality().hash(_budgetCategoryNameList),
+        const DeepCollectionEquality().hash(_budgetCategoryList),
+        const DeepCollectionEquality().hash(_budgetCategoryIconPathList),
+        const DeepCollectionEquality().hash(_budgetCategoryColorList)
+      ]);
 
   @JsonKey(ignore: true)
   @override
@@ -565,7 +679,11 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
           required final List<int> incomeCategoryList,
           required final List<double> incomeCategoryRatioList,
           required final List<String> incomeCategoryIconPathList,
-          required final List<String> incomeCategoryColorList}) =
+          required final List<String> incomeCategoryColorList,
+          required final List<String> budgetCategoryNameList,
+          required final List<int> budgetCategoryList,
+          required final List<String> budgetCategoryIconPathList,
+          required final List<String> budgetCategoryColorList}) =
       _$AllCategoryCardModelImpl;
 
   @override
@@ -604,6 +722,14 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
   List<String> get incomeCategoryIconPathList;
   @override
   List<String> get incomeCategoryColorList;
+  @override // 予算カテゴリー別のデータ
+  List<String> get budgetCategoryNameList;
+  @override
+  List<int> get budgetCategoryList;
+  @override
+  List<String> get budgetCategoryIconPathList;
+  @override
+  List<String> get budgetCategoryColorList;
   @override
   @JsonKey(ignore: true)
   _$$AllCategoryCardModelImplCopyWith<_$AllCategoryCardModelImpl>

@@ -161,7 +161,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                           Navigator.of(context).push(
                             MaterialPageRoute(
                               builder: (context) => YearlyIncomeListPage(
-                                dateScope: dateScope,
+                                period: dateScope.yearPeriod,
                               ),
                             ),
                           );
