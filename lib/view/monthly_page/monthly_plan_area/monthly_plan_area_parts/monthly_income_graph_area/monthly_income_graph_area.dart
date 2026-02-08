@@ -6,7 +6,9 @@ import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_pa
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 
 class MonthlyIncomeGraphArea extends HookConsumerWidget {
-  const MonthlyIncomeGraphArea({super.key});
+  const MonthlyIncomeGraphArea({super.key, this.trailing});
+
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -20,68 +22,45 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                       children: [
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(
-                                  '総収入',
-                                  style: AppTextStyles.appCardTitleLabel,
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                // 総収入
-                                RichText(
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                        text: formattedPriceGetter(
-                                            allCategoryCardEntity
-                                                .allCategoryTotalIncome),
-                                        style: AppTextStyles
-                                            .appCardOptionalSecondaryPriceLabel,
-                                      ),
-                                      TextSpan(
-                                        text: ' 円',
-                                        style: AppTextStyles
-                                            .appCardSecondaryPriceUnit,
-                                      ),
-                                    ])),
-                              ],
+                            Flexible(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    '総収入',
+                                    style: AppTextStyles.appCardTitleLabel,
+                                  ),
+                                  const SizedBox(
+                                    width: 8,
+                                  ),
+                                  // 総収入
+                                  RichText(
+                                      textAlign: TextAlign.end,
+                                      overflow: TextOverflow.ellipsis,
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                          text: formattedPriceGetter(
+                                              allCategoryCardEntity
+                                                  .allCategoryTotalIncome),
+                                          style: AppTextStyles
+                                              .appCardOptionalSecondaryPriceLabel,
+                                        ),
+                                        TextSpan(
+                                          text: ' 円',
+                                          style: AppTextStyles
+                                              .appCardSecondaryPriceUnit,
+                                        ),
+                                      ])),
+                                ],
+                              ),
                             ),
-                            // 残金
-                            allCategoryCardEntity.realSavings != 0
-                                ? Flexible(
-                                    child: RichText(
-                                        textAlign: TextAlign.end,
-                                        overflow: TextOverflow.ellipsis,
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                            text: '残金 ',
-                                            style: AppTextStyles
-                                                .appCardTertiaryTitleLabel,
-                                          ),
-                                          // カテゴリー予算
-                                          TextSpan(
-                                            text: formattedPriceGetter(
-                                                allCategoryCardEntity
-                                                    .realSavings),
-                                            style: AppTextStyles
-                                                .appCardTertiaryPriceLabel,
-                                          ),
-                                          TextSpan(
-                                            text: ' 円',
-                                            style: AppTextStyles
-                                                .appCardTertiaryPriceUnit,
-                                          ),
-                                        ])),
-                                  )
-                                : Container(),
+                            if (trailing != null) ...[
+                              const SizedBox(width: 8),
+                              trailing!,
+                            ],
                           ],
                         ),
                         const SizedBox(

@@ -7,7 +7,9 @@ import 'package:kakeibo/view/monthly_page/skeleton/monthly_plan_skeleton.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 
 class MnothlyPlanGraphArea extends HookConsumerWidget {
-  const MnothlyPlanGraphArea({super.key});
+  const MnothlyPlanGraphArea({super.key, this.trailing});
+
+  final Widget? trailing;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,68 +23,79 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              '総支出',
-                              style: AppTextStyles.appCardTitleLabel,
-                            ),
-                            const SizedBox(
-                              width: 8,
-                            ),
-                            // カテゴリー総支出
-                            RichText(
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                    text: formattedPriceGetter(
-                                        allCategoryCardEntity
-                                            .allCategoryTotalExpense),
-                                    style: AppTextStyles
-                                        .appCardOptionalSecondaryPriceLabel,
+                            Expanded(
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.baseline,
+                                textBaseline: TextBaseline.alphabetic,
+                                children: [
+                                  Text(
+                                    '総支出',
+                                    style: AppTextStyles.appCardTitleLabel,
                                   ),
-                                  TextSpan(
-                                    text: ' 円',
-                                    style:
-                                        AppTextStyles.appCardSecondaryPriceUnit,
+                                  const SizedBox(
+                                    width: 8,
                                   ),
-                                ])),
+                                  // カテゴリー総支出
+                                  RichText(
+                                      textAlign: TextAlign.end,
+                                      overflow: TextOverflow.ellipsis,
+                                      text: TextSpan(children: [
+                                        TextSpan(
+                                          text: formattedPriceGetter(
+                                              allCategoryCardEntity
+                                                  .allCategoryTotalExpense),
+                                          style: AppTextStyles
+                                              .appCardOptionalSecondaryPriceLabel,
+                                        ),
+                                        TextSpan(
+                                          text: ' 円',
+                                          style: AppTextStyles
+                                              .appCardSecondaryPriceUnit,
+                                        ),
+                                      ])),
 
-                            // 予算
-                            allCategoryCardEntity.cardStatusType.hasBudget
-                                ? Flexible(
-                                    child: RichText(
-                                        textAlign: TextAlign.end,
-                                        overflow: TextOverflow.ellipsis,
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                            text: ' /',
-                                            style: AppTextStyles
-                                                .appCardTertiaryTitleLabel,
-                                          ),
-                                          TextSpan(
-                                            text: '予算 ',
-                                            style: AppTextStyles
-                                                .appCardTertiaryTitleLabel,
-                                          ),
-                                          // カテゴリー予算
-                                          TextSpan(
-                                            text: formattedPriceGetter(
-                                                allCategoryCardEntity
-                                                    .allCategoryTotalBudget),
-                                            style: AppTextStyles
-                                                .appCardTertiaryPriceLabel,
-                                          ),
-                                          TextSpan(
-                                            text: ' 円',
-                                            style: AppTextStyles
-                                                .appCardTertiaryPriceUnit,
-                                          ),
-                                        ])),
-                                  )
-                                : Container(),
+                                  // 予算
+                                  allCategoryCardEntity.cardStatusType.hasBudget
+                                      ? Flexible(
+                                          child: RichText(
+                                              textAlign: TextAlign.end,
+                                              overflow: TextOverflow.ellipsis,
+                                              text: TextSpan(children: [
+                                                TextSpan(
+                                                  text: ' /',
+                                                  style: AppTextStyles
+                                                      .appCardTertiaryTitleLabel,
+                                                ),
+                                                TextSpan(
+                                                  text: '予算 ',
+                                                  style: AppTextStyles
+                                                      .appCardTertiaryTitleLabel,
+                                                ),
+                                                // カテゴリー予算
+                                                TextSpan(
+                                                  text: formattedPriceGetter(
+                                                      allCategoryCardEntity
+                                                          .allCategoryTotalBudget),
+                                                  style: AppTextStyles
+                                                      .appCardTertiaryPriceLabel,
+                                                ),
+                                                TextSpan(
+                                                  text: ' 円',
+                                                  style: AppTextStyles
+                                                      .appCardTertiaryPriceUnit,
+                                                ),
+                                              ])),
+                                        )
+                                      : Container(),
+                                ],
+                              ),
+                            ),
+                            if (trailing != null) ...[
+                              const SizedBox(width: 8),
+                              trailing!,
+                            ],
                           ],
                         ),
                         const SizedBox(
