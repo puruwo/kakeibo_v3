@@ -103,6 +103,11 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // 固定費のカテゴリーリストを取得する
     final fixedCostCategoryList =
         await _fixedCostCategoryRepositoryProvider.fetchAll();
+    // 固定費カテゴリーの予算用データ
+    List<String> fixedCostBudgetNameList = [];
+    List<int> fixedCostBudgetAmountList = [];
+    List<String> fixedCostBudgetIconPathList = [];
+    List<String> fixedCostBudgetColorList = [];
     // 各カテゴリーの固定費を取得する
     for (var e in fixedCostCategoryList) {
       // 各カテゴリーの確定分固定費を取得する
@@ -124,11 +129,21 @@ class MonthlyAllCategoryTileUsecaseNotifier
       })).then((values) => values.fold<int>(
           0, (previousValue, estimatePrice) => previousValue + estimatePrice));
 
+      final fixedCostCategoryTotal =
+          confirmedFixedCostExpense + unconfirmedFixedCostEstimated;
+
       categoryNameList.add(e.categoryName);
-      categoryExpenseList
-          .add(confirmedFixedCostExpense + unconfirmedFixedCostEstimated);
+      categoryExpenseList.add(fixedCostCategoryTotal);
       categoryIconPathList.add(e.resourcePath);
       categoryColorList.add(e.colorCode);
+
+      // 予算カテゴリー用にも保持
+      if (fixedCostCategoryTotal > 0) {
+        fixedCostBudgetNameList.add(e.categoryName);
+        fixedCostBudgetAmountList.add(fixedCostCategoryTotal);
+        fixedCostBudgetIconPathList.add(e.resourcePath);
+        fixedCostBudgetColorList.add(e.colorCode);
+      }
     }
 
     // ============================================
@@ -277,6 +292,34 @@ class MonthlyAllCategoryTileUsecaseNotifier
     }
 
     // ============================================
+    // 予算カテゴリー別の集計
+    // ============================================
+    List<String> budgetCategoryNameList = [];
+    List<int> budgetCategoryAmountList = [];
+    List<String> budgetCategoryIconPathList = [];
+    List<String> budgetCategoryColorList = [];
+
+    // 一般カテゴリーの予算を取得
+    for (var category in categoryEntityList) {
+      final budgetEntity =
+          await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
+              month: dateScope.representativeMonth,
+              expenseBigCategoryId: category.id);
+      if (budgetEntity.price > 0) {
+        budgetCategoryNameList.add(category.bigCategoryName);
+        budgetCategoryAmountList.add(budgetEntity.price);
+        budgetCategoryIconPathList.add(category.categoryIconPath);
+        budgetCategoryColorList.add(category.categoryColor);
+      }
+    }
+
+    // 固定費カテゴリーの予算（固定費の実際/推定コストが予算に相当）
+    budgetCategoryNameList.addAll(fixedCostBudgetNameList);
+    budgetCategoryAmountList.addAll(fixedCostBudgetAmountList);
+    budgetCategoryIconPathList.addAll(fixedCostBudgetIconPathList);
+    budgetCategoryColorList.addAll(fixedCostBudgetColorList);
+
+    // ============================================
     // 棒グラフの長さを決める
     // ============================================
 
@@ -316,6 +359,10 @@ class MonthlyAllCategoryTileUsecaseNotifier
       incomeCategoryRatioList: incomeCategoryIncomeRatioList,
       incomeCategoryIconPathList: incomeCategoryIconPathList,
       incomeCategoryColorList: incomeCategoryColorList,
+      budgetCategoryNameList: budgetCategoryNameList,
+      budgetCategoryList: budgetCategoryAmountList,
+      budgetCategoryIconPathList: budgetCategoryIconPathList,
+      budgetCategoryColorList: budgetCategoryColorList,
     );
   }
 }

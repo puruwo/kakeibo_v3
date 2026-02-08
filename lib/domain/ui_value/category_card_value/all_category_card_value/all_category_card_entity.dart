@@ -47,5 +47,10 @@ class MonthPlanCardModel with _$MonthPlanCardModel {
     required List<double> incomeCategoryRatioList,
     required List<String> incomeCategoryIconPathList,
     required List<String> incomeCategoryColorList,
+    // 予算カテゴリー別のデータ
+    required List<String> budgetCategoryNameList,
+    required List<int> budgetCategoryList,
+    required List<String> budgetCategoryIconPathList,
+    required List<String> budgetCategoryColorList,
   }) = _AllCategoryCardModel;
 }
