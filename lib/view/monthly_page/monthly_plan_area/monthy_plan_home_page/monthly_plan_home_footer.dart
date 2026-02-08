@@ -14,6 +14,7 @@ import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_pri
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
+import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
@@ -137,6 +138,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
                         .updateState(TabState.budgetNormal);
 
                     ref.invalidate(isPriceEditedNotifierProvider);
+                    ref.invalidate(editingBudgetPricesProvider);
                   },
                 );
               }),

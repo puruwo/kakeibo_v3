@@ -9,6 +9,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
+import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
@@ -234,6 +235,17 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                           .notifier)
                                       .updateState(true);
                                 });
+                                // リアルタイム反映用に編集中の金額を更新
+                                final numericValue = int.tryParse(
+                                        value.replaceAll(RegExp(r'\D'), '')) ??
+                                    0;
+                                ref
+                                    .read(editingBudgetPricesProvider.notifier)
+                                    .state = {
+                                  ...ref.read(editingBudgetPricesProvider),
+                                  widget.budgetEditValue.expenseBigCategoryId:
+                                      numericValue,
+                                };
                               },
                               // //領域外をタップでproviderを更新する
                               onTapOutside: (event) {

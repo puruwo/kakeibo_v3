@@ -3,11 +3,14 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/summary_bar_graph.dart';
 import 'package:kakeibo/view/monthly_page/skeleton/monthly_plan_skeleton.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
+import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
 
 /// 予算ページ上部のサマリーエリア
 /// 予算合計と収入合計のみを表示する（支出のテキスト情報は含まない）
@@ -18,8 +21,15 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 編集中の予算金額を常にwatchする（autoDisposeの生存を保証するため）
+    final editingPrices = ref.watch(editingBudgetPricesProvider);
+
     return ref.watch(resolvedAllCategoryCardModelProvider).when(
-          data: (allCategoryCardEntity) {
+          data: (originalModel) {
+            // 編集中の値がある場合、予算関連の表示を上書きする
+            final allCategoryCardEntity =
+                _applyEditingOverrides(ref, originalModel, editingPrices);
+
             // 予算と収入の大きい方を棒グラフの基準にする
             final budgetIncomeDenominator = max(
                 allCategoryCardEntity.allCategoryTotalBudget,
@@ -186,5 +196,82 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
           loading: () => const MonthlyPlanSkeleton(),
           error: (error, stack) => Center(child: Text('$error')),
         );
+  }
+
+  /// 編集中の予算値でモデルの予算関連データを上書きする
+  MonthPlanCardModel _applyEditingOverrides(
+    WidgetRef ref,
+    MonthPlanCardModel originalModel,
+    Map<int, int> editingPrices,
+  ) {
+    if (editingPrices.isEmpty) return originalModel;
+
+    final budgetEditValues =
+        ref.watch(resolvedBudgetEditValueProvider).valueOrNull;
+    if (budgetEditValues == null) return originalModel;
+
+    // 元の通常カテゴリー予算のうち price > 0 の件数を取得
+    // モデルの budgetCategoryList は [通常カテゴリー(price>0)] + [固定費カテゴリー] の順
+    final originalNormalBudgetCount =
+        budgetEditValues.where((e) => e.price > 0).length;
+
+    // 固定費カテゴリー部分を元のモデルから取り出す
+    final fixedCostBudgetAmounts =
+        originalModel.budgetCategoryList.length > originalNormalBudgetCount
+            ? originalModel.budgetCategoryList
+                .sublist(originalNormalBudgetCount)
+            : <int>[];
+    final fixedCostBudgetColors =
+        originalModel.budgetCategoryColorList.length > originalNormalBudgetCount
+            ? originalModel.budgetCategoryColorList
+                .sublist(originalNormalBudgetCount)
+            : <String>[];
+
+    // 編集値を反映した通常カテゴリーの予算リストを構築
+    List<int> newNormalBudgetAmounts = [];
+    List<String> newNormalBudgetColors = [];
+    int newNormalBudgetTotal = 0;
+
+    for (var budgetEdit in budgetEditValues) {
+      final price =
+          editingPrices.containsKey(budgetEdit.expenseBigCategoryId)
+              ? editingPrices[budgetEdit.expenseBigCategoryId]!
+              : budgetEdit.price;
+      newNormalBudgetTotal += price;
+      if (price > 0) {
+        newNormalBudgetAmounts.add(price);
+        newNormalBudgetColors.add(budgetEdit.colorCode);
+      }
+    }
+
+    // 通常カテゴリー + 固定費カテゴリーを結合
+    final newBudgetCategoryList = [
+      ...newNormalBudgetAmounts,
+      ...fixedCostBudgetAmounts,
+    ];
+    final newBudgetCategoryColorList = [
+      ...newNormalBudgetColors,
+      ...fixedCostBudgetColors,
+    ];
+
+    // 予算合計 = 通常カテゴリー合計 + 固定費（通常カテゴリーが0なら0）
+    final newTotalBudget = newNormalBudgetTotal > 0
+        ? newNormalBudgetTotal + originalModel.allFixedCostExpense
+        : 0;
+
+    // 予算が新たに設定された場合、cardStatusTypeを更新して予算セクションを表示
+    AllCategoryCardStatusType cardStatusType = originalModel.cardStatusType;
+    if (newTotalBudget > 0 && !originalModel.cardStatusType.hasBudget) {
+      cardStatusType = originalModel.cardStatusType.hasIncome
+          ? AllCategoryCardStatusType.hasBudgetAndIncomeNotOver
+          : AllCategoryCardStatusType.hasOnlyBudget;
+    }
+
+    return originalModel.copyWith(
+      cardStatusType: cardStatusType,
+      allCategoryTotalBudget: newTotalBudget,
+      budgetCategoryList: newBudgetCategoryList,
+      budgetCategoryColorList: newBudgetCategoryColorList,
+    );
   }
 }
