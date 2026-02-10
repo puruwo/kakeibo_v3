@@ -49,7 +49,6 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
               showAppModalBottomSheet(
                 context,
                 child: const CategorySettingPage(),
-                wrapWithMaterialApp: false,
               );
             },
           ),
