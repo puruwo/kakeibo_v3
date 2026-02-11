@@ -137,7 +137,6 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   showAppModalBottomSheet(
                     context,
                     child: const CategorySettingPage(),
-                    wrapWithMaterialApp: false,
                   );
                 },
               ),

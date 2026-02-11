@@ -177,7 +177,6 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
       onTap: () {
         showAppModalBottomSheet(
           context,
-          wrapWithMaterialApp: false,
           child: CategoryReorderPage(
             transactionMode: widget.transactionMode,
           ),

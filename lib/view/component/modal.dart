@@ -8,12 +8,11 @@ import 'package:flutter/material.dart';
 /// [isScrollControlled] - スクロール制御を有効にするか（デフォルト: true）
 /// [useSafeArea] - SafeAreaを使用するか（デフォルト: false）
 /// [maxWidth] - 最大幅（デフォルト: 2000）
-/// [wrapWithMaterialApp] - MaterialAppでラップするか（デフォルト: true）
 /// [enableDrag] - ドラッグで閉じるか（デフォルト: false）
 /// [isDismissible] - 背景タップで閉じるか（デフォルト: false）
 /// [backgroundColor] - 背景色（デフォルト: null）
-/// [topRadius] - 上部の角丸半径（デフォルト: 0 = 角丸なし）
-/// [transitionAnimationController] - アニメーションコントローラー（カスタムduration用）
+/// [topRadius] - 上部の角丸半径（デフォルト: 25）
+/// [transitionDuration] - アニメーション時間（デフォルト: 325ms）
 Future<T?> showAppModalBottomSheet<T>(
   BuildContext context, {
   required Widget child,
@@ -21,7 +20,6 @@ Future<T?> showAppModalBottomSheet<T>(
   bool isScrollControlled = true,
   bool useSafeArea = false,
   double maxWidth = 2000,
-  bool wrapWithMaterialApp = true,
   bool enableDrag = false,
   bool isDismissible = false,
   Color? backgroundColor,
@@ -37,29 +35,8 @@ Future<T?> showAppModalBottomSheet<T>(
         )
       : null;
 
-  // 表示するWidget
-  Widget content;
-  if (wrapWithMaterialApp) {
-    content = MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        appBarTheme: const AppBarTheme(
-          scrolledUnderElevation: 0,
-          elevation: 0,
-        ),
-      ),
-      themeMode: ThemeMode.dark,
-      darkTheme: ThemeData.dark().copyWith(
-        appBarTheme: const AppBarTheme(
-          scrolledUnderElevation: 0,
-          elevation: 0,
-        ),
-      ),
-      home: child,
-    );
-  } else {
-    content = child;
-  }
+  // 表示するWidget（ルートMaterialAppのテーマをそのまま継承）
+  Widget content = child;
 
   // SafeArea対応
   if (useSafeArea) {
@@ -87,7 +64,7 @@ Future<T?> showAppModalBottomSheet<T>(
                   Theme.of(context).bottomSheetTheme.backgroundColor ??
                   Theme.of(context).dialogBackgroundColor,
               shape: shape,
-              clipBehavior: shape != null ? Clip.antiAlias : Clip.none,
+              clipBehavior: shape != null ? Clip.hardEdge : Clip.none,
               child: content,
             ),
           ),
