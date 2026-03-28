@@ -240,12 +240,13 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                         value.replaceAll(RegExp(r'\D'), '')) ??
                                     0;
                                 ref
-                                    .read(editingBudgetPricesProvider.notifier)
-                                    .state = {
-                                  ...ref.read(editingBudgetPricesProvider),
-                                  widget.budgetEditValue.expenseBigCategoryId:
+                                    .read(editingBudgetPricesNotifierProvider
+                                        .notifier)
+                                    .update(
+                                      widget.budgetEditValue
+                                          .expenseBigCategoryId,
                                       numericValue,
-                                };
+                                    );
                               },
                               // //領域外をタップでproviderを更新する
                               onTapOutside: (event) {

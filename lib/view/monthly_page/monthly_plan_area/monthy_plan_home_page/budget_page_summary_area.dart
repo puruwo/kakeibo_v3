@@ -22,7 +22,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 編集中の予算金額を常にwatchする（autoDisposeの生存を保証するため）
-    final editingPrices = ref.watch(editingBudgetPricesProvider);
+    final editingPrices = ref.watch(editingBudgetPricesNotifierProvider);
 
     return ref.watch(resolvedAllCategoryCardModelProvider).when(
           data: (originalModel) {

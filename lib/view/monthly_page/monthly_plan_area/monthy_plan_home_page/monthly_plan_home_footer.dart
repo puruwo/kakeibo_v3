@@ -27,8 +27,6 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         return _budgetNormalButtons(context, ref);
       case TabState.budgetEdditing:
         return _budgetEdditingButton(context, ref);
-      default:
-        return const SizedBox.shrink();
     }
   }
 
@@ -137,7 +135,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
                         .updateState(TabState.budgetNormal);
 
                     ref.invalidate(isPriceEditedNotifierProvider);
-                    ref.invalidate(editingBudgetPricesProvider);
+                    ref.invalidate(editingBudgetPricesNotifierProvider);
                   },
                 );
               }),
@@ -163,5 +161,4 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
       },
     );
   }
-
 }
