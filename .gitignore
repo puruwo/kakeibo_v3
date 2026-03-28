@@ -48,4 +48,4 @@ android/.gradle/
 ios/Pods/
 
 # claude related
-.claude/
+.claude/settings.local.json
