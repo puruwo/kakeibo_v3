@@ -272,7 +272,7 @@ class _BigCategoryAppearanceEditAreaState
                           shape: BoxShape.circle,
                         )),
                   ),
-                  const Text(
+                  Text(
                     'カテゴリーカラー',
                     style: CategoryStyles.categoryEditColorLabel,
                   )

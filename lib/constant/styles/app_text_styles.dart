@@ -1,7 +1,4 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/font_style.dart';
 
@@ -14,11 +11,10 @@ class AppTextStyles {
   // ==========================================================================
 
   /// ページタイトル用のスタイル
-  static TextStyle pageHeaderText = const TextStyle(
+  static final TextStyle pageHeaderText = MyFontStyle.notoSans.copyWith(
     color: MyColors.white,
     fontSize: 18,
     fontWeight: FontWeight.w500,
-    fontFamily: 'noto_sans',
   );
 
   // ==========================================================================
@@ -31,21 +27,21 @@ class AppTextStyles {
   /// - ページ: payment_frequency_picker.dart (支払い頻度ピッカー)
   ///   - エリア: ダイアログヘッダー
   ///   - 詳細: 「支払い頻度を設定」タイトル
-  static TextStyle dialogTitle = GoogleFonts.notoSans(
+  static final TextStyle dialogTitle = MyFontStyle.notoSans.copyWith(
       fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w600);
 
   /// ダイアログ内ラベル用スタイル
   ///
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用）
-  static TextStyle dialogLabel = GoogleFonts.notoSans(
+  static final TextStyle dialogLabel = MyFontStyle.notoSans.copyWith(
       fontSize: 14, color: MyColors.white, fontWeight: FontWeight.w300);
 
   /// ダイアログ内リスト項目用スタイル
   ///
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用）
-  static TextStyle dialogList = GoogleFonts.notoSans(
+  static final TextStyle dialogList = MyFontStyle.notoSans.copyWith(
       fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w300);
 
   // ==========================================================================
@@ -58,7 +54,7 @@ class AppTextStyles {
   /// - ファイル: app_component.dart (AppTab共通コンポーネント)
   ///   - エリア: TabBar
   ///   - 詳細: 選択されているタブのテキストスタイル
-  static TextStyle selectedLabelStyle = GoogleFonts.notoSans(
+  static final TextStyle selectedLabelStyle = MyFontStyle.notoSans.copyWith(
       fontSize: 14, color: MyColors.themeColor, fontWeight: FontWeight.w600);
 
   /// 非選択タブラベル用スタイル
@@ -67,7 +63,7 @@ class AppTextStyles {
   /// - ファイル: app_component.dart (AppTab共通コンポーネント)
   ///   - エリア: TabBar
   ///   - 詳細: 選択されていないタブのテキストスタイル
-  static TextStyle unselectedLabelStyle = GoogleFonts.notoSans(
+  static final TextStyle unselectedLabelStyle = MyFontStyle.notoSans.copyWith(
       fontSize: 14,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w300);
@@ -80,17 +76,17 @@ class AppTextStyles {
   ///
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用、MainButtonコンポーネント内で使用予定）
-  static TextStyle mainButtonText = GoogleFonts.notoSans(
+  static final TextStyle mainButtonText = MyFontStyle.notoSans.copyWith(
       fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w600);
 
   /// 一行ボタン用のテキスト
   ///
-  static TextStyle oneLineButtonText = GoogleFonts.notoSans(
+  static final TextStyle oneLineButtonText = MyFontStyle.notoSans.copyWith(
       fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w400);
 
   /// 一行ボタン用のサブテキスト
   ///
-  static TextStyle oneLineButtonSubText = GoogleFonts.notoSans(
+  static final TextStyle oneLineButtonSubText = MyFontStyle.notoSans.copyWith(
       fontSize: 14,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
@@ -105,7 +101,7 @@ class AppTextStyles {
   /// - ページ: 各リストページ
   ///   - エリア: メインコンテンツ
   ///   - 詳細: データがない場合の表示
-  static TextStyle listEmptyMessage = GoogleFonts.notoSans(
+  static final TextStyle listEmptyMessage = MyFontStyle.notoSans.copyWith(
       fontSize: 16,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
@@ -135,14 +131,14 @@ class AppTextStyles {
   /// - ファイル: payment_frequency_picker.dart
   ///   - エリア: ダイアログ内キャンセルボタン
   ///   - 詳細: 「キャンセル」ボタンテキスト
-  static TextStyle secondaryButtonText = GoogleFonts.notoSans(
+  static final TextStyle secondaryButtonText = MyFontStyle.notoSans.copyWith(
       fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w600);
 
   /// 白文字ボタン用テキストスタイル
   ///
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用）
-  static final TextStyle whiteButtonText = GoogleFonts.notoSans(
+  static final TextStyle whiteButtonText = MyFontStyle.notoSans.copyWith(
       fontSize: 17, color: MyColors.white, fontWeight: FontWeight.w600);
 
   // ==========================================================================
@@ -310,7 +306,7 @@ class AppTextStyles {
   /// - ファイル: income_graph_area.dart
   ///   - エリア: 円グラフ内ラベル
   ///   - 詳細: カテゴリー名と割合表示
-  static final TextStyle appCardGraphLabel = GoogleFonts.notoSans(
+  static final TextStyle appCardGraphLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 11,
     color: MyColors.white,
     fontWeight: FontWeight.w600,
@@ -324,7 +320,7 @@ class AppTextStyles {
   ///   - 詳細: 選択状態に応じて太字になるスタイル
   static TextStyle popupMenuItemLabel(
       {Color? textColor, bool isSelected = false}) {
-    return GoogleFonts.notoSans(
+    return MyFontStyle.notoSans.copyWith(
       color: textColor ?? MyColors.white,
       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
     );
@@ -333,6 +329,6 @@ class AppTextStyles {
   // ==========================================================================
   // テキストボタン ("さらに表示する"など)
   // ==========================================================================
-  static TextStyle textButtonTextStyle = MyFontStyle.notoSans.copyWith(
+  static final TextStyle textButtonTextStyle = MyFontStyle.notoSans.copyWith(
       fontSize: 12, color: MyColors.themeColor, fontWeight: FontWeight.w500);
 }

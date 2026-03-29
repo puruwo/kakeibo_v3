@@ -71,7 +71,7 @@ class _PaymentFrequencyInputFieldState
               color: MyColors.label,
             ),
             const SizedBox(width: 8),
-            const Text(
+            Text(
               '頻度',
               style: RegisterPageStyles.budgetLabel,
             ),

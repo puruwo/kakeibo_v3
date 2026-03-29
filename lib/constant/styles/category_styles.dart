@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/font_style.dart';
 
 /// ============================================================================
 /// カテゴリー関連ページで使用するTextStyleを定義
@@ -23,7 +23,7 @@ class CategoryStyles {
   ///   - エリア: big_category_list_area.dart (大カテゴリーリストエリア)
   ///   - 詳細: 「+ 新しいカテゴリーを追加」リンク
   ///   - 備考: 支出カテゴリー・収入カテゴリーの両方で使用
-  static TextStyle newCategoryAdd = GoogleFonts.notoSans(
+  static final TextStyle newCategoryAdd = MyFontStyle.notoSans.copyWith(
       fontSize: 17,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
@@ -38,8 +38,8 @@ class CategoryStyles {
   /// - ページ: category_expense_history_page.dart (カテゴリー別支出履歴)
   ///   - エリア: expanded_category_sum_tile.dart (展開可能カテゴリーサマリータイル)
   ///   - 詳細: 小カテゴリー名表示
-  static TextStyle categoryExpenseHistoryPageCategoryName =
-      GoogleFonts.notoSans(
+  static final TextStyle categoryExpenseHistoryPageCategoryName =
+      MyFontStyle.notoSans.copyWith(
           fontSize: 16, color: MyColors.label, fontWeight: FontWeight.w400);
 
   /// 件数表示用スタイル
@@ -47,10 +47,11 @@ class CategoryStyles {
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用）
   ///   - 想定: カテゴリー別の取引件数表示
-  static TextStyle categoryExpenseHistoryPageRecordCount = GoogleFonts.notoSans(
-      fontSize: 14,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w300);
+  static final TextStyle categoryExpenseHistoryPageRecordCount =
+      MyFontStyle.notoSans.copyWith(
+          fontSize: 14,
+          color: MyColors.secondaryLabel,
+          fontWeight: FontWeight.w300);
 
   /// 金額表示用スタイル
   ///
@@ -58,11 +59,11 @@ class CategoryStyles {
   /// - ページ: category_expense_history_page.dart (カテゴリー別支出履歴)
   ///   - エリア: expanded_category_sum_tile.dart (展開可能カテゴリーサマリータイル)
   ///   - 詳細: カテゴリー別合計金額表示
-  static const TextStyle categoryExpenseHistoryPagePrice = TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 19,
-      color: MyColors.label,
-      fontWeight: FontWeight.w300);
+  static final TextStyle categoryExpenseHistoryPagePrice =
+      MyFontStyle.sfUi.copyWith(
+          fontSize: 19,
+          color: MyColors.label,
+          fontWeight: FontWeight.w300);
 
   /// 予算表示用スタイル
   ///
@@ -70,11 +71,11 @@ class CategoryStyles {
   /// - ページ: category_expense_history_page.dart (カテゴリー別支出履歴)
   ///   - エリア: expanded_category_sum_tile.dart
   ///   - 詳細: 「/予算 10,000」などの予算金額表示
-  static const TextStyle categoryExpenseHistoryPageBudgetPrice = TextStyle(
-      fontFamily: 'sf_ui',
-      fontSize: 14,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w300);
+  static final TextStyle categoryExpenseHistoryPageBudgetPrice =
+      MyFontStyle.sfUi.copyWith(
+          fontSize: 14,
+          color: MyColors.secondaryLabel,
+          fontWeight: FontWeight.w300);
 
   /// 「円」表示用スタイル
   ///
@@ -82,7 +83,8 @@ class CategoryStyles {
   /// - ページ: category_expense_history_page.dart (カテゴリー別支出履歴)
   ///   - エリア: expanded_category_sum_tile.dart
   ///   - 詳細: 金額・予算の後の「円」表示
-  static TextStyle categoryExpenseHistoryPageYen = GoogleFonts.notoSans(
+  static final TextStyle categoryExpenseHistoryPageYen =
+      MyFontStyle.notoSans.copyWith(
     fontSize: 11,
     color: MyColors.secondaryLabel,
     fontWeight: FontWeight.w400,
@@ -94,10 +96,11 @@ class CategoryStyles {
   /// - ページ: category_expense_history_page.dart (カテゴリー別支出履歴)
   ///   - エリア: expanded_category_sum_tile.dart
   ///   - 詳細: 「/予算」などのラベルテキスト
-  static TextStyle categoryExpenseHistoryPageSubText = GoogleFonts.notoSans(
-      fontSize: 13,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+  static final TextStyle categoryExpenseHistoryPageSubText =
+      MyFontStyle.notoSans.copyWith(
+          fontSize: 13,
+          color: MyColors.secondaryLabel,
+          fontWeight: FontWeight.w400);
 
   /// リスト一覧のヘッダーラベル（表示/項目/並べ替えなど）
   ///
@@ -107,7 +110,7 @@ class CategoryStyles {
   ///   - エリア: big_category_edit_area.dart
   ///   - エリア: big_category_list_area.dart
   ///   - 詳細: リスト上部の各列の見出し
-  static TextStyle listHeaderLabel = GoogleFonts.notoSans(
+  static final TextStyle listHeaderLabel = MyFontStyle.notoSans.copyWith(
       fontSize: 16,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w400);
@@ -120,7 +123,7 @@ class CategoryStyles {
   ///   - エリア: big_category_edit_area.dart
   ///   - エリア: big_category_list_area.dart
   ///   - 詳細: リストアイテムのメインテキスト
-  static TextStyle editListTitle = GoogleFonts.notoSans(
+  static final TextStyle editListTitle = MyFontStyle.notoSans.copyWith(
       fontSize: 18, color: MyColors.label, fontWeight: FontWeight.w400);
 
   /// 編集リストのサブタイトル（小カテゴリー列挙など）
@@ -130,7 +133,7 @@ class CategoryStyles {
   ///   - エリア: big_category_edit_area.dart
   ///   - エリア: big_category_list_area.dart
   ///   - 詳細: 大カテゴリーの下に表示される小カテゴリー一覧など
-  static TextStyle editListSubTitle = GoogleFonts.notoSans(
+  static final TextStyle editListSubTitle = MyFontStyle.notoSans.copyWith(
       fontSize: 14,
       color: MyColors.secondaryLabel,
       fontWeight: FontWeight.w300);
@@ -142,8 +145,8 @@ class CategoryStyles {
   ///   - エリア: cotegory_appearance_edit_area.dart
   ///   - エリア: fixed_cost_category_appearance_edit_area.dart
   ///   - 詳細: カテゴリー名入力テキストフィールド
-  static const TextStyle categoryEditNameInput =
-      TextStyle(fontSize: 20, color: MyColors.label);
+  static final TextStyle categoryEditNameInput =
+      MyFontStyle.notoSans.copyWith(fontSize: 20, color: MyColors.label);
 
   /// カテゴリー名入力フィールドのヒントスタイル
   ///
@@ -152,8 +155,8 @@ class CategoryStyles {
   ///   - エリア: cotegory_appearance_edit_area.dart
   ///   - エリア: fixed_cost_category_appearance_edit_area.dart
   ///   - 詳細: カテゴリー名入力テキストフィールドのヒント
-  static const TextStyle categoryEditNameHint =
-      TextStyle(fontSize: 16, color: MyColors.secondaryLabel);
+  static final TextStyle categoryEditNameHint = MyFontStyle.notoSans
+      .copyWith(fontSize: 16, color: MyColors.secondaryLabel);
 
   /// カテゴリーカラー選択ラベルのスタイル
   ///
@@ -162,6 +165,6 @@ class CategoryStyles {
   ///   - エリア: cotegory_appearance_edit_area.dart
   ///   - エリア: fixed_cost_category_appearance_edit_area.dart
   ///   - 詳細: 「カテゴリーカラー」ラベル
-  static const TextStyle categoryEditColorLabel =
-      TextStyle(fontSize: 14, color: MyColors.label);
+  static final TextStyle categoryEditColorLabel =
+      MyFontStyle.notoSans.copyWith(fontSize: 14, color: MyColors.label);
 }

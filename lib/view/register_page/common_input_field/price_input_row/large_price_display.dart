@@ -127,7 +127,7 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
   }
 
   Widget _buildUnconfirmedDisplay() {
-    return const Text(
+    return Text(
       '---',
       style: RegisterPageStyles.priceUnconfirmed,
     );

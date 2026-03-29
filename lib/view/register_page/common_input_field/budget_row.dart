@@ -82,15 +82,15 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Row(
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                const Icon(
                   Icons.account_balance_wallet_outlined,
                   size: 18,
                   color: MyColors.label,
                 ),
-                SizedBox(width: 8),
+                const SizedBox(width: 8),
                 Text(
                   '予算',
                   style: RegisterPageStyles.budgetLabel,

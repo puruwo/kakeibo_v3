@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/font_style.dart';
 
 /// ============================================================================
 /// 登録ページ（register_page）で使用するTextStyleを定義
@@ -20,7 +20,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: price_type_switch_area.dart (価格タイプ切替エリア)
   ///   - 詳細: 「金額を入力」などのプレースホルダー
-  static TextStyle placeHolder = GoogleFonts.notoSans(
+  static final TextStyle placeHolder = MyFontStyle.notoSans.copyWith(
     fontSize: 17,
     fontWeight: FontWeight.w500,
     color: MyColors.secondaryLabel,
@@ -32,11 +32,10 @@ class RegisterPageStyles {
   /// - ページ: monthly_fixed_cost_page (月間固定費ページ)
   ///   - エリア: price_input_dialog.dart (金額入力ダイアログ)
   ///   - 詳細: 固定費の金額入力フィールド
-  static TextStyle inputExpenseText = const TextStyle(
-    fontSize: 25.0,
+  static final TextStyle inputExpenseText = MyFontStyle.sfUi.copyWith(
+    fontSize: 25,
     fontWeight: FontWeight.w500,
     color: MyColors.label,
-    fontFamily: 'sf_ui',
     height: 1.0,
   );
 
@@ -50,7 +49,7 @@ class RegisterPageStyles {
   /// - ページ: category_edit_page (カテゴリー編集ページ)
   ///   - エリア: new_small_category_input_name_dialog.dart
   ///   - 詳細: 小カテゴリー名入力フィールド
-  static TextStyle inputText = GoogleFonts.notoSans(
+  static final TextStyle inputText = MyFontStyle.notoSans.copyWith(
     fontSize: 18,
     fontWeight: FontWeight.w500,
     color: MyColors.label,
@@ -67,7 +66,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: large_price_display.dart (大型金額表示)
   ///   - 詳細: 入力中の金額表示
-  static const TextStyle priceInput = TextStyle(
+  static final TextStyle priceInput = MyFontStyle.sfUi.copyWith(
     color: MyColors.white,
     fontSize: 42,
     fontWeight: FontWeight.bold,
@@ -80,7 +79,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: large_price_display.dart (大型金額表示)
   ///   - 詳細: 金額未入力時の「---」表示
-  static const TextStyle priceUnconfirmed = TextStyle(
+  static final TextStyle priceUnconfirmed = MyFontStyle.sfUi.copyWith(
     color: MyColors.secondaryLabel,
     fontSize: 42,
     fontWeight: FontWeight.bold,
@@ -94,7 +93,7 @@ class RegisterPageStyles {
   ///   - エリア: large_price_display.dart (大型金額表示)
   ///   - 詳細: 金額の前に表示される「¥」記号
   ///   - 備考: 支出/収入によって色が変わる
-  static TextStyle yenSymbol(Color color) => TextStyle(
+  static TextStyle yenSymbol(Color color) => MyFontStyle.sfUi.copyWith(
         color: color,
         fontSize: 32,
         fontWeight: FontWeight.bold,
@@ -111,7 +110,7 @@ class RegisterPageStyles {
   ///   - エリア: transaction_type_pill.dart (取引種別ピル)
   ///   - 詳細: 「支出」「収入」の切り替えピルのテキスト
   ///   - 備考: 選択状態によって色が変わる
-  static TextStyle pillLabel(Color color) => TextStyle(
+  static TextStyle pillLabel(Color color) => MyFontStyle.notoSans.copyWith(
         color: color,
         fontSize: 16,
         fontWeight: FontWeight.w600,
@@ -128,7 +127,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: initial_payment_date_input_field.dart (初回支払い日入力)
   ///   - 詳細: 固定費の初回支払い日表示
-  static const TextStyle dateButton = TextStyle(
+  static final TextStyle dateButton = MyFontStyle.sfUi.copyWith(
     color: MyColors.white,
     fontSize: 15,
     fontWeight: FontWeight.w500,
@@ -148,7 +147,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: initial_payment_date_input_field.dart
   ///   - 詳細: 「初回支払い日」ラベル
-  static const TextStyle budgetLabel = TextStyle(
+  static final TextStyle budgetLabel = MyFontStyle.notoSans.copyWith(
     color: MyColors.secondaryLabel,
     fontSize: 15,
   );
@@ -163,7 +162,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: payment_frequency_input_field.dart
   ///   - 詳細: 「1ヶ月に1回」などの頻度表示
-  static const TextStyle budgetValue = TextStyle(
+  static final TextStyle budgetValue = MyFontStyle.notoSans.copyWith(
     color: MyColors.white,
     fontSize: 15,
   );
@@ -179,7 +178,7 @@ class RegisterPageStyles {
   ///   - エリア: category_area/icon_box/
   ///   - 詳細: none_icon_button.dart, selected_icon_button.dart, normal_icon_button.dart
   ///   - 備考: 「食費」「交通費」などのカテゴリー名表示
-  static const TextStyle categoryLabel = TextStyle(
+  static final TextStyle categoryLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 13,
     color: MyColors.white,
   );
@@ -190,7 +189,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: category_area/category_area.dart
   ///   - 詳細: カテゴリーエリア下部の並べ替えリンク
-  static const TextStyle rearrangeLink = TextStyle(
+  static final TextStyle rearrangeLink = MyFontStyle.notoSans.copyWith(
     color: MyColors.secondaryLabel,
     fontWeight: FontWeight.w600,
     fontSize: 16,
@@ -206,7 +205,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: payment_frequency_picker.dart (支払い頻度ピッカー)
   ///   - 詳細: 「1」「2」...などの間隔数字表示
-  static const TextStyle pickerLargeNumber = TextStyle(
+  static final TextStyle pickerLargeNumber = MyFontStyle.sfUi.copyWith(
     fontSize: 24,
     color: MyColors.label,
     fontWeight: FontWeight.bold,
@@ -218,7 +217,7 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: payment_frequency_picker.dart (支払い頻度ピッカー)
   ///   - 詳細: 「ヶ月」「年」などの単位表示
-  static const TextStyle pickerMediumText = TextStyle(
+  static final TextStyle pickerMediumText = MyFontStyle.notoSans.copyWith(
     fontSize: 20,
     color: MyColors.label,
     fontWeight: FontWeight.bold,

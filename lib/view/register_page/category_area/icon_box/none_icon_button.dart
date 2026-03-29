@@ -27,7 +27,7 @@ class NoneIconBox extends StatelessWidget {
         //テキストラベル
         SizedBox(
           width: 62.2 * ((context.screenHorizontalMagnification - 1) / 5 + 1),
-          child: const Center(
+          child: Center(
             child: Text(
               '',
               style: RegisterPageStyles.categoryLabel,

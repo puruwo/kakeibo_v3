@@ -182,17 +182,17 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
           ),
         );
       },
-      child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.settings_outlined,
               size: 16,
               color: MyColors.secondaryLabel,
             ),
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
             Text(
               'アイコンを並べ替える',
               style: RegisterPageStyles.rearrangeLink,
