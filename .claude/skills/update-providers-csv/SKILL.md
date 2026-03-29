@@ -39,12 +39,12 @@ Providerに関わるファイルを変更した場合、作業完了前に必ず
 | `provider_type` | Provider種別（`Provider` / `NotifierProvider` / `AutoDisposeNotifierProvider` / `FutureProvider` / `AsyncNotifierProvider` / `StateProvider`） |
 | `return_type` | 返り値の型（例: `Map<int, int>` / `List<ExpenseEntity>`） |
 | `layer` | アーキテクチャ層（`Repository` / `Service` / `Usecase` / `GlobalState` / `State` / `AsyncData` / `MiddleProvider`） |
-| `family` | `.family` 修飾子の有無（`true` / `false`） |
-| `auto_dispose` | `.autoDispose` 修飾子の有無（`true` / `false`） |
-| `keep_alive` | `keepAlive: true` の有無（`true` / `false`） |
+| `family` | `.family` 修飾子の情報。非familyは空欄。familyの場合は `引数型: 日本語説明（50字以内）` の形式で記載（例: `DateScopeEntity: 集計期間スコープ`、`int: 大カテゴリーID`） |
+| `auto_dispose` | `.autoDispose` 修飾子の有無。該当する場合のみ `true` を記載、該当しない場合は空欄 |
+| `keep_alive` | `keepAlive: true` の有無。該当する場合のみ `true` を記載、該当しない場合は空欄 |
 | `file_path` | 定義元の `.dart` ファイルパス（`.g.dart` は記載しない） |
 | `summary` | 日本語での概要（1行） |
-| `dependencies` | 依存するProvider名を ` / ` 区切りで列挙 |
+| `dependencies` | 依存するProviderを ` / ` 区切りで列挙。各Providerは `provider名(日本語説明50字以内)` の形式で記載（例: `budgetUsecaseProvider(予算データの取得・編集) / updateDBCountNotifierProvider(DB更新トリガー)`） |
 
 ---
 
