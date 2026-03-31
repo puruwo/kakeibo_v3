@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.1.2
 
 environment:
-  sdk: ">=3.1.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,14 +31,14 @@ dependencies:
   sqflite:
   flutter:
     sdk: flutter
-  flutter_riverpod:
+  flutter_riverpod: ^2.6.1
   flutter_hooks:
-  hooks_riverpod:
-  riverpod_annotation:
-  google_fonts: 5.0.0
+  hooks_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+  google_fonts:
   flutter_slidable:
   json_annotation:
-  freezed_annotation:
+  freezed_annotation: ^2.4.4
   liveroom:
   percent_indicator:
   go_router:
@@ -61,7 +61,7 @@ dependencies:
   fl_chart: ^0.66.2
   flutter_svg: ^2.0.9
   modal_bottom_sheet: ^3.0.0-pre
-  syncfusion_flutter_charts: ^25.1.35
+  syncfusion_flutter_charts: ^28.1.38
   logger: ^1.2.0
   share_plus: ^7.2.1
   path_provider: ^2.1.2
@@ -75,13 +75,13 @@ dependencies:
   flutter_launcher_icons: ^0.13.1
 
 dev_dependencies:
-  freezed:
+  freezed: ^2.5.2
   build_runner:
   json_serializable:
   flutter_test:
     sdk: flutter
   flutter_lints:
-  riverpod_generator:
+  riverpod_generator: ^2.4.0
   envied_generator:
   sqflite_common_ffi:
 
