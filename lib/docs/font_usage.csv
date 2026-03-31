@@ -37,20 +37,18 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardOptionalSec
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardGraphLabel,ラベル,noto_sans,11,w600,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.popupMenuItemLabel(),ラベル,noto_sans,未指定,dynamic(bold/normal),dynamic(white),MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.textButtonTextStyle,ボタン,noto_sans,12,w500,MyColors.themeColor,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.placeHolder,ラベル,noto_sans,17,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.placeHolder,ラベル,noto_sans,14,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.inputExpenseText,本文,sf_ui,25,w500,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.inputText,本文,noto_sans,18,w500,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.inputText,本文,noto_sans,15,w500,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.priceInput,金額,sf_ui,42,bold,MyColors.white,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.priceUnconfirmed,金額,sf_ui,42,bold,MyColors.secondaryLabel,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.yenSymbol(),金額,sf_ui,32,bold,dynamic,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.pillLabel(),ラベル,noto_sans,16,w600,dynamic,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.dateButton,ボタン,sf_ui,15,w500,MyColors.white,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.budgetLabel,ラベル,noto_sans,15,未指定,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.budgetValue,ラベル,noto_sans,15,未指定,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.categoryLabel,ラベル,noto_sans,13,未指定,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.categoryLabel,ラベル,noto_sans,13,w500,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.rearrangeLink,ボタン,noto_sans,16,w600,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.pickerLargeNumber,本文,sf_ui,24,bold,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.pickerMediumText,本文,noto_sans,20,bold,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.priceTypeSwitchLabel,ラベル,noto_sans,14,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/monthly_page_styles.dart,月間ページ,MonthlyPageStyles.thirdPageSubheading,見出し,noto_sans,18,w600,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/monthly_page_styles.dart,月間ページ,MonthlyPageStyles.topCardTitleLabel,ラベル,noto_sans,16,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/monthly_page_styles.dart,月間ページ,MonthlyPageStyles.topCardSubTitleLabel,ラベル,noto_sans,14,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
@@ -134,7 +132,7 @@ lib/view/year_page/bonus_plan_area/bonus_plan_bar_graph.dart,BonusPlanBarGraph,T
 lib/view/year_page/bonus_plan_area/bonus_plan_bar_graph.dart,BonusPlanBarGraph,Text,エラー,未指定(default),16,未指定,MyColors.secondaryLabel,インライン TextStyle(),未使用,インライン
 lib/view/register_page/category_area/category_reorder_page.dart,CategoryReorderPage,Text,ラベル,未指定(default),14,未指定,MyColors.secondaryLabel,インライン TextStyle(),未使用,インライン
 lib/view/daily_expense_summary_page/daily_expense_summary_page.dart,DailyExpenseSummaryPage,Text,ラベル,noto_sans,14(copyWith),w400,MyColors.secondaryLabel,定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
-lib/view/register_page/common_input_field/memo_input_field.dart,MemoInputField,Text,ラベル,noto_sans,15(copyWith),w500,MyColors.secondaryLabel,定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
+lib/view/register_page/common_input_field/memo_input_field.dart,MemoInputField,Text,ラベル,noto_sans,14,w500,MyColors.secondaryLabel,RegisterPageStyles.placeHolder直接参照,使用(notoSans),共通化済み
 lib/view/register_page/common_input_field/price_input_row/large_price_display.dart,LargePriceDisplay,Text,金額,sf_ui,32,bold,dynamic,定数参照+copyWith,使用(sfUi/間接),copyWithで上書き
 lib/util/common_widget/app_dialog.dart,AppDialog,Text,ボタン,noto_sans,18,w600(copyWith),MyColors.white,定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
 lib/util/common_widget/app_delete_dialog.dart,AppDeleteDialog,Text,ボタン,noto_sans,14,w600,MyColors.white(copyWith),定数参照+copyWith,使用(notoSans/間接),copyWithで上書き

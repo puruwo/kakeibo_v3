@@ -11,10 +11,7 @@ import 'package:kakeibo/view_model/state/register_page/entered_income_source_con
 ///
 /// 画像デザインの「📊 予算 | 給料 ▼」部分
 class BudgetRow extends ConsumerStatefulWidget {
-  const BudgetRow({
-    super.key,
-    required this.originalIncomeSourceBigCategory,
-  });
+  const BudgetRow({super.key, required this.originalIncomeSourceBigCategory});
 
   final int originalIncomeSourceBigCategory;
 
@@ -53,8 +50,9 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedValue =
-        ref.watch(enteredIncomeSourceControllerNotifierProvider);
+    final selectedValue = ref.watch(
+      enteredIncomeSourceControllerNotifierProvider,
+    );
     final selectedEnum = _getEnumByValue(selectedValue);
 
     return AppPopupMenu(
@@ -91,19 +89,13 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
                   color: MyColors.label,
                 ),
                 const SizedBox(width: 8),
-                Text(
-                  '予算',
-                  style: RegisterPageStyles.budgetLabel,
-                ),
+                Text('予算', style: RegisterPageStyles.placeHolder),
               ],
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  selectedEnum.label,
-                  style: RegisterPageStyles.budgetValue,
-                ),
+                Text(selectedEnum.label, style: RegisterPageStyles.inputText),
                 const SizedBox(width: 4),
                 const Icon(
                   Icons.keyboard_arrow_down_rounded,

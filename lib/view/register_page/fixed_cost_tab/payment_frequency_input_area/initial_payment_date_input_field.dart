@@ -10,10 +10,7 @@ import 'package:kakeibo/view_model/state/register_page/input_date_controller/inp
 ///
 /// UIデザイン: [📅 初回   12/29]
 class InitialPaymentDateInputField extends ConsumerStatefulWidget {
-  const InitialPaymentDateInputField({
-    super.key,
-    required this.originalDate,
-  });
+  const InitialPaymentDateInputField({super.key, required this.originalDate});
 
   /// 初期日付（yyyyMMdd形式）
   final String originalDate;
@@ -29,7 +26,9 @@ class _InitialPaymentDateInputFieldState
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(inputDateControllerNotifierProvider.notifier).setData(
+      ref
+          .read(inputDateControllerNotifierProvider.notifier)
+          .setData(
             DateTime.parse(
               '${widget.originalDate.substring(0, 4)}-${widget.originalDate.substring(4, 6)}-${widget.originalDate.substring(6, 8)}',
             ),
@@ -77,14 +76,11 @@ class _InitialPaymentDateInputFieldState
               color: MyColors.label,
             ),
             const SizedBox(width: 8),
-            Text(
-              '初回',
-              style: RegisterPageStyles.budgetLabel,
-            ),
+            Text('初回', style: RegisterPageStyles.placeHolder),
             const Spacer(),
             Text(
               '${enteredDate.month}/${enteredDate.day}',
-              style: RegisterPageStyles.dateButton,
+              style: RegisterPageStyles.inputText,
             ),
           ],
         ),

@@ -38,9 +38,7 @@ class _NewSmallCategoryInputNameDialog
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         alignment: Alignment.center,
         height: 150,
@@ -65,21 +63,22 @@ class _NewSmallCategoryInputNameDialog
               // カーソルの先の太さ
               cursorWidth: 2,
               // 入力するテキストのstyle
-              style: RegisterPageStyles.inputText,
+              style: AppTextStyles.appCardTitleLabel,
               // 行数の制約
               minLines: 1,
               maxLines: 1,
               // 最大文字数の制約
               maxLength: 20,
               // 右下のカウンターを非表示にする
-              buildCounter: (
-                BuildContext context, {
-                required int currentLength,
-                required bool isFocused,
-                required int? maxLength,
-              }) {
-                return null;
-              },
+              buildCounter:
+                  (
+                    BuildContext context, {
+                    required int currentLength,
+                    required bool isFocused,
+                    required int? maxLength,
+                  }) {
+                    return null;
+                  },
 
               // 枠や背景などのデザイン
               decoration: InputDecoration(
@@ -91,22 +90,22 @@ class _NewSmallCategoryInputNameDialog
 
                 // テキストの余白
                 contentPadding: const EdgeInsets.only(
-                    top: 10, bottom: 10, left: 0, right: 0),
+                  top: 10,
+                  bottom: 10,
+                  left: 0,
+                  right: 0,
+                ),
 
                 // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
                 // 何もしていない時の境界線
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: MyColors.transparent,
-                  ),
+                  borderSide: const BorderSide(color: MyColors.transparent),
                 ),
                 // 入力時の境界線
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(
-                    color: MyColors.transparent,
-                  ),
+                  borderSide: const BorderSide(color: MyColors.transparent),
                 ),
               ),
 
@@ -123,7 +122,7 @@ class _NewSmallCategoryInputNameDialog
                 FocusScope.of(context).unfocus();
               },
             ),
-            ButtonBar(
+            OverflowBar(
               alignment: MainAxisAlignment.end,
               children: [
                 TextButton(
@@ -148,9 +147,7 @@ class _NewSmallCategoryInputNameDialog
                       // スナックバーを表示する
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: const Text(
-                            '項目名を入力してください',
-                          ),
+                          content: const Text('項目名を入力してください'),
                           behavior: SnackBarBehavior.floating,
                           duration: const Duration(seconds: 2),
                           shape: RoundedRectangleBorder(
@@ -176,13 +173,15 @@ class _NewSmallCategoryInputNameDialog
                     // 追加する処理をここに書く
                     ref
                         .read(
-                            edittingSmallCategoryListNotifierProvider.notifier)
+                          edittingSmallCategoryListNotifierProvider.notifier,
+                        )
                         .addSmallCategory(entity);
 
                     // 変更を加えたことを管理する状態管理する
                     ref
                         .read(
-                            isSmallCategoryListEditedNotifierProvider.notifier)
+                          isSmallCategoryListEditedNotifierProvider.notifier,
+                        )
                         .updateState(true);
 
                     // OKボタンを押した時の処理

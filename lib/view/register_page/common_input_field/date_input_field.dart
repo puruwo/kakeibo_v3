@@ -12,10 +12,7 @@ import 'package:kakeibo/view_model/state/register_page/register_screen_mode/regi
 ///
 /// 画像デザイン: [📅 2/29] ダークボタン形式
 class DateInputField extends ConsumerStatefulWidget {
-  const DateInputField({
-    super.key,
-    required this.originalDate,
-  });
+  const DateInputField({super.key, required this.originalDate});
 
   /// 初期日付（yyyyMMdd形式）
   final String originalDate;
@@ -35,7 +32,9 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
       if (mode == RegisterScreenMode.add && isInitialized) {
         return;
       }
-      ref.read(inputDateControllerNotifierProvider.notifier).setData(
+      ref
+          .read(inputDateControllerNotifierProvider.notifier)
+          .setData(
             DateTime.parse(
               '${widget.originalDate.substring(0, 4)}-${widget.originalDate.substring(4, 6)}-${widget.originalDate.substring(6, 8)}',
             ),
@@ -70,7 +69,7 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
             const SizedBox(width: 8),
             Text(
               '${enteredDate.month}/${enteredDate.day}',
-              style: RegisterPageStyles.dateButton,
+              style: RegisterPageStyles.inputText,
             ),
           ],
         ),
@@ -79,7 +78,9 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
   }
 
   Future<void> _showDatePicker(
-      BuildContext context, DateTime currentDate) async {
+    BuildContext context,
+    DateTime currentDate,
+  ) async {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialEntryMode: DatePickerEntryMode.calendarOnly,

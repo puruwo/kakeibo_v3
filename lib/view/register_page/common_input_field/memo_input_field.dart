@@ -85,7 +85,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
                 Text(
                   widget.titleLabel,
                   textAlign: TextAlign.left,
-                  style: RegisterPageStyles.placeHolder.copyWith(fontSize: 15),
+                  style: RegisterPageStyles.placeHolder,
                 ),
                 const SizedBox(width: 16),
                 // 入力フィールド
@@ -102,14 +102,15 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
                     minLines: 1,
                     maxLines: 1,
                     maxLength: 20,
-                    buildCounter: (
-                      BuildContext context, {
-                      required int currentLength,
-                      required bool isFocused,
-                      required int? maxLength,
-                    }) {
-                      return null;
-                    },
+                    buildCounter:
+                        (
+                          BuildContext context, {
+                          required int currentLength,
+                          required bool isFocused,
+                          required int? maxLength,
+                        }) {
+                          return null;
+                        },
                     decoration: const InputDecoration(
                       isDense: true,
                       filled: false,

@@ -20,8 +20,20 @@ class RegisterPageStyles {
   /// - ページ: register_page
   ///   - エリア: price_type_switch_area.dart (価格タイプ切替エリア)
   ///   - 詳細: 「金額を入力」などのプレースホルダー
+  ///
+  /// - ページ: register_page
+  ///   - エリア: budget_row.dart (予算行)
+  ///   - 詳細: 「予算」ラベル
+  ///
+  /// - ページ: register_page
+  ///   - エリア: payment_frequency_input_field.dart
+  ///   - 詳細: 「支払い頻度」ラベル
+  ///
+  /// - ページ: register_page
+  ///   - エリア: initial_payment_date_input_field.dart
+  ///   - 詳細: 「初回支払い日」ラベル
   static final TextStyle placeHolder = MyFontStyle.notoSans.copyWith(
-    fontSize: 17,
+    fontSize: 14,
     fontWeight: FontWeight.w500,
     color: MyColors.secondaryLabel,
   );
@@ -46,11 +58,15 @@ class RegisterPageStyles {
   ///   - エリア: memo_input_field.dart (メモ入力フィールド)
   ///   - 詳細: メモの入力テキスト表示
   ///
-  /// - ページ: category_edit_page (カテゴリー編集ページ)
-  ///   - エリア: new_small_category_input_name_dialog.dart
-  ///   - 詳細: 小カテゴリー名入力フィールド
+  /// - ページ: register_page
+  ///   - エリア: budget_row.dart (予算行)
+  ///   - 詳細: 「生活収支」「ボーナス」などの選択値表示
+  ///
+  /// - ページ: register_page
+  ///   - エリア: payment_frequency_input_field.dart
+  ///   - 詳細: 「1ヶ月に1回」などの頻度表示
   static final TextStyle inputText = MyFontStyle.notoSans.copyWith(
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: FontWeight.w500,
     color: MyColors.label,
     height: 1.0,
@@ -94,10 +110,10 @@ class RegisterPageStyles {
   ///   - 詳細: 金額の前に表示される「¥」記号
   ///   - 備考: 支出/収入によって色が変わる
   static TextStyle yenSymbol(Color color) => MyFontStyle.sfUi.copyWith(
-        color: color,
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-      );
+    color: color,
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+  );
 
   // ==========================================================================
   // ピル・ボタン
@@ -111,60 +127,10 @@ class RegisterPageStyles {
   ///   - 詳細: 「支出」「収入」の切り替えピルのテキスト
   ///   - 備考: 選択状態によって色が変わる
   static TextStyle pillLabel(Color color) => MyFontStyle.notoSans.copyWith(
-        color: color,
-        fontSize: 16,
-        fontWeight: FontWeight.w600,
-        height: 1.0,
-      );
-
-  /// 日付ボタンのテキスト（2/29）
-  ///
-  /// 【使用箇所】
-  /// - ページ: register_page
-  ///   - エリア: date_input_field.dart (日付入力フィールド)
-  ///   - 詳細: 選択された日付表示
-  ///
-  /// - ページ: register_page
-  ///   - エリア: initial_payment_date_input_field.dart (初回支払い日入力)
-  ///   - 詳細: 固定費の初回支払い日表示
-  static final TextStyle dateButton = MyFontStyle.sfUi.copyWith(
-    color: MyColors.white,
-    fontSize: 15,
-    fontWeight: FontWeight.w500,
-  );
-
-  /// 予算ラベル（予算）
-  ///
-  /// 【使用箇所】
-  /// - ページ: register_page
-  ///   - エリア: budget_row.dart (予算行)
-  ///   - 詳細: 「予算」ラベル
-  ///
-  /// - ページ: register_page
-  ///   - エリア: payment_frequency_input_field.dart
-  ///   - 詳細: 「支払い頻度」ラベル
-  ///
-  /// - ページ: register_page
-  ///   - エリア: initial_payment_date_input_field.dart
-  ///   - 詳細: 「初回支払い日」ラベル
-  static final TextStyle budgetLabel = MyFontStyle.notoSans.copyWith(
-    color: MyColors.secondaryLabel,
-    fontSize: 15,
-  );
-
-  /// 予算選択値（生活収支）
-  ///
-  /// 【使用箇所】
-  /// - ページ: register_page
-  ///   - エリア: budget_row.dart (予算行)
-  ///   - 詳細: 「生活収支」「ボーナス」などの選択値表示
-  ///
-  /// - ページ: register_page
-  ///   - エリア: payment_frequency_input_field.dart
-  ///   - 詳細: 「1ヶ月に1回」などの頻度表示
-  static final TextStyle budgetValue = MyFontStyle.notoSans.copyWith(
-    color: MyColors.white,
-    fontSize: 15,
+    color: color,
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 1.0,
   );
 
   // ==========================================================================
@@ -180,6 +146,7 @@ class RegisterPageStyles {
   ///   - 備考: 「食費」「交通費」などのカテゴリー名表示
   static final TextStyle categoryLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 13,
+    fontWeight: FontWeight.w500,
     color: MyColors.white,
   );
 
@@ -221,5 +188,17 @@ class RegisterPageStyles {
     fontSize: 20,
     color: MyColors.label,
     fontWeight: FontWeight.bold,
+  );
+
+  /// 支払い額変動ありのラベル
+  ///
+  /// 【使用箇所】
+  /// - ページ: register_page
+  ///   - エリア: price_type_switch_area.dart (価格タイプ切替エリア)
+  ///   - 詳細: 「支払い額変動あり」ラベル
+  static final TextStyle priceTypeSwitchLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 14,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
   );
 }

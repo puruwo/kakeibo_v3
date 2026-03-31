@@ -42,34 +42,37 @@ class _PriceTypeSwitchArea extends ConsumerState<PriceTypeSwitchArea> {
           Text(
             "支払い額変あり",
             textAlign: TextAlign.right,
-            style: RegisterPageStyles.placeHolder,
+            style: RegisterPageStyles.priceTypeSwitchLabel,
           ),
 
           // 選択状態
-          Theme(
-            // ThemeDataを上書きして、トグルOnの時のborderを透明にする
-            data: ThemeData(
-              useMaterial3: true,
-            ).copyWith(
-              colorScheme: Theme.of(context)
-                  .colorScheme
-                  .copyWith(outline: Colors.transparent),
-            ),
-            // トグルスイッチ
-            // 大きさを小さくするためにTransform.scaleを使用
-            child: Transform.scale(
-              alignment: Alignment.centerRight,
-              scale: 0.7,
-              child: Switch(
-                activeTrackColor: MyColors.themeColor, // トグルON時のバー色
-                inactiveTrackColor: MyColors.systemGray, // トグルOFF時のバー色
-                thumbColor: MaterialStateProperty.all(Colors.white), // トグルの丸の色
-                value: isOn,
-                onChanged: (value) {
-                  ref
-                      .read(priceTypeSwitchControllerNotifierProvider.notifier)
-                      .setData(value);
-                },
+          SizedBox(
+            width: 45,
+            child: Theme(
+              // ThemeDataを上書きして、トグルOnの時のborderを透明にする
+              data: ThemeData(useMaterial3: true).copyWith(
+                colorScheme: Theme.of(
+                  context,
+                ).colorScheme.copyWith(outline: Colors.transparent),
+              ),
+              // トグルスイッチ
+              // 大きさを小さくするためにTransform.scaleを使用
+              child: Transform.scale(
+                alignment: Alignment.centerRight,
+                scale: 0.7,
+                child: Switch(
+                  activeTrackColor: MyColors.themeColor, // トグルON時のバー色
+                  inactiveTrackColor: MyColors.systemGray, // トグルOFF時のバー色
+                  thumbColor: WidgetStateProperty.all(Colors.white), // トグルの丸の色
+                  value: isOn,
+                  onChanged: (value) {
+                    ref
+                        .read(
+                          priceTypeSwitchControllerNotifierProvider.notifier,
+                        )
+                        .setData(value);
+                  },
+                ),
               ),
             ),
           ),
