@@ -8,8 +8,11 @@ import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 
 class CategorySumGraph extends HookConsumerWidget {
-  const CategorySumGraph(
-      {required this.barFrameMaxWidth, required this.categoryTile, super.key});
+  const CategorySumGraph({
+    required this.barFrameMaxWidth,
+    required this.categoryTile,
+    super.key,
+  });
   final CategoryCardEntity categoryTile;
   final double barFrameMaxWidth;
 
@@ -39,7 +42,7 @@ class CategorySumGraph extends HookConsumerWidget {
       // 予算あり
       case GraphType.hasBudget:
         return Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 3),
+          padding: const EdgeInsets.only(top: 1, bottom: 3),
           child: Stack(
             children: [
               // バーの背景枠
@@ -58,7 +61,8 @@ class CategorySumGraph extends HookConsumerWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: MyColors().getColorFromHex(
-                      monthlyExpenseByCategoryEntity.categoryColor),
+                    monthlyExpenseByCategoryEntity.categoryColor,
+                  ),
                 ),
                 duration: const Duration(milliseconds: 500),
               ),
@@ -68,7 +72,7 @@ class CategorySumGraph extends HookConsumerWidget {
       // 他のカードも全て予算なしだが、支出はある
       case GraphType.allNoBudget:
         return Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 3),
+          padding: const EdgeInsets.only(top: 1, bottom: 3),
           child: Stack(
             children: [
               // バーの背景枠
@@ -87,7 +91,8 @@ class CategorySumGraph extends HookConsumerWidget {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   color: MyColors().getColorFromHex(
-                      monthlyExpenseByCategoryEntity.categoryColor),
+                    monthlyExpenseByCategoryEntity.categoryColor,
+                  ),
                 ),
                 duration: const Duration(milliseconds: 500),
               ),
@@ -97,31 +102,34 @@ class CategorySumGraph extends HookConsumerWidget {
       // 予算あり、支出超過
       case GraphType.hasBudgetButOver:
         return Padding(
-          padding: const EdgeInsets.only(top: 8, bottom: 3),
-          child: Stack(children: [
-            // バーの中身
-            AnimatedContainer(
-              height: barFrameHeight,
-              width: isBuilt.value ? barFrameMaxWidth : 0,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-                color: MyColors().getColorFromHex(
-                    monthlyExpenseByCategoryEntity.categoryColor),
+          padding: const EdgeInsets.only(top: 1, bottom: 3),
+          child: Stack(
+            children: [
+              // バーの中身
+              AnimatedContainer(
+                height: barFrameHeight,
+                width: isBuilt.value ? barFrameMaxWidth : 0,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: MyColors().getColorFromHex(
+                    monthlyExpenseByCategoryEntity.categoryColor,
+                  ),
+                ),
+                duration: const Duration(milliseconds: 500),
               ),
-              duration: const Duration(milliseconds: 500),
-            ),
-            // バーの超過分マスク
-            SizedBox(
-              width: barFrameMaxWidth,
-              child: AnimatedOpacity(
-                opacity: isBuilt.value ? 1.0 : 0.0,
-                curve: Curves.easeInExpo,
-                duration: const Duration(milliseconds: 700),
-                child: SizedBox(
-                  width: barFrameMaxWidth,
-                  child: ClipRRect(
+              // バーの超過分マスク
+              SizedBox(
+                width: barFrameMaxWidth,
+                child: AnimatedOpacity(
+                  opacity: isBuilt.value ? 1.0 : 0.0,
+                  curve: Curves.easeInExpo,
+                  duration: const Duration(milliseconds: 700),
+                  child: SizedBox(
+                    width: barFrameMaxWidth,
+                    child: ClipRRect(
                       borderRadius: const BorderRadius.horizontal(
-                          right: Radius.circular(10)),
+                        right: Radius.circular(10),
+                      ),
                       child: ClipRect(
                         child: Align(
                           alignment: Alignment.centerLeft,
@@ -132,11 +140,13 @@ class CategorySumGraph extends HookConsumerWidget {
                             fit: BoxFit.cover,
                           ),
                         ),
-                      )),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            )
-          ]),
+            ],
+          ),
         );
       // 予算なし支出なし
       case GraphType.noExpenseNoBudget:

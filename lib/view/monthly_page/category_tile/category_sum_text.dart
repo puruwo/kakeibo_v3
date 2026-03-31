@@ -16,16 +16,16 @@ class CategorySumText extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return // バー下ラベル
-        Row(
+    return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 2.0),
           child: CategoryHandler().sisytIconGetterFromBigCategoryKey(
-              monthlyExpenseByCategoryEntity.id,
-              height: 25,
-              width: 25),
+            monthlyExpenseByCategoryEntity.id,
+            height: 25,
+            width: 25,
+          ),
         ),
         // カテゴリー名
         Text(
