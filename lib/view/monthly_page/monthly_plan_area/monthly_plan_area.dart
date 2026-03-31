@@ -12,7 +12,7 @@ import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_da
 
 class MonthlyPlanArea extends ConsumerWidget {
   const MonthlyPlanArea({Key? key, this.hasButtonArea = true})
-      : super(key: key);
+    : super(key: key);
 
   final bool hasButtonArea;
 
@@ -24,9 +24,7 @@ class MonthlyPlanArea extends ConsumerWidget {
         children: [
           const MnothlyPlanGraphArea(),
           const MonthlyIncomeGraphArea(),
-          const SizedBox(
-            height: 12,
-          ),
+          const SizedBox(height: 12),
           hasButtonArea == true
               ? Column(
                   children: [
@@ -36,9 +34,7 @@ class MonthlyPlanArea extends ConsumerWidget {
                       indent: 16,
                       endIndent: 16,
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                       child: Row(
@@ -57,12 +53,15 @@ class MonthlyPlanArea extends ConsumerWidget {
                                 );
                               },
                               icon: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 4.0,
+                                ),
                                 child: SvgPicture.asset(
                                   'assets/images/ui_icon_edit.svg',
                                   colorFilter: const ColorFilter.mode(
-                                      MyColors.themeColor, BlendMode.srcIn),
+                                    MyColors.themeColor,
+                                    BlendMode.srcIn,
+                                  ),
                                   width: 15,
                                   height: 15,
                                 ),
@@ -82,10 +81,9 @@ class MonthlyPlanArea extends ConsumerWidget {
                                 if (dateScope == null) return;
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) =>
-                                        YearlyIncomeListPage(
-                                            period: dateScope
-                                                .aggregationMonthPeriod),
+                                    builder: (context) => YearlyIncomeListPage(
+                                      period: dateScope.aggregationMonthPeriod,
+                                    ),
                                   ),
                                 );
                               },
@@ -143,7 +141,7 @@ class PlanAreaButton extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 label,
-                style: MonthlyPageStyles.planAreaButtonLabel,
+                style: AppTextStyles.subButtonText,
                 textHeightBehavior: const TextHeightBehavior(
                   applyHeightToFirstAscent: true,
                   applyHeightToLastDescent: true,

@@ -5,10 +5,7 @@ import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/
 import 'package:kakeibo/util/util.dart';
 
 class PriceLabel extends StatelessWidget {
-  const PriceLabel({
-    super.key,
-    required this.categoryTile,
-  });
+  const PriceLabel({super.key, required this.categoryTile});
 
   int get budget => categoryTile.monthlyBudget;
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity =>
@@ -20,7 +17,8 @@ class PriceLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     // 支出合計のLabel
     final String paymentSumLabel = formattedPriceGetter(
-        monthlyExpenseByCategoryEntity.totalExpenseByBigCategory);
+      monthlyExpenseByCategoryEntity.totalExpenseByBigCategory,
+    );
 
     // 予算のLabel
     final String budgetLabel = formattedPriceGetter(budget);
@@ -34,48 +32,54 @@ class PriceLabel extends StatelessWidget {
           children: [
             // カテゴリー総支出
             RichText(
-                textAlign: TextAlign.end,
-                overflow: TextOverflow.ellipsis,
-                text: TextSpan(children: [
+              textAlign: TextAlign.end,
+              overflow: TextOverflow.ellipsis,
+              text: TextSpan(
+                children: [
                   TextSpan(
                     text: paymentSumLabel,
-                    style: AppTextStyles.appCardSecondaryPriceLabel,
+                    style: AppTextStyles.appCardOptionalSecondaryPriceLabel,
                   ),
                   TextSpan(
                     text: ' 円',
                     style: AppTextStyles.appCardSecondaryPriceUnit,
                   ),
-                ])),
+                ],
+              ),
+            ),
 
             // 予算
             categoryTile.graphType == GraphType.hasBudget ||
                     categoryTile.graphType == GraphType.hasBudgetButOver
                 ? Flexible(
                     child: RichText(
-                        textAlign: TextAlign.end,
-                        overflow: TextOverflow.ellipsis,
-                        text: TextSpan(children: [
+                      textAlign: TextAlign.end,
+                      overflow: TextOverflow.ellipsis,
+                      text: TextSpan(
+                        children: [
                           TextSpan(
                             text: ' /',
                             style:
-                                MonthlyPageStyles.categoryTileBudgetSeparator,
+                                AppTextStyles.appCardTertiaryTitleLabel,
                           ),
                           TextSpan(
                             text: '予算 ',
                             style:
-                                MonthlyPageStyles.categoryTileBudgetTextLabel,
+                                AppTextStyles.appCardTertiaryTitleLabel,
                           ),
                           // カテゴリー予算
                           TextSpan(
                             text: budgetLabel,
                             style:
-                                MonthlyPageStyles.categoryTileBudgetPriceLabel,
+                                AppTextStyles.appCardTertiaryPriceLabel,
                           ),
                           TextSpan(
                             text: ' 円',
-                            style: MonthlyPageStyles.categoryTileBudgetYenLabel,
+                            style: AppTextStyles.appCardTertiaryPriceUnit,
                           ),
-                        ])),
+                        ],
+                      ),
+                    ),
                   )
                 : Container(),
           ],

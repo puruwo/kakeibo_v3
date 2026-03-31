@@ -28,21 +28,30 @@ class AppTextStyles {
   ///   - エリア: ダイアログヘッダー
   ///   - 詳細: 「支払い頻度を設定」タイトル
   static final TextStyle dialogTitle = MyFontStyle.notoSans.copyWith(
-      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w600);
+    fontSize: 18,
+    color: MyColors.white,
+    fontWeight: FontWeight.w600,
+  );
 
   /// ダイアログ内ラベル用スタイル
   ///
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用）
   static final TextStyle dialogLabel = MyFontStyle.notoSans.copyWith(
-      fontSize: 14, color: MyColors.white, fontWeight: FontWeight.w300);
+    fontSize: 14,
+    color: MyColors.white,
+    fontWeight: FontWeight.w300,
+  );
 
   /// ダイアログ内リスト項目用スタイル
   ///
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用）
   static final TextStyle dialogList = MyFontStyle.notoSans.copyWith(
-      fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w300);
+    fontSize: 18,
+    color: MyColors.white,
+    fontWeight: FontWeight.w300,
+  );
 
   // ==========================================================================
   // タブ
@@ -55,7 +64,10 @@ class AppTextStyles {
   ///   - エリア: TabBar
   ///   - 詳細: 選択されているタブのテキストスタイル
   static final TextStyle selectedLabelStyle = MyFontStyle.notoSans.copyWith(
-      fontSize: 14, color: MyColors.themeColor, fontWeight: FontWeight.w600);
+    fontSize: 14,
+    color: MyColors.themeColor,
+    fontWeight: FontWeight.w600,
+  );
 
   /// 非選択タブラベル用スタイル
   ///
@@ -64,9 +76,10 @@ class AppTextStyles {
   ///   - エリア: TabBar
   ///   - 詳細: 選択されていないタブのテキストスタイル
   static final TextStyle unselectedLabelStyle = MyFontStyle.notoSans.copyWith(
-      fontSize: 14,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w300);
+    fontSize: 14,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w300,
+  );
 
   // ==========================================================================
   // ボタン
@@ -77,19 +90,33 @@ class AppTextStyles {
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用、MainButtonコンポーネント内で使用予定）
   static final TextStyle mainButtonText = MyFontStyle.notoSans.copyWith(
-      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w600);
+    fontSize: 14,
+    color: MyColors.label,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// サブボタン用テキストスタイル
+  static final TextStyle subButtonText = MyFontStyle.notoSans.copyWith(
+    color: MyColors.themeColor,
+    fontSize: 15,
+    fontWeight: FontWeight.w600,
+  );
 
   /// 一行ボタン用のテキスト
   ///
   static final TextStyle oneLineButtonText = MyFontStyle.notoSans.copyWith(
-      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w400);
+    fontSize: 14,
+    color: MyColors.label,
+    fontWeight: FontWeight.w400,
+  );
 
   /// 一行ボタン用のサブテキスト
   ///
   static final TextStyle oneLineButtonSubText = MyFontStyle.notoSans.copyWith(
-      fontSize: 14,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+    fontSize: 14,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
 
   // ==========================================================================
   // リスト共通
@@ -102,9 +129,10 @@ class AppTextStyles {
   ///   - エリア: メインコンテンツ
   ///   - 詳細: データがない場合の表示
   static final TextStyle listEmptyMessage = MyFontStyle.notoSans.copyWith(
-      fontSize: 16,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+    fontSize: 16,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
 
   /// エラーメッセージスタイル
   ///
@@ -113,9 +141,10 @@ class AppTextStyles {
   ///   - エリア: メインコンテンツ
   ///   - 詳細: エラー発生時の表示
   static final TextStyle errorMessage = MyFontStyle.notoSans.copyWith(
-      fontSize: 16,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+    fontSize: 16,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
 
   /// セカンダリボタン用テキストスタイル
   ///
@@ -132,14 +161,20 @@ class AppTextStyles {
   ///   - エリア: ダイアログ内キャンセルボタン
   ///   - 詳細: 「キャンセル」ボタンテキスト
   static final TextStyle secondaryButtonText = MyFontStyle.notoSans.copyWith(
-      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w600);
+    fontSize: 14,
+    color: MyColors.label,
+    fontWeight: FontWeight.w600,
+  );
 
   /// 白文字ボタン用テキストスタイル
   ///
   /// 【使用箇所】
   /// - 現在未使用（将来の拡張用）
   static final TextStyle whiteButtonText = MyFontStyle.notoSans.copyWith(
-      fontSize: 17, color: MyColors.white, fontWeight: FontWeight.w600);
+    fontSize: 17,
+    color: MyColors.white,
+    fontWeight: FontWeight.w600,
+  );
 
   // ==========================================================================
   // サブヘッダー系
@@ -172,22 +207,32 @@ class AppTextStyles {
 
   /// リストタイルのメインタイトル用スタイル
   static final TextStyle listTilePrimaryTitle = MyFontStyle.notoSans.copyWith(
-      fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w500);
+    fontSize: 14,
+    color: MyColors.label,
+    fontWeight: FontWeight.w500,
+  );
 
   /// カードのサブタイトル用スタイル
   static final TextStyle listTileSecondaryTitle = MyFontStyle.notoSans.copyWith(
-      fontSize: 11,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w400);
+    fontSize: 11,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
 
   /// カード内金額表示用スタイル
   static final TextStyle listTilePriceLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 17, color: MyColors.label, fontWeight: FontWeight.w500);
+    fontSize: 17,
+    color: MyColors.label,
+    fontWeight: FontWeight.w500,
+  );
 
   /// カード内未確定金額用スタイル
   static final TextStyle listTileUnconfirmedPriceLabel = MyFontStyle.notoSans
       .copyWith(
-          fontSize: 15, color: MyColors.label, fontWeight: FontWeight.w500);
+        fontSize: 15,
+        color: MyColors.label,
+        fontWeight: FontWeight.w500,
+      );
 
   // ==========================================================================
   // リストカード内スタイル
@@ -203,21 +248,34 @@ class AppTextStyles {
   /// リストカード内タイトルラベルスタイル
   static final TextStyle listCardUnconfirmedPriceLabel = MyFontStyle.notoSans
       .copyWith(
-          fontSize: 14, color: MyColors.label, fontWeight: FontWeight.w700);
+        fontSize: 14,
+        color: MyColors.label,
+        fontWeight: FontWeight.w700,
+      );
 
   static final TextStyle listCardSecondaryTitle = MyFontStyle.notoSans.copyWith(
-      fontSize: 12,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w500);
+    fontSize: 12,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
 
   static final TextStyle listCardMinusLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 16, color: MyColors.pink, fontWeight: FontWeight.w600);
+    fontSize: 16,
+    color: MyColors.pink,
+    fontWeight: FontWeight.w600,
+  );
 
   static final TextStyle listCardPlusLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 16, color: MyColors.mintBlue, fontWeight: FontWeight.w600);
+    fontSize: 16,
+    color: MyColors.mintBlue,
+    fontWeight: FontWeight.w600,
+  );
 
   static final TextStyle listCardPriceLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 17, color: MyColors.label, fontWeight: FontWeight.w600);
+    fontSize: 17,
+    color: MyColors.label,
+    fontWeight: FontWeight.w600,
+  );
 
   // ==========================================================================
   // アプリカード（収入グラフエリアなど）
@@ -249,12 +307,12 @@ class AppTextStyles {
   /// Secondary=========
 
   /// アプリカードのセカンダリタイトルラベル用スタイル
-  static final TextStyle appCardSecondaryTitleLabel =
-      MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
-    color: MyColors.white,
-    fontWeight: FontWeight.w500,
-  );
+  static final TextStyle appCardSecondaryTitleLabel = MyFontStyle.notoSans
+      .copyWith(
+        fontSize: 14,
+        color: MyColors.white,
+        fontWeight: FontWeight.w500,
+      );
 
   /// アプリカードのセカンダリ金額ラベル用スタイル
   static final TextStyle appCardSecondaryPriceLabel = MyFontStyle.sfUi.copyWith(
@@ -264,41 +322,47 @@ class AppTextStyles {
   );
 
   /// アプリカードのセカンダリ金額単位（円）用スタイル
-  static final TextStyle appCardSecondaryPriceUnit =
-      MyFontStyle.notoSans.copyWith(
-    fontSize: 10,
-    color: MyColors.secondaryLabel,
-    fontWeight: FontWeight.w500,
-  );
+  static final TextStyle appCardSecondaryPriceUnit = MyFontStyle.notoSans
+      .copyWith(
+        fontSize: 10,
+        color: MyColors.secondaryLabel,
+        fontWeight: FontWeight.w500,
+      );
 
   /// Tertiary=========
 
   /// アプリカードのTertiaryタイトルラベル用スタイル
   static final TextStyle appCardTertiaryTitleLabel = MyFontStyle.notoSans
       .copyWith(
-          fontSize: 13,
-          color: MyColors.secondaryLabel,
-          fontWeight: FontWeight.w500);
+        fontSize: 13,
+        color: MyColors.secondaryLabel,
+        fontWeight: FontWeight.w500,
+      );
 
   /// アプリカードのTertiary金額ラベル用スタイル
   static final TextStyle appCardTertiaryPriceLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 14,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w500);
+    fontSize: 14,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
 
   /// アプリカードのTertiary金額単位（円）用スタイル
   static final TextStyle appCardTertiaryPriceUnit = MyFontStyle.notoSans
       .copyWith(
-          fontSize: 11,
-          color: MyColors.secondaryLabel,
-          fontWeight: FontWeight.w500);
+        fontSize: 11,
+        color: MyColors.secondaryLabel,
+        fontWeight: FontWeight.w500,
+      );
 
   /// OptionalSecondary=========
 
   /// アプリカードのセカンダリ金額ラベル用スタイル
   static final TextStyle appCardOptionalSecondaryPriceLabel = MyFontStyle.sfUi
       .copyWith(
-          fontSize: 18, color: MyColors.white, fontWeight: FontWeight.w500);
+        fontSize: 18,
+        color: MyColors.white,
+        fontWeight: FontWeight.w500,
+      );
 
   /// アプリカードのグラフラベル用スタイル
   ///
@@ -318,8 +382,10 @@ class AppTextStyles {
   /// - ファイル: checkable_popup_menu_item.dart
   ///   - エリア: メニューアイテム
   ///   - 詳細: 選択状態に応じて太字になるスタイル
-  static TextStyle popupMenuItemLabel(
-      {Color? textColor, bool isSelected = false}) {
+  static TextStyle popupMenuItemLabel({
+    Color? textColor,
+    bool isSelected = false,
+  }) {
     return MyFontStyle.notoSans.copyWith(
       color: textColor ?? MyColors.white,
       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -330,5 +396,8 @@ class AppTextStyles {
   // テキストボタン ("さらに表示する"など)
   // ==========================================================================
   static final TextStyle textButtonTextStyle = MyFontStyle.notoSans.copyWith(
-      fontSize: 12, color: MyColors.themeColor, fontWeight: FontWeight.w500);
+    fontSize: 12,
+    color: MyColors.themeColor,
+    fontWeight: FontWeight.w500,
+  );
 }
