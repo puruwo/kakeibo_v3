@@ -17,6 +17,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
         ref.watch(fixedCostRegistrationListNotifierProvider);
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -50,6 +51,9 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
 
           return Column(
             children: [
+              // AppBarの高さ分スペースを確保
+              SizedBox(
+                  height: MediaQuery.of(context).padding.top + kToolbarHeight),
               // カテゴリーカードのリスト（残りのスペースを全て使う）
               Expanded(
                 child: ListView.builder(
