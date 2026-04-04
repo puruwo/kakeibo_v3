@@ -49,38 +49,41 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //左矢印ボタン、押すと前の月に移動
-              const PreviousArrowButton(),
-              Consumer(builder: (context, ref, _) {
-                final monthPeriodAsync =
-                    ref.watch(analyzePageDateScopeEntityProvider);
-                final monthPeriod = monthPeriodAsync.whenOrNull(
-                    data: (data) => data.aggregationMonthPeriod);
-                final label = yyyyMMtoMMGetter(monthPeriod);
-                return Text(
-                  label,
-                  style: AppTextStyles.pageHeaderText,
-                );
-              }),
-              //右矢印ボタン、押すと次の月に移動
-              const NextArrowButton(),
-            ]),
-        actions: [
-          IconButton(
-              onPressed: () => {
-                    // 設定画面にrootのNavigatorで遷移
-                    Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ConfigTop(),
-                      ),
-                    )
-                  },
-              icon: const Icon(Icons.settings_rounded)),
-        ],
+        title: Stack(children: [
+          Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                //左矢印ボタン、押すと前の月に移動
+                const PreviousArrowButton(),
+                Consumer(builder: (context, ref, _) {
+                  final monthPeriodAsync =
+                      ref.watch(analyzePageDateScopeEntityProvider);
+                  final monthPeriod = monthPeriodAsync.whenOrNull(
+                      data: (data) => data.aggregationMonthPeriod);
+                  final label = yyyyMMtoMMGetter(monthPeriod);
+                  return Text(
+                    label,
+                    style: AppTextStyles.pageHeaderText,
+                  );
+                }),
+                //右矢印ボタン、押すと次の月に移動
+                const NextArrowButton(),
+              ]),
+          Positioned(
+            right: 0,
+            child: IconButton(
+                onPressed: () => {
+                      // 設定画面にrootのNavigatorで遷移
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (context) => const ConfigTop(),
+                        ),
+                      )
+                    },
+                icon: const Icon(Icons.settings_rounded)),
+          )
+        ]),
       ),
       backgroundColor: MyColors.secondarySystemBackground,
       body: SingleChildScrollView(

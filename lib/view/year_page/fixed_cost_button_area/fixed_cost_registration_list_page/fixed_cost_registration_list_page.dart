@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -13,8 +14,9 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fixedCostListAsync =
-        ref.watch(fixedCostRegistrationListNotifierProvider);
+    final fixedCostListAsync = ref.watch(
+      fixedCostRegistrationListNotifierProvider,
+    );
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -25,15 +27,15 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          '固定費',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        title: Text('固定費', style: AppTextStyles.pageHeaderText),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {
-              // TODO: 設定画面への遷移を実装
+            onPressed: () => {
+              // 設定画面にrootのNavigatorで遷移
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const ConfigTop()),
+              ),
             },
           ),
         ],
@@ -53,7 +55,8 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             children: [
               // AppBarの高さ分スペースを確保
               SizedBox(
-                  height: MediaQuery.of(context).padding.top + kToolbarHeight),
+                height: MediaQuery.of(context).padding.top + kToolbarHeight,
+              ),
               // カテゴリーカードのリスト（残りのスペースを全て使う）
               Expanded(
                 child: ListView.builder(
@@ -89,14 +92,9 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             ],
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
-          child: Text(
-            'エラーが発生しました: $error',
-            style: AppTextStyles.errorMessage,
-          ),
+          child: Text('エラーが発生しました: $error', style: AppTextStyles.errorMessage),
         ),
       ),
     );
