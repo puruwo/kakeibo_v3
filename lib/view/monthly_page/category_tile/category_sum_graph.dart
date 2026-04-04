@@ -104,8 +104,12 @@ class CategorySumGraph extends HookConsumerWidget {
         // 予算到達点の位置（バー上の比率）
         final double budgetPointRatio = categoryTile.graphRatio ?? 0.0;
         final double budgetPointX = barFrameMaxWidth * budgetPointRatio;
-        final double overflowWidth = barFrameMaxWidth - budgetPointX;
         const double overflowContainerHeight = 14.0;
+        // 上下の突出量と右端の余白を揃える
+        final double overflowPadding =
+            (overflowContainerHeight - barFrameHeight) / 2;
+        final double overflowWidth =
+            barFrameMaxWidth - budgetPointX + overflowPadding;
 
         return Padding(
           padding: const EdgeInsets.only(top: 1, bottom: 3),
