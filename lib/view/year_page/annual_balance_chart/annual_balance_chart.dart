@@ -73,11 +73,11 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
         const double drawingAreaWidth = scrollAreaWidth - horizontalPadding * 2;
 
         // 棒グラフエリアの高さ
-        const barGraphHeight = 60.0;
+        const barGraphHeight = 80.0;
         // 棒グラフの中央線の位置
         const barCenterLinePosition = barGraphHeight / 2;
-        // 棒グラフの最大高さ
-        const maxBarHeight = barGraphHeight / 2 - 10.0;
+        // 棒グラフの最大高さ（金額テキスト表示分のスペース16pxを確保）
+        const maxBarHeight = barGraphHeight / 2 - 16.0;
 
         // グラフのメモリ表示スペース
         const reservedSize = 24.0;
