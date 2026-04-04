@@ -158,7 +158,8 @@ class AppListCard extends StatelessWidget {
         : null;
 
     // 2行目: subtitleLeading + subtitleTrailing
-    final hasSecondRow = (subtitleLeading?.isNotEmpty ?? false) ||
+    final hasSecondRow =
+        (subtitleLeading?.isNotEmpty ?? false) ||
         (subtitleTrailing?.isNotEmpty ?? false);
     final secondRow = hasSecondRow
         ? Row(
@@ -196,10 +197,7 @@ class AppListCard extends StatelessWidget {
       children: [
         // 金額のサブタイトル（例: "平均"）
         if (priceSubtitle != null && priceSubtitle!.isNotEmpty) ...[
-          Text(
-            priceSubtitle!,
-            style: AppTextStyles.listCardSecondaryTitle,
-          ),
+          Text(priceSubtitle!, style: AppTextStyles.listCardSecondaryTitle),
           const SizedBox(width: 6),
         ],
         ConstrainedBox(
@@ -228,10 +226,7 @@ class AppListCard extends StatelessWidget {
     final underPriceWidget = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (customWidget != null) ...[
-          customWidget!,
-          const SizedBox(width: 4),
-        ],
+        if (customWidget != null) ...[customWidget!, const SizedBox(width: 4)],
         if (customUnderPriceLabel != null)
           Text(
             customUnderPriceLabel!,

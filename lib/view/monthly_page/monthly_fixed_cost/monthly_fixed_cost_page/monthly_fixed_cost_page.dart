@@ -20,10 +20,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text(
-          '固定費',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        title: Text('固定費', style: AppTextStyles.pageHeaderText),
       ),
       body: Column(
         children: [
@@ -58,17 +55,18 @@ class MonthlyFixedCostPage extends ConsumerWidget {
                     buttonType: ButtonColorType.secondary,
                     buttonText: '固定費を管理',
                     onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
                           builder: ((context) =>
-                              const FixedCostRegistrationListPage())));
+                              const FixedCostRegistrationListPage()),
+                        ),
+                      );
                     },
                   ),
                 ),
 
                 // 間の隙間
-                const SizedBox(
-                  width: 8,
-                ),
+                const SizedBox(width: 8),
 
                 // 固定費を新しく登録する
                 Expanded(
