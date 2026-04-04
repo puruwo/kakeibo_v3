@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/calendar_area.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_next_arrow_button.dart';
@@ -17,6 +18,8 @@ class ExpenseHistoryPage extends StatelessWidget {
     return Scaffold(
       // ヘッダー
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
         centerTitle: true,
         title: Stack(children: [
           Row(
