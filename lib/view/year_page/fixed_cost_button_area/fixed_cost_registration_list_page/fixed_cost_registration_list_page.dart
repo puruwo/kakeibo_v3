@@ -73,20 +73,23 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
 
               const Divider(height: 1),
 
-              // フッターボタンエリア（固定高さ）
-              Container(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: MainButton(
-                    buttonType: ButtonColorType.main,
-                    buttonText: '固定費を追加',
-                    onPressed: () {
-                      showAppModalBottomSheet(
-                        context,
-                        child: const RegisaterPageBase.addFixedCost(),
-                      );
-                    },
+              // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
+              SafeArea(
+                top: false,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: MainButton(
+                      buttonType: ButtonColorType.main,
+                      buttonText: '固定費を追加',
+                      onPressed: () {
+                        showAppModalBottomSheet(
+                          context,
+                          child: const RegisaterPageBase.addFixedCost(),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
