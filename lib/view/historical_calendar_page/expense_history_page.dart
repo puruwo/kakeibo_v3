@@ -21,40 +21,37 @@ class ExpenseHistoryPage extends StatelessWidget {
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         centerTitle: true,
-        title: Stack(children: [
-          Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                //左矢印ボタン、押すと前の月に移動
-                const CalendarPreviousArrowButton(),
-                Consumer(builder: (context, ref, _) {
-                  // 同期プロバイダーを使用して、ローディング中の表示崩れを防止
-                  final selectedDate =
-                      ref.watch(historicalSelectedDatetimeNotifierProvider);
-                  final label = '${selectedDate.year}年 ${selectedDate.month}月';
-                  return Text(
-                    label,
-                    style: AppTextStyles.pageHeaderText,
-                  );
-                }),
-                //右矢印ボタン、押すと次の月に移動
-                const CalendarNextArrowButton(),
-              ]),
-          Positioned(
-            right: 0,
-            child: IconButton(
-                onPressed: () => {
-                      // 設定画面にrootのNavigatorで遷移
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (context) => const ConfigTop(),
-                        ),
-                      )
-                    },
-                icon: const Icon(Icons.settings_rounded)),
-          )
-        ]),
+        title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              //左矢印ボタン、押すと前の月に移動
+              const CalendarPreviousArrowButton(),
+              Consumer(builder: (context, ref, _) {
+                // 同期プロバイダーを使用して、ローディング中の表示崩れを防止
+                final selectedDate =
+                    ref.watch(historicalSelectedDatetimeNotifierProvider);
+                final label = '${selectedDate.year}年 ${selectedDate.month}月';
+                return Text(
+                  label,
+                  style: AppTextStyles.pageHeaderText,
+                );
+              }),
+              //右矢印ボタン、押すと次の月に移動
+              const CalendarNextArrowButton(),
+            ]),
+        actions: [
+          IconButton(
+              onPressed: () => {
+                    // 設定画面にrootのNavigatorで遷移
+                    Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                        builder: (context) => const ConfigTop(),
+                      ),
+                    )
+                  },
+              icon: const Icon(Icons.settings_rounded)),
+        ],
       ),
 
       // 本文
