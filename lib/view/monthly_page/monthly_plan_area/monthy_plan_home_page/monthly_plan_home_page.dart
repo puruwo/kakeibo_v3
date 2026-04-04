@@ -42,10 +42,13 @@ class MonthlyPlanHomePage extends ConsumerWidget {
 
             const Divider(height: 1),
 
-            // フッターボタンエリア
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-              child: MonthlyPlanHomeFooter(),
+            // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
+            const SafeArea(
+              top: false,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                child: MonthlyPlanHomeFooter(),
+              ),
             ),
           ],
         ),

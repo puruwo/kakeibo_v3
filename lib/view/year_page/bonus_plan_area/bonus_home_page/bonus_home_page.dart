@@ -179,11 +179,14 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
 
                               const Divider(height: 1),
 
-                              // フッターボタンエリア
-                              const Padding(
-                                padding:
-                                    EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-                                child: BonusHomeFooter(),
+                              // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
+                              const SafeArea(
+                                top: false,
+                                child: Padding(
+                                  padding:
+                                      EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                                  child: BonusHomeFooter(),
+                                ),
                               ),
                             ],
                           ),

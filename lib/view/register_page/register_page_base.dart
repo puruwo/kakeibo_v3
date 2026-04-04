@@ -136,6 +136,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         backgroundColor: MyColors.secondarySystemBackground,
 
         appBar: AppBar(
+          backgroundColor: Colors.transparent,
           title: SizedBox(
             child: Text(
               widget.registerMode == RegisterScreenMode.add ? '記録' : '編集',
@@ -174,10 +175,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         body: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
+            return FadeTransition(opacity: animation, child: child);
           },
           child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
         ),
@@ -190,22 +188,22 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
   Widget _buildPageByMode(TransactionMode mode) {
     return switch (mode) {
       TransactionMode.expense => RegisterExpensePage(
-          key: const ValueKey('expense'),
-          mode: widget.registerMode,
-          expenseEntity: widget.expenseEntity,
-        ),
+        key: const ValueKey('expense'),
+        mode: widget.registerMode,
+        expenseEntity: widget.expenseEntity,
+      ),
       TransactionMode.fixedCost => RegisterFixedCostPage(
-          key: const ValueKey('fixedCost'),
-          mode: widget.registerMode,
-          fixedCostEntity: widget.fixedCostEntity,
-          isAppBarVisible: false,
-        ),
+        key: const ValueKey('fixedCost'),
+        mode: widget.registerMode,
+        fixedCostEntity: widget.fixedCostEntity,
+        isAppBarVisible: false,
+      ),
       TransactionMode.income => RegisterIncomePage(
-          key: const ValueKey('income'),
-          mode: widget.registerMode,
-          incomeEntity: widget.incomeEntity,
-          isTabVisible: false,
-        ),
+        key: const ValueKey('income'),
+        mode: widget.registerMode,
+        incomeEntity: widget.incomeEntity,
+        isTabVisible: false,
+      ),
     };
   }
 

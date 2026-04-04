@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -13,10 +14,12 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final fixedCostListAsync =
-        ref.watch(fixedCostRegistrationListNotifierProvider);
+    final fixedCostListAsync = ref.watch(
+      fixedCostRegistrationListNotifierProvider,
+    );
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -24,15 +27,15 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text(
-          '固定費',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        title: Text('固定費', style: AppTextStyles.pageHeaderText),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
-            onPressed: () {
-              // TODO: 設定画面への遷移を実装
+            onPressed: () => {
+              // 設定画面にrootのNavigatorで遷移
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const ConfigTop()),
+              ),
             },
           ),
         ],
@@ -53,7 +56,12 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
               // カテゴリーカードのリスト（残りのスペースを全て使う）
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    MediaQuery.of(context).padding.top + kToolbarHeight + 16,
+                    16,
+                    16,
+                  ),
                   itemCount: fixedCostList.categoryGroups.length,
                   itemBuilder: (context, index) {
                     return FixedCostCategoryCardsArea(
@@ -65,34 +73,32 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
 
               const Divider(height: 1),
 
-              // フッターボタンエリア（固定高さ）
-              Container(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: MainButton(
-                    buttonType: ButtonColorType.main,
-                    buttonText: '固定費を追加',
-                    onPressed: () {
-                      showAppModalBottomSheet(
-                        context,
-                        child: const RegisaterPageBase.addFixedCost(),
-                      );
-                    },
+              // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
+              SafeArea(
+                top: false,
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: MainButton(
+                      buttonType: ButtonColorType.main,
+                      buttonText: '固定費を追加',
+                      onPressed: () {
+                        showAppModalBottomSheet(
+                          context,
+                          child: const RegisaterPageBase.addFixedCost(),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
             ],
           );
         },
-        loading: () => const Center(
-          child: CircularProgressIndicator(),
-        ),
+        loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
-          child: Text(
-            'エラーが発生しました: $error',
-            style: AppTextStyles.errorMessage,
-          ),
+          child: Text('エラーが発生しました: $error', style: AppTextStyles.errorMessage),
         ),
       ),
     );

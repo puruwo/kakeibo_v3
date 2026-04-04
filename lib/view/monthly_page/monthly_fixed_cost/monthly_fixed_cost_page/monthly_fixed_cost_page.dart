@@ -15,20 +15,21 @@ class MonthlyFixedCostPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text(
-          '固定費',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        title: Text('固定費', style: AppTextStyles.pageHeaderText),
       ),
       body: Column(
         children: [
-          const Expanded(
+          Expanded(
             child: SingleChildScrollView(
-              child: Column(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + kToolbarHeight,
+              ),
+              child: const Column(
                 children: [
                   // ヘッダー
                   FixedCostSummaryHeader(),
@@ -43,43 +44,47 @@ class MonthlyFixedCostPage extends ConsumerWidget {
             ),
           ),
           const Divider(height: 1),
-          // フッターボタンエリア
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-            child: Row(
-              children: [
-                // 固定費を管理ボタン
-                Expanded(
-                  child: MainButton(
-                    buttonType: ButtonColorType.secondary,
-                    buttonText: '固定費を管理',
-                    onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) =>
-                              const FixedCostRegistrationListPage())));
-                    },
+          // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+              child: Row(
+                children: [
+                  // 固定費を管理ボタン
+                  Expanded(
+                    child: MainButton(
+                      buttonType: ButtonColorType.secondary,
+                      buttonText: '固定費を管理',
+                      onPressed: () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: ((context) =>
+                                const FixedCostRegistrationListPage()),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
 
-                // 間の隙間
-                const SizedBox(
-                  width: 8,
-                ),
+                  // 間の隙間
+                  const SizedBox(width: 8),
 
-                // 固定費を新しく登録する
-                Expanded(
-                  child: MainButton(
-                    buttonType: ButtonColorType.main,
-                    buttonText: '固定費を登録',
-                    onPressed: () {
-                      showAppModalBottomSheet(
-                        context,
-                        child: const RegisaterPageBase.addFixedCost(),
-                      );
-                    },
+                  // 固定費を新しく登録する
+                  Expanded(
+                    child: MainButton(
+                      buttonType: ButtonColorType.main,
+                      buttonText: '固定費を登録',
+                      onPressed: () {
+                        showAppModalBottomSheet(
+                          context,
+                          child: const RegisaterPageBase.addFixedCost(),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
