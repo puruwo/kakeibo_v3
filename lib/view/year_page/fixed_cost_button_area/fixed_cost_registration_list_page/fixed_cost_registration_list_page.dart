@@ -53,14 +53,15 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
 
           return Column(
             children: [
-              // AppBarの高さ分スペースを確保
-              SizedBox(
-                height: MediaQuery.of(context).padding.top + kToolbarHeight,
-              ),
               // カテゴリーカードのリスト（残りのスペースを全て使う）
               Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+                  padding: EdgeInsets.fromLTRB(
+                    16,
+                    MediaQuery.of(context).padding.top + kToolbarHeight + 16,
+                    16,
+                    16,
+                  ),
                   itemCount: fixedCostList.categoryGroups.length,
                   itemBuilder: (context, index) {
                     return FixedCostCategoryCardsArea(

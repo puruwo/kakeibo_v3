@@ -27,11 +27,12 @@ class MonthlyFixedCostPage extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // AppBarの高さ分スペースを確保
-          SizedBox(height: MediaQuery.of(context).padding.top + kToolbarHeight),
-          const Expanded(
+          Expanded(
             child: SingleChildScrollView(
-              child: Column(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + kToolbarHeight,
+              ),
+              child: const Column(
                 children: [
                   // ヘッダー
                   FixedCostSummaryHeader(),
