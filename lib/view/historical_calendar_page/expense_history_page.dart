@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/calendar_area.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_next_arrow_button.dart';
@@ -19,47 +18,43 @@ class ExpenseHistoryPage extends StatelessWidget {
       // ヘッダー
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        flexibleSpace: const GlassAppBarBackground(),
         centerTitle: true,
         title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              //左矢印ボタン、押すと前の月に移動
-              const CalendarPreviousArrowButton(),
-              Consumer(builder: (context, ref, _) {
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //左矢印ボタン、押すと前の月に移動
+            const CalendarPreviousArrowButton(),
+            Consumer(
+              builder: (context, ref, _) {
                 // 同期プロバイダーを使用して、ローディング中の表示崩れを防止
-                final selectedDate =
-                    ref.watch(historicalSelectedDatetimeNotifierProvider);
-                final label = '${selectedDate.year}年 ${selectedDate.month}月';
-                return Text(
-                  label,
-                  style: AppTextStyles.pageHeaderText,
+                final selectedDate = ref.watch(
+                  historicalSelectedDatetimeNotifierProvider,
                 );
-              }),
-              //右矢印ボタン、押すと次の月に移動
-              const CalendarNextArrowButton(),
-            ]),
+                final label = '${selectedDate.year}年 ${selectedDate.month}月';
+                return Text(label, style: AppTextStyles.pageHeaderText);
+              },
+            ),
+            //右矢印ボタン、押すと次の月に移動
+            const CalendarNextArrowButton(),
+          ],
+        ),
         actions: [
           IconButton(
-              onPressed: () => {
-                    // 設定画面にrootのNavigatorで遷移
-                    Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ConfigTop(),
-                      ),
-                    )
-                  },
-              icon: const Icon(Icons.settings_rounded)),
+            onPressed: () => {
+              // 設定画面にrootのNavigatorで遷移
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const ConfigTop()),
+              ),
+            },
+            icon: const Icon(Icons.settings_rounded),
+          ),
         ],
       ),
 
       // 本文
       backgroundColor: MyColors.secondarySystemBackground,
-      body: Column(children: [
-        const CalendarArea(),
-        ExpenceHistoryArea(),
-      ]),
+      body: Column(children: [const CalendarArea(), ExpenceHistoryArea()]),
     );
   }
 }
