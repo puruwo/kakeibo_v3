@@ -78,14 +78,24 @@ class MonthlyCategoryCardUsecaseNotifier
               : GraphType.noBudgetOtherHasBudget;
 
       // グラフの比率を計算する
-      final double graphRatio = graphType == GraphType.hasBudget
-          ? graphType == GraphType.hasBudgetButOver
-              ? 1
-              : (expense / budget)
-          : 0.0;
+      final double graphRatio;
+      switch (graphType) {
+        case GraphType.hasBudget:
+          graphRatio = expense / budget;
+          break;
+        case GraphType.hasBudgetButOver:
+          // 予算超過時: budget/expenseで予算到達点の位置を表す
+          graphRatio = budget / expense;
+          break;
+        default:
+          graphRatio = 0.0;
+      }
 
       final double? graphDenomiratorRatio =
-          graphType == GraphType.hasBudget ? 1.0 : null;
+          graphType == GraphType.hasBudget ||
+                  graphType == GraphType.hasBudgetButOver
+              ? 1.0
+              : null;
 
       // カードのvalueに代入
       categoryTileList.add(CategoryCardEntity(

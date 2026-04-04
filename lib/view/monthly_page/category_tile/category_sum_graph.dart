@@ -101,51 +101,86 @@ class CategorySumGraph extends HookConsumerWidget {
         );
       // 予算あり、支出超過
       case GraphType.hasBudgetButOver:
+        // 予算到達点の位置（バー上の比率）
+        final double budgetPointRatio = categoryTile.graphRatio ?? 0.0;
+        final double budgetPointX = barFrameMaxWidth * budgetPointRatio;
+        final double overflowWidth = barFrameMaxWidth - budgetPointX;
+        const double overflowContainerHeight = 14.0;
+
         return Padding(
           padding: const EdgeInsets.only(top: 1, bottom: 3),
-          child: Stack(
-            children: [
-              // バーの中身
-              AnimatedContainer(
-                height: barFrameHeight,
-                width: isBuilt.value ? barFrameMaxWidth : 0,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: MyColors().getColorFromHex(
-                    monthlyExpenseByCategoryEntity.categoryColor,
+          child: SizedBox(
+            height: overflowContainerHeight,
+            width: barFrameMaxWidth,
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                // バーの背景枠
+                Container(
+                  height: barFrameHeight,
+                  width: barFrameMaxWidth,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: MyColors.secondarySystemfill,
                   ),
                 ),
-                duration: const Duration(milliseconds: 500),
-              ),
-              // バーの超過分マスク
-              SizedBox(
-                width: barFrameMaxWidth,
-                child: AnimatedOpacity(
-                  opacity: isBuilt.value ? 1.0 : 0.0,
-                  curve: Curves.easeInExpo,
-                  duration: const Duration(milliseconds: 700),
-                  child: SizedBox(
-                    width: barFrameMaxWidth,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.horizontal(
-                        right: Radius.circular(10),
-                      ),
-                      child: ClipRect(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Image.asset(
-                            'assets/images/over_fill.png',
-                            width: barFrameMaxWidth,
-                            height: barFrameHeight,
-                            fit: BoxFit.cover,
+                // バーの中身（100%幅）
+                AnimatedContainer(
+                  height: barFrameHeight,
+                  width: isBuilt.value ? barFrameMaxWidth : 0,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: MyColors().getColorFromHex(
+                      monthlyExpenseByCategoryEntity.categoryColor,
+                    ),
+                  ),
+                  duration: const Duration(milliseconds: 500),
+                ),
+                // 超過分の影オーバーレイ
+                if (overflowWidth > 0)
+                  Positioned(
+                    left: budgetPointX,
+                    child: AnimatedOpacity(
+                      opacity: isBuilt.value ? 1.0 : 0.0,
+                      curve: Curves.easeInExpo,
+                      duration: const Duration(milliseconds: 700),
+                      child: Container(
+                        height: overflowContainerHeight,
+                        width: overflowWidth,
+                        decoration: BoxDecoration(
+                          color: const Color.fromRGBO(30, 20, 18, 0.45),
+                          borderRadius: const BorderRadius.horizontal(
+                            right: Radius.circular(7),
+                          ),
+                          border: Border(
+                            top: BorderSide(
+                              color: const Color.fromRGBO(255, 120, 100, 0.25),
+                              width: 1,
+                            ),
+                            right: BorderSide(
+                              color: const Color.fromRGBO(255, 120, 100, 0.25),
+                              width: 1,
+                            ),
+                            bottom: BorderSide(
+                              color: const Color.fromRGBO(255, 120, 100, 0.25),
+                              width: 1,
+                            ),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.horizontal(
+                            right: Radius.circular(7),
+                          ),
+                          child: CustomPaint(
+                            size: Size(overflowWidth, overflowContainerHeight),
+                            painter: _DiagonalStripePainter(),
                           ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         );
       // 予算なし支出なし
@@ -157,6 +192,31 @@ class CategorySumGraph extends HookConsumerWidget {
         return Container();
     }
   }
+}
+
+// 超過分の斜線パターンを描画するPainter
+class _DiagonalStripePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color.fromRGBO(255, 120, 100, 0.15)
+      ..strokeWidth = 1.0
+      ..style = PaintingStyle.stroke;
+
+    const double spacing = 5.0;
+    final double maxDimension = size.width + size.height;
+
+    for (double i = 0; i < maxDimension; i += spacing) {
+      canvas.drawLine(
+        Offset(i, 0),
+        Offset(i - size.height, size.height),
+        paint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class MyClipper extends CustomClipper<Rect> {
