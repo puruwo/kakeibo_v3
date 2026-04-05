@@ -116,7 +116,8 @@ class CategorySumGraph extends HookConsumerWidget {
           child: SizedBox(
             height: overflowContainerHeight,
             width: barFrameMaxWidth,
-            child: Stack(
+            child: ClipRect(
+              child: Stack(
               alignment: Alignment.centerLeft,
               children: [
                 // バーの背景枠
@@ -184,6 +185,7 @@ class CategorySumGraph extends HookConsumerWidget {
                     ),
                   ),
               ],
+              ),
             ),
           ),
         );
