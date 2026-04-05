@@ -44,7 +44,7 @@ class SummaryBarGraph extends HookConsumerWidget {
           ...List.generate(amounts.length, (i) {
             final ratio = amounts[i] / denominator;
             return AnimatedContainer(
-              height: 10,
+              height: 7,
               width: isBuilt.value ? ratio * maxGraphWidth : 0,
               color: MyColors().getColorFromHex(colors[i]),
               duration: const Duration(milliseconds: 500),

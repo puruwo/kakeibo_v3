@@ -40,7 +40,7 @@ class MonthlyIncomeGraph extends HookConsumerWidget {
           ...List.generate(allCategoryCardEntity.incomeCategoryNameList.length,
               (i) {
             return AnimatedContainer(
-              height: 10,
+              height: 7,
               width: isBuilt.value
                   ? allCategoryCardEntity.incomeCategoryRatioList[i] *
                       maxGraphWidth
