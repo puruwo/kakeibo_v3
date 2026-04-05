@@ -27,13 +27,15 @@ class YearlyIncomeListArea extends ConsumerStatefulWidget {
 class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
   @override
   Widget build(BuildContext context) {
-    return ref.watch(yearlyIncomeListNotifierProvider(widget.period)).when(
+    return ref
+        .watch(yearlyIncomeListNotifierProvider(widget.period))
+        .when(
           data: (incomeList) {
             if (incomeList.monthlyGroups.isEmpty) {
               return Center(
                 child: Text(
                   '収入が登録されていません',
-                  style: YearlyIncomeListStyles.noDataMessage,
+                  style: AppTextStyles.listEmptyMessage,
                 ),
               );
             }
@@ -51,36 +53,34 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
                   children: [
                     // 月のヘッダー
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 4, bottom: 8, top: 8),
+                      padding: const EdgeInsets.only(
+                        left: 4,
+                        bottom: 8,
+                        top: 8,
+                      ),
                       child: Text(
                         group.monthLabel,
-                        style: YearlyIncomeListStyles.listMonthHeader,
+                        style: AppTextStyles.listCardSectionTitle,
                       ),
                     ),
-                    const Divider(
-                      height: 0,
-                      thickness: 1,
-                    ),
+                    const Divider(height: 0, thickness: 1),
 
                     const SizedBox(height: 8),
                     // 収入のリスト
-                    ...group.incomes.map((income) {
-                      return YearlyIncomeCard(value: income);
-                    }).toList(),
+                    ...group.incomes.map(
+                      (income) => YearlyIncomeCard(value: income),
+                    ),
                     const SizedBox(height: 8),
                   ],
                 );
               },
             );
           },
-          loading: () => const Center(
-            child: CircularProgressIndicator(),
-          ),
+          loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, stack) => Center(
             child: Text(
               'エラーが発生しました: $error',
-              style: YearlyIncomeListStyles.errorMessage,
+              style: AppTextStyles.errorMessage,
             ),
           ),
         );

@@ -22,35 +22,24 @@ class AppTextStyles {
   // ==========================================================================
 
   /// ダイアログタイトル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ページ: payment_frequency_picker.dart (支払い頻度ピッカー)
-  ///   - エリア: ダイアログヘッダー
-  ///   - 詳細: 「支払い頻度を設定」タイトル
   static final TextStyle dialogTitle = MyFontStyle.notoSans.copyWith(
     fontSize: 18,
     color: MyColors.white,
-    fontWeight: FontWeight.w600,
+    fontWeight: FontWeight.w500,
   );
 
-  /// ダイアログ内ラベル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - 現在未使用（将来の拡張用）
+  /// ダイアログ内文言用スタイル
   static final TextStyle dialogLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+    fontSize: 13,
     color: MyColors.white,
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w400,
   );
 
-  /// ダイアログ内リスト項目用スタイル
-  ///
-  /// 【使用箇所】
-  /// - 現在未使用（将来の拡張用）
+  /// メニューダイアログ内リスト項目用スタイル
   static final TextStyle dialogList = MyFontStyle.notoSans.copyWith(
-    fontSize: 18,
+    fontSize: 16,
     color: MyColors.white,
-    fontWeight: FontWeight.w300,
+    fontWeight: FontWeight.w500,
   );
 
   // ==========================================================================
@@ -180,21 +169,21 @@ class AppTextStyles {
   // サブヘッダー系
   // ==========================================================================
 
-  /// セクションタイトル用スタイル
-  /// 【使用箇所】
-  /// - カードヘッダー
-  /// - リストカードのヘッダー
-  static final TextStyle cardSectionTitle = MyFontStyle.notoSans.copyWith(
+  /// カードヘッダー用スタイル
+  static final TextStyle appCardSectionTitle = MyFontStyle.notoSans.copyWith(
     fontSize: 16,
     color: MyColors.label,
     fontWeight: FontWeight.w600,
   );
 
+  /// リストカードのヘッダー
+  static final TextStyle listCardSectionTitle = MyFontStyle.sfUi.copyWith(
+    fontSize: 14,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w600,
+  );
+
   /// リストタイルのセクションヘッダー
-  /// 【使用箇所】
-  /// - 収入一覧ページ
-  /// - ヒストリカルページ
-  /// - カテゴリー別支出リストページ
   static final TextStyle listTileSectionTitle = MyFontStyle.sfUi.copyWith(
     fontSize: 13,
     color: MyColors.secondaryLabel,
@@ -321,6 +310,7 @@ class AppTextStyles {
 
   // ==========================================================================
   // アプリカード（収入グラフエリアなど）
+  // ページヘッダー（固定費ページなど）
   // ==========================================================================
 
   /// Primary=========
@@ -406,6 +396,10 @@ class AppTextStyles {
         fontWeight: FontWeight.w500,
       );
 
+  // ==========================================================================
+  // その他
+  // ==========================================================================
+
   /// アプリカードのグラフラベル用スタイル
   ///
   /// 【使用箇所】
@@ -429,7 +423,8 @@ class AppTextStyles {
     bool isSelected = false,
   }) {
     return MyFontStyle.notoSans.copyWith(
-      color: textColor ?? MyColors.white,
+      fontSize: 14,
+      color: textColor ?? MyColors.label,
       fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
     );
   }

@@ -201,4 +201,14 @@ class RegisterPageStyles {
     color: MyColors.secondaryLabel,
     fontWeight: FontWeight.w400,
   );
+
+  // ==========================================================================
+  // アイコン並べ替えページ
+  // ==========================================================================
+  static final TextStyle iconRearrangeDescription = MyFontStyle.notoSans
+      .copyWith(
+        fontSize: 14,
+        color: MyColors.secondaryLabel,
+        fontWeight: FontWeight.w500,
+      );
 }

@@ -31,6 +31,8 @@ class MonthlyFixedCostPage extends ConsumerWidget {
               ),
               child: const Column(
                 children: [
+                  SizedBox(height: 16),
+
                   // ヘッダー
                   FixedCostSummaryHeader(),
 

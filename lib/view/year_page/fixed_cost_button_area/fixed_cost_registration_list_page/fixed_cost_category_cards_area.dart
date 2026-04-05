@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/fixed_cost_registration_list_value/fixed_cost_registration_list_entity.dart';
-import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/fixed_cost_category_header.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_item_tile.dart';
 
 class FixedCostCategoryCardsArea extends StatelessWidget {
-  const FixedCostCategoryCardsArea({
-    super.key,
-    required this.group,
-  });
+  const FixedCostCategoryCardsArea({super.key, required this.group});
 
   final FixedCostCategoryGroup group;
 
@@ -21,17 +16,10 @@ class FixedCostCategoryCardsArea extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // カテゴリーヘッダー（アイコン + 名前）
-          AppContentsHeader(
-            iconWidget: SvgPicture.asset(
-              group.categoryIconPath,
-              width: 28,
-              height: 28,
-              colorFilter: ColorFilter.mode(
-                MyColors().getColorFromHex(group.categoryColorCode),
-                BlendMode.srcIn,
-              ),
-            ),
-            title: group.categoryName,
+          FixedCostCategoryHeader(
+            categoryName: group.categoryName,
+            colorCode: group.categoryColorCode,
+            resourcePath: group.categoryIconPath,
           ),
           // 固定費アイテムのリスト
           Column(

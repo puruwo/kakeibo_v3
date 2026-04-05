@@ -23,7 +23,9 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
   @override
   Widget build(BuildContext context) {
     // 円グラフエリア
-    return ref.watch(yearlyIncomeListNotifierProvider(widget.period)).when(
+    return ref
+        .watch(yearlyIncomeListNotifierProvider(widget.period))
+        .when(
           data: (incomeDatas) {
             if (incomeDatas.monthlyGroups.isEmpty) {
               return CardContainer(
@@ -32,8 +34,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                 child: Center(
                   child: Text(
                     '収入データがありません',
-                    // TODO: スタイルをまとめる
-                    style: YearlyIncomeListStyles.noDataMessage,
+                    style: AppTextStyles.listEmptyMessage,
                   ),
                 ),
               );
@@ -54,18 +55,17 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                       Text('総収入', style: AppTextStyles.appCardTitleLabel),
                       Row(
                         children: [
-                          Text('${formatter.format(incomeDatas.totalIncome)} ',
-                              style: AppTextStyles.appCardPriceLabel),
+                          Text(
+                            '${formatter.format(incomeDatas.totalIncome)} ',
+                            style: AppTextStyles.appCardPriceLabel,
+                          ),
                           Text('円', style: AppTextStyles.appCardPriceUnit),
                         ],
                       ),
                     ],
                   ),
                   const SizedBox(height: 8),
-                  const Divider(
-                    height: 0,
-                    thickness: 1,
-                  ),
+                  const Divider(height: 0, thickness: 1),
                   const SizedBox(height: 16),
                   // 円グラフとカテゴリー一覧
                   Expanded(
@@ -81,11 +81,13 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                               sectionsSpace: 2,
                               startDegreeOffset: 270,
                               centerSpaceRadius: 25,
-                              sections:
-                                  incomeDatas.categorySummaries.map((category) {
+                              sections: incomeDatas.categorySummaries.map((
+                                category,
+                              ) {
                                 return PieChartSectionData(
-                                  color: MyColors()
-                                      .getColorFromHex(category.colorCode),
+                                  color: MyColors().getColorFromHex(
+                                    category.colorCode,
+                                  ),
                                   value: category.totalAmount.toDouble(),
                                   titlePositionPercentageOffset: 0.3,
                                   title: category.categoryName,
@@ -106,7 +108,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                               const categoryHeight = 36.0;
                               final totalCategoriesHeight =
                                   incomeDatas.categorySummaries.length *
-                                      categoryHeight;
+                                  categoryHeight;
 
                               // スクロールが必要かどうかを判定
                               final needsScroll =
@@ -117,8 +119,9 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                     ? const AlwaysScrollableScrollPhysics()
                                     : const NeverScrollableScrollPhysics(),
                                 child: Column(
-                                  children: incomeDatas.categorySummaries
-                                      .map((category) {
+                                  children: incomeDatas.categorySummaries.map((
+                                    category,
+                                  ) {
                                     // カテゴリー別の支出金額
                                     return Padding(
                                       padding: const EdgeInsets.only(bottom: 8),
@@ -131,9 +134,11 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                           SvgPicture.asset(
                                             category.iconPath,
                                             colorFilter: ColorFilter.mode(
-                                                MyColors().getColorFromHex(
-                                                    category.colorCode),
-                                                BlendMode.srcIn),
+                                              MyColors().getColorFromHex(
+                                                category.colorCode,
+                                              ),
+                                              BlendMode.srcIn,
+                                            ),
                                             semanticsLabel: 'categoryIcon',
                                             width: 25,
                                             height: 25,
@@ -141,20 +146,25 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                           const SizedBox(width: 4),
                                           // カテゴリー名
                                           Expanded(
-                                            child: Text(category.categoryName,
-                                                style: AppTextStyles
-                                                    .appCardSecondaryTitleLabel),
+                                            child: Text(
+                                              category.categoryName,
+                                              style: AppTextStyles
+                                                  .appCardSecondaryTitleLabel,
+                                            ),
                                           ),
                                           const SizedBox(width: 8),
                                           // 金額
                                           Text(
-                                              '${formatter.format(category.totalAmount)} ',
-                                              style: AppTextStyles
-                                                  .appCardSecondaryPriceLabel),
+                                            '${formatter.format(category.totalAmount)} ',
+                                            style: AppTextStyles
+                                                .appCardSecondaryPriceLabel,
+                                          ),
                                           // 円
-                                          Text('円',
-                                              style: AppTextStyles
-                                                  .appCardSecondaryPriceUnit),
+                                          Text(
+                                            '円',
+                                            style: AppTextStyles
+                                                .appCardSecondaryPriceUnit,
+                                          ),
                                         ],
                                       ),
                                     );
@@ -178,9 +188,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
               color: MyColors.tertiarySystemBackground,
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
+            child: const Center(child: CircularProgressIndicator()),
           ),
           error: (error, stack) => Container(
             height: 200,
@@ -190,10 +198,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
-              child: Text(
-                'エラーが発生しました',
-                style: YearlyIncomeListStyles.errorMessage,
-              ),
+              child: Text('エラーが発生しました', style: AppTextStyles.errorMessage),
             ),
           ),
         );

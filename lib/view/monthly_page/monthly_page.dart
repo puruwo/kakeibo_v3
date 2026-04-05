@@ -49,41 +49,44 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Stack(children: [
-          Row(
+        title: Stack(
+          children: [
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 //左矢印ボタン、押すと前の月に移動
                 const PreviousArrowButton(),
-                Consumer(builder: (context, ref, _) {
-                  final monthPeriodAsync =
-                      ref.watch(analyzePageDateScopeEntityProvider);
-                  final monthPeriod = monthPeriodAsync.whenOrNull(
-                      data: (data) => data.aggregationMonthPeriod);
-                  final label = yyyyMMtoMMGetter(monthPeriod);
-                  return Text(
-                    label,
-                    style: AppTextStyles.pageHeaderText,
-                  );
-                }),
+                Consumer(
+                  builder: (context, ref, _) {
+                    final monthPeriodAsync = ref.watch(
+                      analyzePageDateScopeEntityProvider,
+                    );
+                    final monthPeriod = monthPeriodAsync.whenOrNull(
+                      data: (data) => data.aggregationMonthPeriod,
+                    );
+                    final label = yyyyMMtoMMGetter(monthPeriod);
+                    return Text(label, style: AppTextStyles.pageHeaderText);
+                  },
+                ),
                 //右矢印ボタン、押すと次の月に移動
                 const NextArrowButton(),
-              ]),
-          Positioned(
-            right: 0,
-            child: IconButton(
+              ],
+            ),
+            Positioned(
+              right: 0,
+              child: IconButton(
                 onPressed: () => {
-                      // 設定画面にrootのNavigatorで遷移
-                      Navigator.of(context, rootNavigator: true).push(
-                        MaterialPageRoute(
-                          builder: (context) => const ConfigTop(),
-                        ),
-                      )
-                    },
-                icon: const Icon(Icons.settings_rounded)),
-          )
-        ]),
+                  // 設定画面にrootのNavigatorで遷移
+                  Navigator.of(context, rootNavigator: true).push(
+                    MaterialPageRoute(builder: (context) => const ConfigTop()),
+                  ),
+                },
+                icon: const Icon(Icons.settings_rounded),
+              ),
+            ),
+          ],
+        ),
       ),
       backgroundColor: MyColors.secondarySystemBackground,
       body: SingleChildScrollView(
@@ -96,40 +99,47 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 height: MediaQuery.of(context).padding.top + kToolbarHeight,
               ),
 
-              const AppContentsHeader(title: '支出グラフ'),
-
-              // グラフ部分
-              Consumer(builder: (context, ref, _) {
-                final dateScope = ref.watch(analyzePageDateScopeEntityProvider);
-                return dateScope.when(
-                  data: (scope) => PredictionGraph(dateScope: scope),
-                  loading: () => const PredictionGraphSkeleton(),
-                  error: (error, stack) => CardContainer(
-                    height: 240,
-                    width: 343 * context.screenHorizontalMagnification,
-                    child: Center(
-                      child: Text(
-                        '記録がまだありません',
-                        style: AppTextStyles.listEmptyMessage,
-                      ),
-                    ),
-                  ),
-                );
-              }),
-
-              const SizedBox(
-                height: 12,
+              const AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
+                title: '支出グラフ',
               ),
 
-              const AppContentsHeader(title: '今月の計画'),
+              // グラフ部分
+              Consumer(
+                builder: (context, ref, _) {
+                  final dateScope = ref.watch(
+                    analyzePageDateScopeEntityProvider,
+                  );
+                  return dateScope.when(
+                    data: (scope) => PredictionGraph(dateScope: scope),
+                    loading: () => const PredictionGraphSkeleton(),
+                    error: (error, stack) => CardContainer(
+                      height: 240,
+                      width: 343 * context.screenHorizontalMagnification,
+                      child: Center(
+                        child: Text(
+                          '記録がまだありません',
+                          style: AppTextStyles.listEmptyMessage,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+
+              const SizedBox(height: 12),
+
+              const AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
+                title: '今月の計画',
+              ),
 
               const MonthlyPlanArea(),
 
-              const SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
 
               AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
                 title: 'カテゴリー別',
                 subLabel: 'カテゴリー設定',
                 isLinkable: true,
@@ -143,25 +153,25 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
 
               const CategorySumTileList(),
 
-              const SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
 
               AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
                 title: '固定費',
                 subLabel: 'さらに表示',
                 isLinkable: true,
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const MonthlyFixedCostPage()));
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const MonthlyFixedCostPage(),
+                    ),
+                  );
                 },
               ),
 
               const MonthlyFixedCostSummaryArea(),
 
-              const SizedBox(
-                height: 128
-              ),
+              const SizedBox(height: 128),
             ],
           ),
         ),

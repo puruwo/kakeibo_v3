@@ -36,28 +36,29 @@ class _YearPageState extends ConsumerState<YearPage> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Consumer(builder: (context, ref, _) {
-          final asyncValue = ref.watch(homeDateScopeEntityProvider);
-          return asyncValue.when(
-            data: (activeDt) => Text(
-              yyyyToyyyyGetter(activeDt),
-              style: AppTextStyles.pageHeaderText,
-            ),
-            loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
-          );
-        }),
+        title: Consumer(
+          builder: (context, ref, _) {
+            final asyncValue = ref.watch(homeDateScopeEntityProvider);
+            return asyncValue.when(
+              data: (activeDt) => Text(
+                yyyyToyyyyGetter(activeDt),
+                style: AppTextStyles.pageHeaderText,
+              ),
+              loading: () => const SizedBox.shrink(),
+              error: (_, __) => const SizedBox.shrink(),
+            );
+          },
+        ),
         actions: [
           IconButton(
-              onPressed: () => {
-                    // 設定画面にrootのNavigatorで遷移
-                    Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                        builder: (context) => const ConfigTop(),
-                      ),
-                    )
-                  },
-              icon: const Icon(Icons.settings_rounded)),
+            onPressed: () => {
+              // 設定画面にrootのNavigatorで遷移
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const ConfigTop()),
+              ),
+            },
+            icon: const Icon(Icons.settings_rounded),
+          ),
         ],
       ),
       backgroundColor: MyColors.secondarySystemBackground,
@@ -67,22 +68,21 @@ class _YearPageState extends ConsumerState<YearPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-
               // AppBarのぶんだけスペースをあける
               SizedBox(
                 height: MediaQuery.of(context).padding.top + kToolbarHeight,
               ),
 
-              const AppContentsHeader(title: '年間収支'),
+              const AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
+                title: '年間収支',
+              ),
               const YearlyBalanceArea(),
-              const SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
               const FixedCostButtonArea(),
-              const SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16),
               AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
                 title: 'ボーナス利用状況',
                 subLabel: 'さらに表示する',
                 isLinkable: true,
@@ -95,14 +95,13 @@ class _YearPageState extends ConsumerState<YearPage> {
                 },
               ),
               const BonusPlanArea(),
-              const SizedBox(
-                height: 16,
+              const SizedBox(height: 16),
+              const AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
+                title: '生活収支',
               ),
-              const AppContentsHeader(title: '生活収支'),
               const AnnualBalanceChart(),
-              const SizedBox(
-                height: 128
-              ),
+              const SizedBox(height: 128),
             ],
           ),
         ),

@@ -232,14 +232,11 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                   const SizedBox(height: 16),
 
                   // 説明テキスト
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'アイコンを長押しして並び替えができます',
-                      style: TextStyle(
-                        color: MyColors.secondaryLabel,
-                        fontSize: 14,
-                      ),
+                      style: RegisterPageStyles.iconRearrangeDescription,
                     ),
                   ),
 

@@ -14,10 +14,7 @@ class ConfigTop extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '設定',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        title: Text('設定', style: AppTextStyles.pageHeaderText),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -29,7 +26,10 @@ class ConfigTop extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const AppContentsHeader(title: '設定画面'),
+            const AppContentsHeader(
+              type: AppContentsHeaderType.appCardSectionTitle,
+              title: '設定画面',
+            ),
             Container(
               width: double.infinity,
               height: 50,
@@ -43,11 +43,15 @@ class ConfigTop extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                     onTap: () {
                       // 設定画面からエクスポートを実行
-                      ref.read(exportProvider).when(
-                          data: (data) => null,
-                          error: (e, _) => null,
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()));
+                      ref
+                          .read(exportProvider)
+                          .when(
+                            data: (data) => null,
+                            error: (e, _) => null,
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
