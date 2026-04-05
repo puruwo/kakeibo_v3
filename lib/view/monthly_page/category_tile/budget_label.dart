@@ -21,24 +21,28 @@ class BudgetLabel extends StatelessWidget {
       child: hasBudget
           ? Padding(
               padding: const EdgeInsets.only(left: 8),
-              child: RichText(
-                textAlign: TextAlign.end,
-                overflow: TextOverflow.ellipsis,
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: '予算 ',
-                      style: AppTextStyles.appCardTertiaryPriceUnit,
-                    ),
-                    TextSpan(
-                      text: formattedPriceGetter(budget),
-                      style: AppTextStyles.appCardTertiaryPriceLabel,
-                    ),
-                    TextSpan(
-                      text: ' 円',
-                      style: AppTextStyles.appCardSecondaryPriceUnit,
-                    ),
-                  ],
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerRight,
+                child: RichText(
+                  textAlign: TextAlign.end,
+                  overflow: TextOverflow.ellipsis,
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                        text: '予算 ',
+                        style: AppTextStyles.appCardTertiaryPriceUnit,
+                      ),
+                      TextSpan(
+                        text: formattedPriceGetter(budget),
+                        style: AppTextStyles.appCardTertiaryPriceLabel,
+                      ),
+                      TextSpan(
+                        text: ' 円',
+                        style: AppTextStyles.appCardSecondaryPriceUnit,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             )
