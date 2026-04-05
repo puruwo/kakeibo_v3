@@ -101,11 +101,18 @@ class CategorySumGraph extends HookConsumerWidget {
         );
       // 予算あり、支出超過
       case GraphType.hasBudgetButOver:
+        // 予算到達点の位置（バー全幅のうち予算が占める割合）
+        final double budgetPointX =
+            barFrameMaxWidth * (categoryTile.graphRatio ?? 0.0);
+        final double overflowWidth = barFrameMaxWidth - budgetPointX;
+
         return Padding(
           padding: const EdgeInsets.only(top: 1, bottom: 3),
           child: Stack(
             children: [
-              // バーの中身
+              // Stackのサイズを固定するための背景枠（透明）
+              SizedBox(height: barFrameHeight, width: barFrameMaxWidth),
+              // バーの中身（全幅）
               AnimatedContainer(
                 height: barFrameHeight,
                 width: isBuilt.value ? barFrameMaxWidth : 0,
@@ -117,30 +124,25 @@ class CategorySumGraph extends HookConsumerWidget {
                 ),
                 duration: const Duration(milliseconds: 500),
               ),
-              // バーの超過分マスク
-              SizedBox(
-                width: barFrameMaxWidth,
+              // 超過分のみにオーバーレイをかける
+              Positioned(
+                left: budgetPointX,
+                top: 0,
+                bottom: 0,
+                width: overflowWidth,
                 child: AnimatedOpacity(
                   opacity: isBuilt.value ? 1.0 : 0.0,
                   curve: Curves.easeInExpo,
                   duration: const Duration(milliseconds: 700),
-                  child: SizedBox(
-                    width: barFrameMaxWidth,
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.horizontal(
-                        right: Radius.circular(10),
-                      ),
-                      child: ClipRect(
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Image.asset(
-                            'assets/images/over_fill.png',
-                            width: barFrameMaxWidth,
-                            height: barFrameHeight,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.horizontal(
+                      right: Radius.circular(10),
+                    ),
+                    child: Image.asset(
+                      'assets/images/over_fill.png',
+                      width: overflowWidth,
+                      height: barFrameHeight,
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),
