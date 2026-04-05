@@ -118,7 +118,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                           ? Stack(children: [
                               // バーの背景枠
                               Container(
-                                height: 10,
+                                height: 7,
                                 width: barFrameWidth *
                                     screenHorizontalMagnification,
                                 decoration: BoxDecoration(
@@ -128,7 +128,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                               ),
                               // バーの中身
                               AnimatedContainer(
-                                height: 10,
+                                height: 7,
                                 width: isBuilt.value
                                     ? barWidth * screenHorizontalMagnification
                                     : 0,
@@ -163,7 +163,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                             child: Image.asset(
                                               'assets/images/over_fill.png',
                                               width: 280,
-                                              height: 10,
+                                              height: 7,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -178,7 +178,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                               children: [
                                 // バーの背景枠
                                 Container(
-                                  height: 10,
+                                  height: 7,
                                   width: barFrameWidth *
                                       screenHorizontalMagnification,
                                   decoration: BoxDecoration(
@@ -188,7 +188,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                 ),
                                 // バーの中身
                                 AnimatedContainer(
-                                  height: 10,
+                                  height: 7,
                                   width: isBuilt.value
                                       ? barWidth * screenHorizontalMagnification
                                       : 0,
