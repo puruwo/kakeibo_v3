@@ -43,10 +43,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         data: (summary) => _buildContent(context, summary),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
-          child: Text(
-            'データの取得に失敗しました',
-            style: AppTextStyles.errorMessage,
-          ),
+          child: Text('データの取得に失敗しました', style: AppTextStyles.errorMessage),
         ),
       ),
     );
@@ -141,10 +138,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
       width: double.infinity,
       height: 120,
       child: Center(
-        child: Text(
-          'この日の支出はありません',
-          style: AppTextStyles.errorMessage,
-        ),
+        child: Text('この日の支出はありません', style: AppTextStyles.errorMessage),
       ),
     );
   }
@@ -176,9 +170,7 @@ class DailyExpenseSummaryHeader extends StatelessWidget {
           // カテゴリー合計金額
           Text(
             '${formattedPriceGetter(categoryTotal)}円',
-            style: AppTextStyles.listTileSecondaryTitle.copyWith(
-              fontSize: 14,
-            ),
+            style: AppTextStyles.listTileTirtiaryTitle.copyWith(fontSize: 14),
           ),
         ],
       ),

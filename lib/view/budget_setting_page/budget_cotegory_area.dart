@@ -33,24 +33,18 @@ class BudgetCategoryArea extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 56),
-                child: Text(
-                  'カテゴリー',
-                  style: BudgetSettingsStyles.columnHeaderLabel,
-                ),
+                padding: const EdgeInsets.only(left: 50),
+                child: Text('カテゴリー', style: AppTextStyles.listTileLegendTitle),
               ),
               Row(
                 children: [
-                  Text(
-                    expenseLabel,
-                    style: BudgetSettingsStyles.columnHeaderLabel,
-                  ),
+                  Text(expenseLabel, style: AppTextStyles.listTileLegendTitle),
                   SizedBox(
                     width: 123,
                     child: Text(
                       '今月の予算',
                       textAlign: TextAlign.right,
-                      style: BudgetSettingsStyles.columnHeaderLabel,
+                      style: AppTextStyles.listTileLegendTitle,
                     ),
                   ),
                 ],
@@ -69,20 +63,29 @@ class BudgetCategoryArea extends ConsumerWidget {
         ),
 
         // リスト部分
-        ref.watch(resolvedBudgetEditValueProvider).when(data: (valueList) {
-          return Expanded(
-            child: ListView.builder(
-              itemCount: valueList.length,
-              itemBuilder: (BuildContext context, int i) {
-                return BudgetCategoryTile(budgetEditValue: valueList[i]);
-              },
-            ),
-          );
-        }, error: (Object error, StackTrace stackTrace) {
-          return const Text('エラーが発生しました');
-        }, loading: () {
-          return const CircularProgressIndicator();
-        }),
+        Expanded(
+          child: ref
+              .watch(resolvedBudgetEditValueProvider)
+              .when(
+                data: (valueList) {
+                  return ListView.builder(
+                    // コンテンツが収まる場合はスクロールしない、はみ出る場合はバウンス付きスクロール
+                    physics: const BouncingScrollPhysics(),
+                    padding: EdgeInsets.zero,
+                    itemCount: valueList.length,
+                    itemBuilder: (BuildContext context, int i) {
+                      return BudgetCategoryTile(budgetEditValue: valueList[i]);
+                    },
+                  );
+                },
+                error: (Object error, StackTrace stackTrace) {
+                  return const Text('エラーが発生しました');
+                },
+                loading: () {
+                  return const CircularProgressIndicator();
+                },
+              ),
+        ),
       ],
     );
   }

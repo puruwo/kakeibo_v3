@@ -57,14 +57,12 @@ class IncomeItemTile extends ConsumerWidget {
         secondaryBackground: Container(
           color: MyColors.red,
           child: const Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 18.0),
-                child: Icon(
-                  Icons.delete,
-                  color: MyColors.systemGray,
-                ),
-              )),
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(right: 18.0),
+              child: Icon(Icons.delete, color: MyColors.systemGray),
+            ),
+          ),
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
@@ -76,107 +74,109 @@ class IncomeItemTile extends ConsumerWidget {
           incomeUsecase.delete(id: value.id);
         },
         child: Column(
-        children: [
-          Padding(
-            padding:
-                EdgeInsets.only(left: leftsidePadding, right: leftsidePadding),
-            child: SizedBox(
-              height: 49,
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // アイコン
-                  SizedBox(height: 49, width: 49, child: icon),
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: leftsidePadding,
+                right: leftsidePadding,
+              ),
+              child: SizedBox(
+                height: 49,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // アイコン
+                    SizedBox(height: 49, width: 49, child: icon),
 
-                  // 大カテゴリー、小カテゴリーのColumn
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 大カテゴリー
-                        SizedBox(
-                          width: 153 * screenHorizontalMagnification,
-                          child: Text(
-                            value.bigCategoryName,
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.listTilePrimaryTitle,
-                          ),
-                        ),
-
-                        // 小カテゴリーとメモ
-                        Row(
-                          children: [
-                            // 小カテゴリー
-                            SizedBox(
-                              width: 56,
-                              child: Text(
-                                ' ${value.smallCategoryName}',
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.listTileSecondaryTitle,
-                              ),
-                            ),
-                            // メモ
-                            SizedBox(
-                              width: 90 * screenHorizontalMagnification,
-                              child: Text(
-                                ' ${value.memo}',
-                                textAlign: TextAlign.start,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles.listTileSecondaryTitle,
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-
-                  // 値段
-                  Padding(
-                    padding: const EdgeInsets.only(right: 2.0),
-                    child: SizedBox(
-                      width: 100,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
+                    // 大カテゴリー、小カテゴリーのColumn
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            priceLabel,
-                            textAlign: TextAlign.end,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.listTilePriceLabel,
+                          // 大カテゴリー
+                          SizedBox(
+                            width: 153 * screenHorizontalMagnification,
+                            child: Text(
+                              value.bigCategoryName,
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.listTilePrimaryTitle,
+                            ),
+                          ),
+
+                          // 小カテゴリーとメモ
+                          Row(
+                            children: [
+                              // 小カテゴリー
+                              SizedBox(
+                                width: 56,
+                                child: Text(
+                                  ' ${value.smallCategoryName}',
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.listTileTirtiaryTitle,
+                                ),
+                              ),
+                              // メモ
+                              SizedBox(
+                                width: 90 * screenHorizontalMagnification,
+                                child: Text(
+                                  ' ${value.memo}',
+                                  textAlign: TextAlign.start,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles.listTileTirtiaryTitle,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),
                     ),
-                  ),
 
-                  // nextArrowアイコン
-                  const Padding(
-                    padding: EdgeInsets.only(right: 4),
-                    child: Icon(
-                      size: 18,
-                      Icons.add,
-                      color: MyColors.mintBlue,
+                    // 値段
+                    Padding(
+                      padding: const EdgeInsets.only(right: 2.0),
+                      child: SizedBox(
+                        width: 100,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text(
+                              priceLabel,
+                              textAlign: TextAlign.end,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.listTilePriceLabel,
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                  )
-                ],
+
+                    // nextArrowアイコン
+                    const Padding(
+                      padding: EdgeInsets.only(right: 4),
+                      child: Icon(
+                        size: 18,
+                        Icons.add,
+                        color: MyColors.mintBlue,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Divider(
-            thickness: 0.25,
-            height: 0.25,
-            indent: 50 + leftsidePadding,
-            endIndent: leftsidePadding,
-            color: MyColors.separater,
-          )
-        ],
-      ),
+            Divider(
+              thickness: 0.25,
+              height: 0.25,
+              indent: 50 + leftsidePadding,
+              endIndent: leftsidePadding,
+              color: MyColors.separater,
+            ),
+          ],
+        ),
       ),
     );
   }

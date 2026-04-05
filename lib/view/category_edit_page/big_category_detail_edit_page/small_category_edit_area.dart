@@ -46,8 +46,9 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
       // 一度だけ取得してセット
       Future(() async {
         // 一度だけ取得してセット
-        final initialList = await ref
-            .watch(allSmallCategoriesListProvider(widget.bigId).future);
+        final initialList = await ref.watch(
+          allSmallCategoriesListProvider(widget.bigId).future,
+        );
         ref
             .read(edittingSmallCategoryListNotifierProvider.notifier)
             .setData(initialList);
@@ -80,27 +81,19 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: Row(
                     children: [
-                      Text(
-                        '表示',
-                        style: CategoryStyles.listHeaderLabel,
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
+                      Text('表示', style: AppTextStyles.listTileLegendTitle),
+                      const SizedBox(width: 20),
                       SizedBox(
                         width: 110 + listSTextBoxOffset,
                         child: Text(
                           '項目',
-                          style: CategoryStyles.listHeaderLabel,
+                          style: AppTextStyles.listTileLegendTitle,
                         ),
                       ),
                     ],
                   ),
                 ),
-                Text(
-                  '並べ替え',
-                  style: CategoryStyles.listHeaderLabel,
-                ),
+                Text('並べ替え', style: AppTextStyles.listTileLegendTitle),
               ],
             ),
           ),
@@ -140,8 +133,9 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                     children: [
                       // リスト本体
                       Padding(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: leftsidePadding),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: leftsidePadding,
+                        ),
                         child: SizedBox(
                           height: 50,
                           child: Row(
@@ -158,32 +152,33 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                       // チェックボックスの状態を更新する
                                       ref
                                           .read(
-                                              edittingSmallCategoryListNotifierProvider
-                                                  .notifier)
+                                            edittingSmallCategoryListNotifierProvider
+                                                .notifier,
+                                          )
                                           .toggleDisplay(index);
                                       // 変更を加えたことを管理する状態管理する
                                       ref
                                           .read(
-                                              isSmallCategoryListEditedNotifierProvider
-                                                  .notifier)
+                                            isSmallCategoryListEditedNotifierProvider
+                                                .notifier,
+                                          )
                                           .updateState(true);
                                     });
                                   },
                                   child: CheckBox(
-                                      isChecked:
-                                          itemList[index].etitedStateIsChecked),
+                                    isChecked:
+                                        itemList[index].etitedStateIsChecked,
+                                  ),
                                 ),
                               ),
 
-                              const SizedBox(
-                                width: 16,
-                              ),
+                              const SizedBox(width: 16),
 
                               // カテゴリー名
                               Expanded(
                                 child: Text(
                                   itemList[index].name,
-                                  style: CategoryStyles.editListTitle,
+                                  style: AppTextStyles.listTilePrimaryTitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
@@ -226,8 +221,9 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                         context: context,
                         builder: (BuildContext context) {
                           return NewSmallCategoryInputNameDialog(
-                              bigCategoryId: widget.bigId,
-                              displayedOrderInBig: itemList.length + 1);
+                            bigCategoryId: widget.bigId,
+                            displayedOrderInBig: itemList.length + 1,
+                          );
                         },
                       );
                     },
@@ -246,7 +242,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                   width: double.infinity,
                                   child: Text(
                                     '+ 新しい項目を追加',
-                                    style: CategoryStyles.newCategoryAdd,
+                                    style: AppTextStyles.listTileSecondaryTitle,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),

@@ -3,7 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/styles/category_styles.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/icon_select_dialog.dart';
@@ -42,8 +42,9 @@ class _BigCategoryAppearanceEditAreaState
 
       Future(() async {
         // 一度だけ取得してセット
-        final initialItem =
-            await ref.watch(bigCategoriesProvider(widget.bigId).future);
+        final initialItem = await ref.watch(
+          bigCategoriesProvider(widget.bigId).future,
+        );
 
         ref.read(bigCategoryNameControllerProvider).text =
             initialItem.bigCategoryName;
@@ -70,8 +71,9 @@ class _BigCategoryAppearanceEditAreaState
           child: Container(
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
-                color: MyColors.quarternarySystemfill,
-                borderRadius: BorderRadius.circular(18)),
+              color: MyColors.quarternarySystemfill,
+              borderRadius: BorderRadius.circular(18),
+            ),
             height: 135,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -135,7 +137,7 @@ class _BigCategoryAppearanceEditAreaState
                     // カーソルの先の太さ
                     cursorWidth: 2,
                     // 入力するテキストのstyle
-                    style: CategoryStyles.categoryEditNameInput,
+                    style: AppTextStyles.listTilePrimaryTitle,
                     // 行数の制約
                     minLines: 1,
                     maxLines: 1,
@@ -153,44 +155,55 @@ class _BigCategoryAppearanceEditAreaState
 
                       // ヒントテキスト
                       hintText: "カテゴリー名を入力",
-                      hintStyle: CategoryStyles.categoryEditNameHint,
+                      hintStyle: AppTextStyles.listTileTextFieldHint,
 
                       // テキストの余白
                       contentPadding: const EdgeInsets.only(
-                          top: 16, bottom: 0, left: 40, right: 16),
+                        top: 16,
+                        bottom: 0,
+                        left: 40,
+                        right: 16,
+                      ),
 
                       // テキスト右側のアイコン
                       suffixIcon: Padding(
                         // contentPaddingの影響を受けないので、余白を追加
                         padding: const EdgeInsets.only(right: 0),
-                        child: Stack(alignment: Alignment.center, children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: const BoxDecoration(
-                              color: MyColors.systemfill,
-                              shape: BoxShape.circle,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: const BoxDecoration(
+                                color: MyColors.systemfill,
+                                shape: BoxShape.circle,
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            // 右アイコンを押した時の処理
-                            onPressed: () => {
-                              // テキストフィールドの内容をクリア
-                              ref
-                                  .read(bigCategoryNameControllerProvider)
-                                  .clear(),
+                            IconButton(
+                              // 右アイコンを押した時の処理
+                              onPressed: () => {
+                                // テキストフィールドの内容をクリア
+                                ref
+                                    .read(bigCategoryNameControllerProvider)
+                                    .clear(),
 
-                              // 大カテゴリーの見た目が編集されたことを通知
-                              ref
-                                  .read(
+                                // 大カテゴリーの見た目が編集されたことを通知
+                                ref
+                                    .read(
                                       isBigCategoryAppearanceEditedNotifierProvider
-                                          .notifier)
-                                  .updateState(true),
-                            },
-                            icon: const Icon(Icons.clear,
-                                size: 14, color: MyColors.white),
-                          ),
-                        ]),
+                                          .notifier,
+                                    )
+                                    .updateState(true),
+                              },
+                              icon: const Icon(
+                                Icons.clear,
+                                size: 14,
+                                color: MyColors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
 
                       // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
@@ -215,8 +228,10 @@ class _BigCategoryAppearanceEditAreaState
                     onChanged: (event) {
                       // 大カテゴリーの見た目が編集されたことを通知
                       ref
-                          .read(isBigCategoryAppearanceEditedNotifierProvider
-                              .notifier)
+                          .read(
+                            isBigCategoryAppearanceEditedNotifierProvider
+                                .notifier,
+                          )
                           .updateState(true);
                     },
 
@@ -255,8 +270,9 @@ class _BigCategoryAppearanceEditAreaState
             child: Container(
               height: 42,
               decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(50)),
+                color: MyColors.quarternarySystemfill,
+                borderRadius: BorderRadius.circular(50),
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -264,18 +280,17 @@ class _BigCategoryAppearanceEditAreaState
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, right: 8),
                     child: Container(
-                        height: 16,
-                        width: 16,
-                        decoration: BoxDecoration(
-                          color: ref.watch(
-                              bigCategroyColorControllerNotifierProvider),
-                          shape: BoxShape.circle,
-                        )),
+                      height: 16,
+                      width: 16,
+                      decoration: BoxDecoration(
+                        color: ref.watch(
+                          bigCategroyColorControllerNotifierProvider,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
                   ),
-                  Text(
-                    'カテゴリーカラー',
-                    style: CategoryStyles.categoryEditColorLabel,
-                  )
+                  Text('カテゴリーカラー', style: AppTextStyles.listTileSecondaryTitle),
                 ],
               ),
             ),

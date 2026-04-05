@@ -7,7 +7,7 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.selectedLabelStyle
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.unselectedLabelStyle,タブ,noto_sans,14,w300,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.mainButtonText,ボタン,noto_sans,14,w600,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.subButtonText,ボタン,noto_sans,15,w600,MyColors.themeColor,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.oneLineButtonText,ボタン,noto_sans,14,w400,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.oneLineButtonText,ボタン,noto_sans,13,w500,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.oneLineButtonSubText,ボタン,noto_sans,14,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listEmptyMessage,エラー,noto_sans,16,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.errorMessage,エラー,noto_sans,16,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
@@ -16,9 +16,15 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.whiteButtonText,�
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.cardSectionTitle,見出し,noto_sans,16,w600,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileSectionTitle,見出し,sf_ui,13,w500,MyColors.secondaryLabel,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTilePrimaryTitle,ラベル,noto_sans,14,w500,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileSecondaryTitle,ラベル,noto_sans,11,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileSecondaryTitle,ラベル,noto_sans,13,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileTirtiaryTitle,ラベル,noto_sans,11,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTilePriceLabel,金額,sf_ui,17,w500,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileSubPriceLabel,金額,sf_ui,15,w400,MyColors.secondaryLabel,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileInputPriceLabel,金額,sf_ui,19,w500,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileTextFieldHint,ラベル,noto_sans,15,w600,MyColors.tirtiaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileUnconfirmedPriceLabel,金額,noto_sans,15,w500,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileYenLabel,ラベル,noto_sans,12,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileLegendTitle,ラベル,noto_sans,14,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardTitleLabel,ラベル,noto_sans,14,w500,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardUnconfirmedPriceLabel,金額,noto_sans,14,w700,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardSecondaryTitle,ラベル,noto_sans,12,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
@@ -66,25 +72,6 @@ lib/constant/styles/graph_text_styles.dart,グラフ,GraphTextStyles.tooltipDate
 lib/constant/styles/graph_text_styles.dart,グラフ,GraphTextStyles.tooltipSubtitle,ラベル,sf_ui,13,w600,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/graph_text_styles.dart,グラフ,GraphTextStyles.tooltipCategory,ラベル,sf_ui,12,w700,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/graph_text_styles.dart,グラフ,GraphTextStyles.tooltipCumulativeLabel,ラベル,noto_sans,10,未指定,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.newCategoryAdd,ボタン,noto_sans,17,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryExpenseHistoryPageCategoryName,ラベル,noto_sans,16,w400,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryExpenseHistoryPageRecordCount,ラベル,noto_sans,14,w300,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryExpenseHistoryPagePrice,金額,sf_ui,19,w300,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryExpenseHistoryPageBudgetPrice,金額,sf_ui,14,w300,MyColors.secondaryLabel,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryExpenseHistoryPageYen,ラベル,noto_sans,11,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryExpenseHistoryPageSubText,ラベル,noto_sans,13,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.listHeaderLabel,見出し,noto_sans,16,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.editListTitle,ラベル,noto_sans,18,w400,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.editListSubTitle,ラベル,noto_sans,14,w300,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryEditNameInput,本文,noto_sans,20,未指定,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryEditNameHint,ラベル,noto_sans,16,未指定,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/category_styles.dart,カテゴリー編集,CategoryStyles.categoryEditColorLabel,ラベル,noto_sans,14,未指定,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/budget_settings_styles.dart,予算設定,BudgetSettingsStyles.categoryTitle,ラベル,noto_sans,18,w400,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/budget_settings_styles.dart,予算設定,BudgetSettingsStyles.subPrice,金額,sf_ui,16,w300,MyColors.secondaryLabel,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/budget_settings_styles.dart,予算設定,BudgetSettingsStyles.yenText,ラベル,noto_sans,14,w300,MyColors.tirtiaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/budget_settings_styles.dart,予算設定,BudgetSettingsStyles.textField,本文,sf_ui,20,w600,MyColors.white,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/budget_settings_styles.dart,予算設定,BudgetSettingsStyles.textFieldHint,ラベル,noto_sans,16,未指定,MyColors.tirtiaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/budget_settings_styles.dart,予算設定,BudgetSettingsStyles.columnHeaderLabel,ラベル,noto_sans,16,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/yearly_income_list_styles.dart,年間収入リスト,YearlyIncomeListStyles.listMonthHeader,見出し,noto_sans,14,w600,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/yearly_income_list_styles.dart,年間収入リスト,YearlyIncomeListStyles.noDataMessage,エラー,noto_sans,16,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/yearly_income_list_styles.dart,年間収入リスト,YearlyIncomeListStyles.errorMessage,エラー,noto_sans,16,w400,MyColors.red,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
@@ -100,7 +87,7 @@ lib/view/year_page/yearly_balance_area/yearly_balance_bar_graph.dart,YearlyBalan
 lib/view/year_page/bonus_plan_area/bonus_plan_bar_graph.dart,BonusPlanBarGraph,Text,エラー,未指定(default),16,未指定,MyColors.secondaryLabel,インライン TextStyle(),未使用,インライン
 lib/view/year_page/bonus_plan_area/bonus_plan_bar_graph.dart,BonusPlanBarGraph,Text,エラー,未指定(default),16,未指定,MyColors.secondaryLabel,インライン TextStyle(),未使用,インライン
 lib/view/register_page/category_area/category_reorder_page.dart,CategoryReorderPage,Text,ラベル,未指定(default),14,未指定,MyColors.secondaryLabel,インライン TextStyle(),未使用,インライン
-lib/view/daily_expense_summary_page/daily_expense_summary_page.dart,DailyExpenseSummaryPage,Text,ラベル,noto_sans,14(copyWith),w400,MyColors.secondaryLabel,定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
+lib/view/daily_expense_summary_page/daily_expense_summary_page.dart,DailyExpenseSummaryPage,Text,ラベル,noto_sans,14(copyWith),w400,MyColors.secondaryLabel,定数参照+copyWith(listTileTirtiaryTitle),使用(notoSans/間接),copyWithで上書き
 lib/view/register_page/common_input_field/memo_input_field.dart,MemoInputField,Text,ラベル,noto_sans,14,w500,MyColors.secondaryLabel,RegisterPageStyles.placeHolder直接参照,使用(notoSans),共通化済み
 lib/view/register_page/common_input_field/price_input_row/large_price_display.dart,LargePriceDisplay,Text,金額,sf_ui,32,bold,dynamic,定数参照+copyWith,使用(sfUi/間接),copyWithで上書き
 lib/util/common_widget/app_dialog.dart,AppDialog,Text,ボタン,noto_sans,18,w600(copyWith),MyColors.white,定数参照+copyWith,使用(notoSans/間接),copyWithで上書き

@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 
 class ConfirmedFixedCostItemTile extends ConsumerWidget {
   const ConfirmedFixedCostItemTile({
@@ -50,14 +47,12 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
       secondaryBackground: Container(
         color: MyColors.red,
         child: const Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding: EdgeInsets.only(right: 18.0),
-              child: Icon(
-                Icons.delete,
-                color: MyColors.systemGray,
-              ),
-            )),
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(right: 18.0),
+            child: Icon(Icons.delete, color: MyColors.systemGray),
+          ),
+        ),
       ),
       confirmDismiss: (direction) async {
         if (direction == DismissDirection.endToStart) {
@@ -71,8 +66,10 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
       child: Column(
         children: [
           Padding(
-            padding:
-                EdgeInsets.only(left: leftsidePadding, right: leftsidePadding),
+            padding: EdgeInsets.only(
+              left: leftsidePadding,
+              right: leftsidePadding,
+            ),
             child: SizedBox(
               height: 49,
               width: double.infinity,
@@ -106,7 +103,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                             '固定費',
                             textAlign: TextAlign.start,
                             overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.listTileSecondaryTitle,
+                            style: AppTextStyles.listTileTirtiaryTitle,
                           ),
                         ),
                       ],
@@ -130,12 +127,8 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
                   // nextArrowアイコン
                   const Padding(
                     padding: EdgeInsets.only(right: 4),
-                    child: Icon(
-                      size: 18,
-                      Icons.remove,
-                      color: MyColors.pink,
-                    ),
-                  )
+                    child: Icon(size: 18, Icons.remove, color: MyColors.pink),
+                  ),
                 ],
               ),
             ),
@@ -146,7 +139,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
             indent: 50 + leftsidePadding,
             endIndent: leftsidePadding,
             color: MyColors.separater,
-          )
+          ),
         ],
       ),
     );

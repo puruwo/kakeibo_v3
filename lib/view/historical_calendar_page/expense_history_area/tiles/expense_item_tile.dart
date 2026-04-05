@@ -45,8 +45,9 @@ class ExpenseItemTile extends ConsumerWidget {
       ),
     );
     // 値段ラベル
-    final priceLabel =
-        value.price == 0 ? '未確定' : yenmarkFormattedPriceGetter(value.price);
+    final priceLabel = value.price == 0
+        ? '未確定'
+        : yenmarkFormattedPriceGetter(value.price);
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
@@ -72,14 +73,12 @@ class ExpenseItemTile extends ConsumerWidget {
         secondaryBackground: Container(
           color: MyColors.red,
           child: const Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 18.0),
-                child: Icon(
-                  Icons.delete,
-                  color: MyColors.systemGray,
-                ),
-              )),
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(right: 18.0),
+              child: Icon(Icons.delete, color: MyColors.systemGray),
+            ),
+          ),
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
@@ -94,7 +93,9 @@ class ExpenseItemTile extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  left: leftsidePadding, right: leftsidePadding),
+                left: leftsidePadding,
+                right: leftsidePadding,
+              ),
               child: SizedBox(
                 height: 49,
                 width: double.infinity,
@@ -132,7 +133,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.smallCategoryName}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileSecondaryTitle,
+                                  style: AppTextStyles.listTileTirtiaryTitle,
                                 ),
                               ),
                               // メモ
@@ -142,11 +143,11 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.memo}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileSecondaryTitle,
+                                  style: AppTextStyles.listTileTirtiaryTitle,
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -168,12 +169,8 @@ class ExpenseItemTile extends ConsumerWidget {
                     // nextArrowアイコン
                     const Padding(
                       padding: EdgeInsets.only(right: 4),
-                      child: Icon(
-                        size: 18,
-                        Icons.remove,
-                        color: MyColors.pink,
-                      ),
-                    )
+                      child: Icon(size: 18, Icons.remove, color: MyColors.pink),
+                    ),
                   ],
                 ),
               ),
@@ -184,7 +181,7 @@ class ExpenseItemTile extends ConsumerWidget {
               indent: 50 + leftsidePadding,
               endIndent: leftsidePadding,
               color: MyColors.separater,
-            )
+            ),
           ],
         ),
       ),

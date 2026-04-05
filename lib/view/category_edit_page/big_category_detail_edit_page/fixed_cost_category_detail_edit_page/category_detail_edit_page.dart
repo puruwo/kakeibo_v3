@@ -3,9 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // LocalImport
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/add_complete_button/add_complete_big_category_detail_button.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/cotegory_appearance_edit_area.dart';
@@ -51,37 +49,33 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
 
         // ヘッダー
         appBar: AppBar(
-          title: Text(
-            'カテゴリーの設定',
-            style: AppTextStyles.pageHeaderText,
-          ),
+          title: Text('カテゴリーの設定', style: AppTextStyles.pageHeaderText),
 
           backgroundColor: Colors.transparent,
-          flexibleSpace: const GlassAppBarBackground(),
           //ヘッダー左のアイコンボタン
           leading: IconButton(
-              // 閉じるときはネストしているModal内のRouteではなく、root側のNavigatorを指定する必要がある
-              onPressed: () {
-                Navigator.of(context).pop();
-                if (widget.categoryType == CategoryType.expense) {
-                  ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
-                  ref.invalidate(isSmallCategoryListEditedNotifierProvider);
-                  ref.invalidate(edittingSmallCategoryListNotifierProvider);
-                } else {
-                  ref.invalidate(
-                      fixedCostCategoryNameControllerNotifierProvider);
-                  ref.invalidate(
-                      fixedCostCategoryIconControllerNotifierProvider);
-                  ref.invalidate(
-                      fixedCostCategoryColorControllerNotifierProvider);
-                }
-              },
-              icon: const Icon(Icons.arrow_back_ios_rounded,
-                  color: MyColors.white)),
+            // 閉じるときはネストしているModal内のRouteではなく、root側のNavigatorを指定する必要がある
+            onPressed: () {
+              Navigator.of(context).pop();
+              if (widget.categoryType == CategoryType.expense) {
+                ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
+                ref.invalidate(isSmallCategoryListEditedNotifierProvider);
+                ref.invalidate(edittingSmallCategoryListNotifierProvider);
+              } else {
+                ref.invalidate(fixedCostCategoryNameControllerNotifierProvider);
+                ref.invalidate(fixedCostCategoryIconControllerNotifierProvider);
+                ref.invalidate(
+                  fixedCostCategoryColorControllerNotifierProvider,
+                );
+              }
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios_rounded,
+              color: MyColors.white,
+            ),
+          ),
           //ヘッダー右のアイコンボタン
-          actions: [
-            _buildActionButton(),
-          ],
+          actions: [_buildActionButton()],
         ),
 
         // 本体
@@ -97,9 +91,7 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
 
             // 小カテゴリーのリスト（固定費の場合は表示しない）
             if (widget.categoryType == CategoryType.expense)
-              SmallCategoryEditArea(
-                bigId: widget.bigCategoryId ?? -1,
-              ),
+              SmallCategoryEditArea(bigId: widget.bigCategoryId ?? -1),
           ],
         ),
       ),
@@ -110,9 +102,7 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
   Widget _buildActionButton() {
     if (widget.categoryType == CategoryType.expense) {
       return widget.screenMode == BigCategoryDetailEditScreenMode.edit
-          ? UpdateCompleteBigCategoryDetailButton(
-              bigId: widget.bigCategoryId!,
-            )
+          ? UpdateCompleteBigCategoryDetailButton(bigId: widget.bigCategoryId!)
           : AddCompleteBigCategoryDetailButton(
               categoryOrder: widget.categoryOrder!,
             );

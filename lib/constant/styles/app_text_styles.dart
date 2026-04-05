@@ -105,9 +105,9 @@ class AppTextStyles {
   /// 一行ボタン用のテキスト
   ///
   static final TextStyle oneLineButtonText = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+    fontSize: 13,
     color: MyColors.label,
-    fontWeight: FontWeight.w400,
+    fontWeight: FontWeight.w500,
   );
 
   /// 一行ボタン用のサブテキスト
@@ -214,6 +214,13 @@ class AppTextStyles {
 
   /// カードのサブタイトル用スタイル
   static final TextStyle listTileSecondaryTitle = MyFontStyle.notoSans.copyWith(
+    fontSize: 13,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// カードのサブタイトル用スタイル
+  static final TextStyle listTileTirtiaryTitle = MyFontStyle.notoSans.copyWith(
     fontSize: 11,
     color: MyColors.secondaryLabel,
     fontWeight: FontWeight.w400,
@@ -226,6 +233,27 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  /// カード内金額表示用Secondaryスタイル
+  static final TextStyle listTileSubPriceLabel = MyFontStyle.sfUi.copyWith(
+    fontSize: 15,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// 入力フィールド用スタイル
+  static final TextStyle listTileInputPriceLabel = MyFontStyle.sfUi.copyWith(
+    fontSize: 19,
+    color: MyColors.label,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// 入力フィールドのヒントテキスト
+  static final TextStyle listTileTextFieldHint = MyFontStyle.notoSans.copyWith(
+    fontSize: 15,
+    color: MyColors.tirtiaryLabel,
+    fontWeight: FontWeight.w600,
+  );
+
   /// カード内未確定金額用スタイル
   static final TextStyle listTileUnconfirmedPriceLabel = MyFontStyle.notoSans
       .copyWith(
@@ -233,6 +261,20 @@ class AppTextStyles {
         color: MyColors.label,
         fontWeight: FontWeight.w500,
       );
+
+  /// 金額単位表示「円」
+  static final TextStyle listTileYenLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 12,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// カードの凡例タイトル用
+  static final TextStyle listTileLegendTitle = MyFontStyle.notoSans.copyWith(
+    fontSize: 14,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w400,
+  );
 
   // ==========================================================================
   // リストカード内スタイル

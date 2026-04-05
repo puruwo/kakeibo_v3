@@ -58,10 +58,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
-          title: Text(
-            'カテゴリー設定',
-            style: AppTextStyles.pageHeaderText,
-          ),
+          title: Text('カテゴリー設定', style: AppTextStyles.pageHeaderText),
 
           //ヘッダー左のアイコンボタン
           leading: IconButton(
@@ -96,6 +93,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
         // 本体
         body: TabBarView(
           controller: _tabController,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             // 一般カテゴリータブ
             _buildCategoryContent(

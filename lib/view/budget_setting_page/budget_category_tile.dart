@@ -44,8 +44,9 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
 
-    final controller =
-        ref.watch(enteredBudgetPriceControllerProvider(widget.budgetEditValue));
+    final controller = ref.watch(
+      enteredBudgetPriceControllerProvider(widget.budgetEditValue),
+    );
 
     // フッターの状態を取得
     // 非編集時はTextFieldを表示しないので、編集時のみ表示する
@@ -70,193 +71,224 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                       child: SvgPicture.asset(
                         widget.budgetEditValue.resourcePath,
                         colorFilter: ColorFilter.mode(
-                            MyColors().getColorFromHex(
-                                widget.budgetEditValue.colorCode),
-                            BlendMode.srcIn),
+                          MyColors().getColorFromHex(
+                            widget.budgetEditValue.colorCode,
+                          ),
+                          BlendMode.srcIn,
+                        ),
                         semanticsLabel: 'categoryIcon',
                         width: 25,
                         height: 25,
                       ),
                     ),
 
-                    // カテゴリー名
-                    SizedBox(
-                      width: 70 + listSTextBoxOffset * 2,
-                      child: Text(
-                        widget.budgetEditValue.expenseBigCategoryName,
-                        style: BudgetSettingsStyles.categoryTitle,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-
-                    // 先月の実績
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        SizedBox(
-                          width: 64,
-                          child: Text(
-                            formattedPriceGetterAndZeroAsHyphen(
-                                widget.budgetEditValue.lastMonthBudgetPrice),
-                            style: BudgetSettingsStyles.subPrice,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                        Text(
-                          ' 円',
-                          style: BudgetSettingsStyles.yenText,
-                        )
-                      ],
-                    ),
-
-                    // 金額入力フィールド
-
-                    AppInkWell(
-                      borderRadius: BorderRadius.circular(8),
-                      // readOnly時のタップで編集モードに切り替え
-                      onTap: () async {
-                        // 過去月の場合は編集不可ダイアログを表示
-                        final dateScope = await ref
-                            .read(analyzePageDateScopeEntityProvider.future);
-                        if (dateScope.periodStatus == PeriodStatus.past) {
-                          if (context.mounted) {
-                            FailureSnackBar.show(
-                              ScaffoldMessenger.of(context),
-                              message: "過去の予算は編集できません",
-                            );
-                          }
-                          return;
-                        }
-                        if (state != TabState.budgetEdditing) {
-                          ref
-                              .read(footerStateControllerNotifierProvider
-                                  .notifier)
-                              .updateState(TabState.budgetEdditing);
-                          _focusNode.requestFocus();
-                        }
-                      },
+                    Expanded(
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisSize: MainAxisSize.max,
                         children: [
+                          // カテゴリー名
                           SizedBox(
-                            width: 100,
-                            child: TextField(
-                              controller: controller,
-                              focusNode: _focusNode,
-                              readOnly: state != TabState.budgetEdditing,
-                              // テキストフィールドのプロパティ
-                              textAlign: TextAlign.right,
-                              textAlignVertical: TextAlignVertical.top,
-                              style: BudgetSettingsStyles.textField,
-                              inputFormatters: [
-                                // カンマのフォーマット
-                                NumberTextInputFormatter()
-                              ],
+                            width: 70 + listSTextBoxOffset * 2,
+                            child: Text(
+                              widget.budgetEditValue.expenseBigCategoryName,
+                              style: AppTextStyles.listTilePrimaryTitle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
 
-                              // TextFieldのタップイベント
-                              // 親AppInkWellでもonTap制御しているが、テキストフィールドは別途制御を記載しないと反応しない
-                              onTap: () async {
-                                // 過去月の場合は編集不可ダイアログを表示
-                                final dateScope = await ref.read(
-                                    analyzePageDateScopeEntityProvider.future);
-                                if (dateScope.periodStatus ==
-                                    PeriodStatus.past) {
-                                  if (context.mounted) {
-                                    FailureSnackBar.show(
-                                      ScaffoldMessenger.of(context),
-                                      message: "過去の予算は編集できません",
-                                    );
-                                  }
-                                  return;
-                                }
-                                if (state != TabState.budgetEdditing) {
-                                  ref
-                                      .read(
-                                          footerStateControllerNotifierProvider
-                                              .notifier)
-                                      .updateState(TabState.budgetEdditing);
-                                  _focusNode.requestFocus();
-                                }
-                              },
-
-                              // デコレーション
-                              decoration: InputDecoration(
-                                // なんかわからんおまじない
-                                isDense: true,
-
-                                // 背景の塗りつぶし
-                                filled: false,
-
-                                // ヒントテキスト
-                                // 空文字かどうかを判定することで、入力時再描画のちらつきを防止する
-                                hintText:
-                                    controller.text.isNotEmpty ? "" : "金額を入力",
-                                hintStyle: BudgetSettingsStyles.textFieldHint,
-
-                                // テキストの余白
-                                contentPadding: const EdgeInsets.only(
-                                    top: 16, bottom: 0, left: 0, right: 0),
-
-                                // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
-                                // 何もしていない時の境界線
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
-                                    color: MyColors.jet.withOpacity(0.0),
+                          // 先月の実績
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              SizedBox(
+                                width: 64,
+                                child: Text(
+                                  formattedPriceGetterAndZeroAsHyphen(
+                                    widget.budgetEditValue.lastMonthBudgetPrice,
                                   ),
+                                  style: AppTextStyles.listTileSubPriceLabel,
+                                  textAlign: TextAlign.right,
                                 ),
-                                // 入力時の境界線
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                  borderSide: BorderSide(
-                                    color: MyColors.jet.withOpacity(0.0),
-                                  ),
-                                ),
-
-                                // 入力テキストの末尾に「円」を表示
-                                suffix: controller.text.isNotEmpty
-                                    ? Text(
-                                        ' 円',
-                                        style: BudgetSettingsStyles.yenText,
-                                      )
-                                    : null,
                               ),
-                              keyboardType: TextInputType.number,
+                              Text(' 円', style: AppTextStyles.listTileYenLabel),
+                            ],
+                          ),
 
-                              // 編集されたら編集フラグをtrueに
-                              onChanged: (value) {
-                                // setStateをかますことでwidgetが再描画される
-                                setState(() {
-                                  ref
-                                      .read(isPriceEditedNotifierProvider
-                                          .notifier)
-                                      .updateState(true);
-                                });
-                                // リアルタイム反映用に編集中の金額を更新
-                                final numericValue = int.tryParse(
-                                        value.replaceAll(RegExp(r'\D'), '')) ??
-                                    0;
+                          // 金額入力フィールド
+                          AppInkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            // readOnly時のタップで編集モードに切り替え
+                            onTap: () async {
+                              // 過去月の場合は編集不可ダイアログを表示
+                              final dateScope = await ref.read(
+                                analyzePageDateScopeEntityProvider.future,
+                              );
+                              if (dateScope.periodStatus == PeriodStatus.past) {
+                                if (context.mounted) {
+                                  FailureSnackBar.show(
+                                    ScaffoldMessenger.of(context),
+                                    message: "過去の予算は編集できません",
+                                  );
+                                }
+                                return;
+                              }
+                              if (state != TabState.budgetEdditing) {
                                 ref
-                                    .read(editingBudgetPricesNotifierProvider
-                                        .notifier)
-                                    .update(
-                                      widget.budgetEditValue
-                                          .expenseBigCategoryId,
-                                      numericValue,
-                                    );
-                              },
-                              // //領域外をタップでproviderを更新する
-                              onTapOutside: (event) {
-                                //キーボードを閉じる
-                                // FocusScope.of(context).unfocus();
-                              },
-                              onEditingComplete: () {
-                                //キーボードを閉じる
-                                FocusScope.of(context).unfocus();
-                              },
+                                    .read(
+                                      footerStateControllerNotifierProvider
+                                          .notifier,
+                                    )
+                                    .updateState(TabState.budgetEdditing);
+                                _focusNode.requestFocus();
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
+                              children: [
+                                SizedBox(
+                                  width: 100,
+                                  child: TextField(
+                                    controller: controller,
+                                    focusNode: _focusNode,
+                                    readOnly: state != TabState.budgetEdditing,
+                                    // テキストフィールドのプロパティ
+                                    textAlign: TextAlign.right,
+                                    textAlignVertical: TextAlignVertical.top,
+                                    style:
+                                        AppTextStyles.listTileInputPriceLabel,
+                                    inputFormatters: [
+                                      // カンマのフォーマット
+                                      NumberTextInputFormatter(),
+                                    ],
+
+                                    // TextFieldのタップイベント
+                                    // 親AppInkWellでもonTap制御しているが、テキストフィールドは別途制御を記載しないと反応しない
+                                    onTap: () async {
+                                      // 過去月の場合は編集不可ダイアログを表示
+                                      final dateScope = await ref.read(
+                                        analyzePageDateScopeEntityProvider
+                                            .future,
+                                      );
+                                      if (dateScope.periodStatus ==
+                                          PeriodStatus.past) {
+                                        if (context.mounted) {
+                                          FailureSnackBar.show(
+                                            ScaffoldMessenger.of(context),
+                                            message: "過去の予算は編集できません",
+                                          );
+                                        }
+                                        return;
+                                      }
+                                      if (state != TabState.budgetEdditing) {
+                                        ref
+                                            .read(
+                                              footerStateControllerNotifierProvider
+                                                  .notifier,
+                                            )
+                                            .updateState(
+                                              TabState.budgetEdditing,
+                                            );
+                                        _focusNode.requestFocus();
+                                      }
+                                    },
+
+                                    // デコレーション
+                                    decoration: InputDecoration(
+                                      // なんかわからんおまじない
+                                      isDense: true,
+
+                                      // 背景の塗りつぶし
+                                      filled: false,
+
+                                      // ヒントテキスト
+                                      // 空文字かどうかを判定することで、入力時再描画のちらつきを防止する
+                                      hintText: controller.text.isNotEmpty
+                                          ? ""
+                                          : "金額を入力",
+                                      hintStyle:
+                                          AppTextStyles.listTileTextFieldHint,
+
+                                      // テキストの余白
+                                      contentPadding: const EdgeInsets.only(
+                                        top: 16,
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                      ),
+
+                                      // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
+                                      // 何もしていない時の境界線
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: BorderSide(
+                                          color: MyColors.jet.withOpacity(0.0),
+                                        ),
+                                      ),
+                                      // 入力時の境界線
+                                      focusedBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                        borderSide: BorderSide(
+                                          color: MyColors.jet.withOpacity(0.0),
+                                        ),
+                                      ),
+
+                                      // 入力テキストの末尾に「円」を表示
+                                      suffix: controller.text.isNotEmpty
+                                          ? Text(
+                                              ' 円',
+                                              style: AppTextStyles
+                                                  .listTileYenLabel,
+                                            )
+                                          : null,
+                                    ),
+                                    keyboardType: TextInputType.number,
+
+                                    // 編集されたら編集フラグをtrueに
+                                    onChanged: (value) {
+                                      // setStateをかますことでwidgetが再描画される
+                                      setState(() {
+                                        ref
+                                            .read(
+                                              isPriceEditedNotifierProvider
+                                                  .notifier,
+                                            )
+                                            .updateState(true);
+                                      });
+                                      // リアルタイム反映用に編集中の金額を更新
+                                      final numericValue =
+                                          int.tryParse(
+                                            value.replaceAll(RegExp(r'\D'), ''),
+                                          ) ??
+                                          0;
+                                      ref
+                                          .read(
+                                            editingBudgetPricesNotifierProvider
+                                                .notifier,
+                                          )
+                                          .update(
+                                            widget
+                                                .budgetEditValue
+                                                .expenseBigCategoryId,
+                                            numericValue,
+                                          );
+                                    },
+                                    // //領域外をタップでproviderを更新する
+                                    onTapOutside: (event) {
+                                      //キーボードを閉じる
+                                      // FocusScope.of(context).unfocus();
+                                    },
+                                    onEditingComplete: () {
+                                      //キーボードを閉じる
+                                      FocusScope.of(context).unfocus();
+                                    },
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],

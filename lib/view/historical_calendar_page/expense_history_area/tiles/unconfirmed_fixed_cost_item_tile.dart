@@ -51,14 +51,12 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
         secondaryBackground: Container(
           color: MyColors.red,
           child: const Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 18.0),
-                child: Icon(
-                  Icons.delete,
-                  color: MyColors.systemGray,
-                ),
-              )),
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(right: 18.0),
+              child: Icon(Icons.delete, color: MyColors.systemGray),
+            ),
+          ),
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
@@ -70,86 +68,84 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
           fixedCostExpenseUsecase.delete(id: value.id);
         },
         child: Column(
-        children: [
-          Padding(
-            padding:
-                EdgeInsets.only(left: leftsidePadding, right: leftsidePadding),
-            child: SizedBox(
-              height: 49,
-              width: double.infinity,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // アイコン
-                  SizedBox(height: 49, width: 49, child: icon),
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: leftsidePadding,
+                right: leftsidePadding,
+              ),
+              child: SizedBox(
+                height: 49,
+                width: double.infinity,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    // アイコン
+                    SizedBox(height: 49, width: 49, child: icon),
 
-                  // 固定費名
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // 固定費名
-                        SizedBox(
-                          width: 153 * screenHorizontalMagnification,
-                          child: Text(
-                            value.name,
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.listTilePrimaryTitle,
+                    // 固定費名
+                    Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // 固定費名
+                          SizedBox(
+                            width: 153 * screenHorizontalMagnification,
+                            child: Text(
+                              value.name,
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.listTilePrimaryTitle,
+                            ),
                           ),
-                        ),
-                        // 固定費（未確定）ラベル
-                        SizedBox(
-                          width: 153 * screenHorizontalMagnification,
-                          child: Text(
-                            '固定費(未確定)',
-                            textAlign: TextAlign.start,
-                            overflow: TextOverflow.ellipsis,
-                            style: AppTextStyles.listTileSecondaryTitle,
+                          // 固定費（未確定）ラベル
+                          SizedBox(
+                            width: 153 * screenHorizontalMagnification,
+                            child: Text(
+                              '固定費(未確定)',
+                              textAlign: TextAlign.start,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles.listTileTirtiaryTitle,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // 値段
-                  Padding(
-                    padding: const EdgeInsets.only(right: 2.0),
-                    child: SizedBox(
-                      width: 100,
-                      child: Text(
-                        '未確定',
-                        textAlign: TextAlign.end,
-                        overflow: TextOverflow.ellipsis,
-                        style: AppTextStyles.listTileUnconfirmedPriceLabel,
+                        ],
                       ),
                     ),
-                  ),
 
-                  // nextArrowアイコン
-                  const Padding(
-                    padding: EdgeInsets.only(right: 4),
-                    child: Icon(
-                      size: 18,
-                      Icons.remove,
-                      color: MyColors.pink,
+                    // 値段
+                    Padding(
+                      padding: const EdgeInsets.only(right: 2.0),
+                      child: SizedBox(
+                        width: 100,
+                        child: Text(
+                          '未確定',
+                          textAlign: TextAlign.end,
+                          overflow: TextOverflow.ellipsis,
+                          style: AppTextStyles.listTileUnconfirmedPriceLabel,
+                        ),
+                      ),
                     ),
-                  )
-                ],
+
+                    // nextArrowアイコン
+                    const Padding(
+                      padding: EdgeInsets.only(right: 4),
+                      child: Icon(size: 18, Icons.remove, color: MyColors.pink),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Divider(
-            thickness: 0.25,
-            height: 0.25,
-            indent: 50 + leftsidePadding,
-            endIndent: leftsidePadding,
-            color: MyColors.separater,
-          )
-        ],
-      ),
+            Divider(
+              thickness: 0.25,
+              height: 0.25,
+              indent: 50 + leftsidePadding,
+              endIndent: leftsidePadding,
+              color: MyColors.separater,
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -19,10 +19,7 @@ import 'package:kakeibo/view_model/state/fixed_cost_category_edit_page/editting_
 import 'package:kakeibo/view_model/state/fixed_cost_category_edit_page/is_fixed_cost_category_list_edited/is_fixed_cost_category_list_edited.dart';
 
 class BigCategoryEditArea extends ConsumerStatefulWidget {
-  const BigCategoryEditArea({
-    super.key,
-    required this.categoryType,
-  });
+  const BigCategoryEditArea({super.key, required this.categoryType});
 
   final CategoryType categoryType;
 
@@ -40,15 +37,17 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future(() async {
         if (widget.categoryType == CategoryType.expense) {
-          final initialList =
-              await ref.read(allBigCategoriesWithSmallListProvider.future);
+          final initialList = await ref.read(
+            allBigCategoriesWithSmallListProvider.future,
+          );
           ref
               .read(edittingBigCategoryListNotifierProvider.notifier)
               .setData(initialList);
         } else {
           // 固定費カテゴリーの場合
-          final categories =
-              await ref.read(allFixedCostCategoriesProvider.future);
+          final categories = await ref.read(
+            allFixedCostCategoriesProvider.future,
+          );
           final editList = categories.map((category) {
             return EditFixedCostCategoryValue(
               id: category.id,
@@ -81,13 +80,17 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
       return _buildExpenseCategoryEditArea(leftsidePadding, listSTextBoxOffset);
     } else {
       return _buildFixedCostCategoryEditArea(
-          leftsidePadding, listSTextBoxOffset);
+        leftsidePadding,
+        listSTextBoxOffset,
+      );
     }
   }
 
   // 一般カテゴリーの編集エリア
   Widget _buildExpenseCategoryEditArea(
-      double leftsidePadding, double listSTextBoxOffset) {
+    double leftsidePadding,
+    double listSTextBoxOffset,
+  ) {
     final itemList = ref.watch(edittingBigCategoryListNotifierProvider);
 
     return Column(
@@ -101,31 +104,20 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Text(
-                      '表示',
-                      style: CategoryStyles.listHeaderLabel,
-                    ),
-                    const SizedBox(
-                      width: 18,
-                    ),
+                    Text('表示', style: AppTextStyles.listTileLegendTitle),
+                    const SizedBox(width: 18),
                     SizedBox(
                       width: 110 + listSTextBoxOffset,
                       child: Text(
                         'カテゴリー',
-                        style: CategoryStyles.listHeaderLabel,
+                        style: AppTextStyles.listTileLegendTitle,
                       ),
                     ),
-                    Text(
-                      '項目',
-                      style: CategoryStyles.listHeaderLabel,
-                    ),
+                    Text('項目', style: AppTextStyles.listTileLegendTitle),
                   ],
                 ),
               ),
-              Text(
-                '並べ替え',
-                style: CategoryStyles.listHeaderLabel,
-              ),
+              Text('並べ替え', style: AppTextStyles.listTileLegendTitle),
             ],
           ),
         ),
@@ -141,134 +133,141 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
 
         // リスト部分
         Expanded(
-            child: ReorderableListView.builder(
-          // デフォルトの並べ替えアイコン
-          buildDefaultDragHandles: false,
-          // 並べ替えた時の処理
-          onReorder: (oldIndex, newIndex) {
-            // カテゴリーの状態を保持しているリストの並び替え
-            ref
-                .read(edittingBigCategoryListNotifierProvider.notifier)
-                .reorder(oldIndex, newIndex);
+          child: ReorderableListView.builder(
+            // デフォルトの並べ替えアイコン
+            buildDefaultDragHandles: false,
+            // 並べ替えた時の処理
+            onReorder: (oldIndex, newIndex) {
+              // カテゴリーの状態を保持しているリストの並び替え
+              ref
+                  .read(edittingBigCategoryListNotifierProvider.notifier)
+                  .reorder(oldIndex, newIndex);
 
-            // 変更を加えたことを管理する状態管理する
-            ref
-                .read(isBigCategoryListEditedNotifierProvider.notifier)
-                .updateState(true);
-          },
-          itemCount: itemList.length,
-          itemBuilder: (BuildContext context, int index) {
-            // 並べ替え可能なリストのアイテム
-            return Column(
-              key: Key('$index'),
-              children: [
-                // リスト本体
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
-                  child: SizedBox(
-                    height: 50,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // チェックボックス
-                        Padding(
-                          padding: const EdgeInsets.all(12.5),
-                          child: GestureDetector(
-                            onTap: () {
-                              // チェックボックスのタップ処理
-                              setState(() {
-                                // チェックボックスの状態を更新する
-                                ref
-                                    .read(
+              // 変更を加えたことを管理する状態管理する
+              ref
+                  .read(isBigCategoryListEditedNotifierProvider.notifier)
+                  .updateState(true);
+            },
+            itemCount: itemList.length,
+            itemBuilder: (BuildContext context, int index) {
+              // 並べ替え可能なリストのアイテム
+              return Column(
+                key: Key('$index'),
+                children: [
+                  // リスト本体
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
+                    child: SizedBox(
+                      height: 50,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // チェックボックス
+                          Padding(
+                            padding: const EdgeInsets.all(12.5),
+                            child: GestureDetector(
+                              onTap: () {
+                                // チェックボックスのタップ処理
+                                setState(() {
+                                  // チェックボックスの状態を更新する
+                                  ref
+                                      .read(
                                         edittingBigCategoryListNotifierProvider
-                                            .notifier)
-                                    .toggleDisplay(index);
-                                // 変更を加えたことを管理する状態管理する
-                                ref
-                                    .read(
+                                            .notifier,
+                                      )
+                                      .toggleDisplay(index);
+                                  // 変更を加えたことを管理する状態管理する
+                                  ref
+                                      .read(
                                         isBigCategoryListEditedNotifierProvider
-                                            .notifier)
-                                    .updateState(true);
-                              });
-                            },
-                            child: CheckBox(
-                                isChecked:
-                                    itemList[index].etitedStateIsChecked),
-                          ),
-                        ),
-
-                        // アイコン
-                        Padding(
-                          padding: const EdgeInsets.all(12.5),
-                          child: SvgPicture.asset(
-                            itemList[index].resourcePath,
-                            colorFilter: ColorFilter.mode(
-                                MyColors()
-                                    .getColorFromHex(itemList[index].colorCode),
-                                BlendMode.srcIn),
-                            semanticsLabel: 'categoryIcon',
-                            width: 25,
-                            height: 25,
-                          ),
-                        ),
-
-                        // カテゴリー名
-                        SizedBox(
-                          width: 72 + listSTextBoxOffset,
-                          child: Text(
-                            itemList[index].bigCategoryName,
-                            style: CategoryStyles.editListTitle,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-
-                        // 小カテゴリー列挙
-                        SizedBox(
-                          width: 120 + listSTextBoxOffset,
-                          child: Text(
-                            itemList[index].expenseSmallCategoryNameText,
-                            style: CategoryStyles.editListSubTitle,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-
-                        // 並べ替えアイコン
-                        ReorderableDragStartListener(
-                          index: index,
-                          child: Container(
-                            alignment: Alignment.centerRight,
-                            width: 50,
-                            height: 50,
-                            child: const Icon(
-                              Icons.drag_handle_rounded,
-                              color: MyColors.systemGray2,
+                                            .notifier,
+                                      )
+                                      .updateState(true);
+                                });
+                              },
+                              child: CheckBox(
+                                isChecked: itemList[index].etitedStateIsChecked,
+                              ),
                             ),
                           ),
-                        ),
-                      ],
+
+                          // アイコン
+                          Padding(
+                            padding: const EdgeInsets.all(12.5),
+                            child: SvgPicture.asset(
+                              itemList[index].resourcePath,
+                              colorFilter: ColorFilter.mode(
+                                MyColors().getColorFromHex(
+                                  itemList[index].colorCode,
+                                ),
+                                BlendMode.srcIn,
+                              ),
+                              semanticsLabel: 'categoryIcon',
+                              width: 25,
+                              height: 25,
+                            ),
+                          ),
+
+                          // カテゴリー名
+                          SizedBox(
+                            width: 72 + listSTextBoxOffset,
+                            child: Text(
+                              itemList[index].bigCategoryName,
+                              style: AppTextStyles.listTilePrimaryTitle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+
+                          // 小カテゴリー列挙
+                          SizedBox(
+                            width: 120 + listSTextBoxOffset,
+                            child: Text(
+                              itemList[index].expenseSmallCategoryNameText,
+                              style: AppTextStyles.listTileSecondaryTitle,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+
+                          // 並べ替えアイコン
+                          ReorderableDragStartListener(
+                            index: index,
+                            child: Container(
+                              alignment: Alignment.centerRight,
+                              width: 50,
+                              height: 50,
+                              child: const Icon(
+                                Icons.drag_handle_rounded,
+                                color: MyColors.systemGray2,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
 
-                //区切り線
-                Divider(
-                  thickness: 0.25,
-                  height: 0.25,
-                  indent: leftsidePadding + 50,
-                  endIndent: leftsidePadding,
-                  color: MyColors.separater,
-                ),
-              ],
-            );
-          },
-        )),
+                  //区切り線
+                  Divider(
+                    thickness: 0.25,
+                    height: 0.25,
+                    indent: leftsidePadding + 50,
+                    endIndent: leftsidePadding,
+                    color: MyColors.separater,
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ],
     );
   }
 
   // 固定費カテゴリーの編集エリア
   Widget _buildFixedCostCategoryEditArea(
-      double leftsidePadding, double listSTextBoxOffset) {
+    double leftsidePadding,
+    double listSTextBoxOffset,
+  ) {
     final itemList = ref.watch(edittingFixedCostCategoryListNotifierProvider);
 
     return Column(
@@ -282,25 +281,19 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Text(
-                      '表示',
-                      style: CategoryStyles.listHeaderLabel,
-                    ),
+                    Text('表示', style: AppTextStyles.listTileLegendTitle),
                     const SizedBox(width: 18),
                     SizedBox(
                       width: 110 + listSTextBoxOffset,
                       child: Text(
                         'カテゴリー',
-                        style: CategoryStyles.listHeaderLabel,
+                        style: AppTextStyles.listTileLegendTitle,
                       ),
                     ),
                   ],
                 ),
               ),
-              Text(
-                '並べ替え',
-                style: CategoryStyles.listHeaderLabel,
-              ),
+              Text('並べ替え', style: AppTextStyles.listTileLegendTitle),
             ],
           ),
         ),
@@ -347,19 +340,21 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                                 setState(() {
                                   ref
                                       .read(
-                                          edittingFixedCostCategoryListNotifierProvider
-                                              .notifier)
+                                        edittingFixedCostCategoryListNotifierProvider
+                                            .notifier,
+                                      )
                                       .toggleDisplay(index);
                                   ref
                                       .read(
-                                          isFixedCostCategoryListEditedNotifierProvider
-                                              .notifier)
+                                        isFixedCostCategoryListEditedNotifierProvider
+                                            .notifier,
+                                      )
                                       .updateState(true);
                                 });
                               },
                               child: CheckBox(
-                                  isChecked:
-                                      itemList[index].editedStateIsChecked),
+                                isChecked: itemList[index].editedStateIsChecked,
+                              ),
                             ),
                           ),
 
@@ -369,9 +364,11 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             child: SvgPicture.asset(
                               itemList[index].resourcePath,
                               colorFilter: ColorFilter.mode(
-                                  MyColors().getColorFromHex(
-                                      itemList[index].colorCode),
-                                  BlendMode.srcIn),
+                                MyColors().getColorFromHex(
+                                  itemList[index].colorCode,
+                                ),
+                                BlendMode.srcIn,
+                              ),
                               semanticsLabel: 'categoryIcon',
                               width: 25,
                               height: 25,
@@ -382,7 +379,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                           Expanded(
                             child: Text(
                               itemList[index].name,
-                              style: CategoryStyles.editListTitle,
+                              style: AppTextStyles.listTilePrimaryTitle,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
