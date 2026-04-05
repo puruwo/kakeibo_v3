@@ -105,19 +105,17 @@ class CategorySumGraph extends HookConsumerWidget {
         final double budgetPointRatio = categoryTile.graphRatio ?? 0.0;
         final double budgetPointX = barFrameMaxWidth * budgetPointRatio;
         const double overflowContainerHeight = 14.0;
-        // 上下の突出量と右端の余白を揃える
-        final double overflowPadding =
-            (overflowContainerHeight - barFrameHeight) / 2;
+        // ▼ 上下・右端の余白を調整する場合はここを変更する
+        const double overflowInset = 3.5;
         final double overflowWidth =
-            barFrameMaxWidth - budgetPointX + overflowPadding;
+            barFrameMaxWidth - budgetPointX - overflowInset;
 
         return Padding(
           padding: const EdgeInsets.only(top: 1, bottom: 3),
           child: SizedBox(
             height: overflowContainerHeight,
             width: barFrameMaxWidth,
-            child: ClipRect(
-              child: Stack(
+            child: Stack(
               alignment: Alignment.centerLeft,
               children: [
                 // バーの背景枠
@@ -185,7 +183,6 @@ class CategorySumGraph extends HookConsumerWidget {
                     ),
                   ),
               ],
-              ),
             ),
           ),
         );
