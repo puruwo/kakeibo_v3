@@ -139,7 +139,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                       yearlyBalanceValue.yearlyBalanceType !=
                               YearlyBalanceType.noExpense
                           ? AnimatedContainer(
-                              height: 10,
+                              height: 8.5,
                               width: isBuilt ? expenseBar : barInitialWidth,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
@@ -215,7 +215,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                       yearlyBalanceValue.yearlyBalanceType !=
                               YearlyBalanceType.noIncome
                           ? AnimatedContainer(
-                              height: 10,
+                              height: 8.5,
                               width: isBuilt ? incomeBar : barInitialWidth,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),

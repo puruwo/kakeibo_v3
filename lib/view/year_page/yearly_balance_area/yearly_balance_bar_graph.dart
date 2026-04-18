@@ -63,7 +63,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
             children: [
               // バーの背景枠
               Container(
-                height: 10,
+                height: 8.5,
                 width: barFrameWidth * screenHorizontalMagnification,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -72,7 +72,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
               ),
               // バーの中身
               AnimatedContainer(
-                height: 10,
+                height: 8.5,
                 width: isBuilt.value
                     ? barWidth * screenHorizontalMagnification
                     : barInitialWidth,
@@ -93,7 +93,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
             children: [
               // バーの中身
               AnimatedContainer(
-                height: 10,
+                height: 8.5,
                 width: barFrameWidth * screenHorizontalMagnification,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
@@ -121,7 +121,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
                         child: Image.asset(
                           'assets/images/over_fill.png',
                           width: 280,
-                          height: 10,
+                          height: 8.5,
                           fit: BoxFit.cover,
                         ),
                       ),

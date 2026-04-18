@@ -29,7 +29,7 @@ class MnothlyPlanGraph extends HookConsumerWidget {
       children: [
         // バーの背景枠
         Container(
-          height: 7,
+          height: 8.5,
           width: maxGraphWidth * allCategoryCardEntity.totalBadgetRatio,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
@@ -46,7 +46,7 @@ class MnothlyPlanGraph extends HookConsumerWidget {
               ...List.generate(
                   allCategoryCardEntity.expenseCategoryNameList.length, (i) {
                 return AnimatedContainer(
-                  height: 7,
+                  height: 8.5,
                   width: isBuilt.value
                       ? allCategoryCardEntity.expenseCategoryRatioList[i] *
                           maxGraphWidth
