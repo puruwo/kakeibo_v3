@@ -7,6 +7,7 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
+import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
@@ -27,6 +28,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
   late FixedCostCategoryRepository _fixedCostCategoryRepositoryProvider;
   late BudgetRepository _budgetRepositoryProvider;
   late IncomeRepository _incomeRepositoryProvider;
+  late IncomeBigCategoryRepository _incomeBigCategoryRepositoryProvider;
   late IncomeSmallCategoryRepository _incomeSmallCategoryRepositoryProvider;
   late CategoryAccountingRepository _categoryAccountingRepositoryProvider;
 
@@ -44,6 +46,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
         ref.read(fixedCostCategoryRepositoryProvider);
     _budgetRepositoryProvider = ref.read(budgetRepositoryProvider);
     _incomeRepositoryProvider = ref.read(incomeRepositoryProvider);
+    _incomeBigCategoryRepositoryProvider =
+        ref.read(incomeBigCategoryRepositoryProvider);
     _incomeSmallCategoryRepositoryProvider =
         ref.read(incomeSmallCategoryRepositoryProvider);
     _categoryAccountingRepositoryProvider =
@@ -260,6 +264,14 @@ class MonthlyAllCategoryTileUsecaseNotifier
     final incomeSmallCategoryList =
         await _incomeSmallCategoryRepositoryProvider.fetchAll();
 
+    // 収入大カテゴリー一覧を取得し、ID→カラーコードのマップを構築
+    final incomeBigCategoryList =
+        await _incomeBigCategoryRepositoryProvider.fetchAll();
+    final Map<int, String> incomeBigCategoryColorMap = {
+      for (var bigCategory in incomeBigCategoryList)
+        bigCategory.id: bigCategory.colorCode,
+    };
+
     // カテゴリー別の収入を集計
     List<String> incomeCategoryNameList = [];
     List<int> incomeCategoryIncomeList = [];
@@ -286,8 +298,9 @@ class MonthlyAllCategoryTileUsecaseNotifier
         // 収入カテゴリーにはアイコンがないので、デフォルトのアイコンパスを設定
         incomeCategoryIconPathList
             .add('assets/images/category_icon/income.svg');
-        // 収入カテゴリーにはカラーがないので、デフォルトカラーを設定
-        incomeCategoryColorList.add('36C5F1');
+        // 親大カテゴリーのカラーコードを適用
+        incomeCategoryColorList
+            .add(incomeBigCategoryColorMap[category.bigCategoryKey] ?? '');
       }
     }
 
