@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
@@ -21,6 +22,36 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
     initialScrollOffset: 0.0, // 初期スクロール位置を設定
     keepScrollOffset: false, // スクロール位置を保持する
   );
+
+  // メモリ線の本数を抑えるための候補刻み（1/2/5系列）
+  static const List<double> _verticalIntervalCandidates = [
+    10000.0,
+    20000.0,
+    50000.0,
+    100000.0,
+    200000.0,
+    500000.0,
+    1000000.0,
+    2000000.0,
+    5000000.0,
+    10000000.0,
+  ];
+
+  // メモリ線の最大本数の目安
+  static const int _targetGridCount = 5;
+
+  // 金額表示フォーマッタ（3桁カンマ区切り）
+  static final NumberFormat _amountFormatter = NumberFormat('#,###');
+
+  /// 折れ線グラフのメモリ線が多くなりすぎないよう、データ範囲に応じて間隔を決める
+  double _calcVerticalInterval(double maxMinDifference) {
+    for (final candidate in _verticalIntervalCandidates) {
+      if (maxMinDifference / candidate <= _targetGridCount) {
+        return candidate;
+      }
+    }
+    return _verticalIntervalCandidates.last;
+  }
 
   @override
   void dispose() {
@@ -72,13 +103,6 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
             const double drawingAreaWidth =
                 scrollAreaWidth - horizontalPadding * 2;
 
-            // 棒グラフエリアの高さ
-            const barGraphHeight = 80.0;
-            // 棒グラフの中央線の位置
-            const barCenterLinePosition = barGraphHeight / 2;
-            // 棒グラフの最大高さ（金額テキスト表示分のスペース16pxを確保）
-            const maxBarHeight = barGraphHeight / 2 - 16.0;
-
             // グラフのメモリ表示スペース
             const reservedSize = 24.0;
 
@@ -95,27 +119,42 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
 
             // 差の絶対値の最大値を計算
             final maxDifference = differences.map((e) => e.abs()).reduce(max);
+            // 0除算を避けるための基準値
+            final barScaleBase = maxDifference == 0 ? 1.0 : maxDifference;
+
+            // プラス・マイナスの有無
+            final hasPositive = differences.any((d) => d > 0);
+            final hasNegative = differences.any((d) => d < 0);
+
+            // 棒グラフのラベル用スペース（バー上または下の金額表示分）
+            const barLabelSpace = 14.0;
+            // 片側バーの最大描画高さ
+            const maxBarHeight = 24.0;
+
+            // プラス・マイナス各セクションの高さ（ラベル + バー）
+            final positiveSectionHeight = hasPositive
+                ? (barLabelSpace + maxBarHeight)
+                : 0.0;
+            final negativeSectionHeight = hasNegative
+                ? (maxBarHeight + barLabelSpace)
+                : 0.0;
+
+            // 棒グラフエリア全体の高さ（セクションが全て 0 の場合の保険）
+            final barGraphHeight = positiveSectionHeight + negativeSectionHeight == 0
+                ? barLabelSpace + maxBarHeight
+                : positiveSectionHeight + negativeSectionHeight;
+
+            // 基準線の位置（棒グラフエリア上端からの距離）
+            // プラスセクションがない場合は 0（エリア最上部）が基準線になる
+            final barCenterLinePosition = positiveSectionHeight;
 
             // グラフの最小値と最大値を計算
             final minY = (income + expense).reduce(min);
             final maxY = (income + expense).reduce(max);
             final maxMinDifference = (maxY - minY).abs(); // 最大値と最小値の差を計算
 
-            // グリッドの間隔
-            double verticalInterval;
-            if (maxMinDifference >= 100000.0) {
-              // 100万以上の差分がある場合は、グリッドの間隔を10万に設定
-              verticalInterval = 100000.0;
-            } else if (maxMinDifference >= 50000.0) {
-              // 10万以上の差分がある場合は、グリッドの間
-              verticalInterval = 50000.0;
-            } else if (maxMinDifference >= 10000.0) {
-              // 5万以上の差分がある場合は、グリッドの間隔を1万に設定
-              verticalInterval = 20000.0;
-            } else {
-              // 1万以上の差分がある場合は、グリッドの間
-              verticalInterval = 10000.0;
-            }
+            // メモリ線の本数を制御するための間隔
+            final verticalInterval = _calcVerticalInterval(maxMinDifference);
 
             // 棒グラフのバーの幅
             const barWidth = 25.0;
@@ -207,8 +246,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                   horizontalInterval: verticalInterval,
                                   getDrawingHorizontalLine: (value) {
                                     // 最大値、最小値の一つ外のグリッドから内側を表示
-                                    if ((value >= minY - verticalInterval ||
-                                            value <= maxY + verticalInterval) &&
+                                    if (value >= minY - verticalInterval &&
+                                        value <= maxY + verticalInterval &&
                                         value >= 0) {
                                       return const FlLine(
                                         color: MyColors.separater,
@@ -343,7 +382,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                             // 収支ラベル
                             Positioned(
                               left: 0,
-                              bottom: barCenterLinePosition - 6,
+                              top: barCenterLinePosition - 7,
                               child: SizedBox(
                                 width: reservedSize,
                                 child: FittedBox(
@@ -355,7 +394,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                 ),
                               ),
                             ),
-                            // 基準線: バーエリアの中央
+                            // 基準線: 収支±0 の位置
                             Positioned(
                               top: barCenterLinePosition,
                               left: reservedSize,
@@ -365,6 +404,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                 color: MyColors.separater,
                               ),
                             ),
+                            // 棒グラフと金額ラベル
                             Padding(
                               padding: const EdgeInsets.only(
                                 left: reservedSize,
@@ -376,108 +416,61 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                 ) {
                                   final diff = differences[i];
                                   final barHeight =
-                                      (diff.abs() / maxDifference) *
+                                      (diff.abs() / barScaleBase) *
                                       maxBarHeight;
+                                  final cellWidth = i == 0
+                                      ? firstCellWidth
+                                      : i == 11
+                                      ? endCellWidth
+                                      : normalCellWidth;
+                                  // セル内での棒の左オフセット
+                                  // i == 0 だけセル幅が狭いため、通常セルと同じ絶対位置に揃える
+                                  final barLeft = i == 0
+                                      ? firstCellWidth -
+                                            (normalCellWidth - barWidth) / 2 -
+                                            barWidth
+                                      : (normalCellWidth - barWidth) / 2;
 
                                   return SizedBox(
-                                    width: i == 0
-                                        ? firstCellWidth
-                                        : i == 11
-                                        ? endCellWidth
-                                        : normalCellWidth,
+                                    width: cellWidth,
+                                    height: barGraphHeight,
                                     child: Stack(
-                                      alignment: Alignment.center,
                                       children: [
+                                        // 棒
                                         Positioned(
-                                          width: normalCellWidth,
-                                          bottom: diff >= 0
-                                              ? barCenterLinePosition +
+                                          left: barLeft,
+                                          top: diff >= 0
+                                              ? barCenterLinePosition -
                                                     barHeight
                                               : barCenterLinePosition,
-                                          child: i == 0
-                                              ? SizedBox(
-                                                  width: firstCellWidth,
-                                                  child: Text(
-                                                    '${diff.abs().toInt()}',
-                                                    // 収支の絶対値を表示
-                                                    style: GraphTextStyles
-                                                        .graphMiniLabel,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                )
-                                              : i == 11
-                                              ? SizedBox(
-                                                  width: endCellWidth,
-                                                  child: Text(
-                                                    '    ${diff.abs().toInt()}',
-                                                    // 収支の絶対値を表示
-                                                    style: GraphTextStyles
-                                                        .graphMiniLabel,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                )
-                                              : SizedBox(
-                                                  width: normalCellWidth,
-                                                  child: Text(
-                                                    '${diff.abs().toInt()}',
-                                                    // 収支の絶対値を表示
-                                                    style: GraphTextStyles
-                                                        .graphMiniLabel,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ),
-                                        ),
-                                      ],
-                                    ),
-                                  );
-                                }),
-                              ),
-                            ),
-                            // 棒グラフ
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: reservedSize,
-                              ),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: List.generate(differences.length, (
-                                  i,
-                                ) {
-                                  final diff = differences[i];
-                                  final barHeight =
-                                      (diff.abs() / maxDifference) *
-                                      maxBarHeight;
-
-                                  return SizedBox(
-                                    width: i == 0
-                                        ? firstCellWidth
-                                        : i == 11
-                                        ? endCellWidth
-                                        : normalCellWidth,
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Positioned(
-                                          left: i == 0
-                                              ? firstCellWidth -
-                                                    (normalCellWidth -
-                                                            barWidth) /
-                                                        2 -
-                                                    barWidth
-                                              : (normalCellWidth - barWidth) /
-                                                    2,
-                                          bottom: diff >= 0
-                                              ? barCenterLinePosition
-                                              : null,
-                                          top: diff < 0
-                                              ? barCenterLinePosition
-                                              : null,
                                           child: Container(
                                             width: barWidth,
                                             height: barHeight,
                                             color: diff >= 0
                                                 ? MyColors.incomeEmerald
                                                 : MyColors.pink,
+                                          ),
+                                        ),
+                                        // 金額ラベル
+                                        Positioned(
+                                          left: 0,
+                                          width: cellWidth,
+                                          height: barLabelSpace,
+                                          top: diff >= 0
+                                              ? barCenterLinePosition -
+                                                    barHeight -
+                                                    barLabelSpace
+                                              : barCenterLinePosition +
+                                                    barHeight,
+                                          child: FittedBox(
+                                            fit: BoxFit.scaleDown,
+                                            child: Text(
+                                              _amountFormatter.format(
+                                                diff.abs().toInt(),
+                                              ),
+                                              style: GraphTextStyles
+                                                  .graphMiniLabel,
+                                            ),
                                           ),
                                         ),
                                       ],
