@@ -12,7 +12,7 @@ class BigCategroyColorControllerNotifier
   @override
   Color build() {
     // 最初のデータ
-    return MyColors.pink;
+    return MyColors.expensePink;
   }
 
   // 初回設定時に利用する

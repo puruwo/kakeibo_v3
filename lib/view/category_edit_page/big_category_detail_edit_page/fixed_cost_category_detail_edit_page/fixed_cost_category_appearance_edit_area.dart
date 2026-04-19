@@ -221,42 +221,6 @@ class _FixedCostCategoryAppearanceEditAreaState
             ),
           ),
         ),
-        const SizedBox(height: 8.0),
-        GestureDetector(
-          onTap: () async {
-            _showColorSelectDialog(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Container(
-              height: 42,
-              decoration: BoxDecoration(
-                color: MyColors.quarternarySystemfill,
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 8),
-                    child: Container(
-                      height: 16,
-                      width: 16,
-                      decoration: BoxDecoration(
-                        color: ref.watch(
-                          fixedCostCategoryColorControllerNotifierProvider,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                  Text('カテゴリーカラー', style: AppTextStyles.listTileSecondaryTitle),
-                ],
-              ),
-            ),
-          ),
-        ),
       ],
     );
   }
@@ -295,49 +259,6 @@ class _FixedCostCategoryAppearanceEditAreaState
                   child: SvgPicture.asset(
                     iconPath,
                     colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                  ),
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showColorSelectDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('カラー選択'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-              ),
-              itemCount: FixedCostColors.colorList.length,
-              itemBuilder: (context, index) {
-                final color = FixedCostColors.colorList[index];
-                return GestureDetector(
-                  onTap: () {
-                    ref
-                        .read(
-                          fixedCostCategoryColorControllerNotifierProvider
-                              .notifier,
-                        )
-                        .updateState(color);
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                    ),
                   ),
                 );
               },

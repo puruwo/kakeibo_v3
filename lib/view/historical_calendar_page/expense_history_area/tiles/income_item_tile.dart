@@ -55,7 +55,7 @@ class IncomeItemTile extends ConsumerWidget {
         dragStartBehavior: DragStartBehavior.start,
         background: Container(color: MyColors.black),
         secondaryBackground: Container(
-          color: MyColors.red,
+          color: MyColors.pink,
           child: const Align(
             alignment: Alignment.centerRight,
             child: Padding(
@@ -155,13 +155,13 @@ class IncomeItemTile extends ConsumerWidget {
                       ),
                     ),
 
-                    // nextArrowアイコン
+                    // addアイコン
                     const Padding(
                       padding: EdgeInsets.only(right: 4),
                       child: Icon(
                         size: 18,
                         Icons.add,
-                        color: MyColors.mintBlue,
+                        color: MyColors.incomeEmerald,
                       ),
                     ),
                   ],

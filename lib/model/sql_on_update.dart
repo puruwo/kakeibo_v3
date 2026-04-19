@@ -155,4 +155,27 @@ class DataBaseMigrate {
 
     print('=== v6マイグレーション完了 ===');
   }
+
+  // カテゴリーカラー刷新のマイグレーション (v6 → v7)
+  toV7(Database db) async {
+    print('=== v7マイグレーション開始: カテゴリーカラー更新 ===');
+
+    // 支出大カテゴリーのカラー更新
+    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FF7171' WHERE ${SqfExpenseBigCategory.id} = 1;"); // 食費
+    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FB5B01' WHERE ${SqfExpenseBigCategory.id} = 2;"); // 日用品
+    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = '3DD8E0' WHERE ${SqfExpenseBigCategory.id} = 3;"); // 遊び娯楽
+    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = '4BA6FF' WHERE ${SqfExpenseBigCategory.id} = 4;"); // 交通費
+    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'BB87FF' WHERE ${SqfExpenseBigCategory.id} = 5;"); // 衣服美容
+    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'DF2828' WHERE ${SqfExpenseBigCategory.id} = 6;"); // 医療費
+    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FFC700' WHERE ${SqfExpenseBigCategory.id} = 7;"); // 雑費
+
+    // 固定費カテゴリーのカラーを全て統一（MatBlue）
+    await db.execute("UPDATE ${SqfFixedCostCategory.tableName} SET ${SqfFixedCostCategory.colorCode} = '8E8E93';");
+
+    // 収入大カテゴリーのカラー更新
+    await db.execute("UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.colorCode} = '21D19F' WHERE ${SqfIncomeBigCategory.id} = 1;"); // 月次収入
+    await db.execute("UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.colorCode} = '10B981' WHERE ${SqfIncomeBigCategory.id} = 2;"); // ボーナス
+
+    print('=== v7マイグレーション完了 ===');
+  }
 }

@@ -16,13 +16,9 @@ class FixedCostIcons {
   ];
 }
 
-/// 固定費カテゴリー専用のカラーリスト
+/// 固定費カテゴリー専用のカラーリスト（MatBlue統一）
 class FixedCostColors {
   static const List<Color> colorList = [
-    Color(0xFF2E7D32),
-    Color(0xFF1E9F6E),
-    Color(0xFF27AE60),
-    Color(0xFF2ECC71),
-    Color(0xFF76D7C4),
+    Color(0xFF8E8E93),
   ];
 }

@@ -71,7 +71,7 @@ class ExpenseItemTile extends ConsumerWidget {
         dragStartBehavior: DragStartBehavior.start,
         background: Container(color: MyColors.black),
         secondaryBackground: Container(
-          color: MyColors.red,
+          color: MyColors.pink,
           child: const Align(
             alignment: Alignment.centerRight,
             child: Padding(

@@ -298,7 +298,7 @@ class AppTextStyles {
 
   static final TextStyle listCardPlusLabel = MyFontStyle.sfUi.copyWith(
     fontSize: 16,
-    color: MyColors.mintBlue,
+    color: MyColors.incomeEmerald,
     fontWeight: FontWeight.w600,
   );
 

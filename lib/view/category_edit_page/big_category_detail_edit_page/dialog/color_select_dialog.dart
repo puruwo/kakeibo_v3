@@ -8,9 +8,7 @@ import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
 
 class ColorSelectDialog extends ConsumerStatefulWidget {
-  const ColorSelectDialog({
-    super.key,
-  });
+  const ColorSelectDialog({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -22,16 +20,14 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
   Color selectedColor = MyColors.transparent;
 
   final List<Color> colorList = [
-    MyColors.red,
-    MyColors.pink,
-    MyColors.blue,
-    MyColors.mint,
-    MyColors.yellow,
-    MyColors.giantsOrange,
-    MyColors.uranianBlue,
-    MyColors.erin,
-    MyColors.maize,
-    MyColors.tinberWolf,
+    MyColors.expenseRed,
+    MyColors.expensePink,
+    MyColors.expenseBlue,
+    MyColors.expenseMint,
+    MyColors.expenseYellow,
+    MyColors.expenseGiantsOrange,
+    MyColors.expenseBrown,
+    MyColors.expensePurple,
   ];
 
   @override
@@ -44,9 +40,7 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
     // ==============
 
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         alignment: Alignment.center,
         height: 150,
@@ -60,28 +54,30 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (upperRowIndex) {
+              children: List.generate(4, (upperRowIndex) {
                 final index = upperRowIndex;
                 final color = colorList[index];
                 return AppInkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () {
-                      colorSelectFunction(color);
-                    },
-                    child: colorCircle(color, selectedColor));
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    colorSelectFunction(color);
+                  },
+                  child: colorCircle(color, selectedColor),
+                );
               }),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (underRowIndex) {
-                final index = 5 + underRowIndex;
+              children: List.generate(4, (underRowIndex) {
+                final index = 4 + underRowIndex;
                 final color = colorList[index];
                 return AppInkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () {
-                      colorSelectFunction(color);
-                    },
-                    child: colorCircle(color, selectedColor));
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    colorSelectFunction(color);
+                  },
+                  child: colorCircle(color, selectedColor),
+                );
               }),
             ),
           ],
@@ -95,8 +91,9 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
       selectedColor = color;
     });
     Navigator.of(context).pop();
-    final notifier =
-        ref.read(bigCategroyColorControllerNotifierProvider.notifier);
+    final notifier = ref.read(
+      bigCategroyColorControllerNotifierProvider.notifier,
+    );
     notifier.updateState(color);
   }
 }
@@ -112,10 +109,7 @@ Widget colorCircle(Color color, Color? selectedColor) {
           child: Container(
             height: 35,
             width: 35,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.rectangle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.rectangle),
           ),
         )
       // 非選択時
@@ -124,10 +118,7 @@ Widget colorCircle(Color color, Color? selectedColor) {
           child: Container(
             height: 35,
             width: 35,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
           ),
         );
 }

@@ -48,9 +48,10 @@ class CalendarStyles {
   ///   - エリア: calendar_area/calendar_area.dart (カレンダーエリア)
   ///   - 詳細: 「月」「火」「水」「木」「金」の曜日表示
   static final TextStyle calendarWeekdayLabel = MyFontStyle.notoSans.copyWith(
-      fontSize: 12,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w500);
+    fontSize: 12,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
 
   // TextStyle(
   //   color: MyColors.secondaryLabel,
@@ -64,7 +65,10 @@ class CalendarStyles {
   ///   - エリア: calendar_area/calendar_area.dart (カレンダーエリア)
   ///   - 詳細: 「日」の曜日表示
   static final TextStyle calendarWeekdaySunday = MyFontStyle.notoSans.copyWith(
-      fontSize: 12, color: MyColors.pink, fontWeight: FontWeight.w500);
+    fontSize: 12,
+    color: MyColors.pink,
+    fontWeight: FontWeight.w500,
+  );
 
   /// 土曜の曜日ラベル（青色）
   ///
@@ -74,7 +78,10 @@ class CalendarStyles {
   ///   - 詳細: 「土」の曜日表示
   static final TextStyle calendarWeekdaySaturday = MyFontStyle.notoSans
       .copyWith(
-          fontSize: 12, color: MyColors.mintBlue, fontWeight: FontWeight.w500);
+        fontSize: 12,
+        color: MyColors.mintBlue,
+        fontWeight: FontWeight.w500,
+      );
 
   // ==========================================================================
   // カレンダー日付セル内の日付表示
@@ -88,9 +95,10 @@ class CalendarStyles {
   ///   - 詳細: 「1」「2」...「31」などの日付表示（月〜金）
   ///   - 使用関数: activeDateBox(), normalDateBox()
   static final TextStyle calendarDateLabel = MyFontStyle.sfUi.copyWith(
-      fontSize: 12,
-      color: MyColors.secondaryLabel,
-      fontWeight: FontWeight.w500);
+    fontSize: 12,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
 
   /// 日曜の日付ラベル（赤色）
   ///
@@ -100,7 +108,10 @@ class CalendarStyles {
   ///   - 詳細: 日曜日の日付表示
   ///   - 条件: isSunday = true の場合
   static final TextStyle calendarDateLabelSunday = MyFontStyle.sfUi.copyWith(
-      fontSize: 12, color: MyColors.pink, fontWeight: FontWeight.w500);
+    fontSize: 12,
+    color: MyColors.pink,
+    fontWeight: FontWeight.w500,
+  );
 
   /// 土曜の日付ラベル（青色）
   ///
@@ -110,7 +121,10 @@ class CalendarStyles {
   ///   - 詳細: 土曜日の日付表示
   ///   - 条件: isSaturday = true の場合
   static final TextStyle calendarDateLabelSaturday = MyFontStyle.sfUi.copyWith(
-      fontSize: 12, color: MyColors.mintBlue, fontWeight: FontWeight.w500);
+    fontSize: 12,
+    color: MyColors.mintBlue,
+    fontWeight: FontWeight.w500,
+  );
 
   /// 期間外日付ラベル（薄い色）
   ///
@@ -121,7 +135,8 @@ class CalendarStyles {
   ///   - 使用関数: vacantDateBox()
   static final TextStyle calendarOutOfPeriodDateLabel = MyFontStyle.sfUi
       .copyWith(
-          fontSize: 12,
-          color: MyColors.tirtiaryLabel,
-          fontWeight: FontWeight.w500);
+        fontSize: 12,
+        color: MyColors.tirtiaryLabel,
+        fontWeight: FontWeight.w500,
+      );
 }
