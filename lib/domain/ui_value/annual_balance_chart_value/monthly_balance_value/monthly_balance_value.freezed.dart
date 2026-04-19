@@ -12,7 +12,8 @@ part of 'monthly_balance_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MonthlyBalanceValue {
@@ -21,9 +22,12 @@ mixin _$MonthlyBalanceValue {
   int get monthlyExpense => throw _privateConstructorUsedError;
   int get savings => throw _privateConstructorUsedError;
   MonthlyBalanceType get monthlyBalanceType =>
-      throw _privateConstructorUsedError;
+      throw _privateConstructorUsedError; // 分析タブ遷移用の代表日（集計期間の開始日を格納）
+  DateTime get representativeDate => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MonthlyBalanceValueCopyWith<MonthlyBalanceValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -31,15 +35,18 @@ mixin _$MonthlyBalanceValue {
 /// @nodoc
 abstract class $MonthlyBalanceValueCopyWith<$Res> {
   factory $MonthlyBalanceValueCopyWith(
-          MonthlyBalanceValue value, $Res Function(MonthlyBalanceValue) then) =
-      _$MonthlyBalanceValueCopyWithImpl<$Res, MonthlyBalanceValue>;
+    MonthlyBalanceValue value,
+    $Res Function(MonthlyBalanceValue) then,
+  ) = _$MonthlyBalanceValueCopyWithImpl<$Res, MonthlyBalanceValue>;
   @useResult
-  $Res call(
-      {int month,
-      int monthlyIncome,
-      int monthlyExpense,
-      int savings,
-      MonthlyBalanceType monthlyBalanceType});
+  $Res call({
+    int month,
+    int monthlyIncome,
+    int monthlyExpense,
+    int savings,
+    MonthlyBalanceType monthlyBalanceType,
+    DateTime representativeDate,
+  });
 }
 
 /// @nodoc
@@ -52,6 +59,8 @@ class _$MonthlyBalanceValueCopyWithImpl<$Res, $Val extends MonthlyBalanceValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MonthlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -60,56 +69,70 @@ class _$MonthlyBalanceValueCopyWithImpl<$Res, $Val extends MonthlyBalanceValue>
     Object? monthlyExpense = null,
     Object? savings = null,
     Object? monthlyBalanceType = null,
+    Object? representativeDate = null,
   }) {
-    return _then(_value.copyWith(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyIncome: null == monthlyIncome
-          ? _value.monthlyIncome
-          : monthlyIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyExpense: null == monthlyExpense
-          ? _value.monthlyExpense
-          : monthlyExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      savings: null == savings
-          ? _value.savings
-          : savings // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyBalanceType: null == monthlyBalanceType
-          ? _value.monthlyBalanceType
-          : monthlyBalanceType // ignore: cast_nullable_to_non_nullable
-              as MonthlyBalanceType,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            month: null == month
+                ? _value.month
+                : month // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monthlyIncome: null == monthlyIncome
+                ? _value.monthlyIncome
+                : monthlyIncome // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monthlyExpense: null == monthlyExpense
+                ? _value.monthlyExpense
+                : monthlyExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            savings: null == savings
+                ? _value.savings
+                : savings // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monthlyBalanceType: null == monthlyBalanceType
+                ? _value.monthlyBalanceType
+                : monthlyBalanceType // ignore: cast_nullable_to_non_nullable
+                      as MonthlyBalanceType,
+            representativeDate: null == representativeDate
+                ? _value.representativeDate
+                : representativeDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MonthlyBalanceValueImplCopyWith<$Res>
     implements $MonthlyBalanceValueCopyWith<$Res> {
-  factory _$$MonthlyBalanceValueImplCopyWith(_$MonthlyBalanceValueImpl value,
-          $Res Function(_$MonthlyBalanceValueImpl) then) =
-      __$$MonthlyBalanceValueImplCopyWithImpl<$Res>;
+  factory _$$MonthlyBalanceValueImplCopyWith(
+    _$MonthlyBalanceValueImpl value,
+    $Res Function(_$MonthlyBalanceValueImpl) then,
+  ) = __$$MonthlyBalanceValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int month,
-      int monthlyIncome,
-      int monthlyExpense,
-      int savings,
-      MonthlyBalanceType monthlyBalanceType});
+  $Res call({
+    int month,
+    int monthlyIncome,
+    int monthlyExpense,
+    int savings,
+    MonthlyBalanceType monthlyBalanceType,
+    DateTime representativeDate,
+  });
 }
 
 /// @nodoc
 class __$$MonthlyBalanceValueImplCopyWithImpl<$Res>
     extends _$MonthlyBalanceValueCopyWithImpl<$Res, _$MonthlyBalanceValueImpl>
     implements _$$MonthlyBalanceValueImplCopyWith<$Res> {
-  __$$MonthlyBalanceValueImplCopyWithImpl(_$MonthlyBalanceValueImpl _value,
-      $Res Function(_$MonthlyBalanceValueImpl) _then)
-      : super(_value, _then);
+  __$$MonthlyBalanceValueImplCopyWithImpl(
+    _$MonthlyBalanceValueImpl _value,
+    $Res Function(_$MonthlyBalanceValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MonthlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -118,41 +141,50 @@ class __$$MonthlyBalanceValueImplCopyWithImpl<$Res>
     Object? monthlyExpense = null,
     Object? savings = null,
     Object? monthlyBalanceType = null,
+    Object? representativeDate = null,
   }) {
-    return _then(_$MonthlyBalanceValueImpl(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyIncome: null == monthlyIncome
-          ? _value.monthlyIncome
-          : monthlyIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyExpense: null == monthlyExpense
-          ? _value.monthlyExpense
-          : monthlyExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      savings: null == savings
-          ? _value.savings
-          : savings // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyBalanceType: null == monthlyBalanceType
-          ? _value.monthlyBalanceType
-          : monthlyBalanceType // ignore: cast_nullable_to_non_nullable
-              as MonthlyBalanceType,
-    ));
+    return _then(
+      _$MonthlyBalanceValueImpl(
+        month: null == month
+            ? _value.month
+            : month // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monthlyIncome: null == monthlyIncome
+            ? _value.monthlyIncome
+            : monthlyIncome // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monthlyExpense: null == monthlyExpense
+            ? _value.monthlyExpense
+            : monthlyExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        savings: null == savings
+            ? _value.savings
+            : savings // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monthlyBalanceType: null == monthlyBalanceType
+            ? _value.monthlyBalanceType
+            : monthlyBalanceType // ignore: cast_nullable_to_non_nullable
+                  as MonthlyBalanceType,
+        representativeDate: null == representativeDate
+            ? _value.representativeDate
+            : representativeDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$MonthlyBalanceValueImpl implements _MonthlyBalanceValue {
-  const _$MonthlyBalanceValueImpl(
-      {required this.month,
-      required this.monthlyIncome,
-      required this.monthlyExpense,
-      required this.savings,
-      required this.monthlyBalanceType});
+  const _$MonthlyBalanceValueImpl({
+    required this.month,
+    required this.monthlyIncome,
+    required this.monthlyExpense,
+    required this.savings,
+    required this.monthlyBalanceType,
+    required this.representativeDate,
+  });
 
   @override
   final int month;
@@ -164,10 +196,13 @@ class _$MonthlyBalanceValueImpl implements _MonthlyBalanceValue {
   final int savings;
   @override
   final MonthlyBalanceType monthlyBalanceType;
+  // 分析タブ遷移用の代表日（集計期間の開始日を格納）
+  @override
+  final DateTime representativeDate;
 
   @override
   String toString() {
-    return 'MonthlyBalanceValue(month: $month, monthlyIncome: $monthlyIncome, monthlyExpense: $monthlyExpense, savings: $savings, monthlyBalanceType: $monthlyBalanceType)';
+    return 'MonthlyBalanceValue(month: $month, monthlyIncome: $monthlyIncome, monthlyExpense: $monthlyExpense, savings: $savings, monthlyBalanceType: $monthlyBalanceType, representativeDate: $representativeDate)';
   }
 
   @override
@@ -182,29 +217,43 @@ class _$MonthlyBalanceValueImpl implements _MonthlyBalanceValue {
                 other.monthlyExpense == monthlyExpense) &&
             (identical(other.savings, savings) || other.savings == savings) &&
             (identical(other.monthlyBalanceType, monthlyBalanceType) ||
-                other.monthlyBalanceType == monthlyBalanceType));
+                other.monthlyBalanceType == monthlyBalanceType) &&
+            (identical(other.representativeDate, representativeDate) ||
+                other.representativeDate == representativeDate));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, month, monthlyIncome,
-      monthlyExpense, savings, monthlyBalanceType);
+  int get hashCode => Object.hash(
+    runtimeType,
+    month,
+    monthlyIncome,
+    monthlyExpense,
+    savings,
+    monthlyBalanceType,
+    representativeDate,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonthlyBalanceValueImplCopyWith<_$MonthlyBalanceValueImpl> get copyWith =>
       __$$MonthlyBalanceValueImplCopyWithImpl<_$MonthlyBalanceValueImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _MonthlyBalanceValue implements MonthlyBalanceValue {
-  const factory _MonthlyBalanceValue(
-          {required final int month,
-          required final int monthlyIncome,
-          required final int monthlyExpense,
-          required final int savings,
-          required final MonthlyBalanceType monthlyBalanceType}) =
-      _$MonthlyBalanceValueImpl;
+  const factory _MonthlyBalanceValue({
+    required final int month,
+    required final int monthlyIncome,
+    required final int monthlyExpense,
+    required final int savings,
+    required final MonthlyBalanceType monthlyBalanceType,
+    required final DateTime representativeDate,
+  }) = _$MonthlyBalanceValueImpl;
 
   @override
   int get month;
@@ -215,9 +264,14 @@ abstract class _MonthlyBalanceValue implements MonthlyBalanceValue {
   @override
   int get savings;
   @override
-  MonthlyBalanceType get monthlyBalanceType;
+  MonthlyBalanceType get monthlyBalanceType; // 分析タブ遷移用の代表日（集計期間の開始日を格納）
   @override
-  @JsonKey(ignore: true)
+  DateTime get representativeDate;
+
+  /// Create a copy of MonthlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonthlyBalanceValueImplCopyWith<_$MonthlyBalanceValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
