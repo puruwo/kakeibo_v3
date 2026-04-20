@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
+import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/y_axis_scale.dart';
 
 //Freezedで生成されるデータクラス
 part 'annual_balance_chart_value.freezed.dart';
@@ -12,5 +13,6 @@ class AnnualBalanceChartValue with _$AnnualBalanceChartValue {
     required int currentMonth, // 現在の月
     required List<MonthlyBalanceValue> monthlyBalanceValues,
     required bool hasNoRecord, // 未来の月のみの収支かどうか
+    required YAxisScale yAxisScale, // 折れ線エリアのY軸スケール
   }) = _AnnualBalanceChartValue;
 }

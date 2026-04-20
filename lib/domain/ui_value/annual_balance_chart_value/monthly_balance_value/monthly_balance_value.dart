@@ -21,6 +21,8 @@ class MonthlyBalanceValue with _$MonthlyBalanceValue {
     required int monthlyExpense,
     required int savings,
     required MonthlyBalanceType monthlyBalanceType,
+    // 分析タブ遷移用の代表日（集計期間の開始日を格納）
+    required DateTime representativeDate,
   }) = _MonthlyBalanceValue;
 
 }
