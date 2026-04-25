@@ -12,7 +12,8 @@ part of 'expense_history_tile_group_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ExpenseHistoryTileGroupValue {
@@ -20,27 +21,35 @@ mixin _$ExpenseHistoryTileGroupValue {
   List<ExpenseHistoryTileValue> get expenseHistoryTileValueList =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseHistoryTileGroupValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseHistoryTileGroupValueCopyWith<ExpenseHistoryTileGroupValue>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExpenseHistoryTileGroupValueCopyWith<$Res> {
   factory $ExpenseHistoryTileGroupValueCopyWith(
-          ExpenseHistoryTileGroupValue value,
-          $Res Function(ExpenseHistoryTileGroupValue) then) =
-      _$ExpenseHistoryTileGroupValueCopyWithImpl<$Res,
-          ExpenseHistoryTileGroupValue>;
+    ExpenseHistoryTileGroupValue value,
+    $Res Function(ExpenseHistoryTileGroupValue) then,
+  ) =
+      _$ExpenseHistoryTileGroupValueCopyWithImpl<
+        $Res,
+        ExpenseHistoryTileGroupValue
+      >;
   @useResult
-  $Res call(
-      {DateTime date,
-      List<ExpenseHistoryTileValue> expenseHistoryTileValueList});
+  $Res call({
+    DateTime date,
+    List<ExpenseHistoryTileValue> expenseHistoryTileValueList,
+  });
 }
 
 /// @nodoc
-class _$ExpenseHistoryTileGroupValueCopyWithImpl<$Res,
-        $Val extends ExpenseHistoryTileGroupValue>
+class _$ExpenseHistoryTileGroupValueCopyWithImpl<
+  $Res,
+  $Val extends ExpenseHistoryTileGroupValue
+>
     implements $ExpenseHistoryTileGroupValueCopyWith<$Res> {
   _$ExpenseHistoryTileGroupValueCopyWithImpl(this._value, this._then);
 
@@ -49,22 +58,24 @@ class _$ExpenseHistoryTileGroupValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseHistoryTileGroupValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? date = null,
-    Object? expenseHistoryTileValueList = null,
-  }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expenseHistoryTileValueList: null == expenseHistoryTileValueList
-          ? _value.expenseHistoryTileValueList
-          : expenseHistoryTileValueList // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-    ) as $Val);
+  $Res call({Object? date = null, Object? expenseHistoryTileValueList = null}) {
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            expenseHistoryTileValueList: null == expenseHistoryTileValueList
+                ? _value.expenseHistoryTileValueList
+                : expenseHistoryTileValueList // ignore: cast_nullable_to_non_nullable
+                      as List<ExpenseHistoryTileValue>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -72,42 +83,47 @@ class _$ExpenseHistoryTileGroupValueCopyWithImpl<$Res,
 abstract class _$$ExpenseHistoryTileGroupValueImplCopyWith<$Res>
     implements $ExpenseHistoryTileGroupValueCopyWith<$Res> {
   factory _$$ExpenseHistoryTileGroupValueImplCopyWith(
-          _$ExpenseHistoryTileGroupValueImpl value,
-          $Res Function(_$ExpenseHistoryTileGroupValueImpl) then) =
-      __$$ExpenseHistoryTileGroupValueImplCopyWithImpl<$Res>;
+    _$ExpenseHistoryTileGroupValueImpl value,
+    $Res Function(_$ExpenseHistoryTileGroupValueImpl) then,
+  ) = __$$ExpenseHistoryTileGroupValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime date,
-      List<ExpenseHistoryTileValue> expenseHistoryTileValueList});
+  $Res call({
+    DateTime date,
+    List<ExpenseHistoryTileValue> expenseHistoryTileValueList,
+  });
 }
 
 /// @nodoc
 class __$$ExpenseHistoryTileGroupValueImplCopyWithImpl<$Res>
-    extends _$ExpenseHistoryTileGroupValueCopyWithImpl<$Res,
-        _$ExpenseHistoryTileGroupValueImpl>
+    extends
+        _$ExpenseHistoryTileGroupValueCopyWithImpl<
+          $Res,
+          _$ExpenseHistoryTileGroupValueImpl
+        >
     implements _$$ExpenseHistoryTileGroupValueImplCopyWith<$Res> {
   __$$ExpenseHistoryTileGroupValueImplCopyWithImpl(
-      _$ExpenseHistoryTileGroupValueImpl _value,
-      $Res Function(_$ExpenseHistoryTileGroupValueImpl) _then)
-      : super(_value, _then);
+    _$ExpenseHistoryTileGroupValueImpl _value,
+    $Res Function(_$ExpenseHistoryTileGroupValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExpenseHistoryTileGroupValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? date = null,
-    Object? expenseHistoryTileValueList = null,
-  }) {
-    return _then(_$ExpenseHistoryTileGroupValueImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expenseHistoryTileValueList: null == expenseHistoryTileValueList
-          ? _value._expenseHistoryTileValueList
-          : expenseHistoryTileValueList // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-    ));
+  $Res call({Object? date = null, Object? expenseHistoryTileValueList = null}) {
+    return _then(
+      _$ExpenseHistoryTileGroupValueImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        expenseHistoryTileValueList: null == expenseHistoryTileValueList
+            ? _value._expenseHistoryTileValueList
+            : expenseHistoryTileValueList // ignore: cast_nullable_to_non_nullable
+                  as List<ExpenseHistoryTileValue>,
+      ),
+    );
   }
 }
 
@@ -115,10 +131,10 @@ class __$$ExpenseHistoryTileGroupValueImplCopyWithImpl<$Res>
 
 class _$ExpenseHistoryTileGroupValueImpl
     implements _ExpenseHistoryTileGroupValue {
-  const _$ExpenseHistoryTileGroupValueImpl(
-      {required this.date,
-      required final List<ExpenseHistoryTileValue> expenseHistoryTileValueList})
-      : _expenseHistoryTileValueList = expenseHistoryTileValueList;
+  const _$ExpenseHistoryTileGroupValueImpl({
+    required this.date,
+    required final List<ExpenseHistoryTileValue> expenseHistoryTileValueList,
+  }) : _expenseHistoryTileValueList = expenseHistoryTileValueList;
 
   @override
   final DateTime date;
@@ -143,37 +159,50 @@ class _$ExpenseHistoryTileGroupValueImpl
             other is _$ExpenseHistoryTileGroupValueImpl &&
             (identical(other.date, date) || other.date == date) &&
             const DeepCollectionEquality().equals(
-                other._expenseHistoryTileValueList,
-                _expenseHistoryTileValueList));
+              other._expenseHistoryTileValueList,
+              _expenseHistoryTileValueList,
+            ));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, date,
-      const DeepCollectionEquality().hash(_expenseHistoryTileValueList));
+  int get hashCode => Object.hash(
+    runtimeType,
+    date,
+    const DeepCollectionEquality().hash(_expenseHistoryTileValueList),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseHistoryTileGroupValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExpenseHistoryTileGroupValueImplCopyWith<
-          _$ExpenseHistoryTileGroupValueImpl>
-      get copyWith => __$$ExpenseHistoryTileGroupValueImplCopyWithImpl<
-          _$ExpenseHistoryTileGroupValueImpl>(this, _$identity);
+    _$ExpenseHistoryTileGroupValueImpl
+  >
+  get copyWith =>
+      __$$ExpenseHistoryTileGroupValueImplCopyWithImpl<
+        _$ExpenseHistoryTileGroupValueImpl
+      >(this, _$identity);
 }
 
 abstract class _ExpenseHistoryTileGroupValue
     implements ExpenseHistoryTileGroupValue {
-  const factory _ExpenseHistoryTileGroupValue(
-      {required final DateTime date,
-      required final List<ExpenseHistoryTileValue>
-          expenseHistoryTileValueList}) = _$ExpenseHistoryTileGroupValueImpl;
+  const factory _ExpenseHistoryTileGroupValue({
+    required final DateTime date,
+    required final List<ExpenseHistoryTileValue> expenseHistoryTileValueList,
+  }) = _$ExpenseHistoryTileGroupValueImpl;
 
   @override
   DateTime get date;
   @override
   List<ExpenseHistoryTileValue> get expenseHistoryTileValueList;
+
+  /// Create a copy of ExpenseHistoryTileGroupValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExpenseHistoryTileGroupValueImplCopyWith<
-          _$ExpenseHistoryTileGroupValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$ExpenseHistoryTileGroupValueImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

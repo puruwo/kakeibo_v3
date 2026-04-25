@@ -20,6 +20,7 @@ import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 enum CategoryType {
   expense, // 一般（支出）
   fixedCost, // 固定費
+  income, // 収入
 }
 
 class CategorySettingPage extends ConsumerStatefulWidget {
@@ -37,7 +38,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -86,6 +87,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
             tabs: const [
               Tab(text: '一般'),
               Tab(text: '固定費'),
+              Tab(text: '収入'),
             ],
           ),
         ),
@@ -104,6 +106,12 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
             // 固定費カテゴリータブ
             _buildCategoryContent(
               categoryType: CategoryType.fixedCost,
+              editmodeProvider: editmodeProvider,
+            ),
+
+            // 収入カテゴリータブ
+            _buildCategoryContent(
+              categoryType: CategoryType.income,
               editmodeProvider: editmodeProvider,
             ),
           ],

@@ -12,7 +12,8 @@ part of 'daily_bar_data.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$DailyBarData {
@@ -22,7 +23,9 @@ mixin _$DailyBarData {
       throw _privateConstructorUsedError; // BarAreaHeightに対する比率 (0.0 ~ 1.0)
   double get normalizedTotalHeight => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DailyBarData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DailyBarDataCopyWith<DailyBarData> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -30,14 +33,16 @@ mixin _$DailyBarData {
 /// @nodoc
 abstract class $DailyBarDataCopyWith<$Res> {
   factory $DailyBarDataCopyWith(
-          DailyBarData value, $Res Function(DailyBarData) then) =
-      _$DailyBarDataCopyWithImpl<$Res, DailyBarData>;
+    DailyBarData value,
+    $Res Function(DailyBarData) then,
+  ) = _$DailyBarDataCopyWithImpl<$Res, DailyBarData>;
   @useResult
-  $Res call(
-      {DateTime date,
-      bool isFutureDate,
-      List<CategoryExpense> categoryExpenses,
-      double normalizedTotalHeight});
+  $Res call({
+    DateTime date,
+    bool isFutureDate,
+    List<CategoryExpense> categoryExpenses,
+    double normalizedTotalHeight,
+  });
 }
 
 /// @nodoc
@@ -50,6 +55,8 @@ class _$DailyBarDataCopyWithImpl<$Res, $Val extends DailyBarData>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DailyBarData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -58,24 +65,27 @@ class _$DailyBarDataCopyWithImpl<$Res, $Val extends DailyBarData>
     Object? categoryExpenses = null,
     Object? normalizedTotalHeight = null,
   }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isFutureDate: null == isFutureDate
-          ? _value.isFutureDate
-          : isFutureDate // ignore: cast_nullable_to_non_nullable
-              as bool,
-      categoryExpenses: null == categoryExpenses
-          ? _value.categoryExpenses
-          : categoryExpenses // ignore: cast_nullable_to_non_nullable
-              as List<CategoryExpense>,
-      normalizedTotalHeight: null == normalizedTotalHeight
-          ? _value.normalizedTotalHeight
-          : normalizedTotalHeight // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            isFutureDate: null == isFutureDate
+                ? _value.isFutureDate
+                : isFutureDate // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            categoryExpenses: null == categoryExpenses
+                ? _value.categoryExpenses
+                : categoryExpenses // ignore: cast_nullable_to_non_nullable
+                      as List<CategoryExpense>,
+            normalizedTotalHeight: null == normalizedTotalHeight
+                ? _value.normalizedTotalHeight
+                : normalizedTotalHeight // ignore: cast_nullable_to_non_nullable
+                      as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -83,15 +93,17 @@ class _$DailyBarDataCopyWithImpl<$Res, $Val extends DailyBarData>
 abstract class _$$DailyBarDataImplCopyWith<$Res>
     implements $DailyBarDataCopyWith<$Res> {
   factory _$$DailyBarDataImplCopyWith(
-          _$DailyBarDataImpl value, $Res Function(_$DailyBarDataImpl) then) =
-      __$$DailyBarDataImplCopyWithImpl<$Res>;
+    _$DailyBarDataImpl value,
+    $Res Function(_$DailyBarDataImpl) then,
+  ) = __$$DailyBarDataImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime date,
-      bool isFutureDate,
-      List<CategoryExpense> categoryExpenses,
-      double normalizedTotalHeight});
+  $Res call({
+    DateTime date,
+    bool isFutureDate,
+    List<CategoryExpense> categoryExpenses,
+    double normalizedTotalHeight,
+  });
 }
 
 /// @nodoc
@@ -99,9 +111,12 @@ class __$$DailyBarDataImplCopyWithImpl<$Res>
     extends _$DailyBarDataCopyWithImpl<$Res, _$DailyBarDataImpl>
     implements _$$DailyBarDataImplCopyWith<$Res> {
   __$$DailyBarDataImplCopyWithImpl(
-      _$DailyBarDataImpl _value, $Res Function(_$DailyBarDataImpl) _then)
-      : super(_value, _then);
+    _$DailyBarDataImpl _value,
+    $Res Function(_$DailyBarDataImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of DailyBarData
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -110,36 +125,38 @@ class __$$DailyBarDataImplCopyWithImpl<$Res>
     Object? categoryExpenses = null,
     Object? normalizedTotalHeight = null,
   }) {
-    return _then(_$DailyBarDataImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      isFutureDate: null == isFutureDate
-          ? _value.isFutureDate
-          : isFutureDate // ignore: cast_nullable_to_non_nullable
-              as bool,
-      categoryExpenses: null == categoryExpenses
-          ? _value._categoryExpenses
-          : categoryExpenses // ignore: cast_nullable_to_non_nullable
-              as List<CategoryExpense>,
-      normalizedTotalHeight: null == normalizedTotalHeight
-          ? _value.normalizedTotalHeight
-          : normalizedTotalHeight // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+    return _then(
+      _$DailyBarDataImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        isFutureDate: null == isFutureDate
+            ? _value.isFutureDate
+            : isFutureDate // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        categoryExpenses: null == categoryExpenses
+            ? _value._categoryExpenses
+            : categoryExpenses // ignore: cast_nullable_to_non_nullable
+                  as List<CategoryExpense>,
+        normalizedTotalHeight: null == normalizedTotalHeight
+            ? _value.normalizedTotalHeight
+            : normalizedTotalHeight // ignore: cast_nullable_to_non_nullable
+                  as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$DailyBarDataImpl implements _DailyBarData {
-  const _$DailyBarDataImpl(
-      {required this.date,
-      required this.isFutureDate,
-      required final List<CategoryExpense> categoryExpenses,
-      required this.normalizedTotalHeight})
-      : _categoryExpenses = categoryExpenses;
+  const _$DailyBarDataImpl({
+    required this.date,
+    required this.isFutureDate,
+    required final List<CategoryExpense> categoryExpenses,
+    required this.normalizedTotalHeight,
+  }) : _categoryExpenses = categoryExpenses;
 
   @override
   final DateTime date;
@@ -154,7 +171,7 @@ class _$DailyBarDataImpl implements _DailyBarData {
     return EqualUnmodifiableListView(_categoryExpenses);
   }
 
-// BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  // BarAreaHeightに対する比率 (0.0 ~ 1.0)
   @override
   final double normalizedTotalHeight;
 
@@ -171,21 +188,26 @@ class _$DailyBarDataImpl implements _DailyBarData {
             (identical(other.date, date) || other.date == date) &&
             (identical(other.isFutureDate, isFutureDate) ||
                 other.isFutureDate == isFutureDate) &&
-            const DeepCollectionEquality()
-                .equals(other._categoryExpenses, _categoryExpenses) &&
+            const DeepCollectionEquality().equals(
+              other._categoryExpenses,
+              _categoryExpenses,
+            ) &&
             (identical(other.normalizedTotalHeight, normalizedTotalHeight) ||
                 other.normalizedTotalHeight == normalizedTotalHeight));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      date,
-      isFutureDate,
-      const DeepCollectionEquality().hash(_categoryExpenses),
-      normalizedTotalHeight);
+    runtimeType,
+    date,
+    isFutureDate,
+    const DeepCollectionEquality().hash(_categoryExpenses),
+    normalizedTotalHeight,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DailyBarData
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DailyBarDataImplCopyWith<_$DailyBarDataImpl> get copyWith =>
@@ -193,22 +215,26 @@ class _$DailyBarDataImpl implements _DailyBarData {
 }
 
 abstract class _DailyBarData implements DailyBarData {
-  const factory _DailyBarData(
-      {required final DateTime date,
-      required final bool isFutureDate,
-      required final List<CategoryExpense> categoryExpenses,
-      required final double normalizedTotalHeight}) = _$DailyBarDataImpl;
+  const factory _DailyBarData({
+    required final DateTime date,
+    required final bool isFutureDate,
+    required final List<CategoryExpense> categoryExpenses,
+    required final double normalizedTotalHeight,
+  }) = _$DailyBarDataImpl;
 
   @override
   DateTime get date;
   @override
   bool get isFutureDate;
   @override
-  List<CategoryExpense> get categoryExpenses;
-  @override // BarAreaHeightに対する比率 (0.0 ~ 1.0)
-  double get normalizedTotalHeight;
+  List<CategoryExpense> get categoryExpenses; // BarAreaHeightに対する比率 (0.0 ~ 1.0)
   @override
-  @JsonKey(ignore: true)
+  double get normalizedTotalHeight;
+
+  /// Create a copy of DailyBarData
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DailyBarDataImplCopyWith<_$DailyBarDataImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -223,7 +249,9 @@ mixin _$CategoryExpense {
       throw _privateConstructorUsedError; // BarAreaHeightに対する比率 (0.0 ~ 1.0)
   double get normalizedHeight => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryExpenseCopyWith<CategoryExpense> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -231,16 +259,18 @@ mixin _$CategoryExpense {
 /// @nodoc
 abstract class $CategoryExpenseCopyWith<$Res> {
   factory $CategoryExpenseCopyWith(
-          CategoryExpense value, $Res Function(CategoryExpense) then) =
-      _$CategoryExpenseCopyWithImpl<$Res, CategoryExpense>;
+    CategoryExpense value,
+    $Res Function(CategoryExpense) then,
+  ) = _$CategoryExpenseCopyWithImpl<$Res, CategoryExpense>;
   @useResult
-  $Res call(
-      {int bigCategoryId,
-      int price,
-      String colorCode,
-      String iconPath,
-      String categoryName,
-      double normalizedHeight});
+  $Res call({
+    int bigCategoryId,
+    int price,
+    String colorCode,
+    String iconPath,
+    String categoryName,
+    double normalizedHeight,
+  });
 }
 
 /// @nodoc
@@ -253,6 +283,8 @@ class _$CategoryExpenseCopyWithImpl<$Res, $Val extends CategoryExpense>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoryExpense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -263,50 +295,55 @@ class _$CategoryExpenseCopyWithImpl<$Res, $Val extends CategoryExpense>
     Object? categoryName = null,
     Object? normalizedHeight = null,
   }) {
-    return _then(_value.copyWith(
-      bigCategoryId: null == bigCategoryId
-          ? _value.bigCategoryId
-          : bigCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      normalizedHeight: null == normalizedHeight
-          ? _value.normalizedHeight
-          : normalizedHeight // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            bigCategoryId: null == bigCategoryId
+                ? _value.bigCategoryId
+                : bigCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            iconPath: null == iconPath
+                ? _value.iconPath
+                : iconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            normalizedHeight: null == normalizedHeight
+                ? _value.normalizedHeight
+                : normalizedHeight // ignore: cast_nullable_to_non_nullable
+                      as double,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$CategoryExpenseImplCopyWith<$Res>
     implements $CategoryExpenseCopyWith<$Res> {
-  factory _$$CategoryExpenseImplCopyWith(_$CategoryExpenseImpl value,
-          $Res Function(_$CategoryExpenseImpl) then) =
-      __$$CategoryExpenseImplCopyWithImpl<$Res>;
+  factory _$$CategoryExpenseImplCopyWith(
+    _$CategoryExpenseImpl value,
+    $Res Function(_$CategoryExpenseImpl) then,
+  ) = __$$CategoryExpenseImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int bigCategoryId,
-      int price,
-      String colorCode,
-      String iconPath,
-      String categoryName,
-      double normalizedHeight});
+  $Res call({
+    int bigCategoryId,
+    int price,
+    String colorCode,
+    String iconPath,
+    String categoryName,
+    double normalizedHeight,
+  });
 }
 
 /// @nodoc
@@ -314,9 +351,12 @@ class __$$CategoryExpenseImplCopyWithImpl<$Res>
     extends _$CategoryExpenseCopyWithImpl<$Res, _$CategoryExpenseImpl>
     implements _$$CategoryExpenseImplCopyWith<$Res> {
   __$$CategoryExpenseImplCopyWithImpl(
-      _$CategoryExpenseImpl _value, $Res Function(_$CategoryExpenseImpl) _then)
-      : super(_value, _then);
+    _$CategoryExpenseImpl _value,
+    $Res Function(_$CategoryExpenseImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of CategoryExpense
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -327,45 +367,48 @@ class __$$CategoryExpenseImplCopyWithImpl<$Res>
     Object? categoryName = null,
     Object? normalizedHeight = null,
   }) {
-    return _then(_$CategoryExpenseImpl(
-      bigCategoryId: null == bigCategoryId
-          ? _value.bigCategoryId
-          : bigCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      normalizedHeight: null == normalizedHeight
-          ? _value.normalizedHeight
-          : normalizedHeight // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+    return _then(
+      _$CategoryExpenseImpl(
+        bigCategoryId: null == bigCategoryId
+            ? _value.bigCategoryId
+            : bigCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        iconPath: null == iconPath
+            ? _value.iconPath
+            : iconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        normalizedHeight: null == normalizedHeight
+            ? _value.normalizedHeight
+            : normalizedHeight // ignore: cast_nullable_to_non_nullable
+                  as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$CategoryExpenseImpl implements _CategoryExpense {
-  const _$CategoryExpenseImpl(
-      {required this.bigCategoryId,
-      required this.price,
-      required this.colorCode,
-      required this.iconPath,
-      required this.categoryName,
-      required this.normalizedHeight});
+  const _$CategoryExpenseImpl({
+    required this.bigCategoryId,
+    required this.price,
+    required this.colorCode,
+    required this.iconPath,
+    required this.categoryName,
+    required this.normalizedHeight,
+  });
 
   @override
   final int bigCategoryId;
@@ -377,7 +420,7 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
   final String iconPath;
   @override
   final String categoryName;
-// BarAreaHeightに対する比率 (0.0 ~ 1.0)
+  // BarAreaHeightに対する比率 (0.0 ~ 1.0)
   @override
   final double normalizedHeight;
 
@@ -405,25 +448,37 @@ class _$CategoryExpenseImpl implements _CategoryExpense {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, bigCategoryId, price, colorCode,
-      iconPath, categoryName, normalizedHeight);
+  int get hashCode => Object.hash(
+    runtimeType,
+    bigCategoryId,
+    price,
+    colorCode,
+    iconPath,
+    categoryName,
+    normalizedHeight,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryExpenseImplCopyWith<_$CategoryExpenseImpl> get copyWith =>
       __$$CategoryExpenseImplCopyWithImpl<_$CategoryExpenseImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _CategoryExpense implements CategoryExpense {
-  const factory _CategoryExpense(
-      {required final int bigCategoryId,
-      required final int price,
-      required final String colorCode,
-      required final String iconPath,
-      required final String categoryName,
-      required final double normalizedHeight}) = _$CategoryExpenseImpl;
+  const factory _CategoryExpense({
+    required final int bigCategoryId,
+    required final int price,
+    required final String colorCode,
+    required final String iconPath,
+    required final String categoryName,
+    required final double normalizedHeight,
+  }) = _$CategoryExpenseImpl;
 
   @override
   int get bigCategoryId;
@@ -434,11 +489,14 @@ abstract class _CategoryExpense implements CategoryExpense {
   @override
   String get iconPath;
   @override
-  String get categoryName;
-  @override // BarAreaHeightに対する比率 (0.0 ~ 1.0)
-  double get normalizedHeight;
+  String get categoryName; // BarAreaHeightに対する比率 (0.0 ~ 1.0)
   @override
-  @JsonKey(ignore: true)
+  double get normalizedHeight;
+
+  /// Create a copy of CategoryExpense
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryExpenseImplCopyWith<_$CategoryExpenseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

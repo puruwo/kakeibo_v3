@@ -12,14 +12,17 @@ part of 'year_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$YearValue {
-// ex)2025
+  // ex)2025
   String get year => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of YearValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $YearValueCopyWith<YearValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -42,17 +45,20 @@ class _$YearValueCopyWithImpl<$Res, $Val extends YearValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of YearValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? year = null,
-  }) {
-    return _then(_value.copyWith(
-      year: null == year
-          ? _value.year
-          : year // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? year = null}) {
+    return _then(
+      _value.copyWith(
+            year: null == year
+                ? _value.year
+                : year // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -60,8 +66,9 @@ class _$YearValueCopyWithImpl<$Res, $Val extends YearValue>
 abstract class _$$YearValueImplCopyWith<$Res>
     implements $YearValueCopyWith<$Res> {
   factory _$$YearValueImplCopyWith(
-          _$YearValueImpl value, $Res Function(_$YearValueImpl) then) =
-      __$$YearValueImplCopyWithImpl<$Res>;
+    _$YearValueImpl value,
+    $Res Function(_$YearValueImpl) then,
+  ) = __$$YearValueImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String year});
@@ -72,20 +79,23 @@ class __$$YearValueImplCopyWithImpl<$Res>
     extends _$YearValueCopyWithImpl<$Res, _$YearValueImpl>
     implements _$$YearValueImplCopyWith<$Res> {
   __$$YearValueImplCopyWithImpl(
-      _$YearValueImpl _value, $Res Function(_$YearValueImpl) _then)
-      : super(_value, _then);
+    _$YearValueImpl _value,
+    $Res Function(_$YearValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of YearValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? year = null,
-  }) {
-    return _then(_$YearValueImpl(
-      year: null == year
-          ? _value.year
-          : year // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? year = null}) {
+    return _then(
+      _$YearValueImpl(
+        year: null == year
+            ? _value.year
+            : year // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -94,7 +104,7 @@ class __$$YearValueImplCopyWithImpl<$Res>
 class _$YearValueImpl implements _YearValue {
   const _$YearValueImpl({required this.year});
 
-// ex)2025
+  // ex)2025
   @override
   final String year;
 
@@ -114,7 +124,9 @@ class _$YearValueImpl implements _YearValue {
   @override
   int get hashCode => Object.hash(runtimeType, year);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of YearValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$YearValueImplCopyWith<_$YearValueImpl> get copyWith =>
@@ -124,10 +136,14 @@ class _$YearValueImpl implements _YearValue {
 abstract class _YearValue implements YearValue {
   const factory _YearValue({required final String year}) = _$YearValueImpl;
 
-  @override // ex)2025
-  String get year;
+  // ex)2025
   @override
-  @JsonKey(ignore: true)
+  String get year;
+
+  /// Create a copy of YearValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$YearValueImplCopyWith<_$YearValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

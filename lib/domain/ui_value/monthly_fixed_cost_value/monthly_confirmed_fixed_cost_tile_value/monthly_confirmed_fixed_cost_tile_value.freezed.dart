@@ -12,11 +12,12 @@ part of 'monthly_confirmed_fixed_cost_tile_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MonthlyConfirmedFixedCostTileValue {
-// expense
+  // expense
   int get id => throw _privateConstructorUsedError;
   DateTime get date => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError; // fixed cost
@@ -31,38 +32,47 @@ mixin _$MonthlyConfirmedFixedCostTileValue {
   String get resourcePath => throw _privateConstructorUsedError;
   String get frequencyLabel => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyConfirmedFixedCostTileValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MonthlyConfirmedFixedCostTileValueCopyWith<
-          MonthlyConfirmedFixedCostTileValue>
-      get copyWith => throw _privateConstructorUsedError;
+    MonthlyConfirmedFixedCostTileValue
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MonthlyConfirmedFixedCostTileValueCopyWith<$Res> {
   factory $MonthlyConfirmedFixedCostTileValueCopyWith(
-          MonthlyConfirmedFixedCostTileValue value,
-          $Res Function(MonthlyConfirmedFixedCostTileValue) then) =
-      _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<$Res,
-          MonthlyConfirmedFixedCostTileValue>;
+    MonthlyConfirmedFixedCostTileValue value,
+    $Res Function(MonthlyConfirmedFixedCostTileValue) then,
+  ) =
+      _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<
+        $Res,
+        MonthlyConfirmedFixedCostTileValue
+      >;
   @useResult
-  $Res call(
-      {int id,
-      DateTime date,
-      int price,
-      String name,
-      int variable,
-      int intervalNumber,
-      int intervalUnit,
-      String? nextPaymentDate,
-      String categoryName,
-      String colorCode,
-      String resourcePath,
-      String frequencyLabel});
+  $Res call({
+    int id,
+    DateTime date,
+    int price,
+    String name,
+    int variable,
+    int intervalNumber,
+    int intervalUnit,
+    String? nextPaymentDate,
+    String categoryName,
+    String colorCode,
+    String resourcePath,
+    String frequencyLabel,
+  });
 }
 
 /// @nodoc
-class _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<$Res,
-        $Val extends MonthlyConfirmedFixedCostTileValue>
+class _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<
+  $Res,
+  $Val extends MonthlyConfirmedFixedCostTileValue
+>
     implements $MonthlyConfirmedFixedCostTileValueCopyWith<$Res> {
   _$MonthlyConfirmedFixedCostTileValueCopyWithImpl(this._value, this._then);
 
@@ -71,6 +81,8 @@ class _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MonthlyConfirmedFixedCostTileValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -87,56 +99,59 @@ class _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<$Res,
     Object? resourcePath = null,
     Object? frequencyLabel = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      variable: null == variable
-          ? _value.variable
-          : variable // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalNumber: null == intervalNumber
-          ? _value.intervalNumber
-          : intervalNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalUnit: null == intervalUnit
-          ? _value.intervalUnit
-          : intervalUnit // ignore: cast_nullable_to_non_nullable
-              as int,
-      nextPaymentDate: freezed == nextPaymentDate
-          ? _value.nextPaymentDate
-          : nextPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      frequencyLabel: null == frequencyLabel
-          ? _value.frequencyLabel
-          : frequencyLabel // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            variable: null == variable
+                ? _value.variable
+                : variable // ignore: cast_nullable_to_non_nullable
+                      as int,
+            intervalNumber: null == intervalNumber
+                ? _value.intervalNumber
+                : intervalNumber // ignore: cast_nullable_to_non_nullable
+                      as int,
+            intervalUnit: null == intervalUnit
+                ? _value.intervalUnit
+                : intervalUnit // ignore: cast_nullable_to_non_nullable
+                      as int,
+            nextPaymentDate: freezed == nextPaymentDate
+                ? _value.nextPaymentDate
+                : nextPaymentDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            frequencyLabel: null == frequencyLabel
+                ? _value.frequencyLabel
+                : frequencyLabel // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -144,36 +159,42 @@ class _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<$Res,
 abstract class _$$MonthlyConfirmedFixedCostTileValueImplCopyWith<$Res>
     implements $MonthlyConfirmedFixedCostTileValueCopyWith<$Res> {
   factory _$$MonthlyConfirmedFixedCostTileValueImplCopyWith(
-          _$MonthlyConfirmedFixedCostTileValueImpl value,
-          $Res Function(_$MonthlyConfirmedFixedCostTileValueImpl) then) =
-      __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<$Res>;
+    _$MonthlyConfirmedFixedCostTileValueImpl value,
+    $Res Function(_$MonthlyConfirmedFixedCostTileValueImpl) then,
+  ) = __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      DateTime date,
-      int price,
-      String name,
-      int variable,
-      int intervalNumber,
-      int intervalUnit,
-      String? nextPaymentDate,
-      String categoryName,
-      String colorCode,
-      String resourcePath,
-      String frequencyLabel});
+  $Res call({
+    int id,
+    DateTime date,
+    int price,
+    String name,
+    int variable,
+    int intervalNumber,
+    int intervalUnit,
+    String? nextPaymentDate,
+    String categoryName,
+    String colorCode,
+    String resourcePath,
+    String frequencyLabel,
+  });
 }
 
 /// @nodoc
 class __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<$Res>
-    extends _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<$Res,
-        _$MonthlyConfirmedFixedCostTileValueImpl>
+    extends
+        _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<
+          $Res,
+          _$MonthlyConfirmedFixedCostTileValueImpl
+        >
     implements _$$MonthlyConfirmedFixedCostTileValueImplCopyWith<$Res> {
   __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl(
-      _$MonthlyConfirmedFixedCostTileValueImpl _value,
-      $Res Function(_$MonthlyConfirmedFixedCostTileValueImpl) _then)
-      : super(_value, _then);
+    _$MonthlyConfirmedFixedCostTileValueImpl _value,
+    $Res Function(_$MonthlyConfirmedFixedCostTileValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MonthlyConfirmedFixedCostTileValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -190,56 +211,58 @@ class __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<$Res>
     Object? resourcePath = null,
     Object? frequencyLabel = null,
   }) {
-    return _then(_$MonthlyConfirmedFixedCostTileValueImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      variable: null == variable
-          ? _value.variable
-          : variable // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalNumber: null == intervalNumber
-          ? _value.intervalNumber
-          : intervalNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalUnit: null == intervalUnit
-          ? _value.intervalUnit
-          : intervalUnit // ignore: cast_nullable_to_non_nullable
-              as int,
-      nextPaymentDate: freezed == nextPaymentDate
-          ? _value.nextPaymentDate
-          : nextPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      frequencyLabel: null == frequencyLabel
-          ? _value.frequencyLabel
-          : frequencyLabel // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$MonthlyConfirmedFixedCostTileValueImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        variable: null == variable
+            ? _value.variable
+            : variable // ignore: cast_nullable_to_non_nullable
+                  as int,
+        intervalNumber: null == intervalNumber
+            ? _value.intervalNumber
+            : intervalNumber // ignore: cast_nullable_to_non_nullable
+                  as int,
+        intervalUnit: null == intervalUnit
+            ? _value.intervalUnit
+            : intervalUnit // ignore: cast_nullable_to_non_nullable
+                  as int,
+        nextPaymentDate: freezed == nextPaymentDate
+            ? _value.nextPaymentDate
+            : nextPaymentDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        frequencyLabel: null == frequencyLabel
+            ? _value.frequencyLabel
+            : frequencyLabel // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -247,21 +270,22 @@ class __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<$Res>
 
 class _$MonthlyConfirmedFixedCostTileValueImpl
     implements _MonthlyConfirmedFixedCostTileValue {
-  const _$MonthlyConfirmedFixedCostTileValueImpl(
-      {required this.id,
-      required this.date,
-      this.price = 0,
-      required this.name,
-      required this.variable,
-      required this.intervalNumber,
-      required this.intervalUnit,
-      this.nextPaymentDate,
-      required this.categoryName,
-      required this.colorCode,
-      required this.resourcePath,
-      required this.frequencyLabel});
+  const _$MonthlyConfirmedFixedCostTileValueImpl({
+    required this.id,
+    required this.date,
+    this.price = 0,
+    required this.name,
+    required this.variable,
+    required this.intervalNumber,
+    required this.intervalUnit,
+    this.nextPaymentDate,
+    required this.categoryName,
+    required this.colorCode,
+    required this.resourcePath,
+    required this.frequencyLabel,
+  });
 
-// expense
+  // expense
   @override
   final int id;
   @override
@@ -269,7 +293,7 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
   @override
   @JsonKey()
   final int price;
-// fixed cost
+  // fixed cost
   @override
   final String name;
   @override
@@ -280,7 +304,7 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
   final int intervalUnit;
   @override
   final String? nextPaymentDate;
-// fixed cost category
+  // fixed cost category
   @override
   final String categoryName;
   @override
@@ -324,53 +348,60 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      date,
-      price,
-      name,
-      variable,
-      intervalNumber,
-      intervalUnit,
-      nextPaymentDate,
-      categoryName,
-      colorCode,
-      resourcePath,
-      frequencyLabel);
+    runtimeType,
+    id,
+    date,
+    price,
+    name,
+    variable,
+    intervalNumber,
+    intervalUnit,
+    nextPaymentDate,
+    categoryName,
+    colorCode,
+    resourcePath,
+    frequencyLabel,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyConfirmedFixedCostTileValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonthlyConfirmedFixedCostTileValueImplCopyWith<
-          _$MonthlyConfirmedFixedCostTileValueImpl>
-      get copyWith => __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<
-          _$MonthlyConfirmedFixedCostTileValueImpl>(this, _$identity);
+    _$MonthlyConfirmedFixedCostTileValueImpl
+  >
+  get copyWith =>
+      __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<
+        _$MonthlyConfirmedFixedCostTileValueImpl
+      >(this, _$identity);
 }
 
 abstract class _MonthlyConfirmedFixedCostTileValue
     implements MonthlyConfirmedFixedCostTileValue {
-  const factory _MonthlyConfirmedFixedCostTileValue(
-          {required final int id,
-          required final DateTime date,
-          final int price,
-          required final String name,
-          required final int variable,
-          required final int intervalNumber,
-          required final int intervalUnit,
-          final String? nextPaymentDate,
-          required final String categoryName,
-          required final String colorCode,
-          required final String resourcePath,
-          required final String frequencyLabel}) =
-      _$MonthlyConfirmedFixedCostTileValueImpl;
+  const factory _MonthlyConfirmedFixedCostTileValue({
+    required final int id,
+    required final DateTime date,
+    final int price,
+    required final String name,
+    required final int variable,
+    required final int intervalNumber,
+    required final int intervalUnit,
+    final String? nextPaymentDate,
+    required final String categoryName,
+    required final String colorCode,
+    required final String resourcePath,
+    required final String frequencyLabel,
+  }) = _$MonthlyConfirmedFixedCostTileValueImpl;
 
-  @override // expense
+  // expense
+  @override
   int get id;
   @override
   DateTime get date;
   @override
-  int get price;
-  @override // fixed cost
+  int get price; // fixed cost
+  @override
   String get name;
   @override
   int get variable;
@@ -379,8 +410,8 @@ abstract class _MonthlyConfirmedFixedCostTileValue
   @override
   int get intervalUnit;
   @override
-  String? get nextPaymentDate;
-  @override // fixed cost category
+  String? get nextPaymentDate; // fixed cost category
+  @override
   String get categoryName;
   @override
   String get colorCode;
@@ -388,9 +419,13 @@ abstract class _MonthlyConfirmedFixedCostTileValue
   String get resourcePath;
   @override
   String get frequencyLabel;
+
+  /// Create a copy of MonthlyConfirmedFixedCostTileValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonthlyConfirmedFixedCostTileValueImplCopyWith<
-          _$MonthlyConfirmedFixedCostTileValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$MonthlyConfirmedFixedCostTileValueImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

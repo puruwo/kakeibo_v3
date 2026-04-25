@@ -12,32 +12,40 @@ part of 'fixed_cost_registration_list_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$FixedCostRegistrationListValue {
   List<FixedCostCategoryGroup> get categoryGroups =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FixedCostRegistrationListValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FixedCostRegistrationListValueCopyWith<FixedCostRegistrationListValue>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $FixedCostRegistrationListValueCopyWith<$Res> {
   factory $FixedCostRegistrationListValueCopyWith(
-          FixedCostRegistrationListValue value,
-          $Res Function(FixedCostRegistrationListValue) then) =
-      _$FixedCostRegistrationListValueCopyWithImpl<$Res,
-          FixedCostRegistrationListValue>;
+    FixedCostRegistrationListValue value,
+    $Res Function(FixedCostRegistrationListValue) then,
+  ) =
+      _$FixedCostRegistrationListValueCopyWithImpl<
+        $Res,
+        FixedCostRegistrationListValue
+      >;
   @useResult
   $Res call({List<FixedCostCategoryGroup> categoryGroups});
 }
 
 /// @nodoc
-class _$FixedCostRegistrationListValueCopyWithImpl<$Res,
-        $Val extends FixedCostRegistrationListValue>
+class _$FixedCostRegistrationListValueCopyWithImpl<
+  $Res,
+  $Val extends FixedCostRegistrationListValue
+>
     implements $FixedCostRegistrationListValueCopyWith<$Res> {
   _$FixedCostRegistrationListValueCopyWithImpl(this._value, this._then);
 
@@ -46,17 +54,20 @@ class _$FixedCostRegistrationListValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FixedCostRegistrationListValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? categoryGroups = null,
-  }) {
-    return _then(_value.copyWith(
-      categoryGroups: null == categoryGroups
-          ? _value.categoryGroups
-          : categoryGroups // ignore: cast_nullable_to_non_nullable
-              as List<FixedCostCategoryGroup>,
-    ) as $Val);
+  $Res call({Object? categoryGroups = null}) {
+    return _then(
+      _value.copyWith(
+            categoryGroups: null == categoryGroups
+                ? _value.categoryGroups
+                : categoryGroups // ignore: cast_nullable_to_non_nullable
+                      as List<FixedCostCategoryGroup>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -64,9 +75,9 @@ class _$FixedCostRegistrationListValueCopyWithImpl<$Res,
 abstract class _$$FixedCostRegistrationListValueImplCopyWith<$Res>
     implements $FixedCostRegistrationListValueCopyWith<$Res> {
   factory _$$FixedCostRegistrationListValueImplCopyWith(
-          _$FixedCostRegistrationListValueImpl value,
-          $Res Function(_$FixedCostRegistrationListValueImpl) then) =
-      __$$FixedCostRegistrationListValueImplCopyWithImpl<$Res>;
+    _$FixedCostRegistrationListValueImpl value,
+    $Res Function(_$FixedCostRegistrationListValueImpl) then,
+  ) = __$$FixedCostRegistrationListValueImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({List<FixedCostCategoryGroup> categoryGroups});
@@ -74,25 +85,30 @@ abstract class _$$FixedCostRegistrationListValueImplCopyWith<$Res>
 
 /// @nodoc
 class __$$FixedCostRegistrationListValueImplCopyWithImpl<$Res>
-    extends _$FixedCostRegistrationListValueCopyWithImpl<$Res,
-        _$FixedCostRegistrationListValueImpl>
+    extends
+        _$FixedCostRegistrationListValueCopyWithImpl<
+          $Res,
+          _$FixedCostRegistrationListValueImpl
+        >
     implements _$$FixedCostRegistrationListValueImplCopyWith<$Res> {
   __$$FixedCostRegistrationListValueImplCopyWithImpl(
-      _$FixedCostRegistrationListValueImpl _value,
-      $Res Function(_$FixedCostRegistrationListValueImpl) _then)
-      : super(_value, _then);
+    _$FixedCostRegistrationListValueImpl _value,
+    $Res Function(_$FixedCostRegistrationListValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FixedCostRegistrationListValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? categoryGroups = null,
-  }) {
-    return _then(_$FixedCostRegistrationListValueImpl(
-      categoryGroups: null == categoryGroups
-          ? _value._categoryGroups
-          : categoryGroups // ignore: cast_nullable_to_non_nullable
-              as List<FixedCostCategoryGroup>,
-    ));
+  $Res call({Object? categoryGroups = null}) {
+    return _then(
+      _$FixedCostRegistrationListValueImpl(
+        categoryGroups: null == categoryGroups
+            ? _value._categoryGroups
+            : categoryGroups // ignore: cast_nullable_to_non_nullable
+                  as List<FixedCostCategoryGroup>,
+      ),
+    );
   }
 }
 
@@ -100,9 +116,9 @@ class __$$FixedCostRegistrationListValueImplCopyWithImpl<$Res>
 
 class _$FixedCostRegistrationListValueImpl
     implements _FixedCostRegistrationListValue {
-  const _$FixedCostRegistrationListValueImpl(
-      {required final List<FixedCostCategoryGroup> categoryGroups})
-      : _categoryGroups = categoryGroups;
+  const _$FixedCostRegistrationListValueImpl({
+    required final List<FixedCostCategoryGroup> categoryGroups,
+  }) : _categoryGroups = categoryGroups;
 
   final List<FixedCostCategoryGroup> _categoryGroups;
   @override
@@ -122,36 +138,49 @@ class _$FixedCostRegistrationListValueImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$FixedCostRegistrationListValueImpl &&
-            const DeepCollectionEquality()
-                .equals(other._categoryGroups, _categoryGroups));
+            const DeepCollectionEquality().equals(
+              other._categoryGroups,
+              _categoryGroups,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, const DeepCollectionEquality().hash(_categoryGroups));
+    runtimeType,
+    const DeepCollectionEquality().hash(_categoryGroups),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FixedCostRegistrationListValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FixedCostRegistrationListValueImplCopyWith<
-          _$FixedCostRegistrationListValueImpl>
-      get copyWith => __$$FixedCostRegistrationListValueImplCopyWithImpl<
-          _$FixedCostRegistrationListValueImpl>(this, _$identity);
+    _$FixedCostRegistrationListValueImpl
+  >
+  get copyWith =>
+      __$$FixedCostRegistrationListValueImplCopyWithImpl<
+        _$FixedCostRegistrationListValueImpl
+      >(this, _$identity);
 }
 
 abstract class _FixedCostRegistrationListValue
     implements FixedCostRegistrationListValue {
-  const factory _FixedCostRegistrationListValue(
-          {required final List<FixedCostCategoryGroup> categoryGroups}) =
-      _$FixedCostRegistrationListValueImpl;
+  const factory _FixedCostRegistrationListValue({
+    required final List<FixedCostCategoryGroup> categoryGroups,
+  }) = _$FixedCostRegistrationListValueImpl;
 
   @override
   List<FixedCostCategoryGroup> get categoryGroups;
+
+  /// Create a copy of FixedCostRegistrationListValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FixedCostRegistrationListValueImplCopyWith<
-          _$FixedCostRegistrationListValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$FixedCostRegistrationListValueImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -162,28 +191,34 @@ mixin _$FixedCostCategoryGroup {
   String get categoryColorCode => throw _privateConstructorUsedError;
   List<FixedCostEntity> get items => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FixedCostCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FixedCostCategoryGroupCopyWith<FixedCostCategoryGroup> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $FixedCostCategoryGroupCopyWith<$Res> {
-  factory $FixedCostCategoryGroupCopyWith(FixedCostCategoryGroup value,
-          $Res Function(FixedCostCategoryGroup) then) =
-      _$FixedCostCategoryGroupCopyWithImpl<$Res, FixedCostCategoryGroup>;
+  factory $FixedCostCategoryGroupCopyWith(
+    FixedCostCategoryGroup value,
+    $Res Function(FixedCostCategoryGroup) then,
+  ) = _$FixedCostCategoryGroupCopyWithImpl<$Res, FixedCostCategoryGroup>;
   @useResult
-  $Res call(
-      {int categoryId,
-      String categoryName,
-      String categoryIconPath,
-      String categoryColorCode,
-      List<FixedCostEntity> items});
+  $Res call({
+    int categoryId,
+    String categoryName,
+    String categoryIconPath,
+    String categoryColorCode,
+    List<FixedCostEntity> items,
+  });
 }
 
 /// @nodoc
-class _$FixedCostCategoryGroupCopyWithImpl<$Res,
-        $Val extends FixedCostCategoryGroup>
+class _$FixedCostCategoryGroupCopyWithImpl<
+  $Res,
+  $Val extends FixedCostCategoryGroup
+>
     implements $FixedCostCategoryGroupCopyWith<$Res> {
   _$FixedCostCategoryGroupCopyWithImpl(this._value, this._then);
 
@@ -192,6 +227,8 @@ class _$FixedCostCategoryGroupCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FixedCostCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -201,28 +238,31 @@ class _$FixedCostCategoryGroupCopyWithImpl<$Res,
     Object? categoryColorCode = null,
     Object? items = null,
   }) {
-    return _then(_value.copyWith(
-      categoryId: null == categoryId
-          ? _value.categoryId
-          : categoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryColorCode: null == categoryColorCode
-          ? _value.categoryColorCode
-          : categoryColorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      items: null == items
-          ? _value.items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<FixedCostEntity>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            categoryId: null == categoryId
+                ? _value.categoryId
+                : categoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            categoryIconPath: null == categoryIconPath
+                ? _value.categoryIconPath
+                : categoryIconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            categoryColorCode: null == categoryColorCode
+                ? _value.categoryColorCode
+                : categoryColorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            items: null == items
+                ? _value.items
+                : items // ignore: cast_nullable_to_non_nullable
+                      as List<FixedCostEntity>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -230,29 +270,32 @@ class _$FixedCostCategoryGroupCopyWithImpl<$Res,
 abstract class _$$FixedCostCategoryGroupImplCopyWith<$Res>
     implements $FixedCostCategoryGroupCopyWith<$Res> {
   factory _$$FixedCostCategoryGroupImplCopyWith(
-          _$FixedCostCategoryGroupImpl value,
-          $Res Function(_$FixedCostCategoryGroupImpl) then) =
-      __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>;
+    _$FixedCostCategoryGroupImpl value,
+    $Res Function(_$FixedCostCategoryGroupImpl) then,
+  ) = __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int categoryId,
-      String categoryName,
-      String categoryIconPath,
-      String categoryColorCode,
-      List<FixedCostEntity> items});
+  $Res call({
+    int categoryId,
+    String categoryName,
+    String categoryIconPath,
+    String categoryColorCode,
+    List<FixedCostEntity> items,
+  });
 }
 
 /// @nodoc
 class __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>
-    extends _$FixedCostCategoryGroupCopyWithImpl<$Res,
-        _$FixedCostCategoryGroupImpl>
+    extends
+        _$FixedCostCategoryGroupCopyWithImpl<$Res, _$FixedCostCategoryGroupImpl>
     implements _$$FixedCostCategoryGroupImplCopyWith<$Res> {
   __$$FixedCostCategoryGroupImplCopyWithImpl(
-      _$FixedCostCategoryGroupImpl _value,
-      $Res Function(_$FixedCostCategoryGroupImpl) _then)
-      : super(_value, _then);
+    _$FixedCostCategoryGroupImpl _value,
+    $Res Function(_$FixedCostCategoryGroupImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FixedCostCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -262,41 +305,43 @@ class __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>
     Object? categoryColorCode = null,
     Object? items = null,
   }) {
-    return _then(_$FixedCostCategoryGroupImpl(
-      categoryId: null == categoryId
-          ? _value.categoryId
-          : categoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryColorCode: null == categoryColorCode
-          ? _value.categoryColorCode
-          : categoryColorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      items: null == items
-          ? _value._items
-          : items // ignore: cast_nullable_to_non_nullable
-              as List<FixedCostEntity>,
-    ));
+    return _then(
+      _$FixedCostCategoryGroupImpl(
+        categoryId: null == categoryId
+            ? _value.categoryId
+            : categoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        categoryIconPath: null == categoryIconPath
+            ? _value.categoryIconPath
+            : categoryIconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        categoryColorCode: null == categoryColorCode
+            ? _value.categoryColorCode
+            : categoryColorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        items: null == items
+            ? _value._items
+            : items // ignore: cast_nullable_to_non_nullable
+                  as List<FixedCostEntity>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$FixedCostCategoryGroupImpl implements _FixedCostCategoryGroup {
-  const _$FixedCostCategoryGroupImpl(
-      {required this.categoryId,
-      required this.categoryName,
-      required this.categoryIconPath,
-      required this.categoryColorCode,
-      required final List<FixedCostEntity> items})
-      : _items = items;
+  const _$FixedCostCategoryGroupImpl({
+    required this.categoryId,
+    required this.categoryName,
+    required this.categoryIconPath,
+    required this.categoryColorCode,
+    required final List<FixedCostEntity> items,
+  }) : _items = items;
 
   @override
   final int categoryId;
@@ -337,29 +382,35 @@ class _$FixedCostCategoryGroupImpl implements _FixedCostCategoryGroup {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      categoryId,
-      categoryName,
-      categoryIconPath,
-      categoryColorCode,
-      const DeepCollectionEquality().hash(_items));
+    runtimeType,
+    categoryId,
+    categoryName,
+    categoryIconPath,
+    categoryColorCode,
+    const DeepCollectionEquality().hash(_items),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FixedCostCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FixedCostCategoryGroupImplCopyWith<_$FixedCostCategoryGroupImpl>
-      get copyWith => __$$FixedCostCategoryGroupImplCopyWithImpl<
-          _$FixedCostCategoryGroupImpl>(this, _$identity);
+  get copyWith =>
+      __$$FixedCostCategoryGroupImplCopyWithImpl<_$FixedCostCategoryGroupImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _FixedCostCategoryGroup implements FixedCostCategoryGroup {
-  const factory _FixedCostCategoryGroup(
-          {required final int categoryId,
-          required final String categoryName,
-          required final String categoryIconPath,
-          required final String categoryColorCode,
-          required final List<FixedCostEntity> items}) =
-      _$FixedCostCategoryGroupImpl;
+  const factory _FixedCostCategoryGroup({
+    required final int categoryId,
+    required final String categoryName,
+    required final String categoryIconPath,
+    required final String categoryColorCode,
+    required final List<FixedCostEntity> items,
+  }) = _$FixedCostCategoryGroupImpl;
 
   @override
   int get categoryId;
@@ -371,8 +422,11 @@ abstract class _FixedCostCategoryGroup implements FixedCostCategoryGroup {
   String get categoryColorCode;
   @override
   List<FixedCostEntity> get items;
+
+  /// Create a copy of FixedCostCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FixedCostCategoryGroupImplCopyWith<_$FixedCostCategoryGroupImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

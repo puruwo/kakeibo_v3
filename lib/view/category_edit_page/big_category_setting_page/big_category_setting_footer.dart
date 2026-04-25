@@ -26,6 +26,11 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 収入カテゴリーは並び替え・表示ON/OFFの仕組みを持たないためフッターは表示しない
+    if (categoryType == CategoryType.income) {
+      return const SizedBox.shrink();
+    }
+
     switch (ref.watch(editModeNotifierProvider)) {
       case false:
         return _normalButtons(context, ref);

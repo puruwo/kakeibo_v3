@@ -3,23 +3,31 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
+import 'package:kakeibo/application/category/income_category_provider.dart';
 
 /// localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/check_box.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_name_dialog.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 
 class SmallCategoryEditArea extends ConsumerStatefulWidget {
-  const SmallCategoryEditArea({required this.bigId, super.key});
+  const SmallCategoryEditArea({
+    required this.bigId,
+    this.categoryType = CategoryType.expense,
+    super.key,
+  });
 
   final int bigId;
+  final CategoryType categoryType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -27,8 +35,8 @@ class SmallCategoryEditArea extends ConsumerStatefulWidget {
 }
 
 class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
-  // アイテムリスト
-  late List<EditExpenseSmallCategoryValue> itemList;
+  // アイテムリスト（dynamic: expense/income それぞれの value 型を受ける）
+  late List<dynamic> itemList;
 
   bool isInitial = true;
 
@@ -36,22 +44,30 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
   void initState() {
     super.initState();
 
-    // 取得したデータをedittingSmallCategoryListNotifierProviderに格納し編集できる状態にする
+    // 取得したデータを編集用の状態管理プロバイダーに格納し編集できる状態にする
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.bigId == -1) {
         // 新規作成の時は初期化しない
         return;
       }
 
-      // 一度だけ取得してセット
+      // 一度だけ取得してセット（カテゴリータイプに応じて切り替え）
       Future(() async {
-        // 一度だけ取得してセット
-        final initialList = await ref.watch(
-          allSmallCategoriesListProvider(widget.bigId).future,
-        );
-        ref
-            .read(edittingSmallCategoryListNotifierProvider.notifier)
-            .setData(initialList);
+        if (widget.categoryType == CategoryType.income) {
+          final initialList = await ref.watch(
+            allIncomeSmallCategoriesListProvider(widget.bigId).future,
+          );
+          ref
+              .read(edittingIncomeSmallCategoryListNotifierProvider.notifier)
+              .setData(initialList);
+        } else {
+          final initialList = await ref.watch(
+            allSmallCategoriesListProvider(widget.bigId).future,
+          );
+          ref
+              .read(edittingSmallCategoryListNotifierProvider.notifier)
+              .setData(initialList);
+        }
       });
     });
   }
@@ -66,8 +82,10 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
     // 左のpaddingの大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
 
-    // アイテムリストを状態監視
-    itemList = ref.watch(edittingSmallCategoryListNotifierProvider);
+    // アイテムリストを状態監視（カテゴリータイプに応じて切り替え）
+    itemList = widget.categoryType == CategoryType.income
+        ? ref.watch(edittingIncomeSmallCategoryListNotifierProvider)
+        : ref.watch(edittingSmallCategoryListNotifierProvider);
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -114,15 +132,23 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
               buildDefaultDragHandles: false,
               // 並べ替えた時の処理
               onReorder: (oldIndex, newIndex) {
-                // カテゴリーの状態を保持しているリストの並び替え
-                ref
-                    .read(edittingSmallCategoryListNotifierProvider.notifier)
-                    .reorder(oldIndex, newIndex);
-
-                // 変更を加えたことを管理する状態管理する
-                ref
-                    .read(isSmallCategoryListEditedNotifierProvider.notifier)
-                    .updateState(true);
+                if (widget.categoryType == CategoryType.income) {
+                  ref
+                      .read(edittingIncomeSmallCategoryListNotifierProvider
+                          .notifier)
+                      .reorder(oldIndex, newIndex);
+                  ref
+                      .read(isIncomeSmallCategoryListEditedNotifierProvider
+                          .notifier)
+                      .updateState(true);
+                } else {
+                  ref
+                      .read(edittingSmallCategoryListNotifierProvider.notifier)
+                      .reorder(oldIndex, newIndex);
+                  ref
+                      .read(isSmallCategoryListEditedNotifierProvider.notifier)
+                      .updateState(true);
+                }
               },
               itemCount: itemList.length + 1, // +1は追加ボタン用
               itemBuilder: (BuildContext context, int index) {
@@ -149,20 +175,34 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                   onTap: () {
                                     // チェックボックスのタップ処理
                                     setState(() {
-                                      // チェックボックスの状態を更新する
-                                      ref
-                                          .read(
-                                            edittingSmallCategoryListNotifierProvider
-                                                .notifier,
-                                          )
-                                          .toggleDisplay(index);
-                                      // 変更を加えたことを管理する状態管理する
-                                      ref
-                                          .read(
-                                            isSmallCategoryListEditedNotifierProvider
-                                                .notifier,
-                                          )
-                                          .updateState(true);
+                                      if (widget.categoryType ==
+                                          CategoryType.income) {
+                                        ref
+                                            .read(
+                                              edittingIncomeSmallCategoryListNotifierProvider
+                                                  .notifier,
+                                            )
+                                            .toggleDisplay(index);
+                                        ref
+                                            .read(
+                                              isIncomeSmallCategoryListEditedNotifierProvider
+                                                  .notifier,
+                                            )
+                                            .updateState(true);
+                                      } else {
+                                        ref
+                                            .read(
+                                              edittingSmallCategoryListNotifierProvider
+                                                  .notifier,
+                                            )
+                                            .toggleDisplay(index);
+                                        ref
+                                            .read(
+                                              isSmallCategoryListEditedNotifierProvider
+                                                  .notifier,
+                                            )
+                                            .updateState(true);
+                                      }
                                     });
                                   },
                                   child: CheckBox(
@@ -223,6 +263,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                           return NewSmallCategoryInputNameDialog(
                             bigCategoryId: widget.bigId,
                             displayedOrderInBig: itemList.length + 1,
+                            categoryType: widget.categoryType,
                           );
                         },
                       );

@@ -12,7 +12,8 @@ part of 'daily_expense_summary_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$DailyExpenseSummaryValue {
@@ -50,33 +51,39 @@ mixin _$DailyExpenseSummaryValue {
   List<CategorySummary> get categorySummaries =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DailyExpenseSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DailyExpenseSummaryValueCopyWith<DailyExpenseSummaryValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DailyExpenseSummaryValueCopyWith<$Res> {
-  factory $DailyExpenseSummaryValueCopyWith(DailyExpenseSummaryValue value,
-          $Res Function(DailyExpenseSummaryValue) then) =
-      _$DailyExpenseSummaryValueCopyWithImpl<$Res, DailyExpenseSummaryValue>;
+  factory $DailyExpenseSummaryValueCopyWith(
+    DailyExpenseSummaryValue value,
+    $Res Function(DailyExpenseSummaryValue) then,
+  ) = _$DailyExpenseSummaryValueCopyWithImpl<$Res, DailyExpenseSummaryValue>;
   @useResult
-  $Res call(
-      {DateTime date,
-      List<ExpenseCategoryGroup> expensesByCategory,
-      List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-      List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
-      int expenseTotal,
-      int confirmedFixedCostTotal,
-      int unconfirmedFixedCostTotal,
-      int totalExpense,
-      bool hasNoData,
-      List<CategorySummary> categorySummaries});
+  $Res call({
+    DateTime date,
+    List<ExpenseCategoryGroup> expensesByCategory,
+    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
+    int expenseTotal,
+    int confirmedFixedCostTotal,
+    int unconfirmedFixedCostTotal,
+    int totalExpense,
+    bool hasNoData,
+    List<CategorySummary> categorySummaries,
+  });
 }
 
 /// @nodoc
-class _$DailyExpenseSummaryValueCopyWithImpl<$Res,
-        $Val extends DailyExpenseSummaryValue>
+class _$DailyExpenseSummaryValueCopyWithImpl<
+  $Res,
+  $Val extends DailyExpenseSummaryValue
+>
     implements $DailyExpenseSummaryValueCopyWith<$Res> {
   _$DailyExpenseSummaryValueCopyWithImpl(this._value, this._then);
 
@@ -85,6 +92,8 @@ class _$DailyExpenseSummaryValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DailyExpenseSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,48 +108,51 @@ class _$DailyExpenseSummaryValueCopyWithImpl<$Res,
     Object? hasNoData = null,
     Object? categorySummaries = null,
   }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expensesByCategory: null == expensesByCategory
-          ? _value.expensesByCategory
-          : expensesByCategory // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseCategoryGroup>,
-      confirmedFixedCosts: null == confirmedFixedCosts
-          ? _value.confirmedFixedCosts
-          : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyConfirmedFixedCostTileValue>,
-      unconfirmedFixedCosts: null == unconfirmedFixedCosts
-          ? _value.unconfirmedFixedCosts
-          : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyUnconfirmedFixedCostTileValue>,
-      expenseTotal: null == expenseTotal
-          ? _value.expenseTotal
-          : expenseTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-      confirmedFixedCostTotal: null == confirmedFixedCostTotal
-          ? _value.confirmedFixedCostTotal
-          : confirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-      unconfirmedFixedCostTotal: null == unconfirmedFixedCostTotal
-          ? _value.unconfirmedFixedCostTotal
-          : unconfirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      hasNoData: null == hasNoData
-          ? _value.hasNoData
-          : hasNoData // ignore: cast_nullable_to_non_nullable
-              as bool,
-      categorySummaries: null == categorySummaries
-          ? _value.categorySummaries
-          : categorySummaries // ignore: cast_nullable_to_non_nullable
-              as List<CategorySummary>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            expensesByCategory: null == expensesByCategory
+                ? _value.expensesByCategory
+                : expensesByCategory // ignore: cast_nullable_to_non_nullable
+                      as List<ExpenseCategoryGroup>,
+            confirmedFixedCosts: null == confirmedFixedCosts
+                ? _value.confirmedFixedCosts
+                : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                      as List<MonthlyConfirmedFixedCostTileValue>,
+            unconfirmedFixedCosts: null == unconfirmedFixedCosts
+                ? _value.unconfirmedFixedCosts
+                : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                      as List<MonthlyUnconfirmedFixedCostTileValue>,
+            expenseTotal: null == expenseTotal
+                ? _value.expenseTotal
+                : expenseTotal // ignore: cast_nullable_to_non_nullable
+                      as int,
+            confirmedFixedCostTotal: null == confirmedFixedCostTotal
+                ? _value.confirmedFixedCostTotal
+                : confirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
+                      as int,
+            unconfirmedFixedCostTotal: null == unconfirmedFixedCostTotal
+                ? _value.unconfirmedFixedCostTotal
+                : unconfirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalExpense: null == totalExpense
+                ? _value.totalExpense
+                : totalExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            hasNoData: null == hasNoData
+                ? _value.hasNoData
+                : hasNoData // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            categorySummaries: null == categorySummaries
+                ? _value.categorySummaries
+                : categorySummaries // ignore: cast_nullable_to_non_nullable
+                      as List<CategorySummary>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -148,34 +160,40 @@ class _$DailyExpenseSummaryValueCopyWithImpl<$Res,
 abstract class _$$DailyExpenseSummaryValueImplCopyWith<$Res>
     implements $DailyExpenseSummaryValueCopyWith<$Res> {
   factory _$$DailyExpenseSummaryValueImplCopyWith(
-          _$DailyExpenseSummaryValueImpl value,
-          $Res Function(_$DailyExpenseSummaryValueImpl) then) =
-      __$$DailyExpenseSummaryValueImplCopyWithImpl<$Res>;
+    _$DailyExpenseSummaryValueImpl value,
+    $Res Function(_$DailyExpenseSummaryValueImpl) then,
+  ) = __$$DailyExpenseSummaryValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime date,
-      List<ExpenseCategoryGroup> expensesByCategory,
-      List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-      List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
-      int expenseTotal,
-      int confirmedFixedCostTotal,
-      int unconfirmedFixedCostTotal,
-      int totalExpense,
-      bool hasNoData,
-      List<CategorySummary> categorySummaries});
+  $Res call({
+    DateTime date,
+    List<ExpenseCategoryGroup> expensesByCategory,
+    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
+    int expenseTotal,
+    int confirmedFixedCostTotal,
+    int unconfirmedFixedCostTotal,
+    int totalExpense,
+    bool hasNoData,
+    List<CategorySummary> categorySummaries,
+  });
 }
 
 /// @nodoc
 class __$$DailyExpenseSummaryValueImplCopyWithImpl<$Res>
-    extends _$DailyExpenseSummaryValueCopyWithImpl<$Res,
-        _$DailyExpenseSummaryValueImpl>
+    extends
+        _$DailyExpenseSummaryValueCopyWithImpl<
+          $Res,
+          _$DailyExpenseSummaryValueImpl
+        >
     implements _$$DailyExpenseSummaryValueImplCopyWith<$Res> {
   __$$DailyExpenseSummaryValueImplCopyWithImpl(
-      _$DailyExpenseSummaryValueImpl _value,
-      $Res Function(_$DailyExpenseSummaryValueImpl) _then)
-      : super(_value, _then);
+    _$DailyExpenseSummaryValueImpl _value,
+    $Res Function(_$DailyExpenseSummaryValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of DailyExpenseSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -190,71 +208,72 @@ class __$$DailyExpenseSummaryValueImplCopyWithImpl<$Res>
     Object? hasNoData = null,
     Object? categorySummaries = null,
   }) {
-    return _then(_$DailyExpenseSummaryValueImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expensesByCategory: null == expensesByCategory
-          ? _value._expensesByCategory
-          : expensesByCategory // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseCategoryGroup>,
-      confirmedFixedCosts: null == confirmedFixedCosts
-          ? _value._confirmedFixedCosts
-          : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyConfirmedFixedCostTileValue>,
-      unconfirmedFixedCosts: null == unconfirmedFixedCosts
-          ? _value._unconfirmedFixedCosts
-          : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyUnconfirmedFixedCostTileValue>,
-      expenseTotal: null == expenseTotal
-          ? _value.expenseTotal
-          : expenseTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-      confirmedFixedCostTotal: null == confirmedFixedCostTotal
-          ? _value.confirmedFixedCostTotal
-          : confirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-      unconfirmedFixedCostTotal: null == unconfirmedFixedCostTotal
-          ? _value.unconfirmedFixedCostTotal
-          : unconfirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      hasNoData: null == hasNoData
-          ? _value.hasNoData
-          : hasNoData // ignore: cast_nullable_to_non_nullable
-              as bool,
-      categorySummaries: null == categorySummaries
-          ? _value._categorySummaries
-          : categorySummaries // ignore: cast_nullable_to_non_nullable
-              as List<CategorySummary>,
-    ));
+    return _then(
+      _$DailyExpenseSummaryValueImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        expensesByCategory: null == expensesByCategory
+            ? _value._expensesByCategory
+            : expensesByCategory // ignore: cast_nullable_to_non_nullable
+                  as List<ExpenseCategoryGroup>,
+        confirmedFixedCosts: null == confirmedFixedCosts
+            ? _value._confirmedFixedCosts
+            : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                  as List<MonthlyConfirmedFixedCostTileValue>,
+        unconfirmedFixedCosts: null == unconfirmedFixedCosts
+            ? _value._unconfirmedFixedCosts
+            : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                  as List<MonthlyUnconfirmedFixedCostTileValue>,
+        expenseTotal: null == expenseTotal
+            ? _value.expenseTotal
+            : expenseTotal // ignore: cast_nullable_to_non_nullable
+                  as int,
+        confirmedFixedCostTotal: null == confirmedFixedCostTotal
+            ? _value.confirmedFixedCostTotal
+            : confirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
+                  as int,
+        unconfirmedFixedCostTotal: null == unconfirmedFixedCostTotal
+            ? _value.unconfirmedFixedCostTotal
+            : unconfirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalExpense: null == totalExpense
+            ? _value.totalExpense
+            : totalExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        hasNoData: null == hasNoData
+            ? _value.hasNoData
+            : hasNoData // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        categorySummaries: null == categorySummaries
+            ? _value._categorySummaries
+            : categorySummaries // ignore: cast_nullable_to_non_nullable
+                  as List<CategorySummary>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$DailyExpenseSummaryValueImpl implements _DailyExpenseSummaryValue {
-  _$DailyExpenseSummaryValueImpl(
-      {required this.date,
-      required final List<ExpenseCategoryGroup> expensesByCategory,
-      required final List<MonthlyConfirmedFixedCostTileValue>
-          confirmedFixedCosts,
-      required final List<MonthlyUnconfirmedFixedCostTileValue>
-          unconfirmedFixedCosts,
-      required this.expenseTotal,
-      required this.confirmedFixedCostTotal,
-      required this.unconfirmedFixedCostTotal,
-      required this.totalExpense,
-      required this.hasNoData,
-      required final List<CategorySummary> categorySummaries})
-      : _expensesByCategory = expensesByCategory,
-        _confirmedFixedCosts = confirmedFixedCosts,
-        _unconfirmedFixedCosts = unconfirmedFixedCosts,
-        _categorySummaries = categorySummaries;
+  _$DailyExpenseSummaryValueImpl({
+    required this.date,
+    required final List<ExpenseCategoryGroup> expensesByCategory,
+    required final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    required final List<MonthlyUnconfirmedFixedCostTileValue>
+    unconfirmedFixedCosts,
+    required this.expenseTotal,
+    required this.confirmedFixedCostTotal,
+    required this.unconfirmedFixedCostTotal,
+    required this.totalExpense,
+    required this.hasNoData,
+    required final List<CategorySummary> categorySummaries,
+  }) : _expensesByCategory = expensesByCategory,
+       _confirmedFixedCosts = confirmedFixedCosts,
+       _unconfirmedFixedCosts = unconfirmedFixedCosts,
+       _categorySummaries = categorySummaries;
 
   /// 対象日
   @override
@@ -339,110 +358,128 @@ class _$DailyExpenseSummaryValueImpl implements _DailyExpenseSummaryValue {
         (other.runtimeType == runtimeType &&
             other is _$DailyExpenseSummaryValueImpl &&
             (identical(other.date, date) || other.date == date) &&
-            const DeepCollectionEquality()
-                .equals(other._expensesByCategory, _expensesByCategory) &&
-            const DeepCollectionEquality()
-                .equals(other._confirmedFixedCosts, _confirmedFixedCosts) &&
-            const DeepCollectionEquality()
-                .equals(other._unconfirmedFixedCosts, _unconfirmedFixedCosts) &&
+            const DeepCollectionEquality().equals(
+              other._expensesByCategory,
+              _expensesByCategory,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._confirmedFixedCosts,
+              _confirmedFixedCosts,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._unconfirmedFixedCosts,
+              _unconfirmedFixedCosts,
+            ) &&
             (identical(other.expenseTotal, expenseTotal) ||
                 other.expenseTotal == expenseTotal) &&
             (identical(
-                    other.confirmedFixedCostTotal, confirmedFixedCostTotal) ||
+                  other.confirmedFixedCostTotal,
+                  confirmedFixedCostTotal,
+                ) ||
                 other.confirmedFixedCostTotal == confirmedFixedCostTotal) &&
-            (identical(other.unconfirmedFixedCostTotal,
-                    unconfirmedFixedCostTotal) ||
+            (identical(
+                  other.unconfirmedFixedCostTotal,
+                  unconfirmedFixedCostTotal,
+                ) ||
                 other.unconfirmedFixedCostTotal == unconfirmedFixedCostTotal) &&
             (identical(other.totalExpense, totalExpense) ||
                 other.totalExpense == totalExpense) &&
             (identical(other.hasNoData, hasNoData) ||
                 other.hasNoData == hasNoData) &&
-            const DeepCollectionEquality()
-                .equals(other._categorySummaries, _categorySummaries));
+            const DeepCollectionEquality().equals(
+              other._categorySummaries,
+              _categorySummaries,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      date,
-      const DeepCollectionEquality().hash(_expensesByCategory),
-      const DeepCollectionEquality().hash(_confirmedFixedCosts),
-      const DeepCollectionEquality().hash(_unconfirmedFixedCosts),
-      expenseTotal,
-      confirmedFixedCostTotal,
-      unconfirmedFixedCostTotal,
-      totalExpense,
-      hasNoData,
-      const DeepCollectionEquality().hash(_categorySummaries));
+    runtimeType,
+    date,
+    const DeepCollectionEquality().hash(_expensesByCategory),
+    const DeepCollectionEquality().hash(_confirmedFixedCosts),
+    const DeepCollectionEquality().hash(_unconfirmedFixedCosts),
+    expenseTotal,
+    confirmedFixedCostTotal,
+    unconfirmedFixedCostTotal,
+    totalExpense,
+    hasNoData,
+    const DeepCollectionEquality().hash(_categorySummaries),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DailyExpenseSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DailyExpenseSummaryValueImplCopyWith<_$DailyExpenseSummaryValueImpl>
-      get copyWith => __$$DailyExpenseSummaryValueImplCopyWithImpl<
-          _$DailyExpenseSummaryValueImpl>(this, _$identity);
+  get copyWith =>
+      __$$DailyExpenseSummaryValueImplCopyWithImpl<
+        _$DailyExpenseSummaryValueImpl
+      >(this, _$identity);
 }
 
 abstract class _DailyExpenseSummaryValue implements DailyExpenseSummaryValue {
-  factory _DailyExpenseSummaryValue(
-          {required final DateTime date,
-          required final List<ExpenseCategoryGroup> expensesByCategory,
-          required final List<MonthlyConfirmedFixedCostTileValue>
-              confirmedFixedCosts,
-          required final List<MonthlyUnconfirmedFixedCostTileValue>
-              unconfirmedFixedCosts,
-          required final int expenseTotal,
-          required final int confirmedFixedCostTotal,
-          required final int unconfirmedFixedCostTotal,
-          required final int totalExpense,
-          required final bool hasNoData,
-          required final List<CategorySummary> categorySummaries}) =
-      _$DailyExpenseSummaryValueImpl;
-
-  @override
+  factory _DailyExpenseSummaryValue({
+    required final DateTime date,
+    required final List<ExpenseCategoryGroup> expensesByCategory,
+    required final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    required final List<MonthlyUnconfirmedFixedCostTileValue>
+    unconfirmedFixedCosts,
+    required final int expenseTotal,
+    required final int confirmedFixedCostTotal,
+    required final int unconfirmedFixedCostTotal,
+    required final int totalExpense,
+    required final bool hasNoData,
+    required final List<CategorySummary> categorySummaries,
+  }) = _$DailyExpenseSummaryValueImpl;
 
   /// 対象日
-  DateTime get date;
   @override
+  DateTime get date;
 
   /// カテゴリー別にグループ化された生活支出
-  List<ExpenseCategoryGroup> get expensesByCategory;
   @override
+  List<ExpenseCategoryGroup> get expensesByCategory;
 
   /// 固定費（確定）
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts;
   @override
+  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts;
 
   /// 固定費（未確定）
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts;
   @override
+  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts;
 
   /// 生活支出合計
-  int get expenseTotal;
   @override
+  int get expenseTotal;
 
   /// 固定費（確定）合計
-  int get confirmedFixedCostTotal;
   @override
+  int get confirmedFixedCostTotal;
 
   /// 固定費（未確定）合計
-  int get unconfirmedFixedCostTotal;
   @override
+  int get unconfirmedFixedCostTotal;
 
   /// 総支出
-  int get totalExpense;
   @override
+  int get totalExpense;
 
   /// データがない場合true
-  bool get hasNoData;
   @override
+  bool get hasNoData;
 
   /// グラフ用カテゴリーサマリー
-  List<CategorySummary> get categorySummaries;
   @override
-  @JsonKey(ignore: true)
+  List<CategorySummary> get categorySummaries;
+
+  /// Create a copy of DailyExpenseSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DailyExpenseSummaryValueImplCopyWith<_$DailyExpenseSummaryValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -463,28 +500,34 @@ mixin _$ExpenseCategoryGroup {
   /// カテゴリー内の支出合計
   int get categoryTotal => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseCategoryGroupCopyWith<ExpenseCategoryGroup> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExpenseCategoryGroupCopyWith<$Res> {
-  factory $ExpenseCategoryGroupCopyWith(ExpenseCategoryGroup value,
-          $Res Function(ExpenseCategoryGroup) then) =
-      _$ExpenseCategoryGroupCopyWithImpl<$Res, ExpenseCategoryGroup>;
+  factory $ExpenseCategoryGroupCopyWith(
+    ExpenseCategoryGroup value,
+    $Res Function(ExpenseCategoryGroup) then,
+  ) = _$ExpenseCategoryGroupCopyWithImpl<$Res, ExpenseCategoryGroup>;
   @useResult
-  $Res call(
-      {String categoryName,
-      String iconPath,
-      String colorCode,
-      List<ExpenseHistoryTileValue> expenses,
-      int categoryTotal});
+  $Res call({
+    String categoryName,
+    String iconPath,
+    String colorCode,
+    List<ExpenseHistoryTileValue> expenses,
+    int categoryTotal,
+  });
 }
 
 /// @nodoc
-class _$ExpenseCategoryGroupCopyWithImpl<$Res,
-        $Val extends ExpenseCategoryGroup>
+class _$ExpenseCategoryGroupCopyWithImpl<
+  $Res,
+  $Val extends ExpenseCategoryGroup
+>
     implements $ExpenseCategoryGroupCopyWith<$Res> {
   _$ExpenseCategoryGroupCopyWithImpl(this._value, this._then);
 
@@ -493,6 +536,8 @@ class _$ExpenseCategoryGroupCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -502,55 +547,63 @@ class _$ExpenseCategoryGroupCopyWithImpl<$Res,
     Object? expenses = null,
     Object? categoryTotal = null,
   }) {
-    return _then(_value.copyWith(
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      expenses: null == expenses
-          ? _value.expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-      categoryTotal: null == categoryTotal
-          ? _value.categoryTotal
-          : categoryTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            iconPath: null == iconPath
+                ? _value.iconPath
+                : iconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            expenses: null == expenses
+                ? _value.expenses
+                : expenses // ignore: cast_nullable_to_non_nullable
+                      as List<ExpenseHistoryTileValue>,
+            categoryTotal: null == categoryTotal
+                ? _value.categoryTotal
+                : categoryTotal // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExpenseCategoryGroupImplCopyWith<$Res>
     implements $ExpenseCategoryGroupCopyWith<$Res> {
-  factory _$$ExpenseCategoryGroupImplCopyWith(_$ExpenseCategoryGroupImpl value,
-          $Res Function(_$ExpenseCategoryGroupImpl) then) =
-      __$$ExpenseCategoryGroupImplCopyWithImpl<$Res>;
+  factory _$$ExpenseCategoryGroupImplCopyWith(
+    _$ExpenseCategoryGroupImpl value,
+    $Res Function(_$ExpenseCategoryGroupImpl) then,
+  ) = __$$ExpenseCategoryGroupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String categoryName,
-      String iconPath,
-      String colorCode,
-      List<ExpenseHistoryTileValue> expenses,
-      int categoryTotal});
+  $Res call({
+    String categoryName,
+    String iconPath,
+    String colorCode,
+    List<ExpenseHistoryTileValue> expenses,
+    int categoryTotal,
+  });
 }
 
 /// @nodoc
 class __$$ExpenseCategoryGroupImplCopyWithImpl<$Res>
     extends _$ExpenseCategoryGroupCopyWithImpl<$Res, _$ExpenseCategoryGroupImpl>
     implements _$$ExpenseCategoryGroupImplCopyWith<$Res> {
-  __$$ExpenseCategoryGroupImplCopyWithImpl(_$ExpenseCategoryGroupImpl _value,
-      $Res Function(_$ExpenseCategoryGroupImpl) _then)
-      : super(_value, _then);
+  __$$ExpenseCategoryGroupImplCopyWithImpl(
+    _$ExpenseCategoryGroupImpl _value,
+    $Res Function(_$ExpenseCategoryGroupImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExpenseCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -560,41 +613,43 @@ class __$$ExpenseCategoryGroupImplCopyWithImpl<$Res>
     Object? expenses = null,
     Object? categoryTotal = null,
   }) {
-    return _then(_$ExpenseCategoryGroupImpl(
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      expenses: null == expenses
-          ? _value._expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-      categoryTotal: null == categoryTotal
-          ? _value.categoryTotal
-          : categoryTotal // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ExpenseCategoryGroupImpl(
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        iconPath: null == iconPath
+            ? _value.iconPath
+            : iconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        expenses: null == expenses
+            ? _value._expenses
+            : expenses // ignore: cast_nullable_to_non_nullable
+                  as List<ExpenseHistoryTileValue>,
+        categoryTotal: null == categoryTotal
+            ? _value.categoryTotal
+            : categoryTotal // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ExpenseCategoryGroupImpl implements _ExpenseCategoryGroup {
-  _$ExpenseCategoryGroupImpl(
-      {required this.categoryName,
-      required this.iconPath,
-      required this.colorCode,
-      required final List<ExpenseHistoryTileValue> expenses,
-      required this.categoryTotal})
-      : _expenses = expenses;
+  _$ExpenseCategoryGroupImpl({
+    required this.categoryName,
+    required this.iconPath,
+    required this.colorCode,
+    required final List<ExpenseHistoryTileValue> expenses,
+    required this.categoryTotal,
+  }) : _expenses = expenses;
 
   /// カテゴリー名（大カテゴリー）
   @override
@@ -645,48 +700,61 @@ class _$ExpenseCategoryGroupImpl implements _ExpenseCategoryGroup {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, categoryName, iconPath,
-      colorCode, const DeepCollectionEquality().hash(_expenses), categoryTotal);
+  int get hashCode => Object.hash(
+    runtimeType,
+    categoryName,
+    iconPath,
+    colorCode,
+    const DeepCollectionEquality().hash(_expenses),
+    categoryTotal,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExpenseCategoryGroupImplCopyWith<_$ExpenseCategoryGroupImpl>
-      get copyWith =>
-          __$$ExpenseCategoryGroupImplCopyWithImpl<_$ExpenseCategoryGroupImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$ExpenseCategoryGroupImplCopyWithImpl<_$ExpenseCategoryGroupImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ExpenseCategoryGroup implements ExpenseCategoryGroup {
-  factory _ExpenseCategoryGroup(
-      {required final String categoryName,
-      required final String iconPath,
-      required final String colorCode,
-      required final List<ExpenseHistoryTileValue> expenses,
-      required final int categoryTotal}) = _$ExpenseCategoryGroupImpl;
-
-  @override
+  factory _ExpenseCategoryGroup({
+    required final String categoryName,
+    required final String iconPath,
+    required final String colorCode,
+    required final List<ExpenseHistoryTileValue> expenses,
+    required final int categoryTotal,
+  }) = _$ExpenseCategoryGroupImpl;
 
   /// カテゴリー名（大カテゴリー）
-  String get categoryName;
   @override
+  String get categoryName;
 
   /// カテゴリーアイコンパス
-  String get iconPath;
   @override
+  String get iconPath;
 
   /// カテゴリー色コード
-  String get colorCode;
   @override
+  String get colorCode;
 
   /// このカテゴリーに属する支出リスト
-  List<ExpenseHistoryTileValue> get expenses;
   @override
+  List<ExpenseHistoryTileValue> get expenses;
 
   /// カテゴリー内の支出合計
-  int get categoryTotal;
   @override
-  @JsonKey(ignore: true)
+  int get categoryTotal;
+
+  /// Create a copy of ExpenseCategoryGroup
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExpenseCategoryGroupImplCopyWith<_$ExpenseCategoryGroupImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

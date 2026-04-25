@@ -12,7 +12,8 @@ part of 'income_category_summary_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$IncomeCategorySummaryValue {
@@ -22,29 +23,38 @@ mixin _$IncomeCategorySummaryValue {
   int get totalAmount => throw _privateConstructorUsedError;
   double get percentage => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IncomeCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IncomeCategorySummaryValueCopyWith<IncomeCategorySummaryValue>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $IncomeCategorySummaryValueCopyWith<$Res> {
-  factory $IncomeCategorySummaryValueCopyWith(IncomeCategorySummaryValue value,
-          $Res Function(IncomeCategorySummaryValue) then) =
-      _$IncomeCategorySummaryValueCopyWithImpl<$Res,
-          IncomeCategorySummaryValue>;
+  factory $IncomeCategorySummaryValueCopyWith(
+    IncomeCategorySummaryValue value,
+    $Res Function(IncomeCategorySummaryValue) then,
+  ) =
+      _$IncomeCategorySummaryValueCopyWithImpl<
+        $Res,
+        IncomeCategorySummaryValue
+      >;
   @useResult
-  $Res call(
-      {String categoryName,
-      String colorCode,
-      String iconPath,
-      int totalAmount,
-      double percentage});
+  $Res call({
+    String categoryName,
+    String colorCode,
+    String iconPath,
+    int totalAmount,
+    double percentage,
+  });
 }
 
 /// @nodoc
-class _$IncomeCategorySummaryValueCopyWithImpl<$Res,
-        $Val extends IncomeCategorySummaryValue>
+class _$IncomeCategorySummaryValueCopyWithImpl<
+  $Res,
+  $Val extends IncomeCategorySummaryValue
+>
     implements $IncomeCategorySummaryValueCopyWith<$Res> {
   _$IncomeCategorySummaryValueCopyWithImpl(this._value, this._then);
 
@@ -53,6 +63,8 @@ class _$IncomeCategorySummaryValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of IncomeCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -62,28 +74,31 @@ class _$IncomeCategorySummaryValueCopyWithImpl<$Res,
     Object? totalAmount = null,
     Object? percentage = null,
   }) {
-    return _then(_value.copyWith(
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalAmount: null == totalAmount
-          ? _value.totalAmount
-          : totalAmount // ignore: cast_nullable_to_non_nullable
-              as int,
-      percentage: null == percentage
-          ? _value.percentage
-          : percentage // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            iconPath: null == iconPath
+                ? _value.iconPath
+                : iconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            totalAmount: null == totalAmount
+                ? _value.totalAmount
+                : totalAmount // ignore: cast_nullable_to_non_nullable
+                      as int,
+            percentage: null == percentage
+                ? _value.percentage
+                : percentage // ignore: cast_nullable_to_non_nullable
+                      as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -91,29 +106,35 @@ class _$IncomeCategorySummaryValueCopyWithImpl<$Res,
 abstract class _$$IncomeCategorySummaryValueImplCopyWith<$Res>
     implements $IncomeCategorySummaryValueCopyWith<$Res> {
   factory _$$IncomeCategorySummaryValueImplCopyWith(
-          _$IncomeCategorySummaryValueImpl value,
-          $Res Function(_$IncomeCategorySummaryValueImpl) then) =
-      __$$IncomeCategorySummaryValueImplCopyWithImpl<$Res>;
+    _$IncomeCategorySummaryValueImpl value,
+    $Res Function(_$IncomeCategorySummaryValueImpl) then,
+  ) = __$$IncomeCategorySummaryValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {String categoryName,
-      String colorCode,
-      String iconPath,
-      int totalAmount,
-      double percentage});
+  $Res call({
+    String categoryName,
+    String colorCode,
+    String iconPath,
+    int totalAmount,
+    double percentage,
+  });
 }
 
 /// @nodoc
 class __$$IncomeCategorySummaryValueImplCopyWithImpl<$Res>
-    extends _$IncomeCategorySummaryValueCopyWithImpl<$Res,
-        _$IncomeCategorySummaryValueImpl>
+    extends
+        _$IncomeCategorySummaryValueCopyWithImpl<
+          $Res,
+          _$IncomeCategorySummaryValueImpl
+        >
     implements _$$IncomeCategorySummaryValueImplCopyWith<$Res> {
   __$$IncomeCategorySummaryValueImplCopyWithImpl(
-      _$IncomeCategorySummaryValueImpl _value,
-      $Res Function(_$IncomeCategorySummaryValueImpl) _then)
-      : super(_value, _then);
+    _$IncomeCategorySummaryValueImpl _value,
+    $Res Function(_$IncomeCategorySummaryValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of IncomeCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -123,40 +144,43 @@ class __$$IncomeCategorySummaryValueImplCopyWithImpl<$Res>
     Object? totalAmount = null,
     Object? percentage = null,
   }) {
-    return _then(_$IncomeCategorySummaryValueImpl(
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalAmount: null == totalAmount
-          ? _value.totalAmount
-          : totalAmount // ignore: cast_nullable_to_non_nullable
-              as int,
-      percentage: null == percentage
-          ? _value.percentage
-          : percentage // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+    return _then(
+      _$IncomeCategorySummaryValueImpl(
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        iconPath: null == iconPath
+            ? _value.iconPath
+            : iconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        totalAmount: null == totalAmount
+            ? _value.totalAmount
+            : totalAmount // ignore: cast_nullable_to_non_nullable
+                  as int,
+        percentage: null == percentage
+            ? _value.percentage
+            : percentage // ignore: cast_nullable_to_non_nullable
+                  as double,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$IncomeCategorySummaryValueImpl implements _IncomeCategorySummaryValue {
-  const _$IncomeCategorySummaryValueImpl(
-      {required this.categoryName,
-      required this.colorCode,
-      required this.iconPath,
-      required this.totalAmount,
-      required this.percentage});
+  const _$IncomeCategorySummaryValueImpl({
+    required this.categoryName,
+    required this.colorCode,
+    required this.iconPath,
+    required this.totalAmount,
+    required this.percentage,
+  });
 
   @override
   final String categoryName;
@@ -193,24 +217,35 @@ class _$IncomeCategorySummaryValueImpl implements _IncomeCategorySummaryValue {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, categoryName, colorCode, iconPath, totalAmount, percentage);
+    runtimeType,
+    categoryName,
+    colorCode,
+    iconPath,
+    totalAmount,
+    percentage,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IncomeCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IncomeCategorySummaryValueImplCopyWith<_$IncomeCategorySummaryValueImpl>
-      get copyWith => __$$IncomeCategorySummaryValueImplCopyWithImpl<
-          _$IncomeCategorySummaryValueImpl>(this, _$identity);
+  get copyWith =>
+      __$$IncomeCategorySummaryValueImplCopyWithImpl<
+        _$IncomeCategorySummaryValueImpl
+      >(this, _$identity);
 }
 
 abstract class _IncomeCategorySummaryValue
     implements IncomeCategorySummaryValue {
-  const factory _IncomeCategorySummaryValue(
-      {required final String categoryName,
-      required final String colorCode,
-      required final String iconPath,
-      required final int totalAmount,
-      required final double percentage}) = _$IncomeCategorySummaryValueImpl;
+  const factory _IncomeCategorySummaryValue({
+    required final String categoryName,
+    required final String colorCode,
+    required final String iconPath,
+    required final int totalAmount,
+    required final double percentage,
+  }) = _$IncomeCategorySummaryValueImpl;
 
   @override
   String get categoryName;
@@ -222,8 +257,11 @@ abstract class _IncomeCategorySummaryValue
   int get totalAmount;
   @override
   double get percentage;
+
+  /// Create a copy of IncomeCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IncomeCategorySummaryValueImplCopyWith<_$IncomeCategorySummaryValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

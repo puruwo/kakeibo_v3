@@ -12,9 +12,18 @@ import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fi
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/fixed_cost_category_appearance_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/add_complete_button/add_complete_fixed_cost_category_detail_button.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/update_complete_button/update_complete_fixed_cost_category_detail_button.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/income_category_detail_edit_page/income_category_appearance_edit_area.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/income_category_detail_edit_page/add_complete_button/add_complete_income_category_detail_button.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/income_category_detail_edit_page/update_complete_button/update_complete_income_category_detail_button.dart';
 
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_color_controller/income_big_category_color_controller.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_name_controller/income_big_category_name_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_name_controller/fixed_cost_category_name_controller.dart';
@@ -61,6 +70,15 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
                 ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
                 ref.invalidate(isSmallCategoryListEditedNotifierProvider);
                 ref.invalidate(edittingSmallCategoryListNotifierProvider);
+              } else if (widget.categoryType == CategoryType.income) {
+                ref.invalidate(
+                    isIncomeBigCategoryAppearanceEditedNotifierProvider);
+                ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
+                ref.invalidate(edittingIncomeSmallCategoryListNotifierProvider);
+                ref.invalidate(incomeBigCategoryNameControllerProvider);
+                ref.invalidate(incomeBigCategoryIconControllerNotifierProvider);
+                ref.invalidate(
+                    incomeBigCategoryColorControllerNotifierProvider);
               } else {
                 ref.invalidate(fixedCostCategoryNameControllerNotifierProvider);
                 ref.invalidate(fixedCostCategoryIconControllerNotifierProvider);
@@ -86,12 +104,17 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
             _buildAppearanceEditArea(),
 
             // 余白（固定費の場合は不要）
-            if (widget.categoryType == CategoryType.expense)
+            if (widget.categoryType == CategoryType.expense ||
+                widget.categoryType == CategoryType.income)
               const SizedBox(height: 8.0),
 
             // 小カテゴリーのリスト（固定費の場合は表示しない）
-            if (widget.categoryType == CategoryType.expense)
-              SmallCategoryEditArea(bigId: widget.bigCategoryId ?? -1),
+            if (widget.categoryType == CategoryType.expense ||
+                widget.categoryType == CategoryType.income)
+              SmallCategoryEditArea(
+                bigId: widget.bigCategoryId ?? -1,
+                categoryType: widget.categoryType,
+              ),
           ],
         ),
       ),
@@ -104,6 +127,14 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
       return widget.screenMode == BigCategoryDetailEditScreenMode.edit
           ? UpdateCompleteBigCategoryDetailButton(bigId: widget.bigCategoryId!)
           : AddCompleteBigCategoryDetailButton(
+              categoryOrder: widget.categoryOrder!,
+            );
+    } else if (widget.categoryType == CategoryType.income) {
+      return widget.screenMode == BigCategoryDetailEditScreenMode.edit
+          ? UpdateCompleteIncomeCategoryDetailButton(
+              bigId: widget.bigCategoryId!,
+            )
+          : AddCompleteIncomeCategoryDetailButton(
               categoryOrder: widget.categoryOrder!,
             );
     } else {
@@ -123,6 +154,10 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
       return CategoryAppearanceEditArea(
         bigId: widget.bigCategoryId ?? -1,
         categoryType: widget.categoryType,
+      );
+    } else if (widget.categoryType == CategoryType.income) {
+      return IncomeCategoryAppearanceEditArea(
+        bigId: widget.bigCategoryId ?? -1,
       );
     } else {
       return FixedCostCategoryAppearanceEditArea(

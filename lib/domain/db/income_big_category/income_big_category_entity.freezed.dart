@@ -12,10 +12,12 @@ part of 'income_big_category_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 IncomeBigCategoryEntity _$IncomeBigCategoryEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _IncomeBigCategoryEntity.fromJson(json);
 }
 
@@ -26,24 +28,31 @@ mixin _$IncomeBigCategoryEntity {
   String get colorCode => throw _privateConstructorUsedError;
   String get iconPath => throw _privateConstructorUsedError;
 
+  /// Serializes this IncomeBigCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of IncomeBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IncomeBigCategoryEntityCopyWith<IncomeBigCategoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $IncomeBigCategoryEntityCopyWith<$Res> {
-  factory $IncomeBigCategoryEntityCopyWith(IncomeBigCategoryEntity value,
-          $Res Function(IncomeBigCategoryEntity) then) =
-      _$IncomeBigCategoryEntityCopyWithImpl<$Res, IncomeBigCategoryEntity>;
+  factory $IncomeBigCategoryEntityCopyWith(
+    IncomeBigCategoryEntity value,
+    $Res Function(IncomeBigCategoryEntity) then,
+  ) = _$IncomeBigCategoryEntityCopyWithImpl<$Res, IncomeBigCategoryEntity>;
   @useResult
   $Res call({int id, String name, String colorCode, String iconPath});
 }
 
 /// @nodoc
-class _$IncomeBigCategoryEntityCopyWithImpl<$Res,
-        $Val extends IncomeBigCategoryEntity>
+class _$IncomeBigCategoryEntityCopyWithImpl<
+  $Res,
+  $Val extends IncomeBigCategoryEntity
+>
     implements $IncomeBigCategoryEntityCopyWith<$Res> {
   _$IncomeBigCategoryEntityCopyWithImpl(this._value, this._then);
 
@@ -52,6 +61,8 @@ class _$IncomeBigCategoryEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of IncomeBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -60,24 +71,27 @@ class _$IncomeBigCategoryEntityCopyWithImpl<$Res,
     Object? colorCode = null,
     Object? iconPath = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            iconPath: null == iconPath
+                ? _value.iconPath
+                : iconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -85,9 +99,9 @@ class _$IncomeBigCategoryEntityCopyWithImpl<$Res,
 abstract class _$$IncomeBigCategoryEntityImplCopyWith<$Res>
     implements $IncomeBigCategoryEntityCopyWith<$Res> {
   factory _$$IncomeBigCategoryEntityImplCopyWith(
-          _$IncomeBigCategoryEntityImpl value,
-          $Res Function(_$IncomeBigCategoryEntityImpl) then) =
-      __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>;
+    _$IncomeBigCategoryEntityImpl value,
+    $Res Function(_$IncomeBigCategoryEntityImpl) then,
+  ) = __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, String name, String colorCode, String iconPath});
@@ -95,14 +109,19 @@ abstract class _$$IncomeBigCategoryEntityImplCopyWith<$Res>
 
 /// @nodoc
 class __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>
-    extends _$IncomeBigCategoryEntityCopyWithImpl<$Res,
-        _$IncomeBigCategoryEntityImpl>
+    extends
+        _$IncomeBigCategoryEntityCopyWithImpl<
+          $Res,
+          _$IncomeBigCategoryEntityImpl
+        >
     implements _$$IncomeBigCategoryEntityImplCopyWith<$Res> {
   __$$IncomeBigCategoryEntityImplCopyWithImpl(
-      _$IncomeBigCategoryEntityImpl _value,
-      $Res Function(_$IncomeBigCategoryEntityImpl) _then)
-      : super(_value, _then);
+    _$IncomeBigCategoryEntityImpl _value,
+    $Res Function(_$IncomeBigCategoryEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of IncomeBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -111,36 +130,38 @@ class __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>
     Object? colorCode = null,
     Object? iconPath = null,
   }) {
-    return _then(_$IncomeBigCategoryEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$IncomeBigCategoryEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        iconPath: null == iconPath
+            ? _value.iconPath
+            : iconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
-  const _$IncomeBigCategoryEntityImpl(
-      {required this.id,
-      required this.name,
-      required this.colorCode,
-      required this.iconPath})
-      : super._();
+  const _$IncomeBigCategoryEntityImpl({
+    required this.id,
+    required this.name,
+    required this.colorCode,
+    required this.iconPath,
+  }) : super._();
 
   factory _$IncomeBigCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$IncomeBigCategoryEntityImplFromJson(json);
@@ -172,31 +193,34 @@ class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
                 other.iconPath == iconPath));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, colorCode, iconPath);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IncomeBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IncomeBigCategoryEntityImplCopyWith<_$IncomeBigCategoryEntityImpl>
-      get copyWith => __$$IncomeBigCategoryEntityImplCopyWithImpl<
-          _$IncomeBigCategoryEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$IncomeBigCategoryEntityImplCopyWithImpl<
+        _$IncomeBigCategoryEntityImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$IncomeBigCategoryEntityImplToJson(
-      this,
-    );
+    return _$$IncomeBigCategoryEntityImplToJson(this);
   }
 }
 
 abstract class _IncomeBigCategoryEntity extends IncomeBigCategoryEntity {
-  const factory _IncomeBigCategoryEntity(
-      {required final int id,
-      required final String name,
-      required final String colorCode,
-      required final String iconPath}) = _$IncomeBigCategoryEntityImpl;
+  const factory _IncomeBigCategoryEntity({
+    required final int id,
+    required final String name,
+    required final String colorCode,
+    required final String iconPath,
+  }) = _$IncomeBigCategoryEntityImpl;
   const _IncomeBigCategoryEntity._() : super._();
 
   factory _IncomeBigCategoryEntity.fromJson(Map<String, dynamic> json) =
@@ -210,8 +234,11 @@ abstract class _IncomeBigCategoryEntity extends IncomeBigCategoryEntity {
   String get colorCode;
   @override
   String get iconPath;
+
+  /// Create a copy of IncomeBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IncomeBigCategoryEntityImplCopyWith<_$IncomeBigCategoryEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

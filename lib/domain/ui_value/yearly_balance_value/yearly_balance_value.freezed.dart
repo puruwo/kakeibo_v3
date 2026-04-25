@@ -12,7 +12,8 @@ part of 'yearly_balance_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$YearlyBalanceValue {
@@ -21,7 +22,9 @@ mixin _$YearlyBalanceValue {
   int get savings => throw _privateConstructorUsedError;
   YearlyBalanceType get yearlyBalanceType => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of YearlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $YearlyBalanceValueCopyWith<YearlyBalanceValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -29,14 +32,16 @@ mixin _$YearlyBalanceValue {
 /// @nodoc
 abstract class $YearlyBalanceValueCopyWith<$Res> {
   factory $YearlyBalanceValueCopyWith(
-          YearlyBalanceValue value, $Res Function(YearlyBalanceValue) then) =
-      _$YearlyBalanceValueCopyWithImpl<$Res, YearlyBalanceValue>;
+    YearlyBalanceValue value,
+    $Res Function(YearlyBalanceValue) then,
+  ) = _$YearlyBalanceValueCopyWithImpl<$Res, YearlyBalanceValue>;
   @useResult
-  $Res call(
-      {int yearlyIncome,
-      int yearlyExpense,
-      int savings,
-      YearlyBalanceType yearlyBalanceType});
+  $Res call({
+    int yearlyIncome,
+    int yearlyExpense,
+    int savings,
+    YearlyBalanceType yearlyBalanceType,
+  });
 }
 
 /// @nodoc
@@ -49,6 +54,8 @@ class _$YearlyBalanceValueCopyWithImpl<$Res, $Val extends YearlyBalanceValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of YearlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -57,50 +64,58 @@ class _$YearlyBalanceValueCopyWithImpl<$Res, $Val extends YearlyBalanceValue>
     Object? savings = null,
     Object? yearlyBalanceType = null,
   }) {
-    return _then(_value.copyWith(
-      yearlyIncome: null == yearlyIncome
-          ? _value.yearlyIncome
-          : yearlyIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      yearlyExpense: null == yearlyExpense
-          ? _value.yearlyExpense
-          : yearlyExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      savings: null == savings
-          ? _value.savings
-          : savings // ignore: cast_nullable_to_non_nullable
-              as int,
-      yearlyBalanceType: null == yearlyBalanceType
-          ? _value.yearlyBalanceType
-          : yearlyBalanceType // ignore: cast_nullable_to_non_nullable
-              as YearlyBalanceType,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            yearlyIncome: null == yearlyIncome
+                ? _value.yearlyIncome
+                : yearlyIncome // ignore: cast_nullable_to_non_nullable
+                      as int,
+            yearlyExpense: null == yearlyExpense
+                ? _value.yearlyExpense
+                : yearlyExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            savings: null == savings
+                ? _value.savings
+                : savings // ignore: cast_nullable_to_non_nullable
+                      as int,
+            yearlyBalanceType: null == yearlyBalanceType
+                ? _value.yearlyBalanceType
+                : yearlyBalanceType // ignore: cast_nullable_to_non_nullable
+                      as YearlyBalanceType,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$YearlyBalanceValueImplCopyWith<$Res>
     implements $YearlyBalanceValueCopyWith<$Res> {
-  factory _$$YearlyBalanceValueImplCopyWith(_$YearlyBalanceValueImpl value,
-          $Res Function(_$YearlyBalanceValueImpl) then) =
-      __$$YearlyBalanceValueImplCopyWithImpl<$Res>;
+  factory _$$YearlyBalanceValueImplCopyWith(
+    _$YearlyBalanceValueImpl value,
+    $Res Function(_$YearlyBalanceValueImpl) then,
+  ) = __$$YearlyBalanceValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int yearlyIncome,
-      int yearlyExpense,
-      int savings,
-      YearlyBalanceType yearlyBalanceType});
+  $Res call({
+    int yearlyIncome,
+    int yearlyExpense,
+    int savings,
+    YearlyBalanceType yearlyBalanceType,
+  });
 }
 
 /// @nodoc
 class __$$YearlyBalanceValueImplCopyWithImpl<$Res>
     extends _$YearlyBalanceValueCopyWithImpl<$Res, _$YearlyBalanceValueImpl>
     implements _$$YearlyBalanceValueImplCopyWith<$Res> {
-  __$$YearlyBalanceValueImplCopyWithImpl(_$YearlyBalanceValueImpl _value,
-      $Res Function(_$YearlyBalanceValueImpl) _then)
-      : super(_value, _then);
+  __$$YearlyBalanceValueImplCopyWithImpl(
+    _$YearlyBalanceValueImpl _value,
+    $Res Function(_$YearlyBalanceValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of YearlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -109,35 +124,38 @@ class __$$YearlyBalanceValueImplCopyWithImpl<$Res>
     Object? savings = null,
     Object? yearlyBalanceType = null,
   }) {
-    return _then(_$YearlyBalanceValueImpl(
-      yearlyIncome: null == yearlyIncome
-          ? _value.yearlyIncome
-          : yearlyIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      yearlyExpense: null == yearlyExpense
-          ? _value.yearlyExpense
-          : yearlyExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      savings: null == savings
-          ? _value.savings
-          : savings // ignore: cast_nullable_to_non_nullable
-              as int,
-      yearlyBalanceType: null == yearlyBalanceType
-          ? _value.yearlyBalanceType
-          : yearlyBalanceType // ignore: cast_nullable_to_non_nullable
-              as YearlyBalanceType,
-    ));
+    return _then(
+      _$YearlyBalanceValueImpl(
+        yearlyIncome: null == yearlyIncome
+            ? _value.yearlyIncome
+            : yearlyIncome // ignore: cast_nullable_to_non_nullable
+                  as int,
+        yearlyExpense: null == yearlyExpense
+            ? _value.yearlyExpense
+            : yearlyExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        savings: null == savings
+            ? _value.savings
+            : savings // ignore: cast_nullable_to_non_nullable
+                  as int,
+        yearlyBalanceType: null == yearlyBalanceType
+            ? _value.yearlyBalanceType
+            : yearlyBalanceType // ignore: cast_nullable_to_non_nullable
+                  as YearlyBalanceType,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$YearlyBalanceValueImpl implements _YearlyBalanceValue {
-  const _$YearlyBalanceValueImpl(
-      {required this.yearlyIncome,
-      required this.yearlyExpense,
-      required this.savings,
-      required this.yearlyBalanceType});
+  const _$YearlyBalanceValueImpl({
+    required this.yearlyIncome,
+    required this.yearlyExpense,
+    required this.savings,
+    required this.yearlyBalanceType,
+  });
 
   @override
   final int yearlyIncome;
@@ -169,23 +187,32 @@ class _$YearlyBalanceValueImpl implements _YearlyBalanceValue {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, yearlyIncome, yearlyExpense, savings, yearlyBalanceType);
+    runtimeType,
+    yearlyIncome,
+    yearlyExpense,
+    savings,
+    yearlyBalanceType,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of YearlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$YearlyBalanceValueImplCopyWith<_$YearlyBalanceValueImpl> get copyWith =>
       __$$YearlyBalanceValueImplCopyWithImpl<_$YearlyBalanceValueImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _YearlyBalanceValue implements YearlyBalanceValue {
-  const factory _YearlyBalanceValue(
-          {required final int yearlyIncome,
-          required final int yearlyExpense,
-          required final int savings,
-          required final YearlyBalanceType yearlyBalanceType}) =
-      _$YearlyBalanceValueImpl;
+  const factory _YearlyBalanceValue({
+    required final int yearlyIncome,
+    required final int yearlyExpense,
+    required final int savings,
+    required final YearlyBalanceType yearlyBalanceType,
+  }) = _$YearlyBalanceValueImpl;
 
   @override
   int get yearlyIncome;
@@ -195,8 +222,11 @@ abstract class _YearlyBalanceValue implements YearlyBalanceValue {
   int get savings;
   @override
   YearlyBalanceType get yearlyBalanceType;
+
+  /// Create a copy of YearlyBalanceValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$YearlyBalanceValueImplCopyWith<_$YearlyBalanceValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

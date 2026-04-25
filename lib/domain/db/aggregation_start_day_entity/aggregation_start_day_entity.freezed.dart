@@ -12,29 +12,35 @@ part of 'aggregation_start_day_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$AggregationStartDayEntity {
   int get day => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AggregationStartDayEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AggregationStartDayEntityCopyWith<AggregationStartDayEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AggregationStartDayEntityCopyWith<$Res> {
-  factory $AggregationStartDayEntityCopyWith(AggregationStartDayEntity value,
-          $Res Function(AggregationStartDayEntity) then) =
-      _$AggregationStartDayEntityCopyWithImpl<$Res, AggregationStartDayEntity>;
+  factory $AggregationStartDayEntityCopyWith(
+    AggregationStartDayEntity value,
+    $Res Function(AggregationStartDayEntity) then,
+  ) = _$AggregationStartDayEntityCopyWithImpl<$Res, AggregationStartDayEntity>;
   @useResult
   $Res call({int day});
 }
 
 /// @nodoc
-class _$AggregationStartDayEntityCopyWithImpl<$Res,
-        $Val extends AggregationStartDayEntity>
+class _$AggregationStartDayEntityCopyWithImpl<
+  $Res,
+  $Val extends AggregationStartDayEntity
+>
     implements $AggregationStartDayEntityCopyWith<$Res> {
   _$AggregationStartDayEntityCopyWithImpl(this._value, this._then);
 
@@ -43,17 +49,20 @@ class _$AggregationStartDayEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AggregationStartDayEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? day = null,
-  }) {
-    return _then(_value.copyWith(
-      day: null == day
-          ? _value.day
-          : day // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? day = null}) {
+    return _then(
+      _value.copyWith(
+            day: null == day
+                ? _value.day
+                : day // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -61,9 +70,9 @@ class _$AggregationStartDayEntityCopyWithImpl<$Res,
 abstract class _$$AggregationStartDayEntityImplCopyWith<$Res>
     implements $AggregationStartDayEntityCopyWith<$Res> {
   factory _$$AggregationStartDayEntityImplCopyWith(
-          _$AggregationStartDayEntityImpl value,
-          $Res Function(_$AggregationStartDayEntityImpl) then) =
-      __$$AggregationStartDayEntityImplCopyWithImpl<$Res>;
+    _$AggregationStartDayEntityImpl value,
+    $Res Function(_$AggregationStartDayEntityImpl) then,
+  ) = __$$AggregationStartDayEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int day});
@@ -71,25 +80,30 @@ abstract class _$$AggregationStartDayEntityImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AggregationStartDayEntityImplCopyWithImpl<$Res>
-    extends _$AggregationStartDayEntityCopyWithImpl<$Res,
-        _$AggregationStartDayEntityImpl>
+    extends
+        _$AggregationStartDayEntityCopyWithImpl<
+          $Res,
+          _$AggregationStartDayEntityImpl
+        >
     implements _$$AggregationStartDayEntityImplCopyWith<$Res> {
   __$$AggregationStartDayEntityImplCopyWithImpl(
-      _$AggregationStartDayEntityImpl _value,
-      $Res Function(_$AggregationStartDayEntityImpl) _then)
-      : super(_value, _then);
+    _$AggregationStartDayEntityImpl _value,
+    $Res Function(_$AggregationStartDayEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AggregationStartDayEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? day = null,
-  }) {
-    return _then(_$AggregationStartDayEntityImpl(
-      day: null == day
-          ? _value.day
-          : day // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? day = null}) {
+    return _then(
+      _$AggregationStartDayEntityImpl(
+        day: null == day
+            ? _value.day
+            : day // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -117,12 +131,16 @@ class _$AggregationStartDayEntityImpl implements _AggregationStartDayEntity {
   @override
   int get hashCode => Object.hash(runtimeType, day);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AggregationStartDayEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AggregationStartDayEntityImplCopyWith<_$AggregationStartDayEntityImpl>
-      get copyWith => __$$AggregationStartDayEntityImplCopyWithImpl<
-          _$AggregationStartDayEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$AggregationStartDayEntityImplCopyWithImpl<
+        _$AggregationStartDayEntityImpl
+      >(this, _$identity);
 }
 
 abstract class _AggregationStartDayEntity implements AggregationStartDayEntity {
@@ -131,8 +149,11 @@ abstract class _AggregationStartDayEntity implements AggregationStartDayEntity {
 
   @override
   int get day;
+
+  /// Create a copy of AggregationStartDayEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AggregationStartDayEntityImplCopyWith<_$AggregationStartDayEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

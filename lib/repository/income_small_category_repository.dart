@@ -14,7 +14,7 @@ class ImplementsIncomeSmallCategoryRepository
   Future<IncomeSmallCategoryEntity> fetchBySmallCategory(
       {required int smallCategoryId}) async {
     final sql = '''
-      SELECT 
+      SELECT
         a.${SqfIncomeSmallCategory.id} AS id,
         a.${SqfIncomeSmallCategory.smallCategoryOrderKey} AS smallCategoryOrderKey,
         a.${SqfIncomeSmallCategory.bigCategoryKey} AS bigCategoryKey,
@@ -27,8 +27,6 @@ class ImplementsIncomeSmallCategoryRepository
 
     try {
       final jsonList = await db.query(sql);
-
-      // logger.i('====SQLが実行されました====\n ImplementsIncomeSmallCategoryRepository fetchBySmallCategory(int smallCategoryId)\n$sql');
 
       final results = IncomeSmallCategoryEntity.fromJson(jsonList[0]);
 
@@ -49,7 +47,7 @@ class ImplementsIncomeSmallCategoryRepository
   @override
   Future<List<IncomeSmallCategoryEntity>> fetchAll() async {
     const sql = '''
-      SELECT 
+      SELECT
         a.${SqfIncomeSmallCategory.id} AS id,
         a.${SqfIncomeSmallCategory.smallCategoryOrderKey} AS smallCategoryOrderKey,
         a.${SqfIncomeSmallCategory.bigCategoryKey} AS bigCategoryKey,
@@ -60,11 +58,8 @@ class ImplementsIncomeSmallCategoryRepository
       ORDER BY a.${SqfIncomeSmallCategory.id} ASC;
     ''';
 
-    // SQLを実行して結果を取得
     final jsonList = await db.query(sql);
-    // logger.i('====SQLが実行されました====\n ImplementsSmallCategoryRepository fetchAll()\n$sql');
 
-    // 取得したjsonListをSmallCategoryEntityのリストに変換
     final result = jsonList.map((e) {
       return IncomeSmallCategoryEntity.fromJson(e);
     }).toList();
@@ -74,8 +69,104 @@ class ImplementsIncomeSmallCategoryRepository
 
   @override
   Future<List<IncomeSmallCategoryEntity>> fetchByBigCategory(
-      {required int bigCategoryId}) {
-    // TODO: implement fetchByBigCategory
-    throw UnimplementedError();
+      {required int bigCategoryId}) async {
+    final sql = '''
+      SELECT
+        a.${SqfIncomeSmallCategory.id} AS id,
+        a.${SqfIncomeSmallCategory.smallCategoryOrderKey} AS smallCategoryOrderKey,
+        a.${SqfIncomeSmallCategory.bigCategoryKey} AS bigCategoryKey,
+        a.${SqfIncomeSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
+        a.${SqfIncomeSmallCategory.name} AS smallCategoryName,
+        a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed
+      FROM ${SqfIncomeSmallCategory.tableName} a
+      WHERE a.${SqfIncomeSmallCategory.bigCategoryKey} = $bigCategoryId
+      ORDER BY a.${SqfIncomeSmallCategory.displayedOrderInBig} ASC;
+    ''';
+
+    final jsonList = await db.query(sql);
+
+    final result = jsonList.map((e) {
+      return IncomeSmallCategoryEntity.fromJson(e);
+    }).toList();
+
+    return result;
+  }
+
+  @override
+  Future<int> add({required IncomeSmallCategoryEntity entity}) async {
+    final id = await db.insert(
+      SqfIncomeSmallCategory.tableName,
+      {
+        SqfIncomeSmallCategory.bigCategoryKey: entity.bigCategoryKey,
+        SqfIncomeSmallCategory.name: entity.smallCategoryName,
+        SqfIncomeSmallCategory.smallCategoryOrderKey:
+            entity.smallCategoryOrderKey,
+        SqfIncomeSmallCategory.displayedOrderInBig: entity.displayedOrderInBig,
+        SqfIncomeSmallCategory.defaultDisplayed: entity.defaultDisplayed,
+      },
+    );
+    return id;
+  }
+
+  @override
+  Future<void> update({required IncomeSmallCategoryEntity entity}) async {
+    await db.update(
+      SqfIncomeSmallCategory.tableName,
+      {
+        SqfIncomeSmallCategory.bigCategoryKey: entity.bigCategoryKey,
+        SqfIncomeSmallCategory.name: entity.smallCategoryName,
+        SqfIncomeSmallCategory.smallCategoryOrderKey:
+            entity.smallCategoryOrderKey,
+        SqfIncomeSmallCategory.displayedOrderInBig: entity.displayedOrderInBig,
+        SqfIncomeSmallCategory.defaultDisplayed: entity.defaultDisplayed,
+      },
+      entity.id,
+    );
+  }
+
+  @override
+  Future<void> delete({required int id}) async {
+    await db.delete(SqfIncomeSmallCategory.tableName, id);
+  }
+
+  @override
+  Future<List<int>> deleteByBigCategory({required int bigCategoryId}) async {
+    // 削除対象の小カテゴリーIDを取得
+    final ids =
+        await fetchSmallCategoryIdListByBigCategoryId(bigCategoryId: bigCategoryId);
+
+    for (final id in ids) {
+      await db.delete(SqfIncomeSmallCategory.tableName, id);
+    }
+    return ids;
+  }
+
+  /// 小カテゴリーの最大の表示順序を取得する（全カテゴリー対象）
+  @override
+  Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId}) async {
+    const sql = '''
+      SELECT MAX(${SqfIncomeSmallCategory.smallCategoryOrderKey}) AS maxOrderKey
+      FROM ${SqfIncomeSmallCategory.tableName};
+    ''';
+
+    final jsonList = await db.query(sql);
+
+    if (jsonList.isNotEmpty && jsonList[0]['maxOrderKey'] != null) {
+      return jsonList[0]['maxOrderKey'] as int;
+    } else {
+      return 0;
+    }
+  }
+
+  @override
+  Future<List<int>> fetchSmallCategoryIdListByBigCategoryId(
+      {required int bigCategoryId}) async {
+    final sql = '''
+      SELECT ${SqfIncomeSmallCategory.id} as smallCategoryId
+      FROM ${SqfIncomeSmallCategory.tableName}
+      WHERE ${SqfIncomeSmallCategory.bigCategoryKey} = $bigCategoryId;
+    ''';
+    final jsonList = await db.query(sql);
+    return jsonList.map((e) => e['smallCategoryId'] as int).toList();
   }
 }

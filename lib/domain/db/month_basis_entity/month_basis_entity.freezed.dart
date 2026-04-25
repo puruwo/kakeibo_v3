@@ -12,13 +12,16 @@ part of 'month_basis_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MonthBasisEntity {
   MonthBasis get monthBasis => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MonthBasisEntityCopyWith<MonthBasisEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -26,8 +29,9 @@ mixin _$MonthBasisEntity {
 /// @nodoc
 abstract class $MonthBasisEntityCopyWith<$Res> {
   factory $MonthBasisEntityCopyWith(
-          MonthBasisEntity value, $Res Function(MonthBasisEntity) then) =
-      _$MonthBasisEntityCopyWithImpl<$Res, MonthBasisEntity>;
+    MonthBasisEntity value,
+    $Res Function(MonthBasisEntity) then,
+  ) = _$MonthBasisEntityCopyWithImpl<$Res, MonthBasisEntity>;
   @useResult
   $Res call({MonthBasis monthBasis});
 }
@@ -42,26 +46,30 @@ class _$MonthBasisEntityCopyWithImpl<$Res, $Val extends MonthBasisEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MonthBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? monthBasis = null,
-  }) {
-    return _then(_value.copyWith(
-      monthBasis: null == monthBasis
-          ? _value.monthBasis
-          : monthBasis // ignore: cast_nullable_to_non_nullable
-              as MonthBasis,
-    ) as $Val);
+  $Res call({Object? monthBasis = null}) {
+    return _then(
+      _value.copyWith(
+            monthBasis: null == monthBasis
+                ? _value.monthBasis
+                : monthBasis // ignore: cast_nullable_to_non_nullable
+                      as MonthBasis,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MonthBasisEntityImplCopyWith<$Res>
     implements $MonthBasisEntityCopyWith<$Res> {
-  factory _$$MonthBasisEntityImplCopyWith(_$MonthBasisEntityImpl value,
-          $Res Function(_$MonthBasisEntityImpl) then) =
-      __$$MonthBasisEntityImplCopyWithImpl<$Res>;
+  factory _$$MonthBasisEntityImplCopyWith(
+    _$MonthBasisEntityImpl value,
+    $Res Function(_$MonthBasisEntityImpl) then,
+  ) = __$$MonthBasisEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({MonthBasis monthBasis});
@@ -71,21 +79,24 @@ abstract class _$$MonthBasisEntityImplCopyWith<$Res>
 class __$$MonthBasisEntityImplCopyWithImpl<$Res>
     extends _$MonthBasisEntityCopyWithImpl<$Res, _$MonthBasisEntityImpl>
     implements _$$MonthBasisEntityImplCopyWith<$Res> {
-  __$$MonthBasisEntityImplCopyWithImpl(_$MonthBasisEntityImpl _value,
-      $Res Function(_$MonthBasisEntityImpl) _then)
-      : super(_value, _then);
+  __$$MonthBasisEntityImplCopyWithImpl(
+    _$MonthBasisEntityImpl _value,
+    $Res Function(_$MonthBasisEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MonthBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? monthBasis = null,
-  }) {
-    return _then(_$MonthBasisEntityImpl(
-      monthBasis: null == monthBasis
-          ? _value.monthBasis
-          : monthBasis // ignore: cast_nullable_to_non_nullable
-              as MonthBasis,
-    ));
+  $Res call({Object? monthBasis = null}) {
+    return _then(
+      _$MonthBasisEntityImpl(
+        monthBasis: null == monthBasis
+            ? _value.monthBasis
+            : monthBasis // ignore: cast_nullable_to_non_nullable
+                  as MonthBasis,
+      ),
+    );
   }
 }
 
@@ -114,12 +125,16 @@ class _$MonthBasisEntityImpl implements _MonthBasisEntity {
   @override
   int get hashCode => Object.hash(runtimeType, monthBasis);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonthBasisEntityImplCopyWith<_$MonthBasisEntityImpl> get copyWith =>
       __$$MonthBasisEntityImplCopyWithImpl<_$MonthBasisEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _MonthBasisEntity implements MonthBasisEntity {
@@ -128,8 +143,11 @@ abstract class _MonthBasisEntity implements MonthBasisEntity {
 
   @override
   MonthBasis get monthBasis;
+
+  /// Create a copy of MonthBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonthBasisEntityImplCopyWith<_$MonthBasisEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

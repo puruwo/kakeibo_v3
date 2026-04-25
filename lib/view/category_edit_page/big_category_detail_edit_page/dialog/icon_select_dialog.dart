@@ -6,12 +6,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_icon_contoroller/big_category_icon_contoroller.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
 
 class IconSelectDialog extends ConsumerStatefulWidget {
   const IconSelectDialog({
     super.key,
+    this.categoryType = CategoryType.expense,
   });
+
+  final CategoryType categoryType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _IconSelectDialog();
@@ -38,8 +43,10 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
   Widget build(BuildContext context) {
     // ====状態管理====
 
-    // アイコンのパスを取得
-    iconPath = ref.watch(bigCategroyIconControllerNotifierProvider);
+    // アイコンのパスを取得（カテゴリータイプに応じて切り替え）
+    iconPath = widget.categoryType == CategoryType.income
+        ? ref.watch(incomeBigCategoryIconControllerNotifierProvider)
+        : ref.watch(bigCategroyIconControllerNotifierProvider);
 
     // ==============
 
@@ -95,9 +102,15 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
       iconPath = url;
     });
     Navigator.of(context).pop();
-    final notifier =
-        ref.read(bigCategroyIconControllerNotifierProvider.notifier);
-    notifier.updateState(url);
+    if (widget.categoryType == CategoryType.income) {
+      ref
+          .read(incomeBigCategoryIconControllerNotifierProvider.notifier)
+          .updateState(url);
+    } else {
+      ref
+          .read(bigCategroyIconControllerNotifierProvider.notifier)
+          .updateState(url);
+    }
   }
 }
 

@@ -12,18 +12,20 @@ String _$edittingFixedCostCategoryListNotifierHash() =>
 /// See also [EdittingFixedCostCategoryListNotifier].
 @ProviderFor(EdittingFixedCostCategoryListNotifier)
 final edittingFixedCostCategoryListNotifierProvider =
-    AutoDisposeNotifierProvider<EdittingFixedCostCategoryListNotifier,
-        List<EditFixedCostCategoryValue>>.internal(
-  EdittingFixedCostCategoryListNotifier.new,
-  name: r'edittingFixedCostCategoryListNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$edittingFixedCostCategoryListNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+    AutoDisposeNotifierProvider<
+      EdittingFixedCostCategoryListNotifier,
+      List<EditFixedCostCategoryValue>
+    >.internal(
+      EdittingFixedCostCategoryListNotifier.new,
+      name: r'edittingFixedCostCategoryListNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$edittingFixedCostCategoryListNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$EdittingFixedCostCategoryListNotifier
-    = AutoDisposeNotifier<List<EditFixedCostCategoryValue>>;
+typedef _$EdittingFixedCostCategoryListNotifier =
+    AutoDisposeNotifier<List<EditFixedCostCategoryValue>>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

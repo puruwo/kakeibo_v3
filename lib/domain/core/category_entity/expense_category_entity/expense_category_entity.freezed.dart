@@ -12,10 +12,12 @@ part of 'expense_category_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExpenseCategoryEntity _$ExpenseCategoryEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _ExpenseCategoryEntity.fromJson(json);
 }
 
@@ -34,36 +36,44 @@ mixin _$ExpenseCategoryEntity {
   int get isDisplayed => throw _privateConstructorUsedError; // 表示用のソートキー
   int get sortKey => throw _privateConstructorUsedError;
 
+  /// Serializes this ExpenseCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExpenseCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseCategoryEntityCopyWith<ExpenseCategoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExpenseCategoryEntityCopyWith<$Res> {
-  factory $ExpenseCategoryEntityCopyWith(ExpenseCategoryEntity value,
-          $Res Function(ExpenseCategoryEntity) then) =
-      _$ExpenseCategoryEntityCopyWithImpl<$Res, ExpenseCategoryEntity>;
+  factory $ExpenseCategoryEntityCopyWith(
+    ExpenseCategoryEntity value,
+    $Res Function(ExpenseCategoryEntity) then,
+  ) = _$ExpenseCategoryEntityCopyWithImpl<$Res, ExpenseCategoryEntity>;
   @useResult
-  $Res call(
-      {int id,
-      int smallCategoryOrderKey,
-      int bigCategoryKey,
-      int displaydOrderInBig,
-      String categoryName,
-      int defaultDisplayed,
-      String bigCategoryName,
-      String colorCode,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      int sortKey});
+  $Res call({
+    int id,
+    int smallCategoryOrderKey,
+    int bigCategoryKey,
+    int displaydOrderInBig,
+    String categoryName,
+    int defaultDisplayed,
+    String bigCategoryName,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    int sortKey,
+  });
 }
 
 /// @nodoc
-class _$ExpenseCategoryEntityCopyWithImpl<$Res,
-        $Val extends ExpenseCategoryEntity>
+class _$ExpenseCategoryEntityCopyWithImpl<
+  $Res,
+  $Val extends ExpenseCategoryEntity
+>
     implements $ExpenseCategoryEntityCopyWith<$Res> {
   _$ExpenseCategoryEntityCopyWithImpl(this._value, this._then);
 
@@ -72,6 +82,8 @@ class _$ExpenseCategoryEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -88,56 +100,59 @@ class _$ExpenseCategoryEntityCopyWithImpl<$Res,
     Object? isDisplayed = null,
     Object? sortKey = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryOrderKey: null == smallCategoryOrderKey
-          ? _value.smallCategoryOrderKey
-          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryKey: null == bigCategoryKey
-          ? _value.bigCategoryKey
-          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      displaydOrderInBig: null == displaydOrderInBig
-          ? _value.displaydOrderInBig
-          : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      defaultDisplayed: null == defaultDisplayed
-          ? _value.defaultDisplayed
-          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      sortKey: null == sortKey
-          ? _value.sortKey
-          : sortKey // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            smallCategoryOrderKey: null == smallCategoryOrderKey
+                ? _value.smallCategoryOrderKey
+                : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+            bigCategoryKey: null == bigCategoryKey
+                ? _value.bigCategoryKey
+                : bigCategoryKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+            displaydOrderInBig: null == displaydOrderInBig
+                ? _value.displaydOrderInBig
+                : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            defaultDisplayed: null == defaultDisplayed
+                ? _value.defaultDisplayed
+                : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            bigCategoryName: null == bigCategoryName
+                ? _value.bigCategoryName
+                : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            displayOrder: null == displayOrder
+                ? _value.displayOrder
+                : displayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isDisplayed: null == isDisplayed
+                ? _value.isDisplayed
+                : isDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            sortKey: null == sortKey
+                ? _value.sortKey
+                : sortKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -145,35 +160,39 @@ class _$ExpenseCategoryEntityCopyWithImpl<$Res,
 abstract class _$$ExpenseCategoryEntityImplCopyWith<$Res>
     implements $ExpenseCategoryEntityCopyWith<$Res> {
   factory _$$ExpenseCategoryEntityImplCopyWith(
-          _$ExpenseCategoryEntityImpl value,
-          $Res Function(_$ExpenseCategoryEntityImpl) then) =
-      __$$ExpenseCategoryEntityImplCopyWithImpl<$Res>;
+    _$ExpenseCategoryEntityImpl value,
+    $Res Function(_$ExpenseCategoryEntityImpl) then,
+  ) = __$$ExpenseCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int smallCategoryOrderKey,
-      int bigCategoryKey,
-      int displaydOrderInBig,
-      String categoryName,
-      int defaultDisplayed,
-      String bigCategoryName,
-      String colorCode,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      int sortKey});
+  $Res call({
+    int id,
+    int smallCategoryOrderKey,
+    int bigCategoryKey,
+    int displaydOrderInBig,
+    String categoryName,
+    int defaultDisplayed,
+    String bigCategoryName,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    int sortKey,
+  });
 }
 
 /// @nodoc
 class __$$ExpenseCategoryEntityImplCopyWithImpl<$Res>
-    extends _$ExpenseCategoryEntityCopyWithImpl<$Res,
-        _$ExpenseCategoryEntityImpl>
+    extends
+        _$ExpenseCategoryEntityCopyWithImpl<$Res, _$ExpenseCategoryEntityImpl>
     implements _$$ExpenseCategoryEntityImplCopyWith<$Res> {
-  __$$ExpenseCategoryEntityImplCopyWithImpl(_$ExpenseCategoryEntityImpl _value,
-      $Res Function(_$ExpenseCategoryEntityImpl) _then)
-      : super(_value, _then);
+  __$$ExpenseCategoryEntityImplCopyWithImpl(
+    _$ExpenseCategoryEntityImpl _value,
+    $Res Function(_$ExpenseCategoryEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExpenseCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -190,75 +209,78 @@ class __$$ExpenseCategoryEntityImplCopyWithImpl<$Res>
     Object? isDisplayed = null,
     Object? sortKey = null,
   }) {
-    return _then(_$ExpenseCategoryEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryOrderKey: null == smallCategoryOrderKey
-          ? _value.smallCategoryOrderKey
-          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryKey: null == bigCategoryKey
-          ? _value.bigCategoryKey
-          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      displaydOrderInBig: null == displaydOrderInBig
-          ? _value.displaydOrderInBig
-          : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      defaultDisplayed: null == defaultDisplayed
-          ? _value.defaultDisplayed
-          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      sortKey: null == sortKey
-          ? _value.sortKey
-          : sortKey // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ExpenseCategoryEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        smallCategoryOrderKey: null == smallCategoryOrderKey
+            ? _value.smallCategoryOrderKey
+            : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+        bigCategoryKey: null == bigCategoryKey
+            ? _value.bigCategoryKey
+            : bigCategoryKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+        displaydOrderInBig: null == displaydOrderInBig
+            ? _value.displaydOrderInBig
+            : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        defaultDisplayed: null == defaultDisplayed
+            ? _value.defaultDisplayed
+            : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        bigCategoryName: null == bigCategoryName
+            ? _value.bigCategoryName
+            : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        displayOrder: null == displayOrder
+            ? _value.displayOrder
+            : displayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isDisplayed: null == isDisplayed
+            ? _value.isDisplayed
+            : isDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        sortKey: null == sortKey
+            ? _value.sortKey
+            : sortKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$ExpenseCategoryEntityImpl implements _ExpenseCategoryEntity {
-  const _$ExpenseCategoryEntityImpl(
-      {this.id = 0,
-      required this.smallCategoryOrderKey,
-      required this.bigCategoryKey,
-      required this.displaydOrderInBig,
-      required this.categoryName,
-      required this.defaultDisplayed,
-      required this.bigCategoryName,
-      required this.colorCode,
-      required this.resourcePath,
-      required this.displayOrder,
-      required this.isDisplayed,
-      this.sortKey = 0});
+  const _$ExpenseCategoryEntityImpl({
+    this.id = 0,
+    required this.smallCategoryOrderKey,
+    required this.bigCategoryKey,
+    required this.displaydOrderInBig,
+    required this.categoryName,
+    required this.defaultDisplayed,
+    required this.bigCategoryName,
+    required this.colorCode,
+    required this.resourcePath,
+    required this.displayOrder,
+    required this.isDisplayed,
+    this.sortKey = 0,
+  });
 
   factory _$ExpenseCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExpenseCategoryEntityImplFromJson(json);
@@ -286,7 +308,7 @@ class _$ExpenseCategoryEntityImpl implements _ExpenseCategoryEntity {
   final int displayOrder;
   @override
   final int isDisplayed;
-// 表示用のソートキー
+  // 表示用のソートキー
   @override
   @JsonKey()
   final int sortKey;
@@ -325,52 +347,57 @@ class _$ExpenseCategoryEntityImpl implements _ExpenseCategoryEntity {
             (identical(other.sortKey, sortKey) || other.sortKey == sortKey));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      smallCategoryOrderKey,
-      bigCategoryKey,
-      displaydOrderInBig,
-      categoryName,
-      defaultDisplayed,
-      bigCategoryName,
-      colorCode,
-      resourcePath,
-      displayOrder,
-      isDisplayed,
-      sortKey);
+    runtimeType,
+    id,
+    smallCategoryOrderKey,
+    bigCategoryKey,
+    displaydOrderInBig,
+    categoryName,
+    defaultDisplayed,
+    bigCategoryName,
+    colorCode,
+    resourcePath,
+    displayOrder,
+    isDisplayed,
+    sortKey,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExpenseCategoryEntityImplCopyWith<_$ExpenseCategoryEntityImpl>
-      get copyWith => __$$ExpenseCategoryEntityImplCopyWithImpl<
-          _$ExpenseCategoryEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$ExpenseCategoryEntityImplCopyWithImpl<_$ExpenseCategoryEntityImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$ExpenseCategoryEntityImplToJson(
-      this,
-    );
+    return _$$ExpenseCategoryEntityImplToJson(this);
   }
 }
 
 abstract class _ExpenseCategoryEntity implements ExpenseCategoryEntity {
-  const factory _ExpenseCategoryEntity(
-      {final int id,
-      required final int smallCategoryOrderKey,
-      required final int bigCategoryKey,
-      required final int displaydOrderInBig,
-      required final String categoryName,
-      required final int defaultDisplayed,
-      required final String bigCategoryName,
-      required final String colorCode,
-      required final String resourcePath,
-      required final int displayOrder,
-      required final int isDisplayed,
-      final int sortKey}) = _$ExpenseCategoryEntityImpl;
+  const factory _ExpenseCategoryEntity({
+    final int id,
+    required final int smallCategoryOrderKey,
+    required final int bigCategoryKey,
+    required final int displaydOrderInBig,
+    required final String categoryName,
+    required final int defaultDisplayed,
+    required final String bigCategoryName,
+    required final String colorCode,
+    required final String resourcePath,
+    required final int displayOrder,
+    required final int isDisplayed,
+    final int sortKey,
+  }) = _$ExpenseCategoryEntityImpl;
 
   factory _ExpenseCategoryEntity.fromJson(Map<String, dynamic> json) =
       _$ExpenseCategoryEntityImpl.fromJson;
@@ -396,11 +423,14 @@ abstract class _ExpenseCategoryEntity implements ExpenseCategoryEntity {
   @override
   int get displayOrder;
   @override
-  int get isDisplayed;
-  @override // 表示用のソートキー
-  int get sortKey;
+  int get isDisplayed; // 表示用のソートキー
   @override
-  @JsonKey(ignore: true)
+  int get sortKey;
+
+  /// Create a copy of ExpenseCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExpenseCategoryEntityImplCopyWith<_$ExpenseCategoryEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

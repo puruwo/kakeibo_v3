@@ -12,7 +12,8 @@ part of 'monthly_fixed_cost_category_summary_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MonthlyFixedCostCategorySummaryValue {
@@ -27,32 +28,41 @@ mixin _$MonthlyFixedCostCategorySummaryValue {
   /// カテゴリー内の確定済み固定費の合計
   int get totalAmount => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MonthlyFixedCostCategorySummaryValueCopyWith<
-          MonthlyFixedCostCategorySummaryValue>
-      get copyWith => throw _privateConstructorUsedError;
+    MonthlyFixedCostCategorySummaryValue
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MonthlyFixedCostCategorySummaryValueCopyWith<$Res> {
   factory $MonthlyFixedCostCategorySummaryValueCopyWith(
-          MonthlyFixedCostCategorySummaryValue value,
-          $Res Function(MonthlyFixedCostCategorySummaryValue) then) =
-      _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<$Res,
-          MonthlyFixedCostCategorySummaryValue>;
+    MonthlyFixedCostCategorySummaryValue value,
+    $Res Function(MonthlyFixedCostCategorySummaryValue) then,
+  ) =
+      _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<
+        $Res,
+        MonthlyFixedCostCategorySummaryValue
+      >;
   @useResult
-  $Res call(
-      {int fixedCostCategoryId,
-      String categoryName,
-      String colorCode,
-      String resourcePath,
-      bool isAllConfirmed,
-      int totalAmount});
+  $Res call({
+    int fixedCostCategoryId,
+    String categoryName,
+    String colorCode,
+    String resourcePath,
+    bool isAllConfirmed,
+    int totalAmount,
+  });
 }
 
 /// @nodoc
-class _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<$Res,
-        $Val extends MonthlyFixedCostCategorySummaryValue>
+class _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<
+  $Res,
+  $Val extends MonthlyFixedCostCategorySummaryValue
+>
     implements $MonthlyFixedCostCategorySummaryValueCopyWith<$Res> {
   _$MonthlyFixedCostCategorySummaryValueCopyWithImpl(this._value, this._then);
 
@@ -61,6 +71,8 @@ class _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -71,32 +83,35 @@ class _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<$Res,
     Object? isAllConfirmed = null,
     Object? totalAmount = null,
   }) {
-    return _then(_value.copyWith(
-      fixedCostCategoryId: null == fixedCostCategoryId
-          ? _value.fixedCostCategoryId
-          : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      isAllConfirmed: null == isAllConfirmed
-          ? _value.isAllConfirmed
-          : isAllConfirmed // ignore: cast_nullable_to_non_nullable
-              as bool,
-      totalAmount: null == totalAmount
-          ? _value.totalAmount
-          : totalAmount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            fixedCostCategoryId: null == fixedCostCategoryId
+                ? _value.fixedCostCategoryId
+                : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            isAllConfirmed: null == isAllConfirmed
+                ? _value.isAllConfirmed
+                : isAllConfirmed // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            totalAmount: null == totalAmount
+                ? _value.totalAmount
+                : totalAmount // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -104,30 +119,36 @@ class _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<$Res,
 abstract class _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<$Res>
     implements $MonthlyFixedCostCategorySummaryValueCopyWith<$Res> {
   factory _$$MonthlyFixedCostCategorySummaryValueImplCopyWith(
-          _$MonthlyFixedCostCategorySummaryValueImpl value,
-          $Res Function(_$MonthlyFixedCostCategorySummaryValueImpl) then) =
-      __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>;
+    _$MonthlyFixedCostCategorySummaryValueImpl value,
+    $Res Function(_$MonthlyFixedCostCategorySummaryValueImpl) then,
+  ) = __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int fixedCostCategoryId,
-      String categoryName,
-      String colorCode,
-      String resourcePath,
-      bool isAllConfirmed,
-      int totalAmount});
+  $Res call({
+    int fixedCostCategoryId,
+    String categoryName,
+    String colorCode,
+    String resourcePath,
+    bool isAllConfirmed,
+    int totalAmount,
+  });
 }
 
 /// @nodoc
 class __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>
-    extends _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<$Res,
-        _$MonthlyFixedCostCategorySummaryValueImpl>
+    extends
+        _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<
+          $Res,
+          _$MonthlyFixedCostCategorySummaryValueImpl
+        >
     implements _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<$Res> {
   __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl(
-      _$MonthlyFixedCostCategorySummaryValueImpl _value,
-      $Res Function(_$MonthlyFixedCostCategorySummaryValueImpl) _then)
-      : super(_value, _then);
+    _$MonthlyFixedCostCategorySummaryValueImpl _value,
+    $Res Function(_$MonthlyFixedCostCategorySummaryValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -138,32 +159,34 @@ class __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>
     Object? isAllConfirmed = null,
     Object? totalAmount = null,
   }) {
-    return _then(_$MonthlyFixedCostCategorySummaryValueImpl(
-      fixedCostCategoryId: null == fixedCostCategoryId
-          ? _value.fixedCostCategoryId
-          : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      isAllConfirmed: null == isAllConfirmed
-          ? _value.isAllConfirmed
-          : isAllConfirmed // ignore: cast_nullable_to_non_nullable
-              as bool,
-      totalAmount: null == totalAmount
-          ? _value.totalAmount
-          : totalAmount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$MonthlyFixedCostCategorySummaryValueImpl(
+        fixedCostCategoryId: null == fixedCostCategoryId
+            ? _value.fixedCostCategoryId
+            : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        isAllConfirmed: null == isAllConfirmed
+            ? _value.isAllConfirmed
+            : isAllConfirmed // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        totalAmount: null == totalAmount
+            ? _value.totalAmount
+            : totalAmount // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -171,13 +194,14 @@ class __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>
 
 class _$MonthlyFixedCostCategorySummaryValueImpl
     implements _MonthlyFixedCostCategorySummaryValue {
-  const _$MonthlyFixedCostCategorySummaryValueImpl(
-      {required this.fixedCostCategoryId,
-      required this.categoryName,
-      required this.colorCode,
-      required this.resourcePath,
-      required this.isAllConfirmed,
-      required this.totalAmount});
+  const _$MonthlyFixedCostCategorySummaryValueImpl({
+    required this.fixedCostCategoryId,
+    required this.categoryName,
+    required this.colorCode,
+    required this.resourcePath,
+    required this.isAllConfirmed,
+    required this.totalAmount,
+  });
 
   @override
   final int fixedCostCategoryId;
@@ -221,28 +245,40 @@ class _$MonthlyFixedCostCategorySummaryValueImpl
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, fixedCostCategoryId,
-      categoryName, colorCode, resourcePath, isAllConfirmed, totalAmount);
+  int get hashCode => Object.hash(
+    runtimeType,
+    fixedCostCategoryId,
+    categoryName,
+    colorCode,
+    resourcePath,
+    isAllConfirmed,
+    totalAmount,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<
-          _$MonthlyFixedCostCategorySummaryValueImpl>
-      get copyWith => __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<
-          _$MonthlyFixedCostCategorySummaryValueImpl>(this, _$identity);
+    _$MonthlyFixedCostCategorySummaryValueImpl
+  >
+  get copyWith =>
+      __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<
+        _$MonthlyFixedCostCategorySummaryValueImpl
+      >(this, _$identity);
 }
 
 abstract class _MonthlyFixedCostCategorySummaryValue
     implements MonthlyFixedCostCategorySummaryValue {
-  const factory _MonthlyFixedCostCategorySummaryValue(
-          {required final int fixedCostCategoryId,
-          required final String categoryName,
-          required final String colorCode,
-          required final String resourcePath,
-          required final bool isAllConfirmed,
-          required final int totalAmount}) =
-      _$MonthlyFixedCostCategorySummaryValueImpl;
+  const factory _MonthlyFixedCostCategorySummaryValue({
+    required final int fixedCostCategoryId,
+    required final String categoryName,
+    required final String colorCode,
+    required final String resourcePath,
+    required final bool isAllConfirmed,
+    required final int totalAmount,
+  }) = _$MonthlyFixedCostCategorySummaryValueImpl;
 
   @override
   int get fixedCostCategoryId;
@@ -252,17 +288,21 @@ abstract class _MonthlyFixedCostCategorySummaryValue
   String get colorCode;
   @override
   String get resourcePath;
-  @override
 
   /// 全て確定している場合はtrue
-  bool get isAllConfirmed;
   @override
+  bool get isAllConfirmed;
 
   /// カテゴリー内の確定済み固定費の合計
-  int get totalAmount;
   @override
-  @JsonKey(ignore: true)
+  int get totalAmount;
+
+  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<
-          _$MonthlyFixedCostCategorySummaryValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$MonthlyFixedCostCategorySummaryValueImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

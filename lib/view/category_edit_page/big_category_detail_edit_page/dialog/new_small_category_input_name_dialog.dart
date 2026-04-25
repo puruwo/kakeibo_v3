@@ -6,19 +6,25 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
+import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 
 class NewSmallCategoryInputNameDialog extends ConsumerStatefulWidget {
   const NewSmallCategoryInputNameDialog({
     required this.bigCategoryId,
     required this.displayedOrderInBig,
+    this.categoryType = CategoryType.expense,
     super.key,
   });
 
   final int bigCategoryId;
   final int displayedOrderInBig;
+  final CategoryType categoryType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -158,31 +164,57 @@ class _NewSmallCategoryInputNameDialog
                       return;
                     }
 
-                    // 入力された名前を使って新しい小カテゴリーのentityを作成
-                    final entity = EditExpenseSmallCategoryValue(
-                      id: -1, // 新規作成なのでIDは-1
-                      bigCategoryKey: widget.bigCategoryId,
-                      name: _textContoroller.text,
-                      smallCategoryOrderKey: 0, // 新規作成なので0
-                      displayOrderInBig: widget.displayedOrderInBig,
-                      defaultDisplayed: 1,
-                      editedStateDisplayOrder: widget.displayedOrderInBig,
-                      etitedStateIsChecked: true,
-                    );
+                    if (widget.categoryType == CategoryType.income) {
+                      // 収入小カテゴリー用entity
+                      final entity = EditIncomeSmallCategoryValue(
+                        id: -1,
+                        bigCategoryKey: widget.bigCategoryId,
+                        name: _textContoroller.text,
+                        smallCategoryOrderKey: 0,
+                        displayOrderInBig: widget.displayedOrderInBig,
+                        defaultDisplayed: 1,
+                        editedStateDisplayOrder: widget.displayedOrderInBig,
+                        etitedStateIsChecked: true,
+                      );
 
-                    // 追加する処理をここに書く
-                    ref
-                        .read(
-                          edittingSmallCategoryListNotifierProvider.notifier,
-                        )
-                        .addSmallCategory(entity);
+                      ref
+                          .read(
+                            edittingIncomeSmallCategoryListNotifierProvider
+                                .notifier,
+                          )
+                          .addSmallCategory(entity);
 
-                    // 変更を加えたことを管理する状態管理する
-                    ref
-                        .read(
-                          isSmallCategoryListEditedNotifierProvider.notifier,
-                        )
-                        .updateState(true);
+                      ref
+                          .read(
+                            isIncomeSmallCategoryListEditedNotifierProvider
+                                .notifier,
+                          )
+                          .updateState(true);
+                    } else {
+                      // 一般（支出）小カテゴリー用entity
+                      final entity = EditExpenseSmallCategoryValue(
+                        id: -1, // 新規作成なのでIDは-1
+                        bigCategoryKey: widget.bigCategoryId,
+                        name: _textContoroller.text,
+                        smallCategoryOrderKey: 0, // 新規作成なので0
+                        displayOrderInBig: widget.displayedOrderInBig,
+                        defaultDisplayed: 1,
+                        editedStateDisplayOrder: widget.displayedOrderInBig,
+                        etitedStateIsChecked: true,
+                      );
+
+                      ref
+                          .read(
+                            edittingSmallCategoryListNotifierProvider.notifier,
+                          )
+                          .addSmallCategory(entity);
+
+                      ref
+                          .read(
+                            isSmallCategoryListEditedNotifierProvider.notifier,
+                          )
+                          .updateState(true);
+                    }
 
                     // OKボタンを押した時の処理
                     Navigator.of(context).pop();

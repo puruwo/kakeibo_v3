@@ -12,14 +12,17 @@ part of 'month_period_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$PeriodValue {
   DateTime get startDatetime => throw _privateConstructorUsedError;
   DateTime get endDatetime => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PeriodValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PeriodValueCopyWith<PeriodValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -27,8 +30,9 @@ mixin _$PeriodValue {
 /// @nodoc
 abstract class $PeriodValueCopyWith<$Res> {
   factory $PeriodValueCopyWith(
-          PeriodValue value, $Res Function(PeriodValue) then) =
-      _$PeriodValueCopyWithImpl<$Res, PeriodValue>;
+    PeriodValue value,
+    $Res Function(PeriodValue) then,
+  ) = _$PeriodValueCopyWithImpl<$Res, PeriodValue>;
   @useResult
   $Res call({DateTime startDatetime, DateTime endDatetime});
 }
@@ -43,31 +47,34 @@ class _$PeriodValueCopyWithImpl<$Res, $Val extends PeriodValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PeriodValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? startDatetime = null,
-    Object? endDatetime = null,
-  }) {
-    return _then(_value.copyWith(
-      startDatetime: null == startDatetime
-          ? _value.startDatetime
-          : startDatetime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDatetime: null == endDatetime
-          ? _value.endDatetime
-          : endDatetime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ) as $Val);
+  $Res call({Object? startDatetime = null, Object? endDatetime = null}) {
+    return _then(
+      _value.copyWith(
+            startDatetime: null == startDatetime
+                ? _value.startDatetime
+                : startDatetime // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            endDatetime: null == endDatetime
+                ? _value.endDatetime
+                : endDatetime // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$MonthPeriodValueImplCopyWith<$Res>
     implements $PeriodValueCopyWith<$Res> {
-  factory _$$MonthPeriodValueImplCopyWith(_$MonthPeriodValueImpl value,
-          $Res Function(_$MonthPeriodValueImpl) then) =
-      __$$MonthPeriodValueImplCopyWithImpl<$Res>;
+  factory _$$MonthPeriodValueImplCopyWith(
+    _$MonthPeriodValueImpl value,
+    $Res Function(_$MonthPeriodValueImpl) then,
+  ) = __$$MonthPeriodValueImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DateTime startDatetime, DateTime endDatetime});
@@ -77,34 +84,38 @@ abstract class _$$MonthPeriodValueImplCopyWith<$Res>
 class __$$MonthPeriodValueImplCopyWithImpl<$Res>
     extends _$PeriodValueCopyWithImpl<$Res, _$MonthPeriodValueImpl>
     implements _$$MonthPeriodValueImplCopyWith<$Res> {
-  __$$MonthPeriodValueImplCopyWithImpl(_$MonthPeriodValueImpl _value,
-      $Res Function(_$MonthPeriodValueImpl) _then)
-      : super(_value, _then);
+  __$$MonthPeriodValueImplCopyWithImpl(
+    _$MonthPeriodValueImpl _value,
+    $Res Function(_$MonthPeriodValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of PeriodValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? startDatetime = null,
-    Object? endDatetime = null,
-  }) {
-    return _then(_$MonthPeriodValueImpl(
-      startDatetime: null == startDatetime
-          ? _value.startDatetime
-          : startDatetime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      endDatetime: null == endDatetime
-          ? _value.endDatetime
-          : endDatetime // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-    ));
+  $Res call({Object? startDatetime = null, Object? endDatetime = null}) {
+    return _then(
+      _$MonthPeriodValueImpl(
+        startDatetime: null == startDatetime
+            ? _value.startDatetime
+            : startDatetime // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        endDatetime: null == endDatetime
+            ? _value.endDatetime
+            : endDatetime // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$MonthPeriodValueImpl implements _MonthPeriodValue {
-  const _$MonthPeriodValueImpl(
-      {required this.startDatetime, required this.endDatetime});
+  const _$MonthPeriodValueImpl({
+    required this.startDatetime,
+    required this.endDatetime,
+  });
 
   @override
   final DateTime startDatetime;
@@ -130,25 +141,33 @@ class _$MonthPeriodValueImpl implements _MonthPeriodValue {
   @override
   int get hashCode => Object.hash(runtimeType, startDatetime, endDatetime);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PeriodValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonthPeriodValueImplCopyWith<_$MonthPeriodValueImpl> get copyWith =>
       __$$MonthPeriodValueImplCopyWithImpl<_$MonthPeriodValueImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _MonthPeriodValue implements PeriodValue {
-  const factory _MonthPeriodValue(
-      {required final DateTime startDatetime,
-      required final DateTime endDatetime}) = _$MonthPeriodValueImpl;
+  const factory _MonthPeriodValue({
+    required final DateTime startDatetime,
+    required final DateTime endDatetime,
+  }) = _$MonthPeriodValueImpl;
 
   @override
   DateTime get startDatetime;
   @override
   DateTime get endDatetime;
+
+  /// Create a copy of PeriodValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonthPeriodValueImplCopyWith<_$MonthPeriodValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

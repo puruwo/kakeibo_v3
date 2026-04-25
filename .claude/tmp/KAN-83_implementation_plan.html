@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>KAN-83 実装計画 / 収入カテゴリーを編集できるようにする（v2）</title>
+<style>
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --border: #30363d;
+    --text: #e6edf3;
+    --muted: #8b949e;
+    --accent: #58a6ff;
+    --green: #3fb950;
+    --yellow: #d29922;
+    --red: #f85149;
+    --code-bg: #1f2937;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 32px 24px;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN",
+                 "Yu Gothic", "Segoe UI", sans-serif;
+    line-height: 1.7;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .container { max-width: 960px; margin: 0 auto; }
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+  }
+  header .ticket-id {
+    color: var(--accent);
+    font-size: 14px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+  header h1 { margin: 4px 0 8px; font-size: 28px; }
+  header .meta { color: var(--muted); font-size: 13px; }
+  header .revision {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 2px 10px;
+    background: rgba(248, 81, 73, 0.15);
+    color: var(--red);
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  h2 {
+    margin-top: 40px;
+    padding: 6px 0 6px 12px;
+    border-left: 4px solid var(--accent);
+    font-size: 20px;
+  }
+  h3 { margin-top: 28px; color: var(--accent); font-size: 16px; }
+  ul, ol { padding-left: 22px; }
+  li { margin: 4px 0; }
+  code {
+    background: var(--code-bg);
+    color: #ffd580;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-family: "JetBrains Mono", "Menlo", monospace;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 12px 0;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  th { background: #1f2937; color: var(--accent); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  .step {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin: 16px 0;
+  }
+  .step .step-title {
+    color: var(--green);
+    font-weight: 700;
+    font-size: 16px;
+    margin-bottom: 6px;
+  }
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 6px;
+  }
+  .badge-new { background: rgba(63, 185, 80, 0.15); color: var(--green); }
+  .badge-edit { background: rgba(210, 153, 34, 0.15); color: var(--yellow); }
+  .badge-skip { background: rgba(248, 81, 73, 0.15); color: var(--red); }
+  .badge-changed {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 10px;
+    background: rgba(248, 81, 73, 0.18);
+    color: var(--red);
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .callout {
+    background: rgba(88, 166, 255, 0.08);
+    border-left: 4px solid var(--accent);
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+  }
+  .callout-warn { background: rgba(210, 153, 34, 0.08); border-left-color: var(--yellow); }
+  .callout-danger { background: rgba(248, 81, 73, 0.08); border-left-color: var(--red); }
+  footer {
+    margin-top: 56px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="ticket-id">KAN-83 / 戦略A（1枚）</div>
+  <h1>収入カテゴリーを編集できるようにする</h1>
+  <div class="meta">
+    ブランチ: <code>claude/KAN-83</code> ← <code>dev</code>
+    ／ DB スキーマ変更: なし
+    ／ マイグレーション: なし
+  </div>
+  <div class="revision">v2 — 大カテゴリーの新規追加・編集・削除（id=1, 2 を除く）に対応</div>
+</header>
+
+<h2>1. ゴール</h2>
+<ul>
+  <li>カテゴリー設定ページに <strong>「収入」タブ</strong> を追加する。</li>
+  <li><strong>大カテゴリー</strong>:
+    <ul>
+      <li>新規追加 ✅</li>
+      <li>編集（名前/アイコン/色） ✅</li>
+      <li>削除 ✅（<strong>id=1（月次収入）/ id=2（ボーナス）は不可</strong>）</li>
+      <li>並び替え・表示ON/OFF ❌（スキーマ変更しないため）</li>
+    </ul>
+  </li>
+  <li><strong>小カテゴリー</strong>: 追加・編集・削除・並び替え・表示ON/OFF（支出と同等）</li>
+  <li>既存の <code>expense</code> / <code>fixedCost</code> の編集 UI には極力影響を与えない。</li>
+</ul>
+
+<div class="callout callout-danger">
+  <strong>絶対条件</strong>: id=1（月次収入）／ id=2（ボーナス）の 2 レコードは
+  アプリ全体でハードコード参照されているため <strong>削除・ID 変更を許容しない</strong>。
+  Repository / Usecase / View の 3 層でガードする。
+</div>
+
+<h2>2. 仕様サマリ</h2>
+<table>
+  <thead>
+    <tr><th>観点</th><th>支出（一般）</th><th>固定費</th><th>収入（本チケット）</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>大カテ 追加</td><td>可</td><td>可</td><td><strong>可</strong> <span class="badge-changed">変更</span></td></tr>
+    <tr><td>大カテ 削除</td><td>可</td><td>可</td><td><strong>可（id≧3 のみ）</strong> <span class="badge-changed">変更</span></td></tr>
+    <tr><td>大カテ 編集（名前/アイコン/色）</td><td>可</td><td>可</td><td>可</td></tr>
+    <tr><td>大カテ 並び替え/表示切替</td><td>可</td><td>可</td><td>不可</td></tr>
+    <tr><td>小カテ 編集</td><td>可</td><td>なし</td><td>可</td></tr>
+    <tr><td>DB カラム追加</td><td>—</td><td>—</td><td>なし</td></tr>
+  </tbody>
+</table>
+
+<h2>3. 削除時の挙動</h2>
+<ul>
+  <li>id≧3 の大カテゴリー削除時、紐づく小カテゴリーをすべて削除。</li>
+  <li>削除する小カテゴリーで登録された <code>income</code> レコードも削除（支出側と同等の挙動）。</li>
+  <li>id=1 / id=2 では削除ボタン自体を非表示／無効化（View）＋ Usecase でも例外を投げる。</li>
+</ul>
+
+<h2>4. 実装ステップ</h2>
+
+<div class="step">
+  <div class="step-title">Step 1 — Repository 層の拡張 <span class="badge-changed">変更</span></div>
+  <ul>
+    <li><span class="badge badge-edit">EDIT</span><code>lib/domain/db/income_big_category/income_big_category_repository.dart</code>
+      <code>add</code> / <code>update</code> / <code>delete</code> / <code>getMaxId</code> を追加</li>
+    <li><span class="badge badge-edit">EDIT</span><code>lib/repository/income_big_category_repository.dart</code>
+      上記の実装を追加（<strong>delete は id≧3 のみ受け付け、id=1/2 が来たら例外</strong>）</li>
+    <li><span class="badge badge-edit">EDIT</span><code>lib/domain/db/income_small_category/income_small_category_repository.dart</code>
+      <code>add</code> / <code>update</code> / <code>delete</code> / <code>deleteByBigCategory</code> /
+      <code>getMaxSmallCategoryOrderKey</code> を追加</li>
+    <li><span class="badge badge-edit">EDIT</span><code>lib/repository/income_small_category_repository.dart</code>
+      上記の実装と未実装 <code>fetchByBigCategory()</code> の実装</li>
+    <li><span class="badge badge-edit">EDIT</span><code>income_small_category_entity.dart</code>
+      <code>update()</code> 内が <code>SqfExpenseSmallCategory.tableName</code> に書いているバグ修正
+      （または削除して repository 経由に統一）</li>
+  </ul>
+</div>
+
+<div class="step">
+  <div class="step-title">Step 2 — UI Value / Usecase / Provider <span class="badge-changed">変更</span></div>
+  <ul>
+    <li><span class="badge badge-new">NEW</span><code>lib/domain/ui_value/income_big_category_value/edit_income_big_category_value.dart</code>
+      （新規追加用に id=-1 ／ 既存編集用に正の id を保持）</li>
+    <li><span class="badge badge-new">NEW</span><code>lib/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart</code></li>
+    <li><span class="badge badge-edit">EDIT</span><code>lib/application/category/income_category_usecase.dart</code> に追加：
+      <ul>
+        <li><code>fetchSmallCategoriesByBig(bigId)</code></li>
+        <li><code>addBig(entity)</code> — 新規大カテゴリー作成 + 戻り値で id を返す</li>
+        <li><code>editBig({original, edit})</code> — name / color / icon の更新</li>
+        <li><code>deleteBig(bigId)</code> — <strong>id=1/2 で例外、紐づく small/income も削除</strong></li>
+        <li><code>addSmall(entity)</code> — 新規小カテゴリー作成</li>
+        <li><code>smallEdit({originalValues, editValues})</code> — 並び替え・編集・追加・表示切替の一括保存</li>
+        <li>各メソッドで <code>updateDBCountNotifier.incrementState()</code></li>
+      </ul>
+    </li>
+    <li><span class="badge badge-edit">EDIT</span><code>lib/application/category/income_category_provider.dart</code>
+      <ul>
+        <li><code>allIncomeBigCategoriesProvider</code> を <code>updateDBCountNotifier</code> 監視へ</li>
+        <li><code>allIncomeSmallCategoriesListProvider(bigId)</code> 追加</li>
+        <li><code>anIncomeBigCategoryProvider</code> も <code>updateDBCountNotifier</code> 監視へ</li>
+      </ul>
+    </li>
+  </ul>
+</div>
+
+<div class="step">
+  <div class="step-title">Step 3 — State / Notifier 新規作成（Riverpod）</div>
+  <ul>
+    <li><span class="badge badge-new">NEW</span><code>view_model/state/big_category_detail_edit_page/income_big_category_name_controller/</code></li>
+    <li><span class="badge badge-new">NEW</span><code>view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/</code></li>
+    <li><span class="badge badge-new">NEW</span><code>view_model/state/big_category_detail_edit_page/income_big_category_color_controller/</code></li>
+    <li><span class="badge badge-new">NEW</span><code>view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/</code></li>
+    <li><span class="badge badge-new">NEW</span><code>view_model/state/big_category_detail_edit_page/editting_income_small_category_list/</code></li>
+    <li><span class="badge badge-new">NEW</span><code>view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/</code></li>
+  </ul>
+  <div class="callout">完了後 <code>dart run build_runner build --delete-conflicting-outputs</code> を実行。</div>
+</div>
+
+<div class="step">
+  <div class="step-title">Step 4 — 共通ダイアログ・共通エリアの categoryType 対応</div>
+  <ul>
+    <li><span class="badge badge-edit">EDIT</span><code>icon_select_dialog.dart</code> — <code>categoryType</code> 引数で controller を動的選択</li>
+    <li><span class="badge badge-edit">EDIT</span><code>color_select_dialog.dart</code> — 同上</li>
+    <li><span class="badge badge-edit">EDIT</span><code>small_category_edit_area.dart</code> — <code>categoryType</code> 引数で state を動的選択</li>
+    <li><span class="badge badge-edit">EDIT</span><code>new_small_category_input_name_dialog.dart</code> — <code>categoryType</code> 対応</li>
+  </ul>
+</div>
+
+<div class="step">
+  <div class="step-title">Step 5 — View 層 <span class="badge-changed">変更</span></div>
+  <ul>
+    <li><span class="badge badge-edit">EDIT</span><code>category_setting_page.dart</code>
+      <code>TabController(length: 3)</code> / <code>CategoryType.income</code> / タブ「収入」追加</li>
+    <li><span class="badge badge-edit">EDIT</span><code>big_category_list_area.dart</code>
+      <code>_buildIncomeCategoryList()</code> 追加（<strong>追加ボタン表示</strong>、行タップで詳細編集へ）</li>
+    <li><span class="badge badge-skip">SKIP</span><code>big_category_edit_area.dart</code>
+      income では編集モード UI を持たない（並び替え・表示切替がない）</li>
+    <li><span class="badge badge-edit">EDIT</span><code>big_category_setting_footer.dart</code>
+      income では footer は非表示 or 空</li>
+    <li><span class="badge badge-edit">EDIT</span><code>category_detail_edit_page.dart</code>
+      <code>CategoryType.income</code> 分岐追加（<strong>edit / newCategoryAdd 両モード対応</strong>）</li>
+    <li><span class="badge badge-new">NEW</span><code>income_category_appearance_edit_area.dart</code>（expense 版を参考）</li>
+    <li><span class="badge badge-new">NEW</span><code>add_complete_income_category_detail_button.dart</code>
+      新規追加完了ボタン</li>
+    <li><span class="badge badge-new">NEW</span><code>update_complete_income_category_detail_button.dart</code>
+      編集完了ボタン（大カテ保存＋小カテ一括保存。<strong>id=1/2 では削除ボタン非表示</strong>）</li>
+  </ul>
+</div>
+
+<div class="step">
+  <div class="step-title">Step 6 — 仕上げ</div>
+  <ol>
+    <li>動作確認
+      <ul>
+        <li>収入タブ → 「+ 新しいカテゴリーを追加」で新規大カテゴリー作成</li>
+        <li>id=1/2 の編集（名前/色/アイコン）／<strong>削除ボタンが出ないこと</strong>を確認</li>
+        <li>id≧3 の編集／削除（紐づく small / income レコードも削除されること）</li>
+        <li>小カテ追加・並び替え・削除・表示切替</li>
+      </ul>
+    </li>
+    <li><code>flutter analyze</code> エラー 0 件</li>
+    <li>commit（<code>flutter-commit-rules</code> Skill に従う）</li>
+    <li><code>doc-editor</code> でドキュメント更新要否確認</li>
+    <li>push → dev へ PR 作成 → TestFlight 配信</li>
+  </ol>
+</div>
+
+<h2>5. 影響範囲サマリ</h2>
+<table>
+  <tbody>
+    <tr><th>新規作成</th><td>約 17 ファイル（state 6 + ui_value 2 + view 3 + Riverpod 自動生成はカウント外）</td></tr>
+    <tr><th>既存修正</th><td>約 11 ファイル</td></tr>
+    <tr><th>DB スキーマ変更</th><td><strong>なし</strong></td></tr>
+    <tr><th>マイグレーション</th><td><strong>なし</strong></td></tr>
+    <tr><th>既存の expense / fixedCost</th><td>UI ロジックは変更なし。dialog / small_category_edit_area / new_small_category_input_name_dialog は後方互換を保ちつつ <code>categoryType</code> 追加</td></tr>
+  </tbody>
+</table>
+
+<h2>6. リスク</h2>
+<ul>
+  <li><strong>id=1/2 ガード漏れ</strong>: View の削除ボタン非表示だけだと不十分。Usecase / Repository でも
+      <code>if (bigId == 1 || bigId == 2) throw</code> の二重ガードを入れる。</li>
+  <li><strong>削除時のカスケード</strong>: 大カテゴリー削除 → 小カテゴリー削除 → 紐づく income レコード削除を
+      transaction で実施する（途中失敗時の整合性を担保）。</li>
+  <li><code>IncomeSmallCategoryEntity.update()</code> 既存バグ（expense テーブルに書いている）を修正するが、
+      現状未使用なので他機能への影響なし。</li>
+  <li><code>allIncomeBigCategoriesProvider</code> を <code>updateDBCountNotifier</code> 監視に変更しても、
+      既存の収入入力画面は再取得タイミングが少し増えるだけで実害なし。</li>
+</ul>
+
+<div class="callout callout-warn">
+  ID=1（月次収入） / ID=2（ボーナス）は <strong>3 層でガード</strong>:
+  <br>① View（削除ボタン非表示）
+  ② Usecase（<code>deleteBig</code> 入口で例外）
+  ③ Repository（<code>delete</code> 入口で例外）
+</div>
+
+<footer>KAN-83 implementation plan v2 · generated for review</footer>
+</div>
+</body>
+</html>

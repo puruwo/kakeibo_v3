@@ -12,7 +12,8 @@ part of 'income_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 IncomeEntity _$IncomeEntityFromJson(Map<String, dynamic> json) {
   return _IncomeEntity.fromJson(json);
@@ -26,8 +27,12 @@ mixin _$IncomeEntity {
   int get price => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
 
+  /// Serializes this IncomeEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of IncomeEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IncomeEntityCopyWith<IncomeEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -35,8 +40,9 @@ mixin _$IncomeEntity {
 /// @nodoc
 abstract class $IncomeEntityCopyWith<$Res> {
   factory $IncomeEntityCopyWith(
-          IncomeEntity value, $Res Function(IncomeEntity) then) =
-      _$IncomeEntityCopyWithImpl<$Res, IncomeEntity>;
+    IncomeEntity value,
+    $Res Function(IncomeEntity) then,
+  ) = _$IncomeEntityCopyWithImpl<$Res, IncomeEntity>;
   @useResult
   $Res call({int id, int categoryId, String date, int price, String memo});
 }
@@ -51,6 +57,8 @@ class _$IncomeEntityCopyWithImpl<$Res, $Val extends IncomeEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of IncomeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -60,28 +68,31 @@ class _$IncomeEntityCopyWithImpl<$Res, $Val extends IncomeEntity>
     Object? price = null,
     Object? memo = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryId: null == categoryId
-          ? _value.categoryId
-          : categoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      memo: null == memo
-          ? _value.memo
-          : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryId: null == categoryId
+                ? _value.categoryId
+                : categoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as String,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            memo: null == memo
+                ? _value.memo
+                : memo // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -89,8 +100,9 @@ class _$IncomeEntityCopyWithImpl<$Res, $Val extends IncomeEntity>
 abstract class _$$IncomeEntityImplCopyWith<$Res>
     implements $IncomeEntityCopyWith<$Res> {
   factory _$$IncomeEntityImplCopyWith(
-          _$IncomeEntityImpl value, $Res Function(_$IncomeEntityImpl) then) =
-      __$$IncomeEntityImplCopyWithImpl<$Res>;
+    _$IncomeEntityImpl value,
+    $Res Function(_$IncomeEntityImpl) then,
+  ) = __$$IncomeEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int id, int categoryId, String date, int price, String memo});
@@ -101,9 +113,12 @@ class __$$IncomeEntityImplCopyWithImpl<$Res>
     extends _$IncomeEntityCopyWithImpl<$Res, _$IncomeEntityImpl>
     implements _$$IncomeEntityImplCopyWith<$Res> {
   __$$IncomeEntityImplCopyWithImpl(
-      _$IncomeEntityImpl _value, $Res Function(_$IncomeEntityImpl) _then)
-      : super(_value, _then);
+    _$IncomeEntityImpl _value,
+    $Res Function(_$IncomeEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of IncomeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -113,40 +128,43 @@ class __$$IncomeEntityImplCopyWithImpl<$Res>
     Object? price = null,
     Object? memo = null,
   }) {
-    return _then(_$IncomeEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryId: null == categoryId
-          ? _value.categoryId
-          : categoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      memo: null == memo
-          ? _value.memo
-          : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$IncomeEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryId: null == categoryId
+            ? _value.categoryId
+            : categoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as String,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        memo: null == memo
+            ? _value.memo
+            : memo // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$IncomeEntityImpl implements _IncomeEntity {
-  const _$IncomeEntityImpl(
-      {this.id = 0,
-      this.categoryId = IncomeBigCategoryConstants.incomeSourceIdSalary,
-      required this.date,
-      this.price = 0,
-      this.memo = ''});
+  const _$IncomeEntityImpl({
+    this.id = 0,
+    this.categoryId = IncomeBigCategoryConstants.incomeSourceIdSalary,
+    required this.date,
+    this.price = 0,
+    this.memo = '',
+  });
 
   factory _$IncomeEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$IncomeEntityImplFromJson(json);
@@ -184,12 +202,14 @@ class _$IncomeEntityImpl implements _IncomeEntity {
             (identical(other.memo, memo) || other.memo == memo));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, categoryId, date, price, memo);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IncomeEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IncomeEntityImplCopyWith<_$IncomeEntityImpl> get copyWith =>
@@ -197,19 +217,18 @@ class _$IncomeEntityImpl implements _IncomeEntity {
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$IncomeEntityImplToJson(
-      this,
-    );
+    return _$$IncomeEntityImplToJson(this);
   }
 }
 
 abstract class _IncomeEntity implements IncomeEntity {
-  const factory _IncomeEntity(
-      {final int id,
-      final int categoryId,
-      required final String date,
-      final int price,
-      final String memo}) = _$IncomeEntityImpl;
+  const factory _IncomeEntity({
+    final int id,
+    final int categoryId,
+    required final String date,
+    final int price,
+    final String memo,
+  }) = _$IncomeEntityImpl;
 
   factory _IncomeEntity.fromJson(Map<String, dynamic> json) =
       _$IncomeEntityImpl.fromJson;
@@ -224,8 +243,11 @@ abstract class _IncomeEntity implements IncomeEntity {
   int get price;
   @override
   String get memo;
+
+  /// Create a copy of IncomeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IncomeEntityImplCopyWith<_$IncomeEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

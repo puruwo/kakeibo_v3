@@ -12,10 +12,12 @@ part of 'fixed_cost_category_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 FixedCostCategoryEntity _$FixedCostCategoryEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _FixedCostCategoryEntity.fromJson(json);
 }
 
@@ -29,31 +31,39 @@ mixin _$FixedCostCategoryEntity {
   int get isDisplayed => throw _privateConstructorUsedError; // 表示用のソートキー
   int get sortKey => throw _privateConstructorUsedError;
 
+  /// Serializes this FixedCostCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FixedCostCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FixedCostCategoryEntityCopyWith<FixedCostCategoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $FixedCostCategoryEntityCopyWith<$Res> {
-  factory $FixedCostCategoryEntityCopyWith(FixedCostCategoryEntity value,
-          $Res Function(FixedCostCategoryEntity) then) =
-      _$FixedCostCategoryEntityCopyWithImpl<$Res, FixedCostCategoryEntity>;
+  factory $FixedCostCategoryEntityCopyWith(
+    FixedCostCategoryEntity value,
+    $Res Function(FixedCostCategoryEntity) then,
+  ) = _$FixedCostCategoryEntityCopyWithImpl<$Res, FixedCostCategoryEntity>;
   @useResult
-  $Res call(
-      {int id,
-      String categoryName,
-      String colorCode,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      int sortKey});
+  $Res call({
+    int id,
+    String categoryName,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    int sortKey,
+  });
 }
 
 /// @nodoc
-class _$FixedCostCategoryEntityCopyWithImpl<$Res,
-        $Val extends FixedCostCategoryEntity>
+class _$FixedCostCategoryEntityCopyWithImpl<
+  $Res,
+  $Val extends FixedCostCategoryEntity
+>
     implements $FixedCostCategoryEntityCopyWith<$Res> {
   _$FixedCostCategoryEntityCopyWithImpl(this._value, this._then);
 
@@ -62,6 +72,8 @@ class _$FixedCostCategoryEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FixedCostCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -73,36 +85,39 @@ class _$FixedCostCategoryEntityCopyWithImpl<$Res,
     Object? isDisplayed = null,
     Object? sortKey = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      sortKey: null == sortKey
-          ? _value.sortKey
-          : sortKey // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            displayOrder: null == displayOrder
+                ? _value.displayOrder
+                : displayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isDisplayed: null == isDisplayed
+                ? _value.isDisplayed
+                : isDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            sortKey: null == sortKey
+                ? _value.sortKey
+                : sortKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -110,31 +125,37 @@ class _$FixedCostCategoryEntityCopyWithImpl<$Res,
 abstract class _$$FixedCostCategoryEntityImplCopyWith<$Res>
     implements $FixedCostCategoryEntityCopyWith<$Res> {
   factory _$$FixedCostCategoryEntityImplCopyWith(
-          _$FixedCostCategoryEntityImpl value,
-          $Res Function(_$FixedCostCategoryEntityImpl) then) =
-      __$$FixedCostCategoryEntityImplCopyWithImpl<$Res>;
+    _$FixedCostCategoryEntityImpl value,
+    $Res Function(_$FixedCostCategoryEntityImpl) then,
+  ) = __$$FixedCostCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String categoryName,
-      String colorCode,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      int sortKey});
+  $Res call({
+    int id,
+    String categoryName,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    int sortKey,
+  });
 }
 
 /// @nodoc
 class __$$FixedCostCategoryEntityImplCopyWithImpl<$Res>
-    extends _$FixedCostCategoryEntityCopyWithImpl<$Res,
-        _$FixedCostCategoryEntityImpl>
+    extends
+        _$FixedCostCategoryEntityCopyWithImpl<
+          $Res,
+          _$FixedCostCategoryEntityImpl
+        >
     implements _$$FixedCostCategoryEntityImplCopyWith<$Res> {
   __$$FixedCostCategoryEntityImplCopyWithImpl(
-      _$FixedCostCategoryEntityImpl _value,
-      $Res Function(_$FixedCostCategoryEntityImpl) _then)
-      : super(_value, _then);
+    _$FixedCostCategoryEntityImpl _value,
+    $Res Function(_$FixedCostCategoryEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FixedCostCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -146,50 +167,53 @@ class __$$FixedCostCategoryEntityImplCopyWithImpl<$Res>
     Object? isDisplayed = null,
     Object? sortKey = null,
   }) {
-    return _then(_$FixedCostCategoryEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      sortKey: null == sortKey
-          ? _value.sortKey
-          : sortKey // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$FixedCostCategoryEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        displayOrder: null == displayOrder
+            ? _value.displayOrder
+            : displayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isDisplayed: null == isDisplayed
+            ? _value.isDisplayed
+            : isDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        sortKey: null == sortKey
+            ? _value.sortKey
+            : sortKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
-  const _$FixedCostCategoryEntityImpl(
-      {this.id = 0,
-      required this.categoryName,
-      required this.colorCode,
-      required this.resourcePath,
-      this.displayOrder = 0,
-      this.isDisplayed = 1,
-      this.sortKey = 0});
+  const _$FixedCostCategoryEntityImpl({
+    this.id = 0,
+    required this.categoryName,
+    required this.colorCode,
+    required this.resourcePath,
+    this.displayOrder = 0,
+    this.isDisplayed = 1,
+    this.sortKey = 0,
+  });
 
   factory _$FixedCostCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$FixedCostCategoryEntityImplFromJson(json);
@@ -209,7 +233,7 @@ class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
   @override
   @JsonKey()
   final int isDisplayed;
-// 表示用のソートキー
+  // 表示用のソートキー
   @override
   @JsonKey()
   final int sortKey;
@@ -238,35 +262,46 @@ class _$FixedCostCategoryEntityImpl implements _FixedCostCategoryEntity {
             (identical(other.sortKey, sortKey) || other.sortKey == sortKey));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, categoryName, colorCode,
-      resourcePath, displayOrder, isDisplayed, sortKey);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    categoryName,
+    colorCode,
+    resourcePath,
+    displayOrder,
+    isDisplayed,
+    sortKey,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FixedCostCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FixedCostCategoryEntityImplCopyWith<_$FixedCostCategoryEntityImpl>
-      get copyWith => __$$FixedCostCategoryEntityImplCopyWithImpl<
-          _$FixedCostCategoryEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$FixedCostCategoryEntityImplCopyWithImpl<
+        _$FixedCostCategoryEntityImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FixedCostCategoryEntityImplToJson(
-      this,
-    );
+    return _$$FixedCostCategoryEntityImplToJson(this);
   }
 }
 
 abstract class _FixedCostCategoryEntity implements FixedCostCategoryEntity {
-  const factory _FixedCostCategoryEntity(
-      {final int id,
-      required final String categoryName,
-      required final String colorCode,
-      required final String resourcePath,
-      final int displayOrder,
-      final int isDisplayed,
-      final int sortKey}) = _$FixedCostCategoryEntityImpl;
+  const factory _FixedCostCategoryEntity({
+    final int id,
+    required final String categoryName,
+    required final String colorCode,
+    required final String resourcePath,
+    final int displayOrder,
+    final int isDisplayed,
+    final int sortKey,
+  }) = _$FixedCostCategoryEntityImpl;
 
   factory _FixedCostCategoryEntity.fromJson(Map<String, dynamic> json) =
       _$FixedCostCategoryEntityImpl.fromJson;
@@ -282,11 +317,14 @@ abstract class _FixedCostCategoryEntity implements FixedCostCategoryEntity {
   @override
   int get displayOrder;
   @override
-  int get isDisplayed;
-  @override // 表示用のソートキー
-  int get sortKey;
+  int get isDisplayed; // 表示用のソートキー
   @override
-  @JsonKey(ignore: true)
+  int get sortKey;
+
+  /// Create a copy of FixedCostCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FixedCostCategoryEntityImplCopyWith<_$FixedCostCategoryEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

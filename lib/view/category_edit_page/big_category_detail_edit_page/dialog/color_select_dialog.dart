@@ -5,10 +5,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_color_controller/income_big_category_color_controller.dart';
 
 class ColorSelectDialog extends ConsumerStatefulWidget {
-  const ColorSelectDialog({super.key});
+  const ColorSelectDialog({
+    super.key,
+    this.categoryType = CategoryType.expense,
+  });
+
+  final CategoryType categoryType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -34,8 +41,10 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
   Widget build(BuildContext context) {
     // ====状態管理====
 
-    // アイコンのパスを取得
-    selectedColor = ref.watch(bigCategroyColorControllerNotifierProvider);
+    // 選択カラーを取得（カテゴリータイプに応じて切り替え）
+    selectedColor = widget.categoryType == CategoryType.income
+        ? ref.watch(incomeBigCategoryColorControllerNotifierProvider)
+        : ref.watch(bigCategroyColorControllerNotifierProvider);
 
     // ==============
 
@@ -91,10 +100,15 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
       selectedColor = color;
     });
     Navigator.of(context).pop();
-    final notifier = ref.read(
-      bigCategroyColorControllerNotifierProvider.notifier,
-    );
-    notifier.updateState(color);
+    if (widget.categoryType == CategoryType.income) {
+      ref
+          .read(incomeBigCategoryColorControllerNotifierProvider.notifier)
+          .updateState(color);
+    } else {
+      ref
+          .read(bigCategroyColorControllerNotifierProvider.notifier)
+          .updateState(color);
+    }
   }
 }
 

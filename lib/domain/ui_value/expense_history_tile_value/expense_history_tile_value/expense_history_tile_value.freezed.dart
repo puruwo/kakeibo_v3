@@ -12,7 +12,8 @@ part of 'expense_history_tile_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ExpenseHistoryTileValue {
@@ -27,33 +28,39 @@ mixin _$ExpenseHistoryTileValue {
   String get iconPath => throw _privateConstructorUsedError;
   int get incomeSourceBigCategory => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseHistoryTileValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseHistoryTileValueCopyWith<ExpenseHistoryTileValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExpenseHistoryTileValueCopyWith<$Res> {
-  factory $ExpenseHistoryTileValueCopyWith(ExpenseHistoryTileValue value,
-          $Res Function(ExpenseHistoryTileValue) then) =
-      _$ExpenseHistoryTileValueCopyWithImpl<$Res, ExpenseHistoryTileValue>;
+  factory $ExpenseHistoryTileValueCopyWith(
+    ExpenseHistoryTileValue value,
+    $Res Function(ExpenseHistoryTileValue) then,
+  ) = _$ExpenseHistoryTileValueCopyWithImpl<$Res, ExpenseHistoryTileValue>;
   @useResult
-  $Res call(
-      {int id,
-      DateTime date,
-      int price,
-      int paymentCategoryId,
-      String memo,
-      String smallCategoryName,
-      String bigCategoryName,
-      String colorCode,
-      String iconPath,
-      int incomeSourceBigCategory});
+  $Res call({
+    int id,
+    DateTime date,
+    int price,
+    int paymentCategoryId,
+    String memo,
+    String smallCategoryName,
+    String bigCategoryName,
+    String colorCode,
+    String iconPath,
+    int incomeSourceBigCategory,
+  });
 }
 
 /// @nodoc
-class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
-        $Val extends ExpenseHistoryTileValue>
+class _$ExpenseHistoryTileValueCopyWithImpl<
+  $Res,
+  $Val extends ExpenseHistoryTileValue
+>
     implements $ExpenseHistoryTileValueCopyWith<$Res> {
   _$ExpenseHistoryTileValueCopyWithImpl(this._value, this._then);
 
@@ -62,6 +69,8 @@ class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseHistoryTileValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -76,48 +85,51 @@ class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
     Object? iconPath = null,
     Object? incomeSourceBigCategory = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      paymentCategoryId: null == paymentCategoryId
-          ? _value.paymentCategoryId
-          : paymentCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      memo: null == memo
-          ? _value.memo
-          : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      incomeSourceBigCategory: null == incomeSourceBigCategory
-          ? _value.incomeSourceBigCategory
-          : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            paymentCategoryId: null == paymentCategoryId
+                ? _value.paymentCategoryId
+                : paymentCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            memo: null == memo
+                ? _value.memo
+                : memo // ignore: cast_nullable_to_non_nullable
+                      as String,
+            smallCategoryName: null == smallCategoryName
+                ? _value.smallCategoryName
+                : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bigCategoryName: null == bigCategoryName
+                ? _value.bigCategoryName
+                : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            iconPath: null == iconPath
+                ? _value.iconPath
+                : iconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            incomeSourceBigCategory: null == incomeSourceBigCategory
+                ? _value.incomeSourceBigCategory
+                : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -125,34 +137,40 @@ class _$ExpenseHistoryTileValueCopyWithImpl<$Res,
 abstract class _$$ExpenseHistoryTileValueImplCopyWith<$Res>
     implements $ExpenseHistoryTileValueCopyWith<$Res> {
   factory _$$ExpenseHistoryTileValueImplCopyWith(
-          _$ExpenseHistoryTileValueImpl value,
-          $Res Function(_$ExpenseHistoryTileValueImpl) then) =
-      __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>;
+    _$ExpenseHistoryTileValueImpl value,
+    $Res Function(_$ExpenseHistoryTileValueImpl) then,
+  ) = __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      DateTime date,
-      int price,
-      int paymentCategoryId,
-      String memo,
-      String smallCategoryName,
-      String bigCategoryName,
-      String colorCode,
-      String iconPath,
-      int incomeSourceBigCategory});
+  $Res call({
+    int id,
+    DateTime date,
+    int price,
+    int paymentCategoryId,
+    String memo,
+    String smallCategoryName,
+    String bigCategoryName,
+    String colorCode,
+    String iconPath,
+    int incomeSourceBigCategory,
+  });
 }
 
 /// @nodoc
 class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
-    extends _$ExpenseHistoryTileValueCopyWithImpl<$Res,
-        _$ExpenseHistoryTileValueImpl>
+    extends
+        _$ExpenseHistoryTileValueCopyWithImpl<
+          $Res,
+          _$ExpenseHistoryTileValueImpl
+        >
     implements _$$ExpenseHistoryTileValueImplCopyWith<$Res> {
   __$$ExpenseHistoryTileValueImplCopyWithImpl(
-      _$ExpenseHistoryTileValueImpl _value,
-      $Res Function(_$ExpenseHistoryTileValueImpl) _then)
-      : super(_value, _then);
+    _$ExpenseHistoryTileValueImpl _value,
+    $Res Function(_$ExpenseHistoryTileValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExpenseHistoryTileValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -167,65 +185,68 @@ class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
     Object? iconPath = null,
     Object? incomeSourceBigCategory = null,
   }) {
-    return _then(_$ExpenseHistoryTileValueImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      paymentCategoryId: null == paymentCategoryId
-          ? _value.paymentCategoryId
-          : paymentCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      memo: null == memo
-          ? _value.memo
-          : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      iconPath: null == iconPath
-          ? _value.iconPath
-          : iconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      incomeSourceBigCategory: null == incomeSourceBigCategory
-          ? _value.incomeSourceBigCategory
-          : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ExpenseHistoryTileValueImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        paymentCategoryId: null == paymentCategoryId
+            ? _value.paymentCategoryId
+            : paymentCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        memo: null == memo
+            ? _value.memo
+            : memo // ignore: cast_nullable_to_non_nullable
+                  as String,
+        smallCategoryName: null == smallCategoryName
+            ? _value.smallCategoryName
+            : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bigCategoryName: null == bigCategoryName
+            ? _value.bigCategoryName
+            : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        iconPath: null == iconPath
+            ? _value.iconPath
+            : iconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        incomeSourceBigCategory: null == incomeSourceBigCategory
+            ? _value.incomeSourceBigCategory
+            : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
-  const _$ExpenseHistoryTileValueImpl(
-      {required this.id,
-      required this.date,
-      required this.price,
-      required this.paymentCategoryId,
-      this.memo = '',
-      required this.smallCategoryName,
-      required this.bigCategoryName,
-      required this.colorCode,
-      required this.iconPath,
-      required this.incomeSourceBigCategory});
+  const _$ExpenseHistoryTileValueImpl({
+    required this.id,
+    required this.date,
+    required this.price,
+    required this.paymentCategoryId,
+    this.memo = '',
+    required this.smallCategoryName,
+    required this.bigCategoryName,
+    required this.colorCode,
+    required this.iconPath,
+    required this.incomeSourceBigCategory,
+  });
 
   @override
   final int id;
@@ -274,45 +295,52 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
             (identical(other.iconPath, iconPath) ||
                 other.iconPath == iconPath) &&
             (identical(
-                    other.incomeSourceBigCategory, incomeSourceBigCategory) ||
+                  other.incomeSourceBigCategory,
+                  incomeSourceBigCategory,
+                ) ||
                 other.incomeSourceBigCategory == incomeSourceBigCategory));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      date,
-      price,
-      paymentCategoryId,
-      memo,
-      smallCategoryName,
-      bigCategoryName,
-      colorCode,
-      iconPath,
-      incomeSourceBigCategory);
+    runtimeType,
+    id,
+    date,
+    price,
+    paymentCategoryId,
+    memo,
+    smallCategoryName,
+    bigCategoryName,
+    colorCode,
+    iconPath,
+    incomeSourceBigCategory,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseHistoryTileValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExpenseHistoryTileValueImplCopyWith<_$ExpenseHistoryTileValueImpl>
-      get copyWith => __$$ExpenseHistoryTileValueImplCopyWithImpl<
-          _$ExpenseHistoryTileValueImpl>(this, _$identity);
+  get copyWith =>
+      __$$ExpenseHistoryTileValueImplCopyWithImpl<
+        _$ExpenseHistoryTileValueImpl
+      >(this, _$identity);
 }
 
 abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
-  const factory _ExpenseHistoryTileValue(
-          {required final int id,
-          required final DateTime date,
-          required final int price,
-          required final int paymentCategoryId,
-          final String memo,
-          required final String smallCategoryName,
-          required final String bigCategoryName,
-          required final String colorCode,
-          required final String iconPath,
-          required final int incomeSourceBigCategory}) =
-      _$ExpenseHistoryTileValueImpl;
+  const factory _ExpenseHistoryTileValue({
+    required final int id,
+    required final DateTime date,
+    required final int price,
+    required final int paymentCategoryId,
+    final String memo,
+    required final String smallCategoryName,
+    required final String bigCategoryName,
+    required final String colorCode,
+    required final String iconPath,
+    required final int incomeSourceBigCategory,
+  }) = _$ExpenseHistoryTileValueImpl;
 
   @override
   int get id;
@@ -334,8 +362,11 @@ abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
   String get iconPath;
   @override
   int get incomeSourceBigCategory;
+
+  /// Create a copy of ExpenseHistoryTileValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExpenseHistoryTileValueImplCopyWith<_$ExpenseHistoryTileValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

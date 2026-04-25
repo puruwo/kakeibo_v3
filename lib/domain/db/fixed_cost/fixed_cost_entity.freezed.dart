@@ -12,7 +12,8 @@ part of 'fixed_cost_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 FixedCostEntity _$FixedCostEntityFromJson(Map<String, dynamic> json) {
   return _FixedCostEntity.fromJson(json);
@@ -33,8 +34,12 @@ mixin _$FixedCostEntity {
   String? get nextPaymentDate => throw _privateConstructorUsedError;
   int get deleteFlag => throw _privateConstructorUsedError;
 
+  /// Serializes this FixedCostEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of FixedCostEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $FixedCostEntityCopyWith<FixedCostEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -42,22 +47,24 @@ mixin _$FixedCostEntity {
 /// @nodoc
 abstract class $FixedCostEntityCopyWith<$Res> {
   factory $FixedCostEntityCopyWith(
-          FixedCostEntity value, $Res Function(FixedCostEntity) then) =
-      _$FixedCostEntityCopyWithImpl<$Res, FixedCostEntity>;
+    FixedCostEntity value,
+    $Res Function(FixedCostEntity) then,
+  ) = _$FixedCostEntityCopyWithImpl<$Res, FixedCostEntity>;
   @useResult
-  $Res call(
-      {int? id,
-      String name,
-      int variable,
-      int price,
-      int estimatedPrice,
-      int fixedCostCategoryId,
-      int intervalNumber,
-      int intervalUnit,
-      String firstPaymentDate,
-      String? recentPaymentDate,
-      String? nextPaymentDate,
-      int deleteFlag});
+  $Res call({
+    int? id,
+    String name,
+    int variable,
+    int price,
+    int estimatedPrice,
+    int fixedCostCategoryId,
+    int intervalNumber,
+    int intervalUnit,
+    String firstPaymentDate,
+    String? recentPaymentDate,
+    String? nextPaymentDate,
+    int deleteFlag,
+  });
 }
 
 /// @nodoc
@@ -70,6 +77,8 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of FixedCostEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -86,80 +95,85 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
     Object? nextPaymentDate = freezed,
     Object? deleteFlag = null,
   }) {
-    return _then(_value.copyWith(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      variable: null == variable
-          ? _value.variable
-          : variable // ignore: cast_nullable_to_non_nullable
-              as int,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      estimatedPrice: null == estimatedPrice
-          ? _value.estimatedPrice
-          : estimatedPrice // ignore: cast_nullable_to_non_nullable
-              as int,
-      fixedCostCategoryId: null == fixedCostCategoryId
-          ? _value.fixedCostCategoryId
-          : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalNumber: null == intervalNumber
-          ? _value.intervalNumber
-          : intervalNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalUnit: null == intervalUnit
-          ? _value.intervalUnit
-          : intervalUnit // ignore: cast_nullable_to_non_nullable
-              as int,
-      firstPaymentDate: null == firstPaymentDate
-          ? _value.firstPaymentDate
-          : firstPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      recentPaymentDate: freezed == recentPaymentDate
-          ? _value.recentPaymentDate
-          : recentPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextPaymentDate: freezed == nextPaymentDate
-          ? _value.nextPaymentDate
-          : nextPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deleteFlag: null == deleteFlag
-          ? _value.deleteFlag
-          : deleteFlag // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: freezed == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            variable: null == variable
+                ? _value.variable
+                : variable // ignore: cast_nullable_to_non_nullable
+                      as int,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            estimatedPrice: null == estimatedPrice
+                ? _value.estimatedPrice
+                : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                      as int,
+            fixedCostCategoryId: null == fixedCostCategoryId
+                ? _value.fixedCostCategoryId
+                : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            intervalNumber: null == intervalNumber
+                ? _value.intervalNumber
+                : intervalNumber // ignore: cast_nullable_to_non_nullable
+                      as int,
+            intervalUnit: null == intervalUnit
+                ? _value.intervalUnit
+                : intervalUnit // ignore: cast_nullable_to_non_nullable
+                      as int,
+            firstPaymentDate: null == firstPaymentDate
+                ? _value.firstPaymentDate
+                : firstPaymentDate // ignore: cast_nullable_to_non_nullable
+                      as String,
+            recentPaymentDate: freezed == recentPaymentDate
+                ? _value.recentPaymentDate
+                : recentPaymentDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            nextPaymentDate: freezed == nextPaymentDate
+                ? _value.nextPaymentDate
+                : nextPaymentDate // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            deleteFlag: null == deleteFlag
+                ? _value.deleteFlag
+                : deleteFlag // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$FixedCostEntityImplCopyWith<$Res>
     implements $FixedCostEntityCopyWith<$Res> {
-  factory _$$FixedCostEntityImplCopyWith(_$FixedCostEntityImpl value,
-          $Res Function(_$FixedCostEntityImpl) then) =
-      __$$FixedCostEntityImplCopyWithImpl<$Res>;
+  factory _$$FixedCostEntityImplCopyWith(
+    _$FixedCostEntityImpl value,
+    $Res Function(_$FixedCostEntityImpl) then,
+  ) = __$$FixedCostEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int? id,
-      String name,
-      int variable,
-      int price,
-      int estimatedPrice,
-      int fixedCostCategoryId,
-      int intervalNumber,
-      int intervalUnit,
-      String firstPaymentDate,
-      String? recentPaymentDate,
-      String? nextPaymentDate,
-      int deleteFlag});
+  $Res call({
+    int? id,
+    String name,
+    int variable,
+    int price,
+    int estimatedPrice,
+    int fixedCostCategoryId,
+    int intervalNumber,
+    int intervalUnit,
+    String firstPaymentDate,
+    String? recentPaymentDate,
+    String? nextPaymentDate,
+    int deleteFlag,
+  });
 }
 
 /// @nodoc
@@ -167,9 +181,12 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
     extends _$FixedCostEntityCopyWithImpl<$Res, _$FixedCostEntityImpl>
     implements _$$FixedCostEntityImplCopyWith<$Res> {
   __$$FixedCostEntityImplCopyWithImpl(
-      _$FixedCostEntityImpl _value, $Res Function(_$FixedCostEntityImpl) _then)
-      : super(_value, _then);
+    _$FixedCostEntityImpl _value,
+    $Res Function(_$FixedCostEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of FixedCostEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -186,75 +203,78 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
     Object? nextPaymentDate = freezed,
     Object? deleteFlag = null,
   }) {
-    return _then(_$FixedCostEntityImpl(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      variable: null == variable
-          ? _value.variable
-          : variable // ignore: cast_nullable_to_non_nullable
-              as int,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      estimatedPrice: null == estimatedPrice
-          ? _value.estimatedPrice
-          : estimatedPrice // ignore: cast_nullable_to_non_nullable
-              as int,
-      fixedCostCategoryId: null == fixedCostCategoryId
-          ? _value.fixedCostCategoryId
-          : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalNumber: null == intervalNumber
-          ? _value.intervalNumber
-          : intervalNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalUnit: null == intervalUnit
-          ? _value.intervalUnit
-          : intervalUnit // ignore: cast_nullable_to_non_nullable
-              as int,
-      firstPaymentDate: null == firstPaymentDate
-          ? _value.firstPaymentDate
-          : firstPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      recentPaymentDate: freezed == recentPaymentDate
-          ? _value.recentPaymentDate
-          : recentPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      nextPaymentDate: freezed == nextPaymentDate
-          ? _value.nextPaymentDate
-          : nextPaymentDate // ignore: cast_nullable_to_non_nullable
-              as String?,
-      deleteFlag: null == deleteFlag
-          ? _value.deleteFlag
-          : deleteFlag // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$FixedCostEntityImpl(
+        id: freezed == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        variable: null == variable
+            ? _value.variable
+            : variable // ignore: cast_nullable_to_non_nullable
+                  as int,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        estimatedPrice: null == estimatedPrice
+            ? _value.estimatedPrice
+            : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                  as int,
+        fixedCostCategoryId: null == fixedCostCategoryId
+            ? _value.fixedCostCategoryId
+            : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        intervalNumber: null == intervalNumber
+            ? _value.intervalNumber
+            : intervalNumber // ignore: cast_nullable_to_non_nullable
+                  as int,
+        intervalUnit: null == intervalUnit
+            ? _value.intervalUnit
+            : intervalUnit // ignore: cast_nullable_to_non_nullable
+                  as int,
+        firstPaymentDate: null == firstPaymentDate
+            ? _value.firstPaymentDate
+            : firstPaymentDate // ignore: cast_nullable_to_non_nullable
+                  as String,
+        recentPaymentDate: freezed == recentPaymentDate
+            ? _value.recentPaymentDate
+            : recentPaymentDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        nextPaymentDate: freezed == nextPaymentDate
+            ? _value.nextPaymentDate
+            : nextPaymentDate // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        deleteFlag: null == deleteFlag
+            ? _value.deleteFlag
+            : deleteFlag // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$FixedCostEntityImpl implements _FixedCostEntity {
-  const _$FixedCostEntityImpl(
-      {this.id,
-      this.name = '',
-      required this.variable,
-      this.price = 0,
-      this.estimatedPrice = 0,
-      required this.fixedCostCategoryId,
-      required this.intervalNumber,
-      required this.intervalUnit,
-      required this.firstPaymentDate,
-      this.recentPaymentDate,
-      this.nextPaymentDate,
-      this.deleteFlag = 0});
+  const _$FixedCostEntityImpl({
+    this.id,
+    this.name = '',
+    required this.variable,
+    this.price = 0,
+    this.estimatedPrice = 0,
+    required this.fixedCostCategoryId,
+    required this.intervalNumber,
+    required this.intervalUnit,
+    required this.firstPaymentDate,
+    this.recentPaymentDate,
+    this.nextPaymentDate,
+    this.deleteFlag = 0,
+  });
 
   factory _$FixedCostEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$FixedCostEntityImplFromJson(json);
@@ -321,52 +341,56 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
                 other.deleteFlag == deleteFlag));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      variable,
-      price,
-      estimatedPrice,
-      fixedCostCategoryId,
-      intervalNumber,
-      intervalUnit,
-      firstPaymentDate,
-      recentPaymentDate,
-      nextPaymentDate,
-      deleteFlag);
+    runtimeType,
+    id,
+    name,
+    variable,
+    price,
+    estimatedPrice,
+    fixedCostCategoryId,
+    intervalNumber,
+    intervalUnit,
+    firstPaymentDate,
+    recentPaymentDate,
+    nextPaymentDate,
+    deleteFlag,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of FixedCostEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$FixedCostEntityImplCopyWith<_$FixedCostEntityImpl> get copyWith =>
       __$$FixedCostEntityImplCopyWithImpl<_$FixedCostEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$FixedCostEntityImplToJson(
-      this,
-    );
+    return _$$FixedCostEntityImplToJson(this);
   }
 }
 
 abstract class _FixedCostEntity implements FixedCostEntity {
-  const factory _FixedCostEntity(
-      {final int? id,
-      final String name,
-      required final int variable,
-      final int price,
-      final int estimatedPrice,
-      required final int fixedCostCategoryId,
-      required final int intervalNumber,
-      required final int intervalUnit,
-      required final String firstPaymentDate,
-      final String? recentPaymentDate,
-      final String? nextPaymentDate,
-      final int deleteFlag}) = _$FixedCostEntityImpl;
+  const factory _FixedCostEntity({
+    final int? id,
+    final String name,
+    required final int variable,
+    final int price,
+    final int estimatedPrice,
+    required final int fixedCostCategoryId,
+    required final int intervalNumber,
+    required final int intervalUnit,
+    required final String firstPaymentDate,
+    final String? recentPaymentDate,
+    final String? nextPaymentDate,
+    final int deleteFlag,
+  }) = _$FixedCostEntityImpl;
 
   factory _FixedCostEntity.fromJson(Map<String, dynamic> json) =
       _$FixedCostEntityImpl.fromJson;
@@ -395,8 +419,11 @@ abstract class _FixedCostEntity implements FixedCostEntity {
   String? get nextPaymentDate;
   @override
   int get deleteFlag;
+
+  /// Create a copy of FixedCostEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$FixedCostEntityImplCopyWith<_$FixedCostEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

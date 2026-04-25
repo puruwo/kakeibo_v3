@@ -12,7 +12,8 @@ part of 'all_category_card_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MonthPlanCardModel {
@@ -50,7 +51,9 @@ mixin _$MonthPlanCardModel {
   List<String> get budgetCategoryColorList =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthPlanCardModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MonthPlanCardModelCopyWith<MonthPlanCardModel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -58,32 +61,34 @@ mixin _$MonthPlanCardModel {
 /// @nodoc
 abstract class $MonthPlanCardModelCopyWith<$Res> {
   factory $MonthPlanCardModelCopyWith(
-          MonthPlanCardModel value, $Res Function(MonthPlanCardModel) then) =
-      _$MonthPlanCardModelCopyWithImpl<$Res, MonthPlanCardModel>;
+    MonthPlanCardModel value,
+    $Res Function(MonthPlanCardModel) then,
+  ) = _$MonthPlanCardModelCopyWithImpl<$Res, MonthPlanCardModel>;
   @useResult
-  $Res call(
-      {AllCategoryCardStatusType cardStatusType,
-      int allCategoryTotalExpense,
-      int allCategoryTotalBudget,
-      int allCategoryTotalIncome,
-      int allFixedCostExpense,
-      int denominator,
-      int realSavings,
-      double totalBadgetRatio,
-      List<String> expenseCategoryNameList,
-      List<int> expenseCategoryList,
-      List<double> expenseCategoryRatioList,
-      List<String> expenseCategoryIconPathList,
-      List<String> expenseCategoryColorList,
-      List<String> incomeCategoryNameList,
-      List<int> incomeCategoryList,
-      List<double> incomeCategoryRatioList,
-      List<String> incomeCategoryIconPathList,
-      List<String> incomeCategoryColorList,
-      List<String> budgetCategoryNameList,
-      List<int> budgetCategoryList,
-      List<String> budgetCategoryIconPathList,
-      List<String> budgetCategoryColorList});
+  $Res call({
+    AllCategoryCardStatusType cardStatusType,
+    int allCategoryTotalExpense,
+    int allCategoryTotalBudget,
+    int allCategoryTotalIncome,
+    int allFixedCostExpense,
+    int denominator,
+    int realSavings,
+    double totalBadgetRatio,
+    List<String> expenseCategoryNameList,
+    List<int> expenseCategoryList,
+    List<double> expenseCategoryRatioList,
+    List<String> expenseCategoryIconPathList,
+    List<String> expenseCategoryColorList,
+    List<String> incomeCategoryNameList,
+    List<int> incomeCategoryList,
+    List<double> incomeCategoryRatioList,
+    List<String> incomeCategoryIconPathList,
+    List<String> incomeCategoryColorList,
+    List<String> budgetCategoryNameList,
+    List<int> budgetCategoryList,
+    List<String> budgetCategoryIconPathList,
+    List<String> budgetCategoryColorList,
+  });
 }
 
 /// @nodoc
@@ -96,6 +101,8 @@ class _$MonthPlanCardModelCopyWithImpl<$Res, $Val extends MonthPlanCardModel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MonthPlanCardModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -122,140 +129,148 @@ class _$MonthPlanCardModelCopyWithImpl<$Res, $Val extends MonthPlanCardModel>
     Object? budgetCategoryIconPathList = null,
     Object? budgetCategoryColorList = null,
   }) {
-    return _then(_value.copyWith(
-      cardStatusType: null == cardStatusType
-          ? _value.cardStatusType
-          : cardStatusType // ignore: cast_nullable_to_non_nullable
-              as AllCategoryCardStatusType,
-      allCategoryTotalExpense: null == allCategoryTotalExpense
-          ? _value.allCategoryTotalExpense
-          : allCategoryTotalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      allCategoryTotalBudget: null == allCategoryTotalBudget
-          ? _value.allCategoryTotalBudget
-          : allCategoryTotalBudget // ignore: cast_nullable_to_non_nullable
-              as int,
-      allCategoryTotalIncome: null == allCategoryTotalIncome
-          ? _value.allCategoryTotalIncome
-          : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      allFixedCostExpense: null == allFixedCostExpense
-          ? _value.allFixedCostExpense
-          : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      denominator: null == denominator
-          ? _value.denominator
-          : denominator // ignore: cast_nullable_to_non_nullable
-              as int,
-      realSavings: null == realSavings
-          ? _value.realSavings
-          : realSavings // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalBadgetRatio: null == totalBadgetRatio
-          ? _value.totalBadgetRatio
-          : totalBadgetRatio // ignore: cast_nullable_to_non_nullable
-              as double,
-      expenseCategoryNameList: null == expenseCategoryNameList
-          ? _value.expenseCategoryNameList
-          : expenseCategoryNameList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      expenseCategoryList: null == expenseCategoryList
-          ? _value.expenseCategoryList
-          : expenseCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      expenseCategoryRatioList: null == expenseCategoryRatioList
-          ? _value.expenseCategoryRatioList
-          : expenseCategoryRatioList // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      expenseCategoryIconPathList: null == expenseCategoryIconPathList
-          ? _value.expenseCategoryIconPathList
-          : expenseCategoryIconPathList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      expenseCategoryColorList: null == expenseCategoryColorList
-          ? _value.expenseCategoryColorList
-          : expenseCategoryColorList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      incomeCategoryNameList: null == incomeCategoryNameList
-          ? _value.incomeCategoryNameList
-          : incomeCategoryNameList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      incomeCategoryList: null == incomeCategoryList
-          ? _value.incomeCategoryList
-          : incomeCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      incomeCategoryRatioList: null == incomeCategoryRatioList
-          ? _value.incomeCategoryRatioList
-          : incomeCategoryRatioList // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      incomeCategoryIconPathList: null == incomeCategoryIconPathList
-          ? _value.incomeCategoryIconPathList
-          : incomeCategoryIconPathList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      incomeCategoryColorList: null == incomeCategoryColorList
-          ? _value.incomeCategoryColorList
-          : incomeCategoryColorList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      budgetCategoryNameList: null == budgetCategoryNameList
-          ? _value.budgetCategoryNameList
-          : budgetCategoryNameList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      budgetCategoryList: null == budgetCategoryList
-          ? _value.budgetCategoryList
-          : budgetCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      budgetCategoryIconPathList: null == budgetCategoryIconPathList
-          ? _value.budgetCategoryIconPathList
-          : budgetCategoryIconPathList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      budgetCategoryColorList: null == budgetCategoryColorList
-          ? _value.budgetCategoryColorList
-          : budgetCategoryColorList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            cardStatusType: null == cardStatusType
+                ? _value.cardStatusType
+                : cardStatusType // ignore: cast_nullable_to_non_nullable
+                      as AllCategoryCardStatusType,
+            allCategoryTotalExpense: null == allCategoryTotalExpense
+                ? _value.allCategoryTotalExpense
+                : allCategoryTotalExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            allCategoryTotalBudget: null == allCategoryTotalBudget
+                ? _value.allCategoryTotalBudget
+                : allCategoryTotalBudget // ignore: cast_nullable_to_non_nullable
+                      as int,
+            allCategoryTotalIncome: null == allCategoryTotalIncome
+                ? _value.allCategoryTotalIncome
+                : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
+                      as int,
+            allFixedCostExpense: null == allFixedCostExpense
+                ? _value.allFixedCostExpense
+                : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            denominator: null == denominator
+                ? _value.denominator
+                : denominator // ignore: cast_nullable_to_non_nullable
+                      as int,
+            realSavings: null == realSavings
+                ? _value.realSavings
+                : realSavings // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalBadgetRatio: null == totalBadgetRatio
+                ? _value.totalBadgetRatio
+                : totalBadgetRatio // ignore: cast_nullable_to_non_nullable
+                      as double,
+            expenseCategoryNameList: null == expenseCategoryNameList
+                ? _value.expenseCategoryNameList
+                : expenseCategoryNameList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            expenseCategoryList: null == expenseCategoryList
+                ? _value.expenseCategoryList
+                : expenseCategoryList // ignore: cast_nullable_to_non_nullable
+                      as List<int>,
+            expenseCategoryRatioList: null == expenseCategoryRatioList
+                ? _value.expenseCategoryRatioList
+                : expenseCategoryRatioList // ignore: cast_nullable_to_non_nullable
+                      as List<double>,
+            expenseCategoryIconPathList: null == expenseCategoryIconPathList
+                ? _value.expenseCategoryIconPathList
+                : expenseCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            expenseCategoryColorList: null == expenseCategoryColorList
+                ? _value.expenseCategoryColorList
+                : expenseCategoryColorList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            incomeCategoryNameList: null == incomeCategoryNameList
+                ? _value.incomeCategoryNameList
+                : incomeCategoryNameList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            incomeCategoryList: null == incomeCategoryList
+                ? _value.incomeCategoryList
+                : incomeCategoryList // ignore: cast_nullable_to_non_nullable
+                      as List<int>,
+            incomeCategoryRatioList: null == incomeCategoryRatioList
+                ? _value.incomeCategoryRatioList
+                : incomeCategoryRatioList // ignore: cast_nullable_to_non_nullable
+                      as List<double>,
+            incomeCategoryIconPathList: null == incomeCategoryIconPathList
+                ? _value.incomeCategoryIconPathList
+                : incomeCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            incomeCategoryColorList: null == incomeCategoryColorList
+                ? _value.incomeCategoryColorList
+                : incomeCategoryColorList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            budgetCategoryNameList: null == budgetCategoryNameList
+                ? _value.budgetCategoryNameList
+                : budgetCategoryNameList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            budgetCategoryList: null == budgetCategoryList
+                ? _value.budgetCategoryList
+                : budgetCategoryList // ignore: cast_nullable_to_non_nullable
+                      as List<int>,
+            budgetCategoryIconPathList: null == budgetCategoryIconPathList
+                ? _value.budgetCategoryIconPathList
+                : budgetCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+            budgetCategoryColorList: null == budgetCategoryColorList
+                ? _value.budgetCategoryColorList
+                : budgetCategoryColorList // ignore: cast_nullable_to_non_nullable
+                      as List<String>,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$AllCategoryCardModelImplCopyWith<$Res>
     implements $MonthPlanCardModelCopyWith<$Res> {
-  factory _$$AllCategoryCardModelImplCopyWith(_$AllCategoryCardModelImpl value,
-          $Res Function(_$AllCategoryCardModelImpl) then) =
-      __$$AllCategoryCardModelImplCopyWithImpl<$Res>;
+  factory _$$AllCategoryCardModelImplCopyWith(
+    _$AllCategoryCardModelImpl value,
+    $Res Function(_$AllCategoryCardModelImpl) then,
+  ) = __$$AllCategoryCardModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {AllCategoryCardStatusType cardStatusType,
-      int allCategoryTotalExpense,
-      int allCategoryTotalBudget,
-      int allCategoryTotalIncome,
-      int allFixedCostExpense,
-      int denominator,
-      int realSavings,
-      double totalBadgetRatio,
-      List<String> expenseCategoryNameList,
-      List<int> expenseCategoryList,
-      List<double> expenseCategoryRatioList,
-      List<String> expenseCategoryIconPathList,
-      List<String> expenseCategoryColorList,
-      List<String> incomeCategoryNameList,
-      List<int> incomeCategoryList,
-      List<double> incomeCategoryRatioList,
-      List<String> incomeCategoryIconPathList,
-      List<String> incomeCategoryColorList,
-      List<String> budgetCategoryNameList,
-      List<int> budgetCategoryList,
-      List<String> budgetCategoryIconPathList,
-      List<String> budgetCategoryColorList});
+  $Res call({
+    AllCategoryCardStatusType cardStatusType,
+    int allCategoryTotalExpense,
+    int allCategoryTotalBudget,
+    int allCategoryTotalIncome,
+    int allFixedCostExpense,
+    int denominator,
+    int realSavings,
+    double totalBadgetRatio,
+    List<String> expenseCategoryNameList,
+    List<int> expenseCategoryList,
+    List<double> expenseCategoryRatioList,
+    List<String> expenseCategoryIconPathList,
+    List<String> expenseCategoryColorList,
+    List<String> incomeCategoryNameList,
+    List<int> incomeCategoryList,
+    List<double> incomeCategoryRatioList,
+    List<String> incomeCategoryIconPathList,
+    List<String> incomeCategoryColorList,
+    List<String> budgetCategoryNameList,
+    List<int> budgetCategoryList,
+    List<String> budgetCategoryIconPathList,
+    List<String> budgetCategoryColorList,
+  });
 }
 
 /// @nodoc
 class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
     extends _$MonthPlanCardModelCopyWithImpl<$Res, _$AllCategoryCardModelImpl>
     implements _$$AllCategoryCardModelImplCopyWith<$Res> {
-  __$$AllCategoryCardModelImplCopyWithImpl(_$AllCategoryCardModelImpl _value,
-      $Res Function(_$AllCategoryCardModelImpl) _then)
-      : super(_value, _then);
+  __$$AllCategoryCardModelImplCopyWithImpl(
+    _$AllCategoryCardModelImpl _value,
+    $Res Function(_$AllCategoryCardModelImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MonthPlanCardModel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -282,139 +297,141 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
     Object? budgetCategoryIconPathList = null,
     Object? budgetCategoryColorList = null,
   }) {
-    return _then(_$AllCategoryCardModelImpl(
-      cardStatusType: null == cardStatusType
-          ? _value.cardStatusType
-          : cardStatusType // ignore: cast_nullable_to_non_nullable
-              as AllCategoryCardStatusType,
-      allCategoryTotalExpense: null == allCategoryTotalExpense
-          ? _value.allCategoryTotalExpense
-          : allCategoryTotalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      allCategoryTotalBudget: null == allCategoryTotalBudget
-          ? _value.allCategoryTotalBudget
-          : allCategoryTotalBudget // ignore: cast_nullable_to_non_nullable
-              as int,
-      allCategoryTotalIncome: null == allCategoryTotalIncome
-          ? _value.allCategoryTotalIncome
-          : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      allFixedCostExpense: null == allFixedCostExpense
-          ? _value.allFixedCostExpense
-          : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      denominator: null == denominator
-          ? _value.denominator
-          : denominator // ignore: cast_nullable_to_non_nullable
-              as int,
-      realSavings: null == realSavings
-          ? _value.realSavings
-          : realSavings // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalBadgetRatio: null == totalBadgetRatio
-          ? _value.totalBadgetRatio
-          : totalBadgetRatio // ignore: cast_nullable_to_non_nullable
-              as double,
-      expenseCategoryNameList: null == expenseCategoryNameList
-          ? _value._expenseCategoryNameList
-          : expenseCategoryNameList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      expenseCategoryList: null == expenseCategoryList
-          ? _value._expenseCategoryList
-          : expenseCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      expenseCategoryRatioList: null == expenseCategoryRatioList
-          ? _value._expenseCategoryRatioList
-          : expenseCategoryRatioList // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      expenseCategoryIconPathList: null == expenseCategoryIconPathList
-          ? _value._expenseCategoryIconPathList
-          : expenseCategoryIconPathList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      expenseCategoryColorList: null == expenseCategoryColorList
-          ? _value._expenseCategoryColorList
-          : expenseCategoryColorList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      incomeCategoryNameList: null == incomeCategoryNameList
-          ? _value._incomeCategoryNameList
-          : incomeCategoryNameList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      incomeCategoryList: null == incomeCategoryList
-          ? _value._incomeCategoryList
-          : incomeCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      incomeCategoryRatioList: null == incomeCategoryRatioList
-          ? _value._incomeCategoryRatioList
-          : incomeCategoryRatioList // ignore: cast_nullable_to_non_nullable
-              as List<double>,
-      incomeCategoryIconPathList: null == incomeCategoryIconPathList
-          ? _value._incomeCategoryIconPathList
-          : incomeCategoryIconPathList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      incomeCategoryColorList: null == incomeCategoryColorList
-          ? _value._incomeCategoryColorList
-          : incomeCategoryColorList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      budgetCategoryNameList: null == budgetCategoryNameList
-          ? _value._budgetCategoryNameList
-          : budgetCategoryNameList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      budgetCategoryList: null == budgetCategoryList
-          ? _value._budgetCategoryList
-          : budgetCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<int>,
-      budgetCategoryIconPathList: null == budgetCategoryIconPathList
-          ? _value._budgetCategoryIconPathList
-          : budgetCategoryIconPathList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-      budgetCategoryColorList: null == budgetCategoryColorList
-          ? _value._budgetCategoryColorList
-          : budgetCategoryColorList // ignore: cast_nullable_to_non_nullable
-              as List<String>,
-    ));
+    return _then(
+      _$AllCategoryCardModelImpl(
+        cardStatusType: null == cardStatusType
+            ? _value.cardStatusType
+            : cardStatusType // ignore: cast_nullable_to_non_nullable
+                  as AllCategoryCardStatusType,
+        allCategoryTotalExpense: null == allCategoryTotalExpense
+            ? _value.allCategoryTotalExpense
+            : allCategoryTotalExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        allCategoryTotalBudget: null == allCategoryTotalBudget
+            ? _value.allCategoryTotalBudget
+            : allCategoryTotalBudget // ignore: cast_nullable_to_non_nullable
+                  as int,
+        allCategoryTotalIncome: null == allCategoryTotalIncome
+            ? _value.allCategoryTotalIncome
+            : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
+                  as int,
+        allFixedCostExpense: null == allFixedCostExpense
+            ? _value.allFixedCostExpense
+            : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        denominator: null == denominator
+            ? _value.denominator
+            : denominator // ignore: cast_nullable_to_non_nullable
+                  as int,
+        realSavings: null == realSavings
+            ? _value.realSavings
+            : realSavings // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalBadgetRatio: null == totalBadgetRatio
+            ? _value.totalBadgetRatio
+            : totalBadgetRatio // ignore: cast_nullable_to_non_nullable
+                  as double,
+        expenseCategoryNameList: null == expenseCategoryNameList
+            ? _value._expenseCategoryNameList
+            : expenseCategoryNameList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        expenseCategoryList: null == expenseCategoryList
+            ? _value._expenseCategoryList
+            : expenseCategoryList // ignore: cast_nullable_to_non_nullable
+                  as List<int>,
+        expenseCategoryRatioList: null == expenseCategoryRatioList
+            ? _value._expenseCategoryRatioList
+            : expenseCategoryRatioList // ignore: cast_nullable_to_non_nullable
+                  as List<double>,
+        expenseCategoryIconPathList: null == expenseCategoryIconPathList
+            ? _value._expenseCategoryIconPathList
+            : expenseCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        expenseCategoryColorList: null == expenseCategoryColorList
+            ? _value._expenseCategoryColorList
+            : expenseCategoryColorList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        incomeCategoryNameList: null == incomeCategoryNameList
+            ? _value._incomeCategoryNameList
+            : incomeCategoryNameList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        incomeCategoryList: null == incomeCategoryList
+            ? _value._incomeCategoryList
+            : incomeCategoryList // ignore: cast_nullable_to_non_nullable
+                  as List<int>,
+        incomeCategoryRatioList: null == incomeCategoryRatioList
+            ? _value._incomeCategoryRatioList
+            : incomeCategoryRatioList // ignore: cast_nullable_to_non_nullable
+                  as List<double>,
+        incomeCategoryIconPathList: null == incomeCategoryIconPathList
+            ? _value._incomeCategoryIconPathList
+            : incomeCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        incomeCategoryColorList: null == incomeCategoryColorList
+            ? _value._incomeCategoryColorList
+            : incomeCategoryColorList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        budgetCategoryNameList: null == budgetCategoryNameList
+            ? _value._budgetCategoryNameList
+            : budgetCategoryNameList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        budgetCategoryList: null == budgetCategoryList
+            ? _value._budgetCategoryList
+            : budgetCategoryList // ignore: cast_nullable_to_non_nullable
+                  as List<int>,
+        budgetCategoryIconPathList: null == budgetCategoryIconPathList
+            ? _value._budgetCategoryIconPathList
+            : budgetCategoryIconPathList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+        budgetCategoryColorList: null == budgetCategoryColorList
+            ? _value._budgetCategoryColorList
+            : budgetCategoryColorList // ignore: cast_nullable_to_non_nullable
+                  as List<String>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
-  const _$AllCategoryCardModelImpl(
-      {required this.cardStatusType,
-      required this.allCategoryTotalExpense,
-      required this.allCategoryTotalBudget,
-      required this.allCategoryTotalIncome,
-      required this.allFixedCostExpense,
-      required this.denominator,
-      required this.realSavings,
-      required this.totalBadgetRatio,
-      required final List<String> expenseCategoryNameList,
-      required final List<int> expenseCategoryList,
-      required final List<double> expenseCategoryRatioList,
-      required final List<String> expenseCategoryIconPathList,
-      required final List<String> expenseCategoryColorList,
-      required final List<String> incomeCategoryNameList,
-      required final List<int> incomeCategoryList,
-      required final List<double> incomeCategoryRatioList,
-      required final List<String> incomeCategoryIconPathList,
-      required final List<String> incomeCategoryColorList,
-      required final List<String> budgetCategoryNameList,
-      required final List<int> budgetCategoryList,
-      required final List<String> budgetCategoryIconPathList,
-      required final List<String> budgetCategoryColorList})
-      : _expenseCategoryNameList = expenseCategoryNameList,
-        _expenseCategoryList = expenseCategoryList,
-        _expenseCategoryRatioList = expenseCategoryRatioList,
-        _expenseCategoryIconPathList = expenseCategoryIconPathList,
-        _expenseCategoryColorList = expenseCategoryColorList,
-        _incomeCategoryNameList = incomeCategoryNameList,
-        _incomeCategoryList = incomeCategoryList,
-        _incomeCategoryRatioList = incomeCategoryRatioList,
-        _incomeCategoryIconPathList = incomeCategoryIconPathList,
-        _incomeCategoryColorList = incomeCategoryColorList,
-        _budgetCategoryNameList = budgetCategoryNameList,
-        _budgetCategoryList = budgetCategoryList,
-        _budgetCategoryIconPathList = budgetCategoryIconPathList,
-        _budgetCategoryColorList = budgetCategoryColorList;
+  const _$AllCategoryCardModelImpl({
+    required this.cardStatusType,
+    required this.allCategoryTotalExpense,
+    required this.allCategoryTotalBudget,
+    required this.allCategoryTotalIncome,
+    required this.allFixedCostExpense,
+    required this.denominator,
+    required this.realSavings,
+    required this.totalBadgetRatio,
+    required final List<String> expenseCategoryNameList,
+    required final List<int> expenseCategoryList,
+    required final List<double> expenseCategoryRatioList,
+    required final List<String> expenseCategoryIconPathList,
+    required final List<String> expenseCategoryColorList,
+    required final List<String> incomeCategoryNameList,
+    required final List<int> incomeCategoryList,
+    required final List<double> incomeCategoryRatioList,
+    required final List<String> incomeCategoryIconPathList,
+    required final List<String> incomeCategoryColorList,
+    required final List<String> budgetCategoryNameList,
+    required final List<int> budgetCategoryList,
+    required final List<String> budgetCategoryIconPathList,
+    required final List<String> budgetCategoryColorList,
+  }) : _expenseCategoryNameList = expenseCategoryNameList,
+       _expenseCategoryList = expenseCategoryList,
+       _expenseCategoryRatioList = expenseCategoryRatioList,
+       _expenseCategoryIconPathList = expenseCategoryIconPathList,
+       _expenseCategoryColorList = expenseCategoryColorList,
+       _incomeCategoryNameList = incomeCategoryNameList,
+       _incomeCategoryList = incomeCategoryList,
+       _incomeCategoryRatioList = incomeCategoryRatioList,
+       _incomeCategoryIconPathList = incomeCategoryIconPathList,
+       _incomeCategoryColorList = incomeCategoryColorList,
+       _budgetCategoryNameList = budgetCategoryNameList,
+       _budgetCategoryList = budgetCategoryList,
+       _budgetCategoryIconPathList = budgetCategoryIconPathList,
+       _budgetCategoryColorList = budgetCategoryColorList;
 
   @override
   final AllCategoryCardStatusType cardStatusType;
@@ -432,9 +449,9 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
   final int realSavings;
   @override
   final double totalBadgetRatio;
-// 支出カテゴリー別のデータ
+  // 支出カテゴリー別のデータ
   final List<String> _expenseCategoryNameList;
-// 支出カテゴリー別のデータ
+  // 支出カテゴリー別のデータ
   @override
   List<String> get expenseCategoryNameList {
     if (_expenseCategoryNameList is EqualUnmodifiableListView)
@@ -479,9 +496,9 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
     return EqualUnmodifiableListView(_expenseCategoryColorList);
   }
 
-// 収入カテゴリー別のデータ
+  // 収入カテゴリー別のデータ
   final List<String> _incomeCategoryNameList;
-// 収入カテゴリー別のデータ
+  // 収入カテゴリー別のデータ
   @override
   List<String> get incomeCategoryNameList {
     if (_incomeCategoryNameList is EqualUnmodifiableListView)
@@ -526,9 +543,9 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
     return EqualUnmodifiableListView(_incomeCategoryColorList);
   }
 
-// 予算カテゴリー別のデータ
+  // 予算カテゴリー別のデータ
   final List<String> _budgetCategoryNameList;
-// 予算カテゴリー別のデータ
+  // 予算カテゴリー別のデータ
   @override
   List<String> get budgetCategoryNameList {
     if (_budgetCategoryNameList is EqualUnmodifiableListView)
@@ -577,7 +594,9 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
             (identical(other.cardStatusType, cardStatusType) ||
                 other.cardStatusType == cardStatusType) &&
             (identical(
-                    other.allCategoryTotalExpense, allCategoryTotalExpense) ||
+                  other.allCategoryTotalExpense,
+                  allCategoryTotalExpense,
+                ) ||
                 other.allCategoryTotalExpense == allCategoryTotalExpense) &&
             (identical(other.allCategoryTotalBudget, allCategoryTotalBudget) ||
                 other.allCategoryTotalBudget == allCategoryTotalBudget) &&
@@ -592,99 +611,128 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
             (identical(other.totalBadgetRatio, totalBadgetRatio) ||
                 other.totalBadgetRatio == totalBadgetRatio) &&
             const DeepCollectionEquality().equals(
-                other._expenseCategoryNameList, _expenseCategoryNameList) &&
-            const DeepCollectionEquality()
-                .equals(other._expenseCategoryList, _expenseCategoryList) &&
+              other._expenseCategoryNameList,
+              _expenseCategoryNameList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._expenseCategoryRatioList, _expenseCategoryRatioList) &&
+              other._expenseCategoryList,
+              _expenseCategoryList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._expenseCategoryIconPathList,
-                _expenseCategoryIconPathList) &&
+              other._expenseCategoryRatioList,
+              _expenseCategoryRatioList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._expenseCategoryColorList, _expenseCategoryColorList) &&
+              other._expenseCategoryIconPathList,
+              _expenseCategoryIconPathList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._incomeCategoryNameList, _incomeCategoryNameList) &&
-            const DeepCollectionEquality()
-                .equals(other._incomeCategoryList, _incomeCategoryList) &&
+              other._expenseCategoryColorList,
+              _expenseCategoryColorList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._incomeCategoryRatioList, _incomeCategoryRatioList) &&
+              other._incomeCategoryNameList,
+              _incomeCategoryNameList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._incomeCategoryIconPathList,
-                _incomeCategoryIconPathList) &&
+              other._incomeCategoryList,
+              _incomeCategoryList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._incomeCategoryColorList, _incomeCategoryColorList) &&
+              other._incomeCategoryRatioList,
+              _incomeCategoryRatioList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._budgetCategoryNameList, _budgetCategoryNameList) &&
-            const DeepCollectionEquality()
-                .equals(other._budgetCategoryList, _budgetCategoryList) &&
+              other._incomeCategoryIconPathList,
+              _incomeCategoryIconPathList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._budgetCategoryIconPathList,
-                _budgetCategoryIconPathList) &&
+              other._incomeCategoryColorList,
+              _incomeCategoryColorList,
+            ) &&
             const DeepCollectionEquality().equals(
-                other._budgetCategoryColorList, _budgetCategoryColorList));
+              other._budgetCategoryNameList,
+              _budgetCategoryNameList,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._budgetCategoryList,
+              _budgetCategoryList,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._budgetCategoryIconPathList,
+              _budgetCategoryIconPathList,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._budgetCategoryColorList,
+              _budgetCategoryColorList,
+            ));
   }
 
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        cardStatusType,
-        allCategoryTotalExpense,
-        allCategoryTotalBudget,
-        allCategoryTotalIncome,
-        allFixedCostExpense,
-        denominator,
-        realSavings,
-        totalBadgetRatio,
-        const DeepCollectionEquality().hash(_expenseCategoryNameList),
-        const DeepCollectionEquality().hash(_expenseCategoryList),
-        const DeepCollectionEquality().hash(_expenseCategoryRatioList),
-        const DeepCollectionEquality().hash(_expenseCategoryIconPathList),
-        const DeepCollectionEquality().hash(_expenseCategoryColorList),
-        const DeepCollectionEquality().hash(_incomeCategoryNameList),
-        const DeepCollectionEquality().hash(_incomeCategoryList),
-        const DeepCollectionEquality().hash(_incomeCategoryRatioList),
-        const DeepCollectionEquality().hash(_incomeCategoryIconPathList),
-        const DeepCollectionEquality().hash(_incomeCategoryColorList),
-        const DeepCollectionEquality().hash(_budgetCategoryNameList),
-        const DeepCollectionEquality().hash(_budgetCategoryList),
-        const DeepCollectionEquality().hash(_budgetCategoryIconPathList),
-        const DeepCollectionEquality().hash(_budgetCategoryColorList)
-      ]);
+    runtimeType,
+    cardStatusType,
+    allCategoryTotalExpense,
+    allCategoryTotalBudget,
+    allCategoryTotalIncome,
+    allFixedCostExpense,
+    denominator,
+    realSavings,
+    totalBadgetRatio,
+    const DeepCollectionEquality().hash(_expenseCategoryNameList),
+    const DeepCollectionEquality().hash(_expenseCategoryList),
+    const DeepCollectionEquality().hash(_expenseCategoryRatioList),
+    const DeepCollectionEquality().hash(_expenseCategoryIconPathList),
+    const DeepCollectionEquality().hash(_expenseCategoryColorList),
+    const DeepCollectionEquality().hash(_incomeCategoryNameList),
+    const DeepCollectionEquality().hash(_incomeCategoryList),
+    const DeepCollectionEquality().hash(_incomeCategoryRatioList),
+    const DeepCollectionEquality().hash(_incomeCategoryIconPathList),
+    const DeepCollectionEquality().hash(_incomeCategoryColorList),
+    const DeepCollectionEquality().hash(_budgetCategoryNameList),
+    const DeepCollectionEquality().hash(_budgetCategoryList),
+    const DeepCollectionEquality().hash(_budgetCategoryIconPathList),
+    const DeepCollectionEquality().hash(_budgetCategoryColorList),
+  ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthPlanCardModel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AllCategoryCardModelImplCopyWith<_$AllCategoryCardModelImpl>
-      get copyWith =>
-          __$$AllCategoryCardModelImplCopyWithImpl<_$AllCategoryCardModelImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$AllCategoryCardModelImplCopyWithImpl<_$AllCategoryCardModelImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _AllCategoryCardModel implements MonthPlanCardModel {
-  const factory _AllCategoryCardModel(
-          {required final AllCategoryCardStatusType cardStatusType,
-          required final int allCategoryTotalExpense,
-          required final int allCategoryTotalBudget,
-          required final int allCategoryTotalIncome,
-          required final int allFixedCostExpense,
-          required final int denominator,
-          required final int realSavings,
-          required final double totalBadgetRatio,
-          required final List<String> expenseCategoryNameList,
-          required final List<int> expenseCategoryList,
-          required final List<double> expenseCategoryRatioList,
-          required final List<String> expenseCategoryIconPathList,
-          required final List<String> expenseCategoryColorList,
-          required final List<String> incomeCategoryNameList,
-          required final List<int> incomeCategoryList,
-          required final List<double> incomeCategoryRatioList,
-          required final List<String> incomeCategoryIconPathList,
-          required final List<String> incomeCategoryColorList,
-          required final List<String> budgetCategoryNameList,
-          required final List<int> budgetCategoryList,
-          required final List<String> budgetCategoryIconPathList,
-          required final List<String> budgetCategoryColorList}) =
-      _$AllCategoryCardModelImpl;
+  const factory _AllCategoryCardModel({
+    required final AllCategoryCardStatusType cardStatusType,
+    required final int allCategoryTotalExpense,
+    required final int allCategoryTotalBudget,
+    required final int allCategoryTotalIncome,
+    required final int allFixedCostExpense,
+    required final int denominator,
+    required final int realSavings,
+    required final double totalBadgetRatio,
+    required final List<String> expenseCategoryNameList,
+    required final List<int> expenseCategoryList,
+    required final List<double> expenseCategoryRatioList,
+    required final List<String> expenseCategoryIconPathList,
+    required final List<String> expenseCategoryColorList,
+    required final List<String> incomeCategoryNameList,
+    required final List<int> incomeCategoryList,
+    required final List<double> incomeCategoryRatioList,
+    required final List<String> incomeCategoryIconPathList,
+    required final List<String> incomeCategoryColorList,
+    required final List<String> budgetCategoryNameList,
+    required final List<int> budgetCategoryList,
+    required final List<String> budgetCategoryIconPathList,
+    required final List<String> budgetCategoryColorList,
+  }) = _$AllCategoryCardModelImpl;
 
   @override
   AllCategoryCardStatusType get cardStatusType;
@@ -701,8 +749,8 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
   @override
   int get realSavings;
   @override
-  double get totalBadgetRatio;
-  @override // 支出カテゴリー別のデータ
+  double get totalBadgetRatio; // 支出カテゴリー別のデータ
+  @override
   List<String> get expenseCategoryNameList;
   @override
   List<int> get expenseCategoryList;
@@ -711,8 +759,8 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
   @override
   List<String> get expenseCategoryIconPathList;
   @override
-  List<String> get expenseCategoryColorList;
-  @override // 収入カテゴリー別のデータ
+  List<String> get expenseCategoryColorList; // 収入カテゴリー別のデータ
+  @override
   List<String> get incomeCategoryNameList;
   @override
   List<int> get incomeCategoryList;
@@ -721,8 +769,8 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
   @override
   List<String> get incomeCategoryIconPathList;
   @override
-  List<String> get incomeCategoryColorList;
-  @override // 予算カテゴリー別のデータ
+  List<String> get incomeCategoryColorList; // 予算カテゴリー別のデータ
+  @override
   List<String> get budgetCategoryNameList;
   @override
   List<int> get budgetCategoryList;
@@ -730,8 +778,11 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
   List<String> get budgetCategoryIconPathList;
   @override
   List<String> get budgetCategoryColorList;
+
+  /// Create a copy of MonthPlanCardModel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AllCategoryCardModelImplCopyWith<_$AllCategoryCardModelImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
