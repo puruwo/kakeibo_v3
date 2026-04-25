@@ -37,22 +37,29 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
     MyColors.expensePurple,
   ];
 
+  final List<Color> incomeColorList = [
+    MyColors.incomeEmerald,
+    MyColors.incomeGreen,
+    MyColors.incomeDeepGreen,
+    MyColors.incomeMintGreen,
+  ];
+
   @override
   Widget build(BuildContext context) {
-    // ====状態管理====
-
     // 選択カラーを取得（カテゴリータイプに応じて切り替え）
     selectedColor = widget.categoryType == CategoryType.income
         ? ref.watch(incomeBigCategoryColorControllerNotifierProvider)
         : ref.watch(bigCategroyColorControllerNotifierProvider);
 
-    // ==============
+    final effectiveList = widget.categoryType == CategoryType.income
+        ? incomeColorList
+        : colorList;
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         alignment: Alignment.center,
-        height: 150,
+        height: widget.categoryType == CategoryType.income ? 100 : 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,9 +70,8 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (upperRowIndex) {
-                final index = upperRowIndex;
-                final color = colorList[index];
+              children: List.generate(4, (index) {
+                final color = effectiveList[index];
                 return AppInkWell(
                   borderRadius: BorderRadius.circular(8),
                   onTap: () {
@@ -75,20 +81,20 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
                 );
               }),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(4, (underRowIndex) {
-                final index = 4 + underRowIndex;
-                final color = colorList[index];
-                return AppInkWell(
-                  borderRadius: BorderRadius.circular(8),
-                  onTap: () {
-                    colorSelectFunction(color);
-                  },
-                  child: colorCircle(color, selectedColor),
-                );
-              }),
-            ),
+            if (widget.categoryType != CategoryType.income)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(4, (index) {
+                  final color = effectiveList[4 + index];
+                  return AppInkWell(
+                    borderRadius: BorderRadius.circular(8),
+                    onTap: () {
+                      colorSelectFunction(color);
+                    },
+                    child: colorCircle(color, selectedColor),
+                  );
+                }),
+              ),
           ],
         ),
       ),
