@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // LocalImport
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
-import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/add_complete_button/add_complete_big_category_detail_button.dart';
-import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/cotegory_appearance_edit_area.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/add_complete_big_category_detail_button.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/cotegory_appearance_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/small_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/update_complete_button/update_complete_big_category_detail_button.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/fixed_cost_category_detail_edit_page/fixed_cost_category_appearance_edit_area.dart';
@@ -72,13 +72,15 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
                 ref.invalidate(edittingSmallCategoryListNotifierProvider);
               } else if (widget.categoryType == CategoryType.income) {
                 ref.invalidate(
-                    isIncomeBigCategoryAppearanceEditedNotifierProvider);
+                  isIncomeBigCategoryAppearanceEditedNotifierProvider,
+                );
                 ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
                 ref.invalidate(edittingIncomeSmallCategoryListNotifierProvider);
                 ref.invalidate(incomeBigCategoryNameControllerProvider);
                 ref.invalidate(incomeBigCategoryIconControllerNotifierProvider);
                 ref.invalidate(
-                    incomeBigCategoryColorControllerNotifierProvider);
+                  incomeBigCategoryColorControllerNotifierProvider,
+                );
               } else {
                 ref.invalidate(fixedCostCategoryNameControllerNotifierProvider);
                 ref.invalidate(fixedCostCategoryIconControllerNotifierProvider);
