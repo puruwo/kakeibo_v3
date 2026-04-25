@@ -9,7 +9,7 @@ class IncomeBigCategoryColorControllerNotifier
     extends _$IncomeBigCategoryColorControllerNotifier {
   @override
   Color build() {
-    return MyColors.expensePink;
+    return MyColors.incomeGreen;
   }
 
   void initState(Color color) {
