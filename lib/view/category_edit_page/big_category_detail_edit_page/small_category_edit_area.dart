@@ -35,7 +35,7 @@ class SmallCategoryEditArea extends ConsumerStatefulWidget {
 }
 
 class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
-  // アイテムリスト（dynamic: expense/income それぞれの value 型を受ける）
+  // アイテムリスト
   late List<dynamic> itemList;
 
   bool isInitial = true;
@@ -44,15 +44,16 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
   void initState() {
     super.initState();
 
-    // 取得したデータを編集用の状態管理プロバイダーに格納し編集できる状態にする
+    // 取得したデータをedittingSmallCategoryListNotifierProviderに格納し編集できる状態にする
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.bigId == -1) {
         // 新規作成の時は初期化しない
         return;
       }
 
-      // 一度だけ取得してセット（カテゴリータイプに応じて切り替え）
+      // 一度だけ取得してセット
       Future(() async {
+        // 一度だけ取得してセット
         if (widget.categoryType == CategoryType.income) {
           final initialList = await ref.watch(
             allIncomeSmallCategoriesListProvider(widget.bigId).future,
@@ -82,7 +83,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
     // 左のpaddingの大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
 
-    // アイテムリストを状態監視（カテゴリータイプに応じて切り替え）
+    // アイテムリストを状態監視
     itemList = widget.categoryType == CategoryType.income
         ? ref.watch(edittingIncomeSmallCategoryListNotifierProvider)
         : ref.watch(edittingSmallCategoryListNotifierProvider);
@@ -142,9 +143,12 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                           .notifier)
                       .updateState(true);
                 } else {
+                  // カテゴリーの状態を保持しているリストの並び替え
                   ref
                       .read(edittingSmallCategoryListNotifierProvider.notifier)
                       .reorder(oldIndex, newIndex);
+
+                  // 変更を加えたことを管理する状態管理する
                   ref
                       .read(isSmallCategoryListEditedNotifierProvider.notifier)
                       .updateState(true);
@@ -190,12 +194,14 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                             )
                                             .updateState(true);
                                       } else {
+                                        // チェックボックスの状態を更新する
                                         ref
                                             .read(
                                               edittingSmallCategoryListNotifierProvider
                                                   .notifier,
                                             )
                                             .toggleDisplay(index);
+                                        // 変更を加えたことを管理する状態管理する
                                         ref
                                             .read(
                                               isSmallCategoryListEditedNotifierProvider

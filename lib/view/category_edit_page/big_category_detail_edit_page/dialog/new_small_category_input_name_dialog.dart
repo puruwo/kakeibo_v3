@@ -191,7 +191,7 @@ class _NewSmallCategoryInputNameDialog
                           )
                           .updateState(true);
                     } else {
-                      // 一般（支出）小カテゴリー用entity
+                      // 入力された名前を使って新しい小カテゴリーのentityを作成
                       final entity = EditExpenseSmallCategoryValue(
                         id: -1, // 新規作成なのでIDは-1
                         bigCategoryKey: widget.bigCategoryId,
@@ -203,12 +203,14 @@ class _NewSmallCategoryInputNameDialog
                         etitedStateIsChecked: true,
                       );
 
+                      // 追加する処理をここに書く
                       ref
                           .read(
                             edittingSmallCategoryListNotifierProvider.notifier,
                           )
                           .addSmallCategory(entity);
 
+                      // 変更を加えたことを管理する状態管理する
                       ref
                           .read(
                             isSmallCategoryListEditedNotifierProvider.notifier,

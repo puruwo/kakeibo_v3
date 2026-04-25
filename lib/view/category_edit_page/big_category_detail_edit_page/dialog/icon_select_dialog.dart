@@ -43,7 +43,7 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
   Widget build(BuildContext context) {
     // ====状態管理====
 
-    // アイコンのパスを取得（カテゴリータイプに応じて切り替え）
+    // アイコンのパスを取得
     iconPath = widget.categoryType == CategoryType.income
         ? ref.watch(incomeBigCategoryIconControllerNotifierProvider)
         : ref.watch(bigCategroyIconControllerNotifierProvider);
