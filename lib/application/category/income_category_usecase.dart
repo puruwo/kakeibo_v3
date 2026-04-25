@@ -34,12 +34,15 @@ class IncomeCategoryUsecase {
 
   /// [fetchAllBigCategory] メソッドは、収入大カテゴリーを全て取得する
   Future<List<IncomeBigCategoryEntity>> fetchAllBigCategory() async {
+    // 大カテゴリーを全て取得する
     final list = await _bigCategoryRepositoryProvider.fetchAll();
+
     return list;
   }
 
   /// [fetchAllCategory] メソッドは、収入カテゴリーを全て取得する
   Future<List<IncomeCategoryEntity>> fetchAllCategory() async {
+    // 小カテゴリーを取得する
     final smallCategoryEntityList =
         await _smallCategoryRepositoryProvider.fetchAll();
 
@@ -47,10 +50,12 @@ class IncomeCategoryUsecase {
 
     for (IncomeSmallCategoryEntity smallCategoryEntity
         in smallCategoryEntityList) {
+      // 大カテゴリーを取得する
       final incomeBigCategoryEntity =
           await _bigCategoryRepositoryProvider.fetchByBigCategory(
               bigCategoryId: smallCategoryEntity.bigCategoryKey);
 
+      // カテゴリー情報をまとめてentityに格納する
       final categoryEntity = IncomeCategoryEntity(
         id: smallCategoryEntity.id,
         smallCategoryOrderKey: smallCategoryEntity.smallCategoryOrderKey,
@@ -61,14 +66,18 @@ class IncomeCategoryUsecase {
         bigCategoryName: incomeBigCategoryEntity.name,
         colorCode: incomeBigCategoryEntity.colorCode,
         resourcePath: incomeBigCategoryEntity.iconPath,
+        // displayOrder: incomeBigCategoryEntity.displayOrder,
+        // isDisplayed: incomeBigCategoryEntity.isDisplayed,
       );
 
       results.add(categoryEntity);
     }
 
+    // smallCategoryOrderKeyの昇順で並び替える
     results.sort(
         ((a, b) => a.smallCategoryOrderKey.compareTo(b.smallCategoryOrderKey)));
 
+    // smallCategoryOrderKeyが歯抜けの場合の対策として整数連続値でsortKeyを付与する
     int i = 0;
     for (IncomeCategoryEntity categoryEntity in results) {
       final updated = categoryEntity.copyWith(sortKey: i);
@@ -81,6 +90,7 @@ class IncomeCategoryUsecase {
 
   /// [fetchBigCategoryByBigId] メソッドは、収入カテゴリーを取得する
   Future<IncomeBigCategoryEntity> fetchBigCategoryByBigId(int id) async {
+    // 大カテゴリーを取得する
     final incomeBigCategoryEntity = await _bigCategoryRepositoryProvider
         .fetchByBigCategory(bigCategoryId: id);
 
@@ -89,12 +99,15 @@ class IncomeCategoryUsecase {
 
   /// [fetchCategoryBySmallId] メソッドは、収入カテゴリーを取得する
   Future<IncomeCategoryEntity> fetchCategoryBySmallId(int id) async {
+    // 小カテゴリーを取得する
     final smallCategoryEntity = await _smallCategoryRepositoryProvider
         .fetchBySmallCategory(smallCategoryId: id);
 
+    // 大カテゴリーを取得する
     final incomeBigCategoryEntity = await _bigCategoryRepositoryProvider
         .fetchByBigCategory(bigCategoryId: smallCategoryEntity.bigCategoryKey);
 
+    // カテゴリー情報をまとめてentityに格納する
     final categoryEntity = IncomeCategoryEntity(
       id: smallCategoryEntity.id,
       smallCategoryOrderKey: smallCategoryEntity.smallCategoryOrderKey,
@@ -105,6 +118,8 @@ class IncomeCategoryUsecase {
       bigCategoryName: incomeBigCategoryEntity.name,
       colorCode: incomeBigCategoryEntity.colorCode,
       resourcePath: incomeBigCategoryEntity.iconPath,
+      // displayOrder: incomeBigCategoryEntity.displayOrder,
+      // isDisplayed: incomeBigCategoryEntity.isDisplayed,
     );
 
     return categoryEntity;
@@ -307,9 +322,11 @@ class IncomeCategoryUsecase {
       final categoryId = entry.key;
       final newOrder = entry.value;
 
+      // 小カテゴリーを取得して更新
       final smallCategory = await _smallCategoryRepositoryProvider
           .fetchBySmallCategory(smallCategoryId: categoryId);
 
+      // エンティティに定義されているupdateメソッドを使用
       final updatedEntity = IncomeSmallCategoryEntity(
         id: smallCategory.id,
         smallCategoryOrderKey: newOrder,
