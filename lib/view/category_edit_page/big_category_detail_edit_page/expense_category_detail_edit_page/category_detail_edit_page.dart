@@ -76,11 +76,6 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
                 );
                 ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
                 ref.invalidate(edittingIncomeSmallCategoryListNotifierProvider);
-                ref.invalidate(incomeBigCategoryNameControllerProvider);
-                ref.invalidate(incomeBigCategoryIconControllerNotifierProvider);
-                ref.invalidate(
-                  incomeBigCategoryColorControllerNotifierProvider,
-                );
               } else {
                 ref.invalidate(fixedCostCategoryNameControllerNotifierProvider);
                 ref.invalidate(fixedCostCategoryIconControllerNotifierProvider);
