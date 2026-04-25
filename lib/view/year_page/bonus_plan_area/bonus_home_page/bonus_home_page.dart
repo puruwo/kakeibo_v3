@@ -108,7 +108,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                         controller: scrollController,
                         physics: const ClampingScrollPhysics(),
                         child: Padding(
-                          padding: const EdgeInsets.only(top: 8.0, bottom: 4.0),
+                          padding: const EdgeInsets.only(top: 0, bottom: 4.0),
                           child: Center(
                             child: Container(
                               width: 40,
