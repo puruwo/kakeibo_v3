@@ -46,10 +46,14 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
 
   @override
   Widget build(BuildContext context) {
+    // ====状態管理====
+
     // 選択カラーを取得（カテゴリータイプに応じて切り替え）
     selectedColor = widget.categoryType == CategoryType.income
         ? ref.watch(incomeBigCategoryColorControllerNotifierProvider)
         : ref.watch(bigCategroyColorControllerNotifierProvider);
+
+    // ==============
 
     final effectiveList = widget.categoryType == CategoryType.income
         ? incomeColorList
