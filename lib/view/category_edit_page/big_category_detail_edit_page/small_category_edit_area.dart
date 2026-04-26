@@ -44,7 +44,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
   List<TextEditingController> _controllers = [];
 
   /// コントローラー数をアイテムリストに同期する（末尾の追加/削除のみ）
-  void _syncControllers(List<EditExpenseSmallCategoryValue> items) {
+  void _syncControllers(List<dynamic> items) {
     while (_controllers.length < items.length) {
       _controllers.add(
         TextEditingController(text: items[_controllers.length].name),
@@ -76,6 +76,9 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
           ref
               .read(edittingIncomeSmallCategoryListNotifierProvider.notifier)
               .setData(initialList);
+          setState(() {
+            _syncControllers(initialList);
+          });
         } else {
           final initialList = await ref.watch(
             allSmallCategoriesListProvider(widget.bigId).future,
@@ -83,6 +86,9 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
           ref
               .read(edittingSmallCategoryListNotifierProvider.notifier)
               .setData(initialList);
+          setState(() {
+            _syncControllers(initialList);
+          });
         }
       });
     });
@@ -110,6 +116,12 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
     itemList = widget.categoryType == CategoryType.income
         ? ref.watch(edittingIncomeSmallCategoryListNotifierProvider)
         : ref.watch(edittingSmallCategoryListNotifierProvider);
+
+    // アイテム数が変わったときにコントローラー数を同期（新規追加など）
+    if (_controllers.length != itemList.length) {
+      _syncControllers(itemList);
+    }
+
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -176,6 +188,14 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                       .read(isSmallCategoryListEditedNotifierProvider.notifier)
                       .updateState(true);
                 }
+
+                // コントローラーも同じ順番に並べ替える
+                setState(() {
+                  int adjustedNewIndex = newIndex;
+                  if (oldIndex < adjustedNewIndex) adjustedNewIndex -= 1;
+                  final controller = _controllers.removeAt(oldIndex);
+                  _controllers.insert(adjustedNewIndex, controller);
+                });
               },
               itemCount: itemList.length + 1, // +1は追加ボタン用
               itemBuilder: (BuildContext context, int index) {
@@ -258,18 +278,34 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                           contentPadding: EdgeInsets.zero,
                                         ),
                                         onChanged: (value) {
-                                          ref
-                                              .read(
-                                                edittingSmallCategoryListNotifierProvider
-                                                    .notifier,
-                                              )
-                                              .updateName(index, value);
-                                          ref
-                                              .read(
-                                                isSmallCategoryListEditedNotifierProvider
-                                                    .notifier,
-                                              )
-                                              .updateState(true);
+                                          if (widget.categoryType ==
+                                              CategoryType.income) {
+                                            ref
+                                                .read(
+                                                  edittingIncomeSmallCategoryListNotifierProvider
+                                                      .notifier,
+                                                )
+                                                .updateName(index, value);
+                                            ref
+                                                .read(
+                                                  isIncomeSmallCategoryListEditedNotifierProvider
+                                                      .notifier,
+                                                )
+                                                .updateState(true);
+                                          } else {
+                                            ref
+                                                .read(
+                                                  edittingSmallCategoryListNotifierProvider
+                                                      .notifier,
+                                                )
+                                                .updateName(index, value);
+                                            ref
+                                                .read(
+                                                  isSmallCategoryListEditedNotifierProvider
+                                                      .notifier,
+                                                )
+                                                .updateState(true);
+                                          }
                                         },
                                       )
                                     : Text(

@@ -44,4 +44,9 @@ class EdittingIncomeSmallCategoryListNotifier
   void addSmallCategory(EditIncomeSmallCategoryValue value) {
     state = [...state, value];
   }
+
+  // 小カテゴリーの名前を更新する
+  void updateName(int index, String name) {
+    state[index] = state[index].copyWith(name: name);
+  }
 }
