@@ -14,6 +14,7 @@ import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_area.dart';
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -96,11 +97,29 @@ class _YearPageState extends ConsumerState<YearPage> {
               ),
               const BonusPlanArea(),
               const SizedBox(height: 16),
-              const AppContentsHeader(
-                type: AppContentsHeaderType.appCardSectionTitle,
-                title: '生活収支',
+              Consumer(
+                builder: (context, ref, _) {
+                  final asyncValue =
+                      ref.watch(resolvedAnnualBalanceChartValueProvider);
+                  // データなし時はセクションごと非表示
+                  final shouldHide = asyncValue.maybeWhen(
+                    data: (value) => value.hasNoRecord,
+                    orElse: () => false,
+                  );
+                  if (shouldHide) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: const [
+                      AppContentsHeader(
+                        type: AppContentsHeaderType.appCardSectionTitle,
+                        title: '生活収支',
+                      ),
+                      AnnualBalanceChart(),
+                    ],
+                  );
+                },
               ),
-              const AnnualBalanceChart(),
               const SizedBox(height: 128),
             ],
           ),
