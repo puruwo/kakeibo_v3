@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 
 /// localImport
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/app_component.dart';
@@ -72,10 +71,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
-          title: Text(
-            'ボーナス利用状況',
-            style: AppTextStyles.pageHeaderText,
-          ),
+          title: Text('ボーナス利用状況', style: AppTextStyles.pageHeaderText),
         ),
 
         // 本体
@@ -87,114 +83,121 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
               child: BonusPlanArea(),
             ),
             DraggableScrollableSheet(
-                // 初期の表示割合
-                initialChildSize: 0.7,
-                // 最小の表示割合
-                minChildSize: 0.7,
-                // 最大の表示割合
-                maxChildSize: 1.0,
-                // ドラッグを離した時に一番近いsnapSizeになるか
-                snap: true,
-                // snapで止める時の割合
-                snapSizes: const [0.7, 1.0],
-                builder: (context, scrollController) {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // ハンドルバー
-                      // SingleChildScrollViewの範囲がドラッグできる範囲
-                      // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
-                      SingleChildScrollView(
-                        controller: scrollController,
-                        physics: const ClampingScrollPhysics(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(top: 0, bottom: 4.0),
-                          child: Center(
-                            child: Container(
-                              width: 40,
-                              height: 4,
-                              decoration: BoxDecoration(
-                                color: MyColors.barHandler,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
+              // 初期の表示割合
+              initialChildSize: 0.7,
+              // 最小の表示割合
+              minChildSize: 0.7,
+              // 最大の表示割合
+              maxChildSize: 1.0,
+              // ドラッグを離した時に一番近いsnapSizeになるか
+              snap: true,
+              // snapで止める時の割合
+              snapSizes: const [0.7, 1.0],
+              builder: (context, scrollController) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // ハンドルバー
+                    // SingleChildScrollViewの範囲がドラッグできる範囲
+                    // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
+                    SingleChildScrollView(
+                      controller: scrollController,
+                      physics: const ClampingScrollPhysics(),
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 0, bottom: 4.0),
+                        child: Center(
+                          child: Container(
+                            width: 40,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              color: MyColors.barHandler,
+                              borderRadius: BorderRadius.circular(2),
                             ),
                           ),
                         ),
                       ),
-                      Expanded(
-                        child: Container(
-                          // 背景色 & 角丸
-                          decoration: const BoxDecoration(
-                            color: MyColors.quarternarySystemfillOpaque,
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(24)),
-                            boxShadow: [
-                              // 少し上からの影をつけると見栄えが良い
-                              BoxShadow(
-                                color: Colors.black26,
-                                blurRadius: 8,
-                                spreadRadius: 2,
-                              ),
-                            ],
+                    ),
+                    Expanded(
+                      child: Container(
+                        // 背景色 & 角丸
+                        decoration: const BoxDecoration(
+                          color: MyColors.quarternarySystemfillOpaque,
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(24),
                           ),
-                          child: Column(
-                            children: [
-                              // SingleChildScrollViewの範囲がドラッグできる範囲
-                              // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
-                              SingleChildScrollView(
-                                controller: scrollController,
-                                physics: const ClampingScrollPhysics(),
-                                child: Column(
-                                  children: [
-                                    // タブ
-                                    AppTab(
-                                      tabController: _tabController,
-                                      tabs: const [
-                                        Tab(text: 'ボーナス支出'),
-                                        Tab(text: 'ボーナス収入'),
-                                      ],
+                          boxShadow: [
+                            // 少し上からの影をつけると見栄えが良い
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 8,
+                              spreadRadius: 2,
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            // SingleChildScrollViewの範囲がドラッグできる範囲
+                            // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
+                            SingleChildScrollView(
+                              controller: scrollController,
+                              physics: const ClampingScrollPhysics(),
+                              child: Column(
+                                children: [
+                                  // タブ
+                                  AppTab(
+                                    tabController: _tabController,
+                                    tabs: const [
+                                      Tab(text: 'ボーナス支出'),
+                                      Tab(text: 'ボーナス収入'),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            const Divider(height: 1),
+
+                            Expanded(
+                              child: TabBarView(
+                                controller: _tabController,
+                                children: const [
+                                  // ボーナス支出のエリア
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 16.0,
                                     ),
-                                  ],
-                                ),
+                                    child: BonusExpenseListArea(),
+                                  ),
+
+                                  // ボーナス収入のエリア
+                                  BonusIncomeListArea(),
+                                ],
                               ),
+                            ),
 
-                              const Divider(height: 1),
+                            const Divider(height: 1),
 
-                              Expanded(
-                                child: TabBarView(
-                                  controller: _tabController,
-                                  children: const [
-                                    // ボーナス支出のエリア
-                                    Padding(
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 16.0),
-                                      child: BonusExpenseListArea(),
-                                    ),
-
-                                    // ボーナス収入のエリア
-                                    BonusIncomeListArea(),
-                                  ],
+                            // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
+                            const SafeArea(
+                              top: false,
+                              child: Padding(
+                                padding: EdgeInsets.fromLTRB(
+                                  16.0,
+                                  16.0,
+                                  16.0,
+                                  16.0,
                                 ),
+                                child: BonusHomeFooter(),
                               ),
-
-                              const Divider(height: 1),
-
-                              // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
-                              const SafeArea(
-                                top: false,
-                                child: Padding(
-                                  padding:
-                                      EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-                                  child: BonusHomeFooter(),
-                                ),
-                              ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                    ],
-                  );
-                }),
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
