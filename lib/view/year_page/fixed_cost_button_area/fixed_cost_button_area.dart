@@ -8,11 +8,23 @@ import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
-class FixedCostButtonArea extends StatelessWidget {
+class FixedCostButtonArea extends ConsumerWidget {
   const FixedCostButtonArea({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final activeCountAsync = ref.watch(activeFixedCostCountProvider);
+
+    // 件数取得時のみ空状態を判定し、ローディング・エラー時は安全側で従来表示
+    final isEmpty = activeCountAsync.maybeWhen(
+      data: (count) => count == 0,
+      orElse: () => false,
+    );
+
+    if (isEmpty) {
+      return const FixedCostRegistrationCallToActionButton();
+    }
+
     return const Row(
       children: [
         Expanded(
@@ -108,6 +120,50 @@ class FixedCostAddButton extends StatelessWidget {
           size: 18,
           Icons.add_rounded,
           color: MyColors.secondaryLabel,
+        ),
+      ),
+    );
+  }
+}
+
+/// 固定費が0件のときに表示する登録誘導ボタン（フル幅）
+class FixedCostRegistrationCallToActionButton extends StatelessWidget {
+  const FixedCostRegistrationCallToActionButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return AppInkWell(
+      color: MyColors.quarternarySystemfill,
+      borderRadius: BorderRadius.circular(50.0),
+      onTap: () {
+        showAppModalBottomSheet(
+          context,
+          child: const RegisaterPageBase.addFixedCost(),
+        );
+      },
+      child: Container(
+        height: 46,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                size: 18,
+                Icons.add_rounded,
+                color: MyColors.secondaryLabel,
+              ),
+              const SizedBox(width: 8),
+              Text(
+                '固定費を登録する',
+                style: AppTextStyles.oneLineButtonText,
+              ),
+            ],
+          ),
         ),
       ),
     );
