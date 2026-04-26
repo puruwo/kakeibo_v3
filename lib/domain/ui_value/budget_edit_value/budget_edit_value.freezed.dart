@@ -12,7 +12,8 @@ part of 'budget_edit_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$BudgetEditValue {
@@ -27,7 +28,9 @@ mixin _$BudgetEditValue {
   String get resourcePath => throw _privateConstructorUsedError;
   int get displayOrder => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BudgetEditValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $BudgetEditValueCopyWith<BudgetEditValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -35,20 +38,22 @@ mixin _$BudgetEditValue {
 /// @nodoc
 abstract class $BudgetEditValueCopyWith<$Res> {
   factory $BudgetEditValueCopyWith(
-          BudgetEditValue value, $Res Function(BudgetEditValue) then) =
-      _$BudgetEditValueCopyWithImpl<$Res, BudgetEditValue>;
+    BudgetEditValue value,
+    $Res Function(BudgetEditValue) then,
+  ) = _$BudgetEditValueCopyWithImpl<$Res, BudgetEditValue>;
   @useResult
-  $Res call(
-      {int id,
-      BudgetStatus budgetStatus,
-      int expenseBigCategoryId,
-      String month,
-      int price,
-      int lastMonthBudgetPrice,
-      String expenseBigCategoryName,
-      String colorCode,
-      String resourcePath,
-      int displayOrder});
+  $Res call({
+    int id,
+    BudgetStatus budgetStatus,
+    int expenseBigCategoryId,
+    String month,
+    int price,
+    int lastMonthBudgetPrice,
+    String expenseBigCategoryName,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+  });
 }
 
 /// @nodoc
@@ -61,6 +66,8 @@ class _$BudgetEditValueCopyWithImpl<$Res, $Val extends BudgetEditValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of BudgetEditValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -75,70 +82,75 @@ class _$BudgetEditValueCopyWithImpl<$Res, $Val extends BudgetEditValue>
     Object? resourcePath = null,
     Object? displayOrder = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      budgetStatus: null == budgetStatus
-          ? _value.budgetStatus
-          : budgetStatus // ignore: cast_nullable_to_non_nullable
-              as BudgetStatus,
-      expenseBigCategoryId: null == expenseBigCategoryId
-          ? _value.expenseBigCategoryId
-          : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastMonthBudgetPrice: null == lastMonthBudgetPrice
-          ? _value.lastMonthBudgetPrice
-          : lastMonthBudgetPrice // ignore: cast_nullable_to_non_nullable
-              as int,
-      expenseBigCategoryName: null == expenseBigCategoryName
-          ? _value.expenseBigCategoryName
-          : expenseBigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            budgetStatus: null == budgetStatus
+                ? _value.budgetStatus
+                : budgetStatus // ignore: cast_nullable_to_non_nullable
+                      as BudgetStatus,
+            expenseBigCategoryId: null == expenseBigCategoryId
+                ? _value.expenseBigCategoryId
+                : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            month: null == month
+                ? _value.month
+                : month // ignore: cast_nullable_to_non_nullable
+                      as String,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastMonthBudgetPrice: null == lastMonthBudgetPrice
+                ? _value.lastMonthBudgetPrice
+                : lastMonthBudgetPrice // ignore: cast_nullable_to_non_nullable
+                      as int,
+            expenseBigCategoryName: null == expenseBigCategoryName
+                ? _value.expenseBigCategoryName
+                : expenseBigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            displayOrder: null == displayOrder
+                ? _value.displayOrder
+                : displayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$BudgetEditValueImplCopyWith<$Res>
     implements $BudgetEditValueCopyWith<$Res> {
-  factory _$$BudgetEditValueImplCopyWith(_$BudgetEditValueImpl value,
-          $Res Function(_$BudgetEditValueImpl) then) =
-      __$$BudgetEditValueImplCopyWithImpl<$Res>;
+  factory _$$BudgetEditValueImplCopyWith(
+    _$BudgetEditValueImpl value,
+    $Res Function(_$BudgetEditValueImpl) then,
+  ) = __$$BudgetEditValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      BudgetStatus budgetStatus,
-      int expenseBigCategoryId,
-      String month,
-      int price,
-      int lastMonthBudgetPrice,
-      String expenseBigCategoryName,
-      String colorCode,
-      String resourcePath,
-      int displayOrder});
+  $Res call({
+    int id,
+    BudgetStatus budgetStatus,
+    int expenseBigCategoryId,
+    String month,
+    int price,
+    int lastMonthBudgetPrice,
+    String expenseBigCategoryName,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+  });
 }
 
 /// @nodoc
@@ -146,9 +158,12 @@ class __$$BudgetEditValueImplCopyWithImpl<$Res>
     extends _$BudgetEditValueCopyWithImpl<$Res, _$BudgetEditValueImpl>
     implements _$$BudgetEditValueImplCopyWith<$Res> {
   __$$BudgetEditValueImplCopyWithImpl(
-      _$BudgetEditValueImpl _value, $Res Function(_$BudgetEditValueImpl) _then)
-      : super(_value, _then);
+    _$BudgetEditValueImpl _value,
+    $Res Function(_$BudgetEditValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of BudgetEditValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -163,65 +178,68 @@ class __$$BudgetEditValueImplCopyWithImpl<$Res>
     Object? resourcePath = null,
     Object? displayOrder = null,
   }) {
-    return _then(_$BudgetEditValueImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      budgetStatus: null == budgetStatus
-          ? _value.budgetStatus
-          : budgetStatus // ignore: cast_nullable_to_non_nullable
-              as BudgetStatus,
-      expenseBigCategoryId: null == expenseBigCategoryId
-          ? _value.expenseBigCategoryId
-          : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastMonthBudgetPrice: null == lastMonthBudgetPrice
-          ? _value.lastMonthBudgetPrice
-          : lastMonthBudgetPrice // ignore: cast_nullable_to_non_nullable
-              as int,
-      expenseBigCategoryName: null == expenseBigCategoryName
-          ? _value.expenseBigCategoryName
-          : expenseBigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$BudgetEditValueImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        budgetStatus: null == budgetStatus
+            ? _value.budgetStatus
+            : budgetStatus // ignore: cast_nullable_to_non_nullable
+                  as BudgetStatus,
+        expenseBigCategoryId: null == expenseBigCategoryId
+            ? _value.expenseBigCategoryId
+            : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        month: null == month
+            ? _value.month
+            : month // ignore: cast_nullable_to_non_nullable
+                  as String,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastMonthBudgetPrice: null == lastMonthBudgetPrice
+            ? _value.lastMonthBudgetPrice
+            : lastMonthBudgetPrice // ignore: cast_nullable_to_non_nullable
+                  as int,
+        expenseBigCategoryName: null == expenseBigCategoryName
+            ? _value.expenseBigCategoryName
+            : expenseBigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        displayOrder: null == displayOrder
+            ? _value.displayOrder
+            : displayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$BudgetEditValueImpl implements _BudgetEditValue {
-  const _$BudgetEditValueImpl(
-      {required this.id,
-      required this.budgetStatus,
-      required this.expenseBigCategoryId,
-      required this.month,
-      required this.price,
-      required this.lastMonthBudgetPrice,
-      required this.expenseBigCategoryName,
-      required this.colorCode,
-      required this.resourcePath,
-      required this.displayOrder});
+  const _$BudgetEditValueImpl({
+    required this.id,
+    required this.budgetStatus,
+    required this.expenseBigCategoryId,
+    required this.month,
+    required this.price,
+    required this.lastMonthBudgetPrice,
+    required this.expenseBigCategoryName,
+    required this.colorCode,
+    required this.resourcePath,
+    required this.displayOrder,
+  });
 
   @override
   final int id;
@@ -275,38 +293,44 @@ class _$BudgetEditValueImpl implements _BudgetEditValue {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      budgetStatus,
-      expenseBigCategoryId,
-      month,
-      price,
-      lastMonthBudgetPrice,
-      expenseBigCategoryName,
-      colorCode,
-      resourcePath,
-      displayOrder);
+    runtimeType,
+    id,
+    budgetStatus,
+    expenseBigCategoryId,
+    month,
+    price,
+    lastMonthBudgetPrice,
+    expenseBigCategoryName,
+    colorCode,
+    resourcePath,
+    displayOrder,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BudgetEditValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BudgetEditValueImplCopyWith<_$BudgetEditValueImpl> get copyWith =>
       __$$BudgetEditValueImplCopyWithImpl<_$BudgetEditValueImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _BudgetEditValue implements BudgetEditValue {
-  const factory _BudgetEditValue(
-      {required final int id,
-      required final BudgetStatus budgetStatus,
-      required final int expenseBigCategoryId,
-      required final String month,
-      required final int price,
-      required final int lastMonthBudgetPrice,
-      required final String expenseBigCategoryName,
-      required final String colorCode,
-      required final String resourcePath,
-      required final int displayOrder}) = _$BudgetEditValueImpl;
+  const factory _BudgetEditValue({
+    required final int id,
+    required final BudgetStatus budgetStatus,
+    required final int expenseBigCategoryId,
+    required final String month,
+    required final int price,
+    required final int lastMonthBudgetPrice,
+    required final String expenseBigCategoryName,
+    required final String colorCode,
+    required final String resourcePath,
+    required final int displayOrder,
+  }) = _$BudgetEditValueImpl;
 
   @override
   int get id;
@@ -328,8 +352,11 @@ abstract class _BudgetEditValue implements BudgetEditValue {
   String get resourcePath;
   @override
   int get displayOrder;
+
+  /// Create a copy of BudgetEditValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BudgetEditValueImplCopyWith<_$BudgetEditValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

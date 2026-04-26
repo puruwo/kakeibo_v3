@@ -12,7 +12,8 @@ part of 'daily_transaction_group.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$DailyTransactionGroup {
@@ -30,30 +31,36 @@ mixin _$DailyTransactionGroup {
   List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DailyTransactionGroup
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DailyTransactionGroupCopyWith<DailyTransactionGroup> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $DailyTransactionGroupCopyWith<$Res> {
-  factory $DailyTransactionGroupCopyWith(DailyTransactionGroup value,
-          $Res Function(DailyTransactionGroup) then) =
-      _$DailyTransactionGroupCopyWithImpl<$Res, DailyTransactionGroup>;
+  factory $DailyTransactionGroupCopyWith(
+    DailyTransactionGroup value,
+    $Res Function(DailyTransactionGroup) then,
+  ) = _$DailyTransactionGroupCopyWithImpl<$Res, DailyTransactionGroup>;
   @useResult
-  $Res call(
-      {DateTime date,
-      List<ExpenseHistoryTileValue> expenses,
-      List<ExpenseHistoryTileValue> bonusExpenses,
-      List<IncomeHistoryTileValue> incomes,
-      List<IncomeHistoryTileValue> bonusIncomes,
-      List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-      List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts});
+  $Res call({
+    DateTime date,
+    List<ExpenseHistoryTileValue> expenses,
+    List<ExpenseHistoryTileValue> bonusExpenses,
+    List<IncomeHistoryTileValue> incomes,
+    List<IncomeHistoryTileValue> bonusIncomes,
+    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
+  });
 }
 
 /// @nodoc
-class _$DailyTransactionGroupCopyWithImpl<$Res,
-        $Val extends DailyTransactionGroup>
+class _$DailyTransactionGroupCopyWithImpl<
+  $Res,
+  $Val extends DailyTransactionGroup
+>
     implements $DailyTransactionGroupCopyWith<$Res> {
   _$DailyTransactionGroupCopyWithImpl(this._value, this._then);
 
@@ -62,6 +69,8 @@ class _$DailyTransactionGroupCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DailyTransactionGroup
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -73,36 +82,39 @@ class _$DailyTransactionGroupCopyWithImpl<$Res,
     Object? confirmedFixedCosts = null,
     Object? unconfirmedFixedCosts = null,
   }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expenses: null == expenses
-          ? _value.expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-      bonusExpenses: null == bonusExpenses
-          ? _value.bonusExpenses
-          : bonusExpenses // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-      incomes: null == incomes
-          ? _value.incomes
-          : incomes // ignore: cast_nullable_to_non_nullable
-              as List<IncomeHistoryTileValue>,
-      bonusIncomes: null == bonusIncomes
-          ? _value.bonusIncomes
-          : bonusIncomes // ignore: cast_nullable_to_non_nullable
-              as List<IncomeHistoryTileValue>,
-      confirmedFixedCosts: null == confirmedFixedCosts
-          ? _value.confirmedFixedCosts
-          : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyConfirmedFixedCostTileValue>,
-      unconfirmedFixedCosts: null == unconfirmedFixedCosts
-          ? _value.unconfirmedFixedCosts
-          : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyUnconfirmedFixedCostTileValue>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            expenses: null == expenses
+                ? _value.expenses
+                : expenses // ignore: cast_nullable_to_non_nullable
+                      as List<ExpenseHistoryTileValue>,
+            bonusExpenses: null == bonusExpenses
+                ? _value.bonusExpenses
+                : bonusExpenses // ignore: cast_nullable_to_non_nullable
+                      as List<ExpenseHistoryTileValue>,
+            incomes: null == incomes
+                ? _value.incomes
+                : incomes // ignore: cast_nullable_to_non_nullable
+                      as List<IncomeHistoryTileValue>,
+            bonusIncomes: null == bonusIncomes
+                ? _value.bonusIncomes
+                : bonusIncomes // ignore: cast_nullable_to_non_nullable
+                      as List<IncomeHistoryTileValue>,
+            confirmedFixedCosts: null == confirmedFixedCosts
+                ? _value.confirmedFixedCosts
+                : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                      as List<MonthlyConfirmedFixedCostTileValue>,
+            unconfirmedFixedCosts: null == unconfirmedFixedCosts
+                ? _value.unconfirmedFixedCosts
+                : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                      as List<MonthlyUnconfirmedFixedCostTileValue>,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -110,30 +122,34 @@ class _$DailyTransactionGroupCopyWithImpl<$Res,
 abstract class _$$DailyTransactionGroupImplCopyWith<$Res>
     implements $DailyTransactionGroupCopyWith<$Res> {
   factory _$$DailyTransactionGroupImplCopyWith(
-          _$DailyTransactionGroupImpl value,
-          $Res Function(_$DailyTransactionGroupImpl) then) =
-      __$$DailyTransactionGroupImplCopyWithImpl<$Res>;
+    _$DailyTransactionGroupImpl value,
+    $Res Function(_$DailyTransactionGroupImpl) then,
+  ) = __$$DailyTransactionGroupImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime date,
-      List<ExpenseHistoryTileValue> expenses,
-      List<ExpenseHistoryTileValue> bonusExpenses,
-      List<IncomeHistoryTileValue> incomes,
-      List<IncomeHistoryTileValue> bonusIncomes,
-      List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-      List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts});
+  $Res call({
+    DateTime date,
+    List<ExpenseHistoryTileValue> expenses,
+    List<ExpenseHistoryTileValue> bonusExpenses,
+    List<IncomeHistoryTileValue> incomes,
+    List<IncomeHistoryTileValue> bonusIncomes,
+    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
+  });
 }
 
 /// @nodoc
 class __$$DailyTransactionGroupImplCopyWithImpl<$Res>
-    extends _$DailyTransactionGroupCopyWithImpl<$Res,
-        _$DailyTransactionGroupImpl>
+    extends
+        _$DailyTransactionGroupCopyWithImpl<$Res, _$DailyTransactionGroupImpl>
     implements _$$DailyTransactionGroupImplCopyWith<$Res> {
-  __$$DailyTransactionGroupImplCopyWithImpl(_$DailyTransactionGroupImpl _value,
-      $Res Function(_$DailyTransactionGroupImpl) _then)
-      : super(_value, _then);
+  __$$DailyTransactionGroupImplCopyWithImpl(
+    _$DailyTransactionGroupImpl _value,
+    $Res Function(_$DailyTransactionGroupImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of DailyTransactionGroup
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,58 +161,60 @@ class __$$DailyTransactionGroupImplCopyWithImpl<$Res>
     Object? confirmedFixedCosts = null,
     Object? unconfirmedFixedCosts = null,
   }) {
-    return _then(_$DailyTransactionGroupImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expenses: null == expenses
-          ? _value._expenses
-          : expenses // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-      bonusExpenses: null == bonusExpenses
-          ? _value._bonusExpenses
-          : bonusExpenses // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseHistoryTileValue>,
-      incomes: null == incomes
-          ? _value._incomes
-          : incomes // ignore: cast_nullable_to_non_nullable
-              as List<IncomeHistoryTileValue>,
-      bonusIncomes: null == bonusIncomes
-          ? _value._bonusIncomes
-          : bonusIncomes // ignore: cast_nullable_to_non_nullable
-              as List<IncomeHistoryTileValue>,
-      confirmedFixedCosts: null == confirmedFixedCosts
-          ? _value._confirmedFixedCosts
-          : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyConfirmedFixedCostTileValue>,
-      unconfirmedFixedCosts: null == unconfirmedFixedCosts
-          ? _value._unconfirmedFixedCosts
-          : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-              as List<MonthlyUnconfirmedFixedCostTileValue>,
-    ));
+    return _then(
+      _$DailyTransactionGroupImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        expenses: null == expenses
+            ? _value._expenses
+            : expenses // ignore: cast_nullable_to_non_nullable
+                  as List<ExpenseHistoryTileValue>,
+        bonusExpenses: null == bonusExpenses
+            ? _value._bonusExpenses
+            : bonusExpenses // ignore: cast_nullable_to_non_nullable
+                  as List<ExpenseHistoryTileValue>,
+        incomes: null == incomes
+            ? _value._incomes
+            : incomes // ignore: cast_nullable_to_non_nullable
+                  as List<IncomeHistoryTileValue>,
+        bonusIncomes: null == bonusIncomes
+            ? _value._bonusIncomes
+            : bonusIncomes // ignore: cast_nullable_to_non_nullable
+                  as List<IncomeHistoryTileValue>,
+        confirmedFixedCosts: null == confirmedFixedCosts
+            ? _value._confirmedFixedCosts
+            : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                  as List<MonthlyConfirmedFixedCostTileValue>,
+        unconfirmedFixedCosts: null == unconfirmedFixedCosts
+            ? _value._unconfirmedFixedCosts
+            : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
+                  as List<MonthlyUnconfirmedFixedCostTileValue>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$DailyTransactionGroupImpl implements _DailyTransactionGroup {
-  const _$DailyTransactionGroupImpl(
-      {required this.date,
-      final List<ExpenseHistoryTileValue> expenses = const [],
-      final List<ExpenseHistoryTileValue> bonusExpenses = const [],
-      final List<IncomeHistoryTileValue> incomes = const [],
-      final List<IncomeHistoryTileValue> bonusIncomes = const [],
-      final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts =
-          const [],
-      final List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts =
-          const []})
-      : _expenses = expenses,
-        _bonusExpenses = bonusExpenses,
-        _incomes = incomes,
-        _bonusIncomes = bonusIncomes,
-        _confirmedFixedCosts = confirmedFixedCosts,
-        _unconfirmedFixedCosts = unconfirmedFixedCosts;
+  const _$DailyTransactionGroupImpl({
+    required this.date,
+    final List<ExpenseHistoryTileValue> expenses = const [],
+    final List<ExpenseHistoryTileValue> bonusExpenses = const [],
+    final List<IncomeHistoryTileValue> incomes = const [],
+    final List<IncomeHistoryTileValue> bonusIncomes = const [],
+    final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts =
+        const [],
+    final List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts =
+        const [],
+  }) : _expenses = expenses,
+       _bonusExpenses = bonusExpenses,
+       _incomes = incomes,
+       _bonusIncomes = bonusIncomes,
+       _confirmedFixedCosts = confirmedFixedCosts,
+       _unconfirmedFixedCosts = unconfirmedFixedCosts;
 
   @override
   final DateTime date;
@@ -268,46 +286,60 @@ class _$DailyTransactionGroupImpl implements _DailyTransactionGroup {
             other is _$DailyTransactionGroupImpl &&
             (identical(other.date, date) || other.date == date) &&
             const DeepCollectionEquality().equals(other._expenses, _expenses) &&
-            const DeepCollectionEquality()
-                .equals(other._bonusExpenses, _bonusExpenses) &&
+            const DeepCollectionEquality().equals(
+              other._bonusExpenses,
+              _bonusExpenses,
+            ) &&
             const DeepCollectionEquality().equals(other._incomes, _incomes) &&
-            const DeepCollectionEquality()
-                .equals(other._bonusIncomes, _bonusIncomes) &&
-            const DeepCollectionEquality()
-                .equals(other._confirmedFixedCosts, _confirmedFixedCosts) &&
-            const DeepCollectionEquality()
-                .equals(other._unconfirmedFixedCosts, _unconfirmedFixedCosts));
+            const DeepCollectionEquality().equals(
+              other._bonusIncomes,
+              _bonusIncomes,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._confirmedFixedCosts,
+              _confirmedFixedCosts,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._unconfirmedFixedCosts,
+              _unconfirmedFixedCosts,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      date,
-      const DeepCollectionEquality().hash(_expenses),
-      const DeepCollectionEquality().hash(_bonusExpenses),
-      const DeepCollectionEquality().hash(_incomes),
-      const DeepCollectionEquality().hash(_bonusIncomes),
-      const DeepCollectionEquality().hash(_confirmedFixedCosts),
-      const DeepCollectionEquality().hash(_unconfirmedFixedCosts));
+    runtimeType,
+    date,
+    const DeepCollectionEquality().hash(_expenses),
+    const DeepCollectionEquality().hash(_bonusExpenses),
+    const DeepCollectionEquality().hash(_incomes),
+    const DeepCollectionEquality().hash(_bonusIncomes),
+    const DeepCollectionEquality().hash(_confirmedFixedCosts),
+    const DeepCollectionEquality().hash(_unconfirmedFixedCosts),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DailyTransactionGroup
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DailyTransactionGroupImplCopyWith<_$DailyTransactionGroupImpl>
-      get copyWith => __$$DailyTransactionGroupImplCopyWithImpl<
-          _$DailyTransactionGroupImpl>(this, _$identity);
+  get copyWith =>
+      __$$DailyTransactionGroupImplCopyWithImpl<_$DailyTransactionGroupImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _DailyTransactionGroup implements DailyTransactionGroup {
-  const factory _DailyTransactionGroup(
-      {required final DateTime date,
-      final List<ExpenseHistoryTileValue> expenses,
-      final List<ExpenseHistoryTileValue> bonusExpenses,
-      final List<IncomeHistoryTileValue> incomes,
-      final List<IncomeHistoryTileValue> bonusIncomes,
-      final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-      final List<MonthlyUnconfirmedFixedCostTileValue>
-          unconfirmedFixedCosts}) = _$DailyTransactionGroupImpl;
+  const factory _DailyTransactionGroup({
+    required final DateTime date,
+    final List<ExpenseHistoryTileValue> expenses,
+    final List<ExpenseHistoryTileValue> bonusExpenses,
+    final List<IncomeHistoryTileValue> incomes,
+    final List<IncomeHistoryTileValue> bonusIncomes,
+    final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    final List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
+  }) = _$DailyTransactionGroupImpl;
 
   @override
   DateTime get date;
@@ -323,8 +355,11 @@ abstract class _DailyTransactionGroup implements DailyTransactionGroup {
   List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts;
   @override
   List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts;
+
+  /// Create a copy of DailyTransactionGroup
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DailyTransactionGroupImplCopyWith<_$DailyTransactionGroupImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

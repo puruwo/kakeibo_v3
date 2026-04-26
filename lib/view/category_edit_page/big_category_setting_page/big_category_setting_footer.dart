@@ -17,22 +17,22 @@ import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
-  const BigCategorySettingFooter({
-    super.key,
-    required this.categoryType,
-  });
+  const BigCategorySettingFooter({super.key, required this.categoryType});
 
   final CategoryType categoryType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // 収入カテゴリーは並び替え・表示ON/OFFの仕組みを持たないためフッターは表示しない
+    if (categoryType == CategoryType.income) {
+      return const SizedBox.shrink();
+    }
+
     switch (ref.watch(editModeNotifierProvider)) {
       case false:
         return _normalButtons(context, ref);
       case true:
         return _edditingButton(context, ref);
-      default:
-        return const SizedBox.shrink();
     }
   }
 
@@ -95,10 +95,12 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
   // 一般カテゴリーの保存処理
   Future<void> _saveExpenseCategoryChanges(
-      BuildContext context, WidgetRef ref) async {
-    await ref
-        .read(allBigCategoriesWithSmallListProvider.future)
-        .then((initialData) {
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    await ref.read(allBigCategoriesWithSmallListProvider.future).then((
+      initialData,
+    ) {
       execute(
         context,
         action: () async {
@@ -109,7 +111,9 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
           if (!isChanged) throw const AppException('編集がされていません');
 
           await categoryUsecase.bigCategoriesEdit(
-              originalValues: initialData, editValues: editedList);
+            originalValues: initialData,
+            editValues: editedList,
+          );
         },
         succesAction: () async {
           ref.read(updateDBCountNotifierProvider.notifier).incrementState();
@@ -130,24 +134,29 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
   // 固定費カテゴリーの保存処理
   Future<void> _saveFixedCostCategoryChanges(
-      BuildContext context, WidgetRef ref) async {
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
     await ref.read(allFixedCostCategoriesProvider.future).then((initialData) {
       execute(
         context,
         action: () async {
           final usecase = ref.read(fixedCostCategoryUsecaseProvider);
-          final editedList =
-              ref.watch(edittingFixedCostCategoryListNotifierProvider);
+          final editedList = ref.watch(
+            edittingFixedCostCategoryListNotifierProvider,
+          );
 
-          final isChanged =
-              ref.watch(isFixedCostCategoryListEditedNotifierProvider);
+          final isChanged = ref.watch(
+            isFixedCostCategoryListEditedNotifierProvider,
+          );
           if (!isChanged) throw const AppException('編集がされていません');
 
           // 編集されたカテゴリーを更新
           for (int i = 0; i < editedList.length; i++) {
             final editedCategory = editedList[i];
-            final originalCategory =
-                initialData.firstWhere((c) => c.id == editedCategory.id);
+            final originalCategory = initialData.firstWhere(
+              (c) => c.id == editedCategory.id,
+            );
 
             // 表示順または表示状態が変更されている場合のみ更新
             if (originalCategory.displayOrder !=

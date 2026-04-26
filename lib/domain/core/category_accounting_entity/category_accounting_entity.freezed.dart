@@ -12,10 +12,12 @@ part of 'category_accounting_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 CategoryAccountingEntity _$CategoryAccountingEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _CategoryAccountingEntity.fromJson(json);
 }
 
@@ -27,29 +29,37 @@ mixin _$CategoryAccountingEntity {
   String get categoryIconPath => throw _privateConstructorUsedError;
   int get totalExpenseByBigCategory => throw _privateConstructorUsedError;
 
+  /// Serializes this CategoryAccountingEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of CategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryAccountingEntityCopyWith<CategoryAccountingEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $CategoryAccountingEntityCopyWith<$Res> {
-  factory $CategoryAccountingEntityCopyWith(CategoryAccountingEntity value,
-          $Res Function(CategoryAccountingEntity) then) =
-      _$CategoryAccountingEntityCopyWithImpl<$Res, CategoryAccountingEntity>;
+  factory $CategoryAccountingEntityCopyWith(
+    CategoryAccountingEntity value,
+    $Res Function(CategoryAccountingEntity) then,
+  ) = _$CategoryAccountingEntityCopyWithImpl<$Res, CategoryAccountingEntity>;
   @useResult
-  $Res call(
-      {int id,
-      String categoryColor,
-      String bigCategoryName,
-      String categoryIconPath,
-      int totalExpenseByBigCategory});
+  $Res call({
+    int id,
+    String categoryColor,
+    String bigCategoryName,
+    String categoryIconPath,
+    int totalExpenseByBigCategory,
+  });
 }
 
 /// @nodoc
-class _$CategoryAccountingEntityCopyWithImpl<$Res,
-        $Val extends CategoryAccountingEntity>
+class _$CategoryAccountingEntityCopyWithImpl<
+  $Res,
+  $Val extends CategoryAccountingEntity
+>
     implements $CategoryAccountingEntityCopyWith<$Res> {
   _$CategoryAccountingEntityCopyWithImpl(this._value, this._then);
 
@@ -58,6 +68,8 @@ class _$CategoryAccountingEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -67,28 +79,31 @@ class _$CategoryAccountingEntityCopyWithImpl<$Res,
     Object? categoryIconPath = null,
     Object? totalExpenseByBigCategory = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryColor: null == categoryColor
-          ? _value.categoryColor
-          : categoryColor // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalExpenseByBigCategory: null == totalExpenseByBigCategory
-          ? _value.totalExpenseByBigCategory
-          : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryColor: null == categoryColor
+                ? _value.categoryColor
+                : categoryColor // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bigCategoryName: null == bigCategoryName
+                ? _value.bigCategoryName
+                : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            categoryIconPath: null == categoryIconPath
+                ? _value.categoryIconPath
+                : categoryIconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            totalExpenseByBigCategory: null == totalExpenseByBigCategory
+                ? _value.totalExpenseByBigCategory
+                : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -96,29 +111,35 @@ class _$CategoryAccountingEntityCopyWithImpl<$Res,
 abstract class _$$CategoryAccountingEntityImplCopyWith<$Res>
     implements $CategoryAccountingEntityCopyWith<$Res> {
   factory _$$CategoryAccountingEntityImplCopyWith(
-          _$CategoryAccountingEntityImpl value,
-          $Res Function(_$CategoryAccountingEntityImpl) then) =
-      __$$CategoryAccountingEntityImplCopyWithImpl<$Res>;
+    _$CategoryAccountingEntityImpl value,
+    $Res Function(_$CategoryAccountingEntityImpl) then,
+  ) = __$$CategoryAccountingEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String categoryColor,
-      String bigCategoryName,
-      String categoryIconPath,
-      int totalExpenseByBigCategory});
+  $Res call({
+    int id,
+    String categoryColor,
+    String bigCategoryName,
+    String categoryIconPath,
+    int totalExpenseByBigCategory,
+  });
 }
 
 /// @nodoc
 class __$$CategoryAccountingEntityImplCopyWithImpl<$Res>
-    extends _$CategoryAccountingEntityCopyWithImpl<$Res,
-        _$CategoryAccountingEntityImpl>
+    extends
+        _$CategoryAccountingEntityCopyWithImpl<
+          $Res,
+          _$CategoryAccountingEntityImpl
+        >
     implements _$$CategoryAccountingEntityImplCopyWith<$Res> {
   __$$CategoryAccountingEntityImplCopyWithImpl(
-      _$CategoryAccountingEntityImpl _value,
-      $Res Function(_$CategoryAccountingEntityImpl) _then)
-      : super(_value, _then);
+    _$CategoryAccountingEntityImpl _value,
+    $Res Function(_$CategoryAccountingEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of CategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -128,40 +149,43 @@ class __$$CategoryAccountingEntityImplCopyWithImpl<$Res>
     Object? categoryIconPath = null,
     Object? totalExpenseByBigCategory = null,
   }) {
-    return _then(_$CategoryAccountingEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryColor: null == categoryColor
-          ? _value.categoryColor
-          : categoryColor // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalExpenseByBigCategory: null == totalExpenseByBigCategory
-          ? _value.totalExpenseByBigCategory
-          : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$CategoryAccountingEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryColor: null == categoryColor
+            ? _value.categoryColor
+            : categoryColor // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bigCategoryName: null == bigCategoryName
+            ? _value.bigCategoryName
+            : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        categoryIconPath: null == categoryIconPath
+            ? _value.categoryIconPath
+            : categoryIconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        totalExpenseByBigCategory: null == totalExpenseByBigCategory
+            ? _value.totalExpenseByBigCategory
+            : totalExpenseByBigCategory // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$CategoryAccountingEntityImpl implements _CategoryAccountingEntity {
-  const _$CategoryAccountingEntityImpl(
-      {this.id = 0,
-      required this.categoryColor,
-      required this.bigCategoryName,
-      required this.categoryIconPath,
-      this.totalExpenseByBigCategory = 0});
+  const _$CategoryAccountingEntityImpl({
+    this.id = 0,
+    required this.categoryColor,
+    required this.bigCategoryName,
+    required this.categoryIconPath,
+    this.totalExpenseByBigCategory = 0,
+  });
 
   factory _$CategoryAccountingEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$CategoryAccountingEntityImplFromJson(json);
@@ -196,38 +220,49 @@ class _$CategoryAccountingEntityImpl implements _CategoryAccountingEntity {
                 other.bigCategoryName == bigCategoryName) &&
             (identical(other.categoryIconPath, categoryIconPath) ||
                 other.categoryIconPath == categoryIconPath) &&
-            (identical(other.totalExpenseByBigCategory,
-                    totalExpenseByBigCategory) ||
+            (identical(
+                  other.totalExpenseByBigCategory,
+                  totalExpenseByBigCategory,
+                ) ||
                 other.totalExpenseByBigCategory == totalExpenseByBigCategory));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, categoryColor,
-      bigCategoryName, categoryIconPath, totalExpenseByBigCategory);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    categoryColor,
+    bigCategoryName,
+    categoryIconPath,
+    totalExpenseByBigCategory,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryAccountingEntityImplCopyWith<_$CategoryAccountingEntityImpl>
-      get copyWith => __$$CategoryAccountingEntityImplCopyWithImpl<
-          _$CategoryAccountingEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$CategoryAccountingEntityImplCopyWithImpl<
+        _$CategoryAccountingEntityImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$CategoryAccountingEntityImplToJson(
-      this,
-    );
+    return _$$CategoryAccountingEntityImplToJson(this);
   }
 }
 
 abstract class _CategoryAccountingEntity implements CategoryAccountingEntity {
-  const factory _CategoryAccountingEntity(
-      {final int id,
-      required final String categoryColor,
-      required final String bigCategoryName,
-      required final String categoryIconPath,
-      final int totalExpenseByBigCategory}) = _$CategoryAccountingEntityImpl;
+  const factory _CategoryAccountingEntity({
+    final int id,
+    required final String categoryColor,
+    required final String bigCategoryName,
+    required final String categoryIconPath,
+    final int totalExpenseByBigCategory,
+  }) = _$CategoryAccountingEntityImpl;
 
   factory _CategoryAccountingEntity.fromJson(Map<String, dynamic> json) =
       _$CategoryAccountingEntityImpl.fromJson;
@@ -242,8 +277,11 @@ abstract class _CategoryAccountingEntity implements CategoryAccountingEntity {
   String get categoryIconPath;
   @override
   int get totalExpenseByBigCategory;
+
+  /// Create a copy of CategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryAccountingEntityImplCopyWith<_$CategoryAccountingEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

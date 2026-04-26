@@ -36,6 +36,10 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
     // 取得したデータを編集用プロバイダーに格納
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Future(() async {
+        if (widget.categoryType == CategoryType.income) {
+          // 収入カテゴリーは編集モードを持たないため何もしない
+          return;
+        }
         if (widget.categoryType == CategoryType.expense) {
           final initialList = await ref.read(
             allBigCategoriesWithSmallListProvider.future,
@@ -76,6 +80,10 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
     // 左のpaddingの大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
 
+    if (widget.categoryType == CategoryType.income) {
+      // 収入カテゴリーは編集モードを持たない
+      return const SizedBox.shrink();
+    }
     if (widget.categoryType == CategoryType.expense) {
       return _buildExpenseCategoryEditArea(leftsidePadding, listSTextBoxOffset);
     } else {

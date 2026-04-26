@@ -12,7 +12,8 @@ part of 'category_card_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$CategoryCardEntity {
@@ -26,7 +27,9 @@ mixin _$CategoryCardEntity {
   List<SmallCategoryTileEntity> get smallCategoryList =>
       throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryCardEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CategoryCardEntityCopyWith<CategoryCardEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -34,17 +37,19 @@ mixin _$CategoryCardEntity {
 /// @nodoc
 abstract class $CategoryCardEntityCopyWith<$Res> {
   factory $CategoryCardEntityCopyWith(
-          CategoryCardEntity value, $Res Function(CategoryCardEntity) then) =
-      _$CategoryCardEntityCopyWithImpl<$Res, CategoryCardEntity>;
+    CategoryCardEntity value,
+    $Res Function(CategoryCardEntity) then,
+  ) = _$CategoryCardEntityCopyWithImpl<$Res, CategoryCardEntity>;
   @useResult
-  $Res call(
-      {GraphType graphType,
-      double? graphRatio,
-      double? graphDenomiratorRatio,
-      int monthlyBudget,
-      int monthlyExpense,
-      CategoryAccountingEntity monthlyExpenseByCategoryEntity,
-      List<SmallCategoryTileEntity> smallCategoryList});
+  $Res call({
+    GraphType graphType,
+    double? graphRatio,
+    double? graphDenomiratorRatio,
+    int monthlyBudget,
+    int monthlyExpense,
+    CategoryAccountingEntity monthlyExpenseByCategoryEntity,
+    List<SmallCategoryTileEntity> smallCategoryList,
+  });
 
   $CategoryAccountingEntityCopyWith<$Res> get monthlyExpenseByCategoryEntity;
 }
@@ -59,6 +64,8 @@ class _$CategoryCardEntityCopyWithImpl<$Res, $Val extends CategoryCardEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CategoryCardEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -70,65 +77,76 @@ class _$CategoryCardEntityCopyWithImpl<$Res, $Val extends CategoryCardEntity>
     Object? monthlyExpenseByCategoryEntity = null,
     Object? smallCategoryList = null,
   }) {
-    return _then(_value.copyWith(
-      graphType: null == graphType
-          ? _value.graphType
-          : graphType // ignore: cast_nullable_to_non_nullable
-              as GraphType,
-      graphRatio: freezed == graphRatio
-          ? _value.graphRatio
-          : graphRatio // ignore: cast_nullable_to_non_nullable
-              as double?,
-      graphDenomiratorRatio: freezed == graphDenomiratorRatio
-          ? _value.graphDenomiratorRatio
-          : graphDenomiratorRatio // ignore: cast_nullable_to_non_nullable
-              as double?,
-      monthlyBudget: null == monthlyBudget
-          ? _value.monthlyBudget
-          : monthlyBudget // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyExpense: null == monthlyExpense
-          ? _value.monthlyExpense
-          : monthlyExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyExpenseByCategoryEntity: null == monthlyExpenseByCategoryEntity
-          ? _value.monthlyExpenseByCategoryEntity
-          : monthlyExpenseByCategoryEntity // ignore: cast_nullable_to_non_nullable
-              as CategoryAccountingEntity,
-      smallCategoryList: null == smallCategoryList
-          ? _value.smallCategoryList
-          : smallCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<SmallCategoryTileEntity>,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            graphType: null == graphType
+                ? _value.graphType
+                : graphType // ignore: cast_nullable_to_non_nullable
+                      as GraphType,
+            graphRatio: freezed == graphRatio
+                ? _value.graphRatio
+                : graphRatio // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            graphDenomiratorRatio: freezed == graphDenomiratorRatio
+                ? _value.graphDenomiratorRatio
+                : graphDenomiratorRatio // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            monthlyBudget: null == monthlyBudget
+                ? _value.monthlyBudget
+                : monthlyBudget // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monthlyExpense: null == monthlyExpense
+                ? _value.monthlyExpense
+                : monthlyExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            monthlyExpenseByCategoryEntity:
+                null == monthlyExpenseByCategoryEntity
+                ? _value.monthlyExpenseByCategoryEntity
+                : monthlyExpenseByCategoryEntity // ignore: cast_nullable_to_non_nullable
+                      as CategoryAccountingEntity,
+            smallCategoryList: null == smallCategoryList
+                ? _value.smallCategoryList
+                : smallCategoryList // ignore: cast_nullable_to_non_nullable
+                      as List<SmallCategoryTileEntity>,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of CategoryCardEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $CategoryAccountingEntityCopyWith<$Res> get monthlyExpenseByCategoryEntity {
     return $CategoryAccountingEntityCopyWith<$Res>(
-        _value.monthlyExpenseByCategoryEntity, (value) {
-      return _then(
-          _value.copyWith(monthlyExpenseByCategoryEntity: value) as $Val);
-    });
+      _value.monthlyExpenseByCategoryEntity,
+      (value) {
+        return _then(
+          _value.copyWith(monthlyExpenseByCategoryEntity: value) as $Val,
+        );
+      },
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$CategoryCardEntityImplCopyWith<$Res>
     implements $CategoryCardEntityCopyWith<$Res> {
-  factory _$$CategoryCardEntityImplCopyWith(_$CategoryCardEntityImpl value,
-          $Res Function(_$CategoryCardEntityImpl) then) =
-      __$$CategoryCardEntityImplCopyWithImpl<$Res>;
+  factory _$$CategoryCardEntityImplCopyWith(
+    _$CategoryCardEntityImpl value,
+    $Res Function(_$CategoryCardEntityImpl) then,
+  ) = __$$CategoryCardEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {GraphType graphType,
-      double? graphRatio,
-      double? graphDenomiratorRatio,
-      int monthlyBudget,
-      int monthlyExpense,
-      CategoryAccountingEntity monthlyExpenseByCategoryEntity,
-      List<SmallCategoryTileEntity> smallCategoryList});
+  $Res call({
+    GraphType graphType,
+    double? graphRatio,
+    double? graphDenomiratorRatio,
+    int monthlyBudget,
+    int monthlyExpense,
+    CategoryAccountingEntity monthlyExpenseByCategoryEntity,
+    List<SmallCategoryTileEntity> smallCategoryList,
+  });
 
   @override
   $CategoryAccountingEntityCopyWith<$Res> get monthlyExpenseByCategoryEntity;
@@ -138,10 +156,13 @@ abstract class _$$CategoryCardEntityImplCopyWith<$Res>
 class __$$CategoryCardEntityImplCopyWithImpl<$Res>
     extends _$CategoryCardEntityCopyWithImpl<$Res, _$CategoryCardEntityImpl>
     implements _$$CategoryCardEntityImplCopyWith<$Res> {
-  __$$CategoryCardEntityImplCopyWithImpl(_$CategoryCardEntityImpl _value,
-      $Res Function(_$CategoryCardEntityImpl) _then)
-      : super(_value, _then);
+  __$$CategoryCardEntityImplCopyWithImpl(
+    _$CategoryCardEntityImpl _value,
+    $Res Function(_$CategoryCardEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of CategoryCardEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -153,51 +174,53 @@ class __$$CategoryCardEntityImplCopyWithImpl<$Res>
     Object? monthlyExpenseByCategoryEntity = null,
     Object? smallCategoryList = null,
   }) {
-    return _then(_$CategoryCardEntityImpl(
-      graphType: null == graphType
-          ? _value.graphType
-          : graphType // ignore: cast_nullable_to_non_nullable
-              as GraphType,
-      graphRatio: freezed == graphRatio
-          ? _value.graphRatio
-          : graphRatio // ignore: cast_nullable_to_non_nullable
-              as double?,
-      graphDenomiratorRatio: freezed == graphDenomiratorRatio
-          ? _value.graphDenomiratorRatio
-          : graphDenomiratorRatio // ignore: cast_nullable_to_non_nullable
-              as double?,
-      monthlyBudget: null == monthlyBudget
-          ? _value.monthlyBudget
-          : monthlyBudget // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyExpense: null == monthlyExpense
-          ? _value.monthlyExpense
-          : monthlyExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      monthlyExpenseByCategoryEntity: null == monthlyExpenseByCategoryEntity
-          ? _value.monthlyExpenseByCategoryEntity
-          : monthlyExpenseByCategoryEntity // ignore: cast_nullable_to_non_nullable
-              as CategoryAccountingEntity,
-      smallCategoryList: null == smallCategoryList
-          ? _value._smallCategoryList
-          : smallCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<SmallCategoryTileEntity>,
-    ));
+    return _then(
+      _$CategoryCardEntityImpl(
+        graphType: null == graphType
+            ? _value.graphType
+            : graphType // ignore: cast_nullable_to_non_nullable
+                  as GraphType,
+        graphRatio: freezed == graphRatio
+            ? _value.graphRatio
+            : graphRatio // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        graphDenomiratorRatio: freezed == graphDenomiratorRatio
+            ? _value.graphDenomiratorRatio
+            : graphDenomiratorRatio // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        monthlyBudget: null == monthlyBudget
+            ? _value.monthlyBudget
+            : monthlyBudget // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monthlyExpense: null == monthlyExpense
+            ? _value.monthlyExpense
+            : monthlyExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        monthlyExpenseByCategoryEntity: null == monthlyExpenseByCategoryEntity
+            ? _value.monthlyExpenseByCategoryEntity
+            : monthlyExpenseByCategoryEntity // ignore: cast_nullable_to_non_nullable
+                  as CategoryAccountingEntity,
+        smallCategoryList: null == smallCategoryList
+            ? _value._smallCategoryList
+            : smallCategoryList // ignore: cast_nullable_to_non_nullable
+                  as List<SmallCategoryTileEntity>,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$CategoryCardEntityImpl implements _CategoryCardEntity {
-  const _$CategoryCardEntityImpl(
-      {required this.graphType,
-      this.graphRatio,
-      this.graphDenomiratorRatio,
-      required this.monthlyBudget,
-      required this.monthlyExpense,
-      required this.monthlyExpenseByCategoryEntity,
-      required final List<SmallCategoryTileEntity> smallCategoryList})
-      : _smallCategoryList = smallCategoryList;
+  const _$CategoryCardEntityImpl({
+    required this.graphType,
+    this.graphRatio,
+    this.graphDenomiratorRatio,
+    required this.monthlyBudget,
+    required this.monthlyExpense,
+    required this.monthlyExpenseByCategoryEntity,
+    required final List<SmallCategoryTileEntity> smallCategoryList,
+  }) : _smallCategoryList = smallCategoryList;
 
   @override
   final GraphType graphType;
@@ -240,43 +263,52 @@ class _$CategoryCardEntityImpl implements _CategoryCardEntity {
                 other.monthlyBudget == monthlyBudget) &&
             (identical(other.monthlyExpense, monthlyExpense) ||
                 other.monthlyExpense == monthlyExpense) &&
-            (identical(other.monthlyExpenseByCategoryEntity,
-                    monthlyExpenseByCategoryEntity) ||
+            (identical(
+                  other.monthlyExpenseByCategoryEntity,
+                  monthlyExpenseByCategoryEntity,
+                ) ||
                 other.monthlyExpenseByCategoryEntity ==
                     monthlyExpenseByCategoryEntity) &&
-            const DeepCollectionEquality()
-                .equals(other._smallCategoryList, _smallCategoryList));
+            const DeepCollectionEquality().equals(
+              other._smallCategoryList,
+              _smallCategoryList,
+            ));
   }
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      graphType,
-      graphRatio,
-      graphDenomiratorRatio,
-      monthlyBudget,
-      monthlyExpense,
-      monthlyExpenseByCategoryEntity,
-      const DeepCollectionEquality().hash(_smallCategoryList));
+    runtimeType,
+    graphType,
+    graphRatio,
+    graphDenomiratorRatio,
+    monthlyBudget,
+    monthlyExpense,
+    monthlyExpenseByCategoryEntity,
+    const DeepCollectionEquality().hash(_smallCategoryList),
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CategoryCardEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CategoryCardEntityImplCopyWith<_$CategoryCardEntityImpl> get copyWith =>
       __$$CategoryCardEntityImplCopyWithImpl<_$CategoryCardEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _CategoryCardEntity implements CategoryCardEntity {
-  const factory _CategoryCardEntity(
-      {required final GraphType graphType,
-      final double? graphRatio,
-      final double? graphDenomiratorRatio,
-      required final int monthlyBudget,
-      required final int monthlyExpense,
-      required final CategoryAccountingEntity monthlyExpenseByCategoryEntity,
-      required final List<SmallCategoryTileEntity>
-          smallCategoryList}) = _$CategoryCardEntityImpl;
+  const factory _CategoryCardEntity({
+    required final GraphType graphType,
+    final double? graphRatio,
+    final double? graphDenomiratorRatio,
+    required final int monthlyBudget,
+    required final int monthlyExpense,
+    required final CategoryAccountingEntity monthlyExpenseByCategoryEntity,
+    required final List<SmallCategoryTileEntity> smallCategoryList,
+  }) = _$CategoryCardEntityImpl;
 
   @override
   GraphType get graphType;
@@ -292,8 +324,11 @@ abstract class _CategoryCardEntity implements CategoryCardEntity {
   CategoryAccountingEntity get monthlyExpenseByCategoryEntity;
   @override
   List<SmallCategoryTileEntity> get smallCategoryList;
+
+  /// Create a copy of CategoryCardEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CategoryCardEntityImplCopyWith<_$CategoryCardEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

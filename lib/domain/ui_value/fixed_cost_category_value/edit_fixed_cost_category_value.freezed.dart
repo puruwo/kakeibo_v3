@@ -12,7 +12,8 @@ part of 'edit_fixed_cost_category_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$EditFixedCostCategoryValue {
@@ -26,32 +27,41 @@ mixin _$EditFixedCostCategoryValue {
       throw _privateConstructorUsedError; // 編集後の表示非表示の設定
   bool get editedStateIsChecked => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EditFixedCostCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EditFixedCostCategoryValueCopyWith<EditFixedCostCategoryValue>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EditFixedCostCategoryValueCopyWith<$Res> {
-  factory $EditFixedCostCategoryValueCopyWith(EditFixedCostCategoryValue value,
-          $Res Function(EditFixedCostCategoryValue) then) =
-      _$EditFixedCostCategoryValueCopyWithImpl<$Res,
-          EditFixedCostCategoryValue>;
+  factory $EditFixedCostCategoryValueCopyWith(
+    EditFixedCostCategoryValue value,
+    $Res Function(EditFixedCostCategoryValue) then,
+  ) =
+      _$EditFixedCostCategoryValueCopyWithImpl<
+        $Res,
+        EditFixedCostCategoryValue
+      >;
   @useResult
-  $Res call(
-      {int id,
-      String name,
-      String colorCode,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      int editedStateDisplayOrder,
-      bool editedStateIsChecked});
+  $Res call({
+    int id,
+    String name,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    int editedStateDisplayOrder,
+    bool editedStateIsChecked,
+  });
 }
 
 /// @nodoc
-class _$EditFixedCostCategoryValueCopyWithImpl<$Res,
-        $Val extends EditFixedCostCategoryValue>
+class _$EditFixedCostCategoryValueCopyWithImpl<
+  $Res,
+  $Val extends EditFixedCostCategoryValue
+>
     implements $EditFixedCostCategoryValueCopyWith<$Res> {
   _$EditFixedCostCategoryValueCopyWithImpl(this._value, this._then);
 
@@ -60,6 +70,8 @@ class _$EditFixedCostCategoryValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EditFixedCostCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -72,40 +84,43 @@ class _$EditFixedCostCategoryValueCopyWithImpl<$Res,
     Object? editedStateDisplayOrder = null,
     Object? editedStateIsChecked = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      editedStateDisplayOrder: null == editedStateDisplayOrder
-          ? _value.editedStateDisplayOrder
-          : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      editedStateIsChecked: null == editedStateIsChecked
-          ? _value.editedStateIsChecked
-          : editedStateIsChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            name: null == name
+                ? _value.name
+                : name // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            displayOrder: null == displayOrder
+                ? _value.displayOrder
+                : displayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isDisplayed: null == isDisplayed
+                ? _value.isDisplayed
+                : isDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            editedStateDisplayOrder: null == editedStateDisplayOrder
+                ? _value.editedStateDisplayOrder
+                : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            editedStateIsChecked: null == editedStateIsChecked
+                ? _value.editedStateIsChecked
+                : editedStateIsChecked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -113,32 +128,38 @@ class _$EditFixedCostCategoryValueCopyWithImpl<$Res,
 abstract class _$$EditFixedCostCategoryValueImplCopyWith<$Res>
     implements $EditFixedCostCategoryValueCopyWith<$Res> {
   factory _$$EditFixedCostCategoryValueImplCopyWith(
-          _$EditFixedCostCategoryValueImpl value,
-          $Res Function(_$EditFixedCostCategoryValueImpl) then) =
-      __$$EditFixedCostCategoryValueImplCopyWithImpl<$Res>;
+    _$EditFixedCostCategoryValueImpl value,
+    $Res Function(_$EditFixedCostCategoryValueImpl) then,
+  ) = __$$EditFixedCostCategoryValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String name,
-      String colorCode,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      int editedStateDisplayOrder,
-      bool editedStateIsChecked});
+  $Res call({
+    int id,
+    String name,
+    String colorCode,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    int editedStateDisplayOrder,
+    bool editedStateIsChecked,
+  });
 }
 
 /// @nodoc
 class __$$EditFixedCostCategoryValueImplCopyWithImpl<$Res>
-    extends _$EditFixedCostCategoryValueCopyWithImpl<$Res,
-        _$EditFixedCostCategoryValueImpl>
+    extends
+        _$EditFixedCostCategoryValueCopyWithImpl<
+          $Res,
+          _$EditFixedCostCategoryValueImpl
+        >
     implements _$$EditFixedCostCategoryValueImplCopyWith<$Res> {
   __$$EditFixedCostCategoryValueImplCopyWithImpl(
-      _$EditFixedCostCategoryValueImpl _value,
-      $Res Function(_$EditFixedCostCategoryValueImpl) _then)
-      : super(_value, _then);
+    _$EditFixedCostCategoryValueImpl _value,
+    $Res Function(_$EditFixedCostCategoryValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of EditFixedCostCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -151,55 +172,58 @@ class __$$EditFixedCostCategoryValueImplCopyWithImpl<$Res>
     Object? editedStateDisplayOrder = null,
     Object? editedStateIsChecked = null,
   }) {
-    return _then(_$EditFixedCostCategoryValueImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      name: null == name
-          ? _value.name
-          : name // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      editedStateDisplayOrder: null == editedStateDisplayOrder
-          ? _value.editedStateDisplayOrder
-          : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      editedStateIsChecked: null == editedStateIsChecked
-          ? _value.editedStateIsChecked
-          : editedStateIsChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$EditFixedCostCategoryValueImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        name: null == name
+            ? _value.name
+            : name // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        displayOrder: null == displayOrder
+            ? _value.displayOrder
+            : displayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isDisplayed: null == isDisplayed
+            ? _value.isDisplayed
+            : isDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        editedStateDisplayOrder: null == editedStateDisplayOrder
+            ? _value.editedStateDisplayOrder
+            : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        editedStateIsChecked: null == editedStateIsChecked
+            ? _value.editedStateIsChecked
+            : editedStateIsChecked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$EditFixedCostCategoryValueImpl implements _EditFixedCostCategoryValue {
-  const _$EditFixedCostCategoryValueImpl(
-      {required this.id,
-      required this.name,
-      required this.colorCode,
-      required this.resourcePath,
-      required this.displayOrder,
-      required this.isDisplayed,
-      required this.editedStateDisplayOrder,
-      required this.editedStateIsChecked});
+  const _$EditFixedCostCategoryValueImpl({
+    required this.id,
+    required this.name,
+    required this.colorCode,
+    required this.resourcePath,
+    required this.displayOrder,
+    required this.isDisplayed,
+    required this.editedStateDisplayOrder,
+    required this.editedStateIsChecked,
+  });
 
   @override
   final int id;
@@ -213,10 +237,10 @@ class _$EditFixedCostCategoryValueImpl implements _EditFixedCostCategoryValue {
   final int displayOrder;
   @override
   final int isDisplayed;
-// 編集後表示順
+  // 編集後表示順
   @override
   final int editedStateDisplayOrder;
-// 編集後の表示非表示の設定
+  // 編集後の表示非表示の設定
   @override
   final bool editedStateIsChecked;
 
@@ -241,7 +265,9 @@ class _$EditFixedCostCategoryValueImpl implements _EditFixedCostCategoryValue {
             (identical(other.isDisplayed, isDisplayed) ||
                 other.isDisplayed == isDisplayed) &&
             (identical(
-                    other.editedStateDisplayOrder, editedStateDisplayOrder) ||
+                  other.editedStateDisplayOrder,
+                  editedStateDisplayOrder,
+                ) ||
                 other.editedStateDisplayOrder == editedStateDisplayOrder) &&
             (identical(other.editedStateIsChecked, editedStateIsChecked) ||
                 other.editedStateIsChecked == editedStateIsChecked));
@@ -249,36 +275,41 @@ class _$EditFixedCostCategoryValueImpl implements _EditFixedCostCategoryValue {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      name,
-      colorCode,
-      resourcePath,
-      displayOrder,
-      isDisplayed,
-      editedStateDisplayOrder,
-      editedStateIsChecked);
+    runtimeType,
+    id,
+    name,
+    colorCode,
+    resourcePath,
+    displayOrder,
+    isDisplayed,
+    editedStateDisplayOrder,
+    editedStateIsChecked,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EditFixedCostCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EditFixedCostCategoryValueImplCopyWith<_$EditFixedCostCategoryValueImpl>
-      get copyWith => __$$EditFixedCostCategoryValueImplCopyWithImpl<
-          _$EditFixedCostCategoryValueImpl>(this, _$identity);
+  get copyWith =>
+      __$$EditFixedCostCategoryValueImplCopyWithImpl<
+        _$EditFixedCostCategoryValueImpl
+      >(this, _$identity);
 }
 
 abstract class _EditFixedCostCategoryValue
     implements EditFixedCostCategoryValue {
-  const factory _EditFixedCostCategoryValue(
-          {required final int id,
-          required final String name,
-          required final String colorCode,
-          required final String resourcePath,
-          required final int displayOrder,
-          required final int isDisplayed,
-          required final int editedStateDisplayOrder,
-          required final bool editedStateIsChecked}) =
-      _$EditFixedCostCategoryValueImpl;
+  const factory _EditFixedCostCategoryValue({
+    required final int id,
+    required final String name,
+    required final String colorCode,
+    required final String resourcePath,
+    required final int displayOrder,
+    required final int isDisplayed,
+    required final int editedStateDisplayOrder,
+    required final bool editedStateIsChecked,
+  }) = _$EditFixedCostCategoryValueImpl;
 
   @override
   int get id;
@@ -291,13 +322,16 @@ abstract class _EditFixedCostCategoryValue
   @override
   int get displayOrder;
   @override
-  int get isDisplayed;
-  @override // 編集後表示順
-  int get editedStateDisplayOrder;
-  @override // 編集後の表示非表示の設定
-  bool get editedStateIsChecked;
+  int get isDisplayed; // 編集後表示順
   @override
-  @JsonKey(ignore: true)
+  int get editedStateDisplayOrder; // 編集後の表示非表示の設定
+  @override
+  bool get editedStateIsChecked;
+
+  /// Create a copy of EditFixedCostCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EditFixedCostCategoryValueImplCopyWith<_$EditFixedCostCategoryValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

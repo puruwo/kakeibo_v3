@@ -63,20 +63,14 @@ class CategoryByModeFamily extends Family<AsyncValue<ICategoryEntity>> {
     required TransactionMode mode,
     required int categoryId,
   }) {
-    return CategoryByModeProvider(
-      mode: mode,
-      categoryId: categoryId,
-    );
+    return CategoryByModeProvider(mode: mode, categoryId: categoryId);
   }
 
   @override
   CategoryByModeProvider getProviderOverride(
     covariant CategoryByModeProvider provider,
   ) {
-    return call(
-      mode: provider.mode,
-      categoryId: provider.categoryId,
-    );
+    return call(mode: provider.mode, categoryId: provider.categoryId);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -112,23 +106,22 @@ class CategoryByModeProvider
     required TransactionMode mode,
     required int categoryId,
   }) : this._internal(
-          (ref) => categoryByMode(
-            ref as CategoryByModeRef,
-            mode: mode,
-            categoryId: categoryId,
-          ),
-          from: categoryByModeProvider,
-          name: r'categoryByModeProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$categoryByModeHash,
-          dependencies: CategoryByModeFamily._dependencies,
-          allTransitiveDependencies:
-              CategoryByModeFamily._allTransitiveDependencies,
-          mode: mode,
-          categoryId: categoryId,
-        );
+         (ref) => categoryByMode(
+           ref as CategoryByModeRef,
+           mode: mode,
+           categoryId: categoryId,
+         ),
+         from: categoryByModeProvider,
+         name: r'categoryByModeProvider',
+         debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+             ? null
+             : _$categoryByModeHash,
+         dependencies: CategoryByModeFamily._dependencies,
+         allTransitiveDependencies:
+             CategoryByModeFamily._allTransitiveDependencies,
+         mode: mode,
+         categoryId: categoryId,
+       );
 
   CategoryByModeProvider._internal(
     super._createNotifier, {
@@ -185,6 +178,8 @@ class CategoryByModeProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin CategoryByModeRef on AutoDisposeFutureProviderRef<ICategoryEntity> {
   /// The parameter `mode` of this provider.
   TransactionMode get mode;
@@ -232,21 +227,15 @@ class CategoriesByModeFamily extends Family<AsyncValue<List<ICategoryEntity>>> {
   /// [mode] トランザクションの種類（支出、固定費、収入）
   ///
   /// Copied from [categoriesByMode].
-  CategoriesByModeProvider call(
-    TransactionMode mode,
-  ) {
-    return CategoriesByModeProvider(
-      mode,
-    );
+  CategoriesByModeProvider call(TransactionMode mode) {
+    return CategoriesByModeProvider(mode);
   }
 
   @override
   CategoriesByModeProvider getProviderOverride(
     covariant CategoriesByModeProvider provider,
   ) {
-    return call(
-      provider.mode,
-    );
+    return call(provider.mode);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -276,24 +265,19 @@ class CategoriesByModeProvider
   /// [mode] トランザクションの種類（支出、固定費、収入）
   ///
   /// Copied from [categoriesByMode].
-  CategoriesByModeProvider(
-    TransactionMode mode,
-  ) : this._internal(
-          (ref) => categoriesByMode(
-            ref as CategoriesByModeRef,
-            mode,
-          ),
-          from: categoriesByModeProvider,
-          name: r'categoriesByModeProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$categoriesByModeHash,
-          dependencies: CategoriesByModeFamily._dependencies,
-          allTransitiveDependencies:
-              CategoriesByModeFamily._allTransitiveDependencies,
-          mode: mode,
-        );
+  CategoriesByModeProvider(TransactionMode mode)
+    : this._internal(
+        (ref) => categoriesByMode(ref as CategoriesByModeRef, mode),
+        from: categoriesByModeProvider,
+        name: r'categoriesByModeProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$categoriesByModeHash,
+        dependencies: CategoriesByModeFamily._dependencies,
+        allTransitiveDependencies:
+            CategoriesByModeFamily._allTransitiveDependencies,
+        mode: mode,
+      );
 
   CategoriesByModeProvider._internal(
     super._createNotifier, {
@@ -310,7 +294,7 @@ class CategoriesByModeProvider
   @override
   Override overrideWith(
     FutureOr<List<ICategoryEntity>> Function(CategoriesByModeRef provider)
-        create,
+    create,
   ) {
     return ProviderOverride(
       origin: this,
@@ -345,6 +329,8 @@ class CategoriesByModeProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin CategoriesByModeRef
     on AutoDisposeFutureProviderRef<List<ICategoryEntity>> {
   /// The parameter `mode` of this provider.
@@ -389,21 +375,15 @@ class CategoryPaginationFamily extends Family<CategoryPagination> {
   /// [categoryCount] カテゴリーの総数
   ///
   /// Copied from [categoryPagination].
-  CategoryPaginationProvider call(
-    int categoryCount,
-  ) {
-    return CategoryPaginationProvider(
-      categoryCount,
-    );
+  CategoryPaginationProvider call(int categoryCount) {
+    return CategoryPaginationProvider(categoryCount);
   }
 
   @override
   CategoryPaginationProvider getProviderOverride(
     covariant CategoryPaginationProvider provider,
   ) {
-    return call(
-      provider.categoryCount,
-    );
+    return call(provider.categoryCount);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -433,24 +413,20 @@ class CategoryPaginationProvider
   /// [categoryCount] カテゴリーの総数
   ///
   /// Copied from [categoryPagination].
-  CategoryPaginationProvider(
-    int categoryCount,
-  ) : this._internal(
-          (ref) => categoryPagination(
-            ref as CategoryPaginationRef,
-            categoryCount,
-          ),
-          from: categoryPaginationProvider,
-          name: r'categoryPaginationProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$categoryPaginationHash,
-          dependencies: CategoryPaginationFamily._dependencies,
-          allTransitiveDependencies:
-              CategoryPaginationFamily._allTransitiveDependencies,
-          categoryCount: categoryCount,
-        );
+  CategoryPaginationProvider(int categoryCount)
+    : this._internal(
+        (ref) =>
+            categoryPagination(ref as CategoryPaginationRef, categoryCount),
+        from: categoryPaginationProvider,
+        name: r'categoryPaginationProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$categoryPaginationHash,
+        dependencies: CategoryPaginationFamily._dependencies,
+        allTransitiveDependencies:
+            CategoryPaginationFamily._allTransitiveDependencies,
+        categoryCount: categoryCount,
+      );
 
   CategoryPaginationProvider._internal(
     super._createNotifier, {
@@ -502,6 +478,8 @@ class CategoryPaginationProvider
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin CategoryPaginationRef on AutoDisposeProviderRef<CategoryPagination> {
   /// The parameter `categoryCount` of this provider.
   int get categoryCount;
@@ -515,5 +493,6 @@ class _CategoryPaginationProviderElement
   @override
   int get categoryCount => (origin as CategoryPaginationProvider).categoryCount;
 }
+
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

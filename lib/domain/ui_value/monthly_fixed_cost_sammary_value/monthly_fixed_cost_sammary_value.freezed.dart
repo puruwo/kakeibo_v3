@@ -12,7 +12,8 @@ part of 'monthly_fixed_cost_sammary_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MonthlyFixedCostSummaryValue {
@@ -20,28 +21,36 @@ mixin _$MonthlyFixedCostSummaryValue {
   int get unconfirmedFixedCostSum => throw _privateConstructorUsedError;
   int get scheduledPaymentAmount => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyFixedCostSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MonthlyFixedCostSummaryValueCopyWith<MonthlyFixedCostSummaryValue>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $MonthlyFixedCostSummaryValueCopyWith<$Res> {
   factory $MonthlyFixedCostSummaryValueCopyWith(
-          MonthlyFixedCostSummaryValue value,
-          $Res Function(MonthlyFixedCostSummaryValue) then) =
-      _$MonthlyFixedCostSummaryValueCopyWithImpl<$Res,
-          MonthlyFixedCostSummaryValue>;
+    MonthlyFixedCostSummaryValue value,
+    $Res Function(MonthlyFixedCostSummaryValue) then,
+  ) =
+      _$MonthlyFixedCostSummaryValueCopyWithImpl<
+        $Res,
+        MonthlyFixedCostSummaryValue
+      >;
   @useResult
-  $Res call(
-      {int fixedCostSum,
-      int unconfirmedFixedCostSum,
-      int scheduledPaymentAmount});
+  $Res call({
+    int fixedCostSum,
+    int unconfirmedFixedCostSum,
+    int scheduledPaymentAmount,
+  });
 }
 
 /// @nodoc
-class _$MonthlyFixedCostSummaryValueCopyWithImpl<$Res,
-        $Val extends MonthlyFixedCostSummaryValue>
+class _$MonthlyFixedCostSummaryValueCopyWithImpl<
+  $Res,
+  $Val extends MonthlyFixedCostSummaryValue
+>
     implements $MonthlyFixedCostSummaryValueCopyWith<$Res> {
   _$MonthlyFixedCostSummaryValueCopyWithImpl(this._value, this._then);
 
@@ -50,6 +59,8 @@ class _$MonthlyFixedCostSummaryValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MonthlyFixedCostSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -57,20 +68,23 @@ class _$MonthlyFixedCostSummaryValueCopyWithImpl<$Res,
     Object? unconfirmedFixedCostSum = null,
     Object? scheduledPaymentAmount = null,
   }) {
-    return _then(_value.copyWith(
-      fixedCostSum: null == fixedCostSum
-          ? _value.fixedCostSum
-          : fixedCostSum // ignore: cast_nullable_to_non_nullable
-              as int,
-      unconfirmedFixedCostSum: null == unconfirmedFixedCostSum
-          ? _value.unconfirmedFixedCostSum
-          : unconfirmedFixedCostSum // ignore: cast_nullable_to_non_nullable
-              as int,
-      scheduledPaymentAmount: null == scheduledPaymentAmount
-          ? _value.scheduledPaymentAmount
-          : scheduledPaymentAmount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            fixedCostSum: null == fixedCostSum
+                ? _value.fixedCostSum
+                : fixedCostSum // ignore: cast_nullable_to_non_nullable
+                      as int,
+            unconfirmedFixedCostSum: null == unconfirmedFixedCostSum
+                ? _value.unconfirmedFixedCostSum
+                : unconfirmedFixedCostSum // ignore: cast_nullable_to_non_nullable
+                      as int,
+            scheduledPaymentAmount: null == scheduledPaymentAmount
+                ? _value.scheduledPaymentAmount
+                : scheduledPaymentAmount // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -78,27 +92,33 @@ class _$MonthlyFixedCostSummaryValueCopyWithImpl<$Res,
 abstract class _$$MonthlyFixedCostSummaryValueImplCopyWith<$Res>
     implements $MonthlyFixedCostSummaryValueCopyWith<$Res> {
   factory _$$MonthlyFixedCostSummaryValueImplCopyWith(
-          _$MonthlyFixedCostSummaryValueImpl value,
-          $Res Function(_$MonthlyFixedCostSummaryValueImpl) then) =
-      __$$MonthlyFixedCostSummaryValueImplCopyWithImpl<$Res>;
+    _$MonthlyFixedCostSummaryValueImpl value,
+    $Res Function(_$MonthlyFixedCostSummaryValueImpl) then,
+  ) = __$$MonthlyFixedCostSummaryValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int fixedCostSum,
-      int unconfirmedFixedCostSum,
-      int scheduledPaymentAmount});
+  $Res call({
+    int fixedCostSum,
+    int unconfirmedFixedCostSum,
+    int scheduledPaymentAmount,
+  });
 }
 
 /// @nodoc
 class __$$MonthlyFixedCostSummaryValueImplCopyWithImpl<$Res>
-    extends _$MonthlyFixedCostSummaryValueCopyWithImpl<$Res,
-        _$MonthlyFixedCostSummaryValueImpl>
+    extends
+        _$MonthlyFixedCostSummaryValueCopyWithImpl<
+          $Res,
+          _$MonthlyFixedCostSummaryValueImpl
+        >
     implements _$$MonthlyFixedCostSummaryValueImplCopyWith<$Res> {
   __$$MonthlyFixedCostSummaryValueImplCopyWithImpl(
-      _$MonthlyFixedCostSummaryValueImpl _value,
-      $Res Function(_$MonthlyFixedCostSummaryValueImpl) _then)
-      : super(_value, _then);
+    _$MonthlyFixedCostSummaryValueImpl _value,
+    $Res Function(_$MonthlyFixedCostSummaryValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MonthlyFixedCostSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,20 +126,22 @@ class __$$MonthlyFixedCostSummaryValueImplCopyWithImpl<$Res>
     Object? unconfirmedFixedCostSum = null,
     Object? scheduledPaymentAmount = null,
   }) {
-    return _then(_$MonthlyFixedCostSummaryValueImpl(
-      fixedCostSum: null == fixedCostSum
-          ? _value.fixedCostSum
-          : fixedCostSum // ignore: cast_nullable_to_non_nullable
-              as int,
-      unconfirmedFixedCostSum: null == unconfirmedFixedCostSum
-          ? _value.unconfirmedFixedCostSum
-          : unconfirmedFixedCostSum // ignore: cast_nullable_to_non_nullable
-              as int,
-      scheduledPaymentAmount: null == scheduledPaymentAmount
-          ? _value.scheduledPaymentAmount
-          : scheduledPaymentAmount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$MonthlyFixedCostSummaryValueImpl(
+        fixedCostSum: null == fixedCostSum
+            ? _value.fixedCostSum
+            : fixedCostSum // ignore: cast_nullable_to_non_nullable
+                  as int,
+        unconfirmedFixedCostSum: null == unconfirmedFixedCostSum
+            ? _value.unconfirmedFixedCostSum
+            : unconfirmedFixedCostSum // ignore: cast_nullable_to_non_nullable
+                  as int,
+        scheduledPaymentAmount: null == scheduledPaymentAmount
+            ? _value.scheduledPaymentAmount
+            : scheduledPaymentAmount // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -127,10 +149,11 @@ class __$$MonthlyFixedCostSummaryValueImplCopyWithImpl<$Res>
 
 class _$MonthlyFixedCostSummaryValueImpl
     implements _MonthlyFixedCostSummaryValue {
-  const _$MonthlyFixedCostSummaryValueImpl(
-      {required this.fixedCostSum,
-      required this.unconfirmedFixedCostSum,
-      required this.scheduledPaymentAmount});
+  const _$MonthlyFixedCostSummaryValueImpl({
+    required this.fixedCostSum,
+    required this.unconfirmedFixedCostSum,
+    required this.scheduledPaymentAmount,
+  });
 
   @override
   final int fixedCostSum;
@@ -152,32 +175,43 @@ class _$MonthlyFixedCostSummaryValueImpl
             (identical(other.fixedCostSum, fixedCostSum) ||
                 other.fixedCostSum == fixedCostSum) &&
             (identical(
-                    other.unconfirmedFixedCostSum, unconfirmedFixedCostSum) ||
+                  other.unconfirmedFixedCostSum,
+                  unconfirmedFixedCostSum,
+                ) ||
                 other.unconfirmedFixedCostSum == unconfirmedFixedCostSum) &&
             (identical(other.scheduledPaymentAmount, scheduledPaymentAmount) ||
                 other.scheduledPaymentAmount == scheduledPaymentAmount));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, fixedCostSum,
-      unconfirmedFixedCostSum, scheduledPaymentAmount);
+  int get hashCode => Object.hash(
+    runtimeType,
+    fixedCostSum,
+    unconfirmedFixedCostSum,
+    scheduledPaymentAmount,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthlyFixedCostSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonthlyFixedCostSummaryValueImplCopyWith<
-          _$MonthlyFixedCostSummaryValueImpl>
-      get copyWith => __$$MonthlyFixedCostSummaryValueImplCopyWithImpl<
-          _$MonthlyFixedCostSummaryValueImpl>(this, _$identity);
+    _$MonthlyFixedCostSummaryValueImpl
+  >
+  get copyWith =>
+      __$$MonthlyFixedCostSummaryValueImplCopyWithImpl<
+        _$MonthlyFixedCostSummaryValueImpl
+      >(this, _$identity);
 }
 
 abstract class _MonthlyFixedCostSummaryValue
     implements MonthlyFixedCostSummaryValue {
-  const factory _MonthlyFixedCostSummaryValue(
-          {required final int fixedCostSum,
-          required final int unconfirmedFixedCostSum,
-          required final int scheduledPaymentAmount}) =
-      _$MonthlyFixedCostSummaryValueImpl;
+  const factory _MonthlyFixedCostSummaryValue({
+    required final int fixedCostSum,
+    required final int unconfirmedFixedCostSum,
+    required final int scheduledPaymentAmount,
+  }) = _$MonthlyFixedCostSummaryValueImpl;
 
   @override
   int get fixedCostSum;
@@ -185,9 +219,13 @@ abstract class _MonthlyFixedCostSummaryValue
   int get unconfirmedFixedCostSum;
   @override
   int get scheduledPaymentAmount;
+
+  /// Create a copy of MonthlyFixedCostSummaryValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonthlyFixedCostSummaryValueImplCopyWith<
-          _$MonthlyFixedCostSummaryValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$MonthlyFixedCostSummaryValueImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

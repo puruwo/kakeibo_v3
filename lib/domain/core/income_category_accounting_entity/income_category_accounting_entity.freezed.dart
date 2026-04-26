@@ -12,7 +12,8 @@ part of 'income_category_accounting_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$IncomeCategoryAccountingEntity {
@@ -22,30 +23,38 @@ mixin _$IncomeCategoryAccountingEntity {
   String get categoryIconPath => throw _privateConstructorUsedError;
   String get categoryColor => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IncomeCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IncomeCategoryAccountingEntityCopyWith<IncomeCategoryAccountingEntity>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $IncomeCategoryAccountingEntityCopyWith<$Res> {
   factory $IncomeCategoryAccountingEntityCopyWith(
-          IncomeCategoryAccountingEntity value,
-          $Res Function(IncomeCategoryAccountingEntity) then) =
-      _$IncomeCategoryAccountingEntityCopyWithImpl<$Res,
-          IncomeCategoryAccountingEntity>;
+    IncomeCategoryAccountingEntity value,
+    $Res Function(IncomeCategoryAccountingEntity) then,
+  ) =
+      _$IncomeCategoryAccountingEntityCopyWithImpl<
+        $Res,
+        IncomeCategoryAccountingEntity
+      >;
   @useResult
-  $Res call(
-      {int id,
-      String smallCategoryName,
-      int totalIncomeBySmallCategory,
-      String categoryIconPath,
-      String categoryColor});
+  $Res call({
+    int id,
+    String smallCategoryName,
+    int totalIncomeBySmallCategory,
+    String categoryIconPath,
+    String categoryColor,
+  });
 }
 
 /// @nodoc
-class _$IncomeCategoryAccountingEntityCopyWithImpl<$Res,
-        $Val extends IncomeCategoryAccountingEntity>
+class _$IncomeCategoryAccountingEntityCopyWithImpl<
+  $Res,
+  $Val extends IncomeCategoryAccountingEntity
+>
     implements $IncomeCategoryAccountingEntityCopyWith<$Res> {
   _$IncomeCategoryAccountingEntityCopyWithImpl(this._value, this._then);
 
@@ -54,6 +63,8 @@ class _$IncomeCategoryAccountingEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of IncomeCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -63,28 +74,31 @@ class _$IncomeCategoryAccountingEntityCopyWithImpl<$Res,
     Object? categoryIconPath = null,
     Object? categoryColor = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalIncomeBySmallCategory: null == totalIncomeBySmallCategory
-          ? _value.totalIncomeBySmallCategory
-          : totalIncomeBySmallCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryColor: null == categoryColor
-          ? _value.categoryColor
-          : categoryColor // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            smallCategoryName: null == smallCategoryName
+                ? _value.smallCategoryName
+                : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            totalIncomeBySmallCategory: null == totalIncomeBySmallCategory
+                ? _value.totalIncomeBySmallCategory
+                : totalIncomeBySmallCategory // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryIconPath: null == categoryIconPath
+                ? _value.categoryIconPath
+                : categoryIconPath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            categoryColor: null == categoryColor
+                ? _value.categoryColor
+                : categoryColor // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -92,29 +106,35 @@ class _$IncomeCategoryAccountingEntityCopyWithImpl<$Res,
 abstract class _$$IncomeCategoryAccountingEntityImplCopyWith<$Res>
     implements $IncomeCategoryAccountingEntityCopyWith<$Res> {
   factory _$$IncomeCategoryAccountingEntityImplCopyWith(
-          _$IncomeCategoryAccountingEntityImpl value,
-          $Res Function(_$IncomeCategoryAccountingEntityImpl) then) =
-      __$$IncomeCategoryAccountingEntityImplCopyWithImpl<$Res>;
+    _$IncomeCategoryAccountingEntityImpl value,
+    $Res Function(_$IncomeCategoryAccountingEntityImpl) then,
+  ) = __$$IncomeCategoryAccountingEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String smallCategoryName,
-      int totalIncomeBySmallCategory,
-      String categoryIconPath,
-      String categoryColor});
+  $Res call({
+    int id,
+    String smallCategoryName,
+    int totalIncomeBySmallCategory,
+    String categoryIconPath,
+    String categoryColor,
+  });
 }
 
 /// @nodoc
 class __$$IncomeCategoryAccountingEntityImplCopyWithImpl<$Res>
-    extends _$IncomeCategoryAccountingEntityCopyWithImpl<$Res,
-        _$IncomeCategoryAccountingEntityImpl>
+    extends
+        _$IncomeCategoryAccountingEntityCopyWithImpl<
+          $Res,
+          _$IncomeCategoryAccountingEntityImpl
+        >
     implements _$$IncomeCategoryAccountingEntityImplCopyWith<$Res> {
   __$$IncomeCategoryAccountingEntityImplCopyWithImpl(
-      _$IncomeCategoryAccountingEntityImpl _value,
-      $Res Function(_$IncomeCategoryAccountingEntityImpl) _then)
-      : super(_value, _then);
+    _$IncomeCategoryAccountingEntityImpl _value,
+    $Res Function(_$IncomeCategoryAccountingEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of IncomeCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -124,28 +144,30 @@ class __$$IncomeCategoryAccountingEntityImplCopyWithImpl<$Res>
     Object? categoryIconPath = null,
     Object? categoryColor = null,
   }) {
-    return _then(_$IncomeCategoryAccountingEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalIncomeBySmallCategory: null == totalIncomeBySmallCategory
-          ? _value.totalIncomeBySmallCategory
-          : totalIncomeBySmallCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryIconPath: null == categoryIconPath
-          ? _value.categoryIconPath
-          : categoryIconPath // ignore: cast_nullable_to_non_nullable
-              as String,
-      categoryColor: null == categoryColor
-          ? _value.categoryColor
-          : categoryColor // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$IncomeCategoryAccountingEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        smallCategoryName: null == smallCategoryName
+            ? _value.smallCategoryName
+            : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        totalIncomeBySmallCategory: null == totalIncomeBySmallCategory
+            ? _value.totalIncomeBySmallCategory
+            : totalIncomeBySmallCategory // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryIconPath: null == categoryIconPath
+            ? _value.categoryIconPath
+            : categoryIconPath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        categoryColor: null == categoryColor
+            ? _value.categoryColor
+            : categoryColor // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -153,12 +175,13 @@ class __$$IncomeCategoryAccountingEntityImplCopyWithImpl<$Res>
 
 class _$IncomeCategoryAccountingEntityImpl
     implements _IncomeCategoryAccountingEntity {
-  const _$IncomeCategoryAccountingEntityImpl(
-      {required this.id,
-      required this.smallCategoryName,
-      required this.totalIncomeBySmallCategory,
-      required this.categoryIconPath,
-      required this.categoryColor});
+  const _$IncomeCategoryAccountingEntityImpl({
+    required this.id,
+    required this.smallCategoryName,
+    required this.totalIncomeBySmallCategory,
+    required this.categoryIconPath,
+    required this.categoryColor,
+  });
 
   @override
   final int id;
@@ -184,8 +207,10 @@ class _$IncomeCategoryAccountingEntityImpl
             (identical(other.id, id) || other.id == id) &&
             (identical(other.smallCategoryName, smallCategoryName) ||
                 other.smallCategoryName == smallCategoryName) &&
-            (identical(other.totalIncomeBySmallCategory,
-                    totalIncomeBySmallCategory) ||
+            (identical(
+                  other.totalIncomeBySmallCategory,
+                  totalIncomeBySmallCategory,
+                ) ||
                 other.totalIncomeBySmallCategory ==
                     totalIncomeBySmallCategory) &&
             (identical(other.categoryIconPath, categoryIconPath) ||
@@ -195,27 +220,38 @@ class _$IncomeCategoryAccountingEntityImpl
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, smallCategoryName,
-      totalIncomeBySmallCategory, categoryIconPath, categoryColor);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    smallCategoryName,
+    totalIncomeBySmallCategory,
+    categoryIconPath,
+    categoryColor,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IncomeCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IncomeCategoryAccountingEntityImplCopyWith<
-          _$IncomeCategoryAccountingEntityImpl>
-      get copyWith => __$$IncomeCategoryAccountingEntityImplCopyWithImpl<
-          _$IncomeCategoryAccountingEntityImpl>(this, _$identity);
+    _$IncomeCategoryAccountingEntityImpl
+  >
+  get copyWith =>
+      __$$IncomeCategoryAccountingEntityImplCopyWithImpl<
+        _$IncomeCategoryAccountingEntityImpl
+      >(this, _$identity);
 }
 
 abstract class _IncomeCategoryAccountingEntity
     implements IncomeCategoryAccountingEntity {
-  const factory _IncomeCategoryAccountingEntity(
-          {required final int id,
-          required final String smallCategoryName,
-          required final int totalIncomeBySmallCategory,
-          required final String categoryIconPath,
-          required final String categoryColor}) =
-      _$IncomeCategoryAccountingEntityImpl;
+  const factory _IncomeCategoryAccountingEntity({
+    required final int id,
+    required final String smallCategoryName,
+    required final int totalIncomeBySmallCategory,
+    required final String categoryIconPath,
+    required final String categoryColor,
+  }) = _$IncomeCategoryAccountingEntityImpl;
 
   @override
   int get id;
@@ -227,9 +263,13 @@ abstract class _IncomeCategoryAccountingEntity
   String get categoryIconPath;
   @override
   String get categoryColor;
+
+  /// Create a copy of IncomeCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IncomeCategoryAccountingEntityImplCopyWith<
-          _$IncomeCategoryAccountingEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+    _$IncomeCategoryAccountingEntityImpl
+  >
+  get copyWith => throw _privateConstructorUsedError;
 }

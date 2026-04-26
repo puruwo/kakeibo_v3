@@ -13,15 +13,15 @@ String _$isBigCategoryListEditedNotifierHash() =>
 @ProviderFor(IsBigCategoryListEditedNotifier)
 final isBigCategoryListEditedNotifierProvider =
     NotifierProvider<IsBigCategoryListEditedNotifier, bool>.internal(
-  IsBigCategoryListEditedNotifier.new,
-  name: r'isBigCategoryListEditedNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$isBigCategoryListEditedNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      IsBigCategoryListEditedNotifier.new,
+      name: r'isBigCategoryListEditedNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$isBigCategoryListEditedNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$IsBigCategoryListEditedNotifier = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -12,7 +12,8 @@ part of 'income_category_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 IncomeCategoryEntity _$IncomeCategoryEntityFromJson(Map<String, dynamic> json) {
   return _IncomeCategoryEntity.fromJson(json);
@@ -31,34 +32,42 @@ mixin _$IncomeCategoryEntity {
   String get resourcePath => throw _privateConstructorUsedError; // 表示用のソートキー
   int get sortKey => throw _privateConstructorUsedError;
 
+  /// Serializes this IncomeCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of IncomeCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $IncomeCategoryEntityCopyWith<IncomeCategoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $IncomeCategoryEntityCopyWith<$Res> {
-  factory $IncomeCategoryEntityCopyWith(IncomeCategoryEntity value,
-          $Res Function(IncomeCategoryEntity) then) =
-      _$IncomeCategoryEntityCopyWithImpl<$Res, IncomeCategoryEntity>;
+  factory $IncomeCategoryEntityCopyWith(
+    IncomeCategoryEntity value,
+    $Res Function(IncomeCategoryEntity) then,
+  ) = _$IncomeCategoryEntityCopyWithImpl<$Res, IncomeCategoryEntity>;
   @useResult
-  $Res call(
-      {int id,
-      int smallCategoryOrderKey,
-      int bigCategoryKey,
-      int displaydOrderInBig,
-      String categoryName,
-      int defaultDisplayed,
-      String bigCategoryName,
-      String colorCode,
-      String resourcePath,
-      int sortKey});
+  $Res call({
+    int id,
+    int smallCategoryOrderKey,
+    int bigCategoryKey,
+    int displaydOrderInBig,
+    String categoryName,
+    int defaultDisplayed,
+    String bigCategoryName,
+    String colorCode,
+    String resourcePath,
+    int sortKey,
+  });
 }
 
 /// @nodoc
-class _$IncomeCategoryEntityCopyWithImpl<$Res,
-        $Val extends IncomeCategoryEntity>
+class _$IncomeCategoryEntityCopyWithImpl<
+  $Res,
+  $Val extends IncomeCategoryEntity
+>
     implements $IncomeCategoryEntityCopyWith<$Res> {
   _$IncomeCategoryEntityCopyWithImpl(this._value, this._then);
 
@@ -67,6 +76,8 @@ class _$IncomeCategoryEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of IncomeCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -81,80 +92,88 @@ class _$IncomeCategoryEntityCopyWithImpl<$Res,
     Object? resourcePath = null,
     Object? sortKey = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryOrderKey: null == smallCategoryOrderKey
-          ? _value.smallCategoryOrderKey
-          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryKey: null == bigCategoryKey
-          ? _value.bigCategoryKey
-          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      displaydOrderInBig: null == displaydOrderInBig
-          ? _value.displaydOrderInBig
-          : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      defaultDisplayed: null == defaultDisplayed
-          ? _value.defaultDisplayed
-          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      sortKey: null == sortKey
-          ? _value.sortKey
-          : sortKey // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            smallCategoryOrderKey: null == smallCategoryOrderKey
+                ? _value.smallCategoryOrderKey
+                : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+            bigCategoryKey: null == bigCategoryKey
+                ? _value.bigCategoryKey
+                : bigCategoryKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+            displaydOrderInBig: null == displaydOrderInBig
+                ? _value.displaydOrderInBig
+                : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
+                      as int,
+            categoryName: null == categoryName
+                ? _value.categoryName
+                : categoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            defaultDisplayed: null == defaultDisplayed
+                ? _value.defaultDisplayed
+                : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            bigCategoryName: null == bigCategoryName
+                ? _value.bigCategoryName
+                : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            sortKey: null == sortKey
+                ? _value.sortKey
+                : sortKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$IncomeCategoryEntityImplCopyWith<$Res>
     implements $IncomeCategoryEntityCopyWith<$Res> {
-  factory _$$IncomeCategoryEntityImplCopyWith(_$IncomeCategoryEntityImpl value,
-          $Res Function(_$IncomeCategoryEntityImpl) then) =
-      __$$IncomeCategoryEntityImplCopyWithImpl<$Res>;
+  factory _$$IncomeCategoryEntityImplCopyWith(
+    _$IncomeCategoryEntityImpl value,
+    $Res Function(_$IncomeCategoryEntityImpl) then,
+  ) = __$$IncomeCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int smallCategoryOrderKey,
-      int bigCategoryKey,
-      int displaydOrderInBig,
-      String categoryName,
-      int defaultDisplayed,
-      String bigCategoryName,
-      String colorCode,
-      String resourcePath,
-      int sortKey});
+  $Res call({
+    int id,
+    int smallCategoryOrderKey,
+    int bigCategoryKey,
+    int displaydOrderInBig,
+    String categoryName,
+    int defaultDisplayed,
+    String bigCategoryName,
+    String colorCode,
+    String resourcePath,
+    int sortKey,
+  });
 }
 
 /// @nodoc
 class __$$IncomeCategoryEntityImplCopyWithImpl<$Res>
     extends _$IncomeCategoryEntityCopyWithImpl<$Res, _$IncomeCategoryEntityImpl>
     implements _$$IncomeCategoryEntityImplCopyWith<$Res> {
-  __$$IncomeCategoryEntityImplCopyWithImpl(_$IncomeCategoryEntityImpl _value,
-      $Res Function(_$IncomeCategoryEntityImpl) _then)
-      : super(_value, _then);
+  __$$IncomeCategoryEntityImplCopyWithImpl(
+    _$IncomeCategoryEntityImpl _value,
+    $Res Function(_$IncomeCategoryEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of IncomeCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -169,65 +188,68 @@ class __$$IncomeCategoryEntityImplCopyWithImpl<$Res>
     Object? resourcePath = null,
     Object? sortKey = null,
   }) {
-    return _then(_$IncomeCategoryEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryOrderKey: null == smallCategoryOrderKey
-          ? _value.smallCategoryOrderKey
-          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryKey: null == bigCategoryKey
-          ? _value.bigCategoryKey
-          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      displaydOrderInBig: null == displaydOrderInBig
-          ? _value.displaydOrderInBig
-          : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
-              as int,
-      categoryName: null == categoryName
-          ? _value.categoryName
-          : categoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      defaultDisplayed: null == defaultDisplayed
-          ? _value.defaultDisplayed
-          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      sortKey: null == sortKey
-          ? _value.sortKey
-          : sortKey // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$IncomeCategoryEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        smallCategoryOrderKey: null == smallCategoryOrderKey
+            ? _value.smallCategoryOrderKey
+            : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+        bigCategoryKey: null == bigCategoryKey
+            ? _value.bigCategoryKey
+            : bigCategoryKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+        displaydOrderInBig: null == displaydOrderInBig
+            ? _value.displaydOrderInBig
+            : displaydOrderInBig // ignore: cast_nullable_to_non_nullable
+                  as int,
+        categoryName: null == categoryName
+            ? _value.categoryName
+            : categoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        defaultDisplayed: null == defaultDisplayed
+            ? _value.defaultDisplayed
+            : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        bigCategoryName: null == bigCategoryName
+            ? _value.bigCategoryName
+            : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        sortKey: null == sortKey
+            ? _value.sortKey
+            : sortKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
-  const _$IncomeCategoryEntityImpl(
-      {this.id = 0,
-      required this.smallCategoryOrderKey,
-      required this.bigCategoryKey,
-      required this.displaydOrderInBig,
-      required this.categoryName,
-      required this.defaultDisplayed,
-      required this.bigCategoryName,
-      required this.colorCode,
-      required this.resourcePath,
-      this.sortKey = 0});
+  const _$IncomeCategoryEntityImpl({
+    this.id = 0,
+    required this.smallCategoryOrderKey,
+    required this.bigCategoryKey,
+    required this.displaydOrderInBig,
+    required this.categoryName,
+    required this.defaultDisplayed,
+    required this.bigCategoryName,
+    required this.colorCode,
+    required this.resourcePath,
+    this.sortKey = 0,
+  });
 
   factory _$IncomeCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$IncomeCategoryEntityImplFromJson(json);
@@ -251,7 +273,7 @@ class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
   final String colorCode;
   @override
   final String resourcePath;
-// 表示用のソートキー
+  // 表示用のソートキー
   @override
   @JsonKey()
   final int sortKey;
@@ -286,49 +308,53 @@ class _$IncomeCategoryEntityImpl implements _IncomeCategoryEntity {
             (identical(other.sortKey, sortKey) || other.sortKey == sortKey));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      smallCategoryOrderKey,
-      bigCategoryKey,
-      displaydOrderInBig,
-      categoryName,
-      defaultDisplayed,
-      bigCategoryName,
-      colorCode,
-      resourcePath,
-      sortKey);
+    runtimeType,
+    id,
+    smallCategoryOrderKey,
+    bigCategoryKey,
+    displaydOrderInBig,
+    categoryName,
+    defaultDisplayed,
+    bigCategoryName,
+    colorCode,
+    resourcePath,
+    sortKey,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of IncomeCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$IncomeCategoryEntityImplCopyWith<_$IncomeCategoryEntityImpl>
-      get copyWith =>
-          __$$IncomeCategoryEntityImplCopyWithImpl<_$IncomeCategoryEntityImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$IncomeCategoryEntityImplCopyWithImpl<_$IncomeCategoryEntityImpl>(
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$IncomeCategoryEntityImplToJson(
-      this,
-    );
+    return _$$IncomeCategoryEntityImplToJson(this);
   }
 }
 
 abstract class _IncomeCategoryEntity implements IncomeCategoryEntity {
-  const factory _IncomeCategoryEntity(
-      {final int id,
-      required final int smallCategoryOrderKey,
-      required final int bigCategoryKey,
-      required final int displaydOrderInBig,
-      required final String categoryName,
-      required final int defaultDisplayed,
-      required final String bigCategoryName,
-      required final String colorCode,
-      required final String resourcePath,
-      final int sortKey}) = _$IncomeCategoryEntityImpl;
+  const factory _IncomeCategoryEntity({
+    final int id,
+    required final int smallCategoryOrderKey,
+    required final int bigCategoryKey,
+    required final int displaydOrderInBig,
+    required final String categoryName,
+    required final int defaultDisplayed,
+    required final String bigCategoryName,
+    required final String colorCode,
+    required final String resourcePath,
+    final int sortKey,
+  }) = _$IncomeCategoryEntityImpl;
 
   factory _IncomeCategoryEntity.fromJson(Map<String, dynamic> json) =
       _$IncomeCategoryEntityImpl.fromJson;
@@ -350,11 +376,14 @@ abstract class _IncomeCategoryEntity implements IncomeCategoryEntity {
   @override
   String get colorCode;
   @override
-  String get resourcePath;
-  @override // 表示用のソートキー
-  int get sortKey;
+  String get resourcePath; // 表示用のソートキー
   @override
-  @JsonKey(ignore: true)
+  int get sortKey;
+
+  /// Create a copy of IncomeCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$IncomeCategoryEntityImplCopyWith<_$IncomeCategoryEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

@@ -12,31 +12,39 @@ part of 'aggregation_start_month_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$AggregationStartMonthEntity {
   int get month => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AggregationStartMonthEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AggregationStartMonthEntityCopyWith<AggregationStartMonthEntity>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AggregationStartMonthEntityCopyWith<$Res> {
   factory $AggregationStartMonthEntityCopyWith(
-          AggregationStartMonthEntity value,
-          $Res Function(AggregationStartMonthEntity) then) =
-      _$AggregationStartMonthEntityCopyWithImpl<$Res,
-          AggregationStartMonthEntity>;
+    AggregationStartMonthEntity value,
+    $Res Function(AggregationStartMonthEntity) then,
+  ) =
+      _$AggregationStartMonthEntityCopyWithImpl<
+        $Res,
+        AggregationStartMonthEntity
+      >;
   @useResult
   $Res call({int month});
 }
 
 /// @nodoc
-class _$AggregationStartMonthEntityCopyWithImpl<$Res,
-        $Val extends AggregationStartMonthEntity>
+class _$AggregationStartMonthEntityCopyWithImpl<
+  $Res,
+  $Val extends AggregationStartMonthEntity
+>
     implements $AggregationStartMonthEntityCopyWith<$Res> {
   _$AggregationStartMonthEntityCopyWithImpl(this._value, this._then);
 
@@ -45,17 +53,20 @@ class _$AggregationStartMonthEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AggregationStartMonthEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? month = null,
-  }) {
-    return _then(_value.copyWith(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? month = null}) {
+    return _then(
+      _value.copyWith(
+            month: null == month
+                ? _value.month
+                : month // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -63,9 +74,9 @@ class _$AggregationStartMonthEntityCopyWithImpl<$Res,
 abstract class _$$AggregationStartMonthEntityImplCopyWith<$Res>
     implements $AggregationStartMonthEntityCopyWith<$Res> {
   factory _$$AggregationStartMonthEntityImplCopyWith(
-          _$AggregationStartMonthEntityImpl value,
-          $Res Function(_$AggregationStartMonthEntityImpl) then) =
-      __$$AggregationStartMonthEntityImplCopyWithImpl<$Res>;
+    _$AggregationStartMonthEntityImpl value,
+    $Res Function(_$AggregationStartMonthEntityImpl) then,
+  ) = __$$AggregationStartMonthEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int month});
@@ -73,25 +84,30 @@ abstract class _$$AggregationStartMonthEntityImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AggregationStartMonthEntityImplCopyWithImpl<$Res>
-    extends _$AggregationStartMonthEntityCopyWithImpl<$Res,
-        _$AggregationStartMonthEntityImpl>
+    extends
+        _$AggregationStartMonthEntityCopyWithImpl<
+          $Res,
+          _$AggregationStartMonthEntityImpl
+        >
     implements _$$AggregationStartMonthEntityImplCopyWith<$Res> {
   __$$AggregationStartMonthEntityImplCopyWithImpl(
-      _$AggregationStartMonthEntityImpl _value,
-      $Res Function(_$AggregationStartMonthEntityImpl) _then)
-      : super(_value, _then);
+    _$AggregationStartMonthEntityImpl _value,
+    $Res Function(_$AggregationStartMonthEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AggregationStartMonthEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? month = null,
-  }) {
-    return _then(_$AggregationStartMonthEntityImpl(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? month = null}) {
+    return _then(
+      _$AggregationStartMonthEntityImpl(
+        month: null == month
+            ? _value.month
+            : month // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -120,12 +136,16 @@ class _$AggregationStartMonthEntityImpl
   @override
   int get hashCode => Object.hash(runtimeType, month);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AggregationStartMonthEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AggregationStartMonthEntityImplCopyWith<_$AggregationStartMonthEntityImpl>
-      get copyWith => __$$AggregationStartMonthEntityImplCopyWithImpl<
-          _$AggregationStartMonthEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$AggregationStartMonthEntityImplCopyWithImpl<
+        _$AggregationStartMonthEntityImpl
+      >(this, _$identity);
 }
 
 abstract class _AggregationStartMonthEntity
@@ -135,8 +155,11 @@ abstract class _AggregationStartMonthEntity
 
   @override
   int get month;
+
+  /// Create a copy of AggregationStartMonthEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AggregationStartMonthEntityImplCopyWith<_$AggregationStartMonthEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

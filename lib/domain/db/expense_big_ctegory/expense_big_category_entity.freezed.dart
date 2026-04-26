@@ -12,10 +12,12 @@ part of 'expense_big_category_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExpenseBigCategoryEntity _$ExpenseBigCategoryEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _BigCategoryEntity.fromJson(json);
 }
 
@@ -28,30 +30,38 @@ mixin _$ExpenseBigCategoryEntity {
   int get displayOrder => throw _privateConstructorUsedError;
   int get isDisplayed => throw _privateConstructorUsedError;
 
+  /// Serializes this ExpenseBigCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExpenseBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseBigCategoryEntityCopyWith<ExpenseBigCategoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExpenseBigCategoryEntityCopyWith<$Res> {
-  factory $ExpenseBigCategoryEntityCopyWith(ExpenseBigCategoryEntity value,
-          $Res Function(ExpenseBigCategoryEntity) then) =
-      _$ExpenseBigCategoryEntityCopyWithImpl<$Res, ExpenseBigCategoryEntity>;
+  factory $ExpenseBigCategoryEntityCopyWith(
+    ExpenseBigCategoryEntity value,
+    $Res Function(ExpenseBigCategoryEntity) then,
+  ) = _$ExpenseBigCategoryEntityCopyWithImpl<$Res, ExpenseBigCategoryEntity>;
   @useResult
-  $Res call(
-      {int id,
-      String colorCode,
-      String bigCategoryName,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed});
+  $Res call({
+    int id,
+    String colorCode,
+    String bigCategoryName,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+  });
 }
 
 /// @nodoc
-class _$ExpenseBigCategoryEntityCopyWithImpl<$Res,
-        $Val extends ExpenseBigCategoryEntity>
+class _$ExpenseBigCategoryEntityCopyWithImpl<
+  $Res,
+  $Val extends ExpenseBigCategoryEntity
+>
     implements $ExpenseBigCategoryEntityCopyWith<$Res> {
   _$ExpenseBigCategoryEntityCopyWithImpl(this._value, this._then);
 
@@ -60,6 +70,8 @@ class _$ExpenseBigCategoryEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -70,61 +82,69 @@ class _$ExpenseBigCategoryEntityCopyWithImpl<$Res,
     Object? displayOrder = null,
     Object? isDisplayed = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bigCategoryName: null == bigCategoryName
+                ? _value.bigCategoryName
+                : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            displayOrder: null == displayOrder
+                ? _value.displayOrder
+                : displayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isDisplayed: null == isDisplayed
+                ? _value.isDisplayed
+                : isDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$BigCategoryEntityImplCopyWith<$Res>
     implements $ExpenseBigCategoryEntityCopyWith<$Res> {
-  factory _$$BigCategoryEntityImplCopyWith(_$BigCategoryEntityImpl value,
-          $Res Function(_$BigCategoryEntityImpl) then) =
-      __$$BigCategoryEntityImplCopyWithImpl<$Res>;
+  factory _$$BigCategoryEntityImplCopyWith(
+    _$BigCategoryEntityImpl value,
+    $Res Function(_$BigCategoryEntityImpl) then,
+  ) = __$$BigCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String colorCode,
-      String bigCategoryName,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed});
+  $Res call({
+    int id,
+    String colorCode,
+    String bigCategoryName,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+  });
 }
 
 /// @nodoc
 class __$$BigCategoryEntityImplCopyWithImpl<$Res>
-    extends _$ExpenseBigCategoryEntityCopyWithImpl<$Res,
-        _$BigCategoryEntityImpl>
+    extends
+        _$ExpenseBigCategoryEntityCopyWithImpl<$Res, _$BigCategoryEntityImpl>
     implements _$$BigCategoryEntityImplCopyWith<$Res> {
-  __$$BigCategoryEntityImplCopyWithImpl(_$BigCategoryEntityImpl _value,
-      $Res Function(_$BigCategoryEntityImpl) _then)
-      : super(_value, _then);
+  __$$BigCategoryEntityImplCopyWithImpl(
+    _$BigCategoryEntityImpl _value,
+    $Res Function(_$BigCategoryEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExpenseBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,46 +155,48 @@ class __$$BigCategoryEntityImplCopyWithImpl<$Res>
     Object? displayOrder = null,
     Object? isDisplayed = null,
   }) {
-    return _then(_$BigCategoryEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$BigCategoryEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bigCategoryName: null == bigCategoryName
+            ? _value.bigCategoryName
+            : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        displayOrder: null == displayOrder
+            ? _value.displayOrder
+            : displayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isDisplayed: null == isDisplayed
+            ? _value.isDisplayed
+            : isDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$BigCategoryEntityImpl extends _BigCategoryEntity {
-  const _$BigCategoryEntityImpl(
-      {required this.id,
-      required this.colorCode,
-      required this.bigCategoryName,
-      required this.resourcePath,
-      required this.displayOrder,
-      required this.isDisplayed})
-      : super._();
+  const _$BigCategoryEntityImpl({
+    required this.id,
+    required this.colorCode,
+    required this.bigCategoryName,
+    required this.resourcePath,
+    required this.displayOrder,
+    required this.isDisplayed,
+  }) : super._();
 
   factory _$BigCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$BigCategoryEntityImplFromJson(json);
@@ -215,34 +237,44 @@ class _$BigCategoryEntityImpl extends _BigCategoryEntity {
                 other.isDisplayed == isDisplayed));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, colorCode, bigCategoryName,
-      resourcePath, displayOrder, isDisplayed);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    colorCode,
+    bigCategoryName,
+    resourcePath,
+    displayOrder,
+    isDisplayed,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BigCategoryEntityImplCopyWith<_$BigCategoryEntityImpl> get copyWith =>
       __$$BigCategoryEntityImplCopyWithImpl<_$BigCategoryEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$BigCategoryEntityImplToJson(
-      this,
-    );
+    return _$$BigCategoryEntityImplToJson(this);
   }
 }
 
 abstract class _BigCategoryEntity extends ExpenseBigCategoryEntity {
-  const factory _BigCategoryEntity(
-      {required final int id,
-      required final String colorCode,
-      required final String bigCategoryName,
-      required final String resourcePath,
-      required final int displayOrder,
-      required final int isDisplayed}) = _$BigCategoryEntityImpl;
+  const factory _BigCategoryEntity({
+    required final int id,
+    required final String colorCode,
+    required final String bigCategoryName,
+    required final String resourcePath,
+    required final int displayOrder,
+    required final int isDisplayed,
+  }) = _$BigCategoryEntityImpl;
   const _BigCategoryEntity._() : super._();
 
   factory _BigCategoryEntity.fromJson(Map<String, dynamic> json) =
@@ -260,8 +292,11 @@ abstract class _BigCategoryEntity extends ExpenseBigCategoryEntity {
   int get displayOrder;
   @override
   int get isDisplayed;
+
+  /// Create a copy of ExpenseBigCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BigCategoryEntityImplCopyWith<_$BigCategoryEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
