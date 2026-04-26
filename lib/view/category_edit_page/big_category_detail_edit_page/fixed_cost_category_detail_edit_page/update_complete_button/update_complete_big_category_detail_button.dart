@@ -77,7 +77,7 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
                     colorCode: colorCode,
                     resourcePath: resourcePath,
                     displayOrder: initialData.displayOrder,
-                    isDisplayed: initialData.displayOrder,
+                    isDisplayed: initialData.isDisplayed,
                   );
                   await categoryUsecase.bigEdit(
                       original: initialData, edit: editEntity);
