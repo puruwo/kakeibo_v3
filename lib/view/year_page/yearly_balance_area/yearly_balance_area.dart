@@ -5,7 +5,10 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
+import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
@@ -37,11 +40,44 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                 YearlyBalanceType.noRecorod) {
               return CardContainer(
                 width: double.infinity,
-                height: 30,
-                child: Center(
-                  child: Text(
-                    'まだ記録がありません',
-                    style: AppTextStyles.listCardSecondaryTitle,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16.0,
+                    vertical: 20.0,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.show_chart_rounded,
+                        size: 32,
+                        color: MyColors.secondaryLabel,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        '家計簿をはじめましょう',
+                        style: AppTextStyles.appCardTitleLabel,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '毎日の収支を記録するとグラフが表示されます',
+                        style: AppTextStyles.listCardSecondaryTitle,
+                        textAlign: TextAlign.center,
+                      ),
+                      const SizedBox(height: 16),
+                      SizedBox(
+                        width: double.infinity,
+                        child: MainButton(
+                          buttonText: '＋ 記録を追加する',
+                          onPressed: () {
+                            showAppModalBottomSheet(
+                              context,
+                              child: const RegisaterPageBase.addExpense(),
+                            );
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               );
