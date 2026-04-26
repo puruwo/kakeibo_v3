@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/colors.dart';
 
 /// アイコンボタン背景用の円形コンテナ
 ///
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
 class AppIconCircleContainer extends StatelessWidget {
   const AppIconCircleContainer({
     super.key,
-    required this.color,
+    this.color = MyColors.secondarySystemfill,
     this.size,
     this.child,
   });
