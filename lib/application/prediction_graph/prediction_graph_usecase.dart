@@ -112,22 +112,48 @@ class PredictionGraphUsecase {
     final budgetIncludeFixedCost =
         budget == 0 ? 0 : budget + fixedCostExpenseTotal;
 
+    // 支出なし・予算なし・収入なしの場合はグラフ表示不要
+    if (cumulativePriceData.isEmpty && income == 0 && budgetIncludeFixedCost == 0) {
+      return PredictionGraphValue(
+        predictionGraphLineType: PredictionGraphLineType.noData,
+        fromDate: fromDate,
+        toDate: toDate,
+        today: today,
+        expensePoints: null,
+        predictionPoints: null,
+        income: null,
+        budget: null,
+        maxValue: null,
+        latestPrice: null,
+        predictionPrice: null,
+        xAxisLabels: null,
+        incomeLabelPosition: null,
+        budgetLabelPosition: null,
+        predictionLabel: null,
+        shouldShowPredictionLine: false,
+        shouldShowBudgetLine: false,
+        shouldShowIncomeLine: false,
+        shouldShowExpenseLabel: false,
+        expenseLabelPosition: null,
+        displayMaxValue: 100.0,
+      );
+    }
+
     // 累積支出データをチャート用に変換
     final expensePoints = <PredictionGraphPoint>[];
     int lastPrice = 0;
-    DateTime lastDate = fromDate;
+    DateTime lastDate = predictionGraphLineType == PredictionGraphLineType.thisMonth ? today : toDate;
     if (cumulativePriceData.isNotEmpty) {
       for (final data in cumulativePriceData) {
         final dateTime = data['date'] as DateTime;
         final price = data['sum_price_daily'] as int;
         expensePoints.add(PredictionGraphPoint(date: dateTime, price: price));
       }
+      // 最後のデータから経過情報を取得
+      final lastData = cumulativePriceData.last;
+      lastDate = lastData['date'] as DateTime;
+      lastPrice = lastData['sum_price_daily'] as int;
     }
-
-    // 経過日数と総日数を計算するために最後のデータを取得
-    final lastData = cumulativePriceData.last;
-    lastDate = lastData['date'] as DateTime;
-    lastPrice = lastData['sum_price_daily'] as int;
 
     // 経過日数と総日数を計算
     final elapsedDays = lastDate.difference(fromDate).inDays + 1;
