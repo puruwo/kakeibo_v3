@@ -15,6 +15,7 @@ import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_plan_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -82,21 +83,40 @@ class _YearPageState extends ConsumerState<YearPage> {
               const SizedBox(height: 8),
               const FixedCostButtonArea(),
               const SizedBox(height: 16),
-              AppContentsHeader(
-                type: AppContentsHeaderType.appCardSectionTitle,
-                title: 'ボーナス利用状況',
-                subLabel: 'さらに表示する',
-                isLinkable: true,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const BonusHomePage(),
-                    ),
+              Consumer(
+                builder: (context, ref, _) {
+                  final asyncValue = ref.watch(resolvedBonusPlanValueProvider);
+                  // ボーナス収入も支出もない場合はセクションごと非表示
+                  final shouldHide = asyncValue.maybeWhen(
+                    data: (value) =>
+                        value.yearlyBonusIncome == 0 &&
+                        value.yearlyBonusExpense == 0,
+                    orElse: () => false,
+                  );
+                  if (shouldHide) {
+                    return const SizedBox.shrink();
+                  }
+                  return Column(
+                    children: [
+                      AppContentsHeader(
+                        type: AppContentsHeaderType.appCardSectionTitle,
+                        title: 'ボーナス利用状況',
+                        subLabel: 'さらに表示する',
+                        isLinkable: true,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const BonusHomePage(),
+                            ),
+                          );
+                        },
+                      ),
+                      const BonusPlanArea(),
+                      const SizedBox(height: 16),
+                    ],
                   );
                 },
               ),
-              const BonusPlanArea(),
-              const SizedBox(height: 16),
               Consumer(
                 builder: (context, ref, _) {
                   final asyncValue =
