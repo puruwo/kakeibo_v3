@@ -40,11 +40,14 @@ class MainButton extends StatelessWidget {
               Color.alphaBlend(MyColors.hoverColor, backgroundColor),
           elevation: 0,
         ),
-        child: Text(
-          buttonText,
-          style: buttonType == ButtonColorType.main
-              ? AppTextStyles.mainButtonText
-              : AppTextStyles.secondaryButtonText,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            buttonText,
+            style: buttonType == ButtonColorType.main
+                ? AppTextStyles.mainButtonText
+                : AppTextStyles.secondaryButtonText,
+          ),
         ),
       ),
     );
@@ -73,11 +76,14 @@ class SubButton extends StatelessWidget {
           backgroundColor: buttonType.color,
           elevation: 0,
         ),
-        child: Text(
-          buttonText,
-          style: buttonType == ButtonColorType.main
-              ? AppTextStyles.mainButtonText
-              : AppTextStyles.secondaryButtonText,
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            buttonText,
+            style: buttonType == ButtonColorType.main
+                ? AppTextStyles.mainButtonText
+                : AppTextStyles.secondaryButtonText,
+          ),
         ),
       ),
     );

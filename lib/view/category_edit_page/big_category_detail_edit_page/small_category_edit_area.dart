@@ -32,6 +32,21 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
 
   bool isInitial = true;
 
+  // 各アイテムのテキスト編集コントローラー
+  List<TextEditingController> _controllers = [];
+
+  /// コントローラー数をアイテムリストに同期する（末尾の追加/削除のみ）
+  void _syncControllers(List<EditExpenseSmallCategoryValue> items) {
+    while (_controllers.length < items.length) {
+      _controllers.add(
+        TextEditingController(text: items[_controllers.length].name),
+      );
+    }
+    while (_controllers.length > items.length) {
+      _controllers.removeLast().dispose();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -52,8 +67,20 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
         ref
             .read(edittingSmallCategoryListNotifierProvider.notifier)
             .setData(initialList);
+        // コントローラーを初期化
+        setState(() {
+          _syncControllers(initialList);
+        });
       });
     });
+  }
+
+  @override
+  void dispose() {
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    super.dispose();
   }
 
   @override
@@ -68,6 +95,12 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
 
     // アイテムリストを状態監視
     itemList = ref.watch(edittingSmallCategoryListNotifierProvider);
+
+    // アイテム数が変わったときにコントローラー数を同期（新規追加など）
+    if (_controllers.length != itemList.length) {
+      _syncControllers(itemList);
+    }
+
     return Expanded(
       child: Column(
         mainAxisSize: MainAxisSize.max,
@@ -123,6 +156,14 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                 ref
                     .read(isSmallCategoryListEditedNotifierProvider.notifier)
                     .updateState(true);
+
+                // コントローラーも同じ順番に並べ替える
+                setState(() {
+                  int adjustedNewIndex = newIndex;
+                  if (oldIndex < adjustedNewIndex) adjustedNewIndex -= 1;
+                  final controller = _controllers.removeAt(oldIndex);
+                  _controllers.insert(adjustedNewIndex, controller);
+                });
               },
               itemCount: itemList.length + 1, // +1は追加ボタン用
               itemBuilder: (BuildContext context, int index) {
@@ -174,13 +215,40 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
 
                               const SizedBox(width: 16),
 
-                              // カテゴリー名
+                              // カテゴリー名（直接編集可能）
                               Expanded(
-                                child: Text(
-                                  itemList[index].name,
-                                  style: AppTextStyles.listTilePrimaryTitle,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
+                                child: index < _controllers.length
+                                    ? TextFormField(
+                                        controller: _controllers[index],
+                                        style: AppTextStyles.listTilePrimaryTitle,
+                                        maxLines: 1,
+                                        maxLength: 20,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          counterText: '',
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                        onChanged: (value) {
+                                          ref
+                                              .read(
+                                                edittingSmallCategoryListNotifierProvider
+                                                    .notifier,
+                                              )
+                                              .updateName(index, value);
+                                          ref
+                                              .read(
+                                                isSmallCategoryListEditedNotifierProvider
+                                                    .notifier,
+                                              )
+                                              .updateState(true);
+                                        },
+                                      )
+                                    : Text(
+                                        itemList[index].name,
+                                        style: AppTextStyles.listTilePrimaryTitle,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
                               ),
 
                               // 並べ替えアイコン

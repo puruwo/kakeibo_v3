@@ -48,4 +48,9 @@ class EdittingSmallCategoryListNotifier
     // 新しい値を追加
     state = [...state, value];
   }
+
+  // 小カテゴリーの名前を更新する
+  void updateName(int index, String name) {
+    state[index] = state[index].copyWith(name: name);
+  }
 }

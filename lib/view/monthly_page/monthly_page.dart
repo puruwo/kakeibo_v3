@@ -16,12 +16,11 @@ import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.da
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view/monthly_page/skeleton/prediction_graph_skeleton.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view/component/modal.dart';
-import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 
@@ -99,35 +98,48 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 height: MediaQuery.of(context).padding.top + kToolbarHeight,
               ),
 
-              const AppContentsHeader(
-                type: AppContentsHeaderType.appCardSectionTitle,
-                title: '支出グラフ',
-              ),
-
-              // グラフ部分
+              // 支出グラフ（支出・予算・収入がすべて0のときは非表示）
               Consumer(
                 builder: (context, ref, _) {
                   final dateScope = ref.watch(
                     analyzePageDateScopeEntityProvider,
                   );
                   return dateScope.when(
-                    data: (scope) => PredictionGraph(dateScope: scope),
-                    loading: () => const PredictionGraphSkeleton(),
-                    error: (error, stack) => CardContainer(
-                      height: 240,
-                      width: 343 * context.screenHorizontalMagnification,
-                      child: Center(
-                        child: Text(
-                          '記録がまだありません',
-                          style: AppTextStyles.listEmptyMessage,
+                    data: (scope) {
+                      final graphData = ref.watch(
+                        predictionGraphDataProvider(scope),
+                      );
+                      final isNoData =
+                          graphData.whenOrNull(
+                            data: (data) =>
+                                !data.predictionGraphLineType.shouldShowGraph,
+                          ) ??
+                          true;
+                      if (isNoData) return const SizedBox.shrink();
+                      return Column(
+                        children: [
+                          const AppContentsHeader(
+                            type: AppContentsHeaderType.appCardSectionTitle,
+                            title: '支出グラフ',
+                          ),
+                          PredictionGraph(dateScope: scope),
+                          const SizedBox(height: 12),
+                        ],
+                      );
+                    },
+                    loading: () => Column(
+                      children: [
+                        const AppContentsHeader(
+                          type: AppContentsHeaderType.appCardSectionTitle,
+                          title: '支出グラフ',
                         ),
-                      ),
+                        const PredictionGraphSkeleton(),
+                      ],
                     ),
+                    error: (error, stack) => const SizedBox.shrink(),
                   );
                 },
               ),
-
-              const SizedBox(height: 12),
 
               const AppContentsHeader(
                 type: AppContentsHeaderType.appCardSectionTitle,
