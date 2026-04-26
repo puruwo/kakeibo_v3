@@ -139,11 +139,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           backgroundColor: Colors.transparent,
           title: SizedBox(
             child: Text(
-              widget.transactionMode == TransactionMode.fixedCost
-                  ? (widget.registerMode == RegisterScreenMode.add
-                      ? '固定費を記録'
-                      : '固定費を編集')
-                  : (widget.registerMode == RegisterScreenMode.add ? '記録' : '編集'),
+              widget.registerMode == RegisterScreenMode.add ? '記録' : '編集',
               style: AppTextStyles.pageHeaderText,
             ),
           ),
