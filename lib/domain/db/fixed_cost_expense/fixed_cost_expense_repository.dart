@@ -21,6 +21,10 @@ abstract class FixedCostExpenseRepository {
   Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriodAndCategory(
       {required PeriodValue period, required int fixedCostCategoryId});
 
+  // 未確定の固定費の推定額合計を取得する（fixed_cost.estimated_priceを合算）
+  Future<int> fetchTotalUnconfirmedFixedCostEstimatedWithPeriod(
+      {required PeriodValue period});
+
   // 確定していない固定費の一覧を取得する
   Future<List<FixedCostExpenseEntity>>
       fetchUnconfirmedFixedCostExpenseWithPeriod({required PeriodValue period});
