@@ -520,6 +520,16 @@ class PredictionGraphUsecase {
       fixedCostByDate[dateKey]!.add(expense);
     }
 
+    // 月全体の固定費合計を計算（折れ線と同じ計算方法で揃え、初日に一括加算するため）
+    int totalFixedCost = 0;
+    for (final expense in fixedCostExpenses) {
+      totalFixedCost += expense.price;
+    }
+
+    // 固定費棒の表示用ID・色（一般カテゴリーIDと衝突しない負値を使用）
+    const int fixedCostBarCategoryId = -1;
+    const String fixedCostBarColorCode = 'FF888888';
+
     final dailyBarDataList = <DailyBarData>[];
     int maxDailyTotal = 0;
 
@@ -531,7 +541,7 @@ class PredictionGraphUsecase {
         date: currentDate,
       );
 
-      // 大カテゴリー別に集計（一般支出のみ、固定費は含めない）
+      // 大カテゴリー別に集計（一般支出のみ、固定費は初日に別途一括加算する）
       final categoryTotals = <int, int>{};
 
       // 一般支出を集計
@@ -542,15 +552,33 @@ class PredictionGraphUsecase {
             (categoryTotals[bigCategoryId] ?? 0) + expense.price;
       }
 
-      // 支出がない日はスキップ
-      if (categoryTotals.isEmpty) {
+      // 初日かつ固定費がある場合は、一般支出ゼロでも棒を表示する
+      final isFirstDate = currentDate.isAtSameMomentAs(fromDate);
+      final shouldShowFixedCostOnFirstDate =
+          isFirstDate && totalFixedCost > 0;
+
+      // 支出がない日はスキップ（初日に固定費がある場合は除く）
+      if (categoryTotals.isEmpty && !shouldShowFixedCostOnFirstDate) {
         currentDate = currentDate.add(const Duration(days: 1));
         continue;
       }
 
-      // カテゴリー別支出リストを作成（一般支出のみ）
+      // カテゴリー別支出リストを作成（初日には固定費を一括で先頭に積む）
       final categoryExpenses = <CategoryExpense>[];
       int dailyTotal = 0;
+
+      // 初日に固定費を一括加算（折れ線と棒の累計を一致させる）
+      if (shouldShowFixedCostOnFirstDate) {
+        categoryExpenses.add(CategoryExpense(
+          bigCategoryId: fixedCostBarCategoryId,
+          price: totalFixedCost,
+          colorCode: fixedCostBarColorCode,
+          iconPath: '',
+          categoryName: '固定費',
+          normalizedHeight: 0, // 後で設定
+        ));
+        dailyTotal += totalFixedCost;
+      }
 
       for (final entry in categoryTotals.entries) {
         final catInfo = bigCategoryMap[entry.key];
