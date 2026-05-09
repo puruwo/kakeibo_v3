@@ -1,5 +1,6 @@
 ファイルパス,画面名（クラス名）,コンポーネント名（Widget名）,テキスト内容の種類,fontFamily,fontSize,fontWeight,color,定義方法,MyFontStyle使用,共通化の有無
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.pageHeaderText,見出し,noto_sans,18,w500,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.pageHeaderSubText,ラベル,noto_sans,11,w400,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.dialogTitle,見出し,noto_sans,18,w500,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.dialogLabel,ラベル,noto_sans,13,w400,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.dialogList,ラベル,noto_sans,16,w500,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み

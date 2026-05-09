@@ -17,6 +17,13 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  /// ページヘッダーのサブテキスト用スタイル（補足情報）
+  static final TextStyle pageHeaderSubText = MyFontStyle.notoSans.copyWith(
+    color: MyColors.secondaryLabel,
+    fontSize: 11,
+    fontWeight: FontWeight.w400,
+  );
+
   // ==========================================================================
   // ダイアログ
   // ==========================================================================
