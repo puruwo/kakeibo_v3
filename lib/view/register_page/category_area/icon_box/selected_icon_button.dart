@@ -8,6 +8,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/component/app_icon_circle_container.dart';
 import 'package:kakeibo/constant/strings.dart';
 
 class SelectedIconButton extends ConsumerWidget {
@@ -30,11 +31,8 @@ class SelectedIconButton extends ConsumerWidget {
           SizedBox(
               height: 58 * context.screenVerticalMagnification,
               width: 58 * context.screenVerticalMagnification,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: MyColors.systemGray,
-                  shape: BoxShape.circle,
-                ),
+              child: AppIconCircleContainer(
+                color: MyColors.systemGray,
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: SvgPicture.asset(

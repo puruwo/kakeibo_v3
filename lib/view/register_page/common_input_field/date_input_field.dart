@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/app_pill_container.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
@@ -49,14 +50,9 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
     return AppInkWell(
       borderRadius: BorderRadius.circular(50),
       onTap: () => _showDatePicker(context, enteredDate),
-      child: Container(
-        height: InputPageWidgetSize.pillHeight,
+      child: AppPillContainer(
         width: InputPageWidgetSize.pillWidth,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        decoration: BoxDecoration(
-          color: MyColors.secondarySystemfill,
-          borderRadius: BorderRadius.circular(50),
-        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,

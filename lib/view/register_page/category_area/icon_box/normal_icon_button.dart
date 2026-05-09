@@ -7,6 +7,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/app_icon_circle_container.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -36,11 +37,8 @@ class NormalIconButton extends ConsumerWidget {
           SizedBox(
               height: 58 * context.screenVerticalMagnification,
               width: 58 * context.screenVerticalMagnification,
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: MyColors.secondarySystemfill,
-                  shape: BoxShape.circle,
-                ),
+              child: AppIconCircleContainer(
+                color: MyColors.secondarySystemfill,
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: SvgPicture.asset(
