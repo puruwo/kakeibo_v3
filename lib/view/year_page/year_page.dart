@@ -14,8 +14,10 @@ import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_area.dart';
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_plan_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -75,9 +77,25 @@ class _YearPageState extends ConsumerState<YearPage> {
                 height: MediaQuery.of(context).padding.top + kToolbarHeight,
               ),
 
-              const AppContentsHeader(
-                type: AppContentsHeaderType.appCardSectionTitle,
-                title: '年間収支',
+              Consumer(
+                builder: (context, ref, _) {
+                  final asyncValue =
+                      ref.watch(resolvedYearlyBalanceValueProvider);
+                  // 記録が一切ないときはセクションヘッダーを非表示
+                  final shouldHide = asyncValue.maybeWhen(
+                    data: (value) =>
+                        value.yearlyBalanceType ==
+                        YearlyBalanceType.noRecorod,
+                    orElse: () => false,
+                  );
+                  if (shouldHide) {
+                    return const SizedBox.shrink();
+                  }
+                  return const AppContentsHeader(
+                    type: AppContentsHeaderType.appCardSectionTitle,
+                    title: '年間収支',
+                  );
+                },
               ),
               const YearlyBalanceArea(),
               const SizedBox(height: 8),
