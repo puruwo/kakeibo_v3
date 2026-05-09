@@ -21,7 +21,7 @@ description: >
 | Widget | `lib/view/year_page/annual_balance_chart/annual_balance_chart.dart` | 外枠・スクロール・タップ/ホールドハンドラ・ツールチップ Positioned 配置 |
 | Painter | `lib/view/year_page/annual_balance_chart/parts/annual_balance_chart_painter.dart` | 3 段描画の CustomPainter、レイアウト定数、Dimensions、固定ラベル用 Painter |
 | Tooltip | `lib/view/year_page/annual_balance_chart/parts/annual_balance_tooltip.dart` | 月/収入/支出/収支を表示する Widget。本体タップで分析タブへ遷移 |
-| Usecase | `lib/application/annual_balance_chart_usecase/annual_balance_chart_usecase.dart` | 12ヶ月分の収支取得、Y軸スケール計算、`representativeDate` 埋め込み |
+| Usecase | `lib/application/annual_balance_chart_usecase/annual_balance_chart_usecase.dart` | 12ヶ月分の収支取得、Y軸スケール計算、`representativeDate` 埋め込み。expense は `expense（一般支出）` + `fixed_cost_expense` の確定済み分の合算 |
 | ValueObject | `lib/domain/ui_value/annual_balance_chart_value/annual_balance_chart_value.dart` | `monthIndex` / `monthlyBalanceValues` / `hasNoRecord` / `yAxisScale` |
 | ValueObject | `lib/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart` | 各月のデータ。`monthlyBalanceType` と `representativeDate` を持つ |
 | ValueObject | `lib/domain/ui_value/annual_balance_chart_value/y_axis_scale.dart` | Y軸の `minValue` / `maxValue` / `interval` / `gridValues` |
@@ -33,7 +33,7 @@ description: >
 
 ```
 AnnualBalanceChartUsecaseNotifier.fetch
-  ├─ 12ヶ月分の income/expense を取得し MonthlyBalanceValue にマッピング
+  ├─ 12ヶ月分の income / (一般支出 expense + 確定済み fixed_cost_expense) を取得し MonthlyBalanceValue にマッピング
   ├─ 未来月は MonthlyBalanceType.future で除外
   └─ _calculateYAxisScale で YAxisScale を同梱
        ↓
@@ -213,7 +213,7 @@ CardContainer
 - **現在月の色を緑に戻す** → 視認性が落ちるため NG。白+太字で統一する
 - **スクロール追従を `onPanUpdate` で実装** → 横スクロールと競合する。ロングプレス系で実装
 - **初期スクロールフラグを削除** → 他月タップ時に勝手にスクロール位置が戻るバグが再発する
-- **`hasNoRecord == true` のときに描画を試みる** → Widget 側で早期 return（「まだ記録がありません」）しているが、Painter 側でも `incomeExpense.isEmpty` ならダミー値を返す二重防御
+- **`hasNoRecord == true` のときに描画を試みる** → 親の `year_page.dart` の `Consumer` で `hasNoRecord == true` のときセクションごと `SizedBox.shrink()` で非表示化（KAN-99）。Painter 側でも `incomeExpense.isEmpty` ならダミー値を返す二重防御
 - **Painter の未来月描画漏れ** → 未来月は折れ線・バーを描かず、月ラベルのみ薄色で表示するのが現行仕様
 - **`MonthlyBalanceValue` フィールド追加** → Freezed なので `dart run build_runner build --delete-conflicting-outputs` 必須
 
@@ -233,3 +233,5 @@ CardContainer
 - Jira: KAN-82（fl_chart から自作実装への置換）
 - Pull Request: https://github.com/puruwo/kakeibo_v3/pull/15
 - 先行改修: KAN-75（Y軸グリッド調整）
+- KAN-99: 生活収支セクション全体を `hasNoRecord == true` のとき非表示化（`year_page.dart` 側の `Consumer` で制御）
+- KAN-100: 月次 expense 集計に `fixed_cost_expense` の確定済み分を加算。あわせて `else if (income == 0)` 重複条件タイポを `else if (expense == 0)` に修正し `MonthlyBalanceType.noExpense` ブランチを到達可能化
