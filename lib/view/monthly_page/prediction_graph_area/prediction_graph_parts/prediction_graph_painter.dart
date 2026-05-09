@@ -527,7 +527,7 @@ class PredictionGraphPainter extends CustomPainter {
     final textSpan = TextSpan(
       children: [
         TextSpan(
-          text: '予算 ',
+          text: '予算+固定費 ',
           style: GraphTextStyles.graphLabel,
         ),
         TextSpan(
@@ -545,7 +545,7 @@ class PredictionGraphPainter extends CustomPainter {
 
     // 項目名のみのTextPainterを作成（重なった場合の描画用）
     final titleSpan = TextSpan(
-      text: '予算 ',
+      text: '予算+固定費 ',
       style: GraphTextStyles.graphLabel,
     );
     final titlePainter = TextPainter(
