@@ -2,6 +2,8 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
+import 'package:kakeibo/application/prediction_graph/prediction_graph_constants.dart';
+import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -42,9 +44,6 @@ class PredictionGraphUsecase {
       ref.read(expensebigCategoryRepositoryProvider);
   late final FixedCostCategoryRepository _fixedCostCategoryRepo =
       ref.read(fixedCostCategoryRepositoryProvider);
-
-  /// 横軸ラベルの間隔（日数）
-  static const int _xAxisLabelInterval = 7;
 
   /// 予測グラフのデータを取得
   Future<PredictionGraphValue> fetchPredictionGraphData(
@@ -166,8 +165,8 @@ class PredictionGraphUsecase {
     bool shouldShowPredictionLine;
     List<PredictionGraphPoint>? predictionPoints;
     String? predictionPriceLabel;
-    // 予測支出額を表示しない条件（過去月、未来月、経過日数5日以下、データなし）
-    if (elapsedDays <= 5 ||
+    // 予測支出額を表示しない条件（過去月、未来月、経過日数が最小しきい値以下、データなし）
+    if (elapsedDays <= PredictionGraphConstants.minElapsedDaysForPrediction ||
         predictionGraphLineType == PredictionGraphLineType.lastMonth ||
         predictionGraphLineType == PredictionGraphLineType.futureMonth ||
         cumulativePriceData.isEmpty) {
@@ -303,7 +302,9 @@ class PredictionGraphUsecase {
     final labels = <XAxisLabel>[];
     final totalDays = toDate.difference(fromDate).inDays + 1;
 
-    for (int i = 0; i < totalDays; i += _xAxisLabelInterval) {
+    for (int i = 0;
+        i < totalDays;
+        i += PredictionGraphConstants.xAxisLabelInterval) {
       final date = fromDate.add(Duration(days: i));
       final label = DateFormat.Md().format(date);
       labels.add(XAxisLabel(date: date, label: label));
@@ -399,8 +400,8 @@ class PredictionGraphUsecase {
     final budgetPosition = budget / maxValue;
     final positionDiff = (incomePosition - budgetPosition).abs();
 
-    // 位置の差が10%未満の場合、ラベルが重なると判定
-    if (positionDiff < 0.1) {
+    // 位置の差がしきい値未満の場合、ラベルが重なると判定
+    if (positionDiff < PredictionGraphConstants.labelOverlapPositionThreshold) {
       if (income >= budget) {
         return _LabelDisplayDecision(
           shouldShowIncomeLine: true,
@@ -487,9 +488,6 @@ class PredictionGraphUsecase {
   /// 日別カテゴリー別支出データを取得
   Future<_DailyBarResult> _getDailyBarData(
       DateTime fromDate, DateTime toDate, DateTime today) async {
-    // 棒グラフのスケール閾値（2万円）
-    const int barThreshold = 20000;
-
     // 大カテゴリー情報を取得してキャッシュ（colorCode, iconPath, name）
     final bigCategories = await _bigCategoryRepo.fetchAll();
     final bigCategoryMap = <int, _BigCategoryInfo>{};
@@ -523,10 +521,6 @@ class PredictionGraphUsecase {
     final period = PeriodValue(startDatetime: fromDate, endDatetime: toDate);
     final fixedCostExpenses =
         await _fixedCostExpenseRepo.fetchByPeriod(period: period);
-
-    // 固定費棒の表示用ID・色（一般カテゴリーIDと衝突しない負値を使用、色は MyColors.fixedCostGray）
-    const int fixedCostBarCategoryId = -1;
-    const String fixedCostBarColorCode = 'FF8E8E93';
 
     // 期間内の固定費を「日付別の合計」に集計（確定→price / 未確定→fixed_cost.estimated_price）
     final fixedCostTotalByDate = <String, int>{};
@@ -582,9 +576,9 @@ class PredictionGraphUsecase {
       // （同じ日に複数レコードあっても1本に統合する）
       if (fixedCostForDay > 0) {
         categoryExpenses.add(CategoryExpense(
-          bigCategoryId: fixedCostBarCategoryId,
+          bigCategoryId: PredictionGraphConstants.fixedCostBarCategoryId,
           price: fixedCostForDay,
-          colorCode: fixedCostBarColorCode,
+          colorCode: MyColors.fixedCostGray.toString(),
           iconPath: '',
           categoryName: '固定費',
           normalizedHeight: 0, // 後で設定
@@ -626,7 +620,9 @@ class PredictionGraphUsecase {
 
     // 棒グラフの最大値を計算（閾値を超えたらその最大値、それ以外は閾値）
     final barMaxValue =
-        maxDailyTotal > barThreshold ? maxDailyTotal : barThreshold;
+        maxDailyTotal > PredictionGraphConstants.barChartScaleThreshold
+            ? maxDailyTotal
+            : PredictionGraphConstants.barChartScaleThreshold;
 
     // 正規化とデータ再構築
     final sqrtMaxValue = math.sqrt(barMaxValue);
