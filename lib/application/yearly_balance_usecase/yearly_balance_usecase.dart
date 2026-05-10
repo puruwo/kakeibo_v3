@@ -38,14 +38,18 @@ class YearlyBalanceUsecaseNotifier
     final yearlyIncome = await _incomeRepository.calcurateSumWithPeriod(
         period: dateScope.yearPeriod);
 
-    // 年間支出を取得（一般支出 + 確定済み固定費支出）
+    // 年間支出を取得（一般支出 + 確定済み固定費支出 + 未確定固定費の推定額）
     final regularExpense = await _expenseRepository.fetchTotalExpenseByPeriod(
         fromDate: dateScope.yearPeriod.startDatetime,
         toDate: dateScope.yearPeriod.endDatetime);
     final fixedCostExpense = await _fixedCostExpenseRepository
         .fetchTotalConfirmedFixedCostExpenseWithPeriod(
             period: dateScope.yearPeriod);
-    final yearlyExpense = regularExpense + fixedCostExpense;
+    final unconfirmedFixedCostExpense = await _fixedCostExpenseRepository
+        .fetchTotalUnconfirmedFixedCostEstimatedWithPeriod(
+            period: dateScope.yearPeriod);
+    final yearlyExpense =
+        regularExpense + fixedCostExpense + unconfirmedFixedCostExpense;
 
     // 残金を計算
     final savings = yearlyIncome - yearlyExpense;

@@ -84,7 +84,13 @@ class AnnualBalanceChartUsecaseNotifier
       final fixedCostExpense = await _fixedCostExpenseRepository
           .fetchTotalConfirmedFixedCostExpenseWithPeriod(period: pueryPeriod);
 
-      final expense = regularExpense + fixedCostExpense;
+      // 未確定固定費の推定額を取得（生活収支に合算）
+      final unconfirmedFixedCostExpense = await _fixedCostExpenseRepository
+          .fetchTotalUnconfirmedFixedCostEstimatedWithPeriod(
+              period: pueryPeriod);
+
+      final expense =
+          regularExpense + fixedCostExpense + unconfirmedFixedCostExpense;
 
       // ステータスを確認
       MonthlyBalanceType monthlyBalanceType;

@@ -65,7 +65,17 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       data: (data) => data.aggregationMonthPeriod,
                     );
                     final label = yyyyMMtoMMGetter(monthPeriod);
-                    return Text(label, style: AppTextStyles.pageHeaderText);
+                    // 月ラベルの下に「一般会計」を小さく表示し、ボーナスを含まない分析画面であることを示す
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(label, style: AppTextStyles.pageHeaderText),
+                        Text(
+                          '一般会計',
+                          style: AppTextStyles.pageHeaderSubText,
+                        ),
+                      ],
+                    );
                   },
                 ),
                 //右矢印ボタン、押すと次の月に移動
