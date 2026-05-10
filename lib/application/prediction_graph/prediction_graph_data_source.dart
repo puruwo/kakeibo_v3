@@ -242,7 +242,7 @@ class PredictionGraphDataSource {
         categoryExpenses.add(CategoryExpense(
           bigCategoryId: PredictionGraphConstants.fixedCostBarCategoryId,
           price: fixedCostForDay,
-          colorCode: MyColors.fixedCostGray.toString(),
+          colorCode: MyColors().getHexFromColor(MyColors.fixedCostGray),
           iconPath: '',
           categoryName: '固定費',
           normalizedHeight: 0, // 後で設定
@@ -255,7 +255,7 @@ class PredictionGraphDataSource {
         categoryExpenses.add(CategoryExpense(
           bigCategoryId: entry.key,
           price: entry.value,
-          colorCode: catInfo?.colorCode ?? 'FF888888',
+          colorCode: catInfo?.colorCode ?? MyColors().getHexFromColor(MyColors.fixedCostGray),
           iconPath: catInfo?.iconPath ?? '',
           categoryName: catInfo?.name ?? '',
           normalizedHeight: 0, // 後で設定
