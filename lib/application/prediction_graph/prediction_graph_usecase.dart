@@ -1,15 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
-import 'package:kakeibo/application/prediction_graph/prediction_graph_constants.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_data_source.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_layout_calculator.dart';
+import 'package:kakeibo/application/prediction_graph/prediction_graph_predictor.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
-import 'package:kakeibo/util/util.dart';
 
 final predictionGraphUsecaseProvider = Provider<PredictionGraphUsecase>(
   PredictionGraphUsecase.new,
@@ -26,6 +25,8 @@ class PredictionGraphUsecase {
       ref.read(predictionGraphDataSourceProvider);
   late final PredictionGraphLayoutCalculator _layoutCalc =
       ref.read(predictionGraphLayoutCalculatorProvider);
+  late final PredictionGraphPredictor _predictor =
+      ref.read(predictionGraphPredictorProvider);
 
   /// 予測グラフのデータを取得
   Future<PredictionGraphValue> fetchPredictionGraphData(
@@ -36,11 +37,14 @@ class PredictionGraphUsecase {
     final today = ref.read(systemDatetimeNotifierProvider);
 
     // 予測グラフの種類を判定
-    PredictionGraphLineType predictionGraphLineType;
-    if (toDate.isBefore(today)) {
-      predictionGraphLineType = PredictionGraphLineType.lastMonth;
-    } else if (fromDate.isAfter(today)) {
-      predictionGraphLineType = PredictionGraphLineType.futureMonth;
+    final predictionGraphLineType = _predictor.resolveGraphType(
+      fromDate: fromDate,
+      toDate: toDate,
+      today: today,
+    );
+
+    // 未来月は計算不要のため早期リターン
+    if (predictionGraphLineType == PredictionGraphLineType.futureMonth) {
       return PredictionGraphValue(
         predictionGraphLineType: predictionGraphLineType,
         fromDate: fromDate,
@@ -64,19 +68,15 @@ class PredictionGraphUsecase {
         expenseLabelPosition: null, // 追加
         displayMaxValue: 100.0, // デフォルト値
       );
-    } else {
-      predictionGraphLineType = PredictionGraphLineType.thisMonth;
     }
 
-    // 累積支出データを取得
-    final cumulativePriceData =
-        predictionGraphLineType == PredictionGraphLineType.lastMonth
-            ? await _dataSource.fetchCumulativeByDate(
-                fromDate: fromDate, toDate: toDate)
-            : predictionGraphLineType == PredictionGraphLineType.thisMonth
-                ? await _dataSource.fetchCumulativeByDate(
-                    fromDate: fromDate, toDate: today)
-                : [];
+    // 累積支出データを取得（thisMonthは today まで、lastMonth は月末まで）
+    final cumulativeToDate =
+        predictionGraphLineType == PredictionGraphLineType.thisMonth
+            ? today
+            : toDate;
+    final cumulativePriceData = await _dataSource.fetchCumulativeByDate(
+        fromDate: fromDate, toDate: cumulativeToDate);
 
     // 収入を取得
     final income = await _incomeRepo.calcurateSumWithBigCategoryAndPeriod(
@@ -122,54 +122,19 @@ class PredictionGraphUsecase {
       );
     }
 
-    // 累積支出データをチャート用に変換
-    final expensePoints = <PredictionGraphPoint>[];
-    int lastPrice = 0;
-    DateTime lastDate = predictionGraphLineType == PredictionGraphLineType.thisMonth ? today : toDate;
-    if (cumulativePriceData.isNotEmpty) {
-      for (final data in cumulativePriceData) {
-        final dateTime = data['date'] as DateTime;
-        final price = data['sum_price_daily'] as int;
-        expensePoints.add(PredictionGraphPoint(date: dateTime, price: price));
-      }
-      // 最後のデータから経過情報を取得
-      final lastData = cumulativePriceData.last;
-      lastDate = lastData['date'] as DateTime;
-      lastPrice = lastData['sum_price_daily'] as int;
-    }
-
-    // 経過日数と総日数を計算
-    final elapsedDays = lastDate.difference(fromDate).inDays + 1;
-    final totalDays = toDate.difference(fromDate).inDays + 1;
-
-    ///予想支出額を計算するロジック
-    int? predictionPrice;
-    bool shouldShowPredictionLine;
-    List<PredictionGraphPoint>? predictionPoints;
-    String? predictionPriceLabel;
-    // 予測支出額を表示しない条件（過去月、未来月、経過日数が最小しきい値以下、データなし）
-    if (elapsedDays <= PredictionGraphConstants.minElapsedDaysForPrediction ||
-        predictionGraphLineType == PredictionGraphLineType.lastMonth ||
-        predictionGraphLineType == PredictionGraphLineType.futureMonth ||
-        cumulativePriceData.isEmpty) {
-      predictionPrice = null;
-      shouldShowPredictionLine = false;
-    } else {
-      // 支出データがあり、かつ経過日数が5日未満でも総日数でもない場合に予測ポイントを作成
-      predictionPrice = ((lastPrice / elapsedDays) * totalDays).toInt();
-      shouldShowPredictionLine = true;
-      predictionPoints = <PredictionGraphPoint>[
-        PredictionGraphPoint(date: lastDate, price: lastPrice),
-        PredictionGraphPoint(date: toDate, price: predictionPrice),
-      ];
-      // 予想支出ラベルを生成
-      predictionPriceLabel = _generatePredictionLabel(predictionPrice);
-    }
+    // 折れ線・予測線を計算
+    final predictionResult = _predictor.calculatePrediction(
+      graphType: predictionGraphLineType,
+      cumulativePriceData: cumulativePriceData,
+      fromDate: fromDate,
+      toDate: toDate,
+      today: today,
+    );
 
     // グラフの最大値を計算
     final maxValue = _layoutCalc.calculateMaxValue(
-      latestPrice: lastPrice,
-      predictionPrice: predictionPrice,
+      latestPrice: predictionResult.lastPrice,
+      predictionPrice: predictionResult.predictionPrice,
       income: income,
       budget: budgetIncludeFixedCost,
     );
@@ -210,7 +175,7 @@ class PredictionGraphUsecase {
 
     // 支出ラベルの位置を計算
     final expenseLabelPosition = shouldShowExpenseLabel
-        ? _layoutCalc.calculateExpenseLabel(lastPrice)
+        ? _layoutCalc.calculateExpenseLabel(predictionResult.lastPrice)
         : null;
 
     // 棒グラフデータを取得
@@ -224,19 +189,19 @@ class PredictionGraphUsecase {
       fromDate: fromDate,
       toDate: toDate,
       today: today,
-      expensePoints: expensePoints,
-      predictionPoints: predictionPoints,
+      expensePoints: predictionResult.expensePoints,
+      predictionPoints: predictionResult.predictionPoints,
       income: income,
       budget: budgetIncludeFixedCost,
       maxValue: maxValue,
       displayMaxValue: displayMaxValue,
-      latestPrice: lastPrice,
-      predictionPrice: predictionPrice,
+      latestPrice: predictionResult.lastPrice,
+      predictionPrice: predictionResult.predictionPrice,
       xAxisLabels: xAxisLabels,
       incomeLabelPosition: incomeLabelPosition,
       budgetLabelPosition: budgetLabelPosition,
-      predictionLabel: predictionPriceLabel,
-      shouldShowPredictionLine: shouldShowPredictionLine,
+      predictionLabel: predictionResult.predictionLabel,
+      shouldShowPredictionLine: predictionResult.shouldShowPredictionLine,
       shouldShowBudgetLine: shouldShowBudgetLine,
       shouldShowIncomeLine: shouldShowIncomeLine,
       shouldShowExpenseLabel: shouldShowExpenseLabel,
@@ -245,11 +210,5 @@ class PredictionGraphUsecase {
       barMaxValue: barMaxValue,
       totalFixedCostExpense: fixedCostExpenseTotal,
     );
-  }
-
-  /// 予想支出ラベルを生成
-  String _generatePredictionLabel(int predictionPrice) {
-    final priceLabel = yenFormattedPriceGetter(predictionPrice);
-    return priceLabel;
   }
 }
