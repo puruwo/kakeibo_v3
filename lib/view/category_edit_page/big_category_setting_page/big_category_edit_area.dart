@@ -103,6 +103,9 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
 
     return Column(
       children: [
+        // ヘッダーまでの余白
+        SizedBox(height: 8),
+
         Padding(
           padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
           child: Row(
@@ -280,6 +283,9 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
 
     return Column(
       children: [
+        // ヘッダーまでの余白
+        SizedBox(height: 8),
+
         Padding(
           padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
           child: Row(
