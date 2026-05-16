@@ -11,6 +11,7 @@ import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_register_prompt_area.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_area.dart';
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/constant/colors.dart';
@@ -103,34 +104,55 @@ class _YearPageState extends ConsumerState<YearPage> {
               const SizedBox(height: 16),
               Consumer(
                 builder: (context, ref, _) {
-                  final asyncValue = ref.watch(resolvedBonusPlanValueProvider);
-                  // ボーナス収入も支出もない場合はセクションごと非表示
-                  final shouldHide = asyncValue.maybeWhen(
+                  final bonusAsync =
+                      ref.watch(resolvedBonusPlanValueProvider);
+                  final chartAsync =
+                      ref.watch(resolvedAnnualBalanceChartValueProvider);
+
+                  final bonusEmpty = bonusAsync.maybeWhen(
                     data: (value) =>
                         value.yearlyBonusIncome == 0 &&
                         value.yearlyBonusExpense == 0,
                     orElse: () => false,
                   );
-                  if (shouldHide) {
+
+                  // ボーナス収入か支出が入力済みのとき（通常表示）
+                  if (!bonusEmpty) {
+                    return Column(
+                      children: [
+                        AppContentsHeader(
+                          type: AppContentsHeaderType.appCardSectionTitle,
+                          title: 'ボーナス利用状況',
+                          subLabel: 'さらに表示する',
+                          isLinkable: true,
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => const BonusHomePage(),
+                              ),
+                            );
+                          },
+                        ),
+                        const BonusPlanArea(),
+                        const SizedBox(height: 16),
+                      ],
+                    );
+                  }
+
+                  // ボーナス未入力かつ生活収支グラフも非表示（収入・支出ともに0）→ セクションごと非表示
+                  final isAnnualChartHidden = chartAsync.maybeWhen(
+                    data: (value) => value.hasNoRecord,
+                    orElse: () => false,
+                  );
+                  if (isAnnualChartHidden) {
                     return const SizedBox.shrink();
                   }
+
+                  // ボーナス未入力かつ生活収支グラフは表示中 → 登録を促す表示
                   return Column(
-                    children: [
-                      AppContentsHeader(
-                        type: AppContentsHeaderType.appCardSectionTitle,
-                        title: 'ボーナス利用状況',
-                        subLabel: 'さらに表示する',
-                        isLinkable: true,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const BonusHomePage(),
-                            ),
-                          );
-                        },
-                      ),
-                      const BonusPlanArea(),
-                      const SizedBox(height: 16),
+                    children: const [
+                      BonusRegisterPromptArea(),
+                      SizedBox(height: 16),
                     ],
                   );
                 },
