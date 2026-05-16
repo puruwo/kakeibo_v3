@@ -19,6 +19,18 @@ import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/
 class BudgetPageSummaryArea extends HookConsumerWidget {
   const BudgetPageSummaryArea({super.key});
 
+  /// 外側余白とカードを包むヘルパー（空でない場合のみ使用）
+  Widget _wrapTop(Widget child) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            child: child,
+          ),
+          const SizedBox(height: 8),
+        ],
+      );
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // 編集中の予算金額を常にwatchする（autoDisposeの生存を保証するため）
@@ -30,6 +42,12 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
             final allCategoryCardEntity =
                 _applyEditingOverrides(ref, originalModel, editingPrices);
 
+            // 予算も収入も無い場合はサマリーを非表示にして上に詰める
+            if (!allCategoryCardEntity.cardStatusType.hasBudget &&
+                !allCategoryCardEntity.cardStatusType.hasIncome) {
+              return const SizedBox.shrink();
+            }
+
             // 予算と収入の大きい方を棒グラフの基準にする
             final budgetIncomeDenominator = max(
                 allCategoryCardEntity.allCategoryTotalBudget,
@@ -40,7 +58,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                 allCategoryCardEntity.allCategoryTotalIncome -
                     allCategoryCardEntity.allCategoryTotalBudget;
 
-            return CardContainer(
+            return _wrapTop(CardContainer(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,10 +209,10 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                   const SizedBox(height: 12),
                 ],
               ),
-            );
+            ));
           },
-          loading: () => const MonthlyPlanSkeleton(),
-          error: (error, stack) => Center(child: Text('$error')),
+          loading: () => _wrapTop(const MonthlyPlanSkeleton()),
+          error: (error, stack) => _wrapTop(Center(child: Text('$error'))),
         );
   }
 

@@ -20,13 +20,8 @@ class MonthlyPlanHomePage extends ConsumerWidget {
         ),
         body: Column(
           children: [
-            // 上部サマリー（予算と収入のみ）
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-              child: BudgetPageSummaryArea(),
-            ),
-
-            const SizedBox(height: 8),
+            // 上部サマリー（予算と収入のみ。空の場合はwidget内で非表示にする）
+            const BudgetPageSummaryArea(),
 
             // 予算カテゴリーリスト
             const Expanded(child: BudgetCategoryArea()),
