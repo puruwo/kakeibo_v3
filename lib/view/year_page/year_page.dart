@@ -11,13 +11,15 @@ import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_register_prompt_area.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_area.dart';
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
-import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_plan_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_section_display_provider.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
+import 'package:kakeibo/domain/ui_value/bonus_plan_value/bonus_section_display_type.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -103,35 +105,44 @@ class _YearPageState extends ConsumerState<YearPage> {
               const SizedBox(height: 16),
               Consumer(
                 builder: (context, ref, _) {
-                  final asyncValue = ref.watch(resolvedBonusPlanValueProvider);
-                  // ボーナス収入も支出もない場合はセクションごと非表示
-                  final shouldHide = asyncValue.maybeWhen(
-                    data: (value) =>
-                        value.yearlyBonusIncome == 0 &&
-                        value.yearlyBonusExpense == 0,
-                    orElse: () => false,
-                  );
-                  if (shouldHide) {
-                    return const SizedBox.shrink();
-                  }
-                  return Column(
-                    children: [
-                      AppContentsHeader(
-                        type: AppContentsHeaderType.appCardSectionTitle,
-                        title: 'ボーナス利用状況',
-                        subLabel: 'さらに表示する',
-                        isLinkable: true,
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const BonusHomePage(),
-                            ),
+                  final displayAsync =
+                      ref.watch(resolvedBonusSectionDisplayProvider);
+                  return displayAsync.maybeWhen(
+                    data: (type) {
+                      switch (type) {
+                        case BonusSectionDisplayType.normal:
+                          return Column(
+                            children: [
+                              AppContentsHeader(
+                                type: AppContentsHeaderType.appCardSectionTitle,
+                                title: 'ボーナス利用状況',
+                                subLabel: 'さらに表示する',
+                                isLinkable: true,
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const BonusHomePage(),
+                                    ),
+                                  );
+                                },
+                              ),
+                              const BonusPlanArea(),
+                              const SizedBox(height: 16),
+                            ],
                           );
-                        },
-                      ),
-                      const BonusPlanArea(),
-                      const SizedBox(height: 16),
-                    ],
+                        case BonusSectionDisplayType.registerPrompt:
+                          return Column(
+                            children: const [
+                              BonusRegisterPromptArea(),
+                              SizedBox(height: 16),
+                            ],
+                          );
+                        case BonusSectionDisplayType.hidden:
+                          return const SizedBox.shrink();
+                      }
+                    },
+                    orElse: () => const SizedBox.shrink(),
                   );
                 },
               ),
