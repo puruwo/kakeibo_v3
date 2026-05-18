@@ -54,34 +54,6 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                     ])),
                               ],
                             ),
-                            // 残金
-                            allCategoryCardEntity.realSavings != 0
-                                ? Flexible(
-                                    child: RichText(
-                                        textAlign: TextAlign.end,
-                                        overflow: TextOverflow.ellipsis,
-                                        text: TextSpan(children: [
-                                          TextSpan(
-                                            text: '残金 ',
-                                            style: AppTextStyles
-                                                .appCardTertiaryTitleLabel,
-                                          ),
-                                          // カテゴリー予算
-                                          TextSpan(
-                                            text: formattedPriceGetter(
-                                                allCategoryCardEntity
-                                                    .realSavings),
-                                            style: AppTextStyles
-                                                .appCardTertiaryPriceLabel,
-                                          ),
-                                          TextSpan(
-                                            text: ' 円',
-                                            style: AppTextStyles
-                                                .appCardTertiaryPriceUnit,
-                                          ),
-                                        ])),
-                                  )
-                                : Container(),
                           ],
                         ),
                         const SizedBox(
