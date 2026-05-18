@@ -23,9 +23,55 @@ class MnothlyPlanGraph extends HookConsumerWidget {
       isBuilt.value = true;
     });
 
-    return
-        // バーグラフ
-        Stack(
+    final totalExpenseRatio = allCategoryCardEntity.expenseCategoryRatioList
+        .fold(0.0, (sum, ratio) => sum + ratio);
+    final isExpenseOverflow = totalExpenseRatio > 1.0;
+
+    Widget barGraph = ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        constraints: const BoxConstraints(
+          minWidth: 0,
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [
+          ...List.generate(
+              allCategoryCardEntity.expenseCategoryNameList.length, (i) {
+            return AnimatedContainer(
+              height: 8.5,
+              width: isBuilt.value
+                  ? allCategoryCardEntity.expenseCategoryRatioList[i] *
+                      maxGraphWidth
+                  : 0,
+              color: MyColors().getColorFromHex(
+                  allCategoryCardEntity.expenseCategoryColorList[i]),
+              duration: const Duration(milliseconds: 500),
+            );
+          }),
+        ]),
+      ),
+    );
+
+    // 収入グラフと同様、オーバーフロー時は右端にフェードアウト効果を適用
+    if (isExpenseOverflow) {
+      barGraph = ShaderMask(
+        shaderCallback: (Rect bounds) {
+          return const LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [
+              Colors.white,
+              Colors.white,
+              Colors.transparent,
+            ],
+            stops: [0.0, 0.85, 1.0],
+          ).createShader(bounds);
+        },
+        blendMode: BlendMode.dstIn,
+        child: barGraph,
+      );
+    }
+
+    return Stack(
       children: [
         // バーの背景枠
         Container(
@@ -36,29 +82,7 @@ class MnothlyPlanGraph extends HookConsumerWidget {
             color: MyColors.secondarySystemfill,
           ),
         ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Container(
-            constraints: const BoxConstraints(
-              minWidth: 0,
-            ),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
-              ...List.generate(
-                  allCategoryCardEntity.expenseCategoryNameList.length, (i) {
-                return AnimatedContainer(
-                  height: 8.5,
-                  width: isBuilt.value
-                      ? allCategoryCardEntity.expenseCategoryRatioList[i] *
-                          maxGraphWidth
-                      : 0,
-                  color: MyColors().getColorFromHex(
-                      allCategoryCardEntity.expenseCategoryColorList[i]),
-                  duration: const Duration(milliseconds: 500),
-                );
-              }),
-            ]),
-          ),
-        )
+        barGraph,
       ],
     );
   }
