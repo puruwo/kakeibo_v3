@@ -179,8 +179,7 @@ class PredictionGraphLayoutCalculator {
   /// 支出ラベルの表示位置を計算（金額のみ返却）
   LabelPosition calculateExpenseLabel(int expense) {
     final priceLabel = yenFormattedPriceGetter(expense);
-    // 特に他のラベルとの重なり考慮がなければデフォルト位置（少し上）
-    // 過去月かつ収入・予算なしの場合のみ表示される前提なので、固定位置でOK
+    // 重なり判定はPainter側で実施するため、ここでは固定オフセット位置を返す
     return LabelPosition(label: priceLabel, yOffset: -7.0);
   }
 }
