@@ -1,6 +1,5 @@
 /// Package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
@@ -180,13 +179,12 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       ),
                       const MonthlyPlanArea(),
                       const SizedBox(height: 8),
-                      // KAN-69: カード外の大型ボタン行（左=収入を追加/右=予算を編集）
                       Row(
                         children: [
                           Expanded(
-                            child: PlanAreaButton(
-                              colorType: ButtonColorType.secondary,
-                              onTap: () {
+                            child: MainButton(
+                              buttonType: ButtonColorType.secondary,
+                              onPressed: () {
                                 final dateScope = ref
                                     .read(analyzePageDateScopeEntityProvider)
                                     .value;
@@ -200,19 +198,14 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                   ),
                                 );
                               },
-                              icon: const Icon(
-                                Icons.add,
-                                size: 18,
-                                color: MyColors.themeColor,
-                              ),
-                              label: '収入を追加',
+                              buttonText: '収入を追加',
                             ),
                           ),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: PlanAreaButton(
-                              colorType: ButtonColorType.main,
-                              onTap: () {
+                            child: MainButton(
+                              buttonType: ButtonColorType.main,
+                              onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (context) =>
@@ -220,21 +213,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                   ),
                                 );
                               },
-                              icon: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 4.0,
-                                ),
-                                child: SvgPicture.asset(
-                                  'assets/images/ui_icon_edit.svg',
-                                  colorFilter: const ColorFilter.mode(
-                                    MyColors.white,
-                                    BlendMode.srcIn,
-                                  ),
-                                  width: 15,
-                                  height: 15,
-                                ),
-                              ),
-                              label: '予算を編集',
+                              buttonText: '予算を編集',
                             ),
                           ),
                         ],

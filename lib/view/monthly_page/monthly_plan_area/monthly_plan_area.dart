@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_income_graph_area/monthly_income_graph_area.dart';
@@ -72,57 +70,6 @@ class MonthlyPlanArea extends ConsumerWidget {
             error: (e, s) => const SizedBox.shrink(),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class PlanAreaButton extends StatelessWidget {
-  const PlanAreaButton({
-    super.key,
-    required this.onTap,
-    required this.icon,
-    required this.label,
-    this.colorType = ButtonColorType.secondary,
-  });
-
-  final void Function() onTap;
-  final Widget icon;
-  final String label;
-  final ButtonColorType colorType;
-
-  @override
-  Widget build(BuildContext context) {
-    return AppInkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(50),
-      child: Container(
-        height: 48,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          color: colorType.color,
-          borderRadius: BorderRadius.circular(50),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 14.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              icon,
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: colorType == ButtonColorType.main
-                    ? AppTextStyles.whiteButtonText
-                    : AppTextStyles.subButtonText,
-                textHeightBehavior: const TextHeightBehavior(
-                  applyHeightToFirstAscent: true,
-                  applyHeightToLastDescent: true,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
