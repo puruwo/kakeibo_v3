@@ -1,5 +1,6 @@
 /// Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
@@ -198,6 +199,11 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                   ),
                                 );
                               },
+                              icon: const Icon(
+                                Icons.add,
+                                size: 18,
+                                color: MyColors.themeColor,
+                              ),
                               buttonText: '収入を追加',
                             ),
                           ),
@@ -213,6 +219,15 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                   ),
                                 );
                               },
+                              icon: SvgPicture.asset(
+                                'assets/images/ui_icon_edit.svg',
+                                colorFilter: const ColorFilter.mode(
+                                  MyColors.white,
+                                  BlendMode.srcIn,
+                                ),
+                                width: 15,
+                                height: 15,
+                              ),
                               buttonText: '予算を編集',
                             ),
                           ),
