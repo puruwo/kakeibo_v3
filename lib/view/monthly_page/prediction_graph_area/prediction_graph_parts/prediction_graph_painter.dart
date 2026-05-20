@@ -786,8 +786,17 @@ class PredictionGraphPainter extends CustomPainter {
         }
       }
 
-      // 収入・予算ラベルと重なる場合は支出ラベル/ラインを非表示
-      if (overlapsWithIncome || overlapsWithBudget) {
+      // 0円軸ラベルとの重なりチェック（常時描画される「￥0」ラベルと支出ラベルの重なりを防ぐ）
+      bool overlapsWithZeroAxis = false;
+      final zeroAxisY = topMargin + graphHeight;
+      final zeroAxisLabelTop = zeroAxisY - labelHeight / 2;
+      final zeroAxisLabelBottom = zeroAxisY + labelHeight / 2;
+      if (labelY < zeroAxisLabelBottom && labelBottom > zeroAxisLabelTop) {
+        overlapsWithZeroAxis = true;
+      }
+
+      // 収入・予算・0円軸ラベルと重なる場合は支出ラベル/ラインを非表示
+      if (overlapsWithIncome || overlapsWithBudget || overlapsWithZeroAxis) {
         // 折れ線グラフのみ描画
         canvas.drawPath(path, paint);
         return;
