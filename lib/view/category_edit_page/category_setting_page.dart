@@ -34,15 +34,33 @@ class CategorySettingPage extends ConsumerStatefulWidget {
 class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  // 編集モード中のタブ戻し先インデックス（無限ループ防止用）
+  int? _restoringToIndex;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener(_onTabChanged);
+  }
+
+  // 編集モード中はタブ切り替えを元のタブに戻す
+  void _onTabChanged() {
+    if (!_tabController.indexIsChanging) return;
+    if (_restoringToIndex == _tabController.index) {
+      _restoringToIndex = null;
+      return;
+    }
+    final isEditMode = ref.read(editModeNotifierProvider);
+    if (isEditMode) {
+      _restoringToIndex = _tabController.previousIndex;
+      _tabController.animateTo(_tabController.previousIndex);
+    }
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
   }
