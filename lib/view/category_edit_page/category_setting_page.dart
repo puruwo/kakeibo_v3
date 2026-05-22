@@ -1,9 +1,8 @@
-/// packegeImport
+// packegeImport
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 
-/// localImport
-import 'package:kakeibo/constant/colors.dart';
+// localImport
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
@@ -34,33 +33,15 @@ class CategorySettingPage extends ConsumerStatefulWidget {
 class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
-  // 編集モード中のタブ戻し先インデックス（無限ループ防止用）
-  int? _restoringToIndex;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    _tabController.addListener(_onTabChanged);
-  }
-
-  // 編集モード中はタブ切り替えを元のタブに戻す
-  void _onTabChanged() {
-    if (!_tabController.indexIsChanging) return;
-    if (_restoringToIndex == _tabController.index) {
-      _restoringToIndex = null;
-      return;
-    }
-    final isEditMode = ref.read(editModeNotifierProvider);
-    if (isEditMode) {
-      _restoringToIndex = _tabController.previousIndex;
-      _tabController.animateTo(_tabController.previousIndex);
-    }
   }
 
   @override
   void dispose() {
-    _tabController.removeListener(_onTabChanged);
     _tabController.dispose();
     super.dispose();
   }
@@ -99,14 +80,23 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
             icon: const Icon(Icons.close, color: MyColors.white),
           ),
 
-          // タブバー
-          bottom: AppTab(
-            tabController: _tabController,
-            tabs: const [
-              Tab(text: '一般'),
-              Tab(text: '固定費'),
-              Tab(text: '収入'),
-            ],
+          // タブバー（編集モード中はIgnorePointerでタップを遮断し半透明表示）
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: IgnorePointer(
+              ignoring: editmodeProvider,
+              child: Opacity(
+                opacity: editmodeProvider ? 0.4 : 1.0,
+                child: AppTab(
+                  tabController: _tabController,
+                  tabs: const [
+                    Tab(text: '一般'),
+                    Tab(text: '固定費'),
+                    Tab(text: '収入'),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
 
