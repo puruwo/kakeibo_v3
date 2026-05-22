@@ -123,26 +123,20 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
 }
 
 Widget colorCircle(Color color, Color? selectedColor) {
-  // 選択非選択の判定
   final isSelected = (color == selectedColor);
 
-  return isSelected
-      // 選択時
-      ? Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 35,
-            width: 35,
-            decoration: BoxDecoration(color: color, shape: BoxShape.rectangle),
-          ),
-        )
-      // 非選択時
-      : Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 35,
-            width: 35,
-            decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-          ),
-        );
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      height: 35,
+      width: 35,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        border: isSelected
+            ? Border.all(color: Colors.white, width: 2.5)
+            : null,
+      ),
+    ),
+  );
 }

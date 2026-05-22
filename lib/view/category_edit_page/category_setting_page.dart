@@ -1,9 +1,8 @@
-/// packegeImport
+// packegeImport
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 
-/// localImport
-import 'package:kakeibo/constant/colors.dart';
+// localImport
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
@@ -81,14 +80,23 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
             icon: const Icon(Icons.close, color: MyColors.white),
           ),
 
-          // タブバー
-          bottom: AppTab(
-            tabController: _tabController,
-            tabs: const [
-              Tab(text: '一般'),
-              Tab(text: '固定費'),
-              Tab(text: '収入'),
-            ],
+          // タブバー（編集モード中はIgnorePointerでタップを遮断し半透明表示）
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: IgnorePointer(
+              ignoring: editmodeProvider,
+              child: Opacity(
+                opacity: editmodeProvider ? 0.4 : 1.0,
+                child: AppTab(
+                  tabController: _tabController,
+                  tabs: const [
+                    Tab(text: '一般'),
+                    Tab(text: '固定費'),
+                    Tab(text: '収入'),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
 

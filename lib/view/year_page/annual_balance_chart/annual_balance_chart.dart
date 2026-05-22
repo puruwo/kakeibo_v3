@@ -212,8 +212,10 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
     const tooltipWidth = 160.0;
     final cx = AnnualBalanceChartLayout.cellCenterX(_selectedMonthIndex!);
     double left = cx - tooltipWidth / 2;
-    // 左右見切れ防止
-    if (left < 0) left = 0;
+    // Y軸ラベルオーバーレイ(reservedSize幅)より左にならないよう防止
+    if (left < AnnualBalanceChartLayout.reservedSize) {
+      left = AnnualBalanceChartLayout.reservedSize;
+    }
     if (left + tooltipWidth > AnnualBalanceChartLayout.drawingAreaWidth) {
       left = AnnualBalanceChartLayout.drawingAreaWidth - tooltipWidth;
     }
