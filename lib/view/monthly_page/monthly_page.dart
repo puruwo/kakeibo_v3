@@ -1,5 +1,6 @@
 /// Package imports
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
@@ -12,14 +13,19 @@ import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view/monthly_page/skeleton/prediction_graph_skeleton.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -151,14 +157,87 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 },
               ),
 
-              const AppContentsHeader(
-                type: AppContentsHeaderType.appCardSectionTitle,
-                title: '今月の計画',
+              // KAN-93: noData（支出・収入・予算すべて0）のときセクションごと非表示
+              Consumer(
+                builder: (context, ref, _) {
+                  final modelAsync =
+                      ref.watch(resolvedAllCategoryCardModelProvider);
+                  final isNoData =
+                      modelAsync.whenOrNull(
+                        data: (model) =>
+                            model.cardStatusType ==
+                            AllCategoryCardStatusType.noData,
+                      ) ??
+                      false;
+
+                  if (isNoData) return const SizedBox.shrink();
+
+                  return Column(
+                    children: [
+                      const AppContentsHeader(
+                        type: AppContentsHeaderType.appCardSectionTitle,
+                        title: '今月の収支',
+                      ),
+                      const MonthlyPlanArea(),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: MainButton(
+                              buttonType: ButtonColorType.secondary,
+                              onPressed: () {
+                                final dateScope = ref
+                                    .read(analyzePageDateScopeEntityProvider)
+                                    .value;
+                                if (dateScope == null) return;
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) => YearlyIncomeListPage(
+                                      period:
+                                          dateScope.aggregationMonthPeriod,
+                                    ),
+                                  ),
+                                );
+                              },
+                              icon: const Icon(
+                                Icons.add,
+                                size: 18,
+                                color: MyColors.themeColor,
+                              ),
+                              buttonText: '収入を追加',
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: MainButton(
+                              buttonType: ButtonColorType.main,
+                              onPressed: () {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const MonthlyPlanHomePage(),
+                                  ),
+                                );
+                              },
+                              icon: SvgPicture.asset(
+                                'assets/images/ui_icon_edit.svg',
+                                colorFilter: const ColorFilter.mode(
+                                  MyColors.white,
+                                  BlendMode.srcIn,
+                                ),
+                                width: 15,
+                                height: 15,
+                              ),
+                              buttonText: '予算を編集',
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  );
+                },
               ),
-
-              const MonthlyPlanArea(),
-
-              const SizedBox(height: 8),
 
               AppContentsHeader(
                 type: AppContentsHeaderType.appCardSectionTitle,

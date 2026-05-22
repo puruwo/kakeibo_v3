@@ -16,6 +16,7 @@ class MainButton extends StatelessWidget {
     this.buttonColor,
     this.disabledButtonColor,
     this.buttonType = ButtonColorType.main,
+    this.icon,
     required this.onPressed,
     required this.buttonText,
   });
@@ -25,10 +26,14 @@ class MainButton extends StatelessWidget {
   final String buttonText;
   final Color? buttonColor;
   final Color? disabledButtonColor;
+  final Widget? icon;
 
   @override
   Widget build(BuildContext context) {
     final Color backgroundColor = buttonColor ?? buttonType.color;
+    final textStyle = buttonType == ButtonColorType.main
+        ? AppTextStyles.mainButtonText
+        : AppTextStyles.secondaryButtonText;
 
     return SizedBox(
       height: 40,
@@ -42,12 +47,16 @@ class MainButton extends StatelessWidget {
         ),
         child: FittedBox(
           fit: BoxFit.scaleDown,
-          child: Text(
-            buttonText,
-            style: buttonType == ButtonColorType.main
-                ? AppTextStyles.mainButtonText
-                : AppTextStyles.secondaryButtonText,
-          ),
+          child: icon != null
+              ? Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    icon!,
+                    const SizedBox(width: 6),
+                    Text(buttonText, style: textStyle),
+                  ],
+                )
+              : Text(buttonText, style: textStyle),
         ),
       ),
     );
