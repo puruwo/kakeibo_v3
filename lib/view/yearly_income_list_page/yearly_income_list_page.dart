@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
+import 'package:kakeibo/view/component/app_floating_action_button.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/yearly_income_list_page/income_graph_area.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_area.dart';
 
@@ -18,6 +25,21 @@ class YearlyIncomeListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         extendBodyBehindAppBar: true,
+        floatingActionButton: AppFloatingActionButton(
+          icon: Icons.add_rounded,
+          label: '収入を追加',
+          onTap: () {
+            final today = ref.read(systemDatetimeNotifierProvider);
+            final newIncome = IncomeEntity(
+              date: DateFormat('yyyyMMdd').format(today),
+              categoryId: IncomeBigCategoryConstants.incomeSourceIdSalary,
+            );
+            showAppModalBottomSheet(
+              context,
+              child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
+            );
+          },
+        ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
@@ -43,6 +65,8 @@ class YearlyIncomeListPage extends ConsumerWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
             ),
+            // FABがリスト末尾に被らないよう末尾に余白を確保
+            const SizedBox(height: 80),
           ],
         ));
   }
