@@ -60,8 +60,9 @@ class YearlyIncomeListPage extends ConsumerWidget {
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                 ),
-                // FABとBottomNavigationBar両方をクリアする末尾余白
-                SizedBox(height: fabBottom + 56),
+                // FABがリスト末尾に被らないよう余白を確保
+                // 可視余白 = FAB高さ(46) + FABマージン(kFABMargin=16) = 62dp
+                SizedBox(height: fabBottom + 46),
               ],
             ),
             Positioned(
