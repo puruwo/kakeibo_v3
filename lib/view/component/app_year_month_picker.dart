@@ -140,9 +140,12 @@ class _AppYearMonthPickerOverlayState
 
   Future<PeriodValue> _computePeriod(int year, int month) async {
     if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+      // 月の末日を渡すことで、集計開始日の設定に依存せず
+      // 選んだ月を含む正しい月度の期間を取得する
+      final lastDayOfMonth = DateTime(year, month + 1, 0);
       return ref
           .read(monthPeriodServiceProvider)
-          .fetchMonthPeriod(DateTime(year, month, 1));
+          .fetchMonthPeriod(lastDayOfMonth);
     } else {
       return ref
           .read(year_service.yearPeriodServiceProvider)
@@ -265,10 +268,6 @@ class _AppYearMonthPickerOverlayState
       }
       return '$_selectedYear年 $_selectedMonth月度';
     } else {
-      // 年度モード: 「X月度〜Y月度」形式
-      if (period != null) {
-        return '${period.startDatetime.month}月度〜${period.endDatetime.month}月度';
-      }
       return '$_selectedYear年度';
     }
   }
@@ -278,7 +277,12 @@ class _AppYearMonthPickerOverlayState
     if (period == null) return '';
     final start = period.startDatetime;
     final end = period.endDatetime;
-    return '${start.month}/${start.day} - ${end.month}/${end.day}';
+    if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+      return '${start.month}/${start.day} - ${end.month}/${end.day}';
+    } else {
+      // 年度モード: yyyy/mm〜yyyy/mm 形式
+      return '${start.year}/${start.month}〜${end.year}/${end.month}';
+    }
   }
 
   bool get _canShiftPrevious {
