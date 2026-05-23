@@ -11,8 +11,6 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_summary_area.dart';
 import 'package:kakeibo/view/config/config_top.dart';
-import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
-import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_register_prompt_area.dart';
@@ -57,74 +55,58 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Stack(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                //左矢印ボタン、押すと前の月に移動
-                const PreviousArrowButton(),
-                Consumer(
-                  builder: (context, ref, _) {
-                    final monthPeriodAsync = ref.watch(
-                      analyzePageDateScopeEntityProvider,
-                    );
-                    final monthPeriod = monthPeriodAsync.whenOrNull(
-                      data: (data) => data.aggregationMonthPeriod,
-                    );
-                    final selectedDate = ref.watch(
-                      analyzePageSelectedDatetimeNotifierProvider,
-                    );
-                    final label = yyyyMMtoMMGetter(monthPeriod);
-                    // 月ラベルの下に「一般会計」を小さく表示し、ボーナスを含まない分析画面であることを示す
-                    return GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: () async {
-                        final picked = await showAppYearMonthPicker(
-                          context: context,
-                          mode: AppYearMonthPickerMode.yearMonth,
-                          initialDateTime: selectedDate,
-                        );
-                        if (picked == null) return;
-                        ref
-                            .read(
-                              analyzePageSelectedDatetimeNotifierProvider
-                                  .notifier,
-                            )
-                            .updateState(picked);
-                      },
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(label, style: AppTextStyles.pageHeaderText),
-                          Text(
-                            '一般会計',
-                            style: AppTextStyles.pageHeaderSubText,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-                //右矢印ボタン、押すと次の月に移動
-                const NextArrowButton(),
-              ],
-            ),
-            Positioned(
-              right: 0,
-              child: IconButton(
-                onPressed: () => {
-                  // 設定画面にrootのNavigatorで遷移
-                  Navigator.of(context, rootNavigator: true).push(
-                    MaterialPageRoute(builder: (context) => const ConfigTop()),
+        title: Consumer(
+          builder: (context, ref, _) {
+            final monthPeriodAsync = ref.watch(
+              analyzePageDateScopeEntityProvider,
+            );
+            final monthPeriod = monthPeriodAsync.whenOrNull(
+              data: (data) => data.aggregationMonthPeriod,
+            );
+            final selectedDate = ref.watch(
+              analyzePageSelectedDatetimeNotifierProvider,
+            );
+            final label = yyyyMMtoMMGetter(monthPeriod);
+            // 月ラベルの下に「一般会計」を小さく表示し、ボーナスを含まない分析画面であることを示す
+            return GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () async {
+                final picked = await showAppYearMonthPicker(
+                  context: context,
+                  mode: AppYearMonthPickerMode.yearMonth,
+                  initialDateTime: selectedDate,
+                );
+                if (picked == null) return;
+                ref
+                    .read(
+                      analyzePageSelectedDatetimeNotifierProvider.notifier,
+                    )
+                    .updateState(picked);
+              },
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(label, style: AppTextStyles.pageHeaderText),
+                  Text(
+                    '一般会計',
+                    style: AppTextStyles.pageHeaderSubText,
                   ),
-                },
-                icon: const Icon(Icons.settings_rounded),
+                ],
               ),
-            ),
-          ],
+            );
+          },
         ),
+        actions: [
+          IconButton(
+            onPressed: () => {
+              // 設定画面にrootのNavigatorで遷移
+              Navigator.of(context, rootNavigator: true).push(
+                MaterialPageRoute(builder: (context) => const ConfigTop()),
+              ),
+            },
+            icon: const Icon(Icons.settings_rounded),
+          ),
+        ],
       ),
       backgroundColor: MyColors.secondarySystemBackground,
       body: SingleChildScrollView(
