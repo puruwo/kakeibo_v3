@@ -12,6 +12,7 @@ import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/y_axis_scale.
 import 'package:kakeibo/domain_service/month_period_service/aggregation_representative_month_service.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 final annualBalanceChartNotifierProvider = AsyncNotifierProvider.family<
@@ -53,8 +54,12 @@ class AnnualBalanceChartUsecaseNotifier
       {required DateScopeEntity dateScope}) async {
     final monthBalanceValues = <MonthlyBalanceValue>[];
 
-    // 現在の月の期間を取得
-    final currentMonthPeriod = dateScope.aggregationMonthPeriod;
+    // 「現在月度」は systemDatetime（運用日時）から導出する
+    // selectedDate ベースで計算すると年度切替後に当該年度の開始月以降が
+    // すべて未来扱いになるため、実際の今日を基準にする
+    final systemDate = ref.read(systemDatetimeNotifierProvider);
+    final currentMonthPeriod =
+        await _monthPeriodService.fetchMonthPeriod(systemDate);
 
     // 一番最初の月の期間を取得
     final firstMonthPeriod = await _monthPeriodService
