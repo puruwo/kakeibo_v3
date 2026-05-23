@@ -26,9 +26,12 @@ class YearlyIncomeListPage extends ConsumerWidget {
     return Scaffold(
         extendBodyBehindAppBar: true,
         floatingActionButton: Padding(
-          // extendBody:true の外側BottomNavigationBar(kBottomNavigationBarHeight=56dp)
-          // の分だけ底上げして、FABが隠れないようにする
-          padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+          // extendBody:true により内側のMediaQuery.padding.bottomが0になるため、
+          // BottomNavigationBar(56dp) + デバイスセーフエリア(viewPadding.bottom) で底上げ
+          padding: EdgeInsets.only(
+            bottom: kBottomNavigationBarHeight +
+                MediaQuery.of(context).viewPadding.bottom,
+          ),
           child: AppFloatingActionButton(
             icon: Icons.add_rounded,
             label: '収入を追加',
