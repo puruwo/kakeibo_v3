@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain_service/month_period_service/aggregation_start_day_provider.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
+import 'package:kakeibo/domain_service/year_period_service/aggregation_start_month_provider.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart'
     as year_service;
 
@@ -89,6 +91,9 @@ class _AppYearMonthPickerOverlayState
   late Animation<double> _fadeAnimation;
 
   PeriodValue? _period;
+  // 年度モードのピッカー項目ラベル生成に使用
+  int? _aggregationStartMonth;
+  int? _aggregationStartDay;
 
   @override
   void initState() {
@@ -131,6 +136,22 @@ class _AppYearMonthPickerOverlayState
 
   Future<void> _fetchPeriod() async {
     try {
+      // 年度モードのとき集計開始月・日を取得してピッカー項目ラベルに使用する
+      if (widget.mode == AppYearMonthPickerMode.year &&
+          _aggregationStartMonth == null) {
+        final startMonth = await ref
+            .read(aggregationStartMonthProvider)
+            .fetchAggregationStartMonth();
+        final startDay = await ref
+            .read(aggregationStartDayProvider)
+            .fetchAggregationStartDay();
+        if (mounted) {
+          setState(() {
+            _aggregationStartMonth = startMonth.month;
+            _aggregationStartDay = startDay.day;
+          });
+        }
+      }
       final period = await _computePeriod(_selectedYear, _selectedMonth);
       if (mounted) {
         setState(() => _period = period);
@@ -147,9 +168,17 @@ class _AppYearMonthPickerOverlayState
           .read(monthPeriodServiceProvider)
           .fetchMonthPeriod(lastDayOfMonth);
     } else {
+      // 集計開始月・開始日を使った日付を渡すことで、
+      // fetchYearPeriod が正しく選択年の年度期間を返す
+      final startMonth = await ref
+          .read(aggregationStartMonthProvider)
+          .fetchAggregationStartMonth();
+      final startDay = await ref
+          .read(aggregationStartDayProvider)
+          .fetchAggregationStartDay();
       return ref
           .read(year_service.yearPeriodServiceProvider)
-          .fetchYearPeriod(DateTime(year, 1, 1));
+          .fetchYearPeriod(DateTime(year, startMonth.month, startDay.day));
     }
   }
 
@@ -412,11 +441,27 @@ class _AppYearMonthPickerOverlayState
             )
           : Center(
               child: SizedBox(
-                width: 160,
+                width: 280,
                 child: _buildYearPicker(),
               ),
             ),
     );
+  }
+
+  // 年度モードのピッカー項目ラベルを生成する
+  // 年度モードのとき「$year年$startMonth月〜${endDate.year}年${endDate.month}月」形式、
+  // 年月モードまたはロード中は「$year年」にフォールバックする
+  String _formatYearItem(int year) {
+    if (widget.mode != AppYearMonthPickerMode.year ||
+        _aggregationStartMonth == null ||
+        _aggregationStartDay == null) {
+      return '$year年';
+    }
+    final startMonth = _aggregationStartMonth!;
+    final startDay = _aggregationStartDay!;
+    // DateTime補正で月跨ぎ・年跨ぎが解決される
+    final endDate = DateTime(year + 1, startMonth, startDay - 1);
+    return '$year年$startMonth月〜${endDate.year}年${endDate.month}月';
   }
 
   Widget _buildYearPicker() {
@@ -438,7 +483,7 @@ class _AppYearMonthPickerOverlayState
       children: years
           .map(
             (y) => Center(
-              child: Text('$y年', style: AppTextStyles.pageHeaderText),
+              child: Text(_formatYearItem(y), style: AppTextStyles.pageHeaderText),
             ),
           )
           .toList(),
