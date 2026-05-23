@@ -258,22 +258,42 @@ class _AppYearMonthPickerOverlayState
     _fetchPeriod();
   }
 
-  void _onResetToCurrent() {
+  Future<void> _onResetToCurrent() async {
     final now = ref.read(systemDatetimeNotifierProvider);
-    final newYear = now.year.clamp(widget.minYear, widget.maxYear);
-    final newMonth = now.month;
-    setState(() {
-      _selectedYear = newYear;
-      _selectedMonth = newMonth;
-    });
-    _yearController.animateToItem(
-      _selectedYear - widget.minYear,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeOut,
-    );
     if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+      // nowが属する月度の開始月・年を使って選択状態を更新する
+      // now.monthを直接使うと集計開始日をまたいだ場合に1月度ずれるため
+      final currentPeriod =
+          await ref.read(monthPeriodServiceProvider).fetchMonthPeriod(now);
+      final start = currentPeriod.startDatetime;
+      if (!mounted) return;
+      setState(() {
+        _selectedYear = start.year.clamp(widget.minYear, widget.maxYear);
+        _selectedMonth = start.month;
+      });
+      _yearController.animateToItem(
+        _selectedYear - widget.minYear,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
       _monthController.animateToItem(
         _selectedMonth - 1,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    } else {
+      // nowが属する年度の開始年を使って選択状態を更新する
+      // now.yearを直接使うと集計開始月をまたいだ場合に1年度ずれるため
+      final currentPeriod = await ref
+          .read(year_service.yearPeriodServiceProvider)
+          .fetchYearPeriod(now);
+      if (!mounted) return;
+      setState(() {
+        _selectedYear =
+            currentPeriod.startDatetime.year.clamp(widget.minYear, widget.maxYear);
+      });
+      _yearController.animateToItem(
+        _selectedYear - widget.minYear,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOut,
       );
