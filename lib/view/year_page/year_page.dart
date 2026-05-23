@@ -76,7 +76,16 @@ class _YearPageState extends ConsumerState<YearPage> {
                       key: ValueKey('${start.year}${start.month}'),
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(periodLabel, style: AppTextStyles.pageHeaderText),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(periodLabel,
+                                style: AppTextStyles.pageHeaderText),
+                            const SizedBox(width: 2),
+                            const Icon(Icons.arrow_drop_down,
+                                color: Colors.white, size: 18),
+                          ],
+                        ),
                         Text(yearLabel, style: AppTextStyles.pageHeaderSubText),
                       ],
                     );

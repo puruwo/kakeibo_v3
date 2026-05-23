@@ -92,7 +92,15 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   key: ValueKey(label),
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(label, style: AppTextStyles.pageHeaderText),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(label, style: AppTextStyles.pageHeaderText),
+                        const SizedBox(width: 2),
+                        const Icon(Icons.arrow_drop_down,
+                            color: Colors.white, size: 18),
+                      ],
+                    ),
                     Text(
                       '一般会計',
                       style: AppTextStyles.pageHeaderSubText,
