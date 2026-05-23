@@ -257,9 +257,18 @@ class _AppYearMonthPickerOverlayState
   }
 
   String _formatHeaderTitle() {
+    final period = _period;
     if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+      // 集計開始日を含む月（期間のstartDatetime.month）を月度として表示
+      if (period != null) {
+        return '$_selectedYear年 ${period.startDatetime.month}月度';
+      }
       return '$_selectedYear年 $_selectedMonth月度';
     } else {
+      // 年度モード: 「X月度〜Y月度」形式
+      if (period != null) {
+        return '${period.startDatetime.month}月度〜${period.endDatetime.month}月度';
+      }
       return '$_selectedYear年度';
     }
   }
@@ -463,47 +472,40 @@ class _AppYearMonthPickerOverlayState
   }
 
   Widget _buildButtonRow() {
-    return Container(
-      decoration: BoxDecoration(
-        color: MyColors.tirtiarySystemBackground,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-      child: Row(
-        children: [
-          Expanded(
-            child: CupertinoButton(
-              padding: EdgeInsets.zero,
-              onPressed: _onResetToCurrent,
-              child: Text(
-                widget.mode == AppYearMonthPickerMode.yearMonth
-                    ? '今月度に戻す'
-                    : '今年度に戻す',
-                style: AppTextStyles.secondaryButtonText.copyWith(
-                  color: MyColors.secondaryLabel,
-                ),
-              ),
+    return Row(
+      children: [
+        Expanded(
+          child: CupertinoButton(
+            color: MyColors.systemGray4,
+            borderRadius: BorderRadius.circular(28),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            onPressed: _onResetToCurrent,
+            child: Text(
+              widget.mode == AppYearMonthPickerMode.yearMonth
+                  ? '今月度に戻す'
+                  : '今年度に戻す',
+              style: AppTextStyles.mainButtonText,
             ),
           ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: CupertinoButton(
-              color: MyColors.themeColor,
-              borderRadius: BorderRadius.circular(28),
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              onPressed: _onConfirm,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.check, color: MyColors.white, size: 18),
-                  const SizedBox(width: 4),
-                  Text('適用', style: AppTextStyles.mainButtonText),
-                ],
-              ),
+        ),
+        const SizedBox(width: 8),
+        Expanded(
+          child: CupertinoButton(
+            color: MyColors.themeColor,
+            borderRadius: BorderRadius.circular(28),
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            onPressed: _onConfirm,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.check, color: MyColors.white, size: 18),
+                const SizedBox(width: 4),
+                Text('適用', style: AppTextStyles.mainButtonText),
+              ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
