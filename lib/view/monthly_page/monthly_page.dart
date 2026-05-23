@@ -83,15 +83,21 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                     )
                     .updateState(picked);
               },
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(label, style: AppTextStyles.pageHeaderText),
-                  Text(
-                    '一般会計',
-                    style: AppTextStyles.pageHeaderSubText,
-                  ),
-                ],
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 200),
+                transitionBuilder: (child, animation) =>
+                    FadeTransition(opacity: animation, child: child),
+                child: Column(
+                  key: ValueKey(label),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(label, style: AppTextStyles.pageHeaderText),
+                    Text(
+                      '一般会計',
+                      style: AppTextStyles.pageHeaderSubText,
+                    ),
+                  ],
+                ),
               ),
             );
           },

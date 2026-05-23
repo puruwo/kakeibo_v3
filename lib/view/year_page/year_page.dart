@@ -62,9 +62,15 @@ class _YearPageState extends ConsumerState<YearPage> {
                       .read(homeSelectedDatetimeNotifierProvider.notifier)
                       .updateStateAsYear(picked.year);
                 },
-                child: Text(
-                  yyyyToyyyyGetter(activeDt),
-                  style: AppTextStyles.pageHeaderText,
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+                  child: Text(
+                    yyyyToyyyyGetter(activeDt),
+                    key: ValueKey(yyyyToyyyyGetter(activeDt)),
+                    style: AppTextStyles.pageHeaderText,
+                  ),
                 ),
               ),
               loading: () => const SizedBox.shrink(),
