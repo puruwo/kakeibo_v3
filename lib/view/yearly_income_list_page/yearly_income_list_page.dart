@@ -23,31 +23,16 @@ class YearlyIncomeListPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // extendBody:true によって MediaQuery.padding / viewPadding の bottom が
+    // どちらも 0 にリセットされるため、View(FlutterView) から直接取得する
+    final view = View.of(context);
+    final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
+    // FAB下端の位置: BottomNavigationBar高さ + デバイスセーフエリア + FAB標準マージン
+    final fabBottom =
+        kBottomNavigationBarHeight + bottomSafeArea + kFloatingActionButtonMargin;
+
     return Scaffold(
         extendBodyBehindAppBar: true,
-        floatingActionButton: Padding(
-          // extendBody:true により内側のMediaQuery.padding.bottomが0になるため、
-          // BottomNavigationBar(56dp) + デバイスセーフエリア(viewPadding.bottom) で底上げ
-          padding: EdgeInsets.only(
-            bottom: kBottomNavigationBarHeight +
-                MediaQuery.of(context).viewPadding.bottom,
-          ),
-          child: AppFloatingActionButton(
-            icon: Icons.add_rounded,
-            label: '収入を追加',
-            onTap: () {
-              final today = ref.read(systemDatetimeNotifierProvider);
-              final newIncome = IncomeEntity(
-                date: DateFormat('yyyyMMdd').format(today),
-                categoryId: IncomeBigCategoryConstants.incomeSourceIdSalary,
-              );
-              showAppModalBottomSheet(
-                context,
-                child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
-              );
-            },
-          ),
-        ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
@@ -60,21 +45,44 @@ class YearlyIncomeListPage extends ConsumerWidget {
             style: AppTextStyles.pageHeaderText,
           ),
         ),
-        body: ListView(
+        body: Stack(
           children: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-              child: IncomeGraphArea(
-                period: period,
+            ListView(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                  child: IncomeGraphArea(
+                    period: period,
+                  ),
+                ),
+                YearlyIncomeListArea(
+                  period: period,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                ),
+                // FABとBottomNavigationBar両方をクリアする末尾余白
+                SizedBox(height: fabBottom + 56),
+              ],
+            ),
+            Positioned(
+              right: 16,
+              bottom: fabBottom,
+              child: AppFloatingActionButton(
+                icon: Icons.add_rounded,
+                label: '収入を追加',
+                onTap: () {
+                  final today = ref.read(systemDatetimeNotifierProvider);
+                  final newIncome = IncomeEntity(
+                    date: DateFormat('yyyyMMdd').format(today),
+                    categoryId: IncomeBigCategoryConstants.incomeSourceIdSalary,
+                  );
+                  showAppModalBottomSheet(
+                    context,
+                    child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
+                  );
+                },
               ),
             ),
-            YearlyIncomeListArea(
-              period: period,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-            ),
-            // FABとBottomNavigationBar両方をクリアする末尾余白
-            const SizedBox(height: kBottomNavigationBarHeight + 80),
           ],
         ));
   }
