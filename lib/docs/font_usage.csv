@@ -80,3 +80,4 @@ lib/view/register_page/common_input_field/memo_input_field.dart,MemoInputField,T
 lib/view/register_page/common_input_field/price_input_row/large_price_display.dart,LargePriceDisplay,Text,金額,sf_ui,32,bold,dynamic,定数参照+copyWith,使用(sfUi/間接),copyWithで上書き
 lib/util/common_widget/app_dialog.dart,AppDialog,Text,ボタン,noto_sans,18,w600(copyWith),MyColors.white,定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
 lib/util/common_widget/app_delete_dialog.dart,AppDeleteDialog,Text,ボタン,noto_sans,14,w600,MyColors.white(copyWith),定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
+lib/view/component/app_floating_action_button.dart,AppFloatingActionButton,Text,ラベル,noto_sans,14,w600,dynamic(引数依存),定数参照+copyWith(mainButtonText),使用(notoSans/間接),copyWithで上書き
