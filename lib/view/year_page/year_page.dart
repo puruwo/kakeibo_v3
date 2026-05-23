@@ -6,7 +6,6 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
-import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
@@ -66,11 +65,22 @@ class _YearPageState extends ConsumerState<YearPage> {
                   duration: const Duration(milliseconds: 200),
                   transitionBuilder: (child, animation) =>
                       FadeTransition(opacity: animation, child: child),
-                  child: Text(
-                    yyyyToyyyyGetter(activeDt),
-                    key: ValueKey(yyyyToyyyyGetter(activeDt)),
-                    style: AppTextStyles.pageHeaderText,
-                  ),
+                  child: () {
+                    final start = activeDt.yearPeriod.startDatetime;
+                    final end = activeDt.yearPeriod.endDatetime;
+                    final periodLabel =
+                        '${start.year}年${start.month}月〜${end.year}年${end.month}月';
+                    final yearLabel =
+                        '${activeDt.representativeYear.year}年度';
+                    return Column(
+                      key: ValueKey('${start.year}${start.month}'),
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(periodLabel, style: AppTextStyles.pageHeaderText),
+                        Text(yearLabel, style: AppTextStyles.pageHeaderSubText),
+                      ],
+                    );
+                  }(),
                 ),
               ),
               loading: () => const SizedBox.shrink(),
