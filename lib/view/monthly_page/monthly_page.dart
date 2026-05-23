@@ -15,6 +15,7 @@ import 'package:kakeibo/view/monthly_page/next_arrow_button.dart';
 import 'package:kakeibo/view/monthly_page/previous_arrow_button.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_register_prompt_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile_list.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -157,7 +158,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 },
               ),
 
-              // KAN-93: noData（支出・収入・予算すべて0）のときセクションごと非表示
+              // KAN-113: noData時はグラフを誘導カードに差し替え、ボタンセクションは常時表示
               Consumer(
                 builder: (context, ref, _) {
                   final modelAsync =
@@ -170,15 +171,15 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       ) ??
                       false;
 
-                  if (isNoData) return const SizedBox.shrink();
-
                   return Column(
                     children: [
                       const AppContentsHeader(
                         type: AppContentsHeaderType.appCardSectionTitle,
                         title: '今月の収支',
                       ),
-                      const MonthlyPlanArea(),
+                      isNoData
+                          ? const MonthlyPlanRegisterPromptArea()
+                          : const MonthlyPlanArea(),
                       const SizedBox(height: 8),
                       Row(
                         children: [
