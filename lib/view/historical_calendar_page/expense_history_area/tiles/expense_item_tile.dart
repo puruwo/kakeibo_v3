@@ -5,12 +5,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
-import 'package:kakeibo/constant/styles/history_list_styles.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class ExpenseItemTile extends ConsumerWidget {
@@ -44,43 +45,24 @@ class ExpenseItemTile extends ConsumerWidget {
       ),
     );
     // 値段ラベル
-    final priceLabel =
-        value.price == 0 ? '未確定' : yenmarkFormattedPriceGetter(value.price);
+    final priceLabel = value.price == 0
+        ? '未確定'
+        : yenmarkFormattedPriceGetter(value.price);
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () async {
-        showModalBottomSheet(
-          useRootNavigator: true,
-          isScrollControlled: true,
-          useSafeArea: true,
-          constraints: const BoxConstraints(
-            maxWidth: 2000,
-          ),
-          context: context,
-          builder: (context) {
-            ExpenseEntity expenseEntity = ExpenseEntity(
-                id: value.id,
-                date: DateFormat('yyyyMMdd').format(value.date),
-                price: value.price,
-                paymentCategoryId: value.paymentCategoryId,
-                memo: value.memo,
-                incomeSourceBigCategory: value.incomeSourceBigCategory);
-
-            return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              theme: ThemeData.dark(),
-              themeMode: ThemeMode.dark,
-              darkTheme: ThemeData.dark(),
-              home: MediaQuery.withClampedTextScaling(
-                minScaleFactor: 0.7,
-                maxScaleFactor: 0.95,
-                child: RegisaterPageBase.editExpense(
-                  expenseEntity: expenseEntity,
-                ),
-              ),
-            );
-          },
+        final expenseEntity = ExpenseEntity(
+          id: value.id,
+          date: DateFormat('yyyyMMdd').format(value.date),
+          price: value.price,
+          paymentCategoryId: value.paymentCategoryId,
+          memo: value.memo,
+          incomeSourceBigCategory: value.incomeSourceBigCategory,
+        );
+        showAppModalBottomSheet(
+          context,
+          child: RegisaterPageBase.editExpense(expenseEntity: expenseEntity),
         );
       },
       child: Dismissible(
@@ -89,16 +71,14 @@ class ExpenseItemTile extends ConsumerWidget {
         dragStartBehavior: DragStartBehavior.start,
         background: Container(color: MyColors.black),
         secondaryBackground: Container(
-          color: MyColors.red,
+          color: MyColors.pink,
           child: const Align(
-              alignment: Alignment.centerRight,
-              child: Padding(
-                padding: EdgeInsets.only(right: 18.0),
-                child: Icon(
-                  Icons.delete,
-                  color: MyColors.systemGray,
-                ),
-              )),
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(right: 18.0),
+              child: Icon(Icons.delete, color: MyColors.systemGray),
+            ),
+          ),
         ),
         confirmDismiss: (direction) async {
           if (direction == DismissDirection.endToStart) {
@@ -113,7 +93,9 @@ class ExpenseItemTile extends ConsumerWidget {
           children: [
             Padding(
               padding: EdgeInsets.only(
-                  left: leftsidePadding, right: leftsidePadding),
+                left: leftsidePadding,
+                right: leftsidePadding,
+              ),
               child: SizedBox(
                 height: 49,
                 width: double.infinity,
@@ -137,8 +119,7 @@ class ExpenseItemTile extends ConsumerWidget {
                               value.bigCategoryName,
                               textAlign: TextAlign.start,
                               overflow: TextOverflow.ellipsis,
-                              style:
-                                  HistoryListStyles.historyTileBigCategoryLabel,
+                              style: AppTextStyles.listTilePrimaryTitle,
                             ),
                           ),
 
@@ -152,7 +133,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.smallCategoryName}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: HistoryListStyles.historyTileSubLabel,
+                                  style: AppTextStyles.listTileTirtiaryTitle,
                                 ),
                               ),
                               // メモ
@@ -162,11 +143,11 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.memo}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: HistoryListStyles.historyTileSubLabel,
+                                  style: AppTextStyles.listTileTirtiaryTitle,
                                 ),
                               ),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -180,7 +161,7 @@ class ExpenseItemTile extends ConsumerWidget {
                           priceLabel,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
-                          style: HistoryListStyles.historyTilePriceLabel,
+                          style: AppTextStyles.listTilePriceLabel,
                         ),
                       ),
                     ),
@@ -188,12 +169,8 @@ class ExpenseItemTile extends ConsumerWidget {
                     // nextArrowアイコン
                     const Padding(
                       padding: EdgeInsets.only(right: 4),
-                      child: Icon(
-                        size: 18,
-                        Icons.remove,
-                        color: MyColors.pink,
-                      ),
-                    )
+                      child: Icon(size: 18, Icons.remove, color: MyColors.pink),
+                    ),
                   ],
                 ),
               ),
@@ -204,7 +181,7 @@ class ExpenseItemTile extends ConsumerWidget {
               indent: 50 + leftsidePadding,
               endIndent: leftsidePadding,
               color: MyColors.separater,
-            )
+            ),
           ],
         ),
       ),

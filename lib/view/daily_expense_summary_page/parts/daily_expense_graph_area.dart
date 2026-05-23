@@ -42,10 +42,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
       return CardContainer(
         padding: const EdgeInsets.all(16),
         child: Center(
-          child: Text(
-            '支出データがありません',
-            style: YearlyIncomeListStyles.noDataMessage,
-          ),
+          child: Text('支出データがありません', style: AppTextStyles.listEmptyMessage),
         ),
       );
     }
@@ -63,18 +60,17 @@ class DailyExpenseGraphArea extends StatelessWidget {
               Text('総支出', style: AppTextStyles.appCardTitleLabel),
               Row(
                 children: [
-                  Text('${formatter.format(totalExpense)} ',
-                      style: AppTextStyles.appCardPriceLabel),
+                  Text(
+                    '${formatter.format(totalExpense)} ',
+                    style: AppTextStyles.appCardPriceLabel,
+                  ),
                   Text('円', style: AppTextStyles.appCardPriceUnit),
                 ],
               ),
             ],
           ),
           const SizedBox(height: 8),
-          const Divider(
-            height: 0,
-            thickness: 1,
-          ),
+          const Divider(height: 0, thickness: 1),
           const SizedBox(height: 16),
           // 円グラフとカテゴリー一覧
           categorySummaries.length == 1
@@ -95,8 +91,9 @@ class DailyExpenseGraphArea extends StatelessWidget {
                           centerSpaceRadius: 25,
                           sections: categorySummaries.map((category) {
                             return PieChartSectionData(
-                              color: MyColors()
-                                  .getColorFromHex(category.colorCode),
+                              color: MyColors().getColorFromHex(
+                                category.colorCode,
+                              ),
                               value: category.totalAmount.toDouble(),
                               titlePositionPercentageOffset: 0.3,
                               title: category.categoryName,
@@ -134,8 +131,9 @@ class DailyExpenseGraphArea extends StatelessWidget {
               SvgPicture.asset(
                 category.iconPath,
                 colorFilter: ColorFilter.mode(
-                    MyColors().getColorFromHex(category.colorCode),
-                    BlendMode.srcIn),
+                  MyColors().getColorFromHex(category.colorCode),
+                  BlendMode.srcIn,
+                ),
                 semanticsLabel: 'categoryIcon',
                 width: 25,
                 height: 25,
@@ -143,13 +141,17 @@ class DailyExpenseGraphArea extends StatelessWidget {
               const SizedBox(width: 4),
               // カテゴリー名
               Expanded(
-                child: Text(category.categoryName,
-                    style: AppTextStyles.appCardSecondaryTitleLabel),
+                child: Text(
+                  category.categoryName,
+                  style: AppTextStyles.appCardSecondaryTitleLabel,
+                ),
               ),
               const SizedBox(width: 8),
               // 金額
-              Text('${formatter.format(category.totalAmount)} ',
-                  style: AppTextStyles.appCardSecondaryPriceLabel),
+              Text(
+                '${formatter.format(category.totalAmount)} ',
+                style: AppTextStyles.appCardSecondaryPriceLabel,
+              ),
               // 円
               Text('円', style: AppTextStyles.appCardSecondaryPriceUnit),
             ],
@@ -161,7 +163,8 @@ class DailyExpenseGraphArea extends StatelessWidget {
 
   /// ExpenseHistoryTileValueのリストからCategorySummaryリストを生成
   static List<CategorySummary> createCategorySummaries(
-      List<ExpenseHistoryTileValue> expenses) {
+    List<ExpenseHistoryTileValue> expenses,
+  ) {
     final Map<String, CategorySummary> grouped = {};
 
     for (final expense in expenses) {

@@ -6,6 +6,7 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/state/bonus_home_page/selected_tab_controller/selected_tab_controller.dart';
 
@@ -32,36 +33,15 @@ class BonusHomeFooter extends ConsumerWidget {
         buttonText: '新しい支出を追加',
         onPressed: () {
           final today = ref.read(systemDatetimeNotifierProvider);
-          ExpenseEntity newExpense = ExpenseEntity(
+          final newExpense = ExpenseEntity(
             date: DateFormat('yyyyMMdd').format(today),
             incomeSourceBigCategory:
                 IncomeBigCategoryConstants.incomeSourceIdBonus,
             memo: '',
           );
-
-          showModalBottomSheet(
-            //sccafoldの上に出すか
-            useRootNavigator: true,
-            isScrollControlled: true,
-            useSafeArea: true,
-            constraints: const BoxConstraints(
-              maxWidth: 2000,
-            ),
-            context: context,
-            // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-            builder: (context) {
-              return MaterialApp(
-                debugShowCheckedModeBanner: false,
-                theme: ThemeData.dark(),
-                themeMode: ThemeMode.dark,
-                darkTheme: ThemeData.dark(),
-                home: MediaQuery.withClampedTextScaling(
-                  child: RegisaterPageBase.addExpense(
-                    expenseEntity: newExpense,
-                  ),
-                ),
-              );
-            },
+          showAppModalBottomSheet(
+            context,
+            child: RegisaterPageBase.addExpense(expenseEntity: newExpense),
           );
         },
       ),
@@ -72,39 +52,20 @@ class BonusHomeFooter extends ConsumerWidget {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
-          buttonType: ButtonColorType.main,
-          buttonText: '新しい収入を追加',
-          onPressed: () {
-            showModalBottomSheet(
-              //sccafoldの上に出すか
-              useRootNavigator: true,
-              isScrollControlled: true,
-              useSafeArea: true,
-              constraints: const BoxConstraints(
-                maxWidth: 2000,
-              ),
-              context: context,
-              // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-              builder: (context) {
-                final today = ref.read(systemDatetimeNotifierProvider);
-                IncomeEntity newIncome = IncomeEntity(
-                  date: DateFormat('yyyyMMdd').format(today),
-                  categoryId: IncomeBigCategoryConstants.incomeSourceIdBonus,
-                );
-                return MaterialApp(
-                  debugShowCheckedModeBanner: false,
-                  theme: ThemeData.dark(),
-                  themeMode: ThemeMode.dark,
-                  darkTheme: ThemeData.dark(),
-                  home: MediaQuery.withClampedTextScaling(
-                    child: RegisaterPageBase.addIncome(
-                      incomeEntity: newIncome,
-                    ),
-                  ),
-                );
-              },
-            );
-          }),
+        buttonType: ButtonColorType.main,
+        buttonText: '新しい収入を追加',
+        onPressed: () {
+          final today = ref.read(systemDatetimeNotifierProvider);
+          final newIncome = IncomeEntity(
+            date: DateFormat('yyyyMMdd').format(today),
+            categoryId: IncomeBigCategoryConstants.incomeSourceIdBonus,
+          );
+          showAppModalBottomSheet(
+            context,
+            child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
+          );
+        },
+      ),
     );
   }
 }

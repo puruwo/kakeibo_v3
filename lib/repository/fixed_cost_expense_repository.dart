@@ -145,6 +145,34 @@ class ImplementsFixedCostExpenseRepository
   }
 
   @override
+  Future<int> fetchTotalUnconfirmedFixedCostEstimatedWithPeriod(
+      {required PeriodValue period}) async {
+    final startDate = period.startDatetime
+        .toIso8601String()
+        .substring(0, 10)
+        .replaceAll('-', '');
+    final endDate = period.endDatetime
+        .toIso8601String()
+        .substring(0, 10)
+        .replaceAll('-', '');
+    // fixed_cost_expenseの未確定レコードに対し、紐づくfixed_costのestimated_priceを合算する
+    final sql = '''
+      SELECT COALESCE(SUM(fc.${SqfFixedCost.estimatedPrice}), 0) as total
+      FROM ${SqfFixedCostExpense.tableName} fce
+      INNER JOIN ${SqfFixedCost.tableName} fc
+        ON fce.${SqfFixedCostExpense.fixedCostId} = fc.${SqfFixedCost.id}
+      WHERE fce.${SqfFixedCostExpense.date} >= '$startDate'
+      AND fce.${SqfFixedCostExpense.date} <= '$endDate'
+      AND fce.${SqfFixedCostExpense.isConfirmed} = 0
+    ''';
+    final result = await DatabaseHelper.instance.query(sql);
+    if (result.isEmpty) {
+      return 0;
+    }
+    return (result.first['total'] as num).toInt();
+  }
+
+  @override
   Future<List<FixedCostExpenseEntity>>
       fetchUnconfirmedFixedCostExpenseWithPeriod(
           {required PeriodValue period}) async {

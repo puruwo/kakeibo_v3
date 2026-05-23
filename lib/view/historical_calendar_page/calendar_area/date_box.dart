@@ -7,15 +7,12 @@ import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 
-enum CalendarTileStatus {
-  selected,
-  unselected,
-  outOfPeriod,
-}
+enum CalendarTileStatus { selected, unselected, outOfPeriod }
 
 class DateBox extends ConsumerWidget {
   const DateBox({
@@ -46,14 +43,16 @@ class DateBox extends ConsumerWidget {
     bool shouldDisplayMonth = calendarTileEntity.shouldDisplayMonth;
 
     // 選択された日付かどうかを判定
-    final isSelected =
-        ref.watch(isDateboxSelectedProvider(DateTime(year, month, day)));
+    final isSelected = ref.watch(
+      isDateboxSelectedProvider(DateTime(year, month, day)),
+    );
 
     // タイルの状態をisWithinAggregationRangeとisSelectedから複合的に判定
     final tileStatus = switch (isWithinAggregationRange) {
-      true => isSelected
-          ? CalendarTileStatus.selected
-          : CalendarTileStatus.unselected,
+      true =>
+        isSelected
+            ? CalendarTileStatus.selected
+            : CalendarTileStatus.unselected,
       false => CalendarTileStatus.outOfPeriod,
     };
 
@@ -61,38 +60,68 @@ class DateBox extends ConsumerWidget {
     final dateLabel = shouldDisplayMonth ? '$month/$day' : '$day';
 
     // 支出ラベルを作成
-    final expenseLabel = calculatePriceLabel(totalExpenseBuff,
-        isIncome: false, isCompact: isCompact);
+    final expenseLabel = calculatePriceLabel(
+      totalExpenseBuff,
+      isIncome: false,
+      isCompact: isCompact,
+    );
     // 収入ラベルを作成
-    final incomeLabel = calculatePriceLabel(calendarTileEntity.totalIncome,
-        isIncome: true, isCompact: isCompact);
+    final incomeLabel = calculatePriceLabel(
+      calendarTileEntity.totalIncome,
+      isIncome: true,
+      isCompact: isCompact,
+    );
 
     return AppInkWell(
-        borderRadius: BorderRadius.circular(6),
-        onTap: switch (tileStatus) {
-          CalendarTileStatus.unselected => () {
-              final notifier =
-                  ref.read(historicalSelectedDatetimeNotifierProvider.notifier);
-              notifier.updateState(DateTime(year, month, day));
-            },
-          CalendarTileStatus.selected => () {
-              _showEditExpenseSheet(context, DateTime(year, month, day));
-            },
-          CalendarTileStatus.outOfPeriod => () {},
+      borderRadius: BorderRadius.circular(6),
+      onTap: switch (tileStatus) {
+        CalendarTileStatus.unselected => () {
+          final notifier = ref.read(
+            historicalSelectedDatetimeNotifierProvider.notifier,
+          );
+          notifier.updateState(DateTime(year, month, day));
         },
-        child: switch (tileStatus) {
-          CalendarTileStatus.selected => activeDateBox(weekday, dateLabel,
-              expenseLabel, incomeLabel, boxHeight, boxWidth, isCompact),
-          CalendarTileStatus.unselected => normalDateBox(weekday, dateLabel,
-              expenseLabel, incomeLabel, boxHeight, boxWidth, isCompact),
-          CalendarTileStatus.outOfPeriod =>
-            vacantDateBox(weekday, dateLabel, boxHeight, boxWidth, isCompact),
-        });
+        CalendarTileStatus.selected => () {
+          _showEditExpenseSheet(context, DateTime(year, month, day));
+        },
+        CalendarTileStatus.outOfPeriod => () {},
+      },
+      child: switch (tileStatus) {
+        CalendarTileStatus.selected => activeDateBox(
+          weekday,
+          dateLabel,
+          expenseLabel,
+          incomeLabel,
+          boxHeight,
+          boxWidth,
+          isCompact,
+        ),
+        CalendarTileStatus.unselected => normalDateBox(
+          weekday,
+          dateLabel,
+          expenseLabel,
+          incomeLabel,
+          boxHeight,
+          boxWidth,
+          isCompact,
+        ),
+        CalendarTileStatus.outOfPeriod => vacantDateBox(
+          weekday,
+          dateLabel,
+          boxHeight,
+          boxWidth,
+          isCompact,
+        ),
+      },
+    );
   }
 }
 
-Widget calculatePriceLabel(int amount,
-    {required bool isIncome, required bool isCompact}) {
+Widget calculatePriceLabel(
+  int amount, {
+  required bool isIncome,
+  required bool isCompact,
+}) {
   if (amount == 0) {
     return const SizedBox.shrink();
   } else {
@@ -125,94 +154,151 @@ Widget calculatePriceLabel(int amount,
   }
 }
 
-Container activeDateBox(int weekday, String dateLabel, Widget expenseLabel,
-    Widget incomeLabel, double boxHeight, double boxWidth, bool isCompact) {
+Container activeDateBox(
+  int weekday,
+  String dateLabel,
+  Widget expenseLabel,
+  Widget incomeLabel,
+  double boxHeight,
+  double boxWidth,
+  bool isCompact,
+) {
   return Container(
     width: boxWidth,
     height: boxHeight,
     decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(6)),
-        color: MyColors.tirtiarySystemfill),
-    child: Center(
-      child: Column(
-        children: [
-          Text(
-            dateLabel,
-            style: weekday == 6
-                ? CalendarStyles.calendarDateLabelSaturday
-                : weekday == 7
-                    ? CalendarStyles.calendarDateLabelSunday
-                    : CalendarStyles.calendarDateLabel,
-          ),
-          // 支出
-          if (expenseLabel is! SizedBox)
-            FittedBox(
+      borderRadius: BorderRadius.all(Radius.circular(6)),
+      color: MyColors.tirtiarySystemfill,
+    ),
+    child: Column(
+      children: [
+        // 日付ラベル
+        Text(
+          dateLabel,
+          style: weekday == 6
+              ? CalendarStyles.calendarDateLabelSaturday
+              : weekday == 7
+              ? CalendarStyles.calendarDateLabelSunday
+              : CalendarStyles.calendarDateLabel,
+        ),
+        // 1つ目の金額表示エリア(支出優先、なければ収入)
+        Center(
+          child: expenseLabel is! SizedBox
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    height: boxHeight * 0.3,
+                    width: boxWidth,
+                    child: expenseLabel,
+                  ),
+                )
+              : incomeLabel is! SizedBox
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    height: boxHeight * 0.3,
+                    width: boxWidth,
+                    child: incomeLabel,
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
+        // 2つ目の金額表示エリア(両方ある場合のみ収入を表示)
+        if (expenseLabel is! SizedBox && incomeLabel is! SizedBox)
+          Center(
+            child: FittedBox(
               fit: BoxFit.scaleDown,
               child: SizedBox(
-                width: boxWidth,
-                child: expenseLabel,
-              ),
-            ),
-          // 収入
-          if (incomeLabel is! SizedBox)
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: SizedBox(
+                height: boxHeight * 0.3,
                 width: boxWidth,
                 child: incomeLabel,
               ),
-            )
-        ],
-      ),
+            ),
+          )
+        else if (expenseLabel is! SizedBox || incomeLabel is! SizedBox)
+          // どちらか一方のみの場合は、下に空白を確保
+          const Spacer(),
+      ],
     ),
   );
 }
 
-Container normalDateBox(int weekday, String dateLabel, Widget expenseLabel,
-    Widget incomeLabel, double boxHeight, double boxWidth, bool isCompact) {
+Container normalDateBox(
+  int weekday,
+  String dateLabel,
+  Widget expenseLabel,
+  Widget incomeLabel,
+  double boxHeight,
+  double boxWidth,
+  bool isCompact,
+) {
   return Container(
     width: boxWidth,
     height: boxHeight,
     decoration: const BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(6)),
     ),
-    child: Center(
-      child: Column(
-        children: [
-          Text(
-            dateLabel,
-            style: weekday == 6
-                ? CalendarStyles.calendarDateLabelSaturday
-                : weekday == 7
-                    ? CalendarStyles.calendarDateLabelSunday
-                    : CalendarStyles.calendarDateLabel,
-          ),
-          // 支出
-          if (expenseLabel is! SizedBox)
-            FittedBox(
+    child: Column(
+      children: [
+        // 日付ラベル
+        Text(
+          dateLabel,
+          style: weekday == 6
+              ? CalendarStyles.calendarDateLabelSaturday
+              : weekday == 7
+              ? CalendarStyles.calendarDateLabelSunday
+              : CalendarStyles.calendarDateLabel,
+        ),
+        // 1つ目の金額表示エリア(支出優先、なければ収入)
+        Center(
+          child: expenseLabel is! SizedBox
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    height: boxHeight * 0.3,
+                    width: boxWidth,
+                    child: expenseLabel,
+                  ),
+                )
+              : incomeLabel is! SizedBox
+              ? FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: SizedBox(
+                    height: boxHeight * 0.3,
+                    width: boxWidth,
+                    child: incomeLabel,
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ),
+
+        // 2つ目の金額表示エリア(両方ある場合のみ収入を表示)
+        if (expenseLabel is! SizedBox && incomeLabel is! SizedBox)
+          Center(
+            child: FittedBox(
               fit: BoxFit.scaleDown,
               child: SizedBox(
-                width: boxWidth,
-                child: expenseLabel,
-              ),
-            ),
-          // 収入
-          if (incomeLabel is! SizedBox)
-            FittedBox(
-              fit: BoxFit.scaleDown,
-              child: SizedBox(
+                height: boxHeight * 0.3,
                 width: boxWidth,
                 child: incomeLabel,
               ),
-            )
-        ],
-      ),
+            ),
+          )
+        else if (expenseLabel is! SizedBox || incomeLabel is! SizedBox)
+          // どちらか一方のみの場合は、下に空白を確保
+          const Spacer(),
+      ],
     ),
   );
 }
 
-Container vacantDateBox(int weekday, String dateLabel, double boxHeight,
-    double boxWidth, bool isCompact) {
+Container vacantDateBox(
+  int weekday,
+  String dateLabel,
+  double boxHeight,
+  double boxWidth,
+  bool isCompact,
+) {
   return Container(
     width: boxWidth,
     height: boxHeight,
@@ -230,32 +316,12 @@ Container vacantDateBox(int weekday, String dateLabel, double boxHeight,
 }
 
 void _showEditExpenseSheet(BuildContext context, DateTime selectedDate) {
-  showModalBottomSheet(
-    //sccafoldの上に出すか
-    useRootNavigator: true,
-    isScrollControlled: true,
-    useSafeArea: true,
-    constraints: const BoxConstraints(
-      maxWidth: 2000,
+  showAppModalBottomSheet(
+    context,
+    child: RegisaterPageBase.addExpense(
+      expenseEntity: ExpenseEntity(
+        date: DateFormat('yyyyMMdd').format(selectedDate),
+      ),
     ),
-    context: context,
-    // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-    builder: (context) {
-      return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark(),
-        themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark(),
-        home: MediaQuery.withClampedTextScaling(
-            // テキストサイズの制御
-            minScaleFactor: 0.7,
-            maxScaleFactor: 0.95,
-            child: RegisaterPageBase.addExpense(
-              expenseEntity: ExpenseEntity(
-                date: DateFormat('yyyyMMdd').format(selectedDate),
-              ),
-            )),
-      );
-    },
   );
 }

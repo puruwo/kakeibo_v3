@@ -12,30 +12,36 @@ part of 'prediction_graph_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$PredictionGraphPoint {
   DateTime get date => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PredictionGraphPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PredictionGraphPointCopyWith<PredictionGraphPoint> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $PredictionGraphPointCopyWith<$Res> {
-  factory $PredictionGraphPointCopyWith(PredictionGraphPoint value,
-          $Res Function(PredictionGraphPoint) then) =
-      _$PredictionGraphPointCopyWithImpl<$Res, PredictionGraphPoint>;
+  factory $PredictionGraphPointCopyWith(
+    PredictionGraphPoint value,
+    $Res Function(PredictionGraphPoint) then,
+  ) = _$PredictionGraphPointCopyWithImpl<$Res, PredictionGraphPoint>;
   @useResult
   $Res call({DateTime date, int price});
 }
 
 /// @nodoc
-class _$PredictionGraphPointCopyWithImpl<$Res,
-        $Val extends PredictionGraphPoint>
+class _$PredictionGraphPointCopyWithImpl<
+  $Res,
+  $Val extends PredictionGraphPoint
+>
     implements $PredictionGraphPointCopyWith<$Res> {
   _$PredictionGraphPointCopyWithImpl(this._value, this._then);
 
@@ -44,31 +50,34 @@ class _$PredictionGraphPointCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PredictionGraphPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? date = null,
-    Object? price = null,
-  }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? date = null, Object? price = null}) {
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$PredictionGraphPointImplCopyWith<$Res>
     implements $PredictionGraphPointCopyWith<$Res> {
-  factory _$$PredictionGraphPointImplCopyWith(_$PredictionGraphPointImpl value,
-          $Res Function(_$PredictionGraphPointImpl) then) =
-      __$$PredictionGraphPointImplCopyWithImpl<$Res>;
+  factory _$$PredictionGraphPointImplCopyWith(
+    _$PredictionGraphPointImpl value,
+    $Res Function(_$PredictionGraphPointImpl) then,
+  ) = __$$PredictionGraphPointImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DateTime date, int price});
@@ -78,26 +87,28 @@ abstract class _$$PredictionGraphPointImplCopyWith<$Res>
 class __$$PredictionGraphPointImplCopyWithImpl<$Res>
     extends _$PredictionGraphPointCopyWithImpl<$Res, _$PredictionGraphPointImpl>
     implements _$$PredictionGraphPointImplCopyWith<$Res> {
-  __$$PredictionGraphPointImplCopyWithImpl(_$PredictionGraphPointImpl _value,
-      $Res Function(_$PredictionGraphPointImpl) _then)
-      : super(_value, _then);
+  __$$PredictionGraphPointImplCopyWithImpl(
+    _$PredictionGraphPointImpl _value,
+    $Res Function(_$PredictionGraphPointImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of PredictionGraphPoint
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? date = null,
-    Object? price = null,
-  }) {
-    return _then(_$PredictionGraphPointImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? date = null, Object? price = null}) {
+    return _then(
+      _$PredictionGraphPointImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -128,28 +139,36 @@ class _$PredictionGraphPointImpl implements _PredictionGraphPoint {
   @override
   int get hashCode => Object.hash(runtimeType, date, price);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PredictionGraphPoint
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PredictionGraphPointImplCopyWith<_$PredictionGraphPointImpl>
-      get copyWith =>
-          __$$PredictionGraphPointImplCopyWithImpl<_$PredictionGraphPointImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$PredictionGraphPointImplCopyWithImpl<_$PredictionGraphPointImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _PredictionGraphPoint implements PredictionGraphPoint {
-  const factory _PredictionGraphPoint(
-      {required final DateTime date,
-      required final int price}) = _$PredictionGraphPointImpl;
+  const factory _PredictionGraphPoint({
+    required final DateTime date,
+    required final int price,
+  }) = _$PredictionGraphPointImpl;
 
   @override
   DateTime get date;
   @override
   int get price;
+
+  /// Create a copy of PredictionGraphPoint
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PredictionGraphPointImplCopyWith<_$PredictionGraphPointImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -157,7 +176,9 @@ mixin _$XAxisLabel {
   DateTime get date => throw _privateConstructorUsedError;
   String get label => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of XAxisLabel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $XAxisLabelCopyWith<XAxisLabel> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -165,8 +186,9 @@ mixin _$XAxisLabel {
 /// @nodoc
 abstract class $XAxisLabelCopyWith<$Res> {
   factory $XAxisLabelCopyWith(
-          XAxisLabel value, $Res Function(XAxisLabel) then) =
-      _$XAxisLabelCopyWithImpl<$Res, XAxisLabel>;
+    XAxisLabel value,
+    $Res Function(XAxisLabel) then,
+  ) = _$XAxisLabelCopyWithImpl<$Res, XAxisLabel>;
   @useResult
   $Res call({DateTime date, String label});
 }
@@ -181,22 +203,24 @@ class _$XAxisLabelCopyWithImpl<$Res, $Val extends XAxisLabel>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of XAxisLabel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? date = null,
-    Object? label = null,
-  }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? date = null, Object? label = null}) {
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            label: null == label
+                ? _value.label
+                : label // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -204,8 +228,9 @@ class _$XAxisLabelCopyWithImpl<$Res, $Val extends XAxisLabel>
 abstract class _$$XAxisLabelImplCopyWith<$Res>
     implements $XAxisLabelCopyWith<$Res> {
   factory _$$XAxisLabelImplCopyWith(
-          _$XAxisLabelImpl value, $Res Function(_$XAxisLabelImpl) then) =
-      __$$XAxisLabelImplCopyWithImpl<$Res>;
+    _$XAxisLabelImpl value,
+    $Res Function(_$XAxisLabelImpl) then,
+  ) = __$$XAxisLabelImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DateTime date, String label});
@@ -216,25 +241,27 @@ class __$$XAxisLabelImplCopyWithImpl<$Res>
     extends _$XAxisLabelCopyWithImpl<$Res, _$XAxisLabelImpl>
     implements _$$XAxisLabelImplCopyWith<$Res> {
   __$$XAxisLabelImplCopyWithImpl(
-      _$XAxisLabelImpl _value, $Res Function(_$XAxisLabelImpl) _then)
-      : super(_value, _then);
+    _$XAxisLabelImpl _value,
+    $Res Function(_$XAxisLabelImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of XAxisLabel
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? date = null,
-    Object? label = null,
-  }) {
-    return _then(_$XAxisLabelImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? date = null, Object? label = null}) {
+    return _then(
+      _$XAxisLabelImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        label: null == label
+            ? _value.label
+            : label // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -265,7 +292,9 @@ class _$XAxisLabelImpl implements _XAxisLabel {
   @override
   int get hashCode => Object.hash(runtimeType, date, label);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of XAxisLabel
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$XAxisLabelImplCopyWith<_$XAxisLabelImpl> get copyWith =>
@@ -273,16 +302,20 @@ class _$XAxisLabelImpl implements _XAxisLabel {
 }
 
 abstract class _XAxisLabel implements XAxisLabel {
-  const factory _XAxisLabel(
-      {required final DateTime date,
-      required final String label}) = _$XAxisLabelImpl;
+  const factory _XAxisLabel({
+    required final DateTime date,
+    required final String label,
+  }) = _$XAxisLabelImpl;
 
   @override
   DateTime get date;
   @override
   String get label;
+
+  /// Create a copy of XAxisLabel
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$XAxisLabelImplCopyWith<_$XAxisLabelImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -292,7 +325,9 @@ mixin _$LabelPosition {
   String get label => throw _privateConstructorUsedError;
   double get yOffset => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LabelPosition
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $LabelPositionCopyWith<LabelPosition> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -300,8 +335,9 @@ mixin _$LabelPosition {
 /// @nodoc
 abstract class $LabelPositionCopyWith<$Res> {
   factory $LabelPositionCopyWith(
-          LabelPosition value, $Res Function(LabelPosition) then) =
-      _$LabelPositionCopyWithImpl<$Res, LabelPosition>;
+    LabelPosition value,
+    $Res Function(LabelPosition) then,
+  ) = _$LabelPositionCopyWithImpl<$Res, LabelPosition>;
   @useResult
   $Res call({String label, double yOffset});
 }
@@ -316,22 +352,24 @@ class _$LabelPositionCopyWithImpl<$Res, $Val extends LabelPosition>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of LabelPosition
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? label = null,
-    Object? yOffset = null,
-  }) {
-    return _then(_value.copyWith(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      yOffset: null == yOffset
-          ? _value.yOffset
-          : yOffset // ignore: cast_nullable_to_non_nullable
-              as double,
-    ) as $Val);
+  $Res call({Object? label = null, Object? yOffset = null}) {
+    return _then(
+      _value.copyWith(
+            label: null == label
+                ? _value.label
+                : label // ignore: cast_nullable_to_non_nullable
+                      as String,
+            yOffset: null == yOffset
+                ? _value.yOffset
+                : yOffset // ignore: cast_nullable_to_non_nullable
+                      as double,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -339,8 +377,9 @@ class _$LabelPositionCopyWithImpl<$Res, $Val extends LabelPosition>
 abstract class _$$LabelPositionImplCopyWith<$Res>
     implements $LabelPositionCopyWith<$Res> {
   factory _$$LabelPositionImplCopyWith(
-          _$LabelPositionImpl value, $Res Function(_$LabelPositionImpl) then) =
-      __$$LabelPositionImplCopyWithImpl<$Res>;
+    _$LabelPositionImpl value,
+    $Res Function(_$LabelPositionImpl) then,
+  ) = __$$LabelPositionImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String label, double yOffset});
@@ -351,25 +390,27 @@ class __$$LabelPositionImplCopyWithImpl<$Res>
     extends _$LabelPositionCopyWithImpl<$Res, _$LabelPositionImpl>
     implements _$$LabelPositionImplCopyWith<$Res> {
   __$$LabelPositionImplCopyWithImpl(
-      _$LabelPositionImpl _value, $Res Function(_$LabelPositionImpl) _then)
-      : super(_value, _then);
+    _$LabelPositionImpl _value,
+    $Res Function(_$LabelPositionImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of LabelPosition
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? label = null,
-    Object? yOffset = null,
-  }) {
-    return _then(_$LabelPositionImpl(
-      label: null == label
-          ? _value.label
-          : label // ignore: cast_nullable_to_non_nullable
-              as String,
-      yOffset: null == yOffset
-          ? _value.yOffset
-          : yOffset // ignore: cast_nullable_to_non_nullable
-              as double,
-    ));
+  $Res call({Object? label = null, Object? yOffset = null}) {
+    return _then(
+      _$LabelPositionImpl(
+        label: null == label
+            ? _value.label
+            : label // ignore: cast_nullable_to_non_nullable
+                  as String,
+        yOffset: null == yOffset
+            ? _value.yOffset
+            : yOffset // ignore: cast_nullable_to_non_nullable
+                  as double,
+      ),
+    );
   }
 }
 
@@ -400,7 +441,9 @@ class _$LabelPositionImpl implements _LabelPosition {
   @override
   int get hashCode => Object.hash(runtimeType, label, yOffset);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of LabelPosition
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$LabelPositionImplCopyWith<_$LabelPositionImpl> get copyWith =>
@@ -408,16 +451,20 @@ class _$LabelPositionImpl implements _LabelPosition {
 }
 
 abstract class _LabelPosition implements LabelPosition {
-  const factory _LabelPosition(
-      {required final String label,
-      required final double yOffset}) = _$LabelPositionImpl;
+  const factory _LabelPosition({
+    required final String label,
+    required final double yOffset,
+  }) = _$LabelPositionImpl;
 
   @override
   String get label;
   @override
   double get yOffset;
+
+  /// Create a copy of LabelPosition
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$LabelPositionImplCopyWith<_$LabelPositionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -455,42 +502,46 @@ mixin _$PredictionGraphValue {
       throw _privateConstructorUsedError; // 固定費合計（確定+未確定推測値）※ツールチップ表示用
   int? get totalFixedCostExpense => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PredictionGraphValueCopyWith<PredictionGraphValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $PredictionGraphValueCopyWith<$Res> {
-  factory $PredictionGraphValueCopyWith(PredictionGraphValue value,
-          $Res Function(PredictionGraphValue) then) =
-      _$PredictionGraphValueCopyWithImpl<$Res, PredictionGraphValue>;
+  factory $PredictionGraphValueCopyWith(
+    PredictionGraphValue value,
+    $Res Function(PredictionGraphValue) then,
+  ) = _$PredictionGraphValueCopyWithImpl<$Res, PredictionGraphValue>;
   @useResult
-  $Res call(
-      {PredictionGraphLineType predictionGraphLineType,
-      DateTime fromDate,
-      DateTime toDate,
-      DateTime today,
-      List<PredictionGraphPoint>? expensePoints,
-      List<PredictionGraphPoint>? predictionPoints,
-      int? income,
-      int? budget,
-      double? maxValue,
-      double? displayMaxValue,
-      int? latestPrice,
-      int? predictionPrice,
-      List<XAxisLabel>? xAxisLabels,
-      LabelPosition? incomeLabelPosition,
-      LabelPosition? budgetLabelPosition,
-      String? predictionLabel,
-      bool shouldShowPredictionLine,
-      bool shouldShowBudgetLine,
-      bool shouldShowIncomeLine,
-      bool shouldShowExpenseLabel,
-      LabelPosition? expenseLabelPosition,
-      List<DailyBarData>? dailyBarDataList,
-      int? barMaxValue,
-      int? totalFixedCostExpense});
+  $Res call({
+    PredictionGraphLineType predictionGraphLineType,
+    DateTime fromDate,
+    DateTime toDate,
+    DateTime today,
+    List<PredictionGraphPoint>? expensePoints,
+    List<PredictionGraphPoint>? predictionPoints,
+    int? income,
+    int? budget,
+    double? maxValue,
+    double? displayMaxValue,
+    int? latestPrice,
+    int? predictionPrice,
+    List<XAxisLabel>? xAxisLabels,
+    LabelPosition? incomeLabelPosition,
+    LabelPosition? budgetLabelPosition,
+    String? predictionLabel,
+    bool shouldShowPredictionLine,
+    bool shouldShowBudgetLine,
+    bool shouldShowIncomeLine,
+    bool shouldShowExpenseLabel,
+    LabelPosition? expenseLabelPosition,
+    List<DailyBarData>? dailyBarDataList,
+    int? barMaxValue,
+    int? totalFixedCostExpense,
+  });
 
   $LabelPositionCopyWith<$Res>? get incomeLabelPosition;
   $LabelPositionCopyWith<$Res>? get budgetLabelPosition;
@@ -498,8 +549,10 @@ abstract class $PredictionGraphValueCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$PredictionGraphValueCopyWithImpl<$Res,
-        $Val extends PredictionGraphValue>
+class _$PredictionGraphValueCopyWithImpl<
+  $Res,
+  $Val extends PredictionGraphValue
+>
     implements $PredictionGraphValueCopyWith<$Res> {
   _$PredictionGraphValueCopyWithImpl(this._value, this._then);
 
@@ -508,6 +561,8 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -536,106 +591,111 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
     Object? barMaxValue = freezed,
     Object? totalFixedCostExpense = freezed,
   }) {
-    return _then(_value.copyWith(
-      predictionGraphLineType: null == predictionGraphLineType
-          ? _value.predictionGraphLineType
-          : predictionGraphLineType // ignore: cast_nullable_to_non_nullable
-              as PredictionGraphLineType,
-      fromDate: null == fromDate
-          ? _value.fromDate
-          : fromDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      toDate: null == toDate
-          ? _value.toDate
-          : toDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      today: null == today
-          ? _value.today
-          : today // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expensePoints: freezed == expensePoints
-          ? _value.expensePoints
-          : expensePoints // ignore: cast_nullable_to_non_nullable
-              as List<PredictionGraphPoint>?,
-      predictionPoints: freezed == predictionPoints
-          ? _value.predictionPoints
-          : predictionPoints // ignore: cast_nullable_to_non_nullable
-              as List<PredictionGraphPoint>?,
-      income: freezed == income
-          ? _value.income
-          : income // ignore: cast_nullable_to_non_nullable
-              as int?,
-      budget: freezed == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
-              as int?,
-      maxValue: freezed == maxValue
-          ? _value.maxValue
-          : maxValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      displayMaxValue: freezed == displayMaxValue
-          ? _value.displayMaxValue
-          : displayMaxValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      latestPrice: freezed == latestPrice
-          ? _value.latestPrice
-          : latestPrice // ignore: cast_nullable_to_non_nullable
-              as int?,
-      predictionPrice: freezed == predictionPrice
-          ? _value.predictionPrice
-          : predictionPrice // ignore: cast_nullable_to_non_nullable
-              as int?,
-      xAxisLabels: freezed == xAxisLabels
-          ? _value.xAxisLabels
-          : xAxisLabels // ignore: cast_nullable_to_non_nullable
-              as List<XAxisLabel>?,
-      incomeLabelPosition: freezed == incomeLabelPosition
-          ? _value.incomeLabelPosition
-          : incomeLabelPosition // ignore: cast_nullable_to_non_nullable
-              as LabelPosition?,
-      budgetLabelPosition: freezed == budgetLabelPosition
-          ? _value.budgetLabelPosition
-          : budgetLabelPosition // ignore: cast_nullable_to_non_nullable
-              as LabelPosition?,
-      predictionLabel: freezed == predictionLabel
-          ? _value.predictionLabel
-          : predictionLabel // ignore: cast_nullable_to_non_nullable
-              as String?,
-      shouldShowPredictionLine: null == shouldShowPredictionLine
-          ? _value.shouldShowPredictionLine
-          : shouldShowPredictionLine // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldShowBudgetLine: null == shouldShowBudgetLine
-          ? _value.shouldShowBudgetLine
-          : shouldShowBudgetLine // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldShowIncomeLine: null == shouldShowIncomeLine
-          ? _value.shouldShowIncomeLine
-          : shouldShowIncomeLine // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldShowExpenseLabel: null == shouldShowExpenseLabel
-          ? _value.shouldShowExpenseLabel
-          : shouldShowExpenseLabel // ignore: cast_nullable_to_non_nullable
-              as bool,
-      expenseLabelPosition: freezed == expenseLabelPosition
-          ? _value.expenseLabelPosition
-          : expenseLabelPosition // ignore: cast_nullable_to_non_nullable
-              as LabelPosition?,
-      dailyBarDataList: freezed == dailyBarDataList
-          ? _value.dailyBarDataList
-          : dailyBarDataList // ignore: cast_nullable_to_non_nullable
-              as List<DailyBarData>?,
-      barMaxValue: freezed == barMaxValue
-          ? _value.barMaxValue
-          : barMaxValue // ignore: cast_nullable_to_non_nullable
-              as int?,
-      totalFixedCostExpense: freezed == totalFixedCostExpense
-          ? _value.totalFixedCostExpense
-          : totalFixedCostExpense // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            predictionGraphLineType: null == predictionGraphLineType
+                ? _value.predictionGraphLineType
+                : predictionGraphLineType // ignore: cast_nullable_to_non_nullable
+                      as PredictionGraphLineType,
+            fromDate: null == fromDate
+                ? _value.fromDate
+                : fromDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            toDate: null == toDate
+                ? _value.toDate
+                : toDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            today: null == today
+                ? _value.today
+                : today // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            expensePoints: freezed == expensePoints
+                ? _value.expensePoints
+                : expensePoints // ignore: cast_nullable_to_non_nullable
+                      as List<PredictionGraphPoint>?,
+            predictionPoints: freezed == predictionPoints
+                ? _value.predictionPoints
+                : predictionPoints // ignore: cast_nullable_to_non_nullable
+                      as List<PredictionGraphPoint>?,
+            income: freezed == income
+                ? _value.income
+                : income // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            budget: freezed == budget
+                ? _value.budget
+                : budget // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            maxValue: freezed == maxValue
+                ? _value.maxValue
+                : maxValue // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            displayMaxValue: freezed == displayMaxValue
+                ? _value.displayMaxValue
+                : displayMaxValue // ignore: cast_nullable_to_non_nullable
+                      as double?,
+            latestPrice: freezed == latestPrice
+                ? _value.latestPrice
+                : latestPrice // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            predictionPrice: freezed == predictionPrice
+                ? _value.predictionPrice
+                : predictionPrice // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            xAxisLabels: freezed == xAxisLabels
+                ? _value.xAxisLabels
+                : xAxisLabels // ignore: cast_nullable_to_non_nullable
+                      as List<XAxisLabel>?,
+            incomeLabelPosition: freezed == incomeLabelPosition
+                ? _value.incomeLabelPosition
+                : incomeLabelPosition // ignore: cast_nullable_to_non_nullable
+                      as LabelPosition?,
+            budgetLabelPosition: freezed == budgetLabelPosition
+                ? _value.budgetLabelPosition
+                : budgetLabelPosition // ignore: cast_nullable_to_non_nullable
+                      as LabelPosition?,
+            predictionLabel: freezed == predictionLabel
+                ? _value.predictionLabel
+                : predictionLabel // ignore: cast_nullable_to_non_nullable
+                      as String?,
+            shouldShowPredictionLine: null == shouldShowPredictionLine
+                ? _value.shouldShowPredictionLine
+                : shouldShowPredictionLine // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            shouldShowBudgetLine: null == shouldShowBudgetLine
+                ? _value.shouldShowBudgetLine
+                : shouldShowBudgetLine // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            shouldShowIncomeLine: null == shouldShowIncomeLine
+                ? _value.shouldShowIncomeLine
+                : shouldShowIncomeLine // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            shouldShowExpenseLabel: null == shouldShowExpenseLabel
+                ? _value.shouldShowExpenseLabel
+                : shouldShowExpenseLabel // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            expenseLabelPosition: freezed == expenseLabelPosition
+                ? _value.expenseLabelPosition
+                : expenseLabelPosition // ignore: cast_nullable_to_non_nullable
+                      as LabelPosition?,
+            dailyBarDataList: freezed == dailyBarDataList
+                ? _value.dailyBarDataList
+                : dailyBarDataList // ignore: cast_nullable_to_non_nullable
+                      as List<DailyBarData>?,
+            barMaxValue: freezed == barMaxValue
+                ? _value.barMaxValue
+                : barMaxValue // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            totalFixedCostExpense: freezed == totalFixedCostExpense
+                ? _value.totalFixedCostExpense
+                : totalFixedCostExpense // ignore: cast_nullable_to_non_nullable
+                      as int?,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LabelPositionCopyWith<$Res>? get incomeLabelPosition {
@@ -648,6 +708,8 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LabelPositionCopyWith<$Res>? get budgetLabelPosition {
@@ -660,6 +722,8 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
     });
   }
 
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $LabelPositionCopyWith<$Res>? get expenseLabelPosition {
@@ -676,36 +740,38 @@ class _$PredictionGraphValueCopyWithImpl<$Res,
 /// @nodoc
 abstract class _$$PredictionGraphValueImplCopyWith<$Res>
     implements $PredictionGraphValueCopyWith<$Res> {
-  factory _$$PredictionGraphValueImplCopyWith(_$PredictionGraphValueImpl value,
-          $Res Function(_$PredictionGraphValueImpl) then) =
-      __$$PredictionGraphValueImplCopyWithImpl<$Res>;
+  factory _$$PredictionGraphValueImplCopyWith(
+    _$PredictionGraphValueImpl value,
+    $Res Function(_$PredictionGraphValueImpl) then,
+  ) = __$$PredictionGraphValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {PredictionGraphLineType predictionGraphLineType,
-      DateTime fromDate,
-      DateTime toDate,
-      DateTime today,
-      List<PredictionGraphPoint>? expensePoints,
-      List<PredictionGraphPoint>? predictionPoints,
-      int? income,
-      int? budget,
-      double? maxValue,
-      double? displayMaxValue,
-      int? latestPrice,
-      int? predictionPrice,
-      List<XAxisLabel>? xAxisLabels,
-      LabelPosition? incomeLabelPosition,
-      LabelPosition? budgetLabelPosition,
-      String? predictionLabel,
-      bool shouldShowPredictionLine,
-      bool shouldShowBudgetLine,
-      bool shouldShowIncomeLine,
-      bool shouldShowExpenseLabel,
-      LabelPosition? expenseLabelPosition,
-      List<DailyBarData>? dailyBarDataList,
-      int? barMaxValue,
-      int? totalFixedCostExpense});
+  $Res call({
+    PredictionGraphLineType predictionGraphLineType,
+    DateTime fromDate,
+    DateTime toDate,
+    DateTime today,
+    List<PredictionGraphPoint>? expensePoints,
+    List<PredictionGraphPoint>? predictionPoints,
+    int? income,
+    int? budget,
+    double? maxValue,
+    double? displayMaxValue,
+    int? latestPrice,
+    int? predictionPrice,
+    List<XAxisLabel>? xAxisLabels,
+    LabelPosition? incomeLabelPosition,
+    LabelPosition? budgetLabelPosition,
+    String? predictionLabel,
+    bool shouldShowPredictionLine,
+    bool shouldShowBudgetLine,
+    bool shouldShowIncomeLine,
+    bool shouldShowExpenseLabel,
+    LabelPosition? expenseLabelPosition,
+    List<DailyBarData>? dailyBarDataList,
+    int? barMaxValue,
+    int? totalFixedCostExpense,
+  });
 
   @override
   $LabelPositionCopyWith<$Res>? get incomeLabelPosition;
@@ -719,10 +785,13 @@ abstract class _$$PredictionGraphValueImplCopyWith<$Res>
 class __$$PredictionGraphValueImplCopyWithImpl<$Res>
     extends _$PredictionGraphValueCopyWithImpl<$Res, _$PredictionGraphValueImpl>
     implements _$$PredictionGraphValueImplCopyWith<$Res> {
-  __$$PredictionGraphValueImplCopyWithImpl(_$PredictionGraphValueImpl _value,
-      $Res Function(_$PredictionGraphValueImpl) _then)
-      : super(_value, _then);
+  __$$PredictionGraphValueImplCopyWithImpl(
+    _$PredictionGraphValueImpl _value,
+    $Res Function(_$PredictionGraphValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -751,139 +820,141 @@ class __$$PredictionGraphValueImplCopyWithImpl<$Res>
     Object? barMaxValue = freezed,
     Object? totalFixedCostExpense = freezed,
   }) {
-    return _then(_$PredictionGraphValueImpl(
-      predictionGraphLineType: null == predictionGraphLineType
-          ? _value.predictionGraphLineType
-          : predictionGraphLineType // ignore: cast_nullable_to_non_nullable
-              as PredictionGraphLineType,
-      fromDate: null == fromDate
-          ? _value.fromDate
-          : fromDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      toDate: null == toDate
-          ? _value.toDate
-          : toDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      today: null == today
-          ? _value.today
-          : today // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      expensePoints: freezed == expensePoints
-          ? _value._expensePoints
-          : expensePoints // ignore: cast_nullable_to_non_nullable
-              as List<PredictionGraphPoint>?,
-      predictionPoints: freezed == predictionPoints
-          ? _value._predictionPoints
-          : predictionPoints // ignore: cast_nullable_to_non_nullable
-              as List<PredictionGraphPoint>?,
-      income: freezed == income
-          ? _value.income
-          : income // ignore: cast_nullable_to_non_nullable
-              as int?,
-      budget: freezed == budget
-          ? _value.budget
-          : budget // ignore: cast_nullable_to_non_nullable
-              as int?,
-      maxValue: freezed == maxValue
-          ? _value.maxValue
-          : maxValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      displayMaxValue: freezed == displayMaxValue
-          ? _value.displayMaxValue
-          : displayMaxValue // ignore: cast_nullable_to_non_nullable
-              as double?,
-      latestPrice: freezed == latestPrice
-          ? _value.latestPrice
-          : latestPrice // ignore: cast_nullable_to_non_nullable
-              as int?,
-      predictionPrice: freezed == predictionPrice
-          ? _value.predictionPrice
-          : predictionPrice // ignore: cast_nullable_to_non_nullable
-              as int?,
-      xAxisLabels: freezed == xAxisLabels
-          ? _value._xAxisLabels
-          : xAxisLabels // ignore: cast_nullable_to_non_nullable
-              as List<XAxisLabel>?,
-      incomeLabelPosition: freezed == incomeLabelPosition
-          ? _value.incomeLabelPosition
-          : incomeLabelPosition // ignore: cast_nullable_to_non_nullable
-              as LabelPosition?,
-      budgetLabelPosition: freezed == budgetLabelPosition
-          ? _value.budgetLabelPosition
-          : budgetLabelPosition // ignore: cast_nullable_to_non_nullable
-              as LabelPosition?,
-      predictionLabel: freezed == predictionLabel
-          ? _value.predictionLabel
-          : predictionLabel // ignore: cast_nullable_to_non_nullable
-              as String?,
-      shouldShowPredictionLine: null == shouldShowPredictionLine
-          ? _value.shouldShowPredictionLine
-          : shouldShowPredictionLine // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldShowBudgetLine: null == shouldShowBudgetLine
-          ? _value.shouldShowBudgetLine
-          : shouldShowBudgetLine // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldShowIncomeLine: null == shouldShowIncomeLine
-          ? _value.shouldShowIncomeLine
-          : shouldShowIncomeLine // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldShowExpenseLabel: null == shouldShowExpenseLabel
-          ? _value.shouldShowExpenseLabel
-          : shouldShowExpenseLabel // ignore: cast_nullable_to_non_nullable
-              as bool,
-      expenseLabelPosition: freezed == expenseLabelPosition
-          ? _value.expenseLabelPosition
-          : expenseLabelPosition // ignore: cast_nullable_to_non_nullable
-              as LabelPosition?,
-      dailyBarDataList: freezed == dailyBarDataList
-          ? _value._dailyBarDataList
-          : dailyBarDataList // ignore: cast_nullable_to_non_nullable
-              as List<DailyBarData>?,
-      barMaxValue: freezed == barMaxValue
-          ? _value.barMaxValue
-          : barMaxValue // ignore: cast_nullable_to_non_nullable
-              as int?,
-      totalFixedCostExpense: freezed == totalFixedCostExpense
-          ? _value.totalFixedCostExpense
-          : totalFixedCostExpense // ignore: cast_nullable_to_non_nullable
-              as int?,
-    ));
+    return _then(
+      _$PredictionGraphValueImpl(
+        predictionGraphLineType: null == predictionGraphLineType
+            ? _value.predictionGraphLineType
+            : predictionGraphLineType // ignore: cast_nullable_to_non_nullable
+                  as PredictionGraphLineType,
+        fromDate: null == fromDate
+            ? _value.fromDate
+            : fromDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        toDate: null == toDate
+            ? _value.toDate
+            : toDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        today: null == today
+            ? _value.today
+            : today // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        expensePoints: freezed == expensePoints
+            ? _value._expensePoints
+            : expensePoints // ignore: cast_nullable_to_non_nullable
+                  as List<PredictionGraphPoint>?,
+        predictionPoints: freezed == predictionPoints
+            ? _value._predictionPoints
+            : predictionPoints // ignore: cast_nullable_to_non_nullable
+                  as List<PredictionGraphPoint>?,
+        income: freezed == income
+            ? _value.income
+            : income // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        budget: freezed == budget
+            ? _value.budget
+            : budget // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        maxValue: freezed == maxValue
+            ? _value.maxValue
+            : maxValue // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        displayMaxValue: freezed == displayMaxValue
+            ? _value.displayMaxValue
+            : displayMaxValue // ignore: cast_nullable_to_non_nullable
+                  as double?,
+        latestPrice: freezed == latestPrice
+            ? _value.latestPrice
+            : latestPrice // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        predictionPrice: freezed == predictionPrice
+            ? _value.predictionPrice
+            : predictionPrice // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        xAxisLabels: freezed == xAxisLabels
+            ? _value._xAxisLabels
+            : xAxisLabels // ignore: cast_nullable_to_non_nullable
+                  as List<XAxisLabel>?,
+        incomeLabelPosition: freezed == incomeLabelPosition
+            ? _value.incomeLabelPosition
+            : incomeLabelPosition // ignore: cast_nullable_to_non_nullable
+                  as LabelPosition?,
+        budgetLabelPosition: freezed == budgetLabelPosition
+            ? _value.budgetLabelPosition
+            : budgetLabelPosition // ignore: cast_nullable_to_non_nullable
+                  as LabelPosition?,
+        predictionLabel: freezed == predictionLabel
+            ? _value.predictionLabel
+            : predictionLabel // ignore: cast_nullable_to_non_nullable
+                  as String?,
+        shouldShowPredictionLine: null == shouldShowPredictionLine
+            ? _value.shouldShowPredictionLine
+            : shouldShowPredictionLine // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        shouldShowBudgetLine: null == shouldShowBudgetLine
+            ? _value.shouldShowBudgetLine
+            : shouldShowBudgetLine // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        shouldShowIncomeLine: null == shouldShowIncomeLine
+            ? _value.shouldShowIncomeLine
+            : shouldShowIncomeLine // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        shouldShowExpenseLabel: null == shouldShowExpenseLabel
+            ? _value.shouldShowExpenseLabel
+            : shouldShowExpenseLabel // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        expenseLabelPosition: freezed == expenseLabelPosition
+            ? _value.expenseLabelPosition
+            : expenseLabelPosition // ignore: cast_nullable_to_non_nullable
+                  as LabelPosition?,
+        dailyBarDataList: freezed == dailyBarDataList
+            ? _value._dailyBarDataList
+            : dailyBarDataList // ignore: cast_nullable_to_non_nullable
+                  as List<DailyBarData>?,
+        barMaxValue: freezed == barMaxValue
+            ? _value.barMaxValue
+            : barMaxValue // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        totalFixedCostExpense: freezed == totalFixedCostExpense
+            ? _value.totalFixedCostExpense
+            : totalFixedCostExpense // ignore: cast_nullable_to_non_nullable
+                  as int?,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$PredictionGraphValueImpl implements _PredictionGraphValue {
-  const _$PredictionGraphValueImpl(
-      {required this.predictionGraphLineType,
-      required this.fromDate,
-      required this.toDate,
-      required this.today,
-      final List<PredictionGraphPoint>? expensePoints,
-      final List<PredictionGraphPoint>? predictionPoints,
-      required this.income,
-      required this.budget,
-      required this.maxValue,
-      required this.displayMaxValue,
-      required this.latestPrice,
-      required this.predictionPrice,
-      required final List<XAxisLabel>? xAxisLabels,
-      required this.incomeLabelPosition,
-      required this.budgetLabelPosition,
-      required this.predictionLabel,
-      required this.shouldShowPredictionLine,
-      required this.shouldShowBudgetLine,
-      required this.shouldShowIncomeLine,
-      required this.shouldShowExpenseLabel,
-      required this.expenseLabelPosition,
-      final List<DailyBarData>? dailyBarDataList,
-      this.barMaxValue,
-      this.totalFixedCostExpense})
-      : _expensePoints = expensePoints,
-        _predictionPoints = predictionPoints,
-        _xAxisLabels = xAxisLabels,
-        _dailyBarDataList = dailyBarDataList;
+  const _$PredictionGraphValueImpl({
+    required this.predictionGraphLineType,
+    required this.fromDate,
+    required this.toDate,
+    required this.today,
+    final List<PredictionGraphPoint>? expensePoints,
+    final List<PredictionGraphPoint>? predictionPoints,
+    required this.income,
+    required this.budget,
+    required this.maxValue,
+    required this.displayMaxValue,
+    required this.latestPrice,
+    required this.predictionPrice,
+    required final List<XAxisLabel>? xAxisLabels,
+    required this.incomeLabelPosition,
+    required this.budgetLabelPosition,
+    required this.predictionLabel,
+    required this.shouldShowPredictionLine,
+    required this.shouldShowBudgetLine,
+    required this.shouldShowIncomeLine,
+    required this.shouldShowExpenseLabel,
+    required this.expenseLabelPosition,
+    final List<DailyBarData>? dailyBarDataList,
+    this.barMaxValue,
+    this.totalFixedCostExpense,
+  }) : _expensePoints = expensePoints,
+       _predictionPoints = predictionPoints,
+       _xAxisLabels = xAxisLabels,
+       _dailyBarDataList = dailyBarDataList;
 
   @override
   final PredictionGraphLineType predictionGraphLineType;
@@ -920,7 +991,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
   final int? budget;
   @override
   final double? maxValue;
-// 表示用の最大値（バッファ込み）
+  // 表示用の最大値（バッファ込み）
   @override
   final double? displayMaxValue;
   @override
@@ -953,9 +1024,9 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
   final bool shouldShowExpenseLabel;
   @override
   final LabelPosition? expenseLabelPosition;
-// 棒グラフ用データ
+  // 棒グラフ用データ
   final List<DailyBarData>? _dailyBarDataList;
-// 棒グラフ用データ
+  // 棒グラフ用データ
   @override
   List<DailyBarData>? get dailyBarDataList {
     final value = _dailyBarDataList;
@@ -968,7 +1039,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
 
   @override
   final int? barMaxValue;
-// 固定費合計（確定+未確定推測値）※ツールチップ表示用
+  // 固定費合計（確定+未確定推測値）※ツールチップ表示用
   @override
   final int? totalFixedCostExpense;
 
@@ -983,16 +1054,22 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
         (other.runtimeType == runtimeType &&
             other is _$PredictionGraphValueImpl &&
             (identical(
-                    other.predictionGraphLineType, predictionGraphLineType) ||
+                  other.predictionGraphLineType,
+                  predictionGraphLineType,
+                ) ||
                 other.predictionGraphLineType == predictionGraphLineType) &&
             (identical(other.fromDate, fromDate) ||
                 other.fromDate == fromDate) &&
             (identical(other.toDate, toDate) || other.toDate == toDate) &&
             (identical(other.today, today) || other.today == today) &&
-            const DeepCollectionEquality()
-                .equals(other._expensePoints, _expensePoints) &&
-            const DeepCollectionEquality()
-                .equals(other._predictionPoints, _predictionPoints) &&
+            const DeepCollectionEquality().equals(
+              other._expensePoints,
+              _expensePoints,
+            ) &&
+            const DeepCollectionEquality().equals(
+              other._predictionPoints,
+              _predictionPoints,
+            ) &&
             (identical(other.income, income) || other.income == income) &&
             (identical(other.budget, budget) || other.budget == budget) &&
             (identical(other.maxValue, maxValue) ||
@@ -1003,8 +1080,10 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
                 other.latestPrice == latestPrice) &&
             (identical(other.predictionPrice, predictionPrice) ||
                 other.predictionPrice == predictionPrice) &&
-            const DeepCollectionEquality()
-                .equals(other._xAxisLabels, _xAxisLabels) &&
+            const DeepCollectionEquality().equals(
+              other._xAxisLabels,
+              _xAxisLabels,
+            ) &&
             (identical(other.incomeLabelPosition, incomeLabelPosition) ||
                 other.incomeLabelPosition == incomeLabelPosition) &&
             (identical(other.budgetLabelPosition, budgetLabelPosition) ||
@@ -1012,7 +1091,9 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
             (identical(other.predictionLabel, predictionLabel) ||
                 other.predictionLabel == predictionLabel) &&
             (identical(
-                    other.shouldShowPredictionLine, shouldShowPredictionLine) ||
+                  other.shouldShowPredictionLine,
+                  shouldShowPredictionLine,
+                ) ||
                 other.shouldShowPredictionLine == shouldShowPredictionLine) &&
             (identical(other.shouldShowBudgetLine, shouldShowBudgetLine) ||
                 other.shouldShowBudgetLine == shouldShowBudgetLine) &&
@@ -1022,8 +1103,10 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
                 other.shouldShowExpenseLabel == shouldShowExpenseLabel) &&
             (identical(other.expenseLabelPosition, expenseLabelPosition) ||
                 other.expenseLabelPosition == expenseLabelPosition) &&
-            const DeepCollectionEquality()
-                .equals(other._dailyBarDataList, _dailyBarDataList) &&
+            const DeepCollectionEquality().equals(
+              other._dailyBarDataList,
+              _dailyBarDataList,
+            ) &&
             (identical(other.barMaxValue, barMaxValue) ||
                 other.barMaxValue == barMaxValue) &&
             (identical(other.totalFixedCostExpense, totalFixedCostExpense) ||
@@ -1032,68 +1115,73 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
 
   @override
   int get hashCode => Object.hashAll([
-        runtimeType,
-        predictionGraphLineType,
-        fromDate,
-        toDate,
-        today,
-        const DeepCollectionEquality().hash(_expensePoints),
-        const DeepCollectionEquality().hash(_predictionPoints),
-        income,
-        budget,
-        maxValue,
-        displayMaxValue,
-        latestPrice,
-        predictionPrice,
-        const DeepCollectionEquality().hash(_xAxisLabels),
-        incomeLabelPosition,
-        budgetLabelPosition,
-        predictionLabel,
-        shouldShowPredictionLine,
-        shouldShowBudgetLine,
-        shouldShowIncomeLine,
-        shouldShowExpenseLabel,
-        expenseLabelPosition,
-        const DeepCollectionEquality().hash(_dailyBarDataList),
-        barMaxValue,
-        totalFixedCostExpense
-      ]);
+    runtimeType,
+    predictionGraphLineType,
+    fromDate,
+    toDate,
+    today,
+    const DeepCollectionEquality().hash(_expensePoints),
+    const DeepCollectionEquality().hash(_predictionPoints),
+    income,
+    budget,
+    maxValue,
+    displayMaxValue,
+    latestPrice,
+    predictionPrice,
+    const DeepCollectionEquality().hash(_xAxisLabels),
+    incomeLabelPosition,
+    budgetLabelPosition,
+    predictionLabel,
+    shouldShowPredictionLine,
+    shouldShowBudgetLine,
+    shouldShowIncomeLine,
+    shouldShowExpenseLabel,
+    expenseLabelPosition,
+    const DeepCollectionEquality().hash(_dailyBarDataList),
+    barMaxValue,
+    totalFixedCostExpense,
+  ]);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PredictionGraphValueImplCopyWith<_$PredictionGraphValueImpl>
-      get copyWith =>
-          __$$PredictionGraphValueImplCopyWithImpl<_$PredictionGraphValueImpl>(
-              this, _$identity);
+  get copyWith =>
+      __$$PredictionGraphValueImplCopyWithImpl<_$PredictionGraphValueImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _PredictionGraphValue implements PredictionGraphValue {
-  const factory _PredictionGraphValue(
-      {required final PredictionGraphLineType predictionGraphLineType,
-      required final DateTime fromDate,
-      required final DateTime toDate,
-      required final DateTime today,
-      final List<PredictionGraphPoint>? expensePoints,
-      final List<PredictionGraphPoint>? predictionPoints,
-      required final int? income,
-      required final int? budget,
-      required final double? maxValue,
-      required final double? displayMaxValue,
-      required final int? latestPrice,
-      required final int? predictionPrice,
-      required final List<XAxisLabel>? xAxisLabels,
-      required final LabelPosition? incomeLabelPosition,
-      required final LabelPosition? budgetLabelPosition,
-      required final String? predictionLabel,
-      required final bool shouldShowPredictionLine,
-      required final bool shouldShowBudgetLine,
-      required final bool shouldShowIncomeLine,
-      required final bool shouldShowExpenseLabel,
-      required final LabelPosition? expenseLabelPosition,
-      final List<DailyBarData>? dailyBarDataList,
-      final int? barMaxValue,
-      final int? totalFixedCostExpense}) = _$PredictionGraphValueImpl;
+  const factory _PredictionGraphValue({
+    required final PredictionGraphLineType predictionGraphLineType,
+    required final DateTime fromDate,
+    required final DateTime toDate,
+    required final DateTime today,
+    final List<PredictionGraphPoint>? expensePoints,
+    final List<PredictionGraphPoint>? predictionPoints,
+    required final int? income,
+    required final int? budget,
+    required final double? maxValue,
+    required final double? displayMaxValue,
+    required final int? latestPrice,
+    required final int? predictionPrice,
+    required final List<XAxisLabel>? xAxisLabels,
+    required final LabelPosition? incomeLabelPosition,
+    required final LabelPosition? budgetLabelPosition,
+    required final String? predictionLabel,
+    required final bool shouldShowPredictionLine,
+    required final bool shouldShowBudgetLine,
+    required final bool shouldShowIncomeLine,
+    required final bool shouldShowExpenseLabel,
+    required final LabelPosition? expenseLabelPosition,
+    final List<DailyBarData>? dailyBarDataList,
+    final int? barMaxValue,
+    final int? totalFixedCostExpense,
+  }) = _$PredictionGraphValueImpl;
 
   @override
   PredictionGraphLineType get predictionGraphLineType;
@@ -1112,8 +1200,8 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
   @override
   int? get budget;
   @override
-  double? get maxValue;
-  @override // 表示用の最大値（バッファ込み）
+  double? get maxValue; // 表示用の最大値（バッファ込み）
+  @override
   double? get displayMaxValue;
   @override
   int? get latestPrice;
@@ -1136,15 +1224,18 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
   @override
   bool get shouldShowExpenseLabel;
   @override
-  LabelPosition? get expenseLabelPosition;
-  @override // 棒グラフ用データ
+  LabelPosition? get expenseLabelPosition; // 棒グラフ用データ
+  @override
   List<DailyBarData>? get dailyBarDataList;
   @override
-  int? get barMaxValue;
-  @override // 固定費合計（確定+未確定推測値）※ツールチップ表示用
-  int? get totalFixedCostExpense;
+  int? get barMaxValue; // 固定費合計（確定+未確定推測値）※ツールチップ表示用
   @override
-  @JsonKey(ignore: true)
+  int? get totalFixedCostExpense;
+
+  /// Create a copy of PredictionGraphValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PredictionGraphValueImplCopyWith<_$PredictionGraphValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

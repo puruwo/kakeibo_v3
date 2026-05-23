@@ -73,7 +73,7 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
                               ]))
                           : Text(
                               '未確定',
-                              style: AppTextStyles.appCardSecondaryPriceUnit,
+                              style: AppTextStyles.appCardSecondaryTitleLabel,
                             ),
                     ],
                   ),

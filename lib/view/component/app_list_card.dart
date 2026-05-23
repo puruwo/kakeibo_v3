@@ -37,6 +37,7 @@ class AppListCard extends StatelessWidget {
     this.subtitleLeading,
     this.subtitleTrailing,
     required this.priceLabel,
+    this.priceLabelStyle,
     this.priceSubtitle,
     required this.isIncome,
     this.customUnderPriceLabel,
@@ -69,6 +70,9 @@ class AppListCard extends StatelessWidget {
 
   /// フォーマット済みの値段ラベル
   final String priceLabel;
+
+  /// 値段ラベルのスタイル
+  final TextStyle? priceLabelStyle;
 
   /// 金額の左に表示するサブタイトル（例: "平均"）
   final String? priceSubtitle;
@@ -154,7 +158,8 @@ class AppListCard extends StatelessWidget {
         : null;
 
     // 2行目: subtitleLeading + subtitleTrailing
-    final hasSecondRow = (subtitleLeading?.isNotEmpty ?? false) ||
+    final hasSecondRow =
+        (subtitleLeading?.isNotEmpty ?? false) ||
         (subtitleTrailing?.isNotEmpty ?? false);
     final secondRow = hasSecondRow
         ? Row(
@@ -192,10 +197,7 @@ class AppListCard extends StatelessWidget {
       children: [
         // 金額のサブタイトル（例: "平均"）
         if (priceSubtitle != null && priceSubtitle!.isNotEmpty) ...[
-          Text(
-            priceSubtitle!,
-            style: AppTextStyles.listCardSecondaryTitle,
-          ),
+          Text(priceSubtitle!, style: AppTextStyles.listCardSecondaryTitle),
           const SizedBox(width: 6),
         ],
         ConstrainedBox(
@@ -206,7 +208,7 @@ class AppListCard extends StatelessWidget {
             child: Text(
               priceLabel,
               textAlign: TextAlign.end,
-              style: AppTextStyles.listCardPriceLabel,
+              style: priceLabelStyle ?? AppTextStyles.listCardPriceLabel,
             ),
           ),
         ),
@@ -224,10 +226,7 @@ class AppListCard extends StatelessWidget {
     final underPriceWidget = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (customWidget != null) ...[
-          customWidget!,
-          const SizedBox(width: 4),
-        ],
+        if (customWidget != null) ...[customWidget!, const SizedBox(width: 4)],
         if (customUnderPriceLabel != null)
           Text(
             customUnderPriceLabel!,

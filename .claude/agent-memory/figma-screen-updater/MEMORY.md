@@ -1,0 +1,1 @@
+- [Figma棒グラフコンポーネント構造](reference_figma_bar_graph_components.md) — kakeiboのFigma内の棒グラフコンポーネントID・構造とFlutterコードの対応表

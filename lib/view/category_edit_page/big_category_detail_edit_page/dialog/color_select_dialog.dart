@@ -5,12 +5,17 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // localImport
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_color_controller/income_big_category_color_controller.dart';
 
 class ColorSelectDialog extends ConsumerStatefulWidget {
   const ColorSelectDialog({
     super.key,
+    this.categoryType = CategoryType.expense,
   });
+
+  final CategoryType categoryType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -22,34 +27,43 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
   Color selectedColor = MyColors.transparent;
 
   final List<Color> colorList = [
-    MyColors.red,
-    MyColors.pink,
-    MyColors.blue,
-    MyColors.mint,
-    MyColors.yellow,
-    MyColors.giantsOrange,
-    MyColors.uranianBlue,
-    MyColors.erin,
-    MyColors.maize,
-    MyColors.tinberWolf,
+    MyColors.expenseRed,
+    MyColors.expensePink,
+    MyColors.expenseBlue,
+    MyColors.expenseMint,
+    MyColors.expenseYellow,
+    MyColors.expenseGiantsOrange,
+    MyColors.expenseBrown,
+    MyColors.expensePurple,
+  ];
+
+  final List<Color> incomeColorList = [
+    MyColors.incomeEmerald,
+    MyColors.incomeGreen,
+    MyColors.incomeDeepGreen,
+    MyColors.incomeMintGreen,
   ];
 
   @override
   Widget build(BuildContext context) {
     // ====状態管理====
 
-    // アイコンのパスを取得
-    selectedColor = ref.watch(bigCategroyColorControllerNotifierProvider);
+    // 選択カラーを取得（カテゴリータイプに応じて切り替え）
+    selectedColor = widget.categoryType == CategoryType.income
+        ? ref.watch(incomeBigCategoryColorControllerNotifierProvider)
+        : ref.watch(bigCategroyColorControllerNotifierProvider);
 
     // ==============
 
+    final effectiveList = widget.categoryType == CategoryType.income
+        ? incomeColorList
+        : colorList;
+
     return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       child: Container(
         alignment: Alignment.center,
-        height: 150,
+        height: widget.categoryType == CategoryType.income ? 100 : 150,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -60,30 +74,31 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (upperRowIndex) {
-                final index = upperRowIndex;
-                final color = colorList[index];
+              children: List.generate(4, (index) {
+                final color = effectiveList[index];
                 return AppInkWell(
+                  borderRadius: BorderRadius.circular(8),
+                  onTap: () {
+                    colorSelectFunction(color);
+                  },
+                  child: colorCircle(color, selectedColor),
+                );
+              }),
+            ),
+            if (widget.categoryType != CategoryType.income)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(4, (index) {
+                  final color = effectiveList[4 + index];
+                  return AppInkWell(
                     borderRadius: BorderRadius.circular(8),
                     onTap: () {
                       colorSelectFunction(color);
                     },
-                    child: colorCircle(color, selectedColor));
-              }),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: List.generate(5, (underRowIndex) {
-                final index = 5 + underRowIndex;
-                final color = colorList[index];
-                return AppInkWell(
-                    borderRadius: BorderRadius.circular(8),
-                    onTap: () {
-                      colorSelectFunction(color);
-                    },
-                    child: colorCircle(color, selectedColor));
-              }),
-            ),
+                    child: colorCircle(color, selectedColor),
+                  );
+                }),
+              ),
           ],
         ),
       ),
@@ -95,39 +110,33 @@ class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
       selectedColor = color;
     });
     Navigator.of(context).pop();
-    final notifier =
-        ref.read(bigCategroyColorControllerNotifierProvider.notifier);
-    notifier.updateState(color);
+    if (widget.categoryType == CategoryType.income) {
+      ref
+          .read(incomeBigCategoryColorControllerNotifierProvider.notifier)
+          .updateState(color);
+    } else {
+      ref
+          .read(bigCategroyColorControllerNotifierProvider.notifier)
+          .updateState(color);
+    }
   }
 }
 
 Widget colorCircle(Color color, Color? selectedColor) {
-  // 選択非選択の判定
   final isSelected = (color == selectedColor);
 
-  return isSelected
-      // 選択時
-      ? Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 35,
-            width: 35,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.rectangle,
-            ),
-          ),
-        )
-      // 非選択時
-      : Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 35,
-            width: 35,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
-          ),
-        );
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      height: 35,
+      width: 35,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        border: isSelected
+            ? Border.all(color: Colors.white, width: 2.5)
+            : null,
+      ),
+    ),
+  );
 }

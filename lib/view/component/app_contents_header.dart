@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
 
+enum AppContentsHeaderType {
+  appCardSectionTitle,
+  listCardSectionTitle,
+  // listTileSectionTitle, 今後共通化予定
+}
+
 /// 画面内セクションヘッダーの統一ウィジェット
 ///
 /// 各セクションの見出し（例: 「支出グラフ」「今月の計画」「カテゴリー別」）を統一表示
@@ -12,6 +18,7 @@ import 'package:kakeibo/constant/strings.dart';
 class AppContentsHeader extends StatelessWidget {
   const AppContentsHeader({
     super.key,
+    required this.type,
     this.icon,
     this.iconWidget,
     required this.title,
@@ -19,9 +26,12 @@ class AppContentsHeader extends StatelessWidget {
     this.isLinkable = false,
     this.onTap,
   }) : assert(
-          !isLinkable || onTap != null,
-          'onTap must be provided when isLinkable is true',
-        );
+         !isLinkable || onTap != null,
+         'onTap must be provided when isLinkable is true',
+       );
+
+  /// セクションヘッダーのタイプ
+  final AppContentsHeaderType type;
 
   /// セクションアイコン（IconData）
   final IconData? icon;
@@ -43,55 +53,64 @@ class AppContentsHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveTitleStyle = AppTextStyles.cardSectionTitle;
+    late TextStyle effectiveTitleStyle;
+    switch (type) {
+      case AppContentsHeaderType.appCardSectionTitle:
+        effectiveTitleStyle = AppTextStyles.appCardSectionTitle;
+        break;
+      case AppContentsHeaderType.listCardSectionTitle:
+        effectiveTitleStyle = AppTextStyles.listCardSectionTitle;
+        break;
+    }
 
-    return SizedBox(
-      height: 35,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // 左側: アイコン + タイトル
-          Row(
-            mainAxisSize: MainAxisSize.min,
+    return Column(
+      children: [
+        SizedBox(
+          height: 37,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // カスタムアイコンウィジェット
-              if (iconWidget != null) ...[
-                iconWidget!,
-                const SizedBox(width: 8),
-              ]
-              // IconDataアイコン
-              else if (icon != null) ...[
-                Icon(
-                  icon,
-                  size: 18,
-                  color: effectiveTitleStyle.color,
-                ),
-                const SizedBox(width: 4),
-              ],
-              Text(
-                icon == null && iconWidget == null ? ' $title' : title,
-                style: effectiveTitleStyle,
+              // 左側: アイコン + タイトル
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  // カスタムアイコンウィジェット
+                  if (iconWidget != null) ...[
+                    iconWidget!,
+                    const SizedBox(width: 8),
+                  ]
+                  // IconDataアイコン
+                  else if (icon != null) ...[
+                    Icon(icon, size: 18, color: effectiveTitleStyle.color),
+                    const SizedBox(width: 4),
+                  ],
+                  Text(
+                    icon == null && iconWidget == null ? ' $title' : title,
+                    style: effectiveTitleStyle,
+                  ),
+                ],
               ),
+
+              // 右側: サブラベル（リンク化対応）
+              if (subLabel != null)
+                isLinkable
+                    ? TextButton(
+                        onPressed: onTap,
+                        child: Text(
+                          subLabel!,
+                          style: AppTextStyles.textButtonTextStyle,
+                        ),
+                      )
+                    : Text(
+                        subLabel!,
+                        style: AppTextStyles.listCardSecondaryTitle,
+                      ),
             ],
           ),
-
-          // 右側: サブラベル（リンク化対応）
-          if (subLabel != null)
-            isLinkable
-                ? TextButton(
-                    onPressed: onTap,
-                    child: Text(
-                      subLabel!,
-                      style: AppTextStyles.textButtonTextStyle,
-                    ),
-                  )
-                : Text(
-                    subLabel!,
-                    style: AppTextStyles.listCardSecondaryTitle,
-                  ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

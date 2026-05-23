@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
@@ -13,12 +14,10 @@ class ConfigTop extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          '設定',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        title: Text('設定', style: AppTextStyles.pageHeaderText),
         centerTitle: true,
         backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
@@ -27,7 +26,10 @@ class ConfigTop extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisSize: MainAxisSize.min,
           children: [
-            const AppContentsHeader(title: '設定画面'),
+            const AppContentsHeader(
+              type: AppContentsHeaderType.appCardSectionTitle,
+              title: '設定画面',
+            ),
             Container(
               width: double.infinity,
               height: 50,
@@ -41,11 +43,15 @@ class ConfigTop extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(8),
                     onTap: () {
                       // 設定画面からエクスポートを実行
-                      ref.read(exportProvider).when(
-                          data: (data) => null,
-                          error: (e, _) => null,
-                          loading: () =>
-                              const Center(child: CircularProgressIndicator()));
+                      ref
+                          .read(exportProvider)
+                          .when(
+                            data: (data) => null,
+                            error: (e, _) => null,
+                            loading: () => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),

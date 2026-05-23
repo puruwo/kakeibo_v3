@@ -12,7 +12,8 @@ part of 'daily_expense_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 DailyExpenseEntity _$DailyExpenseEntityFromJson(Map<String, dynamic> json) {
   return _DailyExpenseEntity.fromJson(json);
@@ -24,8 +25,12 @@ mixin _$DailyExpenseEntity {
   int get totalExpense => throw _privateConstructorUsedError;
   int get totalIncome => throw _privateConstructorUsedError;
 
+  /// Serializes this DailyExpenseEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of DailyExpenseEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DailyExpenseEntityCopyWith<DailyExpenseEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -33,8 +38,9 @@ mixin _$DailyExpenseEntity {
 /// @nodoc
 abstract class $DailyExpenseEntityCopyWith<$Res> {
   factory $DailyExpenseEntityCopyWith(
-          DailyExpenseEntity value, $Res Function(DailyExpenseEntity) then) =
-      _$DailyExpenseEntityCopyWithImpl<$Res, DailyExpenseEntity>;
+    DailyExpenseEntity value,
+    $Res Function(DailyExpenseEntity) then,
+  ) = _$DailyExpenseEntityCopyWithImpl<$Res, DailyExpenseEntity>;
   @useResult
   $Res call({DateTime date, int totalExpense, int totalIncome});
 }
@@ -49,6 +55,8 @@ class _$DailyExpenseEntityCopyWithImpl<$Res, $Val extends DailyExpenseEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DailyExpenseEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -56,29 +64,33 @@ class _$DailyExpenseEntityCopyWithImpl<$Res, $Val extends DailyExpenseEntity>
     Object? totalExpense = null,
     Object? totalIncome = null,
   }) {
-    return _then(_value.copyWith(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalIncome: null == totalIncome
-          ? _value.totalIncome
-          : totalIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            totalExpense: null == totalExpense
+                ? _value.totalExpense
+                : totalExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalIncome: null == totalIncome
+                ? _value.totalIncome
+                : totalIncome // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$DailyExpenseEntityImplCopyWith<$Res>
     implements $DailyExpenseEntityCopyWith<$Res> {
-  factory _$$DailyExpenseEntityImplCopyWith(_$DailyExpenseEntityImpl value,
-          $Res Function(_$DailyExpenseEntityImpl) then) =
-      __$$DailyExpenseEntityImplCopyWithImpl<$Res>;
+  factory _$$DailyExpenseEntityImplCopyWith(
+    _$DailyExpenseEntityImpl value,
+    $Res Function(_$DailyExpenseEntityImpl) then,
+  ) = __$$DailyExpenseEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({DateTime date, int totalExpense, int totalIncome});
@@ -88,10 +100,13 @@ abstract class _$$DailyExpenseEntityImplCopyWith<$Res>
 class __$$DailyExpenseEntityImplCopyWithImpl<$Res>
     extends _$DailyExpenseEntityCopyWithImpl<$Res, _$DailyExpenseEntityImpl>
     implements _$$DailyExpenseEntityImplCopyWith<$Res> {
-  __$$DailyExpenseEntityImplCopyWithImpl(_$DailyExpenseEntityImpl _value,
-      $Res Function(_$DailyExpenseEntityImpl) _then)
-      : super(_value, _then);
+  __$$DailyExpenseEntityImplCopyWithImpl(
+    _$DailyExpenseEntityImpl _value,
+    $Res Function(_$DailyExpenseEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of DailyExpenseEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -99,28 +114,33 @@ class __$$DailyExpenseEntityImplCopyWithImpl<$Res>
     Object? totalExpense = null,
     Object? totalIncome = null,
   }) {
-    return _then(_$DailyExpenseEntityImpl(
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalIncome: null == totalIncome
-          ? _value.totalIncome
-          : totalIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$DailyExpenseEntityImpl(
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        totalExpense: null == totalExpense
+            ? _value.totalExpense
+            : totalExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalIncome: null == totalIncome
+            ? _value.totalIncome
+            : totalIncome // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$DailyExpenseEntityImpl implements _DailyExpenseEntity {
-  const _$DailyExpenseEntityImpl(
-      {required this.date, this.totalExpense = 0, this.totalIncome = 0});
+  const _$DailyExpenseEntityImpl({
+    required this.date,
+    this.totalExpense = 0,
+    this.totalIncome = 0,
+  });
 
   factory _$DailyExpenseEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$DailyExpenseEntityImplFromJson(json);
@@ -151,30 +171,33 @@ class _$DailyExpenseEntityImpl implements _DailyExpenseEntity {
                 other.totalIncome == totalIncome));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, date, totalExpense, totalIncome);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DailyExpenseEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DailyExpenseEntityImplCopyWith<_$DailyExpenseEntityImpl> get copyWith =>
       __$$DailyExpenseEntityImplCopyWithImpl<_$DailyExpenseEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$DailyExpenseEntityImplToJson(
-      this,
-    );
+    return _$$DailyExpenseEntityImplToJson(this);
   }
 }
 
 abstract class _DailyExpenseEntity implements DailyExpenseEntity {
-  const factory _DailyExpenseEntity(
-      {required final DateTime date,
-      final int totalExpense,
-      final int totalIncome}) = _$DailyExpenseEntityImpl;
+  const factory _DailyExpenseEntity({
+    required final DateTime date,
+    final int totalExpense,
+    final int totalIncome,
+  }) = _$DailyExpenseEntityImpl;
 
   factory _DailyExpenseEntity.fromJson(Map<String, dynamic> json) =
       _$DailyExpenseEntityImpl.fromJson;
@@ -185,8 +208,11 @@ abstract class _DailyExpenseEntity implements DailyExpenseEntity {
   int get totalExpense;
   @override
   int get totalIncome;
+
+  /// Create a copy of DailyExpenseEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DailyExpenseEntityImplCopyWith<_$DailyExpenseEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

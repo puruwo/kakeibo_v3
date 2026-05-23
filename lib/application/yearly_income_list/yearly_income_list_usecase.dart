@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
@@ -8,23 +8,23 @@ import 'package:kakeibo/domain/ui_value/yearly_income_list_value/income_category
 import 'package:kakeibo/domain/ui_value/yearly_income_list_value/yearly_income_list_entity.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-// 年間収入一覧を取得するユースケース
+// 収入一覧を取得するユースケース（期間指定で汎用的に利用可能）
 
 final yearlyIncomeListNotifierProvider = AsyncNotifierProvider.family<
     YearlyIncomeListUsecaseNotifier,
     YearlyIncomeListValue,
-    DateScopeEntity>(
+    PeriodValue>(
   YearlyIncomeListUsecaseNotifier.new,
 );
 
 class YearlyIncomeListUsecaseNotifier
-    extends FamilyAsyncNotifier<YearlyIncomeListValue, DateScopeEntity> {
+    extends FamilyAsyncNotifier<YearlyIncomeListValue, PeriodValue> {
   late IncomeRepository _incomeRepo;
   late IncomeSmallCategoryRepository _incomeSmallCategoryRepo;
   late IncomeBigCategoryRepository _incomeBigCategoryRepo;
 
   @override
-  Future<YearlyIncomeListValue> build(DateScopeEntity arg) async {
+  Future<YearlyIncomeListValue> build(PeriodValue arg) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
@@ -32,9 +32,9 @@ class YearlyIncomeListUsecaseNotifier
     _incomeSmallCategoryRepo = ref.read(incomeSmallCategoryRepositoryProvider);
     _incomeBigCategoryRepo = ref.read(incomeBigCategoryRepositoryProvider);
 
-    // 年の期間で収入を取得
+    // 指定された期間で収入を取得
     final incomeList = await _incomeRepo.fetchWithoutCategory(
-      period: arg.yearPeriod,
+      period: arg,
     );
 
     // 月ごとにグループ化するためのマップ
@@ -109,7 +109,7 @@ class YearlyIncomeListUsecaseNotifier
       );
     }
 
-    // カテゴリー別の集計を計算
+    // カテゴリー別の集計を計算（小カテゴリー別）
     final Map<String, IncomeCategorySummaryValue> categoryMap = {};
     int totalIncome = 0;
 
@@ -117,7 +117,7 @@ class YearlyIncomeListUsecaseNotifier
       for (var income in group.incomes) {
         totalIncome += income.price;
 
-        final categoryKey = income.bigCategoryName;
+        final categoryKey = income.smallCategoryName;
         if (categoryMap.containsKey(categoryKey)) {
           final existing = categoryMap[categoryKey]!;
           categoryMap[categoryKey] = existing.copyWith(
@@ -125,7 +125,7 @@ class YearlyIncomeListUsecaseNotifier
           );
         } else {
           categoryMap[categoryKey] = IncomeCategorySummaryValue(
-            categoryName: income.bigCategoryName,
+            categoryName: income.smallCategoryName,
             colorCode: income.colorCode,
             iconPath: income.iconPath,
             totalAmount: income.price,

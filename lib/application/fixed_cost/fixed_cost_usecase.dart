@@ -39,7 +39,7 @@ class FixedCostUsecase {
     //エラーチェック
     // 入力した日付が集計期間より前の日付でないかチェック
 
-    final currentMonthPeriod = dateScope.monthPeriod;
+    final currentMonthPeriod = dateScope.aggregationMonthPeriod;
 
     DateTime enteredDate = DateTime.parse(
         '${fixedCostEntity.firstPaymentDate.substring(0, 4)}-${fixedCostEntity.firstPaymentDate.substring(4, 6)}-${fixedCostEntity.firstPaymentDate.substring(6, 8)}');

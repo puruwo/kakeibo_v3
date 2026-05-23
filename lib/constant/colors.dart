@@ -17,22 +17,28 @@ class MyColors {
   static const eerieBlack = Color(0xFF1E1E1E);
   static const richBlack = Color(0xFF051014);
 
-  // カテゴリーカラー
-  static const red = Color(0xFFED112B);
-  static const pink = Color(0xFFFF7070);
-  static const blue = Color(0xFF2596FF);
+  // カテゴリーカラー（支出用）
+  static const expenseRed = Color(0xFFDF2828);
+  static const expensePink = Color(0xFFFF7171);
+  static const expenseBlue = Color(0xFF4BA6FF);
+  static const expenseMint = Color(0xFF3DD8E0);
+  static const expenseYellow = Color(0xFFFFC700);
+  static const expenseGiantsOrange = Color(0xFFFB5B01);
+  static const expensePurple = Color(0xFFBB87FF);
+  static const expenseBrown = Color(0xFFAC3E00);
+
+  // カテゴリーカラー（収入用）
+  static const incomeEmerald = Color(0xFF21D19F);
+  static const incomeGreen = Color(0xFF10B981);
+  static const incomeDeepGreen = Color(0xFF059669);
+  static const incomeMintGreen = Color(0xFF6EE7B7);
+
+  // カテゴリーカラー（固定費用）
+  static const fixedCostGray = Color(0xFF8E8E93);
+
+  // アプリカラー
+  static const pink = Color(0xFFFF7171);
   static const mintBlue = Color(0xFF36C5F1);
-  static const mint = Color(0xFF21D19F);
-  static const yellow = Color(0xFFFFC857);
-  static const giantsOrange = Color(0xFFFF5714);
-  static const uranianBlue = Color(0xFFA3D9FF);
-  static const erin = Color(0xFF4DFF50);
-  static const maize = Color(0xFFFFE74C);
-  static const tinberWolf = Color(0xFFDAD2D8);
-  static const indigoDye = Color(0xFF004777);
-  static const polynesianBlue = Color(0xFF084887);
-  static const purple = Color(0xFFB118C8);
-  static const phthaloBlue = Color(0xFF020887);
 
   static const label = Color(0xffffffff);
   static const secondaryLabel = Color(0x99ebebf5);
@@ -60,13 +66,12 @@ class MyColors {
 
   static const linkColor = Color(0xff0a84ff);
 
-  static const systemGreen = Color(0xff30d158);
-
-  static const tertiaryLabel = Color(0x4cebebf5); // typo修正版
-
   static const separater = Color(0x99545458);
 
   static const barHandler = Color(0xFFD9D9D9);
+
+  // ホバー用
+  static const hoverColor = Color(0x33000000);
 
   Color getColorFromHex(String colorCode) {
     int intValue = int.parse('FF$colorCode', radix: 16);
@@ -84,7 +89,6 @@ class MyColors {
         color.green.toRadixString(16).padLeft(2, '0').toUpperCase() +
         color.blue.toRadixString(16).padLeft(2, '0').toUpperCase();
   }
-
 
   // Component colors
   static const buttonPrimary = themeColor;

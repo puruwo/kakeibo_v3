@@ -12,7 +12,8 @@ part of 'export_income_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$ExportIncomeValue {
@@ -25,7 +26,9 @@ mixin _$ExportIncomeValue {
   String get smallCategoryName => throw _privateConstructorUsedError;
   int get smallCategoryId => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExportIncomeValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExportIncomeValueCopyWith<ExportIncomeValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -33,18 +36,20 @@ mixin _$ExportIncomeValue {
 /// @nodoc
 abstract class $ExportIncomeValueCopyWith<$Res> {
   factory $ExportIncomeValueCopyWith(
-          ExportIncomeValue value, $Res Function(ExportIncomeValue) then) =
-      _$ExportIncomeValueCopyWithImpl<$Res, ExportIncomeValue>;
+    ExportIncomeValue value,
+    $Res Function(ExportIncomeValue) then,
+  ) = _$ExportIncomeValueCopyWithImpl<$Res, ExportIncomeValue>;
   @useResult
-  $Res call(
-      {int id,
-      String date,
-      int price,
-      String memo,
-      String bigCategoryName,
-      int bigCategoryId,
-      String smallCategoryName,
-      int smallCategoryId});
+  $Res call({
+    int id,
+    String date,
+    int price,
+    String memo,
+    String bigCategoryName,
+    int bigCategoryId,
+    String smallCategoryName,
+    int smallCategoryId,
+  });
 }
 
 /// @nodoc
@@ -57,6 +62,8 @@ class _$ExportIncomeValueCopyWithImpl<$Res, $Val extends ExportIncomeValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExportIncomeValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -69,70 +76,78 @@ class _$ExportIncomeValueCopyWithImpl<$Res, $Val extends ExportIncomeValue>
     Object? smallCategoryName = null,
     Object? smallCategoryId = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      memo: null == memo
-          ? _value.memo
-          : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryId: null == bigCategoryId
-          ? _value.bigCategoryId
-          : bigCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      smallCategoryId: null == smallCategoryId
-          ? _value.smallCategoryId
-          : smallCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            date: null == date
+                ? _value.date
+                : date // ignore: cast_nullable_to_non_nullable
+                      as String,
+            price: null == price
+                ? _value.price
+                : price // ignore: cast_nullable_to_non_nullable
+                      as int,
+            memo: null == memo
+                ? _value.memo
+                : memo // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bigCategoryName: null == bigCategoryName
+                ? _value.bigCategoryName
+                : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bigCategoryId: null == bigCategoryId
+                ? _value.bigCategoryId
+                : bigCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+            smallCategoryName: null == smallCategoryName
+                ? _value.smallCategoryName
+                : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            smallCategoryId: null == smallCategoryId
+                ? _value.smallCategoryId
+                : smallCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$ExportIncomeValueImplCopyWith<$Res>
     implements $ExportIncomeValueCopyWith<$Res> {
-  factory _$$ExportIncomeValueImplCopyWith(_$ExportIncomeValueImpl value,
-          $Res Function(_$ExportIncomeValueImpl) then) =
-      __$$ExportIncomeValueImplCopyWithImpl<$Res>;
+  factory _$$ExportIncomeValueImplCopyWith(
+    _$ExportIncomeValueImpl value,
+    $Res Function(_$ExportIncomeValueImpl) then,
+  ) = __$$ExportIncomeValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String date,
-      int price,
-      String memo,
-      String bigCategoryName,
-      int bigCategoryId,
-      String smallCategoryName,
-      int smallCategoryId});
+  $Res call({
+    int id,
+    String date,
+    int price,
+    String memo,
+    String bigCategoryName,
+    int bigCategoryId,
+    String smallCategoryName,
+    int smallCategoryId,
+  });
 }
 
 /// @nodoc
 class __$$ExportIncomeValueImplCopyWithImpl<$Res>
     extends _$ExportIncomeValueCopyWithImpl<$Res, _$ExportIncomeValueImpl>
     implements _$$ExportIncomeValueImplCopyWith<$Res> {
-  __$$ExportIncomeValueImplCopyWithImpl(_$ExportIncomeValueImpl _value,
-      $Res Function(_$ExportIncomeValueImpl) _then)
-      : super(_value, _then);
+  __$$ExportIncomeValueImplCopyWithImpl(
+    _$ExportIncomeValueImpl _value,
+    $Res Function(_$ExportIncomeValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExportIncomeValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,55 +160,58 @@ class __$$ExportIncomeValueImplCopyWithImpl<$Res>
     Object? smallCategoryName = null,
     Object? smallCategoryId = null,
   }) {
-    return _then(_$ExportIncomeValueImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      date: null == date
-          ? _value.date
-          : date // ignore: cast_nullable_to_non_nullable
-              as String,
-      price: null == price
-          ? _value.price
-          : price // ignore: cast_nullable_to_non_nullable
-              as int,
-      memo: null == memo
-          ? _value.memo
-          : memo // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryId: null == bigCategoryId
-          ? _value.bigCategoryId
-          : bigCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      smallCategoryId: null == smallCategoryId
-          ? _value.smallCategoryId
-          : smallCategoryId // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$ExportIncomeValueImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        date: null == date
+            ? _value.date
+            : date // ignore: cast_nullable_to_non_nullable
+                  as String,
+        price: null == price
+            ? _value.price
+            : price // ignore: cast_nullable_to_non_nullable
+                  as int,
+        memo: null == memo
+            ? _value.memo
+            : memo // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bigCategoryName: null == bigCategoryName
+            ? _value.bigCategoryName
+            : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bigCategoryId: null == bigCategoryId
+            ? _value.bigCategoryId
+            : bigCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+        smallCategoryName: null == smallCategoryName
+            ? _value.smallCategoryName
+            : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        smallCategoryId: null == smallCategoryId
+            ? _value.smallCategoryId
+            : smallCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$ExportIncomeValueImpl implements _ExportIncomeValue {
-  const _$ExportIncomeValueImpl(
-      {required this.id,
-      required this.date,
-      required this.price,
-      this.memo = '',
-      required this.bigCategoryName,
-      required this.bigCategoryId,
-      required this.smallCategoryName,
-      required this.smallCategoryId});
+  const _$ExportIncomeValueImpl({
+    required this.id,
+    required this.date,
+    required this.price,
+    this.memo = '',
+    required this.bigCategoryName,
+    required this.bigCategoryId,
+    required this.smallCategoryName,
+    required this.smallCategoryId,
+  });
 
   @override
   final int id;
@@ -238,27 +256,41 @@ class _$ExportIncomeValueImpl implements _ExportIncomeValue {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, id, date, price, memo,
-      bigCategoryName, bigCategoryId, smallCategoryName, smallCategoryId);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    date,
+    price,
+    memo,
+    bigCategoryName,
+    bigCategoryId,
+    smallCategoryName,
+    smallCategoryId,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExportIncomeValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$ExportIncomeValueImplCopyWith<_$ExportIncomeValueImpl> get copyWith =>
       __$$ExportIncomeValueImplCopyWithImpl<_$ExportIncomeValueImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _ExportIncomeValue implements ExportIncomeValue {
-  const factory _ExportIncomeValue(
-      {required final int id,
-      required final String date,
-      required final int price,
-      final String memo,
-      required final String bigCategoryName,
-      required final int bigCategoryId,
-      required final String smallCategoryName,
-      required final int smallCategoryId}) = _$ExportIncomeValueImpl;
+  const factory _ExportIncomeValue({
+    required final int id,
+    required final String date,
+    required final int price,
+    final String memo,
+    required final String bigCategoryName,
+    required final int bigCategoryId,
+    required final String smallCategoryName,
+    required final int smallCategoryId,
+  }) = _$ExportIncomeValueImpl;
 
   @override
   int get id;
@@ -276,8 +308,11 @@ abstract class _ExportIncomeValue implements ExportIncomeValue {
   String get smallCategoryName;
   @override
   int get smallCategoryId;
+
+  /// Create a copy of ExportIncomeValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$ExportIncomeValueImplCopyWith<_$ExportIncomeValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -12,19 +12,23 @@ part of 'date_scope_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$DateScopeEntity {
   DateTime get selectedDate => throw _privateConstructorUsedError;
-  PeriodValue get monthPeriod => throw _privateConstructorUsedError;
+  PeriodValue get aggregationMonthPeriod => throw _privateConstructorUsedError;
+  PeriodValue get displayMonthPeriod => throw _privateConstructorUsedError;
   int get monthIndex => throw _privateConstructorUsedError;
   MonthValue get representativeMonth => throw _privateConstructorUsedError;
   PeriodValue get yearPeriod => throw _privateConstructorUsedError;
   YearValue get representativeYear => throw _privateConstructorUsedError;
   PeriodStatus get periodStatus => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $DateScopeEntityCopyWith<DateScopeEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -32,19 +36,23 @@ mixin _$DateScopeEntity {
 /// @nodoc
 abstract class $DateScopeEntityCopyWith<$Res> {
   factory $DateScopeEntityCopyWith(
-          DateScopeEntity value, $Res Function(DateScopeEntity) then) =
-      _$DateScopeEntityCopyWithImpl<$Res, DateScopeEntity>;
+    DateScopeEntity value,
+    $Res Function(DateScopeEntity) then,
+  ) = _$DateScopeEntityCopyWithImpl<$Res, DateScopeEntity>;
   @useResult
-  $Res call(
-      {DateTime selectedDate,
-      PeriodValue monthPeriod,
-      int monthIndex,
-      MonthValue representativeMonth,
-      PeriodValue yearPeriod,
-      YearValue representativeYear,
-      PeriodStatus periodStatus});
+  $Res call({
+    DateTime selectedDate,
+    PeriodValue aggregationMonthPeriod,
+    PeriodValue displayMonthPeriod,
+    int monthIndex,
+    MonthValue representativeMonth,
+    PeriodValue yearPeriod,
+    YearValue representativeYear,
+    PeriodStatus periodStatus,
+  });
 
-  $PeriodValueCopyWith<$Res> get monthPeriod;
+  $PeriodValueCopyWith<$Res> get aggregationMonthPeriod;
+  $PeriodValueCopyWith<$Res> get displayMonthPeriod;
   $MonthValueCopyWith<$Res> get representativeMonth;
   $PeriodValueCopyWith<$Res> get yearPeriod;
   $YearValueCopyWith<$Res> get representativeYear;
@@ -60,57 +68,81 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? selectedDate = null,
-    Object? monthPeriod = null,
+    Object? aggregationMonthPeriod = null,
+    Object? displayMonthPeriod = null,
     Object? monthIndex = null,
     Object? representativeMonth = null,
     Object? yearPeriod = null,
     Object? representativeYear = null,
     Object? periodStatus = null,
   }) {
-    return _then(_value.copyWith(
-      selectedDate: null == selectedDate
-          ? _value.selectedDate
-          : selectedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      monthPeriod: null == monthPeriod
-          ? _value.monthPeriod
-          : monthPeriod // ignore: cast_nullable_to_non_nullable
-              as PeriodValue,
-      monthIndex: null == monthIndex
-          ? _value.monthIndex
-          : monthIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      representativeMonth: null == representativeMonth
-          ? _value.representativeMonth
-          : representativeMonth // ignore: cast_nullable_to_non_nullable
-              as MonthValue,
-      yearPeriod: null == yearPeriod
-          ? _value.yearPeriod
-          : yearPeriod // ignore: cast_nullable_to_non_nullable
-              as PeriodValue,
-      representativeYear: null == representativeYear
-          ? _value.representativeYear
-          : representativeYear // ignore: cast_nullable_to_non_nullable
-              as YearValue,
-      periodStatus: null == periodStatus
-          ? _value.periodStatus
-          : periodStatus // ignore: cast_nullable_to_non_nullable
-              as PeriodStatus,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            selectedDate: null == selectedDate
+                ? _value.selectedDate
+                : selectedDate // ignore: cast_nullable_to_non_nullable
+                      as DateTime,
+            aggregationMonthPeriod: null == aggregationMonthPeriod
+                ? _value.aggregationMonthPeriod
+                : aggregationMonthPeriod // ignore: cast_nullable_to_non_nullable
+                      as PeriodValue,
+            displayMonthPeriod: null == displayMonthPeriod
+                ? _value.displayMonthPeriod
+                : displayMonthPeriod // ignore: cast_nullable_to_non_nullable
+                      as PeriodValue,
+            monthIndex: null == monthIndex
+                ? _value.monthIndex
+                : monthIndex // ignore: cast_nullable_to_non_nullable
+                      as int,
+            representativeMonth: null == representativeMonth
+                ? _value.representativeMonth
+                : representativeMonth // ignore: cast_nullable_to_non_nullable
+                      as MonthValue,
+            yearPeriod: null == yearPeriod
+                ? _value.yearPeriod
+                : yearPeriod // ignore: cast_nullable_to_non_nullable
+                      as PeriodValue,
+            representativeYear: null == representativeYear
+                ? _value.representativeYear
+                : representativeYear // ignore: cast_nullable_to_non_nullable
+                      as YearValue,
+            periodStatus: null == periodStatus
+                ? _value.periodStatus
+                : periodStatus // ignore: cast_nullable_to_non_nullable
+                      as PeriodStatus,
+          )
+          as $Val,
+    );
   }
 
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
-  $PeriodValueCopyWith<$Res> get monthPeriod {
-    return $PeriodValueCopyWith<$Res>(_value.monthPeriod, (value) {
-      return _then(_value.copyWith(monthPeriod: value) as $Val);
+  $PeriodValueCopyWith<$Res> get aggregationMonthPeriod {
+    return $PeriodValueCopyWith<$Res>(_value.aggregationMonthPeriod, (value) {
+      return _then(_value.copyWith(aggregationMonthPeriod: value) as $Val);
     });
   }
 
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $PeriodValueCopyWith<$Res> get displayMonthPeriod {
+    return $PeriodValueCopyWith<$Res>(_value.displayMonthPeriod, (value) {
+      return _then(_value.copyWith(displayMonthPeriod: value) as $Val);
+    });
+  }
+
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $MonthValueCopyWith<$Res> get representativeMonth {
@@ -119,6 +151,8 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
     });
   }
 
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PeriodValueCopyWith<$Res> get yearPeriod {
@@ -127,6 +161,8 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
     });
   }
 
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $YearValueCopyWith<$Res> get representativeYear {
@@ -139,22 +175,27 @@ class _$DateScopeEntityCopyWithImpl<$Res, $Val extends DateScopeEntity>
 /// @nodoc
 abstract class _$$DateScopeEntityImplCopyWith<$Res>
     implements $DateScopeEntityCopyWith<$Res> {
-  factory _$$DateScopeEntityImplCopyWith(_$DateScopeEntityImpl value,
-          $Res Function(_$DateScopeEntityImpl) then) =
-      __$$DateScopeEntityImplCopyWithImpl<$Res>;
+  factory _$$DateScopeEntityImplCopyWith(
+    _$DateScopeEntityImpl value,
+    $Res Function(_$DateScopeEntityImpl) then,
+  ) = __$$DateScopeEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {DateTime selectedDate,
-      PeriodValue monthPeriod,
-      int monthIndex,
-      MonthValue representativeMonth,
-      PeriodValue yearPeriod,
-      YearValue representativeYear,
-      PeriodStatus periodStatus});
+  $Res call({
+    DateTime selectedDate,
+    PeriodValue aggregationMonthPeriod,
+    PeriodValue displayMonthPeriod,
+    int monthIndex,
+    MonthValue representativeMonth,
+    PeriodValue yearPeriod,
+    YearValue representativeYear,
+    PeriodStatus periodStatus,
+  });
 
   @override
-  $PeriodValueCopyWith<$Res> get monthPeriod;
+  $PeriodValueCopyWith<$Res> get aggregationMonthPeriod;
+  @override
+  $PeriodValueCopyWith<$Res> get displayMonthPeriod;
   @override
   $MonthValueCopyWith<$Res> get representativeMonth;
   @override
@@ -168,69 +209,83 @@ class __$$DateScopeEntityImplCopyWithImpl<$Res>
     extends _$DateScopeEntityCopyWithImpl<$Res, _$DateScopeEntityImpl>
     implements _$$DateScopeEntityImplCopyWith<$Res> {
   __$$DateScopeEntityImplCopyWithImpl(
-      _$DateScopeEntityImpl _value, $Res Function(_$DateScopeEntityImpl) _then)
-      : super(_value, _then);
+    _$DateScopeEntityImpl _value,
+    $Res Function(_$DateScopeEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
     Object? selectedDate = null,
-    Object? monthPeriod = null,
+    Object? aggregationMonthPeriod = null,
+    Object? displayMonthPeriod = null,
     Object? monthIndex = null,
     Object? representativeMonth = null,
     Object? yearPeriod = null,
     Object? representativeYear = null,
     Object? periodStatus = null,
   }) {
-    return _then(_$DateScopeEntityImpl(
-      selectedDate: null == selectedDate
-          ? _value.selectedDate
-          : selectedDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      monthPeriod: null == monthPeriod
-          ? _value.monthPeriod
-          : monthPeriod // ignore: cast_nullable_to_non_nullable
-              as PeriodValue,
-      monthIndex: null == monthIndex
-          ? _value.monthIndex
-          : monthIndex // ignore: cast_nullable_to_non_nullable
-              as int,
-      representativeMonth: null == representativeMonth
-          ? _value.representativeMonth
-          : representativeMonth // ignore: cast_nullable_to_non_nullable
-              as MonthValue,
-      yearPeriod: null == yearPeriod
-          ? _value.yearPeriod
-          : yearPeriod // ignore: cast_nullable_to_non_nullable
-              as PeriodValue,
-      representativeYear: null == representativeYear
-          ? _value.representativeYear
-          : representativeYear // ignore: cast_nullable_to_non_nullable
-              as YearValue,
-      periodStatus: null == periodStatus
-          ? _value.periodStatus
-          : periodStatus // ignore: cast_nullable_to_non_nullable
-              as PeriodStatus,
-    ));
+    return _then(
+      _$DateScopeEntityImpl(
+        selectedDate: null == selectedDate
+            ? _value.selectedDate
+            : selectedDate // ignore: cast_nullable_to_non_nullable
+                  as DateTime,
+        aggregationMonthPeriod: null == aggregationMonthPeriod
+            ? _value.aggregationMonthPeriod
+            : aggregationMonthPeriod // ignore: cast_nullable_to_non_nullable
+                  as PeriodValue,
+        displayMonthPeriod: null == displayMonthPeriod
+            ? _value.displayMonthPeriod
+            : displayMonthPeriod // ignore: cast_nullable_to_non_nullable
+                  as PeriodValue,
+        monthIndex: null == monthIndex
+            ? _value.monthIndex
+            : monthIndex // ignore: cast_nullable_to_non_nullable
+                  as int,
+        representativeMonth: null == representativeMonth
+            ? _value.representativeMonth
+            : representativeMonth // ignore: cast_nullable_to_non_nullable
+                  as MonthValue,
+        yearPeriod: null == yearPeriod
+            ? _value.yearPeriod
+            : yearPeriod // ignore: cast_nullable_to_non_nullable
+                  as PeriodValue,
+        representativeYear: null == representativeYear
+            ? _value.representativeYear
+            : representativeYear // ignore: cast_nullable_to_non_nullable
+                  as YearValue,
+        periodStatus: null == periodStatus
+            ? _value.periodStatus
+            : periodStatus // ignore: cast_nullable_to_non_nullable
+                  as PeriodStatus,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$DateScopeEntityImpl implements _DateScopeEntity {
-  const _$DateScopeEntityImpl(
-      {required this.selectedDate,
-      required this.monthPeriod,
-      required this.monthIndex,
-      required this.representativeMonth,
-      required this.yearPeriod,
-      required this.representativeYear,
-      required this.periodStatus});
+  const _$DateScopeEntityImpl({
+    required this.selectedDate,
+    required this.aggregationMonthPeriod,
+    required this.displayMonthPeriod,
+    required this.monthIndex,
+    required this.representativeMonth,
+    required this.yearPeriod,
+    required this.representativeYear,
+    required this.periodStatus,
+  });
 
   @override
   final DateTime selectedDate;
   @override
-  final PeriodValue monthPeriod;
+  final PeriodValue aggregationMonthPeriod;
+  @override
+  final PeriodValue displayMonthPeriod;
   @override
   final int monthIndex;
   @override
@@ -244,7 +299,7 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
 
   @override
   String toString() {
-    return 'DateScopeEntity(selectedDate: $selectedDate, monthPeriod: $monthPeriod, monthIndex: $monthIndex, representativeMonth: $representativeMonth, yearPeriod: $yearPeriod, representativeYear: $representativeYear, periodStatus: $periodStatus)';
+    return 'DateScopeEntity(selectedDate: $selectedDate, aggregationMonthPeriod: $aggregationMonthPeriod, displayMonthPeriod: $displayMonthPeriod, monthIndex: $monthIndex, representativeMonth: $representativeMonth, yearPeriod: $yearPeriod, representativeYear: $representativeYear, periodStatus: $periodStatus)';
   }
 
   @override
@@ -254,8 +309,10 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
             other is _$DateScopeEntityImpl &&
             (identical(other.selectedDate, selectedDate) ||
                 other.selectedDate == selectedDate) &&
-            (identical(other.monthPeriod, monthPeriod) ||
-                other.monthPeriod == monthPeriod) &&
+            (identical(other.aggregationMonthPeriod, aggregationMonthPeriod) ||
+                other.aggregationMonthPeriod == aggregationMonthPeriod) &&
+            (identical(other.displayMonthPeriod, displayMonthPeriod) ||
+                other.displayMonthPeriod == displayMonthPeriod) &&
             (identical(other.monthIndex, monthIndex) ||
                 other.monthIndex == monthIndex) &&
             (identical(other.representativeMonth, representativeMonth) ||
@@ -270,37 +327,47 @@ class _$DateScopeEntityImpl implements _DateScopeEntity {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      selectedDate,
-      monthPeriod,
-      monthIndex,
-      representativeMonth,
-      yearPeriod,
-      representativeYear,
-      periodStatus);
+    runtimeType,
+    selectedDate,
+    aggregationMonthPeriod,
+    displayMonthPeriod,
+    monthIndex,
+    representativeMonth,
+    yearPeriod,
+    representativeYear,
+    periodStatus,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$DateScopeEntityImplCopyWith<_$DateScopeEntityImpl> get copyWith =>
       __$$DateScopeEntityImplCopyWithImpl<_$DateScopeEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _DateScopeEntity implements DateScopeEntity {
-  const factory _DateScopeEntity(
-      {required final DateTime selectedDate,
-      required final PeriodValue monthPeriod,
-      required final int monthIndex,
-      required final MonthValue representativeMonth,
-      required final PeriodValue yearPeriod,
-      required final YearValue representativeYear,
-      required final PeriodStatus periodStatus}) = _$DateScopeEntityImpl;
+  const factory _DateScopeEntity({
+    required final DateTime selectedDate,
+    required final PeriodValue aggregationMonthPeriod,
+    required final PeriodValue displayMonthPeriod,
+    required final int monthIndex,
+    required final MonthValue representativeMonth,
+    required final PeriodValue yearPeriod,
+    required final YearValue representativeYear,
+    required final PeriodStatus periodStatus,
+  }) = _$DateScopeEntityImpl;
 
   @override
   DateTime get selectedDate;
   @override
-  PeriodValue get monthPeriod;
+  PeriodValue get aggregationMonthPeriod;
+  @override
+  PeriodValue get displayMonthPeriod;
   @override
   int get monthIndex;
   @override
@@ -311,8 +378,11 @@ abstract class _DateScopeEntity implements DateScopeEntity {
   YearValue get representativeYear;
   @override
   PeriodStatus get periodStatus;
+
+  /// Create a copy of DateScopeEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$DateScopeEntityImplCopyWith<_$DateScopeEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

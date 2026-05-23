@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_selection_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
@@ -153,7 +153,9 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         pageCount,
-        (index) => Container(
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
           margin: const EdgeInsets.symmetric(horizontal: 4),
           width: index == _currentPage ? 24 : 8,
           height: 8,
@@ -173,25 +175,24 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () {
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => CategoryReorderPage(
-              transactionMode: widget.transactionMode,
-            ),
+        showAppModalBottomSheet(
+          context,
+          child: CategoryReorderPage(
+            transactionMode: widget.transactionMode,
           ),
         );
       },
-      child: const Padding(
-        padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
+            const Icon(
               Icons.settings_outlined,
               size: 16,
               color: MyColors.secondaryLabel,
             ),
-            SizedBox(width: 6),
+            const SizedBox(width: 6),
             Text(
               'アイコンを並べ替える',
               style: RegisterPageStyles.rearrangeLink,

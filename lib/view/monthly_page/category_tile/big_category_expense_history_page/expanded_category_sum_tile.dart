@@ -118,7 +118,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                           ? Stack(children: [
                               // バーの背景枠
                               Container(
-                                height: 10,
+                                height: 7,
                                 width: barFrameWidth *
                                     screenHorizontalMagnification,
                                 decoration: BoxDecoration(
@@ -128,7 +128,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                               ),
                               // バーの中身
                               AnimatedContainer(
-                                height: 10,
+                                height: 7,
                                 width: isBuilt.value
                                     ? barWidth * screenHorizontalMagnification
                                     : 0,
@@ -163,7 +163,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                             child: Image.asset(
                                               'assets/images/over_fill.png',
                                               width: 280,
-                                              height: 10,
+                                              height: 7,
                                               fit: BoxFit.cover,
                                             ),
                                           ),
@@ -178,7 +178,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                               children: [
                                 // バーの背景枠
                                 Container(
-                                  height: 10,
+                                  height: 7,
                                   width: barFrameWidth *
                                       screenHorizontalMagnification,
                                   decoration: BoxDecoration(
@@ -188,7 +188,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                 ),
                                 // バーの中身
                                 AnimatedContainer(
-                                  height: 10,
+                                  height: 7,
                                   width: isBuilt.value
                                       ? barWidth * screenHorizontalMagnification
                                       : 0,
@@ -237,7 +237,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                       Expanded(
                         child: Text(
                           categoryName,
-                          style: MonthlyPageStyles.categoryExpandedCategoryName,
+                          style: AppTextStyles.appCardSecondaryTitleLabel,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -249,12 +249,12 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                           Text(
                             paymentSumLabel,
                             overflow: TextOverflow.ellipsis,
-                            style: MonthlyPageStyles.categoryExpandedPrice,
+                            style: AppTextStyles.appCardSecondaryPriceLabel,
                             textAlign: TextAlign.end,
                           ),
                           Text(
                             ' 円',
-                            style: MonthlyPageStyles.categoryExpandedYen,
+                            style: AppTextStyles.appCardSecondaryPriceUnit,
                           ),
 
                           // 予算が設定されているかどうか
@@ -264,15 +264,13 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                   children: [
                                     Text(
                                       '  /予算 ',
-                                      style: MonthlyPageStyles
-                                          .categoryExpandedSubText,
+                                      style: AppTextStyles.appCardTertiaryTitleLabel,
                                     ),
                                     // カテゴリー予算
                                     Text(
                                       budgetLabel,
                                       overflow: TextOverflow.ellipsis,
-                                      style: MonthlyPageStyles
-                                          .categoryExpandedBudgetPrice,
+                                      style: AppTextStyles.appCardTitleLabel,
                                       textAlign: TextAlign.end,
                                     ),
                                     Padding(
@@ -281,8 +279,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                                           const EdgeInsets.only(right: 2.0),
                                       child: Text(
                                         ' 円',
-                                        style: MonthlyPageStyles
-                                            .categoryExpandedYen,
+                                        style: AppTextStyles.appCardSecondaryPriceUnit,
                                         textAlign: TextAlign.end,
                                       ),
                                     ),
@@ -356,8 +353,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                               // 小カテゴリー名
                               Text(
                                 smallCategoryList[index].smallCategoryName,
-                                style: MonthlyPageStyles
-                                    .categoryExpandedCategoryName,
+                                style: AppTextStyles.appCardSecondaryTitleLabel,
                                 textAlign: TextAlign.start,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -370,8 +366,7 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                             width: barFrameWidth * 0.15,
                             child: Text(
                               '${smallCategoryList[index].recordCount}件',
-                              style:
-                                  MonthlyPageStyles.categoryExpandedRecordCount,
+                              style: AppTextStyles.appCardTitleLabel,
                               textAlign: TextAlign.right,
                               overflow: TextOverflow.ellipsis,
                             )),
@@ -387,13 +382,13 @@ class ExpandedCategoryTile extends HookConsumerWidget {
                             children: [
                               Text(
                                 totalExpenseBySmallCategory,
-                                style: MonthlyPageStyles.categoryExpandedPrice,
+                                style: AppTextStyles.appCardSecondaryPriceLabel,
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               Text(
                                 ' 円',
-                                style: MonthlyPageStyles.categoryExpandedYen,
+                                style: AppTextStyles.appCardSecondaryPriceUnit,
                                 textAlign: TextAlign.end,
                               ),
                               const SizedBox(

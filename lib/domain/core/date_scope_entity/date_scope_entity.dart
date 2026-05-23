@@ -10,7 +10,8 @@ part 'date_scope_entity.freezed.dart';
 class DateScopeEntity with _$DateScopeEntity {
   const factory DateScopeEntity({
     required DateTime selectedDate,
-    required PeriodValue monthPeriod,
+    required PeriodValue aggregationMonthPeriod,
+    required PeriodValue displayMonthPeriod,
     required int monthIndex,
     required MonthValue representativeMonth,
     required PeriodValue yearPeriod,

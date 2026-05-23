@@ -11,18 +11,21 @@ String _$selectCategoryControllerNotifierHash() =>
 
 /// See also [SelectCategoryControllerNotifier].
 @ProviderFor(SelectCategoryControllerNotifier)
-final selectCategoryControllerNotifierProvider = AutoDisposeNotifierProvider<
-    SelectCategoryControllerNotifier, ICategoryEntity>.internal(
-  SelectCategoryControllerNotifier.new,
-  name: r'selectCategoryControllerNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$selectCategoryControllerNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final selectCategoryControllerNotifierProvider =
+    AutoDisposeNotifierProvider<
+      SelectCategoryControllerNotifier,
+      ICategoryEntity
+    >.internal(
+      SelectCategoryControllerNotifier.new,
+      name: r'selectCategoryControllerNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$selectCategoryControllerNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$SelectCategoryControllerNotifier
-    = AutoDisposeNotifier<ICategoryEntity>;
+typedef _$SelectCategoryControllerNotifier =
+    AutoDisposeNotifier<ICategoryEntity>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
-import 'package:kakeibo/constant/styles/history_list_styles.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/domain/ui_value/daily_expense_summary_value/daily_expense_summary_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
@@ -28,6 +28,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
       backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
           icon: const Icon(Icons.close),
@@ -42,10 +43,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         data: (summary) => _buildContent(context, summary),
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, stack) => Center(
-          child: Text(
-            'データの取得に失敗しました',
-            style: HistoryListStyles.historyEmptyMessage,
-          ),
+          child: Text('データの取得に失敗しました', style: AppTextStyles.errorMessage),
         ),
       ),
     );
@@ -140,10 +138,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
       width: double.infinity,
       height: 120,
       child: Center(
-        child: Text(
-          'この日の支出はありません',
-          style: HistoryListStyles.historyEmptyMessage,
-        ),
+        child: Text('この日の支出はありません', style: AppTextStyles.errorMessage),
       ),
     );
   }
@@ -169,15 +164,13 @@ class DailyExpenseSummaryHeader extends StatelessWidget {
           Expanded(
             child: Text(
               categoryName,
-              style: HistoryListStyles.historyTileBigCategoryLabel,
+              style: AppTextStyles.listTilePrimaryTitle,
             ),
           ),
           // カテゴリー合計金額
           Text(
             '${formattedPriceGetter(categoryTotal)}円',
-            style: HistoryListStyles.historyTileSubLabel.copyWith(
-              fontSize: 14,
-            ),
+            style: AppTextStyles.listTileTirtiaryTitle.copyWith(fontSize: 14),
           ),
         ],
       ),

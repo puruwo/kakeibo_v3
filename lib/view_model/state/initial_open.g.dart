@@ -13,15 +13,15 @@ String _$initialOpenNotifierHash() =>
 @ProviderFor(InitialOpenNotifier)
 final initialOpenNotifierProvider =
     NotifierProvider<InitialOpenNotifier, bool>.internal(
-  InitialOpenNotifier.new,
-  name: r'initialOpenNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$initialOpenNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      InitialOpenNotifier.new,
+      name: r'initialOpenNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$initialOpenNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$InitialOpenNotifier = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

@@ -12,11 +12,12 @@ part of 'edit_expense_big_category_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$EditExpenseBigCategoryValue {
-// 大カテゴリーのEntity
+  // 大カテゴリーのEntity
   int get id => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
@@ -31,35 +32,43 @@ mixin _$EditExpenseBigCategoryValue {
       throw _privateConstructorUsedError; // 編集後の表示非表示の設定
   bool get etitedStateIsChecked => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EditExpenseBigCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $EditExpenseBigCategoryValueCopyWith<EditExpenseBigCategoryValue>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $EditExpenseBigCategoryValueCopyWith<$Res> {
   factory $EditExpenseBigCategoryValueCopyWith(
-          EditExpenseBigCategoryValue value,
-          $Res Function(EditExpenseBigCategoryValue) then) =
-      _$EditExpenseBigCategoryValueCopyWithImpl<$Res,
-          EditExpenseBigCategoryValue>;
+    EditExpenseBigCategoryValue value,
+    $Res Function(EditExpenseBigCategoryValue) then,
+  ) =
+      _$EditExpenseBigCategoryValueCopyWithImpl<
+        $Res,
+        EditExpenseBigCategoryValue
+      >;
   @useResult
-  $Res call(
-      {int id,
-      String colorCode,
-      String bigCategoryName,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
-      String expenseSmallCategoryNameText,
-      int editedStateDisplayOrder,
-      bool etitedStateIsChecked});
+  $Res call({
+    int id,
+    String colorCode,
+    String bigCategoryName,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
+    String expenseSmallCategoryNameText,
+    int editedStateDisplayOrder,
+    bool etitedStateIsChecked,
+  });
 }
 
 /// @nodoc
-class _$EditExpenseBigCategoryValueCopyWithImpl<$Res,
-        $Val extends EditExpenseBigCategoryValue>
+class _$EditExpenseBigCategoryValueCopyWithImpl<
+  $Res,
+  $Val extends EditExpenseBigCategoryValue
+>
     implements $EditExpenseBigCategoryValueCopyWith<$Res> {
   _$EditExpenseBigCategoryValueCopyWithImpl(this._value, this._then);
 
@@ -68,6 +77,8 @@ class _$EditExpenseBigCategoryValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of EditExpenseBigCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -82,48 +93,51 @@ class _$EditExpenseBigCategoryValueCopyWithImpl<$Res,
     Object? editedStateDisplayOrder = null,
     Object? etitedStateIsChecked = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      expenseSmallCategoryList: null == expenseSmallCategoryList
-          ? _value.expenseSmallCategoryList
-          : expenseSmallCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseSmallCategoryEntity>,
-      expenseSmallCategoryNameText: null == expenseSmallCategoryNameText
-          ? _value.expenseSmallCategoryNameText
-          : expenseSmallCategoryNameText // ignore: cast_nullable_to_non_nullable
-              as String,
-      editedStateDisplayOrder: null == editedStateDisplayOrder
-          ? _value.editedStateDisplayOrder
-          : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      etitedStateIsChecked: null == etitedStateIsChecked
-          ? _value.etitedStateIsChecked
-          : etitedStateIsChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            colorCode: null == colorCode
+                ? _value.colorCode
+                : colorCode // ignore: cast_nullable_to_non_nullable
+                      as String,
+            bigCategoryName: null == bigCategoryName
+                ? _value.bigCategoryName
+                : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            resourcePath: null == resourcePath
+                ? _value.resourcePath
+                : resourcePath // ignore: cast_nullable_to_non_nullable
+                      as String,
+            displayOrder: null == displayOrder
+                ? _value.displayOrder
+                : displayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isDisplayed: null == isDisplayed
+                ? _value.isDisplayed
+                : isDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            expenseSmallCategoryList: null == expenseSmallCategoryList
+                ? _value.expenseSmallCategoryList
+                : expenseSmallCategoryList // ignore: cast_nullable_to_non_nullable
+                      as List<ExpenseSmallCategoryEntity>,
+            expenseSmallCategoryNameText: null == expenseSmallCategoryNameText
+                ? _value.expenseSmallCategoryNameText
+                : expenseSmallCategoryNameText // ignore: cast_nullable_to_non_nullable
+                      as String,
+            editedStateDisplayOrder: null == editedStateDisplayOrder
+                ? _value.editedStateDisplayOrder
+                : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            etitedStateIsChecked: null == etitedStateIsChecked
+                ? _value.etitedStateIsChecked
+                : etitedStateIsChecked // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -131,34 +145,40 @@ class _$EditExpenseBigCategoryValueCopyWithImpl<$Res,
 abstract class _$$EditExpenseBigCategoryValueImplCopyWith<$Res>
     implements $EditExpenseBigCategoryValueCopyWith<$Res> {
   factory _$$EditExpenseBigCategoryValueImplCopyWith(
-          _$EditExpenseBigCategoryValueImpl value,
-          $Res Function(_$EditExpenseBigCategoryValueImpl) then) =
-      __$$EditExpenseBigCategoryValueImplCopyWithImpl<$Res>;
+    _$EditExpenseBigCategoryValueImpl value,
+    $Res Function(_$EditExpenseBigCategoryValueImpl) then,
+  ) = __$$EditExpenseBigCategoryValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      String colorCode,
-      String bigCategoryName,
-      String resourcePath,
-      int displayOrder,
-      int isDisplayed,
-      List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
-      String expenseSmallCategoryNameText,
-      int editedStateDisplayOrder,
-      bool etitedStateIsChecked});
+  $Res call({
+    int id,
+    String colorCode,
+    String bigCategoryName,
+    String resourcePath,
+    int displayOrder,
+    int isDisplayed,
+    List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
+    String expenseSmallCategoryNameText,
+    int editedStateDisplayOrder,
+    bool etitedStateIsChecked,
+  });
 }
 
 /// @nodoc
 class __$$EditExpenseBigCategoryValueImplCopyWithImpl<$Res>
-    extends _$EditExpenseBigCategoryValueCopyWithImpl<$Res,
-        _$EditExpenseBigCategoryValueImpl>
+    extends
+        _$EditExpenseBigCategoryValueCopyWithImpl<
+          $Res,
+          _$EditExpenseBigCategoryValueImpl
+        >
     implements _$$EditExpenseBigCategoryValueImplCopyWith<$Res> {
   __$$EditExpenseBigCategoryValueImplCopyWithImpl(
-      _$EditExpenseBigCategoryValueImpl _value,
-      $Res Function(_$EditExpenseBigCategoryValueImpl) _then)
-      : super(_value, _then);
+    _$EditExpenseBigCategoryValueImpl _value,
+    $Res Function(_$EditExpenseBigCategoryValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of EditExpenseBigCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -173,48 +193,50 @@ class __$$EditExpenseBigCategoryValueImplCopyWithImpl<$Res>
     Object? editedStateDisplayOrder = null,
     Object? etitedStateIsChecked = null,
   }) {
-    return _then(_$EditExpenseBigCategoryValueImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      colorCode: null == colorCode
-          ? _value.colorCode
-          : colorCode // ignore: cast_nullable_to_non_nullable
-              as String,
-      bigCategoryName: null == bigCategoryName
-          ? _value.bigCategoryName
-          : bigCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      resourcePath: null == resourcePath
-          ? _value.resourcePath
-          : resourcePath // ignore: cast_nullable_to_non_nullable
-              as String,
-      displayOrder: null == displayOrder
-          ? _value.displayOrder
-          : displayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      isDisplayed: null == isDisplayed
-          ? _value.isDisplayed
-          : isDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-      expenseSmallCategoryList: null == expenseSmallCategoryList
-          ? _value._expenseSmallCategoryList
-          : expenseSmallCategoryList // ignore: cast_nullable_to_non_nullable
-              as List<ExpenseSmallCategoryEntity>,
-      expenseSmallCategoryNameText: null == expenseSmallCategoryNameText
-          ? _value.expenseSmallCategoryNameText
-          : expenseSmallCategoryNameText // ignore: cast_nullable_to_non_nullable
-              as String,
-      editedStateDisplayOrder: null == editedStateDisplayOrder
-          ? _value.editedStateDisplayOrder
-          : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      etitedStateIsChecked: null == etitedStateIsChecked
-          ? _value.etitedStateIsChecked
-          : etitedStateIsChecked // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$EditExpenseBigCategoryValueImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        colorCode: null == colorCode
+            ? _value.colorCode
+            : colorCode // ignore: cast_nullable_to_non_nullable
+                  as String,
+        bigCategoryName: null == bigCategoryName
+            ? _value.bigCategoryName
+            : bigCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        resourcePath: null == resourcePath
+            ? _value.resourcePath
+            : resourcePath // ignore: cast_nullable_to_non_nullable
+                  as String,
+        displayOrder: null == displayOrder
+            ? _value.displayOrder
+            : displayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isDisplayed: null == isDisplayed
+            ? _value.isDisplayed
+            : isDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        expenseSmallCategoryList: null == expenseSmallCategoryList
+            ? _value._expenseSmallCategoryList
+            : expenseSmallCategoryList // ignore: cast_nullable_to_non_nullable
+                  as List<ExpenseSmallCategoryEntity>,
+        expenseSmallCategoryNameText: null == expenseSmallCategoryNameText
+            ? _value.expenseSmallCategoryNameText
+            : expenseSmallCategoryNameText // ignore: cast_nullable_to_non_nullable
+                  as String,
+        editedStateDisplayOrder: null == editedStateDisplayOrder
+            ? _value.editedStateDisplayOrder
+            : editedStateDisplayOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        etitedStateIsChecked: null == etitedStateIsChecked
+            ? _value.etitedStateIsChecked
+            : etitedStateIsChecked // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
@@ -222,20 +244,20 @@ class __$$EditExpenseBigCategoryValueImplCopyWithImpl<$Res>
 
 class _$EditExpenseBigCategoryValueImpl
     implements _EditExpenseBigCategoryValue {
-  const _$EditExpenseBigCategoryValueImpl(
-      {required this.id,
-      required this.colorCode,
-      required this.bigCategoryName,
-      required this.resourcePath,
-      required this.displayOrder,
-      required this.isDisplayed,
-      required final List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
-      required this.expenseSmallCategoryNameText,
-      required this.editedStateDisplayOrder,
-      required this.etitedStateIsChecked})
-      : _expenseSmallCategoryList = expenseSmallCategoryList;
+  const _$EditExpenseBigCategoryValueImpl({
+    required this.id,
+    required this.colorCode,
+    required this.bigCategoryName,
+    required this.resourcePath,
+    required this.displayOrder,
+    required this.isDisplayed,
+    required final List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
+    required this.expenseSmallCategoryNameText,
+    required this.editedStateDisplayOrder,
+    required this.etitedStateIsChecked,
+  }) : _expenseSmallCategoryList = expenseSmallCategoryList;
 
-// 大カテゴリーのEntity
+  // 大カテゴリーのEntity
   @override
   final int id;
   @override
@@ -259,10 +281,10 @@ class _$EditExpenseBigCategoryValueImpl
 
   @override
   final String expenseSmallCategoryNameText;
-// 編集後表示順
+  // 編集後表示順
   @override
   final int editedStateDisplayOrder;
-// 編集後の表示非表示の設定
+  // 編集後の表示非表示の設定
   @override
   final bool etitedStateIsChecked;
 
@@ -288,13 +310,19 @@ class _$EditExpenseBigCategoryValueImpl
             (identical(other.isDisplayed, isDisplayed) ||
                 other.isDisplayed == isDisplayed) &&
             const DeepCollectionEquality().equals(
-                other._expenseSmallCategoryList, _expenseSmallCategoryList) &&
-            (identical(other.expenseSmallCategoryNameText,
-                    expenseSmallCategoryNameText) ||
+              other._expenseSmallCategoryList,
+              _expenseSmallCategoryList,
+            ) &&
+            (identical(
+                  other.expenseSmallCategoryNameText,
+                  expenseSmallCategoryNameText,
+                ) ||
                 other.expenseSmallCategoryNameText ==
                     expenseSmallCategoryNameText) &&
             (identical(
-                    other.editedStateDisplayOrder, editedStateDisplayOrder) ||
+                  other.editedStateDisplayOrder,
+                  editedStateDisplayOrder,
+                ) ||
                 other.editedStateDisplayOrder == editedStateDisplayOrder) &&
             (identical(other.etitedStateIsChecked, etitedStateIsChecked) ||
                 other.etitedStateIsChecked == etitedStateIsChecked));
@@ -302,42 +330,48 @@ class _$EditExpenseBigCategoryValueImpl
 
   @override
   int get hashCode => Object.hash(
-      runtimeType,
-      id,
-      colorCode,
-      bigCategoryName,
-      resourcePath,
-      displayOrder,
-      isDisplayed,
-      const DeepCollectionEquality().hash(_expenseSmallCategoryList),
-      expenseSmallCategoryNameText,
-      editedStateDisplayOrder,
-      etitedStateIsChecked);
+    runtimeType,
+    id,
+    colorCode,
+    bigCategoryName,
+    resourcePath,
+    displayOrder,
+    isDisplayed,
+    const DeepCollectionEquality().hash(_expenseSmallCategoryList),
+    expenseSmallCategoryNameText,
+    editedStateDisplayOrder,
+    etitedStateIsChecked,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of EditExpenseBigCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$EditExpenseBigCategoryValueImplCopyWith<_$EditExpenseBigCategoryValueImpl>
-      get copyWith => __$$EditExpenseBigCategoryValueImplCopyWithImpl<
-          _$EditExpenseBigCategoryValueImpl>(this, _$identity);
+  get copyWith =>
+      __$$EditExpenseBigCategoryValueImplCopyWithImpl<
+        _$EditExpenseBigCategoryValueImpl
+      >(this, _$identity);
 }
 
 abstract class _EditExpenseBigCategoryValue
     implements EditExpenseBigCategoryValue {
-  const factory _EditExpenseBigCategoryValue(
-      {required final int id,
-      required final String colorCode,
-      required final String bigCategoryName,
-      required final String resourcePath,
-      required final int displayOrder,
-      required final int isDisplayed,
-      required final List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
-      required final String expenseSmallCategoryNameText,
-      required final int editedStateDisplayOrder,
-      required final bool
-          etitedStateIsChecked}) = _$EditExpenseBigCategoryValueImpl;
+  const factory _EditExpenseBigCategoryValue({
+    required final int id,
+    required final String colorCode,
+    required final String bigCategoryName,
+    required final String resourcePath,
+    required final int displayOrder,
+    required final int isDisplayed,
+    required final List<ExpenseSmallCategoryEntity> expenseSmallCategoryList,
+    required final String expenseSmallCategoryNameText,
+    required final int editedStateDisplayOrder,
+    required final bool etitedStateIsChecked,
+  }) = _$EditExpenseBigCategoryValueImpl;
 
-  @override // 大カテゴリーのEntity
+  // 大カテゴリーのEntity
+  @override
   int get id;
   @override
   String get colorCode;
@@ -352,13 +386,16 @@ abstract class _EditExpenseBigCategoryValue
   @override
   List<ExpenseSmallCategoryEntity> get expenseSmallCategoryList;
   @override
-  String get expenseSmallCategoryNameText;
-  @override // 編集後表示順
-  int get editedStateDisplayOrder;
-  @override // 編集後の表示非表示の設定
-  bool get etitedStateIsChecked;
+  String get expenseSmallCategoryNameText; // 編集後表示順
   @override
-  @JsonKey(ignore: true)
+  int get editedStateDisplayOrder; // 編集後の表示非表示の設定
+  @override
+  bool get etitedStateIsChecked;
+
+  /// Create a copy of EditExpenseBigCategoryValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$EditExpenseBigCategoryValueImplCopyWith<_$EditExpenseBigCategoryValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

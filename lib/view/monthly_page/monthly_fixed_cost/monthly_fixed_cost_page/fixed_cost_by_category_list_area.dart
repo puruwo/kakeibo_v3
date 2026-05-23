@@ -8,6 +8,7 @@ import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_
 /// Local imports
 import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_by_category_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
@@ -17,15 +18,19 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_fixed_c
 // 選択期間を取得し、カテゴリー別固定費のValuesを取得する中間プロバイダ
 final resolvedFixedCostByCategoryProvider =
     FutureProvider<List<MonthlyFixedCostByCategoryGroup>>((ref) async {
-  // 選択された日付から集計期間を取得する
-  final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider
-      .selectAsync((data) => data.monthPeriod));
+      // 選択された日付から集計期間を取得する
+      final monthPeriod = await ref.watch(
+        analyzePageDateScopeEntityProvider.selectAsync(
+          (data) => data.aggregationMonthPeriod,
+        ),
+      );
 
-  // 選択された集計期間を元に、Valuesを取得する
-  final values =
-      ref.watch(monthlyFixedCostByCategoryNotifierProvider(monthPeriod).future);
-  return values;
-});
+      // 選択された集計期間を元に、Valuesを取得する
+      final values = ref.watch(
+        monthlyFixedCostByCategoryNotifierProvider(monthPeriod).future,
+      );
+      return values;
+    });
 
 class FixedCostByCategoryListArea extends ConsumerStatefulWidget {
   const FixedCostByCategoryListArea({super.key});
@@ -47,10 +52,13 @@ class _FixedCostByCategoryListAreaState
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
 
-    return ref.watch(resolvedFixedCostByCategoryProvider).when(
+    return ref
+        .watch(resolvedFixedCostByCategoryProvider)
+        .when(
           data: (categoryGroups) {
             if (categoryGroups.isNotEmpty) {
               return ListView.builder(
+                padding: EdgeInsets.zero,
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: categoryGroups.length,
@@ -68,6 +76,7 @@ class _FixedCostByCategoryListAreaState
                       ),
                       // カテゴリー内の固定費カード
                       ListView.builder(
+                        padding: EdgeInsets.zero,
                         physics: const NeverScrollableScrollPhysics(),
                         shrinkWrap: true,
                         itemCount: group.items.length,
@@ -89,11 +98,10 @@ class _FixedCostByCategoryListAreaState
                 },
               );
             } else {
-              return const Center(
+              return Center(
                 child: Text(
                   '記録がまだありません',
-                  style:
-                      TextStyle(color: MyColors.secondaryLabel, fontSize: 16),
+                  style: AppTextStyles.listEmptyMessage,
                 ),
               );
             }

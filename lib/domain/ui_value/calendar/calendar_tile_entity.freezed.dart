@@ -12,7 +12,8 @@ part of 'calendar_tile_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$CalendarTileEntity {
@@ -25,7 +26,9 @@ mixin _$CalendarTileEntity {
   bool get isWithinAggregationRange => throw _privateConstructorUsedError;
   bool get shouldDisplayMonth => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CalendarTileEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $CalendarTileEntityCopyWith<CalendarTileEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -33,18 +36,20 @@ mixin _$CalendarTileEntity {
 /// @nodoc
 abstract class $CalendarTileEntityCopyWith<$Res> {
   factory $CalendarTileEntityCopyWith(
-          CalendarTileEntity value, $Res Function(CalendarTileEntity) then) =
-      _$CalendarTileEntityCopyWithImpl<$Res, CalendarTileEntity>;
+    CalendarTileEntity value,
+    $Res Function(CalendarTileEntity) then,
+  ) = _$CalendarTileEntityCopyWithImpl<$Res, CalendarTileEntity>;
   @useResult
-  $Res call(
-      {int year,
-      int month,
-      int day,
-      int weekday,
-      int totalExpense,
-      int totalIncome,
-      bool isWithinAggregationRange,
-      bool shouldDisplayMonth});
+  $Res call({
+    int year,
+    int month,
+    int day,
+    int weekday,
+    int totalExpense,
+    int totalIncome,
+    bool isWithinAggregationRange,
+    bool shouldDisplayMonth,
+  });
 }
 
 /// @nodoc
@@ -57,6 +62,8 @@ class _$CalendarTileEntityCopyWithImpl<$Res, $Val extends CalendarTileEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of CalendarTileEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -69,70 +76,78 @@ class _$CalendarTileEntityCopyWithImpl<$Res, $Val extends CalendarTileEntity>
     Object? isWithinAggregationRange = null,
     Object? shouldDisplayMonth = null,
   }) {
-    return _then(_value.copyWith(
-      year: null == year
-          ? _value.year
-          : year // ignore: cast_nullable_to_non_nullable
-              as int,
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as int,
-      day: null == day
-          ? _value.day
-          : day // ignore: cast_nullable_to_non_nullable
-              as int,
-      weekday: null == weekday
-          ? _value.weekday
-          : weekday // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalIncome: null == totalIncome
-          ? _value.totalIncome
-          : totalIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      isWithinAggregationRange: null == isWithinAggregationRange
-          ? _value.isWithinAggregationRange
-          : isWithinAggregationRange // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldDisplayMonth: null == shouldDisplayMonth
-          ? _value.shouldDisplayMonth
-          : shouldDisplayMonth // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            year: null == year
+                ? _value.year
+                : year // ignore: cast_nullable_to_non_nullable
+                      as int,
+            month: null == month
+                ? _value.month
+                : month // ignore: cast_nullable_to_non_nullable
+                      as int,
+            day: null == day
+                ? _value.day
+                : day // ignore: cast_nullable_to_non_nullable
+                      as int,
+            weekday: null == weekday
+                ? _value.weekday
+                : weekday // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalExpense: null == totalExpense
+                ? _value.totalExpense
+                : totalExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalIncome: null == totalIncome
+                ? _value.totalIncome
+                : totalIncome // ignore: cast_nullable_to_non_nullable
+                      as int,
+            isWithinAggregationRange: null == isWithinAggregationRange
+                ? _value.isWithinAggregationRange
+                : isWithinAggregationRange // ignore: cast_nullable_to_non_nullable
+                      as bool,
+            shouldDisplayMonth: null == shouldDisplayMonth
+                ? _value.shouldDisplayMonth
+                : shouldDisplayMonth // ignore: cast_nullable_to_non_nullable
+                      as bool,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$CalendarTileEntityImplCopyWith<$Res>
     implements $CalendarTileEntityCopyWith<$Res> {
-  factory _$$CalendarTileEntityImplCopyWith(_$CalendarTileEntityImpl value,
-          $Res Function(_$CalendarTileEntityImpl) then) =
-      __$$CalendarTileEntityImplCopyWithImpl<$Res>;
+  factory _$$CalendarTileEntityImplCopyWith(
+    _$CalendarTileEntityImpl value,
+    $Res Function(_$CalendarTileEntityImpl) then,
+  ) = __$$CalendarTileEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int year,
-      int month,
-      int day,
-      int weekday,
-      int totalExpense,
-      int totalIncome,
-      bool isWithinAggregationRange,
-      bool shouldDisplayMonth});
+  $Res call({
+    int year,
+    int month,
+    int day,
+    int weekday,
+    int totalExpense,
+    int totalIncome,
+    bool isWithinAggregationRange,
+    bool shouldDisplayMonth,
+  });
 }
 
 /// @nodoc
 class __$$CalendarTileEntityImplCopyWithImpl<$Res>
     extends _$CalendarTileEntityCopyWithImpl<$Res, _$CalendarTileEntityImpl>
     implements _$$CalendarTileEntityImplCopyWith<$Res> {
-  __$$CalendarTileEntityImplCopyWithImpl(_$CalendarTileEntityImpl _value,
-      $Res Function(_$CalendarTileEntityImpl) _then)
-      : super(_value, _then);
+  __$$CalendarTileEntityImplCopyWithImpl(
+    _$CalendarTileEntityImpl _value,
+    $Res Function(_$CalendarTileEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of CalendarTileEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -145,55 +160,58 @@ class __$$CalendarTileEntityImplCopyWithImpl<$Res>
     Object? isWithinAggregationRange = null,
     Object? shouldDisplayMonth = null,
   }) {
-    return _then(_$CalendarTileEntityImpl(
-      year: null == year
-          ? _value.year
-          : year // ignore: cast_nullable_to_non_nullable
-              as int,
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as int,
-      day: null == day
-          ? _value.day
-          : day // ignore: cast_nullable_to_non_nullable
-              as int,
-      weekday: null == weekday
-          ? _value.weekday
-          : weekday // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalIncome: null == totalIncome
-          ? _value.totalIncome
-          : totalIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      isWithinAggregationRange: null == isWithinAggregationRange
-          ? _value.isWithinAggregationRange
-          : isWithinAggregationRange // ignore: cast_nullable_to_non_nullable
-              as bool,
-      shouldDisplayMonth: null == shouldDisplayMonth
-          ? _value.shouldDisplayMonth
-          : shouldDisplayMonth // ignore: cast_nullable_to_non_nullable
-              as bool,
-    ));
+    return _then(
+      _$CalendarTileEntityImpl(
+        year: null == year
+            ? _value.year
+            : year // ignore: cast_nullable_to_non_nullable
+                  as int,
+        month: null == month
+            ? _value.month
+            : month // ignore: cast_nullable_to_non_nullable
+                  as int,
+        day: null == day
+            ? _value.day
+            : day // ignore: cast_nullable_to_non_nullable
+                  as int,
+        weekday: null == weekday
+            ? _value.weekday
+            : weekday // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalExpense: null == totalExpense
+            ? _value.totalExpense
+            : totalExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalIncome: null == totalIncome
+            ? _value.totalIncome
+            : totalIncome // ignore: cast_nullable_to_non_nullable
+                  as int,
+        isWithinAggregationRange: null == isWithinAggregationRange
+            ? _value.isWithinAggregationRange
+            : isWithinAggregationRange // ignore: cast_nullable_to_non_nullable
+                  as bool,
+        shouldDisplayMonth: null == shouldDisplayMonth
+            ? _value.shouldDisplayMonth
+            : shouldDisplayMonth // ignore: cast_nullable_to_non_nullable
+                  as bool,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$CalendarTileEntityImpl implements _CalendarTileEntity {
-  const _$CalendarTileEntityImpl(
-      {required this.year,
-      required this.month,
-      required this.day,
-      required this.weekday,
-      this.totalExpense = 0,
-      this.totalIncome = 0,
-      required this.isWithinAggregationRange,
-      required this.shouldDisplayMonth});
+  const _$CalendarTileEntityImpl({
+    required this.year,
+    required this.month,
+    required this.day,
+    required this.weekday,
+    this.totalExpense = 0,
+    this.totalIncome = 0,
+    required this.isWithinAggregationRange,
+    required this.shouldDisplayMonth,
+  });
 
   @override
   final int year;
@@ -233,34 +251,50 @@ class _$CalendarTileEntityImpl implements _CalendarTileEntity {
             (identical(other.totalIncome, totalIncome) ||
                 other.totalIncome == totalIncome) &&
             (identical(
-                    other.isWithinAggregationRange, isWithinAggregationRange) ||
+                  other.isWithinAggregationRange,
+                  isWithinAggregationRange,
+                ) ||
                 other.isWithinAggregationRange == isWithinAggregationRange) &&
             (identical(other.shouldDisplayMonth, shouldDisplayMonth) ||
                 other.shouldDisplayMonth == shouldDisplayMonth));
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, year, month, day, weekday,
-      totalExpense, totalIncome, isWithinAggregationRange, shouldDisplayMonth);
+  int get hashCode => Object.hash(
+    runtimeType,
+    year,
+    month,
+    day,
+    weekday,
+    totalExpense,
+    totalIncome,
+    isWithinAggregationRange,
+    shouldDisplayMonth,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of CalendarTileEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$CalendarTileEntityImplCopyWith<_$CalendarTileEntityImpl> get copyWith =>
       __$$CalendarTileEntityImplCopyWithImpl<_$CalendarTileEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _CalendarTileEntity implements CalendarTileEntity {
-  const factory _CalendarTileEntity(
-      {required final int year,
-      required final int month,
-      required final int day,
-      required final int weekday,
-      final int totalExpense,
-      final int totalIncome,
-      required final bool isWithinAggregationRange,
-      required final bool shouldDisplayMonth}) = _$CalendarTileEntityImpl;
+  const factory _CalendarTileEntity({
+    required final int year,
+    required final int month,
+    required final int day,
+    required final int weekday,
+    final int totalExpense,
+    final int totalIncome,
+    required final bool isWithinAggregationRange,
+    required final bool shouldDisplayMonth,
+  }) = _$CalendarTileEntityImpl;
 
   @override
   int get year;
@@ -278,8 +312,11 @@ abstract class _CalendarTileEntity implements CalendarTileEntity {
   bool get isWithinAggregationRange;
   @override
   bool get shouldDisplayMonth;
+
+  /// Create a copy of CalendarTileEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$CalendarTileEntityImplCopyWith<_$CalendarTileEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

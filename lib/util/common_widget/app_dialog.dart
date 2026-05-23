@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 
 /// メニューダイアログの各項目を表すデータクラス
@@ -131,8 +130,10 @@ class _MenuItemTile extends StatelessWidget {
       borderRadius = const BorderRadius.only(topLeft: radius, topRight: radius);
     } else if (isLast) {
       // 最後の項目は下部のみ角丸
-      borderRadius =
-          const BorderRadius.only(bottomLeft: radius, bottomRight: radius);
+      borderRadius = const BorderRadius.only(
+        bottomLeft: radius,
+        bottomRight: radius,
+      );
     } else {
       // 中間の項目は角丸なし
       borderRadius = BorderRadius.zero;
@@ -159,10 +160,7 @@ class _MenuItemTile extends StatelessWidget {
               const SizedBox(width: 16),
               // ラベル
               Expanded(
-                child: Text(
-                  item.label,
-                  style: AppTextStyles.dialogList,
-                ),
+                child: Text(item.label, style: AppTextStyles.dialogList),
               ),
             ],
           ),

@@ -7,6 +7,7 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
+import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
 
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
@@ -27,6 +28,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
   late FixedCostCategoryRepository _fixedCostCategoryRepositoryProvider;
   late BudgetRepository _budgetRepositoryProvider;
   late IncomeRepository _incomeRepositoryProvider;
+  late IncomeBigCategoryRepository _incomeBigCategoryRepositoryProvider;
   late IncomeSmallCategoryRepository _incomeSmallCategoryRepositoryProvider;
   late CategoryAccountingRepository _categoryAccountingRepositoryProvider;
 
@@ -44,6 +46,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
         ref.read(fixedCostCategoryRepositoryProvider);
     _budgetRepositoryProvider = ref.read(budgetRepositoryProvider);
     _incomeRepositoryProvider = ref.read(incomeRepositoryProvider);
+    _incomeBigCategoryRepositoryProvider =
+        ref.read(incomeBigCategoryRepositoryProvider);
     _incomeSmallCategoryRepositoryProvider =
         ref.read(incomeSmallCategoryRepositoryProvider);
     _categoryAccountingRepositoryProvider =
@@ -55,8 +59,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
   // 前カテゴリー合計のタイルデータを取得する
   Future<MonthPlanCardModel> fetch({required DateScopeEntity dateScope}) async {
     // 選択した月の集計期間から開始日と終了日を取得する
-    DateTime fromDate = dateScope.monthPeriod.startDatetime;
-    DateTime toDate = dateScope.monthPeriod.endDatetime;
+    DateTime fromDate = dateScope.aggregationMonthPeriod.startDatetime;
+    DateTime toDate = dateScope.aggregationMonthPeriod.endDatetime;
 
     // 支払いがある固定費の合計を取得
     // 支払額未定の固定費は推定額を使用する
@@ -103,18 +107,23 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // 固定費のカテゴリーリストを取得する
     final fixedCostCategoryList =
         await _fixedCostCategoryRepositoryProvider.fetchAll();
+    // 固定費カテゴリーの予算用データ
+    List<String> fixedCostBudgetNameList = [];
+    List<int> fixedCostBudgetAmountList = [];
+    List<String> fixedCostBudgetIconPathList = [];
+    List<String> fixedCostBudgetColorList = [];
     // 各カテゴリーの固定費を取得する
     for (var e in fixedCostCategoryList) {
       // 各カテゴリーの確定分固定費を取得する
       final confirmedFixedCostExpense =
           await _fixedCostExpenseRepositoryProvider
               .fetchTotalConfirmedFixedCostExpenseWithPeriodAndCategory(
-                  period: dateScope.monthPeriod, fixedCostCategoryId: e.id);
+                  period: dateScope.aggregationMonthPeriod, fixedCostCategoryId: e.id);
 
       // 各カテゴリーの未確定固定費を取得する
       final unconfirmedFixedCostList = await _fixedCostExpenseRepositoryProvider
           .fetchUnconfirmedFixedCostExpenseWithPeriodAndCategory(
-              period: dateScope.monthPeriod, fixedCostCategoryId: e.id);
+              period: dateScope.aggregationMonthPeriod, fixedCostCategoryId: e.id);
       // 未確定支出に対して推定支出を取得する
       final unconfirmedFixedCostEstimated = await Future.wait(
           unconfirmedFixedCostList.map((element) async {
@@ -124,11 +133,21 @@ class MonthlyAllCategoryTileUsecaseNotifier
       })).then((values) => values.fold<int>(
           0, (previousValue, estimatePrice) => previousValue + estimatePrice));
 
+      final fixedCostCategoryTotal =
+          confirmedFixedCostExpense + unconfirmedFixedCostEstimated;
+
       categoryNameList.add(e.categoryName);
-      categoryExpenseList
-          .add(confirmedFixedCostExpense + unconfirmedFixedCostEstimated);
+      categoryExpenseList.add(fixedCostCategoryTotal);
       categoryIconPathList.add(e.resourcePath);
       categoryColorList.add(e.colorCode);
+
+      // 予算カテゴリー用にも保持
+      if (fixedCostCategoryTotal > 0) {
+        fixedCostBudgetNameList.add(e.categoryName);
+        fixedCostBudgetAmountList.add(fixedCostCategoryTotal);
+        fixedCostBudgetIconPathList.add(e.resourcePath);
+        fixedCostBudgetColorList.add(e.colorCode);
+      }
     }
 
     // ============================================
@@ -137,7 +156,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // ボーナス除くカテゴリーの収入のみ取得する
     final allCategoryIncome =
         await _incomeRepositoryProvider.calcurateSumWithBigCategoryAndPeriod(
-            period: dateScope.monthPeriod,
+            period: dateScope.aggregationMonthPeriod,
             bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
 
     // 固定費も一般支出も全て足した支出
@@ -245,6 +264,14 @@ class MonthlyAllCategoryTileUsecaseNotifier
     final incomeSmallCategoryList =
         await _incomeSmallCategoryRepositoryProvider.fetchAll();
 
+    // 収入大カテゴリー一覧を取得し、ID→カラーコードのマップを構築
+    final incomeBigCategoryList =
+        await _incomeBigCategoryRepositoryProvider.fetchAll();
+    final Map<int, String> incomeBigCategoryColorMap = {
+      for (var bigCategory in incomeBigCategoryList)
+        bigCategory.id: bigCategory.colorCode,
+    };
+
     // カテゴリー別の収入を集計
     List<String> incomeCategoryNameList = [];
     List<int> incomeCategoryIncomeList = [];
@@ -261,7 +288,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
       // カテゴリー別の収入合計をrepository経由で取得
       final int totalIncome = await _incomeRepositoryProvider
           .calcurateSumWithSmallCategoryAndPeriod(
-        period: dateScope.monthPeriod,
+        period: dateScope.aggregationMonthPeriod,
         smallCategoryId: category.id,
       );
 
@@ -271,10 +298,39 @@ class MonthlyAllCategoryTileUsecaseNotifier
         // 収入カテゴリーにはアイコンがないので、デフォルトのアイコンパスを設定
         incomeCategoryIconPathList
             .add('assets/images/category_icon/income.svg');
-        // 収入カテゴリーにはカラーがないので、デフォルトカラーを設定
-        incomeCategoryColorList.add('36C5F1');
+        // 親大カテゴリーのカラーコードを適用
+        incomeCategoryColorList
+            .add(incomeBigCategoryColorMap[category.bigCategoryKey] ?? '');
       }
     }
+
+    // ============================================
+    // 予算カテゴリー別の集計
+    // ============================================
+    List<String> budgetCategoryNameList = [];
+    List<int> budgetCategoryAmountList = [];
+    List<String> budgetCategoryIconPathList = [];
+    List<String> budgetCategoryColorList = [];
+
+    // 一般カテゴリーの予算を取得
+    for (var category in categoryEntityList) {
+      final budgetEntity =
+          await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
+              month: dateScope.representativeMonth,
+              expenseBigCategoryId: category.id);
+      if (budgetEntity.price > 0) {
+        budgetCategoryNameList.add(category.bigCategoryName);
+        budgetCategoryAmountList.add(budgetEntity.price);
+        budgetCategoryIconPathList.add(category.categoryIconPath);
+        budgetCategoryColorList.add(category.categoryColor);
+      }
+    }
+
+    // 固定費カテゴリーの予算（固定費の実際/推定コストが予算に相当）
+    budgetCategoryNameList.addAll(fixedCostBudgetNameList);
+    budgetCategoryAmountList.addAll(fixedCostBudgetAmountList);
+    budgetCategoryIconPathList.addAll(fixedCostBudgetIconPathList);
+    budgetCategoryColorList.addAll(fixedCostBudgetColorList);
 
     // ============================================
     // 棒グラフの長さを決める
@@ -316,6 +372,10 @@ class MonthlyAllCategoryTileUsecaseNotifier
       incomeCategoryRatioList: incomeCategoryIncomeRatioList,
       incomeCategoryIconPathList: incomeCategoryIconPathList,
       incomeCategoryColorList: incomeCategoryColorList,
+      budgetCategoryNameList: budgetCategoryNameList,
+      budgetCategoryList: budgetCategoryAmountList,
+      budgetCategoryIconPathList: budgetCategoryIconPathList,
+      budgetCategoryColorList: budgetCategoryColorList,
     );
   }
 }

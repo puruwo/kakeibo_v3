@@ -12,10 +12,12 @@ part of 'small_category_tile_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 SmallCategoryTileEntity _$SmallCategoryTileEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _SmallCategoryTileEntity.fromJson(json);
 }
 
@@ -27,29 +29,37 @@ mixin _$SmallCategoryTileEntity {
   int get totalExpenseBySmallCategory => throw _privateConstructorUsedError;
   int get recordCount => throw _privateConstructorUsedError;
 
+  /// Serializes this SmallCategoryTileEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of SmallCategoryTileEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $SmallCategoryTileEntityCopyWith<SmallCategoryTileEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $SmallCategoryTileEntityCopyWith<$Res> {
-  factory $SmallCategoryTileEntityCopyWith(SmallCategoryTileEntity value,
-          $Res Function(SmallCategoryTileEntity) then) =
-      _$SmallCategoryTileEntityCopyWithImpl<$Res, SmallCategoryTileEntity>;
+  factory $SmallCategoryTileEntityCopyWith(
+    SmallCategoryTileEntity value,
+    $Res Function(SmallCategoryTileEntity) then,
+  ) = _$SmallCategoryTileEntityCopyWithImpl<$Res, SmallCategoryTileEntity>;
   @useResult
-  $Res call(
-      {int id,
-      int displeyOrder,
-      String smallCategoryName,
-      int totalExpenseBySmallCategory,
-      int recordCount});
+  $Res call({
+    int id,
+    int displeyOrder,
+    String smallCategoryName,
+    int totalExpenseBySmallCategory,
+    int recordCount,
+  });
 }
 
 /// @nodoc
-class _$SmallCategoryTileEntityCopyWithImpl<$Res,
-        $Val extends SmallCategoryTileEntity>
+class _$SmallCategoryTileEntityCopyWithImpl<
+  $Res,
+  $Val extends SmallCategoryTileEntity
+>
     implements $SmallCategoryTileEntityCopyWith<$Res> {
   _$SmallCategoryTileEntityCopyWithImpl(this._value, this._then);
 
@@ -58,6 +68,8 @@ class _$SmallCategoryTileEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of SmallCategoryTileEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -67,28 +79,31 @@ class _$SmallCategoryTileEntityCopyWithImpl<$Res,
     Object? totalExpenseBySmallCategory = null,
     Object? recordCount = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      displeyOrder: null == displeyOrder
-          ? _value.displeyOrder
-          : displeyOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalExpenseBySmallCategory: null == totalExpenseBySmallCategory
-          ? _value.totalExpenseBySmallCategory
-          : totalExpenseBySmallCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-      recordCount: null == recordCount
-          ? _value.recordCount
-          : recordCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            displeyOrder: null == displeyOrder
+                ? _value.displeyOrder
+                : displeyOrder // ignore: cast_nullable_to_non_nullable
+                      as int,
+            smallCategoryName: null == smallCategoryName
+                ? _value.smallCategoryName
+                : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            totalExpenseBySmallCategory: null == totalExpenseBySmallCategory
+                ? _value.totalExpenseBySmallCategory
+                : totalExpenseBySmallCategory // ignore: cast_nullable_to_non_nullable
+                      as int,
+            recordCount: null == recordCount
+                ? _value.recordCount
+                : recordCount // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -96,29 +111,35 @@ class _$SmallCategoryTileEntityCopyWithImpl<$Res,
 abstract class _$$SmallCategoryTileEntityImplCopyWith<$Res>
     implements $SmallCategoryTileEntityCopyWith<$Res> {
   factory _$$SmallCategoryTileEntityImplCopyWith(
-          _$SmallCategoryTileEntityImpl value,
-          $Res Function(_$SmallCategoryTileEntityImpl) then) =
-      __$$SmallCategoryTileEntityImplCopyWithImpl<$Res>;
+    _$SmallCategoryTileEntityImpl value,
+    $Res Function(_$SmallCategoryTileEntityImpl) then,
+  ) = __$$SmallCategoryTileEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int displeyOrder,
-      String smallCategoryName,
-      int totalExpenseBySmallCategory,
-      int recordCount});
+  $Res call({
+    int id,
+    int displeyOrder,
+    String smallCategoryName,
+    int totalExpenseBySmallCategory,
+    int recordCount,
+  });
 }
 
 /// @nodoc
 class __$$SmallCategoryTileEntityImplCopyWithImpl<$Res>
-    extends _$SmallCategoryTileEntityCopyWithImpl<$Res,
-        _$SmallCategoryTileEntityImpl>
+    extends
+        _$SmallCategoryTileEntityCopyWithImpl<
+          $Res,
+          _$SmallCategoryTileEntityImpl
+        >
     implements _$$SmallCategoryTileEntityImplCopyWith<$Res> {
   __$$SmallCategoryTileEntityImplCopyWithImpl(
-      _$SmallCategoryTileEntityImpl _value,
-      $Res Function(_$SmallCategoryTileEntityImpl) _then)
-      : super(_value, _then);
+    _$SmallCategoryTileEntityImpl _value,
+    $Res Function(_$SmallCategoryTileEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of SmallCategoryTileEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -128,40 +149,43 @@ class __$$SmallCategoryTileEntityImplCopyWithImpl<$Res>
     Object? totalExpenseBySmallCategory = null,
     Object? recordCount = null,
   }) {
-    return _then(_$SmallCategoryTileEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      displeyOrder: null == displeyOrder
-          ? _value.displeyOrder
-          : displeyOrder // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      totalExpenseBySmallCategory: null == totalExpenseBySmallCategory
-          ? _value.totalExpenseBySmallCategory
-          : totalExpenseBySmallCategory // ignore: cast_nullable_to_non_nullable
-              as int,
-      recordCount: null == recordCount
-          ? _value.recordCount
-          : recordCount // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$SmallCategoryTileEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        displeyOrder: null == displeyOrder
+            ? _value.displeyOrder
+            : displeyOrder // ignore: cast_nullable_to_non_nullable
+                  as int,
+        smallCategoryName: null == smallCategoryName
+            ? _value.smallCategoryName
+            : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        totalExpenseBySmallCategory: null == totalExpenseBySmallCategory
+            ? _value.totalExpenseBySmallCategory
+            : totalExpenseBySmallCategory // ignore: cast_nullable_to_non_nullable
+                  as int,
+        recordCount: null == recordCount
+            ? _value.recordCount
+            : recordCount // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SmallCategoryTileEntityImpl implements _SmallCategoryTileEntity {
-  const _$SmallCategoryTileEntityImpl(
-      {this.id = 0,
-      this.displeyOrder = 0,
-      required this.smallCategoryName,
-      this.totalExpenseBySmallCategory = 0,
-      this.recordCount = 0});
+  const _$SmallCategoryTileEntityImpl({
+    this.id = 0,
+    this.displeyOrder = 0,
+    required this.smallCategoryName,
+    this.totalExpenseBySmallCategory = 0,
+    this.recordCount = 0,
+  });
 
   factory _$SmallCategoryTileEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$SmallCategoryTileEntityImplFromJson(json);
@@ -196,41 +220,52 @@ class _$SmallCategoryTileEntityImpl implements _SmallCategoryTileEntity {
                 other.displeyOrder == displeyOrder) &&
             (identical(other.smallCategoryName, smallCategoryName) ||
                 other.smallCategoryName == smallCategoryName) &&
-            (identical(other.totalExpenseBySmallCategory,
-                    totalExpenseBySmallCategory) ||
+            (identical(
+                  other.totalExpenseBySmallCategory,
+                  totalExpenseBySmallCategory,
+                ) ||
                 other.totalExpenseBySmallCategory ==
                     totalExpenseBySmallCategory) &&
             (identical(other.recordCount, recordCount) ||
                 other.recordCount == recordCount));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, displeyOrder,
-      smallCategoryName, totalExpenseBySmallCategory, recordCount);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    displeyOrder,
+    smallCategoryName,
+    totalExpenseBySmallCategory,
+    recordCount,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of SmallCategoryTileEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SmallCategoryTileEntityImplCopyWith<_$SmallCategoryTileEntityImpl>
-      get copyWith => __$$SmallCategoryTileEntityImplCopyWithImpl<
-          _$SmallCategoryTileEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$SmallCategoryTileEntityImplCopyWithImpl<
+        _$SmallCategoryTileEntityImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SmallCategoryTileEntityImplToJson(
-      this,
-    );
+    return _$$SmallCategoryTileEntityImplToJson(this);
   }
 }
 
 abstract class _SmallCategoryTileEntity implements SmallCategoryTileEntity {
-  const factory _SmallCategoryTileEntity(
-      {final int id,
-      final int displeyOrder,
-      required final String smallCategoryName,
-      final int totalExpenseBySmallCategory,
-      final int recordCount}) = _$SmallCategoryTileEntityImpl;
+  const factory _SmallCategoryTileEntity({
+    final int id,
+    final int displeyOrder,
+    required final String smallCategoryName,
+    final int totalExpenseBySmallCategory,
+    final int recordCount,
+  }) = _$SmallCategoryTileEntityImpl;
 
   factory _SmallCategoryTileEntity.fromJson(Map<String, dynamic> json) =
       _$SmallCategoryTileEntityImpl.fromJson;
@@ -245,8 +280,11 @@ abstract class _SmallCategoryTileEntity implements SmallCategoryTileEntity {
   int get totalExpenseBySmallCategory;
   @override
   int get recordCount;
+
+  /// Create a copy of SmallCategoryTileEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SmallCategoryTileEntityImplCopyWith<_$SmallCategoryTileEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

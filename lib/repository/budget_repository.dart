@@ -37,6 +37,15 @@ class ImplementsBudgetRepository implements BudgetRepository {
       // logger.i(
       //     '====SQLが実行されました====\n ImplementsBudgetRepository fetchMonthlyByBigCategory()\n$sql');
 
+      // クエリ結果が空の場合はデフォルト値を返す
+      if (jsonList.isEmpty) {
+        return BudgetEntity(
+            id: -1,
+            expenseBigCategoryId: expenseBigCategoryId,
+            month: month.month,
+            price: 0);
+      }
+
       final result = BudgetEntity.fromJson(jsonList[0]);
 
       return result;

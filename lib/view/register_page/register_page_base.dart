@@ -3,9 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
@@ -16,6 +14,10 @@ import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_pa
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class RegisaterPageBase extends ConsumerStatefulWidget {
@@ -101,6 +103,11 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
       ref
           .read(inputModeControllerProvider.notifier)
           .initialize(widget.transactionMode);
+      // 最初のフレームで各入力フィールドが初期化された後、フラグを立てる
+      // これにより、pill切り替え時は入力値が保持される
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(inputInitializedControllerProvider.notifier).state = true;
+      });
     });
 
     super.initState();
@@ -114,7 +121,14 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
   @override
   Widget build(BuildContext context) {
-    //レイアウト------------------------------------------------------------------------------------
+    // 入力プロバイダーをここで監視することで、pill切り替え時に破棄されないようにする
+    // autoDisposeプロバイダーは監視しているウィジェットがなくなると破棄されるため、
+    // 親ウィジェットで監視を維持する必要がある
+    ref.watch(enteredPriceControllerProvider);
+    ref.watch(enteredMemoControllerProvider);
+    ref.watch(inputDateControllerNotifierProvider);
+    // 初期化フラグも監視して維持する（autoDisposeのため）
+    ref.watch(inputInitializedControllerProvider);
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -122,16 +136,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         backgroundColor: MyColors.secondarySystemBackground,
 
         appBar: AppBar(
-          // ヘッダーの色
-          backgroundColor: MyColors.secondarySystemBackground,
-
-          // ヘッダーの形
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(10),
-              topRight: Radius.circular(10),
-            ),
-          ),
+          backgroundColor: Colors.transparent,
           title: SizedBox(
             child: Text(
               widget.registerMode == RegisterScreenMode.add ? '記録' : '編集',
@@ -142,6 +147,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           //ヘッダーの左ボタン
           leading: IconButton(
             onPressed: () {
+              _clearInputState();
               Navigator.of(context, rootNavigator: true).pop();
             },
             icon: const Icon(
@@ -169,10 +175,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         body: AnimatedSwitcher(
           duration: const Duration(milliseconds: 200),
           transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: child,
-            );
+            return FadeTransition(opacity: animation, child: child);
           },
           child: _buildPageByMode(ref.watch(inputModeControllerProvider)),
         ),
@@ -185,22 +188,22 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
   Widget _buildPageByMode(TransactionMode mode) {
     return switch (mode) {
       TransactionMode.expense => RegisterExpensePage(
-          key: const ValueKey('expense'),
-          mode: widget.registerMode,
-          expenseEntity: widget.expenseEntity,
-        ),
+        key: const ValueKey('expense'),
+        mode: widget.registerMode,
+        expenseEntity: widget.expenseEntity,
+      ),
       TransactionMode.fixedCost => RegisterFixedCostPage(
-          key: const ValueKey('fixedCost'),
-          mode: widget.registerMode,
-          fixedCostEntity: widget.fixedCostEntity,
-          isAppBarVisible: false,
-        ),
+        key: const ValueKey('fixedCost'),
+        mode: widget.registerMode,
+        fixedCostEntity: widget.fixedCostEntity,
+        isAppBarVisible: false,
+      ),
       TransactionMode.income => RegisterIncomePage(
-          key: const ValueKey('income'),
-          mode: widget.registerMode,
-          incomeEntity: widget.incomeEntity,
-          isTabVisible: false,
-        ),
+        key: const ValueKey('income'),
+        mode: widget.registerMode,
+        incomeEntity: widget.incomeEntity,
+        isTabVisible: false,
+      ),
     };
   }
 
@@ -241,8 +244,9 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
           }
           break;
       }
-      // 削除成功後、画面を閉じる
+      // 削除成功後、入力状態をクリアして画面を閉じる
       if (mounted) {
+        _clearInputState();
         Navigator.of(context, rootNavigator: true).pop();
       }
     } catch (e) {
@@ -254,5 +258,14 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
         );
       }
     }
+  }
+
+  /// 入力状態をクリアする
+  /// 画面を閉じる際や登録完了後に呼び出して、次回表示時に値がリセットされるようにする
+  void _clearInputState() {
+    ref.invalidate(enteredPriceControllerProvider);
+    ref.invalidate(enteredMemoControllerProvider);
+    ref.invalidate(inputDateControllerNotifierProvider);
+    ref.invalidate(inputInitializedControllerProvider);
   }
 }

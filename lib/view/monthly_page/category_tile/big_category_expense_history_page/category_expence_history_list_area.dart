@@ -5,6 +5,7 @@ import 'package:kakeibo/constant/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 // DateTimeの日本語対応
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -105,8 +106,7 @@ class _CategoryExpenceHistoryArea
                           child: Text(
                               DateFormat('yyyy年M月d日(E)', 'ja_JP')
                                   .format(tileGroupList[index].date),
-                              style: HistoryListStyles
-                                  .expenseHistoryDateHeaderLabel),
+                              style: AppTextStyles.listTileSectionTitle),
                         ),
                         //右余白
                       ],

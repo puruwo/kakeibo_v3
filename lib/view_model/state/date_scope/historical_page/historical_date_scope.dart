@@ -4,6 +4,7 @@ import 'package:kakeibo/domain_service/month_period_service/period_status_servic
 import 'package:kakeibo/domain_service/year_period_service/aggregation_representative_year_service.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
+import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
@@ -21,11 +22,14 @@ class HistoricalDateScopeNotifier extends AsyncNotifier<DateScopeEntity> {
 
     // 月の期間を取得する
     final monthService = ref.read(monthPeriodServiceProvider);
-    final monthPeriod = await monthService.fetchMonthPeriod(selectedDate);
+    final aggregationMonthPeriod = await monthService.fetchMonthPeriod(selectedDate);
 
     // 集計期間内の代表月を取得する
     final aRMService = ref.read(aggregationRepresentativeMonthServiceProvider);
     final representativeMonth = await aRMService.fetchMonth(selectedDate);
+
+    // 月の始まりから月末までの期間を取得する
+    final displayMonthPeriod = selectedDate.getMonthPeriod();
 
     // 年の期間を取得する
     final yearService = ref.read(yearPeriodServiceProvider);
@@ -46,7 +50,8 @@ class HistoricalDateScopeNotifier extends AsyncNotifier<DateScopeEntity> {
 
     return DateScopeEntity(
       selectedDate: selectedDate,
-      monthPeriod: monthPeriod,
+      aggregationMonthPeriod: aggregationMonthPeriod,
+      displayMonthPeriod: displayMonthPeriod,
       monthIndex: monthIndex,
       representativeMonth: representativeMonth,
       yearPeriod: yearPeriod,

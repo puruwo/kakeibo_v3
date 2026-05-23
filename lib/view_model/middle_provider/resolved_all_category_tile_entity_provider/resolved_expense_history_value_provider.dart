@@ -12,7 +12,7 @@ final resolvedCategoryExpenseHistoryDigestValueProvider =
         (ref, bigId) async {
   // 選択された日付から集計期間を取得する
   final monthPeriodValue = await ref.watch(analyzePageDateScopeEntityProvider
-      .selectAsync((data) => data.monthPeriod));
+      .selectAsync((data) => data.aggregationMonthPeriod));
 
   final request = RequestBigExpenseHistory(
     bigId: bigId,
@@ -30,7 +30,7 @@ final resolvedSmallCategoryExpenseHistoryDigestValueProvider =
         (ref, smallId) async {
   // 選択された日付から集計期間を取得する
   final monthPeriodValue = await ref.watch(analyzePageDateScopeEntityProvider
-      .selectAsync((data) => data.monthPeriod));
+      .selectAsync((data) => data.aggregationMonthPeriod));
 
   final request = RequestSmallExpenseHistory(
     smallId: smallId,

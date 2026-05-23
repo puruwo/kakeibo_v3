@@ -1,12 +1,13 @@
-import 'dart:math';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
 import 'package:kakeibo/view/component/card_container.dart';
+import 'package:kakeibo/view/year_page/annual_balance_chart/parts/annual_balance_chart_painter.dart';
+import 'package:kakeibo/view/year_page/annual_balance_chart/parts/annual_balance_tooltip.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
+import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
 
 class AnnualBalanceChart extends ConsumerStatefulWidget {
   const AnnualBalanceChart({super.key});
@@ -18,9 +19,12 @@ class AnnualBalanceChart extends ConsumerStatefulWidget {
 
 class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
   final ScrollController _scrollController = ScrollController(
-    initialScrollOffset: 0.0, // 初期スクロール位置を設定
-    keepScrollOffset: false, // スクロール位置を保持する
+    initialScrollOffset: 0.0,
+    keepScrollOffset: false,
   );
+
+  int? _selectedMonthIndex;
+  bool _didInitialScroll = false;
 
   @override
   void dispose() {
@@ -31,466 +35,207 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
   @override
   Widget build(BuildContext context) {
     return ref.watch(resolvedAnnualBalanceChartValueProvider).when(
-      data: (chartData) {
-        // チャートのデータがない場合の処理
-        if (chartData.hasNoRecord) {
-          return CardContainer(
-            width: double.infinity,
-            height: 30,
-            child: Center(
-              child: Text(
-                'まだ記録がありません',
-                style: MonthlyPageStyles.topCardSubYenLabel,
-              ),
-            ),
-          );
-        }
+          data: (chartData) {
+            if (chartData.hasNoRecord) {
+              return CardContainer(
+                width: double.infinity,
+                height: 30,
+                child: Center(
+                  child: Text('まだ記録がありません', style: AppTextStyles.errorMessage),
+                ),
+              );
+            }
 
-        // 収入のリストを作成
-        // 未来の収入はリストに格納しない
-        final List<double> income = [
-          for (int i = 0; i < chartData.monthlyBalanceValues.length; i++)
-            if (chartData.monthlyBalanceValues[i].monthlyBalanceType !=
-                MonthlyBalanceType.future)
-              chartData.monthlyBalanceValues[i].monthlyIncome.toDouble()
-        ];
+            // 初期スクロール位置の設定（初回の build 時のみ実行）
+            if (!_didInitialScroll) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!_scrollController.hasClients) return;
+                if (_didInitialScroll) return;
+                _didInitialScroll = true;
+                final pos = _scrollController.position;
+                if (chartData.monthIndex <= 3) {
+                  _scrollController.animateTo(
+                    pos.minScrollExtent,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                } else if (chartData.monthIndex <= 7) {
+                  _scrollController.animateTo(
+                    pos.maxScrollExtent / 2,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                } else {
+                  _scrollController.animateTo(
+                    pos.maxScrollExtent,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                }
+              });
+            }
 
-        // 支出のリストを作成
-        // 未来の支出はリストに格納しない
-        final List<double> expense = [
-          for (int i = 0; i < chartData.monthlyBalanceValues.length; i++)
-            if (chartData.monthlyBalanceValues[i].monthlyBalanceType !=
-                MonthlyBalanceType.future)
-              chartData.monthlyBalanceValues[i].monthlyExpense.toDouble()
-        ];
+            // データの黒字/赤字有無から動的にバー領域の高さを決定する
+            final dimensions = AnnualBalanceChartDimensions.from(
+              chartData.monthlyBalanceValues,
+            );
 
-        // エリアの幅
-        const scrollAreaWidth = 700.0;
-
-        const horizontalPadding = 8.0;
-
-        // 描画可能エリアの幅
-        const double drawingAreaWidth = scrollAreaWidth - horizontalPadding * 2;
-
-        // 棒グラフエリアの高さ
-        const barGraphHeight = 60.0;
-        // 棒グラフの中央線の位置
-        const barCenterLinePosition = barGraphHeight / 2;
-        // 棒グラフの最大高さ
-        const maxBarHeight = barGraphHeight / 2 - 10.0;
-
-        // グラフのメモリ表示スペース
-        const reservedSize = 24.0;
-
-        // チャートエリアの幅
-        const chartAreaWidth = drawingAreaWidth - reservedSize;
-
-        // 差分を計算
-        final differences = [
-          for (int i = 0; i < chartData.monthlyBalanceValues.length; i++)
-            if (chartData.monthlyBalanceValues[i].monthlyBalanceType !=
-                MonthlyBalanceType.future)
-              chartData.monthlyBalanceValues[i].savings.toDouble()
-        ];
-
-        // 差の絶対値の最大値を計算
-        final maxDifference = differences.map((e) => e.abs()).reduce(max);
-
-        // グラフの最小値と最大値を計算
-        final minY = (income + expense).reduce(min);
-        final maxY = (income + expense).reduce(max);
-        final maxMinDifference = (maxY - minY).abs(); // 最大値と最小値の差を計算
-
-        // グリッドの間隔
-        double verticalInterval;
-        if (maxMinDifference >= 100000.0) {
-          // 100万以上の差分がある場合は、グリッドの間隔を10万に設定
-          verticalInterval = 100000.0;
-        } else if (maxMinDifference >= 50000.0) {
-          // 10万以上の差分がある場合は、グリッドの間
-          verticalInterval = 50000.0;
-        } else if (maxMinDifference >= 10000.0) {
-          // 5万以上の差分がある場合は、グリッドの間隔を1万に設定
-          verticalInterval = 20000.0;
-        } else {
-          // 1万以上の差分がある場合は、グリッドの間
-          verticalInterval = 10000.0;
-        }
-
-        // 棒グラフのバーの幅
-        const barWidth = 25.0;
-
-        // チャートエリアのマージン
-        final topMargin = (verticalInterval / 3) * maxMinDifference / 100000.0;
-        final bottomMargin =
-            (verticalInterval / 2) * maxMinDifference / 100000.0;
-        const lewtMargin = 0.3;
-        const rightMargin = 0.3;
-
-        // 一つのセルの幅を計算
-        const cellWidth = chartAreaWidth / (11 + lewtMargin + rightMargin);
-        const firstCellWidth = cellWidth * (0.5 + lewtMargin);
-        const endCellWidth = cellWidth * (0.5 + rightMargin);
-
-        // 初期スクロール位置を設定するために、ビルド後にコールバックを追加
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (chartData.monthIndex <= 3) {
-            _scrollController.animateTo(
-                _scrollController.position.minScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
-          } else if (4 <= chartData.monthIndex && chartData.monthIndex <= 7) {
-            _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent / 2,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
-          } else if (8 <= chartData.monthIndex && chartData.monthIndex <= 11) {
-            _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
-          } else {
-            _scrollController.animateTo(
-                _scrollController.position.minScrollExtent,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
-          }
-        });
-
-        return CardContainer(
-          width: scrollAreaWidth,
-          child: SingleChildScrollView(
-            controller: _scrollController,
-            scrollDirection: Axis.horizontal,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+            return CardContainer(
+              width: AnnualBalanceChartLayout.scrollAreaWidth,
+              child: Stack(
                 children: [
-                  // 折れ線＋バーエリア
-                  SizedBox(
-                    width: drawingAreaWidth,
-                    height: 150,
-                    child: Stack(
-                      children: [
-                        LineChart(
-                          LineChartData(
-                            borderData: FlBorderData(show: false), //グラフの枠線を非表示
-                            minX: 0 - lewtMargin,
-                            maxX: 11 + rightMargin,
-                            minY: minY - bottomMargin,
-                            maxY: maxY + topMargin,
-
-                            // タッチした時のポップアップを消去
-                            lineTouchData: const LineTouchData(
-                              enabled: false,
-                            ),
-
-                            // グリッド
-                            gridData: FlGridData(
-                              show: true,
-                              drawVerticalLine: false,
-                              drawHorizontalLine: true,
-                              horizontalInterval: verticalInterval,
-                              getDrawingHorizontalLine: (value) {
-                                // 最大値、最小値の一つ外のグリッドから内側を表示
-                                if ((value >= minY - verticalInterval ||
-                                        value <= maxY + verticalInterval) &&
-                                    value >= 0) {
-                                  return const FlLine(
-                                    color: MyColors.separater,
-                                    strokeWidth: 1,
-                                  );
-                                }
-                                // それ以外は表示
-                                return const FlLine(
-                                  color: MyColors.transparent,
-                                  strokeWidth: 1,
-                                );
-                              },
-                            ),
-
-                            // 左側のタイトルプロパティ
-                            titlesData: FlTitlesData(
-                              leftTitles: AxisTitles(
-                                sideTitles: SideTitles(
-                                  showTitles: true,
-                                  interval: verticalInterval,
-                                  reservedSize: reservedSize,
-                                  getTitlesWidget: (value, meta) {
-                                    // メモリの値が最大値か最小値と同じ場合は非表示
-                                    if (value == meta.max ||
-                                        value == meta.min) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    // 最大値と最小値の幅より外は非表示
-                                    if (value < minY - verticalInterval ||
-                                        value > maxY + verticalInterval) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    // マイナスのときは非表示
-                                    if (value < 0) {
-                                      return const SizedBox.shrink();
-                                    }
-                                    // それ以外の時は二桁に丸めて表示
-                                    return Text(
-                                        '${(value / 10000).truncate()}万',
-                                        style: AnnualBalanceStyles
-                                            .annualBalanceChartPageVerticalLabel);
-                                  },
+                  // スクロール可能な本体グラフ（グリッド / 折れ線 / 棒 / 月ラベル）
+                  SingleChildScrollView(
+                    controller: _scrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AnnualBalanceChartLayout.horizontalPadding,
+                        vertical: 16.0,
+                      ),
+                      child: SizedBox(
+                        width: AnnualBalanceChartLayout.drawingAreaWidth,
+                        height: dimensions.totalHeight,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            GestureDetector(
+                              behavior: HitTestBehavior.opaque,
+                              onTapDown: (details) => _updateSelection(
+                                details.localPosition,
+                                chartData.monthlyBalanceValues,
+                                dimensions,
+                              ),
+                              onLongPressStart: (details) => _updateSelection(
+                                details.localPosition,
+                                chartData.monthlyBalanceValues,
+                                dimensions,
+                              ),
+                              onLongPressMoveUpdate: (details) =>
+                                  _updateSelection(
+                                details.localPosition,
+                                chartData.monthlyBalanceValues,
+                                dimensions,
+                              ),
+                              child: CustomPaint(
+                                size: Size(
+                                  AnnualBalanceChartLayout.drawingAreaWidth,
+                                  dimensions.totalHeight,
+                                ),
+                                painter: AnnualBalanceChartPainter(
+                                  value: chartData,
+                                  selectedMonthIndex: _selectedMonthIndex,
+                                  dimensions: dimensions,
                                 ),
                               ),
-                              // 下側のタイトルは非表示
-                              bottomTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              // 上側のタイトルは非表示
-                              topTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
-                              // 右側のタイトルは非表示
-                              rightTitles: const AxisTitles(
-                                sideTitles: SideTitles(showTitles: false),
-                              ),
                             ),
-
-                            // 線グラフ
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: [
-                                  // 未来の収支は表示しない
-                                  for (int i = 0;
-                                      i < chartData.monthlyBalanceValues.length;
-                                      i++)
-                                    if (chartData.monthlyBalanceValues[i]
-                                            .monthlyBalanceType !=
-                                        MonthlyBalanceType.future)
-                                      FlSpot(
-                                        i.toDouble(),
-                                        chartData.monthlyBalanceValues[i]
-                                            .monthlyIncome
-                                            .toDouble(),
-                                      )
-                                ],
-                                isCurved: false,
-                                color: MyColors.mintBlue,
-                                barWidth: 2,
-                                dotData: const FlDotData(show: true),
+                            if (_selectedMonthIndex != null)
+                              _buildTooltip(
+                                chartData.monthlyBalanceValues[
+                                    _selectedMonthIndex!],
                               ),
-                              LineChartBarData(
-                                spots: [
-                                  for (int i = 0;
-                                      i < chartData.monthlyBalanceValues.length;
-                                      i++)
-                                    if (chartData.monthlyBalanceValues[i]
-                                            .monthlyBalanceType !=
-                                        MonthlyBalanceType.future)
-                                      FlSpot(
-                                        i.toDouble(),
-                                        chartData.monthlyBalanceValues[i]
-                                            .monthlyExpense
-                                            .toDouble(),
-                                      )
-                                ],
-                                isCurved: false,
-                                color: MyColors.pink,
-                                barWidth: 2,
-                                dotData: const FlDotData(show: true),
-                              ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  // 固定表示の Y軸ラベルオーバーレイ（左端は CardContainer と同色、右に向けてフェードアウト）
+                  Positioned(
+                    left: 0,
+                    top: 16.0,
+                    width: AnnualBalanceChartLayout.reservedSize,
+                    height: dimensions.totalHeight,
+                    child: IgnorePointer(
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              MyColors.quarternarySystemfillOpaque,
+                              MyColors.quarternarySystemfillOpaque,
+                              MyColors.quarternarySystemfillOpaque
+                                  .withValues(alpha: 0.0),
                             ],
+                            stops: const [0.0, 0.6, 1.0],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  // 棒グラフエリア
-                  SizedBox(
-                    width: drawingAreaWidth,
-                    height: barGraphHeight,
-                    child: Stack(
-                      children: [
-                        // 収支ラベル
-                        Positioned(
-                            left: 0,
-                            bottom: barCenterLinePosition - 6,
-                            child: SizedBox(
-                              width: reservedSize,
-                              child: Text('収支',
-                                  style: AnnualBalanceStyles
-                                      .annualBalanceChartPageVerticalLabel),
-                            )),
-                        // 基準線: バーエリアの中央
-                        Positioned(
-                          top: barCenterLinePosition,
-                          left: reservedSize,
-                          right: 0,
-                          child: Container(
-                            height: 1,
-                            color: MyColors.separater,
+                        child: CustomPaint(
+                          size: Size(
+                            AnnualBalanceChartLayout.reservedSize,
+                            dimensions.totalHeight,
+                          ),
+                          painter: AnnualBalanceAxisLabelsPainter(
+                            scale: chartData.yAxisScale,
+                            dimensions: dimensions,
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: reservedSize),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: List.generate(differences.length, (i) {
-                              final diff = differences[i];
-                              final barHeight =
-                                  (diff.abs() / maxDifference) * maxBarHeight;
-
-                              return SizedBox(
-                                width: i == 0
-                                    ? firstCellWidth
-                                    : i == 11
-                                        ? endCellWidth
-                                        : cellWidth,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Positioned(
-                                      width: cellWidth,
-                                      bottom: diff >= 0
-                                          ? barCenterLinePosition + barHeight
-                                          : barCenterLinePosition,
-                                      child: i == 0
-                                          ? SizedBox(
-                                              width: firstCellWidth,
-                                              child: Text(
-                                                '${diff.abs().toInt()}',
-                                                // 収支の絶対値を表示
-                                                style: AnnualBalanceStyles
-                                                    .annualBalanceChartPageVerticalLabel,
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            )
-                                          : i == 11
-                                              ? SizedBox(
-                                                  width: endCellWidth,
-                                                  child: Text(
-                                                    '    ${diff.abs().toInt()}',
-                                                    // 収支の絶対値を表示
-                                                    style: AnnualBalanceStyles
-                                                        .annualBalanceChartPageVerticalLabel,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                )
-                                              : SizedBox(
-                                                  width: cellWidth,
-                                                  child: Text(
-                                                    '${diff.abs().toInt()}',
-                                                    // 収支の絶対値を表示
-                                                    style: AnnualBalanceStyles
-                                                        .annualBalanceChartPageVerticalLabel,
-                                                    textAlign: TextAlign.center,
-                                                  )),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                        // 棒グラフ
-                        Padding(
-                          padding: const EdgeInsets.only(left: reservedSize),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: List.generate(differences.length, (i) {
-                              final diff = differences[i];
-                              final barHeight =
-                                  (diff.abs() / maxDifference) * maxBarHeight;
-
-                              return SizedBox(
-                                width: i == 0
-                                    ? firstCellWidth
-                                    : i == 11
-                                        ? endCellWidth
-                                        : cellWidth,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    Positioned(
-                                      left: i == 0
-                                          ? firstCellWidth -
-                                              (cellWidth - barWidth) / 2 -
-                                              barWidth
-                                          : (cellWidth - barWidth) / 2,
-                                      bottom: diff >= 0
-                                          ? barCenterLinePosition
-                                          : null,
-                                      top: diff < 0
-                                          ? barCenterLinePosition
-                                          : null,
-                                      child: Container(
-                                        width: barWidth,
-                                        height: barHeight,
-                                        color: diff >= 0
-                                            ? MyColors.mintBlue
-                                            : MyColors.pink,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            }),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  // X軸ラベルのみ
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(reservedSize, 0, 0, 0),
-                    child: SizedBox(
-                      width: drawingAreaWidth - reservedSize,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(12, (i) {
-                          return i == 0
-                              ? SizedBox(
-                                  width: firstCellWidth,
-                                  child: Text(
-                                    '  ${chartData.monthlyBalanceValues[i].month}月',
-                                    style: AnnualBalanceStyles
-                                        .annualBalanceChartPageMonthLabel,
-                                    textAlign: TextAlign.left,
-                                  ),
-                                )
-                              : i == 11
-                                  ? SizedBox(
-                                      width: endCellWidth,
-                                      child: Text(
-                                        '     ${chartData.monthlyBalanceValues[i].month}月',
-                                        style: AnnualBalanceStyles
-                                            .annualBalanceChartPageMonthLabel,
-                                        textAlign: TextAlign.left,
-                                      ),
-                                    )
-                                  : SizedBox(
-                                      width: cellWidth,
-                                      child: Text(
-                                        '${chartData.monthlyBalanceValues[i].month}月',
-                                        style: AnnualBalanceStyles
-                                            .annualBalanceChartPageMonthLabel,
-                                        textAlign: TextAlign.center,
-                                      ));
-                        }),
                       ),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
+            );
+          },
+          error: (error, stackTrace) {
+            return Center(child: Text('Error: $error'));
+          },
+          loading: () {
+            return const Center(child: CircularProgressIndicator());
+          },
         );
-      },
-      error: (error, stackTrace) {
-        return Center(child: Text('Error: $error'));
-      },
-      loading: () {
-        return const Center(child: CircularProgressIndicator());
-      },
+  }
+
+  void _updateSelection(
+    Offset position,
+    List<MonthlyBalanceValue> values,
+    AnnualBalanceChartDimensions dimensions,
+  ) {
+    final idx = AnnualBalanceChartLayout.hitTestCell(
+      position,
+      monthLabelTopY: dimensions.monthLabelTop,
+    );
+    // 範囲外 or 未来月 → 閉じる
+    if (idx == null ||
+        values[idx].monthlyBalanceType == MonthlyBalanceType.future) {
+      if (_selectedMonthIndex != null) {
+        setState(() => _selectedMonthIndex = null);
+      }
+      return;
+    }
+    if (_selectedMonthIndex == idx) return;
+    setState(() => _selectedMonthIndex = idx);
+  }
+
+  Widget _buildTooltip(MonthlyBalanceValue selected) {
+    // ツールチップ幅（実測で中央寄せ制御するほどではないので固定幅運用）
+    const tooltipWidth = 160.0;
+    final cx = AnnualBalanceChartLayout.cellCenterX(_selectedMonthIndex!);
+    double left = cx - tooltipWidth / 2;
+    // Y軸ラベルオーバーレイ(reservedSize幅)より左にならないよう防止
+    if (left < AnnualBalanceChartLayout.reservedSize) {
+      left = AnnualBalanceChartLayout.reservedSize;
+    }
+    if (left + tooltipWidth > AnnualBalanceChartLayout.drawingAreaWidth) {
+      left = AnnualBalanceChartLayout.drawingAreaWidth - tooltipWidth;
+    }
+
+    return Positioned(
+      left: left,
+      top: 0,
+      width: tooltipWidth,
+      child: AnnualBalanceTooltip(
+        value: selected,
+        onTap: () {
+          ref
+              .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
+              .updateState(selected.representativeDate);
+          ref
+              .read(navigationBarNumberNotifierProvider.notifier)
+              .updateState(2);
+          setState(() => _selectedMonthIndex = null);
+        },
+      ),
     );
   }
 }

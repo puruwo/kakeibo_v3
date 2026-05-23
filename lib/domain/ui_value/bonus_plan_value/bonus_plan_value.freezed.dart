@@ -12,7 +12,8 @@ part of 'bonus_plan_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$BonusPlanValue {
@@ -20,7 +21,9 @@ mixin _$BonusPlanValue {
   int get yearlyBonusIncome => throw _privateConstructorUsedError;
   int get lastBonusPrice => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BonusPlanValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $BonusPlanValueCopyWith<BonusPlanValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -28,11 +31,15 @@ mixin _$BonusPlanValue {
 /// @nodoc
 abstract class $BonusPlanValueCopyWith<$Res> {
   factory $BonusPlanValueCopyWith(
-          BonusPlanValue value, $Res Function(BonusPlanValue) then) =
-      _$BonusPlanValueCopyWithImpl<$Res, BonusPlanValue>;
+    BonusPlanValue value,
+    $Res Function(BonusPlanValue) then,
+  ) = _$BonusPlanValueCopyWithImpl<$Res, BonusPlanValue>;
   @useResult
-  $Res call(
-      {int yearlyBonusExpense, int yearlyBonusIncome, int lastBonusPrice});
+  $Res call({
+    int yearlyBonusExpense,
+    int yearlyBonusIncome,
+    int lastBonusPrice,
+  });
 }
 
 /// @nodoc
@@ -45,6 +52,8 @@ class _$BonusPlanValueCopyWithImpl<$Res, $Val extends BonusPlanValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of BonusPlanValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -52,33 +61,40 @@ class _$BonusPlanValueCopyWithImpl<$Res, $Val extends BonusPlanValue>
     Object? yearlyBonusIncome = null,
     Object? lastBonusPrice = null,
   }) {
-    return _then(_value.copyWith(
-      yearlyBonusExpense: null == yearlyBonusExpense
-          ? _value.yearlyBonusExpense
-          : yearlyBonusExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      yearlyBonusIncome: null == yearlyBonusIncome
-          ? _value.yearlyBonusIncome
-          : yearlyBonusIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastBonusPrice: null == lastBonusPrice
-          ? _value.lastBonusPrice
-          : lastBonusPrice // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            yearlyBonusExpense: null == yearlyBonusExpense
+                ? _value.yearlyBonusExpense
+                : yearlyBonusExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            yearlyBonusIncome: null == yearlyBonusIncome
+                ? _value.yearlyBonusIncome
+                : yearlyBonusIncome // ignore: cast_nullable_to_non_nullable
+                      as int,
+            lastBonusPrice: null == lastBonusPrice
+                ? _value.lastBonusPrice
+                : lastBonusPrice // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$BonusPlanValueImplCopyWith<$Res>
     implements $BonusPlanValueCopyWith<$Res> {
-  factory _$$BonusPlanValueImplCopyWith(_$BonusPlanValueImpl value,
-          $Res Function(_$BonusPlanValueImpl) then) =
-      __$$BonusPlanValueImplCopyWithImpl<$Res>;
+  factory _$$BonusPlanValueImplCopyWith(
+    _$BonusPlanValueImpl value,
+    $Res Function(_$BonusPlanValueImpl) then,
+  ) = __$$BonusPlanValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int yearlyBonusExpense, int yearlyBonusIncome, int lastBonusPrice});
+  $Res call({
+    int yearlyBonusExpense,
+    int yearlyBonusIncome,
+    int lastBonusPrice,
+  });
 }
 
 /// @nodoc
@@ -86,9 +102,12 @@ class __$$BonusPlanValueImplCopyWithImpl<$Res>
     extends _$BonusPlanValueCopyWithImpl<$Res, _$BonusPlanValueImpl>
     implements _$$BonusPlanValueImplCopyWith<$Res> {
   __$$BonusPlanValueImplCopyWithImpl(
-      _$BonusPlanValueImpl _value, $Res Function(_$BonusPlanValueImpl) _then)
-      : super(_value, _then);
+    _$BonusPlanValueImpl _value,
+    $Res Function(_$BonusPlanValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of BonusPlanValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -96,30 +115,33 @@ class __$$BonusPlanValueImplCopyWithImpl<$Res>
     Object? yearlyBonusIncome = null,
     Object? lastBonusPrice = null,
   }) {
-    return _then(_$BonusPlanValueImpl(
-      yearlyBonusExpense: null == yearlyBonusExpense
-          ? _value.yearlyBonusExpense
-          : yearlyBonusExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      yearlyBonusIncome: null == yearlyBonusIncome
-          ? _value.yearlyBonusIncome
-          : yearlyBonusIncome // ignore: cast_nullable_to_non_nullable
-              as int,
-      lastBonusPrice: null == lastBonusPrice
-          ? _value.lastBonusPrice
-          : lastBonusPrice // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$BonusPlanValueImpl(
+        yearlyBonusExpense: null == yearlyBonusExpense
+            ? _value.yearlyBonusExpense
+            : yearlyBonusExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        yearlyBonusIncome: null == yearlyBonusIncome
+            ? _value.yearlyBonusIncome
+            : yearlyBonusIncome // ignore: cast_nullable_to_non_nullable
+                  as int,
+        lastBonusPrice: null == lastBonusPrice
+            ? _value.lastBonusPrice
+            : lastBonusPrice // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$BonusPlanValueImpl implements _BonusPlanValue {
-  const _$BonusPlanValueImpl(
-      {required this.yearlyBonusExpense,
-      required this.yearlyBonusIncome,
-      required this.lastBonusPrice});
+  const _$BonusPlanValueImpl({
+    required this.yearlyBonusExpense,
+    required this.yearlyBonusIncome,
+    required this.lastBonusPrice,
+  });
 
   @override
   final int yearlyBonusExpense;
@@ -148,21 +170,30 @@ class _$BonusPlanValueImpl implements _BonusPlanValue {
 
   @override
   int get hashCode => Object.hash(
-      runtimeType, yearlyBonusExpense, yearlyBonusIncome, lastBonusPrice);
+    runtimeType,
+    yearlyBonusExpense,
+    yearlyBonusIncome,
+    lastBonusPrice,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BonusPlanValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BonusPlanValueImplCopyWith<_$BonusPlanValueImpl> get copyWith =>
       __$$BonusPlanValueImplCopyWithImpl<_$BonusPlanValueImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _BonusPlanValue implements BonusPlanValue {
-  const factory _BonusPlanValue(
-      {required final int yearlyBonusExpense,
-      required final int yearlyBonusIncome,
-      required final int lastBonusPrice}) = _$BonusPlanValueImpl;
+  const factory _BonusPlanValue({
+    required final int yearlyBonusExpense,
+    required final int yearlyBonusIncome,
+    required final int lastBonusPrice,
+  }) = _$BonusPlanValueImpl;
 
   @override
   int get yearlyBonusExpense;
@@ -170,8 +201,11 @@ abstract class _BonusPlanValue implements BonusPlanValue {
   int get yearlyBonusIncome;
   @override
   int get lastBonusPrice;
+
+  /// Create a copy of BonusPlanValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BonusPlanValueImplCopyWith<_$BonusPlanValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

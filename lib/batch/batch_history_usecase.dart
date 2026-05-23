@@ -23,7 +23,7 @@ class BatchProcessUsecase {
     final dateScope = await _ref.read(systemDateScopeEntityProvider.future);
 
     // 今の集計期間の終了日を取得
-    final currentMonthEndDate = dateScope.monthPeriod.endDatetime;
+    final currentMonthEndDate = dateScope.aggregationMonthPeriod.endDatetime;
 
     // batchHistoryをチェックして、最近のバッチ処理実行済み期間の最終日を取得
     final latestBatchProcessingDateString =

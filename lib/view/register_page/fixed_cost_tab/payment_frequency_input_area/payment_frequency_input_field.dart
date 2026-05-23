@@ -38,8 +38,9 @@ class _PaymentFrequencyInputFieldState
 
   @override
   Widget build(BuildContext context) {
-    final paymentFrequency =
-        ref.watch(paymentFrequencyControllerNotifierProvider);
+    final paymentFrequency = ref.watch(
+      paymentFrequencyControllerNotifierProvider,
+    );
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(50),
@@ -71,14 +72,11 @@ class _PaymentFrequencyInputFieldState
               color: MyColors.label,
             ),
             const SizedBox(width: 8),
-            const Text(
-              '頻度',
-              style: RegisterPageStyles.budgetLabel,
-            ),
+            Text('頻度', style: RegisterPageStyles.placeHolder),
             const Spacer(),
             Text(
               paymentFrequency.dateLabel,
-              style: RegisterPageStyles.budgetValue,
+              style: RegisterPageStyles.inputText,
             ),
           ],
         ),

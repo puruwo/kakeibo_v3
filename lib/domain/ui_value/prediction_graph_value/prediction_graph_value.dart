@@ -4,9 +4,16 @@ import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.da
 part 'prediction_graph_value.freezed.dart';
 
 enum PredictionGraphLineType {
-  lastMonth,
-  thisMonth,
-  futureMonth,
+  lastMonth(shouldShowGraph: true),
+  thisMonth(shouldShowGraph: true),
+  futureMonth(shouldShowGraph: false),
+
+  /// 支出・予算・収入がすべて0でグラフ表示が不要な場合
+  noData(shouldShowGraph: false);
+
+  const PredictionGraphLineType({required this.shouldShowGraph});
+
+  final bool shouldShowGraph;
 }
 
 /// 予測グラフのデータポイント
@@ -21,10 +28,8 @@ class PredictionGraphPoint with _$PredictionGraphPoint {
 /// 横軸ラベルの情報
 @freezed
 class XAxisLabel with _$XAxisLabel {
-  const factory XAxisLabel({
-    required DateTime date,
-    required String label,
-  }) = _XAxisLabel;
+  const factory XAxisLabel({required DateTime date, required String label}) =
+      _XAxisLabel;
 }
 
 /// ラベルの表示位置情報

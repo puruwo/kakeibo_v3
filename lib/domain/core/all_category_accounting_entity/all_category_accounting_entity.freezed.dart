@@ -12,10 +12,12 @@ part of 'all_category_accounting_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 AllCategoryAccountingEntity _$AllCategoryAccountingEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _AllCategoryAccountingEntity.fromJson(json);
 }
 
@@ -24,26 +26,35 @@ mixin _$AllCategoryAccountingEntity {
   int get totalExpense => throw _privateConstructorUsedError;
   int get totalBudget => throw _privateConstructorUsedError;
 
+  /// Serializes this AllCategoryAccountingEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of AllCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $AllCategoryAccountingEntityCopyWith<AllCategoryAccountingEntity>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $AllCategoryAccountingEntityCopyWith<$Res> {
   factory $AllCategoryAccountingEntityCopyWith(
-          AllCategoryAccountingEntity value,
-          $Res Function(AllCategoryAccountingEntity) then) =
-      _$AllCategoryAccountingEntityCopyWithImpl<$Res,
-          AllCategoryAccountingEntity>;
+    AllCategoryAccountingEntity value,
+    $Res Function(AllCategoryAccountingEntity) then,
+  ) =
+      _$AllCategoryAccountingEntityCopyWithImpl<
+        $Res,
+        AllCategoryAccountingEntity
+      >;
   @useResult
   $Res call({int totalExpense, int totalBudget});
 }
 
 /// @nodoc
-class _$AllCategoryAccountingEntityCopyWithImpl<$Res,
-        $Val extends AllCategoryAccountingEntity>
+class _$AllCategoryAccountingEntityCopyWithImpl<
+  $Res,
+  $Val extends AllCategoryAccountingEntity
+>
     implements $AllCategoryAccountingEntityCopyWith<$Res> {
   _$AllCategoryAccountingEntityCopyWithImpl(this._value, this._then);
 
@@ -52,22 +63,24 @@ class _$AllCategoryAccountingEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of AllCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? totalExpense = null,
-    Object? totalBudget = null,
-  }) {
-    return _then(_value.copyWith(
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalBudget: null == totalBudget
-          ? _value.totalBudget
-          : totalBudget // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+  $Res call({Object? totalExpense = null, Object? totalBudget = null}) {
+    return _then(
+      _value.copyWith(
+            totalExpense: null == totalExpense
+                ? _value.totalExpense
+                : totalExpense // ignore: cast_nullable_to_non_nullable
+                      as int,
+            totalBudget: null == totalBudget
+                ? _value.totalBudget
+                : totalBudget // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -75,9 +88,9 @@ class _$AllCategoryAccountingEntityCopyWithImpl<$Res,
 abstract class _$$AllCategoryAccountingEntityImplCopyWith<$Res>
     implements $AllCategoryAccountingEntityCopyWith<$Res> {
   factory _$$AllCategoryAccountingEntityImplCopyWith(
-          _$AllCategoryAccountingEntityImpl value,
-          $Res Function(_$AllCategoryAccountingEntityImpl) then) =
-      __$$AllCategoryAccountingEntityImplCopyWithImpl<$Res>;
+    _$AllCategoryAccountingEntityImpl value,
+    $Res Function(_$AllCategoryAccountingEntityImpl) then,
+  ) = __$$AllCategoryAccountingEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int totalExpense, int totalBudget});
@@ -85,30 +98,34 @@ abstract class _$$AllCategoryAccountingEntityImplCopyWith<$Res>
 
 /// @nodoc
 class __$$AllCategoryAccountingEntityImplCopyWithImpl<$Res>
-    extends _$AllCategoryAccountingEntityCopyWithImpl<$Res,
-        _$AllCategoryAccountingEntityImpl>
+    extends
+        _$AllCategoryAccountingEntityCopyWithImpl<
+          $Res,
+          _$AllCategoryAccountingEntityImpl
+        >
     implements _$$AllCategoryAccountingEntityImplCopyWith<$Res> {
   __$$AllCategoryAccountingEntityImplCopyWithImpl(
-      _$AllCategoryAccountingEntityImpl _value,
-      $Res Function(_$AllCategoryAccountingEntityImpl) _then)
-      : super(_value, _then);
+    _$AllCategoryAccountingEntityImpl _value,
+    $Res Function(_$AllCategoryAccountingEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of AllCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? totalExpense = null,
-    Object? totalBudget = null,
-  }) {
-    return _then(_$AllCategoryAccountingEntityImpl(
-      totalExpense: null == totalExpense
-          ? _value.totalExpense
-          : totalExpense // ignore: cast_nullable_to_non_nullable
-              as int,
-      totalBudget: null == totalBudget
-          ? _value.totalBudget
-          : totalBudget // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+  $Res call({Object? totalExpense = null, Object? totalBudget = null}) {
+    return _then(
+      _$AllCategoryAccountingEntityImpl(
+        totalExpense: null == totalExpense
+            ? _value.totalExpense
+            : totalExpense // ignore: cast_nullable_to_non_nullable
+                  as int,
+        totalBudget: null == totalBudget
+            ? _value.totalBudget
+            : totalBudget // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
@@ -116,12 +133,14 @@ class __$$AllCategoryAccountingEntityImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$AllCategoryAccountingEntityImpl
     implements _AllCategoryAccountingEntity {
-  const _$AllCategoryAccountingEntityImpl(
-      {required this.totalExpense, required this.totalBudget});
+  const _$AllCategoryAccountingEntityImpl({
+    required this.totalExpense,
+    required this.totalBudget,
+  });
 
   factory _$AllCategoryAccountingEntityImpl.fromJson(
-          Map<String, dynamic> json) =>
-      _$$AllCategoryAccountingEntityImplFromJson(json);
+    Map<String, dynamic> json,
+  ) => _$$AllCategoryAccountingEntityImplFromJson(json);
 
   @override
   final int totalExpense;
@@ -144,30 +163,33 @@ class _$AllCategoryAccountingEntityImpl
                 other.totalBudget == totalBudget));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, totalExpense, totalBudget);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of AllCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$AllCategoryAccountingEntityImplCopyWith<_$AllCategoryAccountingEntityImpl>
-      get copyWith => __$$AllCategoryAccountingEntityImplCopyWithImpl<
-          _$AllCategoryAccountingEntityImpl>(this, _$identity);
+  get copyWith =>
+      __$$AllCategoryAccountingEntityImplCopyWithImpl<
+        _$AllCategoryAccountingEntityImpl
+      >(this, _$identity);
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$AllCategoryAccountingEntityImplToJson(
-      this,
-    );
+    return _$$AllCategoryAccountingEntityImplToJson(this);
   }
 }
 
 abstract class _AllCategoryAccountingEntity
     implements AllCategoryAccountingEntity {
-  const factory _AllCategoryAccountingEntity(
-      {required final int totalExpense,
-      required final int totalBudget}) = _$AllCategoryAccountingEntityImpl;
+  const factory _AllCategoryAccountingEntity({
+    required final int totalExpense,
+    required final int totalBudget,
+  }) = _$AllCategoryAccountingEntityImpl;
 
   factory _AllCategoryAccountingEntity.fromJson(Map<String, dynamic> json) =
       _$AllCategoryAccountingEntityImpl.fromJson;
@@ -176,8 +198,11 @@ abstract class _AllCategoryAccountingEntity
   int get totalExpense;
   @override
   int get totalBudget;
+
+  /// Create a copy of AllCategoryAccountingEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$AllCategoryAccountingEntityImplCopyWith<_$AllCategoryAccountingEntityImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

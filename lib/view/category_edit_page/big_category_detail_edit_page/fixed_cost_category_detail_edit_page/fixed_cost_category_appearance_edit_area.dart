@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/fixed_cost_constants.dart';
-import 'package:kakeibo/constant/styles/category_styles.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_name_controller/fixed_cost_category_name_controller.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_icon_controller/fixed_cost_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_color_controller/fixed_cost_category_color_controller.dart';
@@ -44,10 +44,12 @@ class _FixedCostCategoryAppearanceEditAreaState
       }
 
       Future(() async {
-        final categories =
-            await ref.read(allFixedCostCategoriesProvider.future);
-        final initialItem =
-            categories.firstWhere((c) => c.id == widget.fixedCostCategoryId);
+        final categories = await ref.read(
+          allFixedCostCategoriesProvider.future,
+        );
+        final initialItem = categories.firstWhere(
+          (c) => c.id == widget.fixedCostCategoryId,
+        );
 
         // TextEditingControllerに値をセット
         _nameController.text = initialItem.categoryName;
@@ -78,9 +80,7 @@ class _FixedCostCategoryAppearanceEditAreaState
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
 
     final iconPath = ref.watch(fixedCostCategoryIconControllerNotifierProvider);
@@ -93,8 +93,9 @@ class _FixedCostCategoryAppearanceEditAreaState
           child: Container(
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
-                color: MyColors.quarternarySystemfill,
-                borderRadius: BorderRadius.circular(18)),
+              color: MyColors.quarternarySystemfill,
+              borderRadius: BorderRadius.circular(18),
+            ),
             height: 135,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -139,7 +140,7 @@ class _FixedCostCategoryAppearanceEditAreaState
                     textAlignVertical: TextAlignVertical.center,
                     textAlign: TextAlign.center,
                     cursorWidth: 2,
-                    style: CategoryStyles.categoryEditNameInput,
+                    style: AppTextStyles.listTilePrimaryTitle,
                     minLines: 1,
                     maxLines: 1,
                     decoration: InputDecoration(
@@ -147,33 +148,44 @@ class _FixedCostCategoryAppearanceEditAreaState
                       filled: true,
                       fillColor: MyColors.secondarySystemfill,
                       hintText: "カテゴリー名を入力",
-                      hintStyle: CategoryStyles.categoryEditNameHint,
+                      hintStyle: AppTextStyles.listTileTextFieldHint,
                       contentPadding: const EdgeInsets.only(
-                          top: 16, bottom: 0, left: 40, right: 16),
+                        top: 16,
+                        bottom: 0,
+                        left: 40,
+                        right: 16,
+                      ),
                       suffixIcon: Padding(
                         padding: const EdgeInsets.only(right: 0),
-                        child: Stack(alignment: Alignment.center, children: [
-                          Container(
-                            width: 20,
-                            height: 20,
-                            decoration: const BoxDecoration(
-                              color: MyColors.systemfill,
-                              shape: BoxShape.circle,
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Container(
+                              width: 20,
+                              height: 20,
+                              decoration: const BoxDecoration(
+                                color: MyColors.systemfill,
+                                shape: BoxShape.circle,
+                              ),
                             ),
-                          ),
-                          IconButton(
-                            onPressed: () {
-                              _nameController.clear();
-                              ref
-                                  .read(
+                            IconButton(
+                              onPressed: () {
+                                _nameController.clear();
+                                ref
+                                    .read(
                                       fixedCostCategoryNameControllerNotifierProvider
-                                          .notifier)
-                                  .updateState('');
-                            },
-                            icon: const Icon(Icons.clear,
-                                size: 14, color: MyColors.white),
-                          ),
-                        ]),
+                                          .notifier,
+                                    )
+                                    .updateState('');
+                              },
+                              icon: const Icon(
+                                Icons.clear,
+                                size: 14,
+                                color: MyColors.white,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
@@ -191,8 +203,10 @@ class _FixedCostCategoryAppearanceEditAreaState
                     keyboardAppearance: Brightness.dark,
                     onChanged: (value) {
                       ref
-                          .read(fixedCostCategoryNameControllerNotifierProvider
-                              .notifier)
+                          .read(
+                            fixedCostCategoryNameControllerNotifierProvider
+                                .notifier,
+                          )
                           .updateState(value);
                     },
                     onTapOutside: (event) {
@@ -204,42 +218,6 @@ class _FixedCostCategoryAppearanceEditAreaState
                   ),
                 ),
               ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 8.0),
-        GestureDetector(
-          onTap: () async {
-            _showColorSelectDialog(context);
-          },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Container(
-              height: 42,
-              decoration: BoxDecoration(
-                  color: MyColors.quarternarySystemfill,
-                  borderRadius: BorderRadius.circular(50)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 8),
-                    child: Container(
-                        height: 16,
-                        width: 16,
-                        decoration: BoxDecoration(
-                          color: ref.watch(
-                              fixedCostCategoryColorControllerNotifierProvider),
-                          shape: BoxShape.circle,
-                        )),
-                  ),
-                  const Text(
-                    'カテゴリーカラー',
-                    style: CategoryStyles.categoryEditColorLabel,
-                  )
-                ],
-              ),
             ),
           ),
         ),
@@ -265,60 +243,22 @@ class _FixedCostCategoryAppearanceEditAreaState
               itemCount: FixedCostIcons.iconPathList.length,
               itemBuilder: (context, index) {
                 final iconPath = FixedCostIcons.iconPathList[index];
-                final color =
-                    ref.watch(fixedCostCategoryColorControllerNotifierProvider);
+                final color = ref.watch(
+                  fixedCostCategoryColorControllerNotifierProvider,
+                );
                 return GestureDetector(
                   onTap: () {
                     ref
-                        .read(fixedCostCategoryIconControllerNotifierProvider
-                            .notifier)
+                        .read(
+                          fixedCostCategoryIconControllerNotifierProvider
+                              .notifier,
+                        )
                         .updateState(iconPath);
                     Navigator.of(context).pop();
                   },
                   child: SvgPicture.asset(
                     iconPath,
                     colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-                  ),
-                );
-              },
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _showColorSelectDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('カラー選択'),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: GridView.builder(
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 5,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-              ),
-              itemCount: FixedCostColors.colorList.length,
-              itemBuilder: (context, index) {
-                final color = FixedCostColors.colorList[index];
-                return GestureDetector(
-                  onTap: () {
-                    ref
-                        .read(fixedCostCategoryColorControllerNotifierProvider
-                            .notifier)
-                        .updateState(color);
-                    Navigator.of(context).pop();
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                    ),
                   ),
                 );
               },

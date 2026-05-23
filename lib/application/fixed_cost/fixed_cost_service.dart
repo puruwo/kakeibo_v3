@@ -65,11 +65,11 @@ class FixedCostService {
     final confirmedFixedCostExpenseTotal = await ref
         .read(fixedCostExpenseRepositoryProvider)
         .fetchTotalConfirmedFixedCostExpenseWithPeriod(
-            period: dateScope.monthPeriod);
+            period: dateScope.aggregationMonthPeriod);
     final unconfirmedFixedCostList = await ref
         .read(fixedCostExpenseRepositoryProvider)
         .fetchUnconfirmedFixedCostExpenseWithPeriod(
-            period: dateScope.monthPeriod);
+            period: dateScope.aggregationMonthPeriod);
     final unconfirmedFixedCostEstimatedTotal = await Future.wait(
         unconfirmedFixedCostList.map((element) async {
       final estimatePrice = await ref

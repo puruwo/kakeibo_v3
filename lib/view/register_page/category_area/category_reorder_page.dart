@@ -9,18 +9,17 @@ import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/category_reorder/reordering_category_list.dart';
 
 /// カテゴリー並び替えページ
 ///
 /// ドラッグ＆ドロップでカテゴリーアイコンの表示順を変更できる
 class CategoryReorderPage extends ConsumerStatefulWidget {
-  const CategoryReorderPage({
-    super.key,
-    required this.transactionMode,
-  });
+  const CategoryReorderPage({super.key, required this.transactionMode});
 
   final TransactionMode transactionMode;
 
@@ -67,8 +66,9 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
   /// 初期データを読み込む
   Future<void> _initializeData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final categories = await ref
-          .read(categoriesByModeProvider(widget.transactionMode).future);
+      final categories = await ref.read(
+        categoriesByModeProvider(widget.transactionMode).future,
+      );
       ref
           .read(reorderingCategoryListNotifierProvider.notifier)
           .setData(categories, widget.transactionMode);
@@ -123,10 +123,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
   }
 
   /// タイルのデコレーションを構築
-  Widget buildTile({
-    required Widget child,
-    required bool isDragging,
-  }) {
+  Widget buildTile({required Widget child, required bool isDragging}) {
     return AnimatedScale(
       duration: const Duration(milliseconds: 120),
       scale: isDragging ? 0.96 : 1.0,
@@ -204,9 +201,9 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('保存に失敗しました: $e')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('保存に失敗しました: $e')));
       }
     }
   }
@@ -219,29 +216,13 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     return Scaffold(
       backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
-        backgroundColor: MyColors.secondarySystemBackground,
-        title: Text(
-          'アイコンの並び替え',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
+        title: Text('アイコンの並び替え', style: AppTextStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: const Icon(Icons.close, color: MyColors.white),
         ),
-        actions: [
-          TextButton(
-            onPressed: _saveOrder,
-            child: Text(
-              '保存',
-              style: TextStyle(
-                color: reorderingState.hasChanges
-                    ? MyColors.white
-                    : MyColors.secondaryLabel,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ],
       ),
       body: SafeArea(
         child: items.isEmpty
@@ -251,21 +232,19 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                   const SizedBox(height: 16),
 
                   // 説明テキスト
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Text(
                       'アイコンを長押しして並び替えができます',
-                      style: TextStyle(
-                        color: MyColors.secondaryLabel,
-                        fontSize: 14,
-                      ),
+                      style: RegisterPageStyles.iconRearrangeDescription,
                     ),
                   ),
 
                   const SizedBox(height: 24),
 
                   // グリッド部分
-                  Expanded(
+                  SizedBox(
+                    height: 270 * context.screenVerticalMagnification,
                     child: PageView.builder(
                       controller: _pageController,
                       itemCount: pageCount,
@@ -286,6 +265,22 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                   ] else ...[
                     const SizedBox(height: 32),
                   ],
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 8,
+                      horizontal: 16,
+                    ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: MainButton(
+                        onPressed: reorderingState.hasChanges
+                            ? _saveOrder
+                            : null,
+                        disabledButtonColor: Colors.blue,
+                        buttonText: '保存',
+                      ),
+                    ),
+                  ),
                 ],
               ),
       ),
@@ -314,10 +309,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
 
               // 空枠
               if (idx == null) {
-                return SizedBox(
-                  width: iconBoxSize,
-                  height: iconBoxSize + 20,
-                );
+                return SizedBox(width: iconBoxSize, height: iconBoxSize + 20);
               }
 
               final item = items[idx];
@@ -407,10 +399,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
         SizedBox(
           width: iconBoxSize,
           height: iconBoxSize,
-          child: buildTile(
-            isDragging: isDragging,
-            child: animatedIcon(item),
-          ),
+          child: buildTile(isDragging: isDragging, child: animatedIcon(item)),
         ),
         const SizedBox(height: 4),
         SizedBox(
@@ -432,7 +421,9 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         pageCount,
-        (index) => Container(
+        (index) => AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOutCubic,
           margin: const EdgeInsets.symmetric(horizontal: 4),
           width: index == _currentPage ? 24 : 8,
           height: 8,

@@ -12,7 +12,8 @@ part of 'batch_history_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 BatchHistoryEntity _$BatchHistoryEntityFromJson(Map<String, dynamic> json) {
   return _BatchHistoryEntity.fromJson(json);
@@ -25,8 +26,12 @@ mixin _$BatchHistoryEntity {
   String get endDate => throw _privateConstructorUsedError;
   int get status => throw _privateConstructorUsedError;
 
+  /// Serializes this BatchHistoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of BatchHistoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $BatchHistoryEntityCopyWith<BatchHistoryEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -34,8 +39,9 @@ mixin _$BatchHistoryEntity {
 /// @nodoc
 abstract class $BatchHistoryEntityCopyWith<$Res> {
   factory $BatchHistoryEntityCopyWith(
-          BatchHistoryEntity value, $Res Function(BatchHistoryEntity) then) =
-      _$BatchHistoryEntityCopyWithImpl<$Res, BatchHistoryEntity>;
+    BatchHistoryEntity value,
+    $Res Function(BatchHistoryEntity) then,
+  ) = _$BatchHistoryEntityCopyWithImpl<$Res, BatchHistoryEntity>;
   @useResult
   $Res call({int? id, String startDate, String endDate, int status});
 }
@@ -50,6 +56,8 @@ class _$BatchHistoryEntityCopyWithImpl<$Res, $Val extends BatchHistoryEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of BatchHistoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -58,33 +66,37 @@ class _$BatchHistoryEntityCopyWithImpl<$Res, $Val extends BatchHistoryEntity>
     Object? endDate = null,
     Object? status = null,
   }) {
-    return _then(_value.copyWith(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: freezed == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            startDate: null == startDate
+                ? _value.startDate
+                : startDate // ignore: cast_nullable_to_non_nullable
+                      as String,
+            endDate: null == endDate
+                ? _value.endDate
+                : endDate // ignore: cast_nullable_to_non_nullable
+                      as String,
+            status: null == status
+                ? _value.status
+                : status // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$BatchHistoryEntityImplCopyWith<$Res>
     implements $BatchHistoryEntityCopyWith<$Res> {
-  factory _$$BatchHistoryEntityImplCopyWith(_$BatchHistoryEntityImpl value,
-          $Res Function(_$BatchHistoryEntityImpl) then) =
-      __$$BatchHistoryEntityImplCopyWithImpl<$Res>;
+  factory _$$BatchHistoryEntityImplCopyWith(
+    _$BatchHistoryEntityImpl value,
+    $Res Function(_$BatchHistoryEntityImpl) then,
+  ) = __$$BatchHistoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({int? id, String startDate, String endDate, int status});
@@ -94,10 +106,13 @@ abstract class _$$BatchHistoryEntityImplCopyWith<$Res>
 class __$$BatchHistoryEntityImplCopyWithImpl<$Res>
     extends _$BatchHistoryEntityCopyWithImpl<$Res, _$BatchHistoryEntityImpl>
     implements _$$BatchHistoryEntityImplCopyWith<$Res> {
-  __$$BatchHistoryEntityImplCopyWithImpl(_$BatchHistoryEntityImpl _value,
-      $Res Function(_$BatchHistoryEntityImpl) _then)
-      : super(_value, _then);
+  __$$BatchHistoryEntityImplCopyWithImpl(
+    _$BatchHistoryEntityImpl _value,
+    $Res Function(_$BatchHistoryEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of BatchHistoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -106,35 +121,38 @@ class __$$BatchHistoryEntityImplCopyWithImpl<$Res>
     Object? endDate = null,
     Object? status = null,
   }) {
-    return _then(_$BatchHistoryEntityImpl(
-      id: freezed == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int?,
-      startDate: null == startDate
-          ? _value.startDate
-          : startDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      endDate: null == endDate
-          ? _value.endDate
-          : endDate // ignore: cast_nullable_to_non_nullable
-              as String,
-      status: null == status
-          ? _value.status
-          : status // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$BatchHistoryEntityImpl(
+        id: freezed == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        startDate: null == startDate
+            ? _value.startDate
+            : startDate // ignore: cast_nullable_to_non_nullable
+                  as String,
+        endDate: null == endDate
+            ? _value.endDate
+            : endDate // ignore: cast_nullable_to_non_nullable
+                  as String,
+        status: null == status
+            ? _value.status
+            : status // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$BatchHistoryEntityImpl implements _BatchHistoryEntity {
-  const _$BatchHistoryEntityImpl(
-      {this.id,
-      required this.startDate,
-      required this.endDate,
-      required this.status});
+  const _$BatchHistoryEntityImpl({
+    this.id,
+    required this.startDate,
+    required this.endDate,
+    required this.status,
+  });
 
   factory _$BatchHistoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$BatchHistoryEntityImplFromJson(json);
@@ -165,31 +183,34 @@ class _$BatchHistoryEntityImpl implements _BatchHistoryEntity {
             (identical(other.status, status) || other.status == status));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, id, startDate, endDate, status);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of BatchHistoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$BatchHistoryEntityImplCopyWith<_$BatchHistoryEntityImpl> get copyWith =>
       __$$BatchHistoryEntityImplCopyWithImpl<_$BatchHistoryEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$BatchHistoryEntityImplToJson(
-      this,
-    );
+    return _$$BatchHistoryEntityImplToJson(this);
   }
 }
 
 abstract class _BatchHistoryEntity implements BatchHistoryEntity {
-  const factory _BatchHistoryEntity(
-      {final int? id,
-      required final String startDate,
-      required final String endDate,
-      required final int status}) = _$BatchHistoryEntityImpl;
+  const factory _BatchHistoryEntity({
+    final int? id,
+    required final String startDate,
+    required final String endDate,
+    required final int status,
+  }) = _$BatchHistoryEntityImpl;
 
   factory _BatchHistoryEntity.fromJson(Map<String, dynamic> json) =
       _$BatchHistoryEntityImpl.fromJson;
@@ -202,8 +223,11 @@ abstract class _BatchHistoryEntity implements BatchHistoryEntity {
   String get endDate;
   @override
   int get status;
+
+  /// Create a copy of BatchHistoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$BatchHistoryEntityImplCopyWith<_$BatchHistoryEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

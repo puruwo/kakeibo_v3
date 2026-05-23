@@ -19,6 +19,7 @@ import 'package:kakeibo/view_model/state/register_page/entered_price_controller.
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/price_type_switch_controller/price_type_switch_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -161,6 +162,12 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
             succesAction: () async {
               // DBの更新を通知
               ref.read(updateDBCountNotifierProvider.notifier).incrementState();
+
+              // 入力状態をクリアして、次回画面表示時に値がリセットされるようにする
+              ref.invalidate(enteredPriceControllerProvider);
+              ref.invalidate(enteredMemoControllerProvider);
+              ref.invalidate(inputDateControllerNotifierProvider);
+              ref.invalidate(inputInitializedControllerProvider);
 
               // 画面を閉じる
               Navigator.of(context, rootNavigator: true).pop();

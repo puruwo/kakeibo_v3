@@ -4,7 +4,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'input_date_controller.g.dart';
 
 @riverpod
-class InputDateControllerNotifier extends _$inputDateControllerNotifier {
+class InputDateControllerNotifier extends _$InputDateControllerNotifier {
   @override
   DateTime build() {
     return ref.read(systemDatetimeNotifierProvider);

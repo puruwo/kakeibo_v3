@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -11,6 +11,7 @@ import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/category_expense_hisotry_page.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_graph.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_text.dart';
+import 'package:kakeibo/view/monthly_page/category_tile/budget_label.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/price_label.dart';
 
 class CategorySumTile extends HookConsumerWidget {
@@ -29,10 +30,13 @@ class CategorySumTile extends HookConsumerWidget {
       color: MyColors.quarternarySystemfill,
       borderRadius: appCardRadius,
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => CategoryExpenseHistoryPage(
-              bigId: monthlyExpenseByCategoryEntity.id),
-        ));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CategoryExpenseHistoryPage(
+              bigId: monthlyExpenseByCategoryEntity.id,
+            ),
+          ),
+        );
       },
       child: SizedBox(
         width: 343 * context.screenHorizontalMagnification,
@@ -66,16 +70,28 @@ class CategorySumTile extends HookConsumerWidget {
                           PriceLabel(categoryTile: categoryTile),
                         ],
                       ),
-                      LayoutBuilder(
-                          builder: ((context, constraints) => CategorySumGraph(
-                              barFrameMaxWidth: constraints.maxWidth,
-                              categoryTile: categoryTile))),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          // バー
+                          Expanded(
+                            child: LayoutBuilder(
+                              builder: (context, constraints) =>
+                                  CategorySumGraph(
+                                    barFrameMaxWidth: constraints.maxWidth,
+                                    categoryTile: categoryTile,
+                                  ),
+                            ),
+                          ),
+                          // 予算
+                          BudgetLabel(categoryTile: categoryTile),
+                        ],
+                      ),
                     ],
                   ),
                 ),
-                const SizedBox(
-                  width: 12,
-                ),
+                const SizedBox(width: 12),
                 MyIcon.next,
               ],
             ),

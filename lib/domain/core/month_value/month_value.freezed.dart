@@ -12,14 +12,17 @@ part of 'month_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$MonthValue {
-// ex)202504
+  // ex)202504
   String get month => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $MonthValueCopyWith<MonthValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -27,8 +30,9 @@ mixin _$MonthValue {
 /// @nodoc
 abstract class $MonthValueCopyWith<$Res> {
   factory $MonthValueCopyWith(
-          MonthValue value, $Res Function(MonthValue) then) =
-      _$MonthValueCopyWithImpl<$Res, MonthValue>;
+    MonthValue value,
+    $Res Function(MonthValue) then,
+  ) = _$MonthValueCopyWithImpl<$Res, MonthValue>;
   @useResult
   $Res call({String month});
 }
@@ -43,17 +47,20 @@ class _$MonthValueCopyWithImpl<$Res, $Val extends MonthValue>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of MonthValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? month = null,
-  }) {
-    return _then(_value.copyWith(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+  $Res call({Object? month = null}) {
+    return _then(
+      _value.copyWith(
+            month: null == month
+                ? _value.month
+                : month // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -61,8 +68,9 @@ class _$MonthValueCopyWithImpl<$Res, $Val extends MonthValue>
 abstract class _$$MonthValueImplCopyWith<$Res>
     implements $MonthValueCopyWith<$Res> {
   factory _$$MonthValueImplCopyWith(
-          _$MonthValueImpl value, $Res Function(_$MonthValueImpl) then) =
-      __$$MonthValueImplCopyWithImpl<$Res>;
+    _$MonthValueImpl value,
+    $Res Function(_$MonthValueImpl) then,
+  ) = __$$MonthValueImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({String month});
@@ -73,20 +81,23 @@ class __$$MonthValueImplCopyWithImpl<$Res>
     extends _$MonthValueCopyWithImpl<$Res, _$MonthValueImpl>
     implements _$$MonthValueImplCopyWith<$Res> {
   __$$MonthValueImplCopyWithImpl(
-      _$MonthValueImpl _value, $Res Function(_$MonthValueImpl) _then)
-      : super(_value, _then);
+    _$MonthValueImpl _value,
+    $Res Function(_$MonthValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of MonthValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? month = null,
-  }) {
-    return _then(_$MonthValueImpl(
-      month: null == month
-          ? _value.month
-          : month // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+  $Res call({Object? month = null}) {
+    return _then(
+      _$MonthValueImpl(
+        month: null == month
+            ? _value.month
+            : month // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
@@ -95,7 +106,7 @@ class __$$MonthValueImplCopyWithImpl<$Res>
 class _$MonthValueImpl implements _MonthValue {
   const _$MonthValueImpl({required this.month});
 
-// ex)202504
+  // ex)202504
   @override
   final String month;
 
@@ -115,7 +126,9 @@ class _$MonthValueImpl implements _MonthValue {
   @override
   int get hashCode => Object.hash(runtimeType, month);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of MonthValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$MonthValueImplCopyWith<_$MonthValueImpl> get copyWith =>
@@ -125,10 +138,14 @@ class _$MonthValueImpl implements _MonthValue {
 abstract class _MonthValue implements MonthValue {
   const factory _MonthValue({required final String month}) = _$MonthValueImpl;
 
-  @override // ex)202504
-  String get month;
+  // ex)202504
   @override
-  @JsonKey(ignore: true)
+  String get month;
+
+  /// Create a copy of MonthValue
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$MonthValueImplCopyWith<_$MonthValueImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

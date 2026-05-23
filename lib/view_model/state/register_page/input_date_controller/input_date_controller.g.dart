@@ -7,21 +7,21 @@ part of 'input_date_controller.dart';
 // **************************************************************************
 
 String _$inputDateControllerNotifierHash() =>
-    r'09655ebad8743f391ca1dfe1e69a15aefadfc1d6';
+    r'b12cb959bcd0b7cc4102c9f5c5dc29612caf9b92';
 
 /// See also [InputDateControllerNotifier].
 @ProviderFor(InputDateControllerNotifier)
 final inputDateControllerNotifierProvider =
     AutoDisposeNotifierProvider<InputDateControllerNotifier, DateTime>.internal(
-  InputDateControllerNotifier.new,
-  name: r'inputDateControllerNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$inputDateControllerNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      InputDateControllerNotifier.new,
+      name: r'inputDateControllerNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$inputDateControllerNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
-typedef _$inputDateControllerNotifier = AutoDisposeNotifier<DateTime>;
+typedef _$InputDateControllerNotifier = AutoDisposeNotifier<DateTime>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

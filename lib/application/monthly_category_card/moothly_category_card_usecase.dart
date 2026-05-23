@@ -38,8 +38,8 @@ class MonthlyCategoryCardUsecaseNotifier
 
   Future<List<CategoryCardEntity>> fetch(DateScopeEntity dateScope) async {
     // 選択した月の集計期間から開始日と終了日を取得する
-    DateTime fromDate = dateScope.monthPeriod.startDatetime;
-    DateTime toDate = dateScope.monthPeriod.endDatetime;
+    DateTime fromDate = dateScope.aggregationMonthPeriod.startDatetime;
+    DateTime toDate = dateScope.aggregationMonthPeriod.endDatetime;
 
     // 大カテゴリー(タイル情報つき)のリストを取得する
     final categoryList = await _categoryAccountingRepositoryProvider.fetchAll(
@@ -78,14 +78,25 @@ class MonthlyCategoryCardUsecaseNotifier
               : GraphType.noBudgetOtherHasBudget;
 
       // グラフの比率を計算する
-      final double graphRatio = graphType == GraphType.hasBudget
-          ? graphType == GraphType.hasBudgetButOver
-              ? 1
-              : (expense / budget)
-          : 0.0;
+      final double graphRatio;
+      switch (graphType) {
+        case GraphType.hasBudget:
+          // 支出/予算（0〜1の範囲）
+          graphRatio = expense / budget;
+          break;
+        case GraphType.hasBudgetButOver:
+          // 予算到達点の割合: budget/expense でバーのどこまでが予算分かを示す
+          graphRatio = budget / expense;
+          break;
+        default:
+          graphRatio = 0.0;
+      }
 
       final double? graphDenomiratorRatio =
-          graphType == GraphType.hasBudget ? 1.0 : null;
+          graphType == GraphType.hasBudget ||
+                  graphType == GraphType.hasBudgetButOver
+              ? 1.0
+              : null;
 
       // カードのvalueに代入
       categoryTileList.add(CategoryCardEntity(

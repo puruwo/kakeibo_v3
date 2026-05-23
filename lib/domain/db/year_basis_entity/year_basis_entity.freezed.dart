@@ -12,13 +12,16 @@ part of 'year_basis_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$YearBasisEntity {
   YearBasis get monthBasis => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of YearBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $YearBasisEntityCopyWith<YearBasisEntity> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -26,8 +29,9 @@ mixin _$YearBasisEntity {
 /// @nodoc
 abstract class $YearBasisEntityCopyWith<$Res> {
   factory $YearBasisEntityCopyWith(
-          YearBasisEntity value, $Res Function(YearBasisEntity) then) =
-      _$YearBasisEntityCopyWithImpl<$Res, YearBasisEntity>;
+    YearBasisEntity value,
+    $Res Function(YearBasisEntity) then,
+  ) = _$YearBasisEntityCopyWithImpl<$Res, YearBasisEntity>;
   @useResult
   $Res call({YearBasis monthBasis});
 }
@@ -42,26 +46,30 @@ class _$YearBasisEntityCopyWithImpl<$Res, $Val extends YearBasisEntity>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of YearBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? monthBasis = null,
-  }) {
-    return _then(_value.copyWith(
-      monthBasis: null == monthBasis
-          ? _value.monthBasis
-          : monthBasis // ignore: cast_nullable_to_non_nullable
-              as YearBasis,
-    ) as $Val);
+  $Res call({Object? monthBasis = null}) {
+    return _then(
+      _value.copyWith(
+            monthBasis: null == monthBasis
+                ? _value.monthBasis
+                : monthBasis // ignore: cast_nullable_to_non_nullable
+                      as YearBasis,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$YearBasisEntityImplCopyWith<$Res>
     implements $YearBasisEntityCopyWith<$Res> {
-  factory _$$YearBasisEntityImplCopyWith(_$YearBasisEntityImpl value,
-          $Res Function(_$YearBasisEntityImpl) then) =
-      __$$YearBasisEntityImplCopyWithImpl<$Res>;
+  factory _$$YearBasisEntityImplCopyWith(
+    _$YearBasisEntityImpl value,
+    $Res Function(_$YearBasisEntityImpl) then,
+  ) = __$$YearBasisEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({YearBasis monthBasis});
@@ -72,20 +80,23 @@ class __$$YearBasisEntityImplCopyWithImpl<$Res>
     extends _$YearBasisEntityCopyWithImpl<$Res, _$YearBasisEntityImpl>
     implements _$$YearBasisEntityImplCopyWith<$Res> {
   __$$YearBasisEntityImplCopyWithImpl(
-      _$YearBasisEntityImpl _value, $Res Function(_$YearBasisEntityImpl) _then)
-      : super(_value, _then);
+    _$YearBasisEntityImpl _value,
+    $Res Function(_$YearBasisEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of YearBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
-  $Res call({
-    Object? monthBasis = null,
-  }) {
-    return _then(_$YearBasisEntityImpl(
-      monthBasis: null == monthBasis
-          ? _value.monthBasis
-          : monthBasis // ignore: cast_nullable_to_non_nullable
-              as YearBasis,
-    ));
+  $Res call({Object? monthBasis = null}) {
+    return _then(
+      _$YearBasisEntityImpl(
+        monthBasis: null == monthBasis
+            ? _value.monthBasis
+            : monthBasis // ignore: cast_nullable_to_non_nullable
+                  as YearBasis,
+      ),
+    );
   }
 }
 
@@ -114,12 +125,16 @@ class _$YearBasisEntityImpl implements _YearBasisEntity {
   @override
   int get hashCode => Object.hash(runtimeType, monthBasis);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of YearBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$YearBasisEntityImplCopyWith<_$YearBasisEntityImpl> get copyWith =>
       __$$YearBasisEntityImplCopyWithImpl<_$YearBasisEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 }
 
 abstract class _YearBasisEntity implements YearBasisEntity {
@@ -128,8 +143,11 @@ abstract class _YearBasisEntity implements YearBasisEntity {
 
   @override
   YearBasis get monthBasis;
+
+  /// Create a copy of YearBasisEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$YearBasisEntityImplCopyWith<_$YearBasisEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

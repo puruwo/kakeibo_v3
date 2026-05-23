@@ -20,15 +20,23 @@ class FixedCostCategoryHeader extends StatelessWidget {
     // カテゴリーの色を取得
     final color = MyColors().getColorFromHex(colorCode);
 
-    return AppContentsHeader(
-      iconWidget: SvgPicture.asset(
-        resourcePath,
-        colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
-        semanticsLabel: 'categoryIcon',
-        width: 28,
-        height: 28,
-      ),
-      title: categoryName,
+    return Column(
+      children: [
+        AppContentsHeader(
+          type: AppContentsHeaderType.listCardSectionTitle,
+          iconWidget: SvgPicture.asset(
+            resourcePath,
+            colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+            semanticsLabel: 'categoryIcon',
+            width: 24,
+            height: 24,
+          ),
+          title: categoryName,
+        ),
+        Divider(height: 0, thickness: 1),
+
+        SizedBox(height: 10),
+      ],
     );
   }
 }

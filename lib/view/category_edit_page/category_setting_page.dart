@@ -1,10 +1,10 @@
-/// packegeImport
+// packegeImport
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 
-/// localImport
-import 'package:kakeibo/constant/colors.dart';
+// localImport
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_list_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_setting_footer.dart';
@@ -19,6 +19,7 @@ import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 enum CategoryType {
   expense, // 一般（支出）
   fixedCost, // 固定費
+  income, // 収入
 }
 
 class CategorySettingPage extends ConsumerStatefulWidget {
@@ -36,7 +37,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
   }
 
   @override
@@ -55,11 +56,9 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
         backgroundColor: MyColors.secondarySystemBackground,
         // ヘッダー
         appBar: AppBar(
-          backgroundColor: MyColors.secondarySystemBackground,
-          title: Text(
-            'カテゴリー設定',
-            style: AppTextStyles.pageHeaderText,
-          ),
+          backgroundColor: Colors.transparent,
+          flexibleSpace: const GlassAppBarBackground(),
+          title: Text('カテゴリー設定', style: AppTextStyles.pageHeaderText),
 
           //ヘッダー左のアイコンボタン
           leading: IconButton(
@@ -81,19 +80,30 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
             icon: const Icon(Icons.close, color: MyColors.white),
           ),
 
-          // タブバー
-          bottom: AppTab(
-            tabController: _tabController,
-            tabs: const [
-              Tab(text: '一般'),
-              Tab(text: '固定費'),
-            ],
+          // タブバー（編集モード中はIgnorePointerでタップを遮断し半透明表示）
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(kToolbarHeight),
+            child: IgnorePointer(
+              ignoring: editmodeProvider,
+              child: Opacity(
+                opacity: editmodeProvider ? 0.4 : 1.0,
+                child: AppTab(
+                  tabController: _tabController,
+                  tabs: const [
+                    Tab(text: '一般'),
+                    Tab(text: '固定費'),
+                    Tab(text: '収入'),
+                  ],
+                ),
+              ),
+            ),
           ),
         ),
 
         // 本体
         body: TabBarView(
           controller: _tabController,
+          physics: const NeverScrollableScrollPhysics(),
           children: [
             // 一般カテゴリータブ
             _buildCategoryContent(
@@ -104,6 +114,12 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
             // 固定費カテゴリータブ
             _buildCategoryContent(
               categoryType: CategoryType.fixedCost,
+              editmodeProvider: editmodeProvider,
+            ),
+
+            // 収入カテゴリータブ
+            _buildCategoryContent(
+              categoryType: CategoryType.income,
               editmodeProvider: editmodeProvider,
             ),
           ],

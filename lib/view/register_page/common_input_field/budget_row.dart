@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
-import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
+import 'package:kakeibo/view/component/app_pill_container.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 
@@ -11,10 +11,7 @@ import 'package:kakeibo/view_model/state/register_page/entered_income_source_con
 ///
 /// 画像デザインの「📊 予算 | 給料 ▼」部分
 class BudgetRow extends ConsumerStatefulWidget {
-  const BudgetRow({
-    super.key,
-    required this.originalIncomeSourceBigCategory,
-  });
+  const BudgetRow({super.key, required this.originalIncomeSourceBigCategory});
 
   final int originalIncomeSourceBigCategory;
 
@@ -53,8 +50,9 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedValue =
-        ref.watch(enteredIncomeSourceControllerNotifierProvider);
+    final selectedValue = ref.watch(
+      enteredIncomeSourceControllerNotifierProvider,
+    );
     final selectedEnum = _getEnumByValue(selectedValue);
 
     return AppPopupMenu(
@@ -72,38 +70,27 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
             ),
           )
           .toList(),
-      child: Container(
-        height: InputPageWidgetSize.pillHeight,
-        decoration: BoxDecoration(
-          color: MyColors.secondarySystemfill,
-          borderRadius: BorderRadius.circular(50),
-        ),
+      child: AppPillContainer(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Row(
+            Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
+                const Icon(
                   Icons.account_balance_wallet_outlined,
                   size: 18,
                   color: MyColors.label,
                 ),
-                SizedBox(width: 8),
-                Text(
-                  '予算',
-                  style: RegisterPageStyles.budgetLabel,
-                ),
+                const SizedBox(width: 8),
+                Text('予算', style: RegisterPageStyles.placeHolder),
               ],
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(
-                  selectedEnum.label,
-                  style: RegisterPageStyles.budgetValue,
-                ),
+                Text(selectedEnum.label, style: RegisterPageStyles.inputText),
                 const SizedBox(width: 4),
                 const Icon(
                   Icons.keyboard_arrow_down_rounded,

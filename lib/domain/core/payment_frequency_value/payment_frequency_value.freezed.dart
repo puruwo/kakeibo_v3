@@ -12,7 +12,8 @@ part of 'payment_frequency_value.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 /// @nodoc
 mixin _$PaymentFrequencyValue {
@@ -21,26 +22,32 @@ mixin _$PaymentFrequencyValue {
       throw _privateConstructorUsedError;
   String get dateLabel => throw _privateConstructorUsedError;
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PaymentFrequencyValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $PaymentFrequencyValueCopyWith<PaymentFrequencyValue> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $PaymentFrequencyValueCopyWith<$Res> {
-  factory $PaymentFrequencyValueCopyWith(PaymentFrequencyValue value,
-          $Res Function(PaymentFrequencyValue) then) =
-      _$PaymentFrequencyValueCopyWithImpl<$Res, PaymentFrequencyValue>;
+  factory $PaymentFrequencyValueCopyWith(
+    PaymentFrequencyValue value,
+    $Res Function(PaymentFrequencyValue) then,
+  ) = _$PaymentFrequencyValueCopyWithImpl<$Res, PaymentFrequencyValue>;
   @useResult
-  $Res call(
-      {int intervalNumber,
-      PaymentFrequencyIntervalUnit intervalUnit,
-      String dateLabel});
+  $Res call({
+    int intervalNumber,
+    PaymentFrequencyIntervalUnit intervalUnit,
+    String dateLabel,
+  });
 }
 
 /// @nodoc
-class _$PaymentFrequencyValueCopyWithImpl<$Res,
-        $Val extends PaymentFrequencyValue>
+class _$PaymentFrequencyValueCopyWithImpl<
+  $Res,
+  $Val extends PaymentFrequencyValue
+>
     implements $PaymentFrequencyValueCopyWith<$Res> {
   _$PaymentFrequencyValueCopyWithImpl(this._value, this._then);
 
@@ -49,6 +56,8 @@ class _$PaymentFrequencyValueCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of PaymentFrequencyValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -56,20 +65,23 @@ class _$PaymentFrequencyValueCopyWithImpl<$Res,
     Object? intervalUnit = null,
     Object? dateLabel = null,
   }) {
-    return _then(_value.copyWith(
-      intervalNumber: null == intervalNumber
-          ? _value.intervalNumber
-          : intervalNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalUnit: null == intervalUnit
-          ? _value.intervalUnit
-          : intervalUnit // ignore: cast_nullable_to_non_nullable
-              as PaymentFrequencyIntervalUnit,
-      dateLabel: null == dateLabel
-          ? _value.dateLabel
-          : dateLabel // ignore: cast_nullable_to_non_nullable
-              as String,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            intervalNumber: null == intervalNumber
+                ? _value.intervalNumber
+                : intervalNumber // ignore: cast_nullable_to_non_nullable
+                      as int,
+            intervalUnit: null == intervalUnit
+                ? _value.intervalUnit
+                : intervalUnit // ignore: cast_nullable_to_non_nullable
+                      as PaymentFrequencyIntervalUnit,
+            dateLabel: null == dateLabel
+                ? _value.dateLabel
+                : dateLabel // ignore: cast_nullable_to_non_nullable
+                      as String,
+          )
+          as $Val,
+    );
   }
 }
 
@@ -77,26 +89,30 @@ class _$PaymentFrequencyValueCopyWithImpl<$Res,
 abstract class _$$PaymentFrequencyValueImplCopyWith<$Res>
     implements $PaymentFrequencyValueCopyWith<$Res> {
   factory _$$PaymentFrequencyValueImplCopyWith(
-          _$PaymentFrequencyValueImpl value,
-          $Res Function(_$PaymentFrequencyValueImpl) then) =
-      __$$PaymentFrequencyValueImplCopyWithImpl<$Res>;
+    _$PaymentFrequencyValueImpl value,
+    $Res Function(_$PaymentFrequencyValueImpl) then,
+  ) = __$$PaymentFrequencyValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int intervalNumber,
-      PaymentFrequencyIntervalUnit intervalUnit,
-      String dateLabel});
+  $Res call({
+    int intervalNumber,
+    PaymentFrequencyIntervalUnit intervalUnit,
+    String dateLabel,
+  });
 }
 
 /// @nodoc
 class __$$PaymentFrequencyValueImplCopyWithImpl<$Res>
-    extends _$PaymentFrequencyValueCopyWithImpl<$Res,
-        _$PaymentFrequencyValueImpl>
+    extends
+        _$PaymentFrequencyValueCopyWithImpl<$Res, _$PaymentFrequencyValueImpl>
     implements _$$PaymentFrequencyValueImplCopyWith<$Res> {
-  __$$PaymentFrequencyValueImplCopyWithImpl(_$PaymentFrequencyValueImpl _value,
-      $Res Function(_$PaymentFrequencyValueImpl) _then)
-      : super(_value, _then);
+  __$$PaymentFrequencyValueImplCopyWithImpl(
+    _$PaymentFrequencyValueImpl _value,
+    $Res Function(_$PaymentFrequencyValueImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of PaymentFrequencyValue
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -104,30 +120,33 @@ class __$$PaymentFrequencyValueImplCopyWithImpl<$Res>
     Object? intervalUnit = null,
     Object? dateLabel = null,
   }) {
-    return _then(_$PaymentFrequencyValueImpl(
-      intervalNumber: null == intervalNumber
-          ? _value.intervalNumber
-          : intervalNumber // ignore: cast_nullable_to_non_nullable
-              as int,
-      intervalUnit: null == intervalUnit
-          ? _value.intervalUnit
-          : intervalUnit // ignore: cast_nullable_to_non_nullable
-              as PaymentFrequencyIntervalUnit,
-      dateLabel: null == dateLabel
-          ? _value.dateLabel
-          : dateLabel // ignore: cast_nullable_to_non_nullable
-              as String,
-    ));
+    return _then(
+      _$PaymentFrequencyValueImpl(
+        intervalNumber: null == intervalNumber
+            ? _value.intervalNumber
+            : intervalNumber // ignore: cast_nullable_to_non_nullable
+                  as int,
+        intervalUnit: null == intervalUnit
+            ? _value.intervalUnit
+            : intervalUnit // ignore: cast_nullable_to_non_nullable
+                  as PaymentFrequencyIntervalUnit,
+        dateLabel: null == dateLabel
+            ? _value.dateLabel
+            : dateLabel // ignore: cast_nullable_to_non_nullable
+                  as String,
+      ),
+    );
   }
 }
 
 /// @nodoc
 
 class _$PaymentFrequencyValueImpl implements _PaymentFrequencyValue {
-  const _$PaymentFrequencyValueImpl(
-      {required this.intervalNumber,
-      required this.intervalUnit,
-      required this.dateLabel});
+  const _$PaymentFrequencyValueImpl({
+    required this.intervalNumber,
+    required this.intervalUnit,
+    required this.dateLabel,
+  });
 
   @override
   final int intervalNumber;
@@ -158,19 +177,25 @@ class _$PaymentFrequencyValueImpl implements _PaymentFrequencyValue {
   int get hashCode =>
       Object.hash(runtimeType, intervalNumber, intervalUnit, dateLabel);
 
-  @JsonKey(ignore: true)
+  /// Create a copy of PaymentFrequencyValue
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$PaymentFrequencyValueImplCopyWith<_$PaymentFrequencyValueImpl>
-      get copyWith => __$$PaymentFrequencyValueImplCopyWithImpl<
-          _$PaymentFrequencyValueImpl>(this, _$identity);
+  get copyWith =>
+      __$$PaymentFrequencyValueImplCopyWithImpl<_$PaymentFrequencyValueImpl>(
+        this,
+        _$identity,
+      );
 }
 
 abstract class _PaymentFrequencyValue implements PaymentFrequencyValue {
-  const factory _PaymentFrequencyValue(
-      {required final int intervalNumber,
-      required final PaymentFrequencyIntervalUnit intervalUnit,
-      required final String dateLabel}) = _$PaymentFrequencyValueImpl;
+  const factory _PaymentFrequencyValue({
+    required final int intervalNumber,
+    required final PaymentFrequencyIntervalUnit intervalUnit,
+    required final String dateLabel,
+  }) = _$PaymentFrequencyValueImpl;
 
   @override
   int get intervalNumber;
@@ -178,8 +203,11 @@ abstract class _PaymentFrequencyValue implements PaymentFrequencyValue {
   PaymentFrequencyIntervalUnit get intervalUnit;
   @override
   String get dateLabel;
+
+  /// Create a copy of PaymentFrequencyValue
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$PaymentFrequencyValueImplCopyWith<_$PaymentFrequencyValueImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }

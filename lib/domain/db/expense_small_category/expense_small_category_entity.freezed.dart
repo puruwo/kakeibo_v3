@@ -12,10 +12,12 @@ part of 'expense_small_category_entity.dart';
 T _$identity<T>(T value) => value;
 
 final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
+  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
+);
 
 ExpenseSmallCategoryEntity _$ExpenseSmallCategoryEntityFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   return _SmallCategoryEntity.fromJson(json);
 }
 
@@ -28,31 +30,42 @@ mixin _$ExpenseSmallCategoryEntity {
   String get smallCategoryName => throw _privateConstructorUsedError;
   int get defaultDisplayed => throw _privateConstructorUsedError;
 
+  /// Serializes this ExpenseSmallCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-  @JsonKey(ignore: true)
+
+  /// Create a copy of ExpenseSmallCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   $ExpenseSmallCategoryEntityCopyWith<ExpenseSmallCategoryEntity>
-      get copyWith => throw _privateConstructorUsedError;
+  get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
 abstract class $ExpenseSmallCategoryEntityCopyWith<$Res> {
-  factory $ExpenseSmallCategoryEntityCopyWith(ExpenseSmallCategoryEntity value,
-          $Res Function(ExpenseSmallCategoryEntity) then) =
-      _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
-          ExpenseSmallCategoryEntity>;
+  factory $ExpenseSmallCategoryEntityCopyWith(
+    ExpenseSmallCategoryEntity value,
+    $Res Function(ExpenseSmallCategoryEntity) then,
+  ) =
+      _$ExpenseSmallCategoryEntityCopyWithImpl<
+        $Res,
+        ExpenseSmallCategoryEntity
+      >;
   @useResult
-  $Res call(
-      {int id,
-      int smallCategoryOrderKey,
-      int bigCategoryKey,
-      int displayedOrderInBig,
-      String smallCategoryName,
-      int defaultDisplayed});
+  $Res call({
+    int id,
+    int smallCategoryOrderKey,
+    int bigCategoryKey,
+    int displayedOrderInBig,
+    String smallCategoryName,
+    int defaultDisplayed,
+  });
 }
 
 /// @nodoc
-class _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
-        $Val extends ExpenseSmallCategoryEntity>
+class _$ExpenseSmallCategoryEntityCopyWithImpl<
+  $Res,
+  $Val extends ExpenseSmallCategoryEntity
+>
     implements $ExpenseSmallCategoryEntityCopyWith<$Res> {
   _$ExpenseSmallCategoryEntityCopyWithImpl(this._value, this._then);
 
@@ -61,6 +74,8 @@ class _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
+  /// Create a copy of ExpenseSmallCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -71,61 +86,72 @@ class _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
     Object? smallCategoryName = null,
     Object? defaultDisplayed = null,
   }) {
-    return _then(_value.copyWith(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryOrderKey: null == smallCategoryOrderKey
-          ? _value.smallCategoryOrderKey
-          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryKey: null == bigCategoryKey
-          ? _value.bigCategoryKey
-          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      displayedOrderInBig: null == displayedOrderInBig
-          ? _value.displayedOrderInBig
-          : displayedOrderInBig // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      defaultDisplayed: null == defaultDisplayed
-          ? _value.defaultDisplayed
-          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-    ) as $Val);
+    return _then(
+      _value.copyWith(
+            id: null == id
+                ? _value.id
+                : id // ignore: cast_nullable_to_non_nullable
+                      as int,
+            smallCategoryOrderKey: null == smallCategoryOrderKey
+                ? _value.smallCategoryOrderKey
+                : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+            bigCategoryKey: null == bigCategoryKey
+                ? _value.bigCategoryKey
+                : bigCategoryKey // ignore: cast_nullable_to_non_nullable
+                      as int,
+            displayedOrderInBig: null == displayedOrderInBig
+                ? _value.displayedOrderInBig
+                : displayedOrderInBig // ignore: cast_nullable_to_non_nullable
+                      as int,
+            smallCategoryName: null == smallCategoryName
+                ? _value.smallCategoryName
+                : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
+            defaultDisplayed: null == defaultDisplayed
+                ? _value.defaultDisplayed
+                : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+                      as int,
+          )
+          as $Val,
+    );
   }
 }
 
 /// @nodoc
 abstract class _$$SmallCategoryEntityImplCopyWith<$Res>
     implements $ExpenseSmallCategoryEntityCopyWith<$Res> {
-  factory _$$SmallCategoryEntityImplCopyWith(_$SmallCategoryEntityImpl value,
-          $Res Function(_$SmallCategoryEntityImpl) then) =
-      __$$SmallCategoryEntityImplCopyWithImpl<$Res>;
+  factory _$$SmallCategoryEntityImplCopyWith(
+    _$SmallCategoryEntityImpl value,
+    $Res Function(_$SmallCategoryEntityImpl) then,
+  ) = __$$SmallCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call(
-      {int id,
-      int smallCategoryOrderKey,
-      int bigCategoryKey,
-      int displayedOrderInBig,
-      String smallCategoryName,
-      int defaultDisplayed});
+  $Res call({
+    int id,
+    int smallCategoryOrderKey,
+    int bigCategoryKey,
+    int displayedOrderInBig,
+    String smallCategoryName,
+    int defaultDisplayed,
+  });
 }
 
 /// @nodoc
 class __$$SmallCategoryEntityImplCopyWithImpl<$Res>
-    extends _$ExpenseSmallCategoryEntityCopyWithImpl<$Res,
-        _$SmallCategoryEntityImpl>
+    extends
+        _$ExpenseSmallCategoryEntityCopyWithImpl<
+          $Res,
+          _$SmallCategoryEntityImpl
+        >
     implements _$$SmallCategoryEntityImplCopyWith<$Res> {
-  __$$SmallCategoryEntityImplCopyWithImpl(_$SmallCategoryEntityImpl _value,
-      $Res Function(_$SmallCategoryEntityImpl) _then)
-      : super(_value, _then);
+  __$$SmallCategoryEntityImplCopyWithImpl(
+    _$SmallCategoryEntityImpl _value,
+    $Res Function(_$SmallCategoryEntityImpl) _then,
+  ) : super(_value, _then);
 
+  /// Create a copy of ExpenseSmallCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -136,46 +162,48 @@ class __$$SmallCategoryEntityImplCopyWithImpl<$Res>
     Object? smallCategoryName = null,
     Object? defaultDisplayed = null,
   }) {
-    return _then(_$SmallCategoryEntityImpl(
-      id: null == id
-          ? _value.id
-          : id // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryOrderKey: null == smallCategoryOrderKey
-          ? _value.smallCategoryOrderKey
-          : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      bigCategoryKey: null == bigCategoryKey
-          ? _value.bigCategoryKey
-          : bigCategoryKey // ignore: cast_nullable_to_non_nullable
-              as int,
-      displayedOrderInBig: null == displayedOrderInBig
-          ? _value.displayedOrderInBig
-          : displayedOrderInBig // ignore: cast_nullable_to_non_nullable
-              as int,
-      smallCategoryName: null == smallCategoryName
-          ? _value.smallCategoryName
-          : smallCategoryName // ignore: cast_nullable_to_non_nullable
-              as String,
-      defaultDisplayed: null == defaultDisplayed
-          ? _value.defaultDisplayed
-          : defaultDisplayed // ignore: cast_nullable_to_non_nullable
-              as int,
-    ));
+    return _then(
+      _$SmallCategoryEntityImpl(
+        id: null == id
+            ? _value.id
+            : id // ignore: cast_nullable_to_non_nullable
+                  as int,
+        smallCategoryOrderKey: null == smallCategoryOrderKey
+            ? _value.smallCategoryOrderKey
+            : smallCategoryOrderKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+        bigCategoryKey: null == bigCategoryKey
+            ? _value.bigCategoryKey
+            : bigCategoryKey // ignore: cast_nullable_to_non_nullable
+                  as int,
+        displayedOrderInBig: null == displayedOrderInBig
+            ? _value.displayedOrderInBig
+            : displayedOrderInBig // ignore: cast_nullable_to_non_nullable
+                  as int,
+        smallCategoryName: null == smallCategoryName
+            ? _value.smallCategoryName
+            : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
+        defaultDisplayed: null == defaultDisplayed
+            ? _value.defaultDisplayed
+            : defaultDisplayed // ignore: cast_nullable_to_non_nullable
+                  as int,
+      ),
+    );
   }
 }
 
 /// @nodoc
 @JsonSerializable()
 class _$SmallCategoryEntityImpl extends _SmallCategoryEntity {
-  const _$SmallCategoryEntityImpl(
-      {required this.id,
-      required this.smallCategoryOrderKey,
-      required this.bigCategoryKey,
-      required this.displayedOrderInBig,
-      required this.smallCategoryName,
-      required this.defaultDisplayed})
-      : super._();
+  const _$SmallCategoryEntityImpl({
+    required this.id,
+    required this.smallCategoryOrderKey,
+    required this.bigCategoryKey,
+    required this.displayedOrderInBig,
+    required this.smallCategoryName,
+    required this.defaultDisplayed,
+  }) : super._();
 
   factory _$SmallCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$SmallCategoryEntityImplFromJson(json);
@@ -216,34 +244,44 @@ class _$SmallCategoryEntityImpl extends _SmallCategoryEntity {
                 other.defaultDisplayed == defaultDisplayed));
   }
 
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, smallCategoryOrderKey,
-      bigCategoryKey, displayedOrderInBig, smallCategoryName, defaultDisplayed);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    smallCategoryOrderKey,
+    bigCategoryKey,
+    displayedOrderInBig,
+    smallCategoryName,
+    defaultDisplayed,
+  );
 
-  @JsonKey(ignore: true)
+  /// Create a copy of ExpenseSmallCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
+  @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
   _$$SmallCategoryEntityImplCopyWith<_$SmallCategoryEntityImpl> get copyWith =>
       __$$SmallCategoryEntityImplCopyWithImpl<_$SmallCategoryEntityImpl>(
-          this, _$identity);
+        this,
+        _$identity,
+      );
 
   @override
   Map<String, dynamic> toJson() {
-    return _$$SmallCategoryEntityImplToJson(
-      this,
-    );
+    return _$$SmallCategoryEntityImplToJson(this);
   }
 }
 
 abstract class _SmallCategoryEntity extends ExpenseSmallCategoryEntity {
-  const factory _SmallCategoryEntity(
-      {required final int id,
-      required final int smallCategoryOrderKey,
-      required final int bigCategoryKey,
-      required final int displayedOrderInBig,
-      required final String smallCategoryName,
-      required final int defaultDisplayed}) = _$SmallCategoryEntityImpl;
+  const factory _SmallCategoryEntity({
+    required final int id,
+    required final int smallCategoryOrderKey,
+    required final int bigCategoryKey,
+    required final int displayedOrderInBig,
+    required final String smallCategoryName,
+    required final int defaultDisplayed,
+  }) = _$SmallCategoryEntityImpl;
   const _SmallCategoryEntity._() : super._();
 
   factory _SmallCategoryEntity.fromJson(Map<String, dynamic> json) =
@@ -261,8 +299,11 @@ abstract class _SmallCategoryEntity extends ExpenseSmallCategoryEntity {
   String get smallCategoryName;
   @override
   int get defaultDisplayed;
+
+  /// Create a copy of ExpenseSmallCategoryEntity
+  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(ignore: true)
+  @JsonKey(includeFromJson: false, includeToJson: false)
   _$$SmallCategoryEntityImplCopyWith<_$SmallCategoryEntityImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

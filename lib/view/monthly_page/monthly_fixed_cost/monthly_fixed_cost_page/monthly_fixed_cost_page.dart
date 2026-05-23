@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_summary_header.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_by_category_list_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -13,20 +15,24 @@ class MonthlyFixedCostPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
-        title: Text(
-          '固定費',
-          style: AppTextStyles.pageHeaderText,
-        ),
+        flexibleSpace: const GlassAppBarBackground(),
+        title: Text('固定費', style: AppTextStyles.pageHeaderText),
       ),
       body: Column(
         children: [
-          const Expanded(
+          Expanded(
             child: SingleChildScrollView(
-              child: Column(
+              padding: EdgeInsets.only(
+                top: MediaQuery.of(context).padding.top + kToolbarHeight,
+              ),
+              child: const Column(
                 children: [
+                  SizedBox(height: 16),
+
                   // ヘッダー
                   FixedCostSummaryHeader(),
 
@@ -40,64 +46,47 @@ class MonthlyFixedCostPage extends ConsumerWidget {
             ),
           ),
           const Divider(height: 1),
-          // フッターボタンエリア
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
-            child: Row(
-              children: [
-                // 固定費を管理ボタン
-                Expanded(
-                  child: MainButton(
-                    buttonType: ButtonColorType.secondary,
-                    buttonText: '固定費を管理',
-                    onPressed: () async {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: ((context) =>
-                              const FixedCostRegistrationListPage())));
-                    },
+          // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
+          SafeArea(
+            top: false,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+              child: Row(
+                children: [
+                  // 固定費を管理ボタン
+                  Expanded(
+                    child: MainButton(
+                      buttonType: ButtonColorType.secondary,
+                      buttonText: '固定費を管理',
+                      onPressed: () async {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: ((context) =>
+                                const FixedCostRegistrationListPage()),
+                          ),
+                        );
+                      },
+                    ),
                   ),
-                ),
 
-                // 間の隙間
-                const SizedBox(
-                  width: 8,
-                ),
+                  // 間の隙間
+                  const SizedBox(width: 8),
 
-                // 固定費を新しく登録する
-                Expanded(
-                  child: MainButton(
-                    buttonType: ButtonColorType.main,
-                    buttonText: '固定費を登録',
-                    onPressed: () {
-                      showModalBottomSheet(
-                        //sccafoldの上に出すか
-                        useRootNavigator: true,
-                        isScrollControlled: true,
-                        useSafeArea: true,
-                        constraints: const BoxConstraints(
-                          maxWidth: 2000,
-                        ),
-                        context: context,
-                        // constで呼び出さないとリビルドがかかってtextfieldのも何度も作り直してしまう
-                        builder: (context) {
-                          return MaterialApp(
-                            debugShowCheckedModeBanner: false,
-                            theme: ThemeData.dark(),
-                            themeMode: ThemeMode.dark,
-                            darkTheme: ThemeData.dark(),
-                            home: MediaQuery.withClampedTextScaling(
-                              // テキストサイズの制御
-                              minScaleFactor: 0.7,
-                              maxScaleFactor: 0.95,
-                              child: const RegisaterPageBase.addFixedCost(),
-                            ),
-                          );
-                        },
-                      );
-                    },
+                  // 固定費を新しく登録する
+                  Expanded(
+                    child: MainButton(
+                      buttonType: ButtonColorType.main,
+                      buttonText: '固定費を登録',
+                      onPressed: () {
+                        showAppModalBottomSheet(
+                          context,
+                          child: const RegisaterPageBase.addFixedCost(),
+                        );
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

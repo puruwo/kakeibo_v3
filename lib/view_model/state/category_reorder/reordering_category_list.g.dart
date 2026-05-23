@@ -13,17 +13,20 @@ String _$reorderingCategoryListNotifierHash() =>
 ///
 /// Copied from [ReorderingCategoryListNotifier].
 @ProviderFor(ReorderingCategoryListNotifier)
-final reorderingCategoryListNotifierProvider = AutoDisposeNotifierProvider<
-    ReorderingCategoryListNotifier, ReorderingState>.internal(
-  ReorderingCategoryListNotifier.new,
-  name: r'reorderingCategoryListNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$reorderingCategoryListNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+final reorderingCategoryListNotifierProvider =
+    AutoDisposeNotifierProvider<
+      ReorderingCategoryListNotifier,
+      ReorderingState
+    >.internal(
+      ReorderingCategoryListNotifier.new,
+      name: r'reorderingCategoryListNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$reorderingCategoryListNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ReorderingCategoryListNotifier = AutoDisposeNotifier<ReorderingState>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

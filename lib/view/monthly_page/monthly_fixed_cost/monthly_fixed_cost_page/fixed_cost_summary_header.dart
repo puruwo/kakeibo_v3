@@ -1,6 +1,7 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 
 /// Local imports
@@ -28,7 +29,9 @@ class _FixedCostSummaryHeaderState
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
 
-    return ref.watch(resolvedFixedCostSammaryValueProvider).when(
+    return ref
+        .watch(resolvedFixedCostSammaryValueProvider)
+        .when(
           data: (value) {
             return Column(
               children: [
@@ -37,22 +40,25 @@ class _FixedCostSummaryHeaderState
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Text(
                           '今月の支払い予定',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: AppTextStyles.appCardTitleLabel,
                         ),
                       ),
-                      Text(
-                        '${yenmarkFormattedPriceGetter(value.scheduledPaymentAmount)} 円',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  '${yenmarkFormattedPriceGetter(value.scheduledPaymentAmount)} ',
+                              style: AppTextStyles.appCardPriceLabel,
+                            ),
+                            TextSpan(
+                              text: '円',
+                              style: AppTextStyles.appCardPriceUnit,
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -68,18 +74,20 @@ class _FixedCostSummaryHeaderState
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Text(
-                          '確定分',
-                          style: TextStyle(
-                            color: Colors.white70,
-                            fontSize: 16,
-                          ),
-                        ),
-                        Text(
-                          '${yenmarkFormattedPriceGetter(value.fixedCostSum)} 円',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
+                        Text('確定分', style: AppTextStyles.appCardTitleLabel),
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    '${yenmarkFormattedPriceGetter(value.fixedCostSum)} ',
+                                style: AppTextStyles.appCardSecondaryPriceLabel,
+                              ),
+                              TextSpan(
+                                text: '円',
+                                style: AppTextStyles.appCardPriceUnit,
+                              ),
+                            ],
                           ),
                         ),
                       ],
@@ -95,20 +103,25 @@ class _FixedCostSummaryHeaderState
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: Text(
                             '未確定確定分(推定)',
-                            style: TextStyle(
-                              color: Colors.white54,
-                              fontSize: 16,
-                            ),
+                            style: AppTextStyles.appCardTitleLabel,
                           ),
                         ),
-                        Text(
-                          '${yenmarkFormattedPriceGetter(value.unconfirmedFixedCostSum)} 円',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 18,
+                        Text.rich(
+                          TextSpan(
+                            children: [
+                              TextSpan(
+                                text:
+                                    '${yenmarkFormattedPriceGetter(value.unconfirmedFixedCostSum)} ',
+                                style: AppTextStyles.appCardSecondaryPriceLabel,
+                              ),
+                              TextSpan(
+                                text: '円',
+                                style: AppTextStyles.appCardPriceUnit,
+                              ),
+                            ],
                           ),
                         ),
                       ],
