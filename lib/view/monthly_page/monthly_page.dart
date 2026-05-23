@@ -29,7 +29,9 @@ import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_va
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/app_year_month_picker.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 
 class MonthlyPage extends ConsumerStatefulWidget {
   const MonthlyPage({super.key});
@@ -71,17 +73,37 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                     final monthPeriod = monthPeriodAsync.whenOrNull(
                       data: (data) => data.aggregationMonthPeriod,
                     );
+                    final selectedDate = ref.watch(
+                      analyzePageSelectedDatetimeNotifierProvider,
+                    );
                     final label = yyyyMMtoMMGetter(monthPeriod);
                     // 月ラベルの下に「一般会計」を小さく表示し、ボーナスを含まない分析画面であることを示す
-                    return Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(label, style: AppTextStyles.pageHeaderText),
-                        Text(
-                          '一般会計',
-                          style: AppTextStyles.pageHeaderSubText,
-                        ),
-                      ],
+                    return GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () async {
+                        final picked = await showAppYearMonthPicker(
+                          context: context,
+                          mode: AppYearMonthPickerMode.yearMonth,
+                          initialDateTime: selectedDate,
+                        );
+                        if (picked == null) return;
+                        ref
+                            .read(
+                              analyzePageSelectedDatetimeNotifierProvider
+                                  .notifier,
+                            )
+                            .updateState(picked);
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(label, style: AppTextStyles.pageHeaderText),
+                          Text(
+                            '一般会計',
+                            style: AppTextStyles.pageHeaderSubText,
+                          ),
+                        ],
+                      ),
                     );
                   },
                 ),
