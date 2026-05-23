@@ -51,9 +51,11 @@ class YearlyIncomeListPage extends ConsumerWidget {
               slivers: [
                 SliverToBoxAdapter(
                   child: Padding(
+                    // extendBodyBehindAppBar:true のとき padding.top はステータスバー高さのみ。
+                    // AppBar(kToolbarHeight)分も加算してカードをAppBar下端に揃える。
                     padding: EdgeInsets.fromLTRB(
                       16,
-                      MediaQuery.of(context).padding.top + 16,
+                      MediaQuery.of(context).padding.top + kToolbarHeight + 16,
                       16,
                       0,
                     ),
