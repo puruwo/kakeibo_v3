@@ -47,22 +47,29 @@ class YearlyIncomeListPage extends ConsumerWidget {
         ),
         body: Stack(
           children: [
-            ListView(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
-                  child: IncomeGraphArea(
-                    period: period,
+            CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                    child: IncomeGraphArea(
+                      period: period,
+                    ),
                   ),
                 ),
-                YearlyIncomeListArea(
-                  period: period,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
+                SliverToBoxAdapter(
+                  child: YearlyIncomeListArea(
+                    period: period,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                  ),
                 ),
-                // FABがリスト末尾に被らないよう余白を確保
-                // 可視余白 = FAB高さ(46) + FABマージン(kFABMargin=16) = 62dp
-                SizedBox(height: fabBottom + 46),
+                // コンテンツが短いときは残りスペースを静かに埋める（余分なスクロールなし）
+                // コンテンツが長いときはFAB + マージン分の余白だけ確保する
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: SizedBox(height: fabBottom + 46),
+                ),
               ],
             ),
             Positioned(
