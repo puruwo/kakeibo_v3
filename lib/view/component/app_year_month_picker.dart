@@ -341,7 +341,7 @@ class _AppYearMonthPickerOverlayState
           Positioned.fill(
             child: GestureDetector(
               onTap: () => widget.onClose(null),
-              child: Container(color: Colors.black54),
+              child: Container(color: Colors.black.withValues(alpha: 0.75)),
             ),
           ),
           // ピッカー本体（AppBar直下にスライドイン）
