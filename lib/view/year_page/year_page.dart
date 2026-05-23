@@ -79,6 +79,8 @@ class _YearPageState extends ConsumerState<YearPage> {
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
+                            // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
+                            const SizedBox(width: 20),
                             Text(periodLabel,
                                 style: AppTextStyles.pageHeaderText),
                             const SizedBox(width: 2),
