@@ -49,11 +49,26 @@ yyyyToyyyyGetter(DateScopeEntity dateScope) {
 }
 
 // 選択月の表示フォーマット取得
-// 集計期間の開始月（集計開始日を含む月）を「yyyy年 m月」形式で返す
 yyyyMMtoMMGetter(PeriodValue? monthPeriod) {
   if (monthPeriod == null) {
     return '';
   }
   final referenceDay = monthPeriod.startDatetime;
-  return '${referenceDay.year}年 ${referenceDay.month}月';
+  // 基準日が月初日設定なら表示月はその月のみ
+  if (referenceDay.day == 1) {
+    final label = '${referenceDay.year}年 ${referenceDay.month}月';
+    return label;
+  }
+  // 基準日が月初日以外設定なら表示月はその月とその次の月
+  else {
+    // 12月の次の月は1月なので分岐して処理
+    if (referenceDay.month == 12) {
+      final label = '${referenceDay.year}年 ${referenceDay.month} - ${1}月';
+      return label;
+    } else {
+      final label =
+          '${referenceDay.year}年 ${referenceDay.month} - ${referenceDay.month + 1}月';
+      return label;
+    }
+  }
 }
