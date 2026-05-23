@@ -35,17 +35,8 @@ String yenFormattedPriceGetter(int price) {
 }
 
 yyyyToyyyyGetter(DateScopeEntity dateScope) {
-  final startDate = dateScope.yearPeriod.startDatetime;
-  final endDate = dateScope.yearPeriod.endDatetime;
-
-  // 年のまたぎがない場合は、年のみ表示
-  if (startDate.year == endDate.year) {
-    final label = '${startDate.year}年';
-    return label;
-  } else {
-    final label = '${startDate.year}年 - ${endDate.year}年';
-    return label;
-  }
+  // 代表年（YearBasis設定に従う。デフォルトは開始年）で年度表示
+  return '${dateScope.representativeYear.year}年度';
 }
 
 // 選択月の表示フォーマット取得
