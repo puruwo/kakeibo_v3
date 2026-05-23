@@ -48,7 +48,7 @@ updateDBCountNotifierProvider,AutoDisposeNotifierProvider,int,GlobalState,,true,
 navigationBarNumberNotifierProvider,NotifierProvider,int,GlobalState,,,true,lib/view_model/state/navigation_bar_number.dart,ナビゲーション画面選択インデックス（keepAlive）,
 pageManagerNotifierProvider,NotifierProvider,int,GlobalState,,,true,lib/view_model/state/page_manager/page_manager.dart,ページスクロール位置管理（keepAlive）,
 initialOpenNotifierProvider,NotifierProvider,bool,GlobalState,,,true,lib/view_model/state/initial_open.dart,アプリ初期開放フラグ（keepAlive）,
-homeSelectedDatetimeNotifierProvider,NotifierProvider,DateTime,State,,,,lib/view_model/state/date_scope/home_page/selected_datetime/home_selected_datetime.dart,ホームページの選択日付,systemDatetimeNotifierProvider(アプリ起動時点の日時)
+homeSelectedDatetimeNotifierProvider,NotifierProvider,DateTime,State,,,,lib/view_model/state/date_scope/home_page/selected_datetime/home_selected_datetime.dart,ホームページの選択日付,systemDatetimeNotifierProvider(アプリ起動時点の日時) / aggregationStartMonthProvider(年度集計開始月) / aggregationStartDayProvider(集計開始日)
 analyzePageSelectedDatetimeNotifierProvider,NotifierProvider,DateTime,State,,,,lib/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart,分析ページの選択日付,systemDatetimeNotifierProvider(アプリ起動時点の日時)
 historicalSelectedDatetimeNotifierProvider,NotifierProvider,DateTime,State,,,,lib/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart,履歴ページの選択日付,systemDatetimeNotifierProvider(アプリ起動時点の日時)
 editModeNotifierProvider,AutoDisposeNotifierProvider,bool,State,,true,,lib/view_model/state/category_edit_page/edit_mode.dart,カテゴリー編集モード切り替え,

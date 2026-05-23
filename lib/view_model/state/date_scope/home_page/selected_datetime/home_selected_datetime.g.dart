@@ -7,7 +7,7 @@ part of 'home_selected_datetime.dart';
 // **************************************************************************
 
 String _$homeSelectedDatetimeNotifierHash() =>
-    r'e63fd3506ef9b3a587e3a5e839bfe7b02630f6c8';
+    r'5e41bcf24f48fce7b8095c35bfc926ae2acccbc4';
 
 /// See also [HomeSelectedDatetimeNotifier].
 @ProviderFor(HomeSelectedDatetimeNotifier)

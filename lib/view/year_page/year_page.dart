@@ -6,7 +6,6 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
-import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
@@ -22,7 +21,9 @@ import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_en
 import 'package:kakeibo/domain/ui_value/bonus_plan_value/bonus_section_display_type.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/app_year_month_picker.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view_model/state/date_scope/home_page/selected_datetime/home_selected_datetime.dart';
 
 class YearPage extends ConsumerStatefulWidget {
   const YearPage({super.key});
@@ -45,10 +46,42 @@ class _YearPageState extends ConsumerState<YearPage> {
         title: Consumer(
           builder: (context, ref, _) {
             final asyncValue = ref.watch(homeDateScopeEntityProvider);
+            final selectedDate = ref.watch(homeSelectedDatetimeNotifierProvider);
             return asyncValue.when(
-              data: (activeDt) => Text(
-                yyyyToyyyyGetter(activeDt),
-                style: AppTextStyles.pageHeaderText,
+              data: (activeDt) => GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () async {
+                  final picked = await showAppYearMonthPicker(
+                    context: context,
+                    mode: AppYearMonthPickerMode.year,
+                    initialDateTime: selectedDate,
+                  );
+                  if (picked == null) return;
+                  await ref
+                      .read(homeSelectedDatetimeNotifierProvider.notifier)
+                      .updateStateAsYear(picked.year);
+                },
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 200),
+                  transitionBuilder: (child, animation) =>
+                      FadeTransition(opacity: animation, child: child),
+                  child: () {
+                    final start = activeDt.yearPeriod.startDatetime;
+                    final end = activeDt.yearPeriod.endDatetime;
+                    final periodLabel =
+                        '${start.year}年${start.month}月〜${end.year}年${end.month}月';
+                    final yearLabel =
+                        '${activeDt.representativeYear.year}年度';
+                    return Column(
+                      key: ValueKey('${start.year}${start.month}'),
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(periodLabel, style: AppTextStyles.pageHeaderText),
+                        Text(yearLabel, style: AppTextStyles.pageHeaderSubText),
+                      ],
+                    );
+                  }(),
+                ),
               ),
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
