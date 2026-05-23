@@ -44,7 +44,7 @@ class AppFloatingActionButton extends StatelessWidget {
         onTap: onTap,
         child: hasLabel
             ? SizedBox(
-                height: 56,
+                height: 46,
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: Row(
@@ -64,7 +64,7 @@ class AppFloatingActionButton extends StatelessWidget {
               )
             : SizedBox(
                 width: 56,
-                height: 56,
+                height: 46,
                 child: Center(
                   child: Icon(icon, color: fgColor, size: 24),
                 ),
