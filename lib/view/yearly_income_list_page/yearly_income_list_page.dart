@@ -25,20 +25,25 @@ class YearlyIncomeListPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
         extendBodyBehindAppBar: true,
-        floatingActionButton: AppFloatingActionButton(
-          icon: Icons.add_rounded,
-          label: '収入を追加',
-          onTap: () {
-            final today = ref.read(systemDatetimeNotifierProvider);
-            final newIncome = IncomeEntity(
-              date: DateFormat('yyyyMMdd').format(today),
-              categoryId: IncomeBigCategoryConstants.incomeSourceIdSalary,
-            );
-            showAppModalBottomSheet(
-              context,
-              child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
-            );
-          },
+        floatingActionButton: Padding(
+          // extendBody:true の外側BottomNavigationBar(kBottomNavigationBarHeight=56dp)
+          // の分だけ底上げして、FABが隠れないようにする
+          padding: const EdgeInsets.only(bottom: kBottomNavigationBarHeight),
+          child: AppFloatingActionButton(
+            icon: Icons.add_rounded,
+            label: '収入を追加',
+            onTap: () {
+              final today = ref.read(systemDatetimeNotifierProvider);
+              final newIncome = IncomeEntity(
+                date: DateFormat('yyyyMMdd').format(today),
+                categoryId: IncomeBigCategoryConstants.incomeSourceIdSalary,
+              );
+              showAppModalBottomSheet(
+                context,
+                child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
+              );
+            },
+          ),
         ),
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -65,8 +70,8 @@ class YearlyIncomeListPage extends ConsumerWidget {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
             ),
-            // FABがリスト末尾に被らないよう末尾に余白を確保
-            const SizedBox(height: 80),
+            // FABとBottomNavigationBar両方をクリアする末尾余白
+            const SizedBox(height: kBottomNavigationBarHeight + 80),
           ],
         ));
   }
