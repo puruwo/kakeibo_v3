@@ -254,7 +254,8 @@ class _AppYearMonthPickerOverlayState
 
   void _onConfirm() {
     final result = widget.mode == AppYearMonthPickerMode.yearMonth
-        ? DateTime(_selectedYear, _selectedMonth, 1)
+        // 月末日を渡すことで fetchMonthPeriod が必ず選択月の月度を返すようにする
+        ? DateTime(_selectedYear, _selectedMonth + 1, 0)
         : DateTime(_selectedYear, 1, 1);
     widget.onClose(result);
   }

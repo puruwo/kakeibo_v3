@@ -74,7 +74,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 final picked = await showAppYearMonthPicker(
                   context: context,
                   mode: AppYearMonthPickerMode.yearMonth,
-                  initialDateTime: selectedDate,
+                  // startDatetimeを渡すことで分析画面が表示中の月度と一致した状態でピッカーを開く
+                  initialDateTime: monthPeriod?.startDatetime ?? selectedDate,
                 );
                 if (picked == null) return;
                 ref
