@@ -96,7 +96,11 @@ class PredictionGraphUsecase {
         budget == 0 ? 0 : budget + fixedCostExpenseTotal;
 
     // 支出なし・予算なし・収入なしの場合はグラフ表示不要
-    if (cumulativePriceData.isEmpty && income == 0 && budgetIncludeFixedCost == 0) {
+    // isEmpty ではなく実際の合計値で判定する（最終日に0エントリーが追加されるケースに対応）
+    final hasActualExpense = cumulativePriceData.any(
+      (e) => (e['sum_price_daily'] as int) > 0,
+    );
+    if (!hasActualExpense && income == 0 && budgetIncludeFixedCost == 0) {
       return PredictionGraphValue(
         predictionGraphLineType: PredictionGraphLineType.noData,
         fromDate: fromDate,
