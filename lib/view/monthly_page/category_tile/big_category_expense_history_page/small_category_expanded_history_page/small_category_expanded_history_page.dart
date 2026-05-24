@@ -23,12 +23,15 @@ class SmallCategoryExpenseHistoryPage extends ConsumerWidget {
       ),
       body: Column(
         children: [
-          // AppBarのぶんだけスペースをあける
-          SizedBox(
-            height: MediaQuery.of(context).padding.top + kToolbarHeight,
-          ),
           CategoryExpenceHistoryArea(
-              listAreaMode: ListAreaMode.smallCategory, smallId: smallId),
+            listAreaMode: ListAreaMode.smallCategory,
+            smallId: smallId,
+            // ListView内padding-topでAppBar分の余白を確保することで、
+            // スクロール時にアイテムがAppBar背後を通り透過効果が機能する
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight,
+            ),
+          ),
         ],
       ),
     );

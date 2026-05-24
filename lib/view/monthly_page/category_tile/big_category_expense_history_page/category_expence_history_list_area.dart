@@ -24,10 +24,15 @@ enum ListAreaMode { bigCategory, smallCategory }
 
 class CategoryExpenceHistoryArea extends ConsumerStatefulWidget {
   CategoryExpenceHistoryArea(
-      {super.key, required this.listAreaMode, this.bigId, this.smallId});
+      {super.key,
+      required this.listAreaMode,
+      this.bigId,
+      this.smallId,
+      this.padding});
   final ListAreaMode listAreaMode;
   final int? bigId;
   final int? smallId;
+  final EdgeInsetsGeometry? padding;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -82,6 +87,7 @@ class _CategoryExpenceHistoryArea
         return Expanded(
           child: ListView.builder(
             controller: widget._scrollController,
+            padding: widget.padding,
             itemCount: tileGroupList.length,
             itemBuilder: (BuildContext context, int index) {
               itemKeys = tileGroupList.map((e) => e.date).toList();
