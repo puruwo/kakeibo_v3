@@ -11,6 +11,8 @@ class SmallCategoryExpenseHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -22,7 +24,14 @@ class SmallCategoryExpenseHistoryPage extends ConsumerWidget {
       body: Column(
         children: [
           CategoryExpenceHistoryArea(
-              listAreaMode: ListAreaMode.smallCategory, smallId: smallId),
+            listAreaMode: ListAreaMode.smallCategory,
+            smallId: smallId,
+            // ListView内padding-topでAppBar分の余白を確保することで、
+            // スクロール時にアイテムがAppBar背後を通り透過効果が機能する
+            padding: EdgeInsets.only(
+              top: MediaQuery.of(context).padding.top + kToolbarHeight,
+            ),
+          ),
         ],
       ),
     );
