@@ -25,6 +25,7 @@ Containerに `BoxDecoration` を直接書く前に、必ずこのドキュメン
 | `AppIconCircleContainer` | アイコンボタン用円形背景 | shape: circle / 色は省略時 `secondarySystemfill` | `lib/view/component/app_icon_circle_container.dart` |
 | `UnconfirmedFixedCostChipLabel` | 「変動あり」表示用チップ | 角丸4px + テーマカラーborder | `lib/view/component/unconfirmed_fixed_cost_chip_label.dart` |
 | `CheckBox` | 円形チェックボックス | shape: circle / 状態で色切替 | `lib/view/component/check_box.dart` |
+| `showAppYearMonthPicker` | AppBar下ドロップダウン年月度・年度ピッカー | Overlay式。月度モード（年＋月ドラム）と年度モード（年ドラム）の2種 | `lib/view/component/app_year_month_picker.dart` |
 
 ---
 
@@ -178,6 +179,57 @@ import 'package:kakeibo/view/component/check_box.dart';
 
 CheckBox(isChecked: selected)
 ```
+
+---
+
+### 7. showAppYearMonthPicker
+
+AppBar の下にドロップダウン展開する年月度・年度ピッカー。
+`Future<DateTime?>` を返し、「適用」で日時・背景タップで `null` が返る。
+
+**モード**
+
+| モード | ピッカー | 戻り値 |
+|---|---|---|
+| `AppYearMonthPickerMode.yearMonth` | 年列＋月度列の2ドラム | `DateTime(year, month末日)` |
+| `AppYearMonthPickerMode.year` | 年ドラム（項目は「2025年4月〜2026年3月」形式） | `DateTime(year, 1, 1)` |
+
+**基本の使い方（月度モード・分析画面）**
+
+```dart
+import 'package:kakeibo/view/component/app_year_month_picker.dart';
+
+final picked = await showAppYearMonthPicker(
+  context: context,
+  mode: AppYearMonthPickerMode.yearMonth,
+  // 分析画面表示中の月度の startDatetime を渡すと、ピッカー初期選択が表示月度と一致する
+  initialDateTime: monthPeriod?.startDatetime ?? selectedDate,
+);
+if (picked == null) return;
+ref.read(analyzePageSelectedDatetimeNotifierProvider.notifier).updateState(picked);
+```
+
+**基本の使い方（年度モード・ホーム画面）**
+
+```dart
+final picked = await showAppYearMonthPicker(
+  context: context,
+  mode: AppYearMonthPickerMode.year,
+  initialDateTime: selectedDate,
+);
+if (picked == null) return;
+// picked.year のみ使い、updateStateAsYear() で集計開始月・日に正規化する
+await ref.read(homeSelectedDatetimeNotifierProvider.notifier)
+    .updateStateAsYear(picked.year);
+```
+
+**重要な注意点**
+
+- **月度モード**: ピッカー内部は `DateTime(year, month+1, 0)`（月末日）を `fetchMonthPeriod` に渡す。月初日（day=1）では集計開始日設定によって前月度が返るため。
+- **年度モード**: ピッカー内部は `DateTime(year, startMonth, startDay)` を `fetchYearPeriod` に渡す。`DateTime(year, 1, 1)` では集計開始月（例:4月）より前になり、前年度が返るバグになる。
+- 戻り値の `DateTime` 全体は信頼せず、`picked.year` / `picked.month` のみ使うのが安全。正規化は呼び出し側（`updateStateAsYear` など）が行う。
+
+詳細は `kakeibo-period-patterns` スキルも参照。
 
 ---
 
