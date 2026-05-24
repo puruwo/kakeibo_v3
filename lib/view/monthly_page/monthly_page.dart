@@ -100,7 +100,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         Text(label, style: AppTextStyles.pageHeaderText),
                         const SizedBox(width: 2),
                         const Icon(Icons.arrow_drop_down,
-                            color: MyColors.white, size: 18),
+                            color: MyColors.systemGray2, size: 18),
                       ],
                     ),
                     Text(
