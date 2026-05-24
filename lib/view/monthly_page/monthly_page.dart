@@ -96,11 +96,13 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
-                        const SizedBox(width: 20),
+                        const SizedBox(width: 28),
                         Text(label, style: AppTextStyles.pageHeaderText),
-                        const SizedBox(width: 2),
-                        const Icon(Icons.arrow_drop_down,
-                            color: MyColors.systemGray2, size: 18),
+                        Transform.translate(
+                          offset: const Offset(-4, 0),
+                          child: const Icon(Icons.arrow_drop_down,
+                              color: MyColors.systemGray2, size: 30),
+                        ),
                       ],
                     ),
                     Text(
