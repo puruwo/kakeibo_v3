@@ -1,0 +1,1482 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>claude_workspace · Flutter Kakeibo v3 Workflows</title>
+<style>
+  :root {
+    --bg:#0c1117; --bg-2:#11171f; --panel:#161d27; --line:#2a3340;
+    --text:#d6dde6; --muted:#8a94a3;
+    --edge:#2c3441; --edge-active:#ffd166; --edge-active-glow:rgba(255,209,102,0.55);
+    --anno-h: 300px;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; height: 100%; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: -apple-system, "Segoe UI", "Hiragino Sans", "Yu Gothic UI", sans-serif;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    grid-template-rows: auto 1fr 6px var(--anno-h);
+    grid-template-areas:
+      "header header"
+      "sidebar canvas"
+      "sidebar resizer"
+      "sidebar annotations";
+    height: 100vh;
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* HEADER */
+  .header {
+    grid-area: header;
+    padding: 14px 22px 12px;
+    border-bottom: 1px solid var(--line);
+    background: linear-gradient(180deg, var(--bg-2) 0%, var(--bg) 100%);
+    display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+  }
+  .header h1 { margin: 0; font-size: 16px; font-weight: 700; letter-spacing: 0.4px; }
+  .header h1 .accent { color: var(--edge-active); }
+  .header .path { color: var(--muted); font-size: 11px; font-family: ui-monospace, "SF Mono", "Menlo", monospace; }
+  .header .hint { color: var(--muted); font-size: 11px; margin-left: auto; }
+  .header .hint kbd {
+    display: inline-block; padding: 1px 6px; margin: 0 2px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 4px;
+    font-family: ui-monospace, "SF Mono", "Menlo", monospace; font-size: 10px;
+    color: var(--text);
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    grid-area: sidebar;
+    border-right: 1px solid var(--line);
+    background: var(--bg-2);
+    overflow-y: auto;
+    padding: 14px 12px 18px;
+    display: flex; flex-direction: column; gap: 14px;
+  }
+  .sidebar h3 {
+    margin: 0 4px 6px;
+    font-size: 10px; font-weight: 700; color: var(--muted);
+    letter-spacing: 1.6px; text-transform: uppercase;
+  }
+  .flow-list { display: flex; flex-direction: column; gap: 4px; }
+  .flow-btn {
+    appearance: none; border: 1px solid var(--line); background: var(--panel); color: var(--text);
+    padding: 9px 10px; border-radius: 7px; text-align: left; cursor: pointer;
+    display: grid; grid-template-columns: 22px 18px 1fr; gap: 8px; align-items: center;
+    font-size: 12px; line-height: 1.3;
+    transition: border-color 0.15s, background 0.15s, transform 0.05s;
+  }
+  .flow-btn .key {
+    color: var(--muted); font-family: ui-monospace, monospace; font-size: 10px;
+    text-align: center; opacity: 0.7;
+  }
+  .flow-btn .icon { font-size: 14px; line-height: 1; text-align: center; }
+  .flow-btn .name { font-weight: 600; font-size: 12px; }
+  .flow-btn .sub { color: var(--muted); font-size: 10.5px; font-weight: 400; margin-top: 1px; }
+  .flow-btn:hover { border-color: var(--edge-active); background: #1d2230; }
+  .flow-btn.active {
+    border-color: var(--edge-active);
+    background: linear-gradient(90deg, rgba(255,209,102,0.10) 0%, rgba(255,209,102,0.02) 100%);
+    box-shadow: 0 0 0 1px rgba(255,209,102,0.25) inset, 0 4px 14px rgba(255,209,102,0.10);
+  }
+  .flow-btn.active .key { color: var(--edge-active); opacity: 1; }
+
+  .legend { display: flex; flex-direction: column; gap: 4px; }
+  .legend .row { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--muted); }
+  .legend .swatch { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid var(--line); }
+
+  .reset-btn {
+    appearance: none; border: 1px solid var(--line); background: transparent; color: var(--muted);
+    padding: 7px 10px; border-radius: 6px; cursor: pointer; font-size: 11px;
+    transition: color 0.15s, border-color 0.15s;
+  }
+  .reset-btn:hover { color: var(--edge-active); border-color: var(--edge-active); }
+
+  /* CANVAS */
+  .canvas-wrap {
+    grid-area: canvas;
+    overflow: hidden;
+    position: relative;
+    background:
+      radial-gradient(ellipse 60% 40% at 50% 35%, rgba(255,209,102,0.04), transparent 70%),
+      var(--bg);
+    cursor: grab;
+  }
+  .canvas-wrap.dragging { cursor: grabbing; }
+  svg.canvas { width: 100%; height: 100%; display: block; }
+
+  /* COLUMN HEADERS / DIVIDERS */
+  .col-header {
+    fill: var(--muted); font-size: 11px; font-weight: 700;
+    letter-spacing: 2.2px; text-anchor: middle;
+  }
+  .col-divider {
+    stroke: var(--line); stroke-dasharray: 3 5; stroke-width: 1;
+  }
+
+  /* NODES */
+  .node { transition: opacity 0.25s ease; }
+  .node rect.node-bg {
+    transition: stroke-width 0.2s ease, filter 0.2s ease;
+  }
+  .node text { user-select: none; pointer-events: none; }
+  .node .node-title { fill: var(--text); font-size: 12px; font-weight: 700; }
+  .node .node-subtitle { fill: var(--muted); font-size: 10.5px; }
+  .node.dim { opacity: 0.18; }
+  .node.in-flow rect.node-bg {
+    stroke-width: 2.4;
+    filter: drop-shadow(0 0 10px var(--edge-active-glow));
+  }
+  .node.endpoint rect.node-bg {
+    stroke-width: 3;
+    animation: node-glow 1.1s infinite ease-in-out;
+    transform-origin: center; transform-box: fill-box;
+  }
+
+  /* EDGES */
+  .edge {
+    fill: none; stroke: var(--edge); stroke-width: 1.4;
+    transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease, opacity 0.25s ease;
+  }
+  .edge.dim { opacity: 0.18; }
+  .edge.in-flow {
+    stroke: var(--edge-active); stroke-width: 2.3;
+    filter: drop-shadow(0 0 6px var(--edge-active-glow));
+  }
+  .edge.focused-edge {
+    animation: edge-pulse 1.1s infinite ease-in-out;
+  }
+
+  /* BADGES (always topmost layer) */
+  .edge-step-badge {
+    cursor: pointer; opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+  .edge-step-badge.visible { opacity: 1; }
+  .edge-step-pill {
+    fill: var(--panel); stroke: var(--edge); stroke-width: 1.2;
+    transition: fill 0.2s ease, stroke 0.2s ease;
+  }
+  .edge-step-badge.in-flow .edge-step-pill {
+    fill: #1c2230; stroke: var(--edge-active);
+  }
+  .edge-step-badge.focused-step .edge-step-pill {
+    fill: var(--edge-active); stroke: #fff8d6;
+  }
+  .edge-step-badge text {
+    font-size: 10.5px; font-weight: 700; fill: var(--text);
+    pointer-events: none; user-select: none;
+  }
+  .edge-step-badge.in-flow text { fill: var(--edge-active); }
+  .edge-step-badge.focused-step text { fill: #1a1100; }
+  .edge-step-hit { fill: rgba(0,0,0,0.001); pointer-events: all; }
+  .edge-step-halo {
+    fill: var(--edge-active); opacity: 0; pointer-events: none;
+    transform-origin: center; transform-box: fill-box;
+  }
+  .edge-step-badge.focused-step .edge-step-halo {
+    animation: halo-burst 1.3s infinite ease-out;
+  }
+  .edge-step-badge.focused-step .edge-step-scale {
+    animation: pulse 0.9s infinite cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform-origin: center; transform-box: fill-box;
+  }
+  .edge-tether {
+    stroke: var(--edge-active); stroke-width: 1;
+    stroke-dasharray: 2 3; opacity: 0.45;
+    fill: none; pointer-events: none;
+  }
+  .edge-step-badge:not(.in-flow) .edge-tether { display: none; }
+
+  /* KEYFRAMES — PIKAPIKA */
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1.0);
+      filter: drop-shadow(0 0 0 #fff8d6) drop-shadow(0 0 0 var(--edge-active)) drop-shadow(0 0 0 var(--edge-active-glow));
+    }
+    50% {
+      transform: scale(1.42);
+      filter: drop-shadow(0 0 4px #fff8d6) drop-shadow(0 0 10px var(--edge-active)) drop-shadow(0 0 22px var(--edge-active-glow));
+    }
+  }
+  @keyframes halo-burst {
+    0%   { transform: scale(0.55); opacity: 0.85; }
+    100% { transform: scale(3.0);  opacity: 0; }
+  }
+  @keyframes edge-pulse {
+    0%, 100% {
+      stroke-width: 2.8; stroke: var(--edge-active);
+      filter: drop-shadow(0 0 4px var(--edge-active-glow));
+    }
+    50% {
+      stroke-width: 4.2; stroke: #fff8d6;
+      filter: drop-shadow(0 0 14px var(--edge-active-glow));
+    }
+  }
+  @keyframes node-glow {
+    0%, 100% { filter: drop-shadow(0 0 6px var(--edge-active-glow)); }
+    50%      { filter: drop-shadow(0 0 16px #fff8d6); }
+  }
+  @keyframes anno-flash {
+    0%   { background: rgba(255, 209, 102, 0.55); }
+    100% { background: rgba(255, 209, 102, 0.10); }
+  }
+
+  /* RESIZER */
+  .resizer {
+    grid-area: resizer;
+    background: var(--line);
+    cursor: row-resize;
+    position: relative;
+    transition: background 0.15s;
+  }
+  .resizer:hover, .resizer.active { background: var(--edge-active); }
+  .resizer::after {
+    content: ''; position: absolute; left: 50%; top: 50%;
+    width: 38px; height: 2px; transform: translate(-50%, -50%);
+    background: var(--muted); border-radius: 1px; opacity: 0.5;
+  }
+  .resizer:hover::after { background: var(--bg); opacity: 0.8; }
+
+  /* ANNOTATIONS */
+  .annotations {
+    grid-area: annotations;
+    background: var(--bg-2);
+    border-top: 1px solid var(--line);
+    overflow-y: auto;
+    padding: 12px 18px 18px;
+  }
+  .annotations .empty {
+    color: var(--muted); font-size: 12px; padding: 16px;
+  }
+  .annotations .anno-head {
+    display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .annotations .anno-head .icon { font-size: 18px; }
+  .annotations .anno-head .name { font-weight: 700; font-size: 14px; color: var(--text); }
+  .annotations .anno-head .sub { color: var(--muted); font-size: 11px; }
+  .annotations .anno-head .desc { width: 100%; color: var(--muted); font-size: 11.5px; line-height: 1.5; }
+  .annotations ol {
+    counter-reset: step; padding-left: 0; margin: 0;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .annotations li {
+    list-style: none; counter-increment: step;
+    padding: 7px 10px 8px 36px; position: relative;
+    background: transparent; border: 1px solid transparent;
+    border-radius: 6px; cursor: pointer;
+    font-size: 11.5px; line-height: 1.45;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .annotations li::before {
+    content: counter(step);
+    position: absolute; left: 8px; top: 6px;
+    width: 20px; height: 20px; line-height: 20px;
+    border-radius: 50%;
+    background: var(--panel); border: 1px solid var(--line);
+    color: var(--muted); font-size: 10px; font-weight: 700;
+    text-align: center;
+  }
+  .annotations li:hover {
+    border-color: var(--edge-active);
+    background: rgba(255,209,102,0.04);
+  }
+  .annotations li:hover::before { color: var(--edge-active); border-color: var(--edge-active); }
+  .annotations li.focused {
+    background: rgba(255, 209, 102, 0.10);
+    border-color: var(--edge-active);
+    animation: anno-flash 1.2s;
+  }
+  .annotations li.focused::before {
+    background: var(--edge-active); color: #1a1100; border-color: #fff8d6;
+  }
+  .annotations li .from-to {
+    font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+    font-size: 11px; color: var(--text); margin-bottom: 4px;
+  }
+  .annotations li .arrow { color: var(--edge-active); margin: 0 4px; }
+  .annotations li .passes {
+    background: var(--panel); border-left: 2px solid var(--edge-active);
+    padding: 4px 8px; margin: 4px 0;
+    font-family: ui-monospace, "SF Mono", "Menlo", monospace;
+    font-size: 10.5px; color: var(--text);
+    border-radius: 0 3px 3px 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  .annotations li .note { color: var(--muted); font-size: 11px; }
+
+  /* TOOLTIP */
+  #tooltip {
+    position: fixed; pointer-events: none; z-index: 1000;
+    max-width: 380px; padding: 10px 12px;
+    background: rgba(14, 20, 28, 0.97);
+    border: 1px solid var(--edge-active);
+    border-radius: 7px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,209,102,0.15);
+    color: var(--text); font-size: 12px; line-height: 1.45;
+    opacity: 0; transform: translateY(4px);
+    transition: opacity 0.12s ease, transform 0.12s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  #tooltip.visible { opacity: 1; transform: translateY(0); }
+  #tooltip .tt-flow { color: var(--edge-active); font-size: 10.5px; font-weight: 700; letter-spacing: 0.4px; margin-bottom: 4px; }
+  #tooltip .tt-route { font-family: ui-monospace, monospace; font-size: 10.5px; color: var(--muted); margin-bottom: 6px; }
+  #tooltip .tt-route .arrow { color: var(--edge-active); margin: 0 4px; }
+  #tooltip .tt-passes {
+    background: rgba(255,209,102,0.06); border-left: 2px solid var(--edge-active);
+    padding: 4px 7px; margin: 4px 0;
+    font-family: ui-monospace, monospace; font-size: 10.5px;
+    border-radius: 0 3px 3px 0;
+    white-space: pre-wrap; word-break: break-word;
+  }
+  #tooltip .tt-note { color: var(--muted); font-size: 11px; margin-top: 4px; }
+  #tooltip .tt-sep { border-top: 1px dashed var(--line); margin: 8px 0; }
+
+  /* SCROLLBARS */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--line); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+</style>
+</head>
+<body>
+  <header class="header">
+    <h1><span class="accent">claude_workspace</span> · Flutter Kakeibo v3 Workflows</h1>
+    <span class="path">lib/ · Clean Architecture (View → UseCase → Service → Repository → DB)</span>
+    <span class="hint">
+      <kbd>1</kbd>–<kbd>9</kbd><kbd>0</kbd> フロー選択 ·
+      <kbd>F</kbd> 全体 · <kbd>+</kbd>/<kbd>-</kbd> ズーム · <kbd>Esc</kbd> 解除 ·
+      ホイール=ズーム · ドラッグ=パン
+    </span>
+  </header>
+
+  <aside class="sidebar">
+    <div>
+      <h3>Workflows · 11</h3>
+      <div class="flow-list" id="flow-list"></div>
+    </div>
+    <div>
+      <h3>Layers · Legend</h3>
+      <div class="legend" id="legend"></div>
+    </div>
+    <button class="reset-btn" id="reset-btn" type="button">⟲ 表示をリセット (F)</button>
+  </aside>
+
+  <main class="canvas-wrap" id="canvas-wrap">
+    <svg class="canvas" id="svg-canvas" preserveAspectRatio="xMidYMid meet"></svg>
+  </main>
+
+  <div class="resizer" id="resizer" title="ドラッグで注釈の高さを変更"></div>
+
+  <section class="annotations" id="annotations">
+    <div class="empty">← 左のリストからワークフローを選ぶか、<kbd style="background:var(--panel);border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:10px">1</kbd>〜<kbd style="background:var(--panel);border:1px solid var(--line);padding:1px 6px;border-radius:4px;font-size:10px">0</kbd> キーを押してください</div>
+  </section>
+
+  <div id="tooltip" role="tooltip"></div>
+
+  <!-- file:// fallback: same content as flows.json -->
+  <script type="application/json" id="workflow-data">
+{
+  "viewBox": { "w": 1500, "h": 900 },
+  "columns": [
+    { "id": "ui",   "label": "UI · VIEW PAGES",   "x": 140,  "divider": 290 },
+    { "id": "uc",   "label": "APPLICATION · USECASE", "x": 470,  "divider": 620 },
+    { "id": "svc",  "label": "DOMAIN SERVICE",    "x": 770,  "divider": 880 },
+    { "id": "repo", "label": "REPOSITORY",        "x": 1050, "divider": 1190 },
+    { "id": "db",   "label": "SQLITE TABLES",     "x": 1340, "divider": null }
+  ],
+  "groups": [
+    { "id": "view",       "label": "View Layer",     "stroke": "#4cc9f0", "fill": "#11242e", "sub": "rgba(76,201,240,0.18)" },
+    { "id": "state",      "label": "State Bus",      "stroke": "#9ad1f0", "fill": "#142531", "sub": "rgba(154,209,240,0.18)" },
+    { "id": "usecase",    "label": "UseCase",        "stroke": "#ffd166", "fill": "#2a2410", "sub": "rgba(255,209,102,0.18)" },
+    { "id": "service",    "label": "Domain Service", "stroke": "#b388ff", "fill": "#1f1832", "sub": "rgba(179,136,255,0.18)" },
+    { "id": "repository", "label": "Repository",     "stroke": "#80ed99", "fill": "#142a1c", "sub": "rgba(128,237,153,0.18)" },
+    { "id": "db",         "label": "Database Table", "stroke": "#f25c54", "fill": "#2a1411", "sub": "rgba(242,92,84,0.18)" }
+  ],
+  "nodes": [
+    { "id": "ui.register", "title": "RegisterPage", "subtitle": "入力モーダル / 支出・収入・固定費", "group": "view", "x": 30, "y": 70, "w": 220, "h": 56 },
+    { "id": "ui.history",  "title": "HistoricalCalendarPage", "subtitle": "履歴タブ / カレンダー閲覧・編集起点", "group": "view", "x": 30, "y": 160, "w": 220, "h": 56 },
+    { "id": "ui.monthly",  "title": "MonthlyPage", "subtitle": "分析タブ / 月次予算・カテゴリ別", "group": "view", "x": 30, "y": 300, "w": 220, "h": 56 },
+    { "id": "ui.budget",   "title": "BudgetSettingPage", "subtitle": "予算編集ページ", "group": "view", "x": 30, "y": 400, "w": 220, "h": 56 },
+    { "id": "ui.category", "title": "CategoryEditPage", "subtitle": "カテゴリ CRUD ページ", "group": "view", "x": 30, "y": 500, "w": 220, "h": 56 },
+    { "id": "ui.year",     "title": "YearPage", "subtitle": "ホームタブ / 年間収支・ボーナス計画", "group": "view", "x": 30, "y": 640, "w": 220, "h": 56 },
+
+    { "id": "state.dbCount", "title": "UpdateDBCountNotifier", "subtitle": "DB変更検知バス · 全画面の再fetchトリガー", "group": "state", "x": 170, "y": 815, "w": 320, "h": 50 },
+
+    { "id": "uc.expense",       "title": "ExpenseUsecase",            "subtitle": "add / edit / delete",      "group": "usecase", "x": 360, "y": 30,  "w": 220, "h": 56 },
+    { "id": "uc.income",        "title": "IncomeUsecase",             "subtitle": "add / edit / delete",      "group": "usecase", "x": 360, "y": 110, "w": 220, "h": 56 },
+    { "id": "uc.fixedCost",     "title": "FixedCostUsecase",          "subtitle": "定義CRUD + バッチ生成",     "group": "usecase", "x": 360, "y": 190, "w": 220, "h": 56 },
+    { "id": "uc.fixedCostExp",  "title": "FixedCostExpenseUsecase",   "subtitle": "confirm / edit / delete",  "group": "usecase", "x": 360, "y": 270, "w": 220, "h": 56 },
+    { "id": "uc.budget",        "title": "BudgetUsecase",             "subtitle": "月次予算 CRUD",             "group": "usecase", "x": 360, "y": 350, "w": 220, "h": 56 },
+    { "id": "uc.category",      "title": "CategoryUsecase",           "subtitle": "大小カテゴリ CRUD",         "group": "usecase", "x": 360, "y": 430, "w": 220, "h": 56 },
+    { "id": "uc.batch",         "title": "BatchProcessUsecase",       "subtitle": "月次バッチ判定 (起動時)",   "group": "usecase", "x": 360, "y": 510, "w": 220, "h": 56 },
+    { "id": "uc.annualBalance", "title": "AnnualBalanceChartUsecase", "subtitle": "年間月次収支集計",          "group": "usecase", "x": 360, "y": 590, "w": 220, "h": 56 },
+    { "id": "uc.prediction",    "title": "PredictionGraphUsecase",    "subtitle": "日次累積予測グラフ",        "group": "usecase", "x": 360, "y": 670, "w": 220, "h": 56 },
+    { "id": "uc.export",        "title": "ExportUsecase",             "subtitle": "CSV 出力",                  "group": "usecase", "x": 360, "y": 750, "w": 220, "h": 56 },
+
+    { "id": "svc.fixedCost",   "title": "FixedCostService",   "subtitle": "支払日 / 推定額計算", "group": "service", "x": 660, "y": 200, "w": 220, "h": 56 },
+    { "id": "svc.monthPeriod", "title": "MonthPeriodService", "subtitle": "月度期間計算 · 集計開始日基準", "group": "service", "x": 660, "y": 520, "w": 220, "h": 56 },
+
+    { "id": "repo.expense",       "title": "ExpenseRepository",            "subtitle": "ImplementsExpenseRepository", "group": "repository", "x": 940, "y": 30,  "w": 220, "h": 56 },
+    { "id": "repo.income",        "title": "IncomeRepository",             "subtitle": "ImplementsIncomeRepository",  "group": "repository", "x": 940, "y": 120, "w": 220, "h": 56 },
+    { "id": "repo.fixedCost",     "title": "FixedCostRepository",          "subtitle": "ImplementsFixedCostRepository", "group": "repository", "x": 940, "y": 210, "w": 220, "h": 56 },
+    { "id": "repo.fixedCostExp",  "title": "FixedCostExpenseRepository",   "subtitle": "ImplementsFixedCostExpenseRepository", "group": "repository", "x": 940, "y": 300, "w": 220, "h": 56 },
+    { "id": "repo.budget",        "title": "BudgetRepository",             "subtitle": "ImplementsBudgetRepository",  "group": "repository", "x": 940, "y": 390, "w": 220, "h": 56 },
+    { "id": "repo.category",      "title": "CategoryRepository 群",        "subtitle": "Expense / Income / FixedCost Big&Small 5 種", "group": "repository", "x": 940, "y": 480, "w": 220, "h": 56 },
+    { "id": "repo.batchHist",     "title": "BatchHistoryRepository",       "subtitle": "ImplementsBatchHistoryRepository", "group": "repository", "x": 940, "y": 570, "w": 220, "h": 56 },
+
+    { "id": "db.expense",       "title": "expense",            "subtitle": "通常支出 (v6: fixed_cost 分離)", "group": "db", "x": 1230, "y": 30,  "w": 220, "h": 56 },
+    { "id": "db.income",        "title": "income",             "subtitle": "収入 (月次収入・ボーナス)",      "group": "db", "x": 1230, "y": 120, "w": 220, "h": 56 },
+    { "id": "db.fixedCost",     "title": "fixed_cost",         "subtitle": "固定費定義 (定期支払マスタ)",    "group": "db", "x": 1230, "y": 210, "w": 220, "h": 56 },
+    { "id": "db.fixedCostExp",  "title": "fixed_cost_expense", "subtitle": "固定費支出実績 (v6 新規)",        "group": "db", "x": 1230, "y": 300, "w": 220, "h": 56 },
+    { "id": "db.budget",        "title": "budget",             "subtitle": "月次予算 (month + bigCategory)", "group": "db", "x": 1230, "y": 390, "w": 220, "h": 56 },
+    { "id": "db.category",      "title": "*_category",         "subtitle": "expense/income/fixed_cost Big&Small 5 表", "group": "db", "x": 1230, "y": 480, "w": 220, "h": 56 },
+    { "id": "db.batchHist",     "title": "batch_history",      "subtitle": "バッチ実行履歴",                  "group": "db", "x": 1230, "y": 570, "w": 220, "h": 56 }
+  ],
+  "flows": [
+    {
+      "id": "f1.expenseAdd",
+      "icon": "🧾",
+      "name": "1. 支出を新規登録する",
+      "sub": "RegisterPage → ExpenseUsecase → expense テーブル",
+      "description": "入力タブから通常支出を 1 件登録するフロー。fixed_cost は別フロー (4) で扱う。",
+      "steps": [
+        { "from": "ui.register",    "to": "uc.expense",     "passes": "ExpenseEntity { date, price, smallCategoryId, memo, incomeSourceBigCategory }", "note": "lib/view/register_page/submit_button.dart:98 で SubmitButton タップ" },
+        { "from": "uc.expense",     "to": "repo.expense",   "passes": "insert(ExpenseEntity)",                                "note": "ImplementsExpenseRepository.insert へ委譲" },
+        { "from": "repo.expense",   "to": "db.expense",     "passes": "INSERT INTO expense VALUES (...)",                     "note": "DatabaseHelper.instance.insert('expense', toJson())" },
+        { "from": "uc.expense",     "to": "state.dbCount",  "passes": "incrementState()",                                     "note": "updateDBCountNotifier を +1 して全画面に変更通知" },
+        { "from": "state.dbCount",  "to": "ui.history",     "passes": "rebuild trigger",                                      "note": "ref.watch(updateDBCountNotifierProvider) で履歴カレンダーが再fetch" },
+        { "from": "state.dbCount",  "to": "ui.monthly",     "passes": "rebuild trigger",                                      "note": "月次カテゴリ別サマリも自動再描画" }
+      ]
+    },
+    {
+      "id": "f2.expenseEdit",
+      "icon": "✏️",
+      "name": "2. 支出を編集・削除する",
+      "sub": "履歴 → RegisterPage(edit) → ExpenseUsecase",
+      "description": "履歴カレンダーから明細をタップして編集モードの RegisterPage を開き、edit / delete を実行するフロー。",
+      "steps": [
+        { "from": "ui.history",   "to": "ui.register",    "passes": "ExpenseEntity (編集対象)",                            "note": "ExpenseItemTile タップ → RegisterPageBase.editExpense() で編集モード起動" },
+        { "from": "ui.register",  "to": "uc.expense",     "passes": "edit(original, updated) または delete(entity)",       "note": "lib/view/register_page/register_page_base.dart:226 の削除ボタン / SubmitButton" },
+        { "from": "uc.expense",   "to": "repo.expense",   "passes": "update(...) / delete(id)",                            "note": "Repository へ委譲" },
+        { "from": "repo.expense", "to": "db.expense",     "passes": "UPDATE / DELETE FROM expense WHERE _id = ?",          "note": "SQL 実行" },
+        { "from": "uc.expense",   "to": "state.dbCount",  "passes": "incrementState()",                                    "note": "DB 更新通知" },
+        { "from": "state.dbCount","to": "ui.history",     "passes": "rebuild trigger",                                     "note": "編集元の履歴ページが即座に再描画" }
+      ]
+    },
+    {
+      "id": "f3.incomeManage",
+      "icon": "💰",
+      "name": "3. 収入・ボーナスを管理する",
+      "sub": "YearPage / MonthlyPage ⇆ RegisterPage ⇆ IncomeUsecase",
+      "description": "ホームのボーナス計画パネル、または分析タブの月次収入リストから収入を add / edit / delete するフロー。",
+      "steps": [
+        { "from": "ui.year",       "to": "ui.register",   "passes": "IncomeEntity (編集対象 or 新規)",                    "note": "BonusIncomeHistoryTile クリック → RegisterPageBase.editIncome()" },
+        { "from": "ui.monthly",    "to": "ui.register",   "passes": "新規 IncomeEntity 雛形",                              "note": "月次収入リストの追加ボタン" },
+        { "from": "ui.register",   "to": "uc.income",     "passes": "add / edit / delete (IncomeEntity)",                  "note": "lib/view/register_page/submit_button.dart:116" },
+        { "from": "uc.income",     "to": "repo.income",   "passes": "insert / update / delete",                             "note": "ImplementsIncomeRepository へ委譲" },
+        { "from": "repo.income",   "to": "db.income",     "passes": "INSERT / UPDATE / DELETE",                             "note": "SQL 実行" },
+        { "from": "uc.income",     "to": "state.dbCount", "passes": "incrementState()",                                     "note": "DB 更新通知" },
+        { "from": "state.dbCount", "to": "ui.year",       "passes": "rebuild trigger",                                      "note": "ボーナス計画パネル + 年間収支グラフが再描画" },
+        { "from": "state.dbCount", "to": "ui.monthly",    "passes": "rebuild trigger",                                      "note": "月次収入リストも再描画" }
+      ]
+    },
+    {
+      "id": "f4.fixedCostAdd",
+      "icon": "🏠",
+      "name": "4. 固定費を新規登録する",
+      "sub": "RegisterPage → FixedCostUsecase → fixed_cost + fixed_cost_expense",
+      "description": "定期支払の固定費を新規定義し、既往期間ぶんの支払履歴も同時生成するフロー。",
+      "steps": [
+        { "from": "ui.register",      "to": "uc.fixedCost",       "passes": "FixedCostEntity { name, price/variable, fixedCostCategoryId, intervalNumber/unit, firstPaymentDate }", "note": "lib/view/register_page/submit_button.dart:149 (固定費タブ)" },
+        { "from": "uc.fixedCost",     "to": "svc.fixedCost",      "passes": "calculateNextPaymentDate(firstDate, interval)",                                        "note": "FixedCostService が次回支払日 (nextPaymentDate) を計算" },
+        { "from": "svc.fixedCost",    "to": "uc.fixedCost",       "passes": "nextPaymentDate / recentPaymentDate",                                                   "note": "計算結果を Usecase に返却" },
+        { "from": "uc.fixedCost",     "to": "repo.fixedCost",     "passes": "insert(FixedCostEntity with nextPaymentDate)",                                          "note": "ImplementsFixedCostRepository.insert" },
+        { "from": "repo.fixedCost",   "to": "db.fixedCost",       "passes": "INSERT INTO fixed_cost",                                                                "note": "SqfFixedCost マスタレコード作成" },
+        { "from": "uc.fixedCost",     "to": "repo.fixedCostExp",  "passes": "insert(FixedCostExpenseEntity) × N (firstPaymentDate ~ 今日までの過去ぶん)",          "note": "FixedCostService.insertToFixedCostExpense を経由してバルク登録" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",    "passes": "INSERT INTO fixed_cost_expense (is_confirmed=0)",                                       "note": "実績テーブルへ書込み (v6 で expense から分離)" },
+        { "from": "uc.fixedCost",     "to": "state.dbCount",      "passes": "incrementState()",                                                                       "note": "DB 更新通知" },
+        { "from": "state.dbCount",    "to": "ui.monthly",         "passes": "rebuild trigger",                                                                        "note": "月次固定費パネルが再描画" }
+      ]
+    },
+    {
+      "id": "f5.fixedCostExpConfirm",
+      "icon": "✅",
+      "name": "5. 固定費支出を確定する",
+      "sub": "MonthlyPage → FixedCostExpenseUsecase",
+      "description": "変動費型の固定費 (例: 光熱費) の月次支出額を確定するフロー。is_confirmed=1 で実績を確定する。",
+      "steps": [
+        { "from": "ui.monthly",        "to": "uc.fixedCostExp",  "passes": "confirmExpense(id, price)",                            "note": "月次固定費パネル → 確定ダイアログ → confirm" },
+        { "from": "uc.fixedCostExp",   "to": "repo.fixedCostExp","passes": "update(price, isConfirmed=1, confirmedCostType)",      "note": "ImplementsFixedCostExpenseRepository.update" },
+        { "from": "repo.fixedCostExp", "to": "db.fixedCostExp",  "passes": "UPDATE fixed_cost_expense SET price, is_confirmed=1",  "note": "SQL 実行" },
+        { "from": "uc.fixedCostExp",   "to": "state.dbCount",    "passes": "incrementState()",                                     "note": "DB 更新通知" },
+        { "from": "state.dbCount",     "to": "ui.monthly",       "passes": "rebuild trigger",                                      "note": "予算進捗・固定費サマリが再描画" }
+      ]
+    },
+    {
+      "id": "f6.budgetEdit",
+      "icon": "💴",
+      "name": "6. 月次予算を編集する",
+      "sub": "MonthlyPage → BudgetSettingPage → BudgetUsecase",
+      "description": "分析タブから予算設定ページに遷移し、大カテゴリ別の月次予算を一括編集するフロー。",
+      "steps": [
+        { "from": "ui.monthly",   "to": "ui.budget",     "passes": "月度 PeriodValue (YYYYMM)",                                "note": "MonthlyPlanFooter『予算を編集する』ボタンから push" },
+        { "from": "ui.budget",    "to": "uc.budget",     "passes": "List<BudgetEditValue> { month, bigCategoryId, price }",     "note": "lib/view/budget_setting_page/submit_budget_button.dart:57" },
+        { "from": "uc.budget",    "to": "repo.budget",   "passes": "upsert(BudgetEntity) × N",                                  "note": "ImplementsBudgetRepository.update / add" },
+        { "from": "repo.budget",  "to": "db.budget",     "passes": "INSERT OR REPLACE INTO budget",                              "note": "(month, expense_big_category_id) で upsert" },
+        { "from": "uc.budget",    "to": "state.dbCount", "passes": "incrementState()",                                           "note": "DB 更新通知" },
+        { "from": "state.dbCount","to": "ui.monthly",    "passes": "rebuild trigger",                                            "note": "予算進捗カードが新しい予算で再描画" }
+      ]
+    },
+    {
+      "id": "f7.categoryCrud",
+      "icon": "🏷️",
+      "name": "7. カテゴリを追加・編集する",
+      "sub": "MonthlyPage → CategoryEditPage → CategoryUsecase",
+      "description": "支出/収入の大カテゴリと小カテゴリを追加/編集/並替するフロー。FixedCostCategory も同経路。",
+      "steps": [
+        { "from": "ui.monthly",   "to": "ui.category",   "passes": "対象カテゴリ種別 (expense/income/fixedCost)",                "note": "カテゴリ設定ページへ push" },
+        { "from": "ui.category",  "to": "uc.category",   "passes": "BigCategoryEntity + List<SmallCategoryEntity>",              "note": "lib/view/category_edit_page/.../add_complete_big_category_detail_button.dart:98" },
+        { "from": "uc.category",  "to": "repo.category", "passes": "insertBig / insertSmall / updateBig / updateSmall",          "note": "ExpenseBigCategoryRepository + ExpenseSmallCategoryRepository (Income/FixedCost 系も同様)" },
+        { "from": "repo.category","to": "db.category",   "passes": "INSERT / UPDATE *_category",                                  "note": "expense_big_category / expense_small_category / fixed_cost_category 等" },
+        { "from": "uc.category",  "to": "state.dbCount", "passes": "incrementState()",                                            "note": "DB 更新通知" },
+        { "from": "state.dbCount","to": "ui.monthly",    "passes": "rebuild trigger",                                             "note": "カテゴリ別カードが新カテゴリで再描画" }
+      ]
+    },
+    {
+      "id": "f8.monthlyBatch",
+      "icon": "⏰",
+      "name": "8. 月次バッチ処理 (起動時自動)",
+      "sub": "Foundation.onBuild → BatchProcessUsecase → fixed_cost_expense 展開",
+      "description": "アプリ起動時に Foundation の addPostFrameCallback から走る自動バッチ。前回実行月度から今月度までの fixed_cost を fixed_cost_expense に展開する。",
+      "steps": [
+        { "from": "ui.year",         "to": "uc.batch",          "passes": "grobalBatchProscessing()",                                                "note": "lib/view/foundation.dart _onBuildComplete から起動 (initialOpen=true 時のみ)" },
+        { "from": "uc.batch",        "to": "repo.batchHist",    "passes": "fetchLatestDate()",                                                       "note": "前回バッチ完了日を取得" },
+        { "from": "repo.batchHist",  "to": "db.batchHist",      "passes": "SELECT MAX(end_date) FROM batch_history",                                 "note": "最終バッチ日" },
+        { "from": "uc.batch",        "to": "svc.monthPeriod",   "passes": "fetchMonthPeriod(now)",                                                   "note": "現在月度の終了日を計算 (集計開始日基準)" },
+        { "from": "uc.batch",        "to": "uc.fixedCost",      "passes": "addExpenseForFixedCost(PeriodValue)",                                     "note": "月度ごとにループで委譲" },
+        { "from": "uc.fixedCost",    "to": "repo.fixedCost",    "passes": "fetchNextPeriodPayment(period)",                                          "note": "next_payment_date が period 内の固定費を取得" },
+        { "from": "repo.fixedCost",  "to": "db.fixedCost",      "passes": "SELECT FROM fixed_cost WHERE next_payment_date BETWEEN ? AND ?",         "note": "該当固定費取得" },
+        { "from": "uc.fixedCost",    "to": "svc.fixedCost",     "passes": "insertToFixedCostExpense(FixedCostEntity, date)",                          "note": "実支払額 or 0 で実績レコード作成" },
+        { "from": "svc.fixedCost",   "to": "repo.fixedCostExp", "passes": "insert(FixedCostExpenseEntity)",                                          "note": "ImplementsFixedCostExpenseRepository.insert" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",  "passes": "INSERT INTO fixed_cost_expense",                                          "note": "実績生成 (v6 から expense とは別テーブル)" },
+        { "from": "uc.fixedCost",    "to": "repo.fixedCost",    "passes": "update(nextPaymentDate, recentPaymentDate)",                              "note": "次回支払日を進める" },
+        { "from": "uc.batch",        "to": "repo.batchHist",    "passes": "insert(BatchHistoryEntity { start, end, status=1 })",                      "note": "バッチ完了履歴を記録" },
+        { "from": "repo.batchHist",  "to": "db.batchHist",      "passes": "INSERT INTO batch_history",                                                "note": "完了履歴保存" },
+        { "from": "uc.batch",        "to": "state.dbCount",     "passes": "incrementState()",                                                         "note": "全 UI 再描画 (固定費パネル等)" }
+      ]
+    },
+    {
+      "id": "f9.annualBalance",
+      "icon": "📈",
+      "name": "9. 年間収支グラフ表示",
+      "sub": "YearPage → AnnualBalanceChartUsecase (AsyncNotifier)",
+      "description": "ホームの年間収支グラフ。AsyncNotifier として 12 か月分の収入/通常支出/固定費支出を集計して 1 枚の chart にする。",
+      "steps": [
+        { "from": "ui.year",         "to": "uc.annualBalance",  "passes": "build(year)",                                            "note": "AsyncNotifier 自動起動 (ref.watch)" },
+        { "from": "uc.annualBalance","to": "svc.monthPeriod",   "passes": "fetchMonthPeriod(month) × 12",                            "note": "年内 12 月分の期間レンジを計算" },
+        { "from": "uc.annualBalance","to": "repo.expense",      "passes": "fetchByPeriod(periodValue)",                              "note": "月度別の通常支出合計" },
+        { "from": "repo.expense",    "to": "db.expense",        "passes": "SELECT SUM(price) FROM expense WHERE date BETWEEN ?",     "note": "月度内データ集計" },
+        { "from": "uc.annualBalance","to": "repo.income",       "passes": "fetchByPeriod(periodValue)",                              "note": "月度別の収入合計" },
+        { "from": "repo.income",     "to": "db.income",         "passes": "SELECT SUM(price) FROM income WHERE date BETWEEN ?",      "note": "月度内データ集計" },
+        { "from": "uc.annualBalance","to": "repo.fixedCostExp", "passes": "fetchByPeriod(periodValue)",                              "note": "月度別の固定費支出合計" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",  "passes": "SELECT SUM(price) FROM fixed_cost_expense WHERE date ?",  "note": "月度内データ集計" },
+        { "from": "uc.annualBalance","to": "ui.year",           "passes": "AsyncValue<AnnualBalanceChartData[]>",                    "note": "12 月分の収入 / 支出を CustomPaint で描画 (KAN-82 で fl_chart 非依存に再実装)" }
+      ]
+    },
+    {
+      "id": "f10.predictionGraph",
+      "icon": "🔮",
+      "name": "10. 予測グラフ表示",
+      "sub": "MonthlyPage → PredictionGraphUsecase",
+      "description": "分析タブの日次累積予測グラフ。月次予算と収入を元に、月末までの予測ラインを描画する。",
+      "steps": [
+        { "from": "ui.monthly",   "to": "uc.prediction",  "passes": "fetchPredictionGraphData(periodValue)",                        "note": "PredictionGraphUsecase 起動" },
+        { "from": "uc.prediction","to": "repo.budget",    "passes": "fetchByMonth(YYYYMM)",                                          "note": "月次予算を取得" },
+        { "from": "repo.budget",  "to": "db.budget",      "passes": "SELECT FROM budget WHERE month = ?",                            "note": "対象月の予算" },
+        { "from": "uc.prediction","to": "repo.income",    "passes": "fetchByPeriod(periodValue)",                                    "note": "月次収入を取得" },
+        { "from": "repo.income",  "to": "db.income",      "passes": "SELECT FROM income WHERE date BETWEEN ?",                       "note": "月次収入データ" },
+        { "from": "uc.prediction","to": "ui.monthly",     "passes": "List<PredictionGraphData> { date, predictedSum }",               "note": "日次累積予測ライン描画" }
+      ]
+    },
+    {
+      "id": "f11.csvExport",
+      "icon": "📤",
+      "name": "11. CSV エクスポート",
+      "sub": "YearPage (設定) → ExportUsecase → Share",
+      "description": "全 4 エンティティ + カテゴリマスタを CSV に出力し、端末の Share シートで外部アプリへ渡すフロー。",
+      "steps": [
+        { "from": "ui.year",          "to": "uc.export",        "passes": "exportAll()",                                                "note": "設定メニューから起動 (Config 画面)" },
+        { "from": "uc.export",        "to": "repo.expense",     "passes": "fetchAll()",                                                  "note": "通常支出を全件取得" },
+        { "from": "repo.expense",     "to": "db.expense",       "passes": "SELECT * FROM expense",                                       "note": "全件" },
+        { "from": "uc.export",        "to": "repo.income",      "passes": "fetchAll()",                                                  "note": "収入を全件取得" },
+        { "from": "repo.income",      "to": "db.income",        "passes": "SELECT * FROM income",                                        "note": "全件" },
+        { "from": "uc.export",        "to": "repo.fixedCostExp","passes": "fetchAll()",                                                  "note": "固定費支出を全件取得" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",  "passes": "SELECT * FROM fixed_cost_expense",                            "note": "全件" },
+        { "from": "uc.export",        "to": "repo.category",    "passes": "fetchAll() (5 種カテゴリ)",                                   "note": "カテゴリマスタ取得" },
+        { "from": "repo.category",    "to": "db.category",      "passes": "SELECT * FROM *_category",                                    "note": "全カテゴリ" },
+        { "from": "uc.export",        "to": "ui.year",          "passes": "CSV file path → Share",                                       "note": "端末の Share シート起動" }
+      ]
+    }
+  ]
+}
+  </script>
+
+<script>
+(function () {
+  'use strict';
+
+  const SVG_NS = 'http://www.w3.org/2000/svg';
+  const BADGE_OFFSETS = [0.50, 0.44, 0.56, 0.38, 0.62, 0.32, 0.68, 0.26, 0.74, 0.20, 0.80, 0.15, 0.85, 0.10, 0.90];
+  const LANE = 38;
+  const NODE_MARGIN = 4;
+
+  // ============================================================
+  // DATA LOADING (fetch with embedded JSON fallback)
+  // ============================================================
+  async function loadData() {
+    try {
+      const res = await fetch('./flows.json', { cache: 'no-cache' });
+      if (!res.ok) throw new Error('fetch returned ' + res.status);
+      return await res.json();
+    } catch (err) {
+      console.warn('[workflows] fetch failed, using embedded fallback:', err.message);
+      const el = document.getElementById('workflow-data');
+      if (!el) throw new Error('embedded workflow-data not found');
+      return JSON.parse(el.textContent);
+    }
+  }
+
+  // ============================================================
+  // HELPERS
+  // ============================================================
+  function svg(tag, attrs) {
+    const el = document.createElementNS(SVG_NS, tag);
+    if (attrs) for (const [k, v] of Object.entries(attrs)) {
+      if (v !== null && v !== undefined) el.setAttribute(k, String(v));
+    }
+    return el;
+  }
+
+  function htmlEscape(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[c]));
+  }
+
+  // ============================================================
+  // BEZIER GEOMETRY
+  // ============================================================
+  function computeBezier(fromNode, toNode, lane) {
+    const fromCx = fromNode.x + fromNode.w / 2;
+    const fromCy = fromNode.y + fromNode.h / 2;
+    const toCx   = toNode.x   + toNode.w   / 2;
+    const toCy   = toNode.y   + toNode.h   / 2;
+    const dx = toCx - fromCx;
+    const dy = toCy - fromCy;
+
+    let sx, sy, tx, ty, cp1x, cp1y, cp2x, cp2y, orientation;
+
+    if (Math.abs(dx) >= Math.abs(dy)) {
+      orientation = 'horizontal';
+      if (dx >= 0) {
+        sx = fromNode.x + fromNode.w; sy = fromCy;
+        tx = toNode.x;                ty = toCy;
+      } else {
+        sx = fromNode.x;              sy = fromCy;
+        tx = toNode.x + toNode.w;     ty = toCy;
+      }
+      const span = Math.max(60, Math.abs(tx - sx));
+      const dir  = dx >= 0 ? 1 : -1;
+      cp1x = sx + dir * span * 0.45;  cp1y = sy + lane;
+      cp2x = tx - dir * span * 0.45;  cp2y = ty + lane;
+    } else {
+      orientation = 'vertical';
+      if (dy >= 0) {
+        sx = fromCx; sy = fromNode.y + fromNode.h;
+        tx = toCx;   ty = toNode.y;
+      } else {
+        sx = fromCx; sy = fromNode.y;
+        tx = toCx;   ty = toNode.y + toNode.h;
+      }
+      const span = Math.max(40, Math.abs(ty - sy));
+      const dir  = dy >= 0 ? 1 : -1;
+      cp1x = sx + lane; cp1y = sy + dir * span * 0.45;
+      cp2x = tx + lane; cp2y = ty - dir * span * 0.45;
+    }
+    return { sx, sy, tx, ty, cp1x, cp1y, cp2x, cp2y, orientation };
+  }
+
+  function bezierToPath(g) {
+    return `M ${g.sx} ${g.sy} C ${g.cp1x} ${g.cp1y}, ${g.cp2x} ${g.cp2y}, ${g.tx} ${g.ty}`;
+  }
+
+  // ============================================================
+  // EDGE / BADGE STRUCTURE
+  // ============================================================
+  function buildEdgeIndex(data) {
+    // global edge: one entry per unique from→to (across all flows)
+    const map = new Map();
+    for (const flow of data.flows) {
+      flow.steps.forEach((step, idx) => {
+        const key = step.from + '|' + step.to;
+        if (!map.has(key)) {
+          map.set(key, { key, from: step.from, to: step.to, flowSteps: [] });
+        }
+        map.get(key).flowSteps.push({
+          flowId: flow.id,
+          stepIdx: idx,
+          passes: step.passes,
+          note: step.note
+        });
+      });
+    }
+
+    // assign lane offsets for reverse pairs (lexicographic canonical order)
+    for (const edge of map.values()) {
+      const reverseKey = edge.to + '|' + edge.from;
+      if (map.has(reverseKey) && reverseKey !== edge.key) {
+        edge.lane = (edge.from < edge.to) ? -LANE : +LANE;
+      } else {
+        edge.lane = 0;
+      }
+    }
+    return map;
+  }
+
+  function computeBadgeLabel(stepIdxs1based) {
+    const n = stepIdxs1based.length;
+    if (n === 1) return String(stepIdxs1based[0]);
+    if (n <= 5) return stepIdxs1based.join(' · ');
+    return stepIdxs1based[0] + '–' + stepIdxs1based[n - 1] + ' (' + n + ')';
+  }
+
+  function estimatePillSize(label) {
+    // Monospace-ish estimate (10.5px bold): roughly 7px per char + 14px padding
+    const charW = 7.2;
+    const w = Math.max(22, label.length * charW + 14);
+    return { w, h: 20 };
+  }
+
+  // ============================================================
+  // BADGE PLACEMENT — two-stage collision + escape loop
+  // ============================================================
+  function findBadgePosition(path, pathLen, pillSize, placed, nodeBBoxes) {
+    let best = null;
+    let bestScore = -Infinity;
+
+    for (const t of BADGE_OFFSETS) {
+      const pt = path.getPointAtLength(t * pathLen);
+      const cand = { cx: pt.x, cy: pt.y, w: pillSize.w, h: pillSize.h, t };
+
+      // 1) pill-pill ellipse distance (normalized)
+      let minPillDist = Infinity;
+      for (const p of placed) {
+        const dx = (cand.cx - p.cx) / ((cand.w + p.w) / 2);
+        const dy = (cand.cy - p.cy) / ((cand.h + p.h) / 2);
+        const d  = Math.hypot(dx, dy);
+        if (d < minPillDist) minPillDist = d;
+      }
+
+      // 2) node bbox overlap
+      const inNode = isInsideAnyNode(cand, nodeBBoxes);
+
+      const score = (minPillDist === Infinity ? 5 : minPillDist) + (inNode ? -3.5 : 0);
+      if (score > bestScore) {
+        bestScore = score;
+        best = { ...cand, inNode };
+      }
+      if (minPillDist >= 1.05 && !inNode) return { ...cand, inNode: false };
+    }
+
+    // escape loop: walk along path to find first node-free spot
+    if (best && best.inNode) {
+      const step = 0.012;
+      for (let i = 1; i <= 30; i++) {
+        for (const sign of [+1, -1]) {
+          const nt = best.t + sign * step * i;
+          if (nt <= 0.04 || nt >= 0.96) continue;
+          const pt = path.getPointAtLength(nt * pathLen);
+          const cand = { cx: pt.x, cy: pt.y, w: pillSize.w, h: pillSize.h, t: nt };
+          if (!isInsideAnyNode(cand, nodeBBoxes)) {
+            return { ...cand, inNode: false };
+          }
+        }
+      }
+    }
+    return best;
+  }
+
+  function isInsideAnyNode(cand, nodeBBoxes) {
+    const x1 = cand.cx - cand.w / 2 - NODE_MARGIN;
+    const x2 = cand.cx + cand.w / 2 + NODE_MARGIN;
+    const y1 = cand.cy - cand.h / 2 - NODE_MARGIN;
+    const y2 = cand.cy + cand.h / 2 + NODE_MARGIN;
+    for (const n of nodeBBoxes) {
+      if (x1 < n.x + n.w && x2 > n.x && y1 < n.y + n.h && y2 > n.y) return true;
+    }
+    return false;
+  }
+
+  // ============================================================
+  // MAIN
+  // ============================================================
+  loadData().then(init).catch(err => {
+    document.body.innerHTML = '<pre style="color:#f25c54;padding:20px">Failed to load workflow data: ' + htmlEscape(err.message) + '</pre>';
+    console.error(err);
+  });
+
+  function init(data) {
+    const svgEl = document.getElementById('svg-canvas');
+    const VBW = data.viewBox.w, VBH = data.viewBox.h;
+    let viewBox = { x: 0, y: 0, w: VBW, h: VBH };
+    svgEl.setAttribute('viewBox', `0 0 ${VBW} ${VBH}`);
+
+    const nodeById = new Map(data.nodes.map(n => [n.id, n]));
+    const groupById = new Map(data.groups.map(g => [g.id, g]));
+
+    // -- DEFS (markers)
+    const defs = svg('defs');
+    defs.innerHTML = `
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5"
+              markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#2c3441"/>
+      </marker>
+      <marker id="arrow-active" viewBox="0 0 10 10" refX="9" refY="5"
+              markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#ffd166"/>
+      </marker>`;
+    svgEl.appendChild(defs);
+
+    // -- LAYERS in strict order: col → edge → node → badge (badge always topmost)
+    const colLayer   = svg('g', { id: 'col-layer' });
+    const edgeLayer  = svg('g', { id: 'edge-layer' });
+    const nodeLayer  = svg('g', { id: 'node-layer' });
+    const badgeLayer = svg('g', { id: 'badge-layer' });
+    svgEl.append(colLayer, edgeLayer, nodeLayer, badgeLayer);
+
+    // -- COLUMNS
+    for (const col of data.columns) {
+      const txt = svg('text', { x: col.x, y: 18, class: 'col-header' });
+      txt.textContent = col.label;
+      colLayer.appendChild(txt);
+      if (col.divider != null) {
+        colLayer.appendChild(svg('line', {
+          x1: col.divider, y1: 30,
+          x2: col.divider, y2: VBH - 8,
+          class: 'col-divider'
+        }));
+      }
+    }
+
+    // -- NODES
+    const nodeEls = new Map();
+    for (const node of data.nodes) {
+      const grp = groupById.get(node.group);
+      const g = svg('g', { class: 'node', 'data-id': node.id });
+      g.appendChild(svg('rect', {
+        x: node.x, y: node.y, width: node.w, height: node.h, rx: 8, ry: 8,
+        class: 'node-bg',
+        fill: grp.fill, stroke: grp.stroke, 'stroke-width': 1.5,
+        style: 'filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));'
+      }));
+      const t1 = svg('text', {
+        x: node.x + node.w / 2, y: node.y + 24,
+        class: 'node-title', 'text-anchor': 'middle'
+      });
+      t1.textContent = node.title;
+      const t2 = svg('text', {
+        x: node.x + node.w / 2, y: node.y + 42,
+        class: 'node-subtitle', 'text-anchor': 'middle'
+      });
+      t2.textContent = node.subtitle;
+      g.append(t1, t2);
+      nodeLayer.appendChild(g);
+      nodeEls.set(node.id, g);
+    }
+
+    // -- EDGES (one per unique from→to globally)
+    const edgeIndex = buildEdgeIndex(data);
+    const edgeEls = new Map();
+    for (const edge of edgeIndex.values()) {
+      const from = nodeById.get(edge.from);
+      const to   = nodeById.get(edge.to);
+      const geom = computeBezier(from, to, edge.lane);
+      const path = svg('path', {
+        class: 'edge',
+        d: bezierToPath(geom),
+        'marker-end': 'url(#arrow)',
+        'data-key': edge.key
+      });
+      edgeLayer.appendChild(path);
+      edge.path = path;
+      edge.pathLen = path.getTotalLength();
+      edge.geom = geom;
+      edgeEls.set(edge.key, path);
+    }
+
+    // -- BADGE SLOTS: pre-place one global slot per edge (for the busiest flow on it)
+    // For each edge, find the flow with the most steps on it and use those step numbers as
+    // an estimate for pill size. Multiple flows: per-flow render uses correct labels later.
+    const nodeBBoxes = data.nodes.map(n => ({ x: n.x, y: n.y, w: n.w, h: n.h }));
+    const placedPills = [];
+    // sort by step-count desc so busiest edges get the prime midpoint
+    const sortedEdges = [...edgeIndex.values()].sort((a, b) => {
+      const aBy = perFlowStepCount(a);
+      const bBy = perFlowStepCount(b);
+      if (bBy !== aBy) return bBy - aBy;
+      return a.flowSteps[0].stepIdx - b.flowSteps[0].stepIdx;
+    });
+
+    for (const edge of sortedEdges) {
+      // estimate widest possible label across all flows on this edge
+      const widest = widestLabelAcrossFlows(edge);
+      const pillSize = estimatePillSize(widest);
+      const placement = findBadgePosition(edge.path, edge.pathLen, pillSize, placedPills, nodeBBoxes);
+      edge.placement = placement;
+      placedPills.push({ cx: placement.cx, cy: placement.cy, w: pillSize.w, h: pillSize.h });
+
+      // build empty badge DOM (filled on flow select)
+      const badge = renderBadgeShell(edge);
+      badgeLayer.appendChild(badge);
+      edge.badge = badge;
+    }
+
+    function perFlowStepCount(edge) {
+      const byFlow = new Map();
+      for (const s of edge.flowSteps) byFlow.set(s.flowId, (byFlow.get(s.flowId) || 0) + 1);
+      let m = 0; for (const v of byFlow.values()) if (v > m) m = v;
+      return m;
+    }
+    function widestLabelAcrossFlows(edge) {
+      const byFlow = new Map();
+      for (const s of edge.flowSteps) {
+        if (!byFlow.has(s.flowId)) byFlow.set(s.flowId, []);
+        byFlow.get(s.flowId).push(s.stepIdx + 1);
+      }
+      let widest = '0';
+      for (const arr of byFlow.values()) {
+        const lbl = computeBadgeLabel(arr.sort((a, b) => a - b));
+        if (lbl.length > widest.length) widest = lbl;
+      }
+      return widest;
+    }
+
+    // -- BADGE DOM (empty shell, populated dynamically per flow)
+    function renderBadgeShell(edge) {
+      const g = svg('g', {
+        class: 'edge-step-badge',
+        'data-key': edge.key,
+        transform: `translate(${edge.placement.cx}, ${edge.placement.cy})`
+      });
+
+      // halo (focus only)
+      g.appendChild(svg('ellipse', {
+        class: 'edge-step-halo',
+        cx: 0, cy: 0, rx: 18, ry: 13
+      }));
+
+      // hit area (transparent, larger than pill, captures hover)
+      g.appendChild(svg('rect', {
+        class: 'edge-step-hit',
+        x: -28, y: -18, width: 56, height: 36, rx: 18
+      }));
+
+      // scale wrapper (for pulse animation)
+      const scale = svg('g', { class: 'edge-step-scale' });
+
+      // visible pill
+      scale.appendChild(svg('rect', {
+        class: 'edge-step-pill',
+        x: -16, y: -10, width: 32, height: 20, rx: 10
+      }));
+
+      // text
+      const t = svg('text', {
+        x: 0, y: 0,
+        'text-anchor': 'middle',
+        'dominant-baseline': 'central'
+      });
+      t.textContent = '';
+      scale.appendChild(t);
+      g.appendChild(scale);
+      g.__text = t;
+
+      // tether (dashed) — drawn only if badge is offset from midpoint
+      const midPt = edge.path.getPointAtLength(0.50 * edge.pathLen);
+      const dx = edge.placement.cx - midPt.x;
+      const dy = edge.placement.cy - midPt.y;
+      if (Math.hypot(dx, dy) > 16) {
+        g.appendChild(svg('path', {
+          class: 'edge-tether',
+          d: `M ${-dx} ${-dy} L 0 0`
+        }));
+      }
+
+      // hover/click events on the OUTER <g>, using bubble-friendly mouseover/mouseout
+      g.addEventListener('mouseover', (ev) => onBadgeOver(edge, ev));
+      g.addEventListener('mouseout',  (ev) => onBadgeOut(edge, ev));
+      g.addEventListener('click',     (ev) => { ev.stopPropagation(); onBadgeClick(edge); });
+      return g;
+    }
+
+    // ============================================================
+    // FLOW SELECTION / FOCUS / TOOLTIP
+    // ============================================================
+    let activeFlowId = null;
+    let focusedStep  = null; // {flowId, stepIdx}
+    let badgeCycleIdx = new Map(); // edgeKey → index for multi-step click cycling
+
+    function setActiveFlow(flowId, opts) {
+      const opt = opts || {};
+      activeFlowId = flowId;
+      focusedStep  = null;
+      badgeCycleIdx.clear();
+      hideTooltip();
+
+      // sidebar buttons
+      document.querySelectorAll('.flow-btn').forEach(b => {
+        b.classList.toggle('active', b.dataset.flowId === flowId);
+      });
+
+      // reset all visual state on nodes/edges/badges
+      for (const g of nodeEls.values()) g.classList.remove('in-flow', 'dim', 'endpoint');
+      for (const p of edgeEls.values()) p.classList.remove('in-flow', 'dim', 'focused-edge');
+      for (const edge of edgeIndex.values()) {
+        edge.badge.classList.remove('visible', 'in-flow', 'focused-step');
+        edge.badge.__text.textContent = '';
+      }
+
+      if (!flowId) {
+        renderAnnotations(null);
+        fitTo(data.nodes, opt.animate !== false);
+        return;
+      }
+      const flow = data.flows.find(f => f.id === flowId);
+      if (!flow) return;
+
+      // group steps by edge within this flow
+      const byEdge = new Map();   // edgeKey → {stepIdxs, steps}
+      const usedNodes = new Set();
+      flow.steps.forEach((s, i) => {
+        const key = s.from + '|' + s.to;
+        if (!byEdge.has(key)) byEdge.set(key, { stepIdxs: [], steps: [] });
+        byEdge.get(key).stepIdxs.push(i + 1);
+        byEdge.get(key).steps.push({ idx: i, ...s });
+        usedNodes.add(s.from); usedNodes.add(s.to);
+      });
+
+      // dim non-participating nodes / edges
+      for (const [id, g] of nodeEls) {
+        if (usedNodes.has(id)) g.classList.add('in-flow');
+        else                   g.classList.add('dim');
+      }
+      for (const [key, p] of edgeEls) {
+        if (byEdge.has(key)) {
+          p.classList.add('in-flow');
+          p.setAttribute('marker-end', 'url(#arrow-active)');
+        } else {
+          p.classList.add('dim');
+          p.setAttribute('marker-end', 'url(#arrow)');
+        }
+      }
+
+      // populate badges
+      for (const [key, info] of byEdge) {
+        const edge = edgeIndex.get(key);
+        if (!edge) continue;
+        const lbl = computeBadgeLabel(info.stepIdxs);
+        const txt = edge.badge.__text;
+        txt.textContent = lbl;
+        // resize pill to fit text
+        const bbox = (function () { try { return txt.getBBox(); } catch (e) { return { width: lbl.length * 7 }; } })();
+        const pw = Math.max(22, bbox.width + 14);
+        const ph = 20;
+        const scale = edge.badge.querySelector('.edge-step-scale');
+        const pill  = scale.querySelector('.edge-step-pill');
+        pill.setAttribute('x', -pw / 2);
+        pill.setAttribute('width', pw);
+        pill.setAttribute('y', -ph / 2);
+        pill.setAttribute('height', ph);
+        pill.setAttribute('rx', ph / 2);
+        // hit area
+        const hit = edge.badge.querySelector('.edge-step-hit');
+        hit.setAttribute('x', -pw / 2 - 8);
+        hit.setAttribute('width', pw + 16);
+        hit.setAttribute('y', -ph / 2 - 8);
+        hit.setAttribute('height', ph + 16);
+        hit.setAttribute('rx', ph / 2 + 8);
+        // halo size
+        const halo = edge.badge.querySelector('.edge-step-halo');
+        halo.setAttribute('rx', pw / 2 + 4);
+        halo.setAttribute('ry', ph / 2 + 4);
+
+        edge.badge.classList.add('visible', 'in-flow');
+        edge.badge.__activeFlowInfo = info;
+      }
+
+      renderAnnotations(flow);
+      const focusNodes = data.nodes.filter(n => usedNodes.has(n.id));
+      fitTo(focusNodes, opt.animate !== false);
+    }
+
+    function focusStep(flowId, stepIdx, opts) {
+      const opt = opts || {};
+      if (activeFlowId !== flowId) setActiveFlow(flowId, { animate: false });
+      const flow = data.flows.find(f => f.id === flowId);
+      const step = flow.steps[stepIdx];
+      if (!step) return;
+      focusedStep = { flowId, stepIdx };
+      const key = step.from + '|' + step.to;
+
+      // clear previous step focus
+      for (const edge of edgeIndex.values()) {
+        edge.badge.classList.remove('focused-step');
+      }
+      for (const p of edgeEls.values()) p.classList.remove('focused-edge');
+      for (const g of nodeEls.values()) g.classList.remove('endpoint');
+
+      // apply new step focus
+      const edge = edgeIndex.get(key);
+      if (edge) edge.badge.classList.add('focused-step');
+      const ep  = edgeEls.get(key);
+      if (ep)   ep.classList.add('focused-edge');
+      const fromG = nodeEls.get(step.from);
+      const toG   = nodeEls.get(step.to);
+      if (fromG) fromG.classList.add('endpoint');
+      if (toG)   toG.classList.add('endpoint');
+
+      // annotation flash (re-fire on repeated click via forced reflow)
+      document.querySelectorAll('.annotations li').forEach((li, i) => {
+        li.classList.remove('focused');
+        if (i === stepIdx) {
+          // force reflow so the animation re-fires even on re-click
+          // eslint-disable-next-line no-unused-expressions
+          li.offsetWidth;
+          li.classList.add('focused');
+          if (opt.scrollIntoView !== false) {
+            li.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          }
+        }
+      });
+    }
+
+    function onBadgeOver(edge, ev) {
+      if (!activeFlowId) return;
+      const info = edge.badge.__activeFlowInfo;
+      if (!info) return;
+      const flow = data.flows.find(f => f.id === activeFlowId);
+      showTooltip(buildBadgeTooltip(flow, info, edge), ev.clientX, ev.clientY);
+    }
+    function onBadgeOut(edge, ev) {
+      const outer = edge.badge;
+      // ignore moves within the same badge
+      if (outer.contains(ev.relatedTarget)) return;
+      hideTooltip();
+    }
+    function onBadgeClick(edge) {
+      if (!activeFlowId) return;
+      const info = edge.badge.__activeFlowInfo;
+      if (!info) return;
+      const steps = info.steps;
+      if (steps.length === 1) {
+        focusStep(activeFlowId, steps[0].idx);
+      } else {
+        // cycle through multi-step
+        const k = edge.key;
+        const cur = badgeCycleIdx.get(k);
+        const nextIdx = cur == null ? 0 : (cur + 1) % steps.length;
+        badgeCycleIdx.set(k, nextIdx);
+        focusStep(activeFlowId, steps[nextIdx].idx);
+      }
+    }
+
+    function buildBadgeTooltip(flow, info, edge) {
+      const fromNode = nodeById.get(edge.from);
+      const toNode   = nodeById.get(edge.to);
+      const parts = [];
+      parts.push(`<div class="tt-flow">${htmlEscape(flow.icon)} ${htmlEscape(flow.name)}</div>`);
+      parts.push(`<div class="tt-route"><b>${htmlEscape(fromNode.title)}</b><span class="arrow">→</span><b>${htmlEscape(toNode.title)}</b></div>`);
+      info.steps.forEach((s, i) => {
+        if (i > 0) parts.push(`<div class="tt-sep"></div>`);
+        parts.push(`<div style="color:var(--edge-active);font-size:10.5px;font-weight:700;margin-bottom:2px">STEP ${s.idx + 1}</div>`);
+        parts.push(`<div class="tt-passes">${htmlEscape(s.passes)}</div>`);
+        if (s.note) parts.push(`<div class="tt-note">${htmlEscape(s.note)}</div>`);
+      });
+      return parts.join('');
+    }
+
+    function showTooltip(html, x, y) {
+      const t = document.getElementById('tooltip');
+      t.innerHTML = html;
+      t.classList.add('visible');
+      const r = t.getBoundingClientRect();
+      let nx = x + 16, ny = y + 16;
+      if (nx + r.width  > window.innerWidth)  nx = x - r.width  - 16;
+      if (ny + r.height > window.innerHeight) ny = y - r.height - 16;
+      if (nx < 4) nx = 4;
+      if (ny < 4) ny = 4;
+      t.style.left = nx + 'px';
+      t.style.top  = ny + 'px';
+    }
+    function hideTooltip() {
+      document.getElementById('tooltip').classList.remove('visible');
+    }
+
+    // ============================================================
+    // ANNOTATIONS
+    // ============================================================
+    function renderAnnotations(flow) {
+      const root = document.getElementById('annotations');
+      if (!flow) {
+        root.innerHTML = '<div class="empty">← 左のリストからワークフローを選ぶか、数字キーで切り替えてください</div>';
+        return;
+      }
+      const head = `<div class="anno-head">
+        <span class="icon">${htmlEscape(flow.icon)}</span>
+        <span class="name">${htmlEscape(flow.name)}</span>
+        <span class="sub">${htmlEscape(flow.sub)}</span>
+        <span class="desc">${htmlEscape(flow.description)}</span>
+      </div>`;
+      const itemsHtml = flow.steps.map((s, i) => {
+        const fromN = nodeById.get(s.from);
+        const toN   = nodeById.get(s.to);
+        return `<li data-step-idx="${i}">
+          <div class="from-to"><b>${htmlEscape(fromN.title)}</b><span class="arrow">→</span><b>${htmlEscape(toN.title)}</b></div>
+          <div class="passes">${htmlEscape(s.passes)}</div>
+          <div class="note">${htmlEscape(s.note || '')}</div>
+        </li>`;
+      }).join('');
+      root.innerHTML = head + '<ol>' + itemsHtml + '</ol>';
+
+      root.querySelectorAll('li').forEach(li => {
+        li.addEventListener('click', () => {
+          const i = parseInt(li.dataset.stepIdx, 10);
+          focusStep(flow.id, i);
+        });
+      });
+    }
+
+    // ============================================================
+    // FIT / ZOOM / PAN
+    // ============================================================
+    function fitTo(nodes, animate) {
+      if (!nodes.length) return;
+      let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+      for (const n of nodes) {
+        if (n.x < minX) minX = n.x;
+        if (n.y < minY) minY = n.y;
+        if (n.x + n.w > maxX) maxX = n.x + n.w;
+        if (n.y + n.h > maxY) maxY = n.y + n.h;
+      }
+      const pad = 60;
+      const target = {
+        x: minX - pad,
+        y: minY - pad,
+        w: (maxX - minX) + pad * 2,
+        h: (maxY - minY) + pad * 2
+      };
+      // keep aspect ratio of svg container
+      const wrap = document.getElementById('canvas-wrap').getBoundingClientRect();
+      const containerAspect = wrap.width / wrap.height;
+      const targetAspect    = target.w / target.h;
+      if (containerAspect > targetAspect) {
+        const newW = target.h * containerAspect;
+        target.x -= (newW - target.w) / 2;
+        target.w  = newW;
+      } else {
+        const newH = target.w / containerAspect;
+        target.y -= (newH - target.h) / 2;
+        target.h  = newH;
+      }
+      animateViewBox(target, animate ? 380 : 0);
+    }
+
+    function animateViewBox(target, duration) {
+      const start = { ...viewBox };
+      const t0 = performance.now();
+      function step(t) {
+        const k = duration === 0 ? 1 : Math.min(1, (t - t0) / duration);
+        const e = k < 0.5 ? 2 * k * k : 1 - Math.pow(-2 * k + 2, 2) / 2;
+        viewBox = {
+          x: start.x + (target.x - start.x) * e,
+          y: start.y + (target.y - start.y) * e,
+          w: start.w + (target.w - start.w) * e,
+          h: start.h + (target.h - start.h) * e
+        };
+        applyViewBox();
+        if (k < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function applyViewBox() {
+      svgEl.setAttribute('viewBox', `${viewBox.x} ${viewBox.y} ${viewBox.w} ${viewBox.h}`);
+    }
+
+    function svgPointFromClient(clientX, clientY) {
+      const r = svgEl.getBoundingClientRect();
+      const sx = (clientX - r.left) / r.width;
+      const sy = (clientY - r.top)  / r.height;
+      return { x: viewBox.x + sx * viewBox.w, y: viewBox.y + sy * viewBox.h };
+    }
+
+    function setupZoomPan() {
+      const wrap = document.getElementById('canvas-wrap');
+
+      wrap.addEventListener('wheel', (ev) => {
+        ev.preventDefault();
+        const factor = ev.deltaY > 0 ? 1.12 : 1 / 1.12;
+        const pt = svgPointFromClient(ev.clientX, ev.clientY);
+        const newW = Math.max(200, Math.min(4500, viewBox.w * factor));
+        const newH = Math.max(120, Math.min(2700, viewBox.h * factor));
+        viewBox = {
+          x: pt.x - (pt.x - viewBox.x) * (newW / viewBox.w),
+          y: pt.y - (pt.y - viewBox.y) * (newH / viewBox.h),
+          w: newW, h: newH
+        };
+        applyViewBox();
+      }, { passive: false });
+
+      // drag pan
+      let dragging = false, lastX = 0, lastY = 0;
+      wrap.addEventListener('mousedown', (ev) => {
+        if (ev.target.closest('.edge-step-badge, .annotations, .sidebar')) return;
+        dragging = true; lastX = ev.clientX; lastY = ev.clientY;
+        wrap.classList.add('dragging');
+      });
+      window.addEventListener('mousemove', (ev) => {
+        if (!dragging) return;
+        const r = svgEl.getBoundingClientRect();
+        const dx = (ev.clientX - lastX) * (viewBox.w / r.width);
+        const dy = (ev.clientY - lastY) * (viewBox.h / r.height);
+        viewBox.x -= dx; viewBox.y -= dy;
+        applyViewBox();
+        lastX = ev.clientX; lastY = ev.clientY;
+      });
+      window.addEventListener('mouseup', () => {
+        dragging = false;
+        wrap.classList.remove('dragging');
+      });
+    }
+
+    function setupKeyboard() {
+      window.addEventListener('keydown', (ev) => {
+        if (ev.target && (ev.target.tagName === 'INPUT' || ev.target.tagName === 'TEXTAREA')) return;
+        const k = ev.key;
+        if (k >= '1' && k <= '9') {
+          const idx = parseInt(k, 10) - 1;
+          if (data.flows[idx]) { ev.preventDefault(); setActiveFlow(data.flows[idx].id); }
+        } else if (k === '0') {
+          if (data.flows[9]) { ev.preventDefault(); setActiveFlow(data.flows[9].id); }
+        } else if (k === 'f' || k === 'F') {
+          ev.preventDefault(); setActiveFlow(null);
+        } else if (k === '+' || k === '=') {
+          ev.preventDefault();
+          const cx = viewBox.x + viewBox.w / 2, cy = viewBox.y + viewBox.h / 2;
+          const f = 1 / 1.15;
+          viewBox = { x: cx - (viewBox.w * f) / 2, y: cy - (viewBox.h * f) / 2, w: viewBox.w * f, h: viewBox.h * f };
+          applyViewBox();
+        } else if (k === '-' || k === '_') {
+          ev.preventDefault();
+          const cx = viewBox.x + viewBox.w / 2, cy = viewBox.y + viewBox.h / 2;
+          const f = 1.15;
+          viewBox = { x: cx - (viewBox.w * f) / 2, y: cy - (viewBox.h * f) / 2, w: viewBox.w * f, h: viewBox.h * f };
+          applyViewBox();
+        } else if (k === 'Escape') {
+          ev.preventDefault();
+          if (focusedStep) {
+            focusedStep = null;
+            for (const edge of edgeIndex.values()) edge.badge.classList.remove('focused-step');
+            for (const p of edgeEls.values()) p.classList.remove('focused-edge');
+            for (const g of nodeEls.values()) g.classList.remove('endpoint');
+            document.querySelectorAll('.annotations li').forEach(li => li.classList.remove('focused'));
+          } else if (activeFlowId) {
+            setActiveFlow(null);
+          }
+        }
+      });
+    }
+
+    function setupResizer() {
+      const resizer = document.getElementById('resizer');
+      const saved = parseInt(localStorage.getItem('annoH') || '0', 10);
+      if (saved >= 120 && saved <= 700) {
+        document.body.style.setProperty('--anno-h', saved + 'px');
+      }
+      let dragging = false, startY = 0, startH = 0;
+      resizer.addEventListener('mousedown', (ev) => {
+        dragging = true;
+        startY = ev.clientY;
+        startH = parseInt(getComputedStyle(document.body).getPropertyValue('--anno-h'), 10) || 300;
+        resizer.classList.add('active');
+        ev.preventDefault();
+      });
+      window.addEventListener('mousemove', (ev) => {
+        if (!dragging) return;
+        const dy = startY - ev.clientY;
+        const next = Math.max(120, Math.min(700, startH + dy));
+        document.body.style.setProperty('--anno-h', next + 'px');
+      });
+      window.addEventListener('mouseup', () => {
+        if (!dragging) return;
+        dragging = false;
+        resizer.classList.remove('active');
+        const cur = parseInt(getComputedStyle(document.body).getPropertyValue('--anno-h'), 10);
+        if (cur) localStorage.setItem('annoH', String(cur));
+      });
+    }
+
+    // ============================================================
+    // SIDEBAR
+    // ============================================================
+    function renderSidebar() {
+      const list = document.getElementById('flow-list');
+      list.innerHTML = data.flows.map((f, i) => {
+        const key = (i === 9) ? '0' : String(i + 1);
+        return `<button class="flow-btn" type="button" data-flow-id="${htmlEscape(f.id)}">
+          <span class="key">${key}</span>
+          <span class="icon">${htmlEscape(f.icon)}</span>
+          <span>
+            <div class="name">${htmlEscape(f.name)}</div>
+            <div class="sub">${htmlEscape(f.sub)}</div>
+          </span>
+        </button>`;
+      }).join('');
+      list.querySelectorAll('.flow-btn').forEach(b => {
+        b.addEventListener('click', () => setActiveFlow(b.dataset.flowId));
+      });
+
+      const legend = document.getElementById('legend');
+      legend.innerHTML = data.groups.map(g => `
+        <div class="row">
+          <span class="swatch" style="background:${g.fill};border-color:${g.stroke}"></span>
+          <span>${htmlEscape(g.label)}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('reset-btn').addEventListener('click', () => setActiveFlow(null));
+    }
+
+    // ============================================================
+    // BOOT
+    // ============================================================
+    renderSidebar();
+    setupZoomPan();
+    setupKeyboard();
+    setupResizer();
+    // initial fit on all nodes — show whole diagram first
+    fitTo(data.nodes, false);
+  }
+})();
+</script>
+</body>
+</html>

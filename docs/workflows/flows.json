@@ -1,0 +1,244 @@
+{
+  "viewBox": { "w": 1500, "h": 900 },
+  "columns": [
+    { "id": "ui",   "label": "UI · VIEW PAGES",   "x": 140,  "divider": 290 },
+    { "id": "uc",   "label": "APPLICATION · USECASE", "x": 470,  "divider": 620 },
+    { "id": "svc",  "label": "DOMAIN SERVICE",    "x": 770,  "divider": 880 },
+    { "id": "repo", "label": "REPOSITORY",        "x": 1050, "divider": 1190 },
+    { "id": "db",   "label": "SQLITE TABLES",     "x": 1340, "divider": null }
+  ],
+  "groups": [
+    { "id": "view",       "label": "View Layer",     "stroke": "#4cc9f0", "fill": "#11242e", "sub": "rgba(76,201,240,0.18)" },
+    { "id": "state",      "label": "State Bus",      "stroke": "#9ad1f0", "fill": "#142531", "sub": "rgba(154,209,240,0.18)" },
+    { "id": "usecase",    "label": "UseCase",        "stroke": "#ffd166", "fill": "#2a2410", "sub": "rgba(255,209,102,0.18)" },
+    { "id": "service",    "label": "Domain Service", "stroke": "#b388ff", "fill": "#1f1832", "sub": "rgba(179,136,255,0.18)" },
+    { "id": "repository", "label": "Repository",     "stroke": "#80ed99", "fill": "#142a1c", "sub": "rgba(128,237,153,0.18)" },
+    { "id": "db",         "label": "Database Table", "stroke": "#f25c54", "fill": "#2a1411", "sub": "rgba(242,92,84,0.18)" }
+  ],
+  "nodes": [
+    { "id": "ui.register", "title": "RegisterPage", "subtitle": "入力モーダル / 支出・収入・固定費", "group": "view", "x": 30, "y": 70, "w": 220, "h": 56 },
+    { "id": "ui.history",  "title": "HistoricalCalendarPage", "subtitle": "履歴タブ / カレンダー閲覧・編集起点", "group": "view", "x": 30, "y": 160, "w": 220, "h": 56 },
+    { "id": "ui.monthly",  "title": "MonthlyPage", "subtitle": "分析タブ / 月次予算・カテゴリ別", "group": "view", "x": 30, "y": 300, "w": 220, "h": 56 },
+    { "id": "ui.budget",   "title": "BudgetSettingPage", "subtitle": "予算編集ページ", "group": "view", "x": 30, "y": 400, "w": 220, "h": 56 },
+    { "id": "ui.category", "title": "CategoryEditPage", "subtitle": "カテゴリ CRUD ページ", "group": "view", "x": 30, "y": 500, "w": 220, "h": 56 },
+    { "id": "ui.year",     "title": "YearPage", "subtitle": "ホームタブ / 年間収支・ボーナス計画", "group": "view", "x": 30, "y": 640, "w": 220, "h": 56 },
+
+    { "id": "state.dbCount", "title": "UpdateDBCountNotifier", "subtitle": "DB変更検知バス · 全画面の再fetchトリガー", "group": "state", "x": 170, "y": 815, "w": 320, "h": 50 },
+
+    { "id": "uc.expense",       "title": "ExpenseUsecase",            "subtitle": "add / edit / delete",      "group": "usecase", "x": 360, "y": 30,  "w": 220, "h": 56 },
+    { "id": "uc.income",        "title": "IncomeUsecase",             "subtitle": "add / edit / delete",      "group": "usecase", "x": 360, "y": 110, "w": 220, "h": 56 },
+    { "id": "uc.fixedCost",     "title": "FixedCostUsecase",          "subtitle": "定義CRUD + バッチ生成",     "group": "usecase", "x": 360, "y": 190, "w": 220, "h": 56 },
+    { "id": "uc.fixedCostExp",  "title": "FixedCostExpenseUsecase",   "subtitle": "confirm / edit / delete",  "group": "usecase", "x": 360, "y": 270, "w": 220, "h": 56 },
+    { "id": "uc.budget",        "title": "BudgetUsecase",             "subtitle": "月次予算 CRUD",             "group": "usecase", "x": 360, "y": 350, "w": 220, "h": 56 },
+    { "id": "uc.category",      "title": "CategoryUsecase",           "subtitle": "大小カテゴリ CRUD",         "group": "usecase", "x": 360, "y": 430, "w": 220, "h": 56 },
+    { "id": "uc.batch",         "title": "BatchProcessUsecase",       "subtitle": "月次バッチ判定 (起動時)",   "group": "usecase", "x": 360, "y": 510, "w": 220, "h": 56 },
+    { "id": "uc.annualBalance", "title": "AnnualBalanceChartUsecase", "subtitle": "年間月次収支集計",          "group": "usecase", "x": 360, "y": 590, "w": 220, "h": 56 },
+    { "id": "uc.prediction",    "title": "PredictionGraphUsecase",    "subtitle": "日次累積予測グラフ",        "group": "usecase", "x": 360, "y": 670, "w": 220, "h": 56 },
+    { "id": "uc.export",        "title": "ExportUsecase",             "subtitle": "CSV 出力",                  "group": "usecase", "x": 360, "y": 750, "w": 220, "h": 56 },
+
+    { "id": "svc.fixedCost",   "title": "FixedCostService",   "subtitle": "支払日 / 推定額計算", "group": "service", "x": 660, "y": 200, "w": 220, "h": 56 },
+    { "id": "svc.monthPeriod", "title": "MonthPeriodService", "subtitle": "月度期間計算 · 集計開始日基準", "group": "service", "x": 660, "y": 520, "w": 220, "h": 56 },
+
+    { "id": "repo.expense",       "title": "ExpenseRepository",            "subtitle": "ImplementsExpenseRepository", "group": "repository", "x": 940, "y": 30,  "w": 220, "h": 56 },
+    { "id": "repo.income",        "title": "IncomeRepository",             "subtitle": "ImplementsIncomeRepository",  "group": "repository", "x": 940, "y": 120, "w": 220, "h": 56 },
+    { "id": "repo.fixedCost",     "title": "FixedCostRepository",          "subtitle": "ImplementsFixedCostRepository", "group": "repository", "x": 940, "y": 210, "w": 220, "h": 56 },
+    { "id": "repo.fixedCostExp",  "title": "FixedCostExpenseRepository",   "subtitle": "ImplementsFixedCostExpenseRepository", "group": "repository", "x": 940, "y": 300, "w": 220, "h": 56 },
+    { "id": "repo.budget",        "title": "BudgetRepository",             "subtitle": "ImplementsBudgetRepository",  "group": "repository", "x": 940, "y": 390, "w": 220, "h": 56 },
+    { "id": "repo.category",      "title": "CategoryRepository 群",        "subtitle": "Expense / Income / FixedCost Big&Small 5 種", "group": "repository", "x": 940, "y": 480, "w": 220, "h": 56 },
+    { "id": "repo.batchHist",     "title": "BatchHistoryRepository",       "subtitle": "ImplementsBatchHistoryRepository", "group": "repository", "x": 940, "y": 570, "w": 220, "h": 56 },
+
+    { "id": "db.expense",       "title": "expense",            "subtitle": "通常支出 (v6: fixed_cost 分離)", "group": "db", "x": 1230, "y": 30,  "w": 220, "h": 56 },
+    { "id": "db.income",        "title": "income",             "subtitle": "収入 (月次収入・ボーナス)",      "group": "db", "x": 1230, "y": 120, "w": 220, "h": 56 },
+    { "id": "db.fixedCost",     "title": "fixed_cost",         "subtitle": "固定費定義 (定期支払マスタ)",    "group": "db", "x": 1230, "y": 210, "w": 220, "h": 56 },
+    { "id": "db.fixedCostExp",  "title": "fixed_cost_expense", "subtitle": "固定費支出実績 (v6 新規)",        "group": "db", "x": 1230, "y": 300, "w": 220, "h": 56 },
+    { "id": "db.budget",        "title": "budget",             "subtitle": "月次予算 (month + bigCategory)", "group": "db", "x": 1230, "y": 390, "w": 220, "h": 56 },
+    { "id": "db.category",      "title": "*_category",         "subtitle": "expense/income/fixed_cost Big&Small 5 表", "group": "db", "x": 1230, "y": 480, "w": 220, "h": 56 },
+    { "id": "db.batchHist",     "title": "batch_history",      "subtitle": "バッチ実行履歴",                  "group": "db", "x": 1230, "y": 570, "w": 220, "h": 56 }
+  ],
+  "flows": [
+    {
+      "id": "f1.expenseAdd",
+      "icon": "🧾",
+      "name": "1. 支出を新規登録する",
+      "sub": "RegisterPage → ExpenseUsecase → expense テーブル",
+      "description": "入力タブから通常支出を 1 件登録するフロー。fixed_cost は別フロー (4) で扱う。",
+      "steps": [
+        { "from": "ui.register",    "to": "uc.expense",     "passes": "ExpenseEntity { date, price, smallCategoryId, memo, incomeSourceBigCategory }", "note": "lib/view/register_page/submit_button.dart:98 で SubmitButton タップ" },
+        { "from": "uc.expense",     "to": "repo.expense",   "passes": "insert(ExpenseEntity)",                                "note": "ImplementsExpenseRepository.insert へ委譲" },
+        { "from": "repo.expense",   "to": "db.expense",     "passes": "INSERT INTO expense VALUES (...)",                     "note": "DatabaseHelper.instance.insert('expense', toJson())" },
+        { "from": "uc.expense",     "to": "state.dbCount",  "passes": "incrementState()",                                     "note": "updateDBCountNotifier を +1 して全画面に変更通知" },
+        { "from": "state.dbCount",  "to": "ui.history",     "passes": "rebuild trigger",                                      "note": "ref.watch(updateDBCountNotifierProvider) で履歴カレンダーが再fetch" },
+        { "from": "state.dbCount",  "to": "ui.monthly",     "passes": "rebuild trigger",                                      "note": "月次カテゴリ別サマリも自動再描画" }
+      ]
+    },
+    {
+      "id": "f2.expenseEdit",
+      "icon": "✏️",
+      "name": "2. 支出を編集・削除する",
+      "sub": "履歴 → RegisterPage(edit) → ExpenseUsecase",
+      "description": "履歴カレンダーから明細をタップして編集モードの RegisterPage を開き、edit / delete を実行するフロー。",
+      "steps": [
+        { "from": "ui.history",   "to": "ui.register",    "passes": "ExpenseEntity (編集対象)",                            "note": "ExpenseItemTile タップ → RegisterPageBase.editExpense() で編集モード起動" },
+        { "from": "ui.register",  "to": "uc.expense",     "passes": "edit(original, updated) または delete(entity)",       "note": "lib/view/register_page/register_page_base.dart:226 の削除ボタン / SubmitButton" },
+        { "from": "uc.expense",   "to": "repo.expense",   "passes": "update(...) / delete(id)",                            "note": "Repository へ委譲" },
+        { "from": "repo.expense", "to": "db.expense",     "passes": "UPDATE / DELETE FROM expense WHERE _id = ?",          "note": "SQL 実行" },
+        { "from": "uc.expense",   "to": "state.dbCount",  "passes": "incrementState()",                                    "note": "DB 更新通知" },
+        { "from": "state.dbCount","to": "ui.history",     "passes": "rebuild trigger",                                     "note": "編集元の履歴ページが即座に再描画" }
+      ]
+    },
+    {
+      "id": "f3.incomeManage",
+      "icon": "💰",
+      "name": "3. 収入・ボーナスを管理する",
+      "sub": "YearPage / MonthlyPage ⇆ RegisterPage ⇆ IncomeUsecase",
+      "description": "ホームのボーナス計画パネル、または分析タブの月次収入リストから収入を add / edit / delete するフロー。",
+      "steps": [
+        { "from": "ui.year",       "to": "ui.register",   "passes": "IncomeEntity (編集対象 or 新規)",                    "note": "BonusIncomeHistoryTile クリック → RegisterPageBase.editIncome()" },
+        { "from": "ui.monthly",    "to": "ui.register",   "passes": "新規 IncomeEntity 雛形",                              "note": "月次収入リストの追加ボタン" },
+        { "from": "ui.register",   "to": "uc.income",     "passes": "add / edit / delete (IncomeEntity)",                  "note": "lib/view/register_page/submit_button.dart:116" },
+        { "from": "uc.income",     "to": "repo.income",   "passes": "insert / update / delete",                             "note": "ImplementsIncomeRepository へ委譲" },
+        { "from": "repo.income",   "to": "db.income",     "passes": "INSERT / UPDATE / DELETE",                             "note": "SQL 実行" },
+        { "from": "uc.income",     "to": "state.dbCount", "passes": "incrementState()",                                     "note": "DB 更新通知" },
+        { "from": "state.dbCount", "to": "ui.year",       "passes": "rebuild trigger",                                      "note": "ボーナス計画パネル + 年間収支グラフが再描画" },
+        { "from": "state.dbCount", "to": "ui.monthly",    "passes": "rebuild trigger",                                      "note": "月次収入リストも再描画" }
+      ]
+    },
+    {
+      "id": "f4.fixedCostAdd",
+      "icon": "🏠",
+      "name": "4. 固定費を新規登録する",
+      "sub": "RegisterPage → FixedCostUsecase → fixed_cost + fixed_cost_expense",
+      "description": "定期支払の固定費を新規定義し、既往期間ぶんの支払履歴も同時生成するフロー。",
+      "steps": [
+        { "from": "ui.register",      "to": "uc.fixedCost",       "passes": "FixedCostEntity { name, price/variable, fixedCostCategoryId, intervalNumber/unit, firstPaymentDate }", "note": "lib/view/register_page/submit_button.dart:149 (固定費タブ)" },
+        { "from": "uc.fixedCost",     "to": "svc.fixedCost",      "passes": "calculateNextPaymentDate(firstDate, interval)",                                        "note": "FixedCostService が次回支払日 (nextPaymentDate) を計算" },
+        { "from": "svc.fixedCost",    "to": "uc.fixedCost",       "passes": "nextPaymentDate / recentPaymentDate",                                                   "note": "計算結果を Usecase に返却" },
+        { "from": "uc.fixedCost",     "to": "repo.fixedCost",     "passes": "insert(FixedCostEntity with nextPaymentDate)",                                          "note": "ImplementsFixedCostRepository.insert" },
+        { "from": "repo.fixedCost",   "to": "db.fixedCost",       "passes": "INSERT INTO fixed_cost",                                                                "note": "SqfFixedCost マスタレコード作成" },
+        { "from": "uc.fixedCost",     "to": "repo.fixedCostExp",  "passes": "insert(FixedCostExpenseEntity) × N (firstPaymentDate ~ 今日までの過去ぶん)",          "note": "FixedCostService.insertToFixedCostExpense を経由してバルク登録" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",    "passes": "INSERT INTO fixed_cost_expense (is_confirmed=0)",                                       "note": "実績テーブルへ書込み (v6 で expense から分離)" },
+        { "from": "uc.fixedCost",     "to": "state.dbCount",      "passes": "incrementState()",                                                                       "note": "DB 更新通知" },
+        { "from": "state.dbCount",    "to": "ui.monthly",         "passes": "rebuild trigger",                                                                        "note": "月次固定費パネルが再描画" }
+      ]
+    },
+    {
+      "id": "f5.fixedCostExpConfirm",
+      "icon": "✅",
+      "name": "5. 固定費支出を確定する",
+      "sub": "MonthlyPage → FixedCostExpenseUsecase",
+      "description": "変動費型の固定費 (例: 光熱費) の月次支出額を確定するフロー。is_confirmed=1 で実績を確定する。",
+      "steps": [
+        { "from": "ui.monthly",        "to": "uc.fixedCostExp",  "passes": "confirmExpense(id, price)",                            "note": "月次固定費パネル → 確定ダイアログ → confirm" },
+        { "from": "uc.fixedCostExp",   "to": "repo.fixedCostExp","passes": "update(price, isConfirmed=1, confirmedCostType)",      "note": "ImplementsFixedCostExpenseRepository.update" },
+        { "from": "repo.fixedCostExp", "to": "db.fixedCostExp",  "passes": "UPDATE fixed_cost_expense SET price, is_confirmed=1",  "note": "SQL 実行" },
+        { "from": "uc.fixedCostExp",   "to": "state.dbCount",    "passes": "incrementState()",                                     "note": "DB 更新通知" },
+        { "from": "state.dbCount",     "to": "ui.monthly",       "passes": "rebuild trigger",                                      "note": "予算進捗・固定費サマリが再描画" }
+      ]
+    },
+    {
+      "id": "f6.budgetEdit",
+      "icon": "💴",
+      "name": "6. 月次予算を編集する",
+      "sub": "MonthlyPage → BudgetSettingPage → BudgetUsecase",
+      "description": "分析タブから予算設定ページに遷移し、大カテゴリ別の月次予算を一括編集するフロー。",
+      "steps": [
+        { "from": "ui.monthly",   "to": "ui.budget",     "passes": "月度 PeriodValue (YYYYMM)",                                "note": "MonthlyPlanFooter『予算を編集する』ボタンから push" },
+        { "from": "ui.budget",    "to": "uc.budget",     "passes": "List<BudgetEditValue> { month, bigCategoryId, price }",     "note": "lib/view/budget_setting_page/submit_budget_button.dart:57" },
+        { "from": "uc.budget",    "to": "repo.budget",   "passes": "upsert(BudgetEntity) × N",                                  "note": "ImplementsBudgetRepository.update / add" },
+        { "from": "repo.budget",  "to": "db.budget",     "passes": "INSERT OR REPLACE INTO budget",                              "note": "(month, expense_big_category_id) で upsert" },
+        { "from": "uc.budget",    "to": "state.dbCount", "passes": "incrementState()",                                           "note": "DB 更新通知" },
+        { "from": "state.dbCount","to": "ui.monthly",    "passes": "rebuild trigger",                                            "note": "予算進捗カードが新しい予算で再描画" }
+      ]
+    },
+    {
+      "id": "f7.categoryCrud",
+      "icon": "🏷️",
+      "name": "7. カテゴリを追加・編集する",
+      "sub": "MonthlyPage → CategoryEditPage → CategoryUsecase",
+      "description": "支出/収入の大カテゴリと小カテゴリを追加/編集/並替するフロー。FixedCostCategory も同経路。",
+      "steps": [
+        { "from": "ui.monthly",   "to": "ui.category",   "passes": "対象カテゴリ種別 (expense/income/fixedCost)",                "note": "カテゴリ設定ページへ push" },
+        { "from": "ui.category",  "to": "uc.category",   "passes": "BigCategoryEntity + List<SmallCategoryEntity>",              "note": "lib/view/category_edit_page/.../add_complete_big_category_detail_button.dart:98" },
+        { "from": "uc.category",  "to": "repo.category", "passes": "insertBig / insertSmall / updateBig / updateSmall",          "note": "ExpenseBigCategoryRepository + ExpenseSmallCategoryRepository (Income/FixedCost 系も同様)" },
+        { "from": "repo.category","to": "db.category",   "passes": "INSERT / UPDATE *_category",                                  "note": "expense_big_category / expense_small_category / fixed_cost_category 等" },
+        { "from": "uc.category",  "to": "state.dbCount", "passes": "incrementState()",                                            "note": "DB 更新通知" },
+        { "from": "state.dbCount","to": "ui.monthly",    "passes": "rebuild trigger",                                             "note": "カテゴリ別カードが新カテゴリで再描画" }
+      ]
+    },
+    {
+      "id": "f8.monthlyBatch",
+      "icon": "⏰",
+      "name": "8. 月次バッチ処理 (起動時自動)",
+      "sub": "Foundation.onBuild → BatchProcessUsecase → fixed_cost_expense 展開",
+      "description": "アプリ起動時に Foundation の addPostFrameCallback から走る自動バッチ。前回実行月度から今月度までの fixed_cost を fixed_cost_expense に展開する。",
+      "steps": [
+        { "from": "ui.year",         "to": "uc.batch",          "passes": "grobalBatchProscessing()",                                                "note": "lib/view/foundation.dart _onBuildComplete から起動 (initialOpen=true 時のみ)" },
+        { "from": "uc.batch",        "to": "repo.batchHist",    "passes": "fetchLatestDate()",                                                       "note": "前回バッチ完了日を取得" },
+        { "from": "repo.batchHist",  "to": "db.batchHist",      "passes": "SELECT MAX(end_date) FROM batch_history",                                 "note": "最終バッチ日" },
+        { "from": "uc.batch",        "to": "svc.monthPeriod",   "passes": "fetchMonthPeriod(now)",                                                   "note": "現在月度の終了日を計算 (集計開始日基準)" },
+        { "from": "uc.batch",        "to": "uc.fixedCost",      "passes": "addExpenseForFixedCost(PeriodValue)",                                     "note": "月度ごとにループで委譲" },
+        { "from": "uc.fixedCost",    "to": "repo.fixedCost",    "passes": "fetchNextPeriodPayment(period)",                                          "note": "next_payment_date が period 内の固定費を取得" },
+        { "from": "repo.fixedCost",  "to": "db.fixedCost",      "passes": "SELECT FROM fixed_cost WHERE next_payment_date BETWEEN ? AND ?",         "note": "該当固定費取得" },
+        { "from": "uc.fixedCost",    "to": "svc.fixedCost",     "passes": "insertToFixedCostExpense(FixedCostEntity, date)",                          "note": "実支払額 or 0 で実績レコード作成" },
+        { "from": "svc.fixedCost",   "to": "repo.fixedCostExp", "passes": "insert(FixedCostExpenseEntity)",                                          "note": "ImplementsFixedCostExpenseRepository.insert" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",  "passes": "INSERT INTO fixed_cost_expense",                                          "note": "実績生成 (v6 から expense とは別テーブル)" },
+        { "from": "uc.fixedCost",    "to": "repo.fixedCost",    "passes": "update(nextPaymentDate, recentPaymentDate)",                              "note": "次回支払日を進める" },
+        { "from": "uc.batch",        "to": "repo.batchHist",    "passes": "insert(BatchHistoryEntity { start, end, status=1 })",                      "note": "バッチ完了履歴を記録" },
+        { "from": "repo.batchHist",  "to": "db.batchHist",      "passes": "INSERT INTO batch_history",                                                "note": "完了履歴保存" },
+        { "from": "uc.batch",        "to": "state.dbCount",     "passes": "incrementState()",                                                         "note": "全 UI 再描画 (固定費パネル等)" }
+      ]
+    },
+    {
+      "id": "f9.annualBalance",
+      "icon": "📈",
+      "name": "9. 年間収支グラフ表示",
+      "sub": "YearPage → AnnualBalanceChartUsecase (AsyncNotifier)",
+      "description": "ホームの年間収支グラフ。AsyncNotifier として 12 か月分の収入/通常支出/固定費支出を集計して 1 枚の chart にする。",
+      "steps": [
+        { "from": "ui.year",         "to": "uc.annualBalance",  "passes": "build(year)",                                            "note": "AsyncNotifier 自動起動 (ref.watch)" },
+        { "from": "uc.annualBalance","to": "svc.monthPeriod",   "passes": "fetchMonthPeriod(month) × 12",                            "note": "年内 12 月分の期間レンジを計算" },
+        { "from": "uc.annualBalance","to": "repo.expense",      "passes": "fetchByPeriod(periodValue)",                              "note": "月度別の通常支出合計" },
+        { "from": "repo.expense",    "to": "db.expense",        "passes": "SELECT SUM(price) FROM expense WHERE date BETWEEN ?",     "note": "月度内データ集計" },
+        { "from": "uc.annualBalance","to": "repo.income",       "passes": "fetchByPeriod(periodValue)",                              "note": "月度別の収入合計" },
+        { "from": "repo.income",     "to": "db.income",         "passes": "SELECT SUM(price) FROM income WHERE date BETWEEN ?",      "note": "月度内データ集計" },
+        { "from": "uc.annualBalance","to": "repo.fixedCostExp", "passes": "fetchByPeriod(periodValue)",                              "note": "月度別の固定費支出合計" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",  "passes": "SELECT SUM(price) FROM fixed_cost_expense WHERE date ?",  "note": "月度内データ集計" },
+        { "from": "uc.annualBalance","to": "ui.year",           "passes": "AsyncValue<AnnualBalanceChartData[]>",                    "note": "12 月分の収入 / 支出を CustomPaint で描画 (KAN-82 で fl_chart 非依存に再実装)" }
+      ]
+    },
+    {
+      "id": "f10.predictionGraph",
+      "icon": "🔮",
+      "name": "10. 予測グラフ表示",
+      "sub": "MonthlyPage → PredictionGraphUsecase",
+      "description": "分析タブの日次累積予測グラフ。月次予算と収入を元に、月末までの予測ラインを描画する。",
+      "steps": [
+        { "from": "ui.monthly",   "to": "uc.prediction",  "passes": "fetchPredictionGraphData(periodValue)",                        "note": "PredictionGraphUsecase 起動" },
+        { "from": "uc.prediction","to": "repo.budget",    "passes": "fetchByMonth(YYYYMM)",                                          "note": "月次予算を取得" },
+        { "from": "repo.budget",  "to": "db.budget",      "passes": "SELECT FROM budget WHERE month = ?",                            "note": "対象月の予算" },
+        { "from": "uc.prediction","to": "repo.income",    "passes": "fetchByPeriod(periodValue)",                                    "note": "月次収入を取得" },
+        { "from": "repo.income",  "to": "db.income",      "passes": "SELECT FROM income WHERE date BETWEEN ?",                       "note": "月次収入データ" },
+        { "from": "uc.prediction","to": "ui.monthly",     "passes": "List<PredictionGraphData> { date, predictedSum }",               "note": "日次累積予測ライン描画" }
+      ]
+    },
+    {
+      "id": "f11.csvExport",
+      "icon": "📤",
+      "name": "11. CSV エクスポート",
+      "sub": "YearPage (設定) → ExportUsecase → Share",
+      "description": "全 4 エンティティ + カテゴリマスタを CSV に出力し、端末の Share シートで外部アプリへ渡すフロー。",
+      "steps": [
+        { "from": "ui.year",          "to": "uc.export",        "passes": "exportAll()",                                                "note": "設定メニューから起動 (Config 画面)" },
+        { "from": "uc.export",        "to": "repo.expense",     "passes": "fetchAll()",                                                  "note": "通常支出を全件取得" },
+        { "from": "repo.expense",     "to": "db.expense",       "passes": "SELECT * FROM expense",                                       "note": "全件" },
+        { "from": "uc.export",        "to": "repo.income",      "passes": "fetchAll()",                                                  "note": "収入を全件取得" },
+        { "from": "repo.income",      "to": "db.income",        "passes": "SELECT * FROM income",                                        "note": "全件" },
+        { "from": "uc.export",        "to": "repo.fixedCostExp","passes": "fetchAll()",                                                  "note": "固定費支出を全件取得" },
+        { "from": "repo.fixedCostExp","to": "db.fixedCostExp",  "passes": "SELECT * FROM fixed_cost_expense",                            "note": "全件" },
+        { "from": "uc.export",        "to": "repo.category",    "passes": "fetchAll() (5 種カテゴリ)",                                   "note": "カテゴリマスタ取得" },
+        { "from": "repo.category",    "to": "db.category",      "passes": "SELECT * FROM *_category",                                    "note": "全カテゴリ" },
+        { "from": "uc.export",        "to": "ui.year",          "passes": "CSV file path → Share",                                       "note": "端末の Share シート起動" }
+      ]
+    }
+  ]
+}

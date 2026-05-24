@@ -76,7 +76,20 @@ class _YearPageState extends ConsumerState<YearPage> {
                       key: ValueKey('${start.year}${start.month}'),
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(periodLabel, style: AppTextStyles.pageHeaderText),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
+                            const SizedBox(width: 32),
+                            Text(periodLabel,
+                                style: AppTextStyles.pageHeaderText),
+                            Transform.translate(
+                              offset: const Offset(-6, 0),
+                              child: const Icon(Icons.arrow_drop_down,
+                                  color: MyColors.systemGray2, size: 30),
+                            ),
+                          ],
+                        ),
                         Text(yearLabel, style: AppTextStyles.pageHeaderSubText),
                       ],
                     );
