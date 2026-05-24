@@ -25,6 +25,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
     final summaryAsync = ref.watch(resolvedDailyExpenseSummaryProvider(date));
 
     return Scaffold(
+      extendBodyBehindAppBar: true,
       backgroundColor: MyColors.secondarySystemBackground,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -58,6 +59,10 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // AppBarのぶんだけスペースをあける
+            SizedBox(
+              height: MediaQuery.of(context).padding.top + kToolbarHeight,
+            ),
             const SizedBox(height: 16),
             if (summary.hasNoData)
               _buildEmptyState()
