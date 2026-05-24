@@ -30,7 +30,8 @@ class PredictionGraph extends ConsumerWidget {
         data: (data) {
           return PredictionGraphWidget(data: data);
         },
-        loading: () => const Center(child: CircularProgressIndicator()),
+        // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
+        loading: () => const SizedBox.shrink(),
         error: (error, stack) => Center(
           child: Text('エラーが発生しました', style: AppTextStyles.errorMessage),
         ),

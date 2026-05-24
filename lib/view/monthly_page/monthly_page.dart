@@ -21,10 +21,12 @@ import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dar
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
-import 'package:kakeibo/view/monthly_page/skeleton/prediction_graph_skeleton.dart';
+import 'package:kakeibo/view/component/page_loading_indicator.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_category_tile_entity_provider.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/app_year_month_picker.dart';
@@ -39,12 +41,46 @@ class MonthlyPage extends ConsumerStatefulWidget {
 }
 
 class _MonthlyPage extends ConsumerState<MonthlyPage> {
+  /// ピッカーで月変更した直後、provider 側のローディング状態に切り替わるまでの
+  /// 数フレームのチラつき（前月コンテンツの一瞬表示）を防ぐためのフラグ
+  bool _isMonthSwitching = false;
+
   @override
   Widget build(BuildContext context) {
     //状態管理---------------------------------------------------------------------------------------
 
     // DBが更新されたらリビルドするため
     ref.watch(updateDBCountNotifierProvider);
+
+    // 全カードの通信が完了するまでフルスケルトン表示する
+    // 月切替時もスケルトンに戻すため、各providerのisLoadingを判定する
+    final dateScopeAsync = ref.watch(analyzePageDateScopeEntityProvider);
+    final scope = dateScopeAsync.valueOrNull;
+    // scope依存のfamilyはscopeが解決していなければwatchしない
+    final graphAsync = scope != null
+        ? ref.watch(predictionGraphDataProvider(scope))
+        : null;
+    final modelAsync = ref.watch(resolvedAllCategoryCardModelProvider);
+    final tileAsync = ref.watch(resolvedAllCategoryTileEntityProvider);
+    final fixedCostAsync = ref.watch(resolvedFixedCostSammaryValueProvider);
+
+    // いずれかがloading中ならフルスケルトン
+    // _isMonthSwitching は updateState 後 provider 再評価開始までの数フレームを埋める
+    final isAnyLoading = _isMonthSwitching ||
+        dateScopeAsync.isLoading ||
+        scope == null ||
+        (graphAsync?.isLoading ?? true) ||
+        modelAsync.isLoading ||
+        tileAsync.isLoading ||
+        fixedCostAsync.isLoading;
+
+    // provider 側が loading に切り替わったら、強制フラグを解除する
+    // 以降は provider 側の isLoading でローディング表示が引き継がれる
+    if (_isMonthSwitching && dateScopeAsync.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) setState(() => _isMonthSwitching = false);
+      });
+    }
 
     //--------------------------------------------------------------------------------------------
     //レイアウト------------------------------------------------------------------------------------
@@ -78,6 +114,11 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                   initialDateTime: monthPeriod?.startDatetime ?? selectedDate,
                 );
                 if (picked == null) return;
+                // 同月なら provider 再評価が走らないので、フラグも立てずに早期 return
+                if (DateUtils.isSameMonth(picked, selectedDate)) return;
+
+                // ピッカーが閉じた瞬間に強制ローディング表示にしてチラつきを防ぐ
+                setState(() => _isMonthSwitching = true);
                 ref
                     .read(
                       analyzePageSelectedDatetimeNotifierProvider.notifier,
@@ -128,7 +169,18 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
         ],
       ),
       backgroundColor: MyColors.secondarySystemBackground,
-      body: SingleChildScrollView(
+      // ローディング → コンテンツの切り替えをフェードで行う
+      body: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 300),
+        // content → loading への切り替えは即時にする
+        // （前コンテンツの透過残像で月切替時のチラつきが見えるのを防ぐ）
+        reverseDuration: Duration.zero,
+        transitionBuilder: (child, animation) =>
+            FadeTransition(opacity: animation, child: child),
+        child: isAnyLoading
+            ? const PageLoadingIndicator(key: ValueKey('loading'))
+            : SingleChildScrollView(
+        key: const ValueKey('content'),
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
           child: Column(
@@ -167,15 +219,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         ],
                       );
                     },
-                    loading: () => Column(
-                      children: [
-                        const AppContentsHeader(
-                          type: AppContentsHeaderType.appCardSectionTitle,
-                          title: '支出グラフ',
-                        ),
-                        const PredictionGraphSkeleton(),
-                      ],
-                    ),
+                    // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
+                    loading: () => const SizedBox.shrink(),
                     error: (error, stack) => const SizedBox.shrink(),
                   );
                 },
@@ -300,6 +345,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
             ],
           ),
         ),
+      ),
       ),
     );
   }
