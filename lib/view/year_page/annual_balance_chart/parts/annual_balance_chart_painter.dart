@@ -214,6 +214,12 @@ class AnnualBalanceChartPainter extends CustomPainter {
       final mv = value.monthlyBalanceValues[i];
       if (mv.monthlyBalanceType == MonthlyBalanceType.future) {
         // 未来月で一旦途切れる
+        // ここまでに構築した path を drawPath でフラッシュしてからリセットする。
+        // フラッシュせずに null 上書きすると、ループ末尾の drawPath 判定で弾かれ
+        // 折れ線が一切描画されなくなる（過去月＋現在月までしかデータが無いケース）。
+        if (path != null) {
+          canvas.drawPath(path, linePaint);
+        }
         path = null;
         continue;
       }
