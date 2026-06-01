@@ -336,13 +336,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  /// アプリカードの金額単位（円）用スタイル
-  static final TextStyle appCardPriceUnit = MyFontStyle.notoSans.copyWith(
-    fontSize: 13,
-    color: MyColors.secondaryLabel,
-    fontWeight: FontWeight.w500,
-  );
-
   /// Secondary=========
 
   /// アプリカードのセカンダリタイトルラベル用スタイル
@@ -359,14 +352,6 @@ class AppTextStyles {
     color: MyColors.white,
     fontWeight: FontWeight.w500,
   );
-
-  /// アプリカードのセカンダリ金額単位（円）用スタイル
-  static final TextStyle appCardSecondaryPriceUnit = MyFontStyle.notoSans
-      .copyWith(
-        fontSize: 10,
-        color: MyColors.secondaryLabel,
-        fontWeight: FontWeight.w500,
-      );
 
   /// Tertiary=========
 
