@@ -46,20 +46,9 @@ class _FixedCostSummaryHeaderState
                           style: AppTextStyles.appCardTitleLabel,
                         ),
                       ),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text:
-                                  '${yenmarkFormattedPriceGetter(value.scheduledPaymentAmount)} ',
-                              style: AppTextStyles.appCardPriceLabel,
-                            ),
-                            TextSpan(
-                              text: '円',
-                              style: AppTextStyles.appCardPriceUnit,
-                            ),
-                          ],
-                        ),
+                      Text(
+                        yenmarkFormattedPriceGetter(value.scheduledPaymentAmount),
+                        style: AppTextStyles.appCardPriceLabel,
                       ),
                     ],
                   ),
@@ -75,20 +64,9 @@ class _FixedCostSummaryHeaderState
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('確定分', style: AppTextStyles.appCardTitleLabel),
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${yenmarkFormattedPriceGetter(value.fixedCostSum)} ',
-                                style: AppTextStyles.appCardSecondaryPriceLabel,
-                              ),
-                              TextSpan(
-                                text: '円',
-                                style: AppTextStyles.appCardPriceUnit,
-                              ),
-                            ],
-                          ),
+                        Text(
+                          yenmarkFormattedPriceGetter(value.fixedCostSum),
+                          style: AppTextStyles.appCardSecondaryPriceLabel,
                         ),
                       ],
                     ),
@@ -109,20 +87,9 @@ class _FixedCostSummaryHeaderState
                             style: AppTextStyles.appCardTitleLabel,
                           ),
                         ),
-                        Text.rich(
-                          TextSpan(
-                            children: [
-                              TextSpan(
-                                text:
-                                    '${yenmarkFormattedPriceGetter(value.unconfirmedFixedCostSum)} ',
-                                style: AppTextStyles.appCardSecondaryPriceLabel,
-                              ),
-                              TextSpan(
-                                text: '円',
-                                style: AppTextStyles.appCardPriceUnit,
-                              ),
-                            ],
-                          ),
+                        Text(
+                          yenmarkFormattedPriceGetter(value.unconfirmedFixedCostSum),
+                          style: AppTextStyles.appCardSecondaryPriceLabel,
                         ),
                       ],
                     ),

@@ -116,7 +116,7 @@ class PredictionGraphPredictor {
       PredictionGraphPoint(date: lastDate, price: lastPrice),
       PredictionGraphPoint(date: toDate, price: predictionPrice),
     ];
-    final predictionLabel = yenFormattedPriceGetter(predictionPrice);
+    final predictionLabel = yenmarkFormattedPriceGetter(predictionPrice);
 
     return PredictionResult(
       expensePoints: expensePoints,

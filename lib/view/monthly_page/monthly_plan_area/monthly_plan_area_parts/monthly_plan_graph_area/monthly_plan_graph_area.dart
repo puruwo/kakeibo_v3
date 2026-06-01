@@ -32,23 +32,15 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                               width: 8,
                             ),
                             // カテゴリー総支出
-                            RichText(
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.ellipsis,
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                    text: formattedPriceGetter(
-                                        allCategoryCardEntity
-                                            .allCategoryTotalExpense),
-                                    style: AppTextStyles
-                                        .appCardOptionalSecondaryPriceLabel,
-                                  ),
-                                  TextSpan(
-                                    text: ' 円',
-                                    style:
-                                        AppTextStyles.appCardSecondaryPriceUnit,
-                                  ),
-                                ])),
+                            Text(
+                              yenmarkFormattedPriceGetter(
+                                  allCategoryCardEntity
+                                      .allCategoryTotalExpense),
+                              textAlign: TextAlign.end,
+                              overflow: TextOverflow.ellipsis,
+                              style: AppTextStyles
+                                  .appCardOptionalSecondaryPriceLabel,
+                            ),
 
                             // 予算
                             allCategoryCardEntity.cardStatusType.hasBudget
@@ -69,16 +61,11 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                                           ),
                                           // カテゴリー予算
                                           TextSpan(
-                                            text: formattedPriceGetter(
+                                            text: yenmarkFormattedPriceGetter(
                                                 allCategoryCardEntity
                                                     .allCategoryTotalBudget),
                                             style: AppTextStyles
                                                 .appCardTertiaryPriceLabel,
-                                          ),
-                                          TextSpan(
-                                            text: ' 円',
-                                            style: AppTextStyles
-                                                .appCardTertiaryPriceUnit,
                                           ),
                                         ])),
                                   )

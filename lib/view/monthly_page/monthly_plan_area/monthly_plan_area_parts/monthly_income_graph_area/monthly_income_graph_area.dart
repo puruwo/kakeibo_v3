@@ -35,23 +35,15 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                   width: 8,
                                 ),
                                 // 総収入
-                                RichText(
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                        text: formattedPriceGetter(
-                                            allCategoryCardEntity
-                                                .allCategoryTotalIncome),
-                                        style: AppTextStyles
-                                            .appCardOptionalSecondaryPriceLabel,
-                                      ),
-                                      TextSpan(
-                                        text: ' 円',
-                                        style: AppTextStyles
-                                            .appCardSecondaryPriceUnit,
-                                      ),
-                                    ])),
+                                Text(
+                                  yenmarkFormattedPriceGetter(
+                                      allCategoryCardEntity
+                                          .allCategoryTotalIncome),
+                                  textAlign: TextAlign.end,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: AppTextStyles
+                                      .appCardOptionalSecondaryPriceLabel,
+                                ),
                               ],
                             ),
                           ],

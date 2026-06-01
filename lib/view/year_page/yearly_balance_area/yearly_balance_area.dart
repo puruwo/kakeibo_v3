@@ -150,23 +150,11 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             ),
                             yearlyBalanceValue.yearlyBalanceType !=
                                     YearlyBalanceType.noExpense
-                                ? Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.baseline,
-                                    textBaseline: TextBaseline.alphabetic,
-                                    children: [
-                                      Text(
-                                        formattedPriceGetter(
-                                          yearlyBalanceValue.yearlyExpense,
-                                        ),
-                                        style: AppTextStyles.listCardPriceLabel,
-                                      ),
-                                      Text(
-                                        ' 円',
-                                        style: AppTextStyles
-                                            .appCardSecondaryPriceUnit,
-                                      ),
-                                    ],
+                                ? Text(
+                                    yenmarkFormattedPriceGetter(
+                                      yearlyBalanceValue.yearlyExpense,
+                                    ),
+                                    style: AppTextStyles.listCardPriceLabel,
                                   )
                                 : Text(
                                     'まだ記録がありません',
@@ -222,24 +210,11 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                               const SizedBox(width: 8),
                               yearlyBalanceValue.yearlyBalanceType !=
                                       YearlyBalanceType.noIncome
-                                  ? Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.baseline,
-                                      textBaseline: TextBaseline.alphabetic,
-                                      children: [
-                                        Text(
-                                          formattedPriceGetter(
-                                            yearlyBalanceValue.yearlyIncome,
-                                          ),
-                                          style:
-                                              AppTextStyles.listCardPriceLabel,
-                                        ),
-                                        Text(
-                                          ' 円',
-                                          style: AppTextStyles
-                                              .appCardSecondaryPriceUnit,
-                                        ),
-                                      ],
+                                  ? Text(
+                                      yenmarkFormattedPriceGetter(
+                                        yearlyBalanceValue.yearlyIncome,
+                                      ),
+                                      style: AppTextStyles.listCardPriceLabel,
                                     )
                                   : Text(
                                       'まだ記録がありません',
@@ -280,21 +255,11 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                           textBaseline: TextBaseline.alphabetic,
                           children: [
                             Text('残金', style: AppTextStyles.appCardTitleLabel),
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.baseline,
-                              textBaseline: TextBaseline.alphabetic,
-                              children: [
-                                Text(
-                                  formattedPriceGetter(
-                                    yearlyBalanceValue.savings,
-                                  ),
-                                  style: AppTextStyles.appCardPriceLabel,
-                                ),
-                                Text(
-                                  ' 円',
-                                  style: AppTextStyles.appCardPriceUnit,
-                                ),
-                              ],
+                            Text(
+                              signedYenmarkFormattedPriceGetter(
+                                yearlyBalanceValue.savings,
+                              ),
+                              style: AppTextStyles.appCardPriceLabel,
                             ),
                           ],
                         ),

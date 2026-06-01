@@ -143,7 +143,7 @@ class PredictionGraphLayoutCalculator {
     required int budget,
     required bool shouldShowBudgetLine,
   }) {
-    final priceLabel = yenFormattedPriceGetter(income);
+    final priceLabel = yenmarkFormattedPriceGetter(income);
 
     // 予算が表示されない場合は上に表示
     if (!shouldShowBudgetLine) {
@@ -163,7 +163,7 @@ class PredictionGraphLayoutCalculator {
     required int budget,
     required bool shouldShowIncomeLine,
   }) {
-    final priceLabel = yenFormattedPriceGetter(budget);
+    final priceLabel = yenmarkFormattedPriceGetter(budget);
 
     // 収入が表示されない場合は上に表示
     if (!shouldShowIncomeLine) {
@@ -178,7 +178,7 @@ class PredictionGraphLayoutCalculator {
 
   /// 支出ラベルの表示位置を計算（金額のみ返却）
   LabelPosition calculateExpenseLabel(int expense) {
-    final priceLabel = yenFormattedPriceGetter(expense);
+    final priceLabel = yenmarkFormattedPriceGetter(expense);
     // 重なり判定はPainter側で実施するため、ここでは固定オフセット位置を返す
     return LabelPosition(label: priceLabel, yOffset: -7.0);
   }

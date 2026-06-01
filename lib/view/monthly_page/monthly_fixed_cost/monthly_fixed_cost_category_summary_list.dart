@@ -55,22 +55,12 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
                       ),
                       // 金額 or 未確定
                       summary.isAllConfirmed
-                          ? RichText(
+                          ? Text(
+                              yenmarkFormattedPriceGetter(summary.totalAmount),
                               textAlign: TextAlign.end,
                               overflow: TextOverflow.ellipsis,
-                              text: TextSpan(children: [
-                                TextSpan(
-                                  text:
-                                      formattedPriceGetter(summary.totalAmount),
-                                  style:
-                                      AppTextStyles.appCardSecondaryPriceLabel,
-                                ),
-                                TextSpan(
-                                  text: ' 円',
-                                  style:
-                                      AppTextStyles.appCardSecondaryPriceUnit,
-                                ),
-                              ]))
+                              style: AppTextStyles.appCardSecondaryPriceLabel,
+                            )
                           : Text(
                               '未確定',
                               style: AppTextStyles.appCardSecondaryTitleLabel,

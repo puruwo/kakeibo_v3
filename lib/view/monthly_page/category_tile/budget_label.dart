@@ -34,12 +34,8 @@ class BudgetLabel extends StatelessWidget {
                         style: AppTextStyles.appCardTertiaryPriceUnit,
                       ),
                       TextSpan(
-                        text: formattedPriceGetter(budget),
+                        text: yenmarkFormattedPriceGetter(budget),
                         style: AppTextStyles.appCardTertiaryPriceLabel,
-                      ),
-                      TextSpan(
-                        text: ' 円',
-                        style: AppTextStyles.appCardSecondaryPriceUnit,
                       ),
                     ],
                   ),
