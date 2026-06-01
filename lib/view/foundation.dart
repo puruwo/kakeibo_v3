@@ -151,18 +151,31 @@ class _FoundationState extends ConsumerState<Foundation>
                   label: '月間分析',
                 ),
                 // 入力（中央の緑 rounded-square ボタン）
+                // OverflowBox でレイアウト高さを他アイコンと同じ24pxに揃え、
+                // 視覚的な42pxボタンが上にずれないようにする
                 BottomNavigationBarItem(
-                  icon: Container(
+                  icon: SizedBox(
                     width: 42,
-                    height: 42,
-                    decoration: BoxDecoration(
-                      color: MyColors.themeColor,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: const Icon(
-                      Icons.add_rounded,
-                      color: MyColors.white,
-                      size: 26,
+                    height: 24,
+                    child: OverflowBox(
+                      alignment: Alignment.center,
+                      minWidth: 42,
+                      maxWidth: 42,
+                      minHeight: 42,
+                      maxHeight: 42,
+                      child: Container(
+                        width: 42,
+                        height: 42,
+                        decoration: BoxDecoration(
+                          color: MyColors.themeColor,
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                        child: const Icon(
+                          Icons.add_rounded,
+                          color: MyColors.white,
+                          size: 26,
+                        ),
+                      ),
                     ),
                   ),
                   label: '',
