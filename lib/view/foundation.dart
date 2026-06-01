@@ -116,7 +116,8 @@ class _FoundationState extends ConsumerState<Foundation>
         ),
       ),
       bottomNavigationBar: DecoratedBox(
-        // グロナビ上端の境界線
+        // グロナビ上端の境界線（foreground で ColoredBox の上に描画）
+        position: DecorationPosition.foreground,
         decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(color: MyColors.separater, width: 0.5),
