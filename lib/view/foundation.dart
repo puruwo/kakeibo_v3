@@ -125,78 +125,80 @@ class _FoundationState extends ConsumerState<Foundation>
         child: ClipRect(
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: MyColors.white,
-              unselectedItemColor: MyColors.secondaryLabel,
-              backgroundColor:
-                  MyColors.secondarySystemBackground.withOpacity(0.7),
-              elevation: 0,
-              // 選択時にラベルが拡大しないよう両方同じサイズに固定
-              selectedFontSize: 11,
-              unselectedFontSize: 11,
-              selectedLabelStyle: AppTextStyles.bottomNavSelectedLabel,
-              unselectedLabelStyle: AppTextStyles.bottomNavUnselectedLabel,
-              items: [
-                // 全体
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined),
-                  activeIcon: Icon(Icons.home_rounded),
-                  label: '全体',
-                ),
-                // 月間分析
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.bar_chart_rounded),
-                  activeIcon: Icon(Icons.bar_chart_rounded),
-                  label: '月間分析',
-                ),
-                // 入力（中央の緑 rounded-square ボタン）
-                // OverflowBox でレイアウト高さを他アイコンと同じ24pxに揃え、
-                // 視覚的な42pxボタンが上にずれないようにする
-                BottomNavigationBarItem(
-                  icon: SizedBox(
-                    width: 42,
-                    height: 24,
-                    child: OverflowBox(
-                      alignment: Alignment.center,
-                      minWidth: 42,
-                      maxWidth: 42,
-                      minHeight: 42,
-                      maxHeight: 42,
-                      child: Container(
-                        width: 42,
-                        height: 42,
-                        decoration: BoxDecoration(
-                          color: MyColors.themeColor,
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: const Icon(
-                          Icons.add_rounded,
-                          color: MyColors.white,
-                          size: 26,
-                        ),
-                      ),
-                    ),
+            child: ColoredBox(
+              color: MyColors.secondarySystemBackground.withOpacity(0.7),
+              child: SafeArea(
+                top: false,
+                child: SizedBox(
+                  height: 56,
+                  child: Row(
+                    children: [
+                      _buildNavItem(Icons.home_outlined, Icons.home_rounded, '全体', 0, navigationBarState),
+                      _buildNavItem(Icons.bar_chart_rounded, Icons.bar_chart_rounded, '月間分析', 1, navigationBarState),
+                      _buildAddButton(),
+                      _buildNavItem(Icons.people_outline_rounded, Icons.people_rounded, '家族', 3, navigationBarState),
+                      _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, '履歴', 4, navigationBarState),
+                    ],
                   ),
-                  label: '',
                 ),
-                // 家族
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.people_outline_rounded),
-                  activeIcon: Icon(Icons.people_rounded),
-                  label: '家族',
-                ),
-                // 履歴
-                const BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month_outlined),
-                  activeIcon: Icon(Icons.calendar_month_rounded),
-                  label: '履歴',
-                ),
-              ],
-              currentIndex: navigationBarState,
-              onTap: (int index) {
-                _selectTab(index, ref);
-              },
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 通常ナビアイテム（アイコン＋ラベル）
+  Widget _buildNavItem(
+    IconData icon,
+    IconData activeIcon,
+    String label,
+    int index,
+    int currentIndex,
+  ) {
+    final isSelected = currentIndex == index;
+    return Expanded(
+      child: InkWell(
+        onTap: () => _selectTab(index, ref),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isSelected ? activeIcon : icon,
+              color: isSelected ? MyColors.white : MyColors.secondaryLabel,
+              size: 24,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: isSelected
+                  ? AppTextStyles.bottomNavSelectedLabel
+                  : AppTextStyles.bottomNavUnselectedLabel,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 中央の入力ボタン（緑 rounded-square）
+  Widget _buildAddButton() {
+    return Expanded(
+      child: InkWell(
+        onTap: () => _selectTab(2, ref),
+        child: Center(
+          child: Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: MyColors.themeColor,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Icon(
+              Icons.add_rounded,
+              color: MyColors.white,
+              size: 26,
             ),
           ),
         ),
