@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view/family_page/family_page.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
@@ -22,7 +24,9 @@ class Foundation extends ConsumerStatefulWidget {
 class _FoundationState extends ConsumerState<Foundation>
     with SingleTickerProviderStateMixin {
   // 各タブごとの Navigator にアクセスするための GlobalKey
+  // index 0:全体 / 1:月間分析 / 2:入力(未使用) / 3:家族 / 4:履歴
   final List<GlobalKey<NavigatorState>> navigatorKeys = [
+    GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
     GlobalKey<NavigatorState>(),
@@ -32,8 +36,9 @@ class _FoundationState extends ConsumerState<Foundation>
   //navigationBarに設定するbodyのpageリスト
   final List<Widget> pageList = [
     const YearPage(),
-    Container(), // 2番目のタブは入力画面を表示するための空のコンテナ
     const MonthlyPage(),
+    Container(), // 入力タブは入力モーダルを表示するための空のコンテナ
+    const FamilyPage(),
     const ExpenseHistoryPage(),
   ];
 
@@ -77,60 +82,125 @@ class _FoundationState extends ConsumerState<Foundation>
         child: IndexedStack(
           index: ref.watch(navigationBarNumberNotifierProvider),
           children: [
-          Navigator(
-            key: navigatorKeys[0],
-            onGenerateRoute: (RouteSettings settings) {
-              return MaterialPageRoute(
-                builder: (_) => pageList[0],
-              );
-            },
-          ),
-          Container(), // 2番目のタブは入力画面を表示するための空のコンテナ
-          Navigator(
-            key: navigatorKeys[2],
-            onGenerateRoute: (RouteSettings settings) {
-              return MaterialPageRoute(
-                builder: (_) => pageList[2],
-              );
-            },
-          ),
-          Navigator(
-            key: navigatorKeys[3],
-            onGenerateRoute: (RouteSettings settings) {
-              return MaterialPageRoute(
-                builder: (_) => pageList[3],
-              );
-            },
-          ),
-        ],
+            // index 0: 全体
+            Navigator(
+              key: navigatorKeys[0],
+              onGenerateRoute: (RouteSettings settings) {
+                return MaterialPageRoute(builder: (_) => pageList[0]);
+              },
+            ),
+            // index 1: 月間分析
+            Navigator(
+              key: navigatorKeys[1],
+              onGenerateRoute: (RouteSettings settings) {
+                return MaterialPageRoute(builder: (_) => pageList[1]);
+              },
+            ),
+            // index 2: 入力（入力モーダルを表示するための空のコンテナ）
+            Container(),
+            // index 3: 家族
+            Navigator(
+              key: navigatorKeys[3],
+              onGenerateRoute: (RouteSettings settings) {
+                return MaterialPageRoute(builder: (_) => pageList[3]);
+              },
+            ),
+            // index 4: 履歴
+            Navigator(
+              key: navigatorKeys[4],
+              onGenerateRoute: (RouteSettings settings) {
+                return MaterialPageRoute(builder: (_) => pageList[4]);
+              },
+            ),
+          ],
         ),
       ),
-      bottomNavigationBar: ClipRect(
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
-          child: BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: MyColors.themeSecondaryColor,
-            backgroundColor:
-                MyColors.secondarySystemBackground.withOpacity(0.7),
-            elevation: 0,
-            items: const [
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.home_outlined), label: 'ホーム'),
-              BottomNavigationBarItem(
-                  icon: Icon(
-                    Icons.add,
+      bottomNavigationBar: DecoratedBox(
+        // グロナビ上端の境界線（foreground で ColoredBox の上に描画）
+        position: DecorationPosition.foreground,
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(color: MyColors.separater, width: 0.5),
+          ),
+        ),
+        child: ClipRect(
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15),
+            child: ColoredBox(
+              color: MyColors.secondarySystemBackground.withOpacity(0.7),
+              child: SafeArea(
+                top: false,
+                child: SizedBox(
+                  height: 56,
+                  child: Row(
+                    children: [
+                      _buildNavItem(Icons.home_rounded, Icons.home_rounded, '全体', 0, navigationBarState),
+                      _buildNavItem(Icons.bar_chart_rounded, Icons.bar_chart_rounded, '月間分析', 1, navigationBarState),
+                      _buildAddButton(),
+                      _buildNavItem(Icons.people_rounded, Icons.people_rounded, '家族', 3, navigationBarState),
+                      _buildNavItem(Icons.calendar_month_rounded, Icons.calendar_month_rounded, '履歴', 4, navigationBarState),
+                    ],
                   ),
-                  label: '入力'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.auto_graph_rounded), label: '分析'),
-              BottomNavigationBarItem(
-                  icon: Icon(Icons.calendar_month_rounded), label: '履歴'),
-            ],
-            currentIndex: navigationBarState,
-            onTap: (int index) {
-              _selectTab(index, ref);
-            },
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // 通常ナビアイテム（アイコン＋ラベル）
+  Widget _buildNavItem(
+    IconData icon,
+    IconData activeIcon,
+    String label,
+    int index,
+    int currentIndex,
+  ) {
+    final isSelected = currentIndex == index;
+    return Expanded(
+      child: InkWell(
+        onTap: () => _selectTab(index, ref),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              isSelected ? activeIcon : icon,
+              color: isSelected ? MyColors.white : MyColors.secondaryLabel,
+              size: 24,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              style: isSelected
+                  ? AppTextStyles.bottomNavSelectedLabel
+                  : AppTextStyles.bottomNavUnselectedLabel,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // 中央の入力ボタン（緑 rounded-square）
+  Widget _buildAddButton() {
+    return Expanded(
+      child: InkWell(
+        onTap: () => _selectTab(2, ref),
+        child: Center(
+          child: Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: MyColors.themeColor,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: const Icon(
+              Icons.add_rounded,
+              color: MyColors.white,
+              size: 26,
+            ),
           ),
         ),
       ),
@@ -139,8 +209,8 @@ class _FoundationState extends ConsumerState<Foundation>
 
   // タブがタップされたときの処理
   void _selectTab(int index, WidgetRef ref) {
-    // 1をタップしたときは、入力画面を表示する
-    if (index == 1) {
+    // 2（入力）をタップしたときは、入力モーダルを表示する
+    if (index == 2) {
       _showExpenseEntrySheet(ref.context);
     }
     // それ以外のタブがタップされた場合

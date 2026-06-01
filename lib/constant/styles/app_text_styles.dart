@@ -444,4 +444,22 @@ class AppTextStyles {
     color: MyColors.themeColor,
     fontWeight: FontWeight.w500,
   );
+
+  // ==========================================================================
+  // ボトムナビゲーションバー
+  // ==========================================================================
+
+  /// グロナビ選択中ラベル（白・視認性確保）
+  static final TextStyle bottomNavSelectedLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 11,
+    color: MyColors.white,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// グロナビ非選択ラベル
+  static final TextStyle bottomNavUnselectedLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 11,
+    color: MyColors.secondaryLabel,
+    fontWeight: FontWeight.w500,
+  );
 }

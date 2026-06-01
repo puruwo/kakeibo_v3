@@ -46,6 +46,8 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardOptionalSec
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardGraphLabel,ラベル,noto_sans,11,w600,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.popupMenuItemLabel(),ラベル,noto_sans,14,dynamic(bold/normal),dynamic(label),MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.textButtonTextStyle,ボタン,noto_sans,12,w500,MyColors.themeColor,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.bottomNavSelectedLabel,タブ,noto_sans,11,w600,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.bottomNavUnselectedLabel,タブ,noto_sans,11,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.placeHolder,ラベル,noto_sans,14,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.inputExpenseText,本文,sf_ui,25,w500,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.inputText,本文,noto_sans,15,w500,MyColors.label,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
