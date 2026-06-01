@@ -117,7 +117,8 @@ class BonusPlanArea extends ConsumerWidget {
               ),
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          // ローディングはトップレベル(PageLoadingIndicator)で吸収する
+          loading: () => const SizedBox.shrink(),
           error: (error, stack) => Center(child: Text('$error')),
         );
   }

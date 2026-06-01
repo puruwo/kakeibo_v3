@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_parts.dart';
-import 'package:kakeibo/view/monthly_page/skeleton/monthly_plan_skeleton.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 
 class MnothlyPlanGraphArea extends HookConsumerWidget {
@@ -101,7 +100,8 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                   )
                 : Container();
           },
-          loading: () => const MonthlyPlanSkeleton(),
+          // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
+          loading: () => const SizedBox.shrink(),
           error: (error, stack) => Center(child: Text('$error')),
         );
   }

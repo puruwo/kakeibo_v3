@@ -26,12 +26,19 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
   bool isBuilt = false;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     /// ビルドが完了したら横棒グラフのサイズを変更しアニメーションが動く
+    /// setState を呼ばないと AnimatedContainer.width に反映されないので注意
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      isBuilt = true;
+      if (mounted) {
+        setState(() => isBuilt = true);
+      }
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return ref
         .watch(resolvedYearlyBalanceValueProvider)
         .when(
@@ -307,7 +314,8 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
               },
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          // ローディングはトップレベル(PageLoadingIndicator)で吸収する
+          loading: () => const SizedBox.shrink(),
           error: (error, stack) => Center(child: Text('$error')),
         );
   }

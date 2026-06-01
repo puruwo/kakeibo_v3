@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/all_no_budget_type_category_sum_tile.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/category_sum_tile.dart';
-import 'package:kakeibo/view/monthly_page/skeleton/category_tile_skeleton.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_category_tile_entity_provider.dart';
 
 class CategorySumTileList extends ConsumerWidget {
@@ -32,7 +31,8 @@ class CategorySumTileList extends ConsumerWidget {
               ),
             );
           },
-          loading: () => const CategoryTileSkeleton(),
+          // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
+          loading: () => const SizedBox.shrink(),
           error: (error, stack) => Center(child: Text('$error')),
         );
   }

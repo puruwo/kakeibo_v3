@@ -180,9 +180,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
           error: (error, stackTrace) {
             return Center(child: Text('Error: $error'));
           },
-          loading: () {
-            return const Center(child: CircularProgressIndicator());
-          },
+          // ローディングはトップレベル(PageLoadingIndicator)で吸収する
+          loading: () => const SizedBox.shrink(),
         );
   }
 

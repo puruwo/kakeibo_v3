@@ -112,7 +112,8 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
               ),
             );
           },
-          loading: () => const Center(child: CircularProgressIndicator()),
+          // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
+          loading: () => const SizedBox.shrink(),
           error: (error, stackTrace) => Center(child: Text('Error: $error')),
         );
   }
