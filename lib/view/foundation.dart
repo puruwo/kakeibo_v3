@@ -133,11 +133,11 @@ class _FoundationState extends ConsumerState<Foundation>
                   height: 56,
                   child: Row(
                     children: [
-                      _buildNavItem(Icons.home_outlined, Icons.home_rounded, '全体', 0, navigationBarState),
+                      _buildNavItem(Icons.home_rounded, Icons.home_rounded, '全体', 0, navigationBarState),
                       _buildNavItem(Icons.bar_chart_rounded, Icons.bar_chart_rounded, '月間分析', 1, navigationBarState),
                       _buildAddButton(),
-                      _buildNavItem(Icons.people_outline_rounded, Icons.people_rounded, '家族', 3, navigationBarState),
-                      _buildNavItem(Icons.calendar_month_outlined, Icons.calendar_month_rounded, '履歴', 4, navigationBarState),
+                      _buildNavItem(Icons.people_rounded, Icons.people_rounded, '家族', 3, navigationBarState),
+                      _buildNavItem(Icons.calendar_month_rounded, Icons.calendar_month_rounded, '履歴', 4, navigationBarState),
                     ],
                   ),
                 ),
