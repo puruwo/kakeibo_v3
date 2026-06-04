@@ -232,7 +232,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
               .updateState(selected.representativeDate);
           ref
               .read(navigationBarNumberNotifierProvider.notifier)
-              .updateState(2);
+              // 月間分析タブ（グロナビ index 1）へ遷移する
+              .updateState(1);
           setState(() => _selectedMonthIndex = null);
         },
       ),
