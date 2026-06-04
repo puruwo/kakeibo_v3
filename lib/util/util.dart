@@ -27,13 +27,13 @@ String yenmarkFormattedPriceGetter(int price) {
 }
 
 /// 符号付き¥フォーマット
-/// 負: -¥ 5,400 / showPlusSign=true かつ正: +¥ 1,200 / それ以外: ¥ 0
+/// 負: ¥ -5,400 / showPlusSign=true かつ正: ¥ +1,200 / それ以外: ¥ 0
 String signedYenmarkFormattedPriceGetter(
   int price, {
   bool showPlusSign = false,
 }) {
-  if (price < 0) return '-${yenmarkFormattedPriceGetter(-price)}';
-  if (showPlusSign && price > 0) return '+${yenmarkFormattedPriceGetter(price)}';
+  if (price < 0) return '¥ -${formattedPriceGetter(-price)}';
+  if (showPlusSign && price > 0) return '¥ +${formattedPriceGetter(price)}';
   return yenmarkFormattedPriceGetter(price);
 }
 
