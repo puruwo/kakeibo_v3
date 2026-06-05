@@ -135,6 +135,12 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                 }
                 // =============グラフサイズ計算ここまで================
 
+                // 収入・支出の両方に記録がある時だけ横棒バーを表示する
+                final showBars = yearlyBalanceValue.yearlyBalanceType ==
+                        YearlyBalanceType.surplus ||
+                    yearlyBalanceValue.yearlyBalanceType ==
+                        YearlyBalanceType.deficit;
+
                 return CardContainer(
                   width: double.infinity,
                   child: Padding(
@@ -164,15 +170,14 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     style: AppTextStyles.listCardPriceLabel,
                                   )
                                 : Text(
-                                    'まだ記録がありません',
-                                    style: AppTextStyles.listCardSecondaryTitle,
+                                    '-',
+                                    style: AppTextStyles.listCardPriceLabel,
                                   ),
                           ],
                         ),
 
                         // 支出バー
-                        yearlyBalanceValue.yearlyBalanceType !=
-                                YearlyBalanceType.noExpense
+                        showBars
                             ? AnimatedContainer(
                                 height: 8.5,
                                 width: isBuilt ? expenseBar : barInitialWidth,
@@ -224,17 +229,15 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                       style: AppTextStyles.listCardPriceLabel,
                                     )
                                   : Text(
-                                      'まだ記録がありません',
-                                      style:
-                                          AppTextStyles.listCardSecondaryTitle,
+                                      '-',
+                                      style: AppTextStyles.listCardPriceLabel,
                                     ),
                             ],
                           ),
                         ),
 
                         // 収入バー
-                        yearlyBalanceValue.yearlyBalanceType !=
-                                YearlyBalanceType.noIncome
+                        showBars
                             ? AnimatedContainer(
                                 height: 8.5,
                                 width: isBuilt ? incomeBar : barInitialWidth,
