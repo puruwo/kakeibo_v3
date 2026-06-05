@@ -329,6 +329,20 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  /// アプリカードのメインタイトルラベル用スタイル
+  /// （収支カードの総支出/総収入など、白・強調）
+  ///
+  /// height/leadingDistribution で行ボックス内のグリフを上下中央に寄せ、
+  /// 隣接するシェブロンアイコンと縦位置が揃うようにする
+  static final TextStyle appCardPrimaryTitleLabel = MyFontStyle.notoSans
+      .copyWith(
+        fontSize: 16,
+        color: MyColors.label,
+        fontWeight: FontWeight.w600,
+        height: 1.0,
+        leadingDistribution: TextLeadingDistribution.even,
+      );
+
   /// アプリカードの金額表示用スタイル
   static final TextStyle appCardPriceLabel = MyFontStyle.sfUi.copyWith(
     fontSize: 20,
