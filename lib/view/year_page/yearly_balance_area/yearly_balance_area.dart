@@ -94,8 +94,8 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
               builder: (context, constraints) {
                 // =============グラフサイズ計算================
                 /// 画面の横幅を取得し、棒グラフの幅を設定
-                /// 横幅の70%を大きい方の棒グラフの幅に設定
-                final double largerBarFrameWidth = constraints.maxWidth * 0.7;
+                /// カードの左右パディング(16*2)を除いた横幅いっぱいを大きい方の棒グラフ幅とする
+                final double largerBarFrameWidth = constraints.maxWidth - 32;
 
                 //横棒グラフの初期値
                 double barInitialWidth = 0;
@@ -181,15 +181,28 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
-                                    '総支出',
-                                    style: AppTextStyles.appCardTitleLabel,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(
-                                    size: 12,
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: MyColors.secondaryLabel,
+                                  // ラベル＋シェブロン（シェブロンを文字の上下中央に配置）
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '総支出',
+                                          style: AppTextStyles
+                                              .appCardPrimaryTitleLabel,
+                                        ),
+                                        const WidgetSpan(
+                                          alignment: PlaceholderAlignment.middle,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              size: 12,
+                                              color: MyColors.secondaryLabel,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -210,6 +223,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                           ),
                         ),
 
+                        // 間隔
+                        const SizedBox(height: 8.0),
+
                         // 支出バー
                         showBars
                             ? AnimatedContainer(
@@ -223,7 +239,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                               )
                             : Container(),
 
-                        const SizedBox(height: 12.0),
+                        const SizedBox(height: 16.0),
 
                         AppInkWell(
                           borderRadius: BorderRadius.circular(8),
@@ -257,15 +273,28 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     ),
                                   ),
                                   const SizedBox(width: 8),
-                                  Text(
-                                    '総収入',
-                                    style: AppTextStyles.appCardTitleLabel,
-                                  ),
-                                  const SizedBox(width: 4),
-                                  const Icon(
-                                    size: 12,
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: MyColors.secondaryLabel,
+                                  // ラベル＋シェブロン（シェブロンを文字の上下中央に配置）
+                                  Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                          text: '総収入',
+                                          style: AppTextStyles
+                                              .appCardPrimaryTitleLabel,
+                                        ),
+                                        const WidgetSpan(
+                                          alignment: PlaceholderAlignment.middle,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(left: 4),
+                                            child: Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              size: 12,
+                                              color: MyColors.secondaryLabel,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
                               ),
@@ -285,6 +314,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             ],
                           ),
                         ),
+                        
+                        // 間隔
+                        const SizedBox(height: 8.0),
 
                         // 収入バー
                         showBars
