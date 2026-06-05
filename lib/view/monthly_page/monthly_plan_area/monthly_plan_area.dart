@@ -44,21 +44,12 @@ class MonthlyPlanArea extends ConsumerWidget {
                           '今月の収支',
                           style: AppTextStyles.appCardTitleLabel,
                         ),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: model.realSavings > 0
-                                    ? '+${formattedPriceGetter(model.realSavings)}'
-                                    : formattedPriceGetter(model.realSavings),
-                                style: AppTextStyles.appCardPriceLabel,
-                              ),
-                              TextSpan(
-                                text: ' 円',
-                                style: AppTextStyles.appCardPriceUnit,
-                              ),
-                            ],
+                        Text(
+                          signedYenmarkFormattedPriceGetter(
+                            model.realSavings,
+                            showPlusSign: true,
                           ),
+                          style: AppTextStyles.appCardPriceLabel,
                         ),
                       ],
                     ),

@@ -35,10 +35,8 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardPlusLabel,
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardPriceLabel,金額,sf_ui,17,w600,MyColors.label,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardTitleLabel,ラベル,noto_sans,14,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardPriceLabel,金額,sf_ui,20,w600,MyColors.white,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardPriceUnit,ラベル,noto_sans,13,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardSecondaryTitleLabel,ラベル,noto_sans,14,w500,MyColors.white,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardSecondaryPriceLabel,金額,sf_ui,16,w500,MyColors.white,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
-lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardSecondaryPriceUnit,ラベル,noto_sans,10,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardTertiaryTitleLabel,ラベル,noto_sans,13,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardTertiaryPriceLabel,金額,sf_ui,14,w500,MyColors.secondaryLabel,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardTertiaryPriceUnit,ラベル,noto_sans,11,w500,MyColors.secondaryLabel,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み

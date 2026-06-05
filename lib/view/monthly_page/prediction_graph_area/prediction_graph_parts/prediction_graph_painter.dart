@@ -214,7 +214,7 @@ class PredictionGraphPainter extends CustomPainter {
   void _drawZeroLine(Canvas canvas, double leftMargin, double y,
       double totalWidth, double labelLeftPadding, double graphLeftOffset) {
     final textSpan = TextSpan(
-      text: '￥0',
+      text: '¥ 0',
       style: GraphTextStyles.graphLabel,
     );
 
@@ -786,7 +786,7 @@ class PredictionGraphPainter extends CustomPainter {
         }
       }
 
-      // 0円軸ラベルとの重なりチェック（常時描画される「￥0」ラベルと支出ラベルの重なりを防ぐ）
+      // 0円軸ラベルとの重なりチェック（常時描画される「¥ 0」ラベルと支出ラベルの重なりを防ぐ）
       bool overlapsWithZeroAxis = false;
       final zeroAxisY = topMargin + graphHeight;
       final zeroAxisLabelTop = zeroAxisY - labelHeight / 2;

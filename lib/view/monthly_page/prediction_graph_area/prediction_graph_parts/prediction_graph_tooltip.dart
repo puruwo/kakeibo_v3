@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/constant/styles/graph_text_styles.dart';
+import 'package:kakeibo/util/util.dart';
 
 /// ツールチップウィジェット
 class GraphTooltip extends StatelessWidget {
@@ -64,7 +65,7 @@ class GraphTooltip extends StatelessWidget {
                           style: GraphTextStyles.tooltipCumulativeLabel,
                         ),
                         TextSpan(
-                          text: '¥${_formatNumber(cumulativeExpense)}',
+                          text: yenmarkFormattedPriceGetter(cumulativeExpense),
                           style: GraphTextStyles.tooltipSubtitle,
                         ),
                       ],
@@ -129,7 +130,7 @@ class GraphTooltip extends StatelessWidget {
           const Spacer(),
           // 金額（右揃え）
           Text(
-            '¥${_formatNumber(expense.price)}',
+            yenmarkFormattedPriceGetter(expense.price),
             style: GraphTextStyles.tooltipCategory,
           ),
         ],
@@ -137,10 +138,4 @@ class GraphTooltip extends StatelessWidget {
     );
   }
 
-  String _formatNumber(int number) {
-    return number.toString().replaceAllMapped(
-          RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
-          (Match m) => '${m[1]},',
-        );
-  }
 }

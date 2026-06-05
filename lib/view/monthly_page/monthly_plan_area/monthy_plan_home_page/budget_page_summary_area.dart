@@ -79,23 +79,14 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                                 style: AppTextStyles.appCardTitleLabel,
                               ),
                               const SizedBox(width: 8),
-                              RichText(
+                              Text(
+                                yenmarkFormattedPriceGetter(
+                                    allCategoryCardEntity
+                                        .allCategoryTotalBudget),
                                 textAlign: TextAlign.end,
                                 overflow: TextOverflow.ellipsis,
-                                text: TextSpan(children: [
-                                  TextSpan(
-                                    text: formattedPriceGetter(
-                                        allCategoryCardEntity
-                                            .allCategoryTotalBudget),
-                                    style: AppTextStyles
-                                        .appCardOptionalSecondaryPriceLabel,
-                                  ),
-                                  TextSpan(
-                                    text: ' 円',
-                                    style:
-                                        AppTextStyles.appCardSecondaryPriceUnit,
-                                  ),
-                                ]),
+                                style: AppTextStyles
+                                    .appCardOptionalSecondaryPriceLabel,
                               ),
                             ],
                           ),
@@ -139,23 +130,14 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                                     style: AppTextStyles.appCardTitleLabel,
                                   ),
                                   const SizedBox(width: 8),
-                                  RichText(
+                                  Text(
+                                    yenmarkFormattedPriceGetter(
+                                        allCategoryCardEntity
+                                            .allCategoryTotalIncome),
                                     textAlign: TextAlign.end,
                                     overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                        text: formattedPriceGetter(
-                                            allCategoryCardEntity
-                                                .allCategoryTotalIncome),
-                                        style: AppTextStyles
-                                            .appCardOptionalSecondaryPriceLabel,
-                                      ),
-                                      TextSpan(
-                                        text: ' 円',
-                                        style: AppTextStyles
-                                            .appCardSecondaryPriceUnit,
-                                      ),
-                                    ]),
+                                    style: AppTextStyles
+                                        .appCardOptionalSecondaryPriceLabel,
                                   ),
                                 ],
                               ),
@@ -172,15 +154,10 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                                             .appCardTertiaryTitleLabel,
                                       ),
                                       TextSpan(
-                                        text: formattedPriceGetter(
+                                        text: signedYenmarkFormattedPriceGetter(
                                             projectedSavings),
                                         style: AppTextStyles
                                             .appCardTertiaryPriceLabel,
-                                      ),
-                                      TextSpan(
-                                        text: ' 円',
-                                        style: AppTextStyles
-                                            .appCardTertiaryPriceUnit,
                                       ),
                                     ]),
                                   ),

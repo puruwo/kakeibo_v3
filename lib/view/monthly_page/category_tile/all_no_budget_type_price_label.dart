@@ -23,7 +23,7 @@ class AllNoBudgetTypePriceLabel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // 支出合計のLabel
-    final String paymentSumLabel = formattedPriceGetter(
+    final String paymentSumLabel = yenmarkFormattedPriceGetter(
         monthlyExpenseByCategoryEntity.totalExpenseByBigCategory);
 
     // 予算のLabel
@@ -31,19 +31,12 @@ class AllNoBudgetTypePriceLabel extends StatelessWidget {
       padding: EdgeInsets.only(left: gapBetweenGraphAndLabel),
       child: SizedBox(
         width: width,
-        child: RichText(
-            textAlign: TextAlign.end,
-            overflow: TextOverflow.ellipsis,
-            text: TextSpan(children: [
-              TextSpan(
-                text: paymentSumLabel,
-                style: AppTextStyles.appCardOptionalSecondaryPriceLabel,
-              ),
-              TextSpan(
-                text: ' 円',
-                style: AppTextStyles.appCardSecondaryPriceUnit,
-              ),
-            ])),
+        child: Text(
+          paymentSumLabel,
+          textAlign: TextAlign.end,
+          overflow: TextOverflow.ellipsis,
+          style: AppTextStyles.appCardOptionalSecondaryPriceLabel,
+        ),
       ),
     );
   }

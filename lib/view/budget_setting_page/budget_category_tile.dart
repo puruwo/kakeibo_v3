@@ -98,23 +98,17 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                           ),
 
                           // 先月の実績
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              SizedBox(
-                                width: 64,
-                                child: Text(
-                                  formattedPriceGetterAndZeroAsHyphen(
-                                    widget.budgetEditValue.lastMonthBudgetPrice,
-                                  ),
-                                  style: AppTextStyles.listTileSubPriceLabel,
-                                  textAlign: TextAlign.right,
-                                ),
-                              ),
-                              Text(' 円', style: AppTextStyles.listTileYenLabel),
-                            ],
+                          SizedBox(
+                            width: 72,
+                            child: Text(
+                              widget.budgetEditValue.lastMonthBudgetPrice == 0
+                                  ? '---'
+                                  : yenmarkFormattedPriceGetter(
+                                      widget.budgetEditValue.lastMonthBudgetPrice,
+                                    ),
+                              style: AppTextStyles.listTileSubPriceLabel,
+                              textAlign: TextAlign.right,
+                            ),
                           ),
 
                           // 金額入力フィールド

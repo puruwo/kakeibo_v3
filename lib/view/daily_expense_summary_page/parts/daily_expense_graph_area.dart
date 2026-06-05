@@ -1,9 +1,9 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 
@@ -36,8 +36,6 @@ class DailyExpenseGraphArea extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formatter = NumberFormat('#,###');
-
     if (categorySummaries.isEmpty) {
       return CardContainer(
         padding: const EdgeInsets.all(16),
@@ -58,14 +56,9 @@ class DailyExpenseGraphArea extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('総支出', style: AppTextStyles.appCardTitleLabel),
-              Row(
-                children: [
-                  Text(
-                    '${formatter.format(totalExpense)} ',
-                    style: AppTextStyles.appCardPriceLabel,
-                  ),
-                  Text('円', style: AppTextStyles.appCardPriceUnit),
-                ],
+              Text(
+                yenmarkFormattedPriceGetter(totalExpense),
+                style: AppTextStyles.appCardPriceLabel,
               ),
             ],
           ),
@@ -75,7 +68,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
           // 円グラフとカテゴリー一覧
           categorySummaries.length == 1
               // カテゴリーが1つの場合は円グラフを表示せずカテゴリー一覧のみ
-              ? _buildCategoryList(formatter)
+              ? _buildCategoryList()
               // カテゴリーが複数の場合は円グラフとカテゴリー一覧を横並び
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,7 +100,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
                     ),
                     const SizedBox(width: 24),
                     // カテゴリー一覧
-                    Flexible(child: _buildCategoryList(formatter)),
+                    Flexible(child: _buildCategoryList()),
                   ],
                 ),
         ],
@@ -116,7 +109,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
   }
 
   /// カテゴリー一覧ウィジェット
-  Widget _buildCategoryList(NumberFormat formatter) {
+  Widget _buildCategoryList() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: categorySummaries.map((category) {
@@ -149,11 +142,9 @@ class DailyExpenseGraphArea extends StatelessWidget {
               const SizedBox(width: 8),
               // 金額
               Text(
-                '${formatter.format(category.totalAmount)} ',
+                yenmarkFormattedPriceGetter(category.totalAmount),
                 style: AppTextStyles.appCardSecondaryPriceLabel,
               ),
-              // 円
-              Text('円', style: AppTextStyles.appCardSecondaryPriceUnit),
             ],
           ),
         );

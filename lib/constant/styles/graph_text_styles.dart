@@ -8,7 +8,7 @@ class GraphTextStyles {
   // グラフ本体のラベル
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-  /// グラフ軸ラベル（「￥0」「日別」「収入」「予算」「予測」）
+  /// グラフ軸ラベル（「¥ 0」「日別」「収入」「予算」「予測」）
   static final TextStyle graphLabel = MyFontStyle.notoSans.copyWith(
       fontSize: 12,
       color: MyColors.secondaryLabel,

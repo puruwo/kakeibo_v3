@@ -2,8 +2,8 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
+import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -40,8 +40,6 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
               );
             }
 
-            final formatter = NumberFormat('#,###');
-
             return CardContainer(
               constraints: const BoxConstraints(maxHeight: 200),
               padding: const EdgeInsets.all(16),
@@ -53,14 +51,9 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text('総収入', style: AppTextStyles.appCardTitleLabel),
-                      Row(
-                        children: [
-                          Text(
-                            '${formatter.format(incomeDatas.totalIncome)} ',
-                            style: AppTextStyles.appCardPriceLabel,
-                          ),
-                          Text('円', style: AppTextStyles.appCardPriceUnit),
-                        ],
+                      Text(
+                        yenmarkFormattedPriceGetter(incomeDatas.totalIncome),
+                        style: AppTextStyles.appCardPriceLabel,
                       ),
                     ],
                   ),
@@ -155,15 +148,9 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                           const SizedBox(width: 8),
                                           // 金額
                                           Text(
-                                            '${formatter.format(category.totalAmount)} ',
+                                            yenmarkFormattedPriceGetter(category.totalAmount),
                                             style: AppTextStyles
                                                 .appCardSecondaryPriceLabel,
-                                          ),
-                                          // 円
-                                          Text(
-                                            '円',
-                                            style: AppTextStyles
-                                                .appCardSecondaryPriceUnit,
                                           ),
                                         ],
                                       ),

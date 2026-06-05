@@ -74,6 +74,15 @@ class _FoundationState extends ConsumerState<Foundation>
     //navigationBarの状態管理
     final navigationBarState = ref.watch(navigationBarNumberNotifierProvider);
 
+    // タブ切り替え時のフェードイン
+    // グロナビ操作・生活収支グラフからの遷移など、どの経路でタブが変わっても共通で発火させる
+    ref.listen<int>(navigationBarNumberNotifierProvider, (previous, next) {
+      if (previous != next) {
+        _fadeController.value = 0.0;
+        _fadeController.forward();
+      }
+    });
+
     return Scaffold(
       extendBody: true,
       // IndexedStack によって、各タブの Navigator を保持
@@ -220,13 +229,9 @@ class _FoundationState extends ConsumerState<Foundation>
         // 同じタブが再タップされた場合、タブ内の Navigator を初期状態までポップしてリセットする
         navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
       } else {
-        // タブ切り替え前にopacityを0にする（ちらつき防止）
-        _fadeController.value = 0.0;
-        // タブを切り替える
+        // タブを切り替える（フェードインは navigationBarNumber の変化を listen して実行）
         final notifier = ref.read(navigationBarNumberNotifierProvider.notifier);
         notifier.updateState(index);
-        // フェードインアニメーションを開始
-        _fadeController.forward();
       }
     }
   }

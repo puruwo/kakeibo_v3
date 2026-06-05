@@ -64,7 +64,7 @@ class AnnualBalanceTooltip extends StatelessWidget {
         Text(label, style: GraphTextStyles.tooltipCumulativeLabel),
         const Spacer(),
         Text(
-          '¥${_numberFormat.format(amount)}',
+          '¥ ${_numberFormat.format(amount)}',
           style: GraphTextStyles.tooltipSubtitle.copyWith(color: color),
         ),
       ],

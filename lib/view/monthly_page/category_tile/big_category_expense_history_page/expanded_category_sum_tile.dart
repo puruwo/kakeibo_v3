@@ -93,7 +93,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                   ...List.generate(smallCategoryList.length, (index) {
                     // 支出合計のLabel
                     final String totalExpenseBySmallCategory =
-                        formattedPriceGetter(smallCategoryList[index]
+                        yenmarkFormattedPriceGetter(smallCategoryList[index]
                             .totalExpenseBySmallCategory);
 
                     // 小カテゴリーのID
@@ -174,12 +174,6 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                       AppTextStyles.appCardSecondaryPriceLabel,
                                   textAlign: TextAlign.end,
                                   overflow: TextOverflow.ellipsis,
-                                ),
-                                Text(
-                                  ' 円',
-                                  style:
-                                      AppTextStyles.appCardSecondaryPriceUnit,
-                                  textAlign: TextAlign.end,
                                 ),
                                 const SizedBox(
                                   width: 8,

@@ -359,13 +359,15 @@ Generated files follow these patterns:
 
 **Main Scaffold**: `lib/view/foundation.dart`
 
-4-tab bottom navigation with `IndexedStack` (preserves state):
-1. **ホーム (Home)** - `year_page/` - Annual overview, balance chart, bonus planning
-2. **入力 (Input)** - `register_page/` - Transaction entry modal (expense/income/fixed cost)
-3. **分析 (Analysis)** - `monthly_page/` - Monthly category breakdown, budgets, predictions
-4. **履歴 (History)** - `historical_calendar_page/` - Calendar-based transaction browser
+5-tab bottom navigation with `IndexedStack` (preserves state):
+1. **全体 (index 0)** - `year_page/` - Annual overview, balance chart, bonus planning
+2. **月間分析 (index 1)** - `monthly_page/` - Monthly category breakdown, budgets, predictions
+3. **入力 (index 2)** - `register_page/` - Transaction entry modal (expense/income/fixed cost); center green rounded-square button, no label
+4. **家族 (index 3)** - `family_page/` - Family shared view (placeholder)
+5. **履歴 (index 4)** - `historical_calendar_page/` - Calendar-based transaction browser
 
 Each tab has its own `Navigator` instance for independent navigation stacks.
+The input tab (index 2) does not navigate to a page — it opens a bottom sheet modal and keeps `Container()` as its body.
 
 ---
 
