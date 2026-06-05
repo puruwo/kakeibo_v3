@@ -9,6 +9,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
@@ -152,28 +153,61 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         const SizedBox(height: 8),
 
                         // 支出
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
-                          children: [
-                            Text(
-                              '総支出  ',
-                              style: AppTextStyles.appCardTitleLabel,
-                            ),
-                            yearlyBalanceValue.yearlyBalanceType !=
-                                    YearlyBalanceType.noExpense
-                                ? Text(
-                                    yenmarkFormattedPriceGetter(
-                                      yearlyBalanceValue.yearlyExpense,
+                        AppInkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    const YearlyExpenseListPage(),
+                              ),
+                            );
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              // ラベル（ドット + 総支出 + シェブロン）
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // 支出カラーのドット
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: MyColors.pink,
                                     ),
-                                    style: AppTextStyles.listCardPriceLabel,
-                                  )
-                                : Text(
-                                    '-',
-                                    style: AppTextStyles.listCardPriceLabel,
                                   ),
-                          ],
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '総支出',
+                                    style: AppTextStyles.appCardTitleLabel,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(
+                                    size: 12,
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: MyColors.secondaryLabel,
+                                  ),
+                                ],
+                              ),
+                              // 金額
+                              yearlyBalanceValue.yearlyBalanceType !=
+                                      YearlyBalanceType.noExpense
+                                  ? Text(
+                                      yenmarkFormattedPriceGetter(
+                                        yearlyBalanceValue.yearlyExpense,
+                                      ),
+                                      style: AppTextStyles.listCardPriceLabel,
+                                    )
+                                  : Text(
+                                      '-',
+                                      style: AppTextStyles.listCardPriceLabel,
+                                    ),
+                            ],
+                          ),
                         ),
 
                         // 支出バー
@@ -206,20 +240,36 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             );
                           },
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                '総収入',
-                                style: AppTextStyles.appCardTitleLabel,
+                              // ラベル（ドット + 総収入 + シェブロン）
+                              Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  // 収入カラーのドット
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: MyColors.incomeEmerald,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Text(
+                                    '総収入',
+                                    style: AppTextStyles.appCardTitleLabel,
+                                  ),
+                                  const SizedBox(width: 4),
+                                  const Icon(
+                                    size: 12,
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: MyColors.secondaryLabel,
+                                  ),
+                                ],
                               ),
-                              const Icon(
-                                size: 12,
-                                Icons.arrow_forward_ios_rounded,
-                                color: MyColors.secondaryLabel,
-                              ),
-                              const SizedBox(width: 8),
+                              // 金額
                               yearlyBalanceValue.yearlyBalanceType !=
                                       YearlyBalanceType.noIncome
                                   ? Text(
