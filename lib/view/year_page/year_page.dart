@@ -116,7 +116,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                     final start = activeDt.yearPeriod.startDatetime;
                     final end = activeDt.yearPeriod.endDatetime;
                     final periodLabel =
-                        '${start.year}年${start.month}月〜${end.year}年${end.month}月';
+                        '${start.year}年${start.month}月 - ${end.year}年${end.month}月';
                     final yearLabel =
                         '${activeDt.representativeYear.year}年度';
                     return Column(
