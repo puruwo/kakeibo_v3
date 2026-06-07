@@ -67,7 +67,7 @@ class _CategoryExpenceHistoryArea
     // ボトムナビ高さとあわせて末尾余白に加算する（最後の項目が隠れないように）
     final view = View.of(context);
     final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
-    final bottomInset = kBottomNavigationBarHeight + bottomSafeArea;
+    final bottomInset = kBottomNavigationBarHeight + bottomSafeArea + 24;
     final listPadding =
         (widget.padding ?? EdgeInsets.zero).add(EdgeInsets.only(bottom: bottomInset));
 

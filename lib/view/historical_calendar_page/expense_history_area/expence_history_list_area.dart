@@ -41,6 +41,13 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
     // DateTimeの日本語対応
     initializeDateFormatting();
 
+    // extendBody:true のボトムナビ背後までリストが広がるため、
+    // MediaQuery では取得できない下部セーフエリアを View から直接取得し、
+    // ボトムナビ高さとあわせて末尾余白に加算する（最後の項目が隠れないように）
+    final view = View.of(context);
+    final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
+    final bottomInset = kBottomNavigationBarHeight + bottomSafeArea + 24;
+
     // selectedDatetimeが更新されたら動く
     ref.listen(historicalSelectedDatetimeNotifierProvider, (previous, next) {
       final updatedSelectedDateTime = next;
@@ -70,6 +77,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
             return ListView.builder(
               key: const ValueKey('data'),
               controller: widget._scrollController,
+              padding: EdgeInsets.only(bottom: bottomInset),
               itemCount: tileGroupList.length,
               itemBuilder: (BuildContext context, int index) {
                 itemKeys = tileGroupList.map((e) => e.date).toList();
