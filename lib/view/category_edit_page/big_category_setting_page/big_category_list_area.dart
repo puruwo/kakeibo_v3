@@ -191,14 +191,15 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                 ),
                               ),
 
-                              //区切り線
-                              Divider(
-                                thickness: 0.25,
-                                height: 0.25,
-                                indent: leftsidePadding + 50,
-                                endIndent: leftsidePadding,
-                                color: MyColors.separater,
-                              ),
+                              //区切り線（最後のアイテムには表示しない）
+                              if (index < itemList.length - 1)
+                                Divider(
+                                  thickness: 0.25,
+                                  height: 0.25,
+                                  indent: leftsidePadding + 50,
+                                  endIndent: leftsidePadding,
+                                  color: MyColors.separater,
+                                ),
                             ],
                           ),
                         );
@@ -221,40 +222,24 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                           },
                           child: SizedBox(
                             height: 50,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                        80,
-                                        0,
-                                        0,
-                                        0,
-                                      ),
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        child: Text(
-                                          '+ 新しいカテゴリーを追加',
-                                          style: AppTextStyles
-                                              .listTileSecondaryTitle,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  80,
+                                  0,
+                                  0,
+                                  0,
+                                ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    '+ 新しいカテゴリーを追加',
+                                    style: AppTextStyles
+                                        .listTileSecondaryTitle,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-
-                                Divider(
-                                  thickness: 0.25,
-                                  height: 0.25,
-                                  indent: leftsidePadding + 50,
-                                  endIndent: leftsidePadding,
-                                  color: MyColors.separater,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         );
@@ -421,14 +406,15 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                 ),
                               ),
 
-                              //区切り線
-                              Divider(
-                                thickness: 0.25,
-                                height: 0.25,
-                                indent: leftsidePadding + 50,
-                                endIndent: leftsidePadding,
-                                color: MyColors.separater,
-                              ),
+                              //区切り線（最後のアイテムには表示しない）
+                              if (index < itemList.length - 1)
+                                Divider(
+                                  thickness: 0.25,
+                                  height: 0.25,
+                                  indent: leftsidePadding + 50,
+                                  endIndent: leftsidePadding,
+                                  color: MyColors.separater,
+                                ),
                             ],
                           ),
                         );
@@ -451,42 +437,24 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                           },
                           child: SizedBox(
                             height: 50,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                // カテゴリー名
-                                Expanded(
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                        80,
-                                        0,
-                                        0,
-                                        0,
-                                      ),
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        child: Text(
-                                          '+ 新しいカテゴリーを追加',
-                                          style: AppTextStyles
-                                              .listTileSecondaryTitle,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  80,
+                                  0,
+                                  0,
+                                  0,
+                                ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    '+ 新しいカテゴリーを追加',
+                                    style: AppTextStyles
+                                        .listTileSecondaryTitle,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-
-                                //区切り線
-                                Divider(
-                                  thickness: 0.25,
-                                  height: 0.25,
-                                  indent: leftsidePadding + 50,
-                                  endIndent: leftsidePadding,
-                                  color: MyColors.separater,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         );
@@ -634,14 +602,15 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                 ),
                               ),
 
-                              //区切り線
-                              Divider(
-                                thickness: 0.25,
-                                height: 0.25,
-                                indent: leftsidePadding + 50,
-                                endIndent: leftsidePadding,
-                                color: MyColors.separater,
-                              ),
+                              //区切り線（最後のアイテムには表示しない）
+                              if (index < itemList.length - 1)
+                                Divider(
+                                  thickness: 0.25,
+                                  height: 0.25,
+                                  indent: leftsidePadding + 50,
+                                  endIndent: leftsidePadding,
+                                  color: MyColors.separater,
+                                ),
                             ],
                           ),
                         );
@@ -664,41 +633,24 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                           },
                           child: SizedBox(
                             height: 50,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  child: Center(
-                                    child: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                        80,
-                                        0,
-                                        0,
-                                        0,
-                                      ),
-                                      child: SizedBox(
-                                        width: double.infinity,
-                                        child: Text(
-                                          '+ 新しいカテゴリーを追加',
-                                          style: AppTextStyles
-                                              .listTileSecondaryTitle,
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                      ),
-                                    ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  80,
+                                  0,
+                                  0,
+                                  0,
+                                ),
+                                child: SizedBox(
+                                  width: double.infinity,
+                                  child: Text(
+                                    '+ 新しいカテゴリーを追加',
+                                    style: AppTextStyles
+                                        .listTileSecondaryTitle,
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
-
-                                //区切り線
-                                Divider(
-                                  thickness: 0.25,
-                                  height: 0.25,
-                                  indent: leftsidePadding + 50,
-                                  endIndent: leftsidePadding,
-                                  color: MyColors.separater,
-                                ),
-                              ],
+                              ),
                             ),
                           ),
                         );
