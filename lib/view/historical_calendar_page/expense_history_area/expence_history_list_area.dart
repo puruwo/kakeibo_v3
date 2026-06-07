@@ -77,9 +77,13 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
             return ListView.builder(
               key: const ValueKey('data'),
               controller: widget._scrollController,
-              padding: EdgeInsets.only(bottom: bottomInset),
-              itemCount: tileGroupList.length,
+              itemCount: tileGroupList.length + 1,
               itemBuilder: (BuildContext context, int index) {
+                // リスト末尾のスペーサー
+                if (index == tileGroupList.length) {
+                  return SizedBox(height: bottomInset);
+                }
+
                 itemKeys = tileGroupList.map((e) => e.date).toList();
 
                 return AutoScrollTag(
