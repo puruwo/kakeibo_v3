@@ -85,14 +85,16 @@ Positioned AnnualBalanceTooltip
 ## バー領域の動的サイズ（`AnnualBalanceChartDimensions`）
 
 その年に赤字月がない場合、バー領域の下半分が空くため、月ラベルとの隙間を縮める。
+上半分（黒字バー用）は常に確保し、「収支」ラベルが「0万」グリッドと重ならないようにする。
 
 | 条件 | `barAreaTopHeight` | `barAreaBottomHeight` |
 |---|---|---|
-| 黒字月あり / 赤字月なし | `barAreaHeight / 2`（40） | 0 |
-| 黒字月なし / 赤字月あり | 0 | `barAreaHeight / 2`（40） |
-| 両方あり | 40 | 40 |
+| 黒字月あり / 赤字月なし | 40（常に確保） | 0 |
+| 黒字月なし / 赤字月あり | 40（常に確保） | `barAreaHeight / 2`（40） |
+| 両方あり | 40（常に確保） | 40 |
 
-- `factory AnnualBalanceChartDimensions.from(values)` で未来月を除外しつつ判定
+- `factory AnnualBalanceChartDimensions.from(values)` で未来月を除外しつつ赤字有無のみ判定
+- `barAreaTopHeight` は常に固定値 `barAreaHeight / 2`（上半分collapsは廃止・KAN-119で修正）
 - `monthLabelTop` / `totalHeight` が動的に短くなる
 - Widget 側の `SizedBox.height` とオーバーレイ `height` に適用
 
@@ -194,8 +196,9 @@ CardContainer
 - グリッド本数は「スケール計算時点での rawMax ベース」で決まる
 
 ### 3. バー領域の高さ動的化ルールを変えたい
-- `AnnualBalanceChartDimensions.from(values)` の `keepTop` / `hasDeficit` 判定を変更
-- 「赤字0でも下半分を残したい」等のケースはここをいじる
+- `AnnualBalanceChartDimensions.from(values)` の `hasDeficit` 判定を変更（`keepTop` は廃止済み）
+- 上半分は常に確保（変更禁止 → 変えると「収支」「0万」が重なる）
+- 「赤字0でも下半分を残したい」等のケースは `hasDeficit` 判定のみ調整する
 
 ### 4. ツールチップの見た目を変えたい
 - `annual_balance_tooltip.dart` のみ編集
@@ -216,6 +219,7 @@ CardContainer
 - **`hasNoRecord == true` のときに描画を試みる** → 親の `year_page.dart` の `Consumer` で `hasNoRecord == true` のときセクションごと `SizedBox.shrink()` で非表示化（KAN-99）。Painter 側でも `incomeExpense.isEmpty` ならダミー値を返す二重防御
 - **Painter の未来月描画漏れ** → 未来月は折れ線・バーを描かず、月ラベルのみ薄色で表示するのが現行仕様
 - **`MonthlyBalanceValue` フィールド追加** → Freezed なので `dart run build_runner build --delete-conflicting-outputs` 必須
+- **`barAreaTopHeight` を 0 にする（上半分 collapse）** → `AnnualBalanceAxisLabelsPainter` が「収支」ラベルを `barCenterLineY=lineAreaHeight` に描き、「0万」グリッドと完全に重なる。上半分は常に `barAreaHeight/2` 固定（KAN-119 で修正）
 
 ---
 
