@@ -46,7 +46,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
     // ボトムナビ高さとあわせて末尾余白に加算する（最後の項目が隠れないように）
     final view = View.of(context);
     final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
-    final bottomInset = kBottomNavigationBarHeight + bottomSafeArea + 24;
+    final bottomInset = (kBottomNavigationBarHeight + bottomSafeArea + 24) / 2;
 
     // selectedDatetimeが更新されたら動く
     ref.listen(historicalSelectedDatetimeNotifierProvider, (previous, next) {
