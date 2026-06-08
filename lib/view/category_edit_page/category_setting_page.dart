@@ -142,13 +142,16 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
               // 編集時
               : BigCategoryEditArea(categoryType: categoryType),
         ),
-        const Divider(height: 1),
+        // 収入タブはフッターがないためDividerも非表示
+        if (categoryType != CategoryType.income)
+          const Divider(height: 1),
 
-        // フッターボタンエリア
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
-          child: BigCategorySettingFooter(categoryType: categoryType),
-        ),
+        // フッターボタンエリア（収入タブは非表示）
+        if (categoryType != CategoryType.income)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 32.0),
+            child: BigCategorySettingFooter(categoryType: categoryType),
+          ),
       ],
     );
   }
