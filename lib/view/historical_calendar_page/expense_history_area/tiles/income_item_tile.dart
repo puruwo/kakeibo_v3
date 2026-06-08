@@ -4,9 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -55,12 +54,12 @@ class IncomeItemTile extends ConsumerWidget {
         dragStartBehavior: DragStartBehavior.start,
         background: Container(color: MyColors.black),
         secondaryBackground: Container(
-          color: MyColors.pink,
-          child: const Align(
+          color: context.colors.expense,
+          child: Align(
             alignment: Alignment.centerRight,
             child: Padding(
               padding: EdgeInsets.only(right: 18.0),
-              child: Icon(Icons.delete, color: MyColors.systemGray),
+              child: Icon(Icons.delete, color: context.colors.icon),
             ),
           ),
         ),
@@ -156,12 +155,12 @@ class IncomeItemTile extends ConsumerWidget {
                     ),
 
                     // addアイコン
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(right: 4),
                       child: Icon(
                         size: 18,
                         Icons.add,
-                        color: MyColors.incomeEmerald,
+                        color: context.colors.income,
                       ),
                     ),
                   ],
@@ -173,7 +172,7 @@ class IncomeItemTile extends ConsumerWidget {
               height: 0.25,
               indent: 50 + leftsidePadding,
               endIndent: leftsidePadding,
-              color: MyColors.separater,
+              color: context.colors.separator,
             ),
           ],
         ),
