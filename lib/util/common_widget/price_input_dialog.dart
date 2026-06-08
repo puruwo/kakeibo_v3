@@ -4,9 +4,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 
 // localImport
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 
@@ -73,7 +73,7 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
               // テキストの揃え(左右)
               textAlign: TextAlign.center,
               // カーソルの色
-              cursorColor: MyColors.themeColor,
+              cursorColor: context.colors.primary,
               // カーソルの高さ
               cursorHeight: 25,
               // カーソルの先の太さ

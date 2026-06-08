@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 /// アプリ共通のカードコンテナ
 ///
@@ -71,7 +71,7 @@ class CardContainer extends StatelessWidget {
       transformAlignment: transformAlignment,
       clipBehavior: clipBehavior,
       decoration: BoxDecoration(
-        color: MyColors.quarternarySystemfill,
+        color: context.colors.fillQuaternary,
         borderRadius: appCardRadius,
       ),
       child: child,

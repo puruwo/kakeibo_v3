@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/card_container.dart';
@@ -241,7 +242,7 @@ class AppListCard extends StatelessWidget {
       padding: EdgeInsets.only(bottom: bottomPadding),
       child: AppInkWell(
         borderRadius: appCardRadius,
-        color: backgroundColor ?? MyColors.quarternarySystemfill,
+        color: backgroundColor ?? context.colors.fillQuaternary,
         onTap: onTap,
         onLongPress: onLongPress,
         child: Padding(

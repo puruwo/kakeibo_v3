@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain_service/month_period_service/aggregation_start_day_provider.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
@@ -401,7 +402,7 @@ class _AppYearMonthPickerOverlayState
   Widget _buildHeaderCard() {
     return Container(
       decoration: BoxDecoration(
-        color: MyColors.tirtiarySystemBackground,
+        color: context.colors.surfaceElevated2,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
@@ -411,7 +412,7 @@ class _AppYearMonthPickerOverlayState
               Icons.chevron_left_rounded,
               color: _canShiftPrevious
                   ? MyColors.white
-                  : MyColors.secondaryLabel,
+                  : context.colors.textSecondary,
             ),
             onPressed: _canShiftPrevious ? _onShiftPrevious : null,
           ),
@@ -436,7 +437,7 @@ class _AppYearMonthPickerOverlayState
               Icons.chevron_right_rounded,
               color: _canShiftNext
                   ? MyColors.white
-                  : MyColors.secondaryLabel,
+                  : context.colors.textSecondary,
             ),
             onPressed: _canShiftNext ? _onShiftNext : null,
           ),
@@ -449,7 +450,7 @@ class _AppYearMonthPickerOverlayState
     return Container(
       height: 216,
       decoration: BoxDecoration(
-        color: MyColors.tirtiarySystemBackground,
+        color: context.colors.surfaceElevated2,
         borderRadius: BorderRadius.circular(16),
       ),
       child: widget.mode == AppYearMonthPickerMode.yearMonth
@@ -535,7 +536,7 @@ class _AppYearMonthPickerOverlayState
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
-        color: MyColors.systemGray4.withValues(alpha: 0.6),
+        color: context.colors.disabled.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(8),
       ),
     );
@@ -546,7 +547,7 @@ class _AppYearMonthPickerOverlayState
       children: [
         Expanded(
           child: CupertinoButton(
-            color: MyColors.systemGray4,
+            color: context.colors.disabled,
             borderRadius: BorderRadius.circular(28),
             padding: const EdgeInsets.symmetric(vertical: 12),
             onPressed: _onResetToCurrent,
@@ -561,7 +562,7 @@ class _AppYearMonthPickerOverlayState
         const SizedBox(width: 8),
         Expanded(
           child: CupertinoButton(
-            color: MyColors.themeColor,
+            color: context.colors.primary,
             borderRadius: BorderRadius.circular(28),
             padding: const EdgeInsets.symmetric(vertical: 12),
             onPressed: _onConfirm,

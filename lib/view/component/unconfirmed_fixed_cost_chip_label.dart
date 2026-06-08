@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 class UnconfirmedFixedCostChipLabel extends StatelessWidget {
   const UnconfirmedFixedCostChipLabel({
@@ -13,9 +14,9 @@ class UnconfirmedFixedCostChipLabel extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
       margin: const EdgeInsets.only(right: 4),
       decoration: BoxDecoration(
-          color: MyColors.themeThinColor,
+          color: context.colors.primarySubtle,
           borderRadius: BorderRadius.circular(4),
-          border: Border.all(color: MyColors.themeColor)),
+          border: Border.all(color: context.colors.primary)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -29,7 +30,7 @@ class UnconfirmedFixedCostChipLabel extends StatelessWidget {
             '変動あり',
             style: GoogleFonts.notoSans(
               fontSize: 10,
-              color: MyColors.themeColor,
+              color: context.colors.primary,
               fontWeight: FontWeight.w400,
             ),
           ),

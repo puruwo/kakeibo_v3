@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 class CheckBox extends StatelessWidget {
   const CheckBox({required this.isChecked, super.key});
@@ -27,7 +28,7 @@ class CheckBox extends StatelessWidget {
             width: 23,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: MyColors.secondarySystemfill),
+              border: Border.all(color: context.colors.fillSecondary),
               color: Colors.transparent,
             ),
           );

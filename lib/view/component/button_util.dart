@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 enum ButtonColorType {
   main(MyColors.buttonPrimary),
@@ -42,7 +43,7 @@ class MainButton extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor,
           disabledBackgroundColor:
-              Color.alphaBlend(MyColors.hoverColor, backgroundColor),
+              Color.alphaBlend(context.colors.overlay, backgroundColor),
           elevation: 0,
         ),
         child: FittedBox(
