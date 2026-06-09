@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/widgets.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
@@ -124,7 +124,7 @@ class _CategoryExpenceHistoryArea
                       height: 0.25,
                       indent: leftsidePadding,
                       endIndent: leftsidePadding,
-                      color: MyColors.separater,
+                      color: context.colors.separator,
                     ),
 
                     //タイル

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 
 /// 今月の収支データ（支出・収入・予算）がすべて未入力のとき、登録を促す誘導カード。
@@ -21,10 +21,10 @@ class MonthlyPlanRegisterPromptArea extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.account_balance_wallet_rounded,
               size: 32,
-              color: MyColors.secondaryLabel,
+              color: context.colors.textSecondary,
             ),
             const SizedBox(height: 8),
             Text(

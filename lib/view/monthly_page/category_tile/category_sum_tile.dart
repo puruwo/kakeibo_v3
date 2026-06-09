@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/icon.dart';
-import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -27,7 +27,7 @@ class CategorySumTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppInkWell(
-      color: MyColors.quarternarySystemfill,
+      color: context.colors.fillQuaternary,
       borderRadius: appCardRadius,
       onTap: () {
         Navigator.of(context).push(
