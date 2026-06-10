@@ -67,6 +67,7 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
               value: category,
               label: category.label,
               isSelected: selectedEnum == category,
+              selectedColor: context.colors.primary,
             ),
           )
           .toList(),

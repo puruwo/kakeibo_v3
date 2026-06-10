@@ -1,21 +1,21 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
-Color getPillColor(TransactionMode mode) {
+Color getPillColor(BuildContext context, TransactionMode mode) {
   return switch (mode) {
-    TransactionMode.expense => MyColors.pink,
+    TransactionMode.expense => context.colors.expense,
     TransactionMode.income => Colors.lightBlue,
-    TransactionMode.fixedCost => MyColors.pink,
+    TransactionMode.fixedCost => context.colors.expense,
   };
 }
 
-Color getPillBackgroundColor(TransactionMode mode) {
+Color getPillBackgroundColor(BuildContext context, TransactionMode mode) {
   return switch (mode) {
-    TransactionMode.expense => MyColors.pink.withOpacity(0.1),
+    TransactionMode.expense => context.colors.expense.withOpacity(0.1),
     TransactionMode.income => Colors.lightBlue.withOpacity(0.1),
-    TransactionMode.fixedCost => MyColors.pink.withOpacity(0.1),
+    TransactionMode.fixedCost => context.colors.expense.withOpacity(0.1),
   };
 }

@@ -61,7 +61,7 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
         Text(
           '¥',
           style: RegisterPageStyles.yenSymbol(
-            getPillColor(ref.watch(inputModeControllerProvider)),
+            getPillColor(context, ref.watch(inputModeControllerProvider)),
           ).copyWith(
             height: 1,
           ),

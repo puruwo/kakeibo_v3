@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
-enum ButtonColorType {
-  main(MyColors.buttonPrimary),
-  secondary(MyColors.buttonSecondary);
+enum ButtonColorType { main, secondary }
 
-  final Color color;
-
-  const ButtonColorType(this.color);
+extension ButtonColorTypeColor on ButtonColorType {
+  /// 種別に対応する色を context のテーマから解決する。
+  Color resolveColor(BuildContext context) => switch (this) {
+        ButtonColorType.main => context.colors.primary,
+        ButtonColorType.secondary => context.colors.fill,
+      };
 }
 
 class MainButton extends StatelessWidget {
@@ -31,7 +32,7 @@ class MainButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color backgroundColor = buttonColor ?? buttonType.color;
+    final Color backgroundColor = buttonColor ?? buttonType.resolveColor(context);
     final textStyle = buttonType == ButtonColorType.main
         ? AppTextStyles.mainButtonText
         : AppTextStyles.secondaryButtonText;
@@ -83,7 +84,7 @@ class SubButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: buttonType.color,
+          backgroundColor: buttonType.resolveColor(context),
           elevation: 0,
         ),
         child: FittedBox(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
@@ -61,12 +61,14 @@ class DateBox extends ConsumerWidget {
 
     // 支出ラベルを作成
     final expenseLabel = calculatePriceLabel(
+      context,
       totalExpenseBuff,
       isIncome: false,
       isCompact: isCompact,
     );
     // 収入ラベルを作成
     final incomeLabel = calculatePriceLabel(
+      context,
       calendarTileEntity.totalIncome,
       isIncome: true,
       isCompact: isCompact,
@@ -88,6 +90,7 @@ class DateBox extends ConsumerWidget {
       },
       child: switch (tileStatus) {
         CalendarTileStatus.selected => activeDateBox(
+          context,
           weekday,
           dateLabel,
           expenseLabel,
@@ -118,6 +121,7 @@ class DateBox extends ConsumerWidget {
 }
 
 Widget calculatePriceLabel(
+  BuildContext context,
   int amount, {
   required bool isIncome,
   required bool isCompact,
@@ -140,7 +144,7 @@ Widget calculatePriceLabel(
           // 収入は青い+アイコン、支出は赤い-アイコン
           Icon(
             isIncome ? Icons.add : Icons.remove,
-            color: isIncome ? MyColors.mintBlue : MyColors.pink,
+            color: isIncome ? MyColors.mintBlue : context.colors.expense,
             size: isCompact ? 8 : 10,
           ),
           Text(
@@ -155,6 +159,7 @@ Widget calculatePriceLabel(
 }
 
 Container activeDateBox(
+  BuildContext context,
   int weekday,
   String dateLabel,
   Widget expenseLabel,
@@ -166,9 +171,9 @@ Container activeDateBox(
   return Container(
     width: boxWidth,
     height: boxHeight,
-    decoration: const BoxDecoration(
+    decoration: BoxDecoration(
       borderRadius: BorderRadius.all(Radius.circular(6)),
-      color: MyColors.tirtiarySystemfill,
+      color: context.colors.fillTertiary,
     ),
     child: Column(
       children: [

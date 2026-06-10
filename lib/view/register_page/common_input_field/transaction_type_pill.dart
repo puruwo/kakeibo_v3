@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
@@ -33,11 +34,13 @@ class TransactionTypePill extends StatelessWidget {
           value: TransactionMode.expense,
           label: '支出',
           isSelected: currentMode == TransactionMode.expense,
+          selectedColor: context.colors.primary,
         ),
         buildCheckableMenuItem(
           value: TransactionMode.income,
           label: '収入',
           isSelected: currentMode == TransactionMode.income,
+          selectedColor: context.colors.primary,
         ),
       ],
       child: Container(
@@ -45,8 +48,8 @@ class TransactionTypePill extends StatelessWidget {
         width: InputPageWidgetSize.pillWidth,
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
         decoration: BoxDecoration(
-          color: getPillBackgroundColor(currentMode),
-          border: Border.all(color: getPillColor(currentMode)),
+          color: getPillBackgroundColor(context, currentMode),
+          border: Border.all(color: getPillColor(context, currentMode)),
           borderRadius: BorderRadius.circular(50),
         ),
         child: Row(
@@ -59,7 +62,7 @@ class TransactionTypePill extends StatelessWidget {
               width: 8,
               height: 8,
               decoration: BoxDecoration(
-                color: getPillColor(currentMode),
+                color: getPillColor(context, currentMode),
                 shape: BoxShape.circle,
               ),
             ),
@@ -67,7 +70,7 @@ class TransactionTypePill extends StatelessWidget {
             // ラベル
             Text(
               _getLabel(currentMode),
-              style: RegisterPageStyles.pillLabel(getPillColor(currentMode)),
+              style: RegisterPageStyles.pillLabel(getPillColor(context, currentMode)),
             ),
             const SizedBox(width: 6),
             // ドロップダウン矢印
@@ -75,7 +78,7 @@ class TransactionTypePill extends StatelessWidget {
               visible: enabled,
               child: Icon(
                 Icons.keyboard_arrow_down_rounded,
-                color: getPillColor(currentMode),
+                color: getPillColor(context, currentMode),
                 size: 14,
               ),
             ),
