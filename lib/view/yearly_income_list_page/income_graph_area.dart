@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 
@@ -172,7 +172,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
             height: 200,
             margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             decoration: BoxDecoration(
-              color: MyColors.tertiarySystemBackground,
+              color: context.colors.surfaceElevated2,
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Center(child: CircularProgressIndicator()),
@@ -181,7 +181,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
             height: 200,
             margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             decoration: BoxDecoration(
-              color: MyColors.tertiarySystemBackground,
+              color: context.colors.surfaceElevated2,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Center(
