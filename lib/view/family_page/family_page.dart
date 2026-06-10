@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 /// 家族機能のプレースホルダー画面（未実装）
 class FamilyPage extends StatelessWidget {
@@ -9,9 +9,9 @@ class FamilyPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyColors.systemBackground,
+      backgroundColor: context.colors.surface,
       appBar: AppBar(
-        backgroundColor: MyColors.systemBackground,
+        backgroundColor: context.colors.surface,
         centerTitle: true,
         title: Text('家族', style: AppTextStyles.pageHeaderText),
       ),
