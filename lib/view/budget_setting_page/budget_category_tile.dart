@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -298,7 +299,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
               height: 0.25,
               indent: leftsidePadding + 50,
               endIndent: leftsidePadding,
-              color: MyColors.separater,
+              color: context.colors.separator,
             ),
           ],
         ),
