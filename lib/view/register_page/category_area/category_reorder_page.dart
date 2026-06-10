@@ -9,6 +9,7 @@ import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -128,8 +129,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       duration: const Duration(milliseconds: 120),
       scale: isDragging ? 0.96 : 1.0,
       child: Container(
-        decoration: const BoxDecoration(
-          color: MyColors.secondarySystemfill,
+        decoration: BoxDecoration(
+          color: context.colors.fillSecondary,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
@@ -214,7 +215,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     final items = reorderingState.items;
 
     return Scaffold(
-      backgroundColor: MyColors.secondarySystemBackground,
+      backgroundColor: context.colors.surfaceElevated,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -429,8 +430,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
           height: 8,
           decoration: BoxDecoration(
             color: index == _currentPage
-                ? MyColors.tirtiarySystemfill
-                : MyColors.separater,
+                ? context.colors.fillTertiary
+                : context.colors.separator,
             borderRadius: BorderRadius.circular(4),
           ),
         ),

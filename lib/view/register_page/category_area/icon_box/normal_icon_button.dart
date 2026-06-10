@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/app_icon_circle_container.dart';
@@ -38,7 +38,7 @@ class NormalIconButton extends ConsumerWidget {
               height: 58 * context.screenVerticalMagnification,
               width: 58 * context.screenVerticalMagnification,
               child: AppIconCircleContainer(
-                color: MyColors.secondarySystemfill,
+                color: context.colors.fillSecondary,
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: SvgPicture.asset(

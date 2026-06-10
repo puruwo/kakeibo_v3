@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
 import 'package:kakeibo/view/component/app_pill_container.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -78,10 +78,10 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(
+                Icon(
                   Icons.account_balance_wallet_outlined,
                   size: 18,
-                  color: MyColors.label,
+                  color: context.colors.text,
                 ),
                 const SizedBox(width: 8),
                 Text('予算', style: RegisterPageStyles.placeHolder),
@@ -92,10 +92,10 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
               children: [
                 Text(selectedEnum.label, style: RegisterPageStyles.inputText),
                 const SizedBox(width: 4),
-                const Icon(
+                Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 20,
-                  color: MyColors.secondaryLabel,
+                  color: context.colors.textSecondary,
                 ),
               ],
             ),

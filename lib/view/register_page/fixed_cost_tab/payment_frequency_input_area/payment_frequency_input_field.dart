@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -59,17 +59,17 @@ class _PaymentFrequencyInputFieldState
         height: InputPageWidgetSize.pillHeight,
         padding: const EdgeInsets.fromLTRB(16, 8, 20, 8),
         decoration: BoxDecoration(
-          color: MyColors.secondarySystemfill,
+          color: context.colors.fillSecondary,
           borderRadius: BorderRadius.circular(50),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.autorenew_rounded,
               size: 18,
-              color: MyColors.label,
+              color: context.colors.text,
             ),
             const SizedBox(width: 8),
             Text('頻度', style: RegisterPageStyles.placeHolder),
