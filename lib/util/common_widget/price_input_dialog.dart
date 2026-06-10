@@ -115,14 +115,14 @@ class _PriceInputDialog extends ConsumerState<PriceInputDialog> {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                    color: MyColors.transparent,
+                    color: Colors.transparent,
                   ),
                 ),
                 // 入力時の境界線
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: const BorderSide(
-                    color: MyColors.transparent,
+                    color: Colors.transparent,
                   ),
                 ),
               ),

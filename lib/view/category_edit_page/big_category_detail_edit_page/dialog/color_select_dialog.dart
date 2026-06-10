@@ -24,7 +24,7 @@ class ColorSelectDialog extends ConsumerStatefulWidget {
 
 class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
   //選択カラー
-  Color selectedColor = MyColors.transparent;
+  Color selectedColor = Colors.transparent;
 
   final List<Color> colorList = [
     MyColors.expenseRed,

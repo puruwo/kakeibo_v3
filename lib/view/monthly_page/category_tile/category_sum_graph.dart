@@ -82,7 +82,7 @@ class CategorySumGraph extends HookConsumerWidget {
                 width: barFrameMaxWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: MyColors.transparent,
+                  color: Colors.transparent,
                 ),
               ),
               // バーの中身

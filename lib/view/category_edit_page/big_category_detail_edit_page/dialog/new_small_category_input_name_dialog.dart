@@ -106,12 +106,12 @@ class _NewSmallCategoryInputNameDialog
                 // 何もしていない時の境界線
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: MyColors.transparent),
+                  borderSide: const BorderSide(color: Colors.transparent),
                 ),
                 // 入力時の境界線
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: MyColors.transparent),
+                  borderSide: const BorderSide(color: Colors.transparent),
                 ),
               ),
 

@@ -183,13 +183,13 @@ class _IncomeCategoryAppearanceEditAreaState
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: MyColors.jet.withOpacity(0.0),
+                          color: Colors.transparent,
                         ),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: MyColors.jet.withOpacity(0.0),
+                          color: Colors.transparent,
                         ),
                       ),
                     ),

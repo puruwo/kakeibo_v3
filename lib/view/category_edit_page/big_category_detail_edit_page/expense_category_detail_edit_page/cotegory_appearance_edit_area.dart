@@ -212,14 +212,14 @@ class _BigCategoryAppearanceEditAreaState
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: MyColors.jet.withOpacity(0.0),
+                          color: Colors.transparent,
                         ),
                       ),
                       // 入力時の境界線
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: MyColors.jet.withOpacity(0.0),
+                          color: Colors.transparent,
                         ),
                       ),
                     ),
