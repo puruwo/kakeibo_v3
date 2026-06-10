@@ -6,8 +6,8 @@ import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 
 /// localImport
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/properties.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -158,7 +158,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
             height: 0.25,
             indent: leftsidePadding,
             endIndent: leftsidePadding,
-            color: MyColors.separater,
+            color: context.colors.separator,
           ),
 
           // リスト部分
@@ -339,7 +339,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                         height: 0.25,
                         indent: leftsidePadding + 50,
                         endIndent: leftsidePadding,
-                        color: MyColors.separater,
+                        color: context.colors.separator,
                       ),
                     ],
                   );
@@ -389,7 +389,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                             height: 0.25,
                             indent: leftsidePadding + 50,
                             endIndent: leftsidePadding,
-                            color: MyColors.separater,
+                            color: context.colors.separator,
                           ),
                         ],
                       ),

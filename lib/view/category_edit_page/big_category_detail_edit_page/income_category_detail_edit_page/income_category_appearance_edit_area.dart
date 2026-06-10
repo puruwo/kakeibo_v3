@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/icon_select_dialog.dart';
@@ -68,7 +69,7 @@ class _IncomeCategoryAppearanceEditAreaState
           child: Container(
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
-              color: MyColors.quarternarySystemfill,
+              color: context.colors.fillQuaternary,
               borderRadius: BorderRadius.circular(18),
             ),
             height: 135,
@@ -134,7 +135,7 @@ class _IncomeCategoryAppearanceEditAreaState
                     decoration: InputDecoration(
                       isDense: true,
                       filled: true,
-                      fillColor: MyColors.secondarySystemfill,
+                      fillColor: context.colors.fillSecondary,
                       hintText: "カテゴリー名を入力",
                       hintStyle: AppTextStyles.listTileTextFieldHint,
                       contentPadding: const EdgeInsets.only(
@@ -151,8 +152,8 @@ class _IncomeCategoryAppearanceEditAreaState
                             Container(
                               width: 20,
                               height: 20,
-                              decoration: const BoxDecoration(
-                                color: MyColors.systemfill,
+                              decoration: BoxDecoration(
+                                color: context.colors.fill,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -233,7 +234,7 @@ class _IncomeCategoryAppearanceEditAreaState
             child: Container(
               height: 42,
               decoration: BoxDecoration(
-                color: MyColors.quarternarySystemfill,
+                color: context.colors.fillQuaternary,
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Row(

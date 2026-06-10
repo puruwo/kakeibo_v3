@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // LocalImport
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/add_complete_big_category_detail_button.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/cotegory_appearance_edit_area.dart';
@@ -51,7 +52,7 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
       child: Scaffold(
-        backgroundColor: MyColors.secondarySystemBackground,
+        backgroundColor: context.colors.surfaceElevated,
 
         // ヘッダー
         appBar: AppBar(

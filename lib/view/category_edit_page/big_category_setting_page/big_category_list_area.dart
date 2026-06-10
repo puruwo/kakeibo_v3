@@ -9,6 +9,7 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 /// localImport
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
@@ -96,7 +97,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                   height: 0.25,
                   indent: leftsidePadding,
                   endIndent: leftsidePadding,
-                  color: MyColors.separater,
+                  color: context.colors.separator,
                 ),
 
                 // リスト部分
@@ -197,7 +198,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                 height: 0.25,
                                 indent: leftsidePadding + 50,
                                 endIndent: leftsidePadding,
-                                color: MyColors.separater,
+                                color: context.colors.separator,
                               ),
                             ],
                           ),
@@ -252,7 +253,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                   height: 0.25,
                                   indent: leftsidePadding + 50,
                                   endIndent: leftsidePadding,
-                                  color: MyColors.separater,
+                                  color: context.colors.separator,
                                 ),
                               ],
                             ),
@@ -325,7 +326,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                   height: 0.25,
                   indent: leftsidePadding,
                   endIndent: leftsidePadding,
-                  color: MyColors.separater,
+                  color: context.colors.separator,
                 ),
 
                 // リスト部分
@@ -427,7 +428,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                 height: 0.25,
                                 indent: leftsidePadding + 50,
                                 endIndent: leftsidePadding,
-                                color: MyColors.separater,
+                                color: context.colors.separator,
                               ),
                             ],
                           ),
@@ -484,7 +485,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                   height: 0.25,
                                   indent: leftsidePadding + 50,
                                   endIndent: leftsidePadding,
-                                  color: MyColors.separater,
+                                  color: context.colors.separator,
                                 ),
                               ],
                             ),
@@ -552,7 +553,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                   height: 0.25,
                   indent: leftsidePadding,
                   endIndent: leftsidePadding,
-                  color: MyColors.separater,
+                  color: context.colors.separator,
                 ),
 
                 // リスト部分
@@ -640,7 +641,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                 height: 0.25,
                                 indent: leftsidePadding + 50,
                                 endIndent: leftsidePadding,
-                                color: MyColors.separater,
+                                color: context.colors.separator,
                               ),
                             ],
                           ),
@@ -696,7 +697,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                   height: 0.25,
                                   indent: leftsidePadding + 50,
                                   endIndent: leftsidePadding,
-                                  color: MyColors.separater,
+                                  color: context.colors.separator,
                                 ),
                               ],
                             ),

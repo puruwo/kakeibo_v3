@@ -4,6 +4,7 @@ import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
@@ -43,7 +44,7 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                 context: context,
                 builder: (BuildContext dialogContext) {
                   return AlertDialog(
-                    backgroundColor: MyColors.secondarySystemBackground,
+                    backgroundColor: context.colors.surfaceElevated,
                     title: const Text(
                       'カテゴリーを削除しますか？',
                       style: TextStyle(color: MyColors.white),

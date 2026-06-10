@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -65,7 +65,7 @@ class _NewSmallCategoryInputNameDialog
               // テキストの揃え(左右)
               textAlign: TextAlign.center,
               // カーソルの色
-              cursorColor: MyColors.themeColor,
+              cursorColor: context.colors.primary,
               // カーソルの先の太さ
               cursorWidth: 2,
               // 入力するテキストのstyle
@@ -137,7 +137,7 @@ class _NewSmallCategoryInputNameDialog
                     Navigator.of(context).pop();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: MyColors.buttonSecondary,
+                    backgroundColor: context.colors.fill,
                   ),
                   child: Text(
                     'キャンセル',
