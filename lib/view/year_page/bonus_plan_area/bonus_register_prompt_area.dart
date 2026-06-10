@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
@@ -28,10 +28,10 @@ class BonusRegisterPromptArea extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.savings_rounded,
               size: 32,
-              color: MyColors.secondaryLabel,
+              color: context.colors.textSecondary,
             ),
             const SizedBox(height: 8),
             Text(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
@@ -160,7 +161,7 @@ class _YearPageState extends ConsumerState<YearPage> {
           ),
         ],
       ),
-      backgroundColor: MyColors.secondarySystemBackground,
+      backgroundColor: context.colors.surfaceElevated,
       // ローディング → コンテンツの切り替えをフェードで行う
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),

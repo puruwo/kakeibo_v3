@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show NumberFormat;
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/graph_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
 
 /// 生活収支グラフのツールチップ。
@@ -21,7 +21,7 @@ class AnnualBalanceTooltip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isSurplus = value.savings >= 0;
-    final savingsColor = isSurplus ? MyColors.incomeEmerald : MyColors.pink;
+    final savingsColor = isSurplus ? context.colors.income : context.colors.expense;
 
     return GestureDetector(
       onTap: onTap,
@@ -47,9 +47,9 @@ class AnnualBalanceTooltip extends StatelessWidget {
             const SizedBox(height: 6),
             const Divider(height: 1, color: Colors.white24),
             const SizedBox(height: 6),
-            _row(label: '収入', amount: value.monthlyIncome, color: MyColors.incomeEmerald),
+            _row(label: '収入', amount: value.monthlyIncome, color: context.colors.income),
             const SizedBox(height: 2),
-            _row(label: '支出', amount: value.monthlyExpense, color: MyColors.pink),
+            _row(label: '支出', amount: value.monthlyExpense, color: context.colors.expense),
             const SizedBox(height: 2),
             _row(label: '収支', amount: value.savings, color: savingsColor),
           ],

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
@@ -55,10 +55,10 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.show_chart_rounded,
                         size: 32,
-                        color: MyColors.secondaryLabel,
+                        color: context.colors.textSecondary,
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -178,7 +178,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                 width: isBuilt ? expenseBar : barInitialWidth,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: MyColors.pink,
+                                  color: context.colors.expense,
                                 ),
                                 duration: const Duration(milliseconds: 500),
                               )
@@ -209,10 +209,10 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                 '総収入',
                                 style: AppTextStyles.appCardTitleLabel,
                               ),
-                              const Icon(
+                              Icon(
                                 size: 12,
                                 Icons.arrow_forward_ios_rounded,
-                                color: MyColors.secondaryLabel,
+                                color: context.colors.textSecondary,
                               ),
                               const SizedBox(width: 8),
                               yearlyBalanceValue.yearlyBalanceType !=
@@ -240,7 +240,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                 width: isBuilt ? incomeBar : barInitialWidth,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
-                                  color: MyColors.incomeEmerald,
+                                  color: context.colors.income,
                                 ),
                                 duration: const Duration(milliseconds: 500),
                               )
@@ -248,10 +248,10 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
 
                         const SizedBox(height: 12.0),
 
-                        const Divider(
+                        Divider(
                           thickness: 1.0,
                           height: 4.0,
-                          color: MyColors.separater,
+                          color: context.colors.separator,
                         ),
 
                         const SizedBox(height: 4),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 /// localImport
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_list_area.dart';
@@ -66,7 +67,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
-        backgroundColor: MyColors.secondarySystemBackground,
+        backgroundColor: context.colors.surfaceElevated,
         // ヘッダー
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -110,7 +111,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                             width: 40,
                             height: 4,
                             decoration: BoxDecoration(
-                              color: MyColors.barHandler,
+                              color: context.colors.handle,
                               borderRadius: BorderRadius.circular(2),
                             ),
                           ),
@@ -120,8 +121,8 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                     Expanded(
                       child: Container(
                         // 背景色 & 角丸
-                        decoration: const BoxDecoration(
-                          color: MyColors.quarternarySystemfillOpaque,
+                        decoration: BoxDecoration(
+                          color: context.colors.fillOpaque,
                           borderRadius: BorderRadius.vertical(
                             top: Radius.circular(24),
                           ),

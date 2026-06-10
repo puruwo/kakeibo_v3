@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 enum YearlyBalanceBarGraphStatus { underBudget, overBudget, noBudget }
@@ -67,7 +67,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
                 width: barFrameWidth * screenHorizontalMagnification,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: MyColors.secondarySystemfill,
+                  color: context.colors.fillSecondary,
                 ),
               ),
               // バーの中身
@@ -78,7 +78,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
                     : barInitialWidth,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: MyColors.themeColor,
+                  color: context.colors.primary,
                 ),
                 duration: const Duration(milliseconds: 500),
               ),
@@ -97,7 +97,7 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
                 width: barFrameWidth * screenHorizontalMagnification,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: MyColors.themeColor,
+                  color: context.colors.primary,
                 ),
                 duration: const Duration(milliseconds: 500),
               ),

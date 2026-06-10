@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/parts/annual_balance_chart_painter.dart';
@@ -152,9 +153,9 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                             colors: [
-                              MyColors.quarternarySystemfillOpaque,
-                              MyColors.quarternarySystemfillOpaque,
-                              MyColors.quarternarySystemfillOpaque
+                              context.colors.fillOpaque,
+                              context.colors.fillOpaque,
+                              context.colors.fillOpaque
                                   .withValues(alpha: 0.0),
                             ],
                             stops: const [0.0, 0.6, 1.0],
