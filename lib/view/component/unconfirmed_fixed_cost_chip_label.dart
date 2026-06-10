@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
 class UnconfirmedFixedCostChipLabel extends StatelessWidget {
@@ -20,10 +19,10 @@ class UnconfirmedFixedCostChipLabel extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(
+          Icon(
             Icons.show_chart,
             size: 12,
-            color: MyColors.themeColor,
+            color: context.colors.primary,
           ),
           const SizedBox(width: 2),
           Text(

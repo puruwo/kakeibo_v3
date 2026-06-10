@@ -60,10 +60,10 @@ Future<void> showMenuDialog(
                       isLast: i == items.length - 1,
                     ),
                     if (i != items.length - 1)
-                      const Divider(
+                      Divider(
                         height: 1,
                         thickness: 1,
-                        color: MyColors.separater,
+                        color: context.colors.separator,
                       ),
                   ],
                 ],
