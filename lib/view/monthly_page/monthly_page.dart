@@ -291,8 +291,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                               },
                               icon: SvgPicture.asset(
                                 'assets/images/ui_icon_edit.svg',
-                                colorFilter: const ColorFilter.mode(
-                                  MyColors.white,
+                                colorFilter: ColorFilter.mode(
+                                  context.colors.text,
                                   BlendMode.srcIn,
                                 ),
                                 width: 15,

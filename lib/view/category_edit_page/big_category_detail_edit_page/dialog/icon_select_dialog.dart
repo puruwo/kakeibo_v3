@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/model/assets_conecter/category_handler.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -75,7 +75,7 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
                     onTap: () {
                       urlSelectFunction(url);
                     },
-                    child: iconWidget(url, iconPath));
+                    child: iconWidget(url, iconPath, context.colors.text));
               }),
             ),
             Row(
@@ -88,7 +88,7 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
                     onTap: () {
                       urlSelectFunction(url);
                     },
-                    child: iconWidget(url, iconPath));
+                    child: iconWidget(url, iconPath, context.colors.text));
               }),
             ),
           ],
@@ -114,7 +114,7 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
   }
 }
 
-Widget iconWidget(String url, String? selectedUrl) {
+Widget iconWidget(String url, String? selectedUrl, Color iconColor) {
   // 選択非選択の判定
   final isSelected = (url == selectedUrl);
 
@@ -126,7 +126,7 @@ Widget iconWidget(String url, String? selectedUrl) {
             height: 35,
             width: 35,
             child: CategoryHandler()
-                .iconWidget(url, MyColors.white, width: 15, height: 15),
+                .iconWidget(url, iconColor, width: 15, height: 15),
           ),
         )
       // 非選択時
@@ -136,7 +136,7 @@ Widget iconWidget(String url, String? selectedUrl) {
             height: 35,
             width: 35,
             child: CategoryHandler()
-                .iconWidget(url, MyColors.white, width: 15, height: 15),
+                .iconWidget(url, iconColor, width: 15, height: 15),
           ),
         );
 }

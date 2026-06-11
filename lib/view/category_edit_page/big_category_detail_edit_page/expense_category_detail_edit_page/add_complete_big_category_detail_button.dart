@@ -3,7 +3,7 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
@@ -33,10 +33,10 @@ class AddCompleteBigCategoryDetailButton extends ConsumerWidget
     late int addedBigCategoryId;
 
     return IconButton(
-        icon: const Icon(
+        icon: Icon(
           //完了チェックマーク
           Icons.done_rounded,
-          color: MyColors.white,
+          color: context.colors.text,
         ),
         onPressed: () async {
           // 編集前のbudgetListを取得する

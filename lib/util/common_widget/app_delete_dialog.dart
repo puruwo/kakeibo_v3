@@ -119,7 +119,7 @@ class _DialogButton extends StatelessWidget {
             child: Text(
               label,
               style: AppTextStyles.mainButtonText.copyWith(
-                color: isPrimary ? MyColors.white : MyColors.white,
+                color: isPrimary ? context.colors.onPrimary : context.colors.onPrimary,
               ),
             ),
           ),

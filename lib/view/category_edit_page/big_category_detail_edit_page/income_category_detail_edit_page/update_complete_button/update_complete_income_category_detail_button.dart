@@ -3,7 +3,6 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/theme/category_palette.dart';
@@ -37,9 +36,9 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
         // 削除ボタン（id=1, id=2 は表示しない）
         if (bigId != 1 && bigId != 2)
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.delete_outline_rounded,
-              color: MyColors.white,
+              color: context.colors.text,
             ),
             onPressed: () async {
               final shouldDelete = await showDialog<bool>(
@@ -47,13 +46,13 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                 builder: (BuildContext dialogContext) {
                   return AlertDialog(
                     backgroundColor: context.colors.surfaceElevated,
-                    title: const Text(
+                    title: Text(
                       'カテゴリーを削除しますか？',
-                      style: TextStyle(color: MyColors.white),
+                      style: TextStyle(color: context.colors.text),
                     ),
-                    content: const Text(
+                    content: Text(
                       'このカテゴリーに紐づく項目および収入レコードがすべて削除されます。',
-                      style: TextStyle(color: MyColors.white),
+                      style: TextStyle(color: context.colors.text),
                     ),
                     actions: [
                       TextButton(
@@ -109,9 +108,9 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
 
         // 完了ボタン
         IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.done_rounded,
-            color: MyColors.white,
+            color: context.colors.text,
           ),
           onPressed: () async {
             execute(

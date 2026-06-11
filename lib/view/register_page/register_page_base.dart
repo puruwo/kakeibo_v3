@@ -151,10 +151,10 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
               _clearInputState();
               Navigator.of(context, rootNavigator: true).pop();
             },
-            icon: const Icon(
+            icon: Icon(
               //バッテン
               Icons.close_rounded,
-              color: MyColors.white,
+              color: context.colors.text,
             ),
           ),
 
@@ -163,9 +163,9 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
               ? [
                   IconButton(
                     onPressed: () => _showDeleteConfirmDialog(context),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.delete_outline,
-                      color: MyColors.white,
+                      color: context.colors.text,
                     ),
                   ),
                 ]

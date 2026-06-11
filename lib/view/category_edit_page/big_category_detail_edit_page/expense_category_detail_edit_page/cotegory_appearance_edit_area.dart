@@ -3,7 +3,6 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -198,10 +197,10 @@ class _BigCategoryAppearanceEditAreaState
                                     )
                                     .updateState(true),
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.clear,
                                 size: 14,
-                                color: MyColors.white,
+                                color: context.colors.text,
                               ),
                             ),
                           ],

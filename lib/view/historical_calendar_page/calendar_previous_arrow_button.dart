@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
 
 class CalendarPreviousArrowButton extends ConsumerWidget {
@@ -18,7 +18,7 @@ class CalendarPreviousArrowButton extends ConsumerWidget {
       },
       iconSize: 15,
       icon: const Icon(Icons.arrow_back_ios_rounded),
-      color: MyColors.white,
+      color: context.colors.text,
     );
   }
 }

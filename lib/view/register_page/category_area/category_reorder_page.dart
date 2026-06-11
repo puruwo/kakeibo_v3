@@ -223,7 +223,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
         title: Text('アイコンの並び替え', style: AppTextStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close, color: MyColors.white),
+          icon: Icon(Icons.close, color: context.colors.text),
         ),
       ),
       body: SafeArea(

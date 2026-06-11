@@ -180,12 +180,12 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                       ),
 
                                       // 進むアイコン
-                                      const Padding(
-                                        padding: EdgeInsets.all(12.5),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12.5),
                                         child: Icon(
                                           Icons.arrow_forward_ios_rounded,
                                           size: 18,
-                                          color: MyColors.white,
+                                          color: context.colors.text,
                                         ),
                                       ),
                                     ],
@@ -410,12 +410,12 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                       ),
 
                                       // 進むアイコン
-                                      const Padding(
-                                        padding: EdgeInsets.all(12.5),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12.5),
                                         child: Icon(
                                           Icons.arrow_forward_ios_rounded,
                                           size: 18,
-                                          color: MyColors.white,
+                                          color: context.colors.text,
                                         ),
                                       ),
                                     ],
@@ -623,12 +623,12 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                       ),
 
                                       // 進むアイコン
-                                      const Padding(
-                                        padding: EdgeInsets.all(12.5),
+                                      Padding(
+                                        padding: const EdgeInsets.all(12.5),
                                         child: Icon(
                                           Icons.arrow_forward_ios_rounded,
                                           size: 18,
-                                          color: MyColors.white,
+                                          color: context.colors.text,
                                         ),
                                       ),
                                     ],

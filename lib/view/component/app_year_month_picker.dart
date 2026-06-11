@@ -411,7 +411,7 @@ class _AppYearMonthPickerOverlayState
             icon: Icon(
               Icons.chevron_left_rounded,
               color: _canShiftPrevious
-                  ? MyColors.white
+                  ? context.colors.text
                   : context.colors.textSecondary,
             ),
             onPressed: _canShiftPrevious ? _onShiftPrevious : null,
@@ -436,7 +436,7 @@ class _AppYearMonthPickerOverlayState
             icon: Icon(
               Icons.chevron_right_rounded,
               color: _canShiftNext
-                  ? MyColors.white
+                  ? context.colors.text
                   : context.colors.textSecondary,
             ),
             onPressed: _canShiftNext ? _onShiftNext : null,
@@ -569,7 +569,7 @@ class _AppYearMonthPickerOverlayState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.check, color: MyColors.white, size: 18),
+                Icon(Icons.check, color: context.colors.onPrimary, size: 18),
                 const SizedBox(width: 4),
                 Text('適用', style: AppTextStyles.mainButtonText),
               ],

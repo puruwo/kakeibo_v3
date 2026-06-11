@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
@@ -177,7 +176,7 @@ class _FoundationState extends ConsumerState<Foundation>
           children: [
             Icon(
               isSelected ? activeIcon : icon,
-              color: isSelected ? MyColors.white : context.colors.textSecondary,
+              color: isSelected ? context.colors.text : context.colors.textSecondary,
               size: 24,
             ),
             const SizedBox(height: 2),
@@ -206,9 +205,9 @@ class _FoundationState extends ConsumerState<Foundation>
               color: context.colors.primary,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.add_rounded,
-              color: MyColors.white,
+              color: context.colors.onPrimary,
               size: 26,
             ),
           ),

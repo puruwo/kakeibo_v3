@@ -78,7 +78,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
                 Navigator.of(context, rootNavigator: true).pop();
               }
             },
-            icon: const Icon(Icons.close, color: MyColors.white),
+            icon: Icon(Icons.close, color: context.colors.text),
           ),
 
           // タブバー（編集モード中はIgnorePointerでタップを遮断し半透明表示）

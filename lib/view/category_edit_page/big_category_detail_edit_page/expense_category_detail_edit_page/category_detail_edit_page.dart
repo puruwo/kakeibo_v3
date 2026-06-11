@@ -82,9 +82,9 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
                 );
               }
             },
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_rounded,
-              color: MyColors.white,
+              color: context.colors.text,
             ),
           ),
           //ヘッダー右のアイコンボタン
