@@ -34,6 +34,7 @@ import 'package:kakeibo/repository/month_basis_repository.dart';
 import 'package:kakeibo/repository/small_category_Tile_repository.dart';
 import 'package:kakeibo/repository/expense_small_category_repository.dart';
 import 'package:kakeibo/repository/year_basis_repository.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/foundation.dart';
 
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
@@ -113,18 +114,22 @@ void main() {
         },
         home: const Foundation(),
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark().copyWith(
-          appBarTheme: const AppBarTheme(
-            scrolledUnderElevation: 0,
-            elevation: 0,
-          ),
+        // ライト用テーマ。細部は後回しで、まずは ThemeData.light() ベースに
+        // AppColors.light を ThemeExtension として登録するのみ。
+        // 当面 themeMode.dark 固定のため、このテーマは実際には使われない。
+        theme: ThemeData.light().copyWith(
+          extensions: const [AppColors.light],
         ),
+        // 当面ダーク固定。移行完了後に ThemeMode.system へ変える。
         themeMode: ThemeMode.dark,
+        // 既存のダークテーマ設定（AppBarのelevation上書き等）は保持したまま、
+        // AppColors.dark を ThemeExtension として追加する。
         darkTheme: ThemeData.dark().copyWith(
           appBarTheme: const AppBarTheme(
             scrolledUnderElevation: 0,
             elevation: 0,
           ),
+          extensions: const [AppColors.dark],
         ),
       ),
     ),
