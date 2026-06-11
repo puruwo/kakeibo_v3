@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/app_fab_stack.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
@@ -51,49 +51,28 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             );
           }
 
-          return Column(
-            children: [
-              // カテゴリーカードのリスト（残りのスペースを全て使う）
-              Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.fromLTRB(
-                    16,
-                    MediaQuery.of(context).padding.top + kToolbarHeight + 16,
-                    16,
-                    16,
-                  ),
-                  itemCount: fixedCostList.categoryGroups.length,
-                  itemBuilder: (context, index) {
-                    return FixedCostCategoryCardsArea(
-                      group: fixedCostList.categoryGroups[index],
-                    );
-                  },
-                ),
+          return AppFabStack(
+            fabLabel: '固定費を追加',
+            onFabTap: () {
+              showAppModalBottomSheet(
+                context,
+                child: const RegisaterPageBase.addFixedCost(),
+              );
+            },
+            child: ListView.builder(
+              padding: EdgeInsets.fromLTRB(
+                16,
+                MediaQuery.of(context).padding.top + kToolbarHeight + 16,
+                16,
+                fabBottomOf(context) + 46,
               ),
-
-              const Divider(height: 1),
-
-              // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
-              SafeArea(
-                top: false,
-                child: Container(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                  child: SizedBox(
-                    width: double.infinity,
-                    child: MainButton(
-                      buttonType: ButtonColorType.main,
-                      buttonText: '固定費を追加',
-                      onPressed: () {
-                        showAppModalBottomSheet(
-                          context,
-                          child: const RegisaterPageBase.addFixedCost(),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              itemCount: fixedCostList.categoryGroups.length,
+              itemBuilder: (context, index) {
+                return FixedCostCategoryCardsArea(
+                  group: fixedCostList.categoryGroups[index],
+                );
+              },
+            ),
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),

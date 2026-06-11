@@ -99,7 +99,8 @@ class AnnualBalanceChartLayout {
 }
 
 /// データ内容に応じて動的に変わるバー領域の縦サイズ。
-/// 全月黒字なら下半分、全月赤字なら上半分を詰めて月ラベルを上に寄せる。
+/// 上半分（黒字バー用）は常に確保し「収支」ラベルが「0万」グリッドと重ならないようにする。
+/// 下半分（赤字バー用）は赤字月が無いとき詰めて月ラベルを上に寄せる。
 class AnnualBalanceChartDimensions {
   const AnnualBalanceChartDimensions({
     required this.barAreaTopHeight,
@@ -115,22 +116,17 @@ class AnnualBalanceChartDimensions {
   double get totalHeight =>
       monthLabelTop + AnnualBalanceChartLayout.monthLabelAreaHeight;
 
-  /// 未来月を除いた収支から黒字/赤字の有無を判定して寸法を算出する。
+  /// 未来月を除いた収支から赤字の有無を判定して寸法を算出する。
   factory AnnualBalanceChartDimensions.from(
     List<MonthlyBalanceValue> values,
   ) {
-    bool hasSurplus = false;
     bool hasDeficit = false;
     for (final v in values) {
       if (v.monthlyBalanceType == MonthlyBalanceType.future) continue;
-      if (v.savings > 0) hasSurplus = true;
       if (v.savings < 0) hasDeficit = true;
     }
-    // 全0の場合は上半分を残して最低限のバー領域を確保する
-    final keepTop = hasSurplus || !hasDeficit;
     return AnnualBalanceChartDimensions(
-      barAreaTopHeight:
-          keepTop ? AnnualBalanceChartLayout.barAreaHeight / 2 : 0.0,
+      barAreaTopHeight: AnnualBalanceChartLayout.barAreaHeight / 2,
       barAreaBottomHeight:
           hasDeficit ? AnnualBalanceChartLayout.barAreaHeight / 2 : 0.0,
     );

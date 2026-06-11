@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
@@ -9,6 +9,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
@@ -55,10 +56,10 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(
+                      const Icon(
                         Icons.show_chart_rounded,
                         size: 32,
-                        color: context.colors.textSecondary,
+                        color: MyColors.secondaryLabel,
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -93,8 +94,8 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
               builder: (context, constraints) {
                 // =============グラフサイズ計算================
                 /// 画面の横幅を取得し、棒グラフの幅を設定
-                /// 横幅の70%を大きい方の棒グラフの幅に設定
-                final double largerBarFrameWidth = constraints.maxWidth * 0.7;
+                /// カードの左右パディング(16*2)を除いた横幅いっぱいを大きい方の棒グラフ幅とする
+                final double largerBarFrameWidth = constraints.maxWidth - 32;
 
                 //横棒グラフの初期値
                 double barInitialWidth = 0;
@@ -135,6 +136,28 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                 }
                 // =============グラフサイズ計算ここまで================
 
+                // 収入・支出それぞれの記録有無
+                final bool hasExpense =
+                    yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.surplus ||
+                        yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.deficit ||
+                        yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.noIncome;
+                final bool hasIncome =
+                    yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.surplus ||
+                        yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.deficit ||
+                        yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.noExpense;
+                // バーと残金行は両方記録がある場合のみ表示
+                final bool showBars =
+                    yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.surplus ||
+                        yearlyBalanceValue.yearlyBalanceType ==
+                            YearlyBalanceType.deficit;
+
                 return CardContainer(
                   width: double.infinity,
                   child: Padding(
@@ -145,131 +168,261 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                       children: [
                         const SizedBox(height: 8),
 
-                        // 支出
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
-                          children: [
-                            Text(
-                              '総支出  ',
-                              style: AppTextStyles.appCardTitleLabel,
-                            ),
-                            yearlyBalanceValue.yearlyBalanceType !=
-                                    YearlyBalanceType.noExpense
-                                ? Text(
-                                    yenmarkFormattedPriceGetter(
-                                      yearlyBalanceValue.yearlyExpense,
+                        // ========== 支出行 ==========
+                        if (hasExpense)
+                          // データあり行
+                          AppInkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const YearlyExpenseListPage(),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: MyColors.pink,
+                                      ),
                                     ),
-                                    style: AppTextStyles.listCardPriceLabel,
-                                  )
-                                : Text(
-                                    'まだ記録がありません',
-                                    style: AppTextStyles.listCardSecondaryTitle,
+                                    const SizedBox(width: 8),
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: '総支出',
+                                            style: AppTextStyles
+                                                .appCardPrimaryTitleLabel,
+                                          ),
+                                          const WidgetSpan(
+                                            alignment:
+                                                PlaceholderAlignment.middle,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 4),
+                                              child: Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                size: 12,
+                                                color: MyColors.secondaryLabel,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  yenmarkFormattedPriceGetter(
+                                    yearlyBalanceValue.yearlyExpense,
                                   ),
-                          ],
-                        ),
-
-                        // 支出バー
-                        yearlyBalanceValue.yearlyBalanceType !=
-                                YearlyBalanceType.noExpense
-                            ? AnimatedContainer(
-                                height: 8.5,
-                                width: isBuilt ? expenseBar : barInitialWidth,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: context.colors.expense,
+                                  style: AppTextStyles.listCardPriceLabel,
                                 ),
-                                duration: const Duration(milliseconds: 500),
-                              )
-                            : Container(),
-
-                        const SizedBox(height: 12.0),
-
-                        AppInkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: () {
-                            final dateScope = ref
-                                .read(homeDateScopeEntityProvider)
-                                .value!;
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => YearlyIncomeListPage(
-                                  period: dateScope.yearPeriod,
+                              ],
+                            ),
+                          )
+                        else
+                          // CTA行（支出なし）
+                          AppInkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {
+                              showAppModalBottomSheet(
+                                context,
+                                child:
+                                    const RegisaterPageBase.addExpense(),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: MyColors.pink.withValues(alpha: 0.4),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
+                                const SizedBox(width: 8),
+                                Text(
+                                  '＋ 支出を登録する',
+                                  style: AppTextStyles.appCardPrimaryTitleLabel
+                                      .copyWith(
+                                    color: MyColors.secondaryLabel,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        const SizedBox(height: 8.0),
+
+                        // 支出バー（両方あるときのみ）
+                        if (showBars)
+                          AnimatedContainer(
+                            height: 8.5,
+                            width: isBuilt ? expenseBar : barInitialWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: MyColors.pink,
+                            ),
+                            duration: const Duration(milliseconds: 500),
+                          ),
+
+                        SizedBox(height: showBars ? 16.0 : 8.0),
+
+                        // ========== 収入行 ==========
+                        if (hasIncome)
+                          // データあり行
+                          AppInkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {
+                              final dateScope = ref
+                                  .read(homeDateScopeEntityProvider)
+                                  .value!;
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => YearlyIncomeListPage(
+                                    period: dateScope.yearPeriod,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Container(
+                                      width: 8,
+                                      height: 8,
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: MyColors.incomeEmerald,
+                                      ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text.rich(
+                                      TextSpan(
+                                        children: [
+                                          TextSpan(
+                                            text: '総収入',
+                                            style: AppTextStyles
+                                                .appCardPrimaryTitleLabel,
+                                          ),
+                                          const WidgetSpan(
+                                            alignment:
+                                                PlaceholderAlignment.middle,
+                                            child: Padding(
+                                              padding: EdgeInsets.only(left: 4),
+                                              child: Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                size: 12,
+                                                color: MyColors.secondaryLabel,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  yenmarkFormattedPriceGetter(
+                                    yearlyBalanceValue.yearlyIncome,
+                                  ),
+                                  style: AppTextStyles.listCardPriceLabel,
+                                ),
+                              ],
+                            ),
+                          )
+                        else
+                          // CTA行（収入なし）
+                          AppInkWell(
+                            borderRadius: BorderRadius.circular(8),
+                            onTap: () {
+                              showAppModalBottomSheet(
+                                context,
+                                child:
+                                    const RegisaterPageBase.addIncome(),
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: MyColors.incomeEmerald.withValues(
+                                      alpha: 0.4,
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Text(
+                                  '＋ 収入を登録する',
+                                  style: AppTextStyles.appCardPrimaryTitleLabel
+                                      .copyWith(
+                                    color: MyColors.secondaryLabel,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        const SizedBox(height: 8.0),
+
+                        // 収入バー（両方あるときのみ）
+                        if (showBars)
+                          AnimatedContainer(
+                            height: 8.5,
+                            width: isBuilt ? incomeBar : barInitialWidth,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: MyColors.incomeEmerald,
+                            ),
+                            duration: const Duration(milliseconds: 500),
+                          ),
+
+                        // 残金行（両方あるときのみ）
+                        if (showBars) ...[
+                          const SizedBox(height: 12.0),
+                          const Divider(
+                            thickness: 1.0,
+                            height: 4.0,
+                            color: MyColors.separater,
+                          ),
+                          const SizedBox(height: 4),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
                               Text(
-                                '総収入',
+                                '残金',
                                 style: AppTextStyles.appCardTitleLabel,
                               ),
-                              Icon(
-                                size: 12,
-                                Icons.arrow_forward_ios_rounded,
-                                color: context.colors.textSecondary,
+                              Text(
+                                signedYenmarkFormattedPriceGetter(
+                                  yearlyBalanceValue.savings,
+                                ),
+                                style: AppTextStyles.appCardPriceLabel,
                               ),
-                              const SizedBox(width: 8),
-                              yearlyBalanceValue.yearlyBalanceType !=
-                                      YearlyBalanceType.noIncome
-                                  ? Text(
-                                      yenmarkFormattedPriceGetter(
-                                        yearlyBalanceValue.yearlyIncome,
-                                      ),
-                                      style: AppTextStyles.listCardPriceLabel,
-                                    )
-                                  : Text(
-                                      'まだ記録がありません',
-                                      style:
-                                          AppTextStyles.listCardSecondaryTitle,
-                                    ),
                             ],
                           ),
-                        ),
-
-                        // 収入バー
-                        yearlyBalanceValue.yearlyBalanceType !=
-                                YearlyBalanceType.noIncome
-                            ? AnimatedContainer(
-                                height: 8.5,
-                                width: isBuilt ? incomeBar : barInitialWidth,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  color: context.colors.income,
-                                ),
-                                duration: const Duration(milliseconds: 500),
-                              )
-                            : Container(),
-
-                        const SizedBox(height: 12.0),
-
-                        Divider(
-                          thickness: 1.0,
-                          height: 4.0,
-                          color: context.colors.separator,
-                        ),
-
-                        const SizedBox(height: 4),
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.baseline,
-                          textBaseline: TextBaseline.alphabetic,
-                          children: [
-                            Text('残金', style: AppTextStyles.appCardTitleLabel),
-                            Text(
-                              signedYenmarkFormattedPriceGetter(
-                                yearlyBalanceValue.savings,
-                              ),
-                              style: AppTextStyles.appCardPriceLabel,
-                            ),
-                          ],
-                        ),
+                        ],
 
                         const SizedBox(height: 4),
                       ],
