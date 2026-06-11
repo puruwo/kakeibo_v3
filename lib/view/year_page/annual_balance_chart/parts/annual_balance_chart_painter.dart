@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show NumberFormat;
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/annual_balance_chart_value.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
@@ -140,11 +139,23 @@ class AnnualBalanceChartPainter extends CustomPainter {
     required this.value,
     required this.selectedMonthIndex,
     required this.dimensions,
+    required this.separator,
+    required this.income,
+    required this.expense,
   });
 
   final AnnualBalanceChartValue value;
   final int? selectedMonthIndex;
   final AnnualBalanceChartDimensions dimensions;
+
+  /// グリッド線・中央線の色（context.colors.separator を注入）
+  final Color separator;
+
+  /// 収入折れ線・黒字バーの色（context.colors.income を注入）
+  final Color income;
+
+  /// 支出折れ線・赤字バーの色（context.colors.expense を注入）
+  final Color expense;
 
   static final NumberFormat _numberFormat = NumberFormat('#,###');
 
@@ -163,7 +174,7 @@ class AnnualBalanceChartPainter extends CustomPainter {
 
     // グリッド線（Y軸ラベルはオーバーレイ painter 側で描画）
     final gridPaint = Paint()
-      ..color = MyColors.separater
+      ..color = separator
       ..strokeWidth = 1.0;
     for (final gridValue in scale.gridValues) {
       final y = _lineY(gridValue);
@@ -179,14 +190,14 @@ class AnnualBalanceChartPainter extends CustomPainter {
     // 収入ポリライン（緑）
     _drawPolyline(
       canvas,
-      color: MyColors.incomeEmerald,
+      color: income,
       getValue: (v) => v.monthlyIncome.toDouble(),
     );
 
     // 支出ポリライン（ピンク）
     _drawPolyline(
       canvas,
-      color: MyColors.pink,
+      color: expense,
       getValue: (v) => v.monthlyExpense.toDouble(),
     );
   }
@@ -253,7 +264,7 @@ class AnnualBalanceChartPainter extends CustomPainter {
 
     // 中央線
     final centerLinePaint = Paint()
-      ..color = MyColors.separater
+      ..color = separator
       ..strokeWidth = 1.0;
     canvas.drawLine(
       Offset(
@@ -289,7 +300,7 @@ class AnnualBalanceChartPainter extends CustomPainter {
 
       // バー
       final barPaint = Paint()
-        ..color = isSurplus ? MyColors.incomeEmerald : MyColors.pink
+        ..color = isSurplus ? income : expense
         ..style = PaintingStyle.fill;
       final barRect = Rect.fromLTWH(
         cx - AnnualBalanceChartLayout.barWidth / 2,

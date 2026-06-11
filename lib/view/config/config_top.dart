@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/export/export_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -34,7 +34,7 @@ class ConfigTop extends ConsumerWidget {
               width: double.infinity,
               height: 50,
               decoration: BoxDecoration(
-                color: MyColors.tirtiarySystemfill,
+                color: context.colors.fillTertiary,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/active_fixed_cost_count_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
@@ -51,7 +51,7 @@ class FixedCostManagePageButton extends ConsumerWidget {
     final activeCountAsync = ref.watch(activeFixedCostCountProvider);
 
     return AppInkWell(
-      color: MyColors.quarternarySystemfill,
+      color: context.colors.fillQuaternary,
       borderRadius: BorderRadius.circular(50.0),
       onTap: () async {
         Navigator.of(context).push(MaterialPageRoute(
@@ -82,10 +82,10 @@ class FixedCostManagePageButton extends ConsumerWidget {
                     error: (_, __) => const SizedBox.shrink(),
                   ),
                   const SizedBox(width: 8),
-                  const Icon(
+                  Icon(
                     size: 16,
                     Icons.arrow_forward_ios_rounded,
-                    color: MyColors.secondaryLabel,
+                    color: context.colors.textSecondary,
                   ),
                 ],
               ),
@@ -115,13 +115,13 @@ class FixedCostAddButton extends StatelessWidget {
         width: 46,
         height: 46,
         decoration: BoxDecoration(
-          color: MyColors.quarternarySystemfill,
+          color: context.colors.fillQuaternary,
           borderRadius: BorderRadius.circular(50.0),
         ),
-        child: const Icon(
+        child: Icon(
           size: 18,
           Icons.add_rounded,
-          color: MyColors.secondaryLabel,
+          color: context.colors.textSecondary,
         ),
       ),
     );
@@ -144,10 +144,10 @@ class FixedCostRegistrationCallToActionButton extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.repeat_rounded,
               size: 32,
-              color: MyColors.secondaryLabel,
+              color: context.colors.textSecondary,
             ),
             const SizedBox(height: 8),
             Text(

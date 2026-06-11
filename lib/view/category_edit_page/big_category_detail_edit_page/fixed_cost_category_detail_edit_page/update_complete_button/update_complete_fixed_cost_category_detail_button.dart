@@ -1,11 +1,12 @@
 // packageImport
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // LocalImport
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
@@ -28,9 +29,9 @@ class UpdateCompleteFixedCostCategoryDetailButton extends ConsumerWidget
     final usecase = ref.read(fixedCostCategoryUsecaseProvider);
 
     return IconButton(
-      icon: const Icon(
+      icon: Icon(
         Icons.done_rounded,
-        color: MyColors.white,
+        color: context.colors.text,
       ),
       onPressed: () async {
         execute(
@@ -57,14 +58,14 @@ class UpdateCompleteFixedCostCategoryDetailButton extends ConsumerWidget
             if (originalEntity.categoryName == categoryName &&
                 originalEntity.resourcePath == iconPath &&
                 originalEntity.colorCode ==
-                    MyColors().getHexFromColor(colorCode)) {
+                    ColorCode.toHex(colorCode)) {
               throw const AppException('編集がされていません');
             }
 
             final updatedEntity = originalEntity.copyWith(
               categoryName: categoryName,
               resourcePath: iconPath,
-              colorCode: MyColors().getHexFromColor(colorCode),
+              colorCode: ColorCode.toHex(colorCode),
             );
 
             await usecase.edit(

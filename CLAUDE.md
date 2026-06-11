@@ -500,9 +500,8 @@ final myDataProvider = FutureProvider<List<MyUIValue>>((ref) async {
 
 ## Testing Notes
 
-- Limited test coverage currently (2 test files)
+- Limited test coverage currently (1 test file)
 - `test/month_period_fetch_test.dart` - Tests period calculation logic
-- `test/widget_test.dart` - Basic widget test
 
 When adding tests:
 - Use `sqflite_common_ffi` for SQLite in tests (already in dev_dependencies)
@@ -533,3 +532,28 @@ flutter clean
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
 ```
+
+---
+
+## Design Tokens & Automation Pipeline
+
+詳細は `docs/kakeibo-pipeline-handoff.md` を参照（全体設計・ロードマップ・運用ルールの単一ソース）。
+
+### デザイントークン
+
+- 色の単一ソースは `design-tokens/tokens.json`。アプリからは `context.colors.<token>` を使う。運用ルールは `kakeibo-design-tokens` スキル参照
+- `lib/theme/app_colors.dart` / `lib/theme/category_palette.dart` は `tool/generate_tokens.dart` の生成物（手編集禁止）
+
+### パイプライン subagents（`.claude/agents/`）
+
+- `design-auditor` — Figma/コードのデザインドリフト監査（読み取り専用）
+- `confluence-reader` — Confluence設計 → 画面スペック構造化（読み取り専用）
+- `figma-to-impl` — Figma → Flutter実装設計（読み取り専用・実装しない）
+- `flutter-implementer` — 実装設計 → Flutter実装（analyze・コミットまで）
+- `figma-builder` — 画面スペック → Figma画面生成（C-2完了まで使用しない）
+
+### パイプライン skills（`.claude/skills/`）
+
+- `confluence-to-screenspec` — 画面スペックの変換手順と出力フォーマット（雛形）
+- `figma-to-implplan` — Figma → 実装設計の手順とトークン読み替え規則（雛形）
+- `figma-from-screenspec` — 画面スペック → Figma組み立て手順（C-2後に整備）

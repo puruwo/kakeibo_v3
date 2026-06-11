@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_color_contoroller/big_category_color_contoroller.dart';
@@ -24,25 +24,11 @@ class ColorSelectDialog extends ConsumerStatefulWidget {
 
 class _ColorSelectDialogState extends ConsumerState<ColorSelectDialog> {
   //選択カラー
-  Color selectedColor = MyColors.transparent;
+  Color selectedColor = Colors.transparent;
 
-  final List<Color> colorList = [
-    MyColors.expenseRed,
-    MyColors.expensePink,
-    MyColors.expenseBlue,
-    MyColors.expenseMint,
-    MyColors.expenseYellow,
-    MyColors.expenseGiantsOrange,
-    MyColors.expenseBrown,
-    MyColors.expensePurple,
-  ];
+  final List<Color> colorList = CategoryPalette.expenseSwatches;
 
-  final List<Color> incomeColorList = [
-    MyColors.incomeEmerald,
-    MyColors.incomeGreen,
-    MyColors.incomeDeepGreen,
-    MyColors.incomeMintGreen,
-  ];
+  final List<Color> incomeColorList = CategoryPalette.incomeSwatches;
 
   @override
   Widget build(BuildContext context) {

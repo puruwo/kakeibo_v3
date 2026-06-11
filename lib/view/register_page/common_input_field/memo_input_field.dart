@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
@@ -62,7 +62,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
         height: InputPageWidgetSize.pillHeight,
         width: InputPageWidgetSize.pillWidth,
         decoration: BoxDecoration(
-          color: MyColors.secondarySystemfill,
+          color: context.colors.fillSecondary,
           borderRadius: BorderRadius.circular(50),
         ),
         child: Padding(
@@ -74,10 +74,10 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
               children: [
                 // アイコン表示（オプション）
                 if (widget.showIcon) ...[
-                  const Icon(
+                  Icon(
                     Icons.notes_rounded,
                     size: 18,
-                    color: MyColors.label,
+                    color: context.colors.text,
                   ),
                   const SizedBox(width: 6),
                 ],
@@ -96,7 +96,7 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
                     autofocus: false,
                     textAlignVertical: TextAlignVertical.center,
                     textAlign: TextAlign.right,
-                    cursorColor: MyColors.themeColor,
+                    cursorColor: context.colors.primary,
                     cursorWidth: 2,
                     style: RegisterPageStyles.inputText,
                     minLines: 1,

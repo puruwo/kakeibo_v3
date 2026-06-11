@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
@@ -9,6 +10,7 @@ import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -128,8 +130,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       duration: const Duration(milliseconds: 120),
       scale: isDragging ? 0.96 : 1.0,
       child: Container(
-        decoration: const BoxDecoration(
-          color: MyColors.secondarySystemfill,
+        decoration: BoxDecoration(
+          color: context.colors.fillSecondary,
           shape: BoxShape.circle,
         ),
         alignment: Alignment.center,
@@ -140,7 +142,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
 
   /// アイコンウィジェットを構築（アニメーション付き）
   Widget animatedIcon(ReorderingCategoryItem item) {
-    final color = MyColors().getColorFromHex(item.colorCode);
+    final color = ColorCode.toColor(item.colorCode);
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 180),
@@ -214,14 +216,14 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     final items = reorderingState.items;
 
     return Scaffold(
-      backgroundColor: MyColors.secondarySystemBackground,
+      backgroundColor: context.colors.surfaceElevated,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         title: Text('アイコンの並び替え', style: AppTextStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: const Icon(Icons.close, color: MyColors.white),
+          icon: Icon(Icons.close, color: context.colors.text),
         ),
       ),
       body: SafeArea(
@@ -429,8 +431,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
           height: 8,
           decoration: BoxDecoration(
             color: index == _currentPage
-                ? MyColors.tirtiarySystemfill
-                : MyColors.separater,
+                ? context.colors.fillTertiary
+                : context.colors.separator,
             borderRadius: BorderRadius.circular(4),
           ),
         ),

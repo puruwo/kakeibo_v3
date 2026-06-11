@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 
 class MonthlyIncomeGraph extends HookConsumerWidget {
@@ -45,7 +45,7 @@ class MonthlyIncomeGraph extends HookConsumerWidget {
                   ? allCategoryCardEntity.incomeCategoryRatioList[i] *
                       maxGraphWidth
                   : 0,
-              color: MyColors().getColorFromHex(
+              color: ColorCode.toColor(
                   allCategoryCardEntity.incomeCategoryColorList[i]),
               duration: const Duration(milliseconds: 500),
             );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
@@ -79,14 +81,14 @@ class ExpandedCategoryTile extends ConsumerWidget {
                   ),
 
                   // 区切り線
-                  const Divider(
+                  Divider(
                     // ウィジェット自体の高さ
                     height: 16,
                     // 線の太さ
                     thickness: 1,
                     indent: 0,
                     endIndent: 0,
-                    color: MyColors.separater,
+                    color: context.colors.separator,
                   ),
 
                   // 小カテゴリーのリスト
@@ -131,8 +133,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(5),
-                                          color: MyColors()
-                                              .getColorFromHex(colorCode),
+                                          color: ColorCode.toColor(colorCode),
                                         )),
                                   ),
                                 ),

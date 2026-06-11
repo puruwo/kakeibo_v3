@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 /// ページ全体に被せる共通ローディング表示。
 ///
@@ -12,9 +12,9 @@ class PageLoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const ColoredBox(
-      color: MyColors.secondarySystemBackground,
-      child: Center(
+    return ColoredBox(
+      color: context.colors.surfaceElevated,
+      child: const Center(
         child: CircularProgressIndicator(),
       ),
     );

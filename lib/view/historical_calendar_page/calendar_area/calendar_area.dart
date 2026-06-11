@@ -8,8 +8,8 @@ import 'package:logger/logger.dart';
 
 /// LocalImport
 import 'package:kakeibo/util/screen_size_func.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
@@ -140,7 +140,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
                         thickness: 0.25,
                         indent: 12 * screenHorizontalMagnification,
                         endIndent: 12 * screenHorizontalMagnification,
-                        color: MyColors.separater,
+                        color: context.colors.separator,
                       ),
 
                       // カレンダー中身
@@ -161,7 +161,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
                               thickness: 0.25,
                               indent: 12 * screenHorizontalMagnification,
                               endIndent: 12 * screenHorizontalMagnification,
-                              color: MyColors.separater,
+                              color: context.colors.separator,
                             ),
                           ],
                         );

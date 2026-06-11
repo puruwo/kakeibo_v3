@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/icon_select_dialog.dart';
@@ -50,7 +51,7 @@ class _BigCategoryAppearanceEditAreaState
             initialItem.bigCategoryName;
         ref
             .read(bigCategroyColorControllerNotifierProvider.notifier)
-            .initState(MyColors().getColorFromHex(initialItem.colorCode));
+            .initState(ColorCode.toColor(initialItem.colorCode));
         ref
             .read(bigCategroyIconControllerNotifierProvider.notifier)
             .initState(initialItem.resourcePath);
@@ -71,7 +72,7 @@ class _BigCategoryAppearanceEditAreaState
           child: Container(
             alignment: Alignment.topCenter,
             decoration: BoxDecoration(
-              color: MyColors.quarternarySystemfill,
+              color: context.colors.fillQuaternary,
               borderRadius: BorderRadius.circular(18),
             ),
             height: 135,
@@ -151,7 +152,7 @@ class _BigCategoryAppearanceEditAreaState
 
                       // 背景の塗りつぶし
                       filled: true,
-                      fillColor: MyColors.secondarySystemfill,
+                      fillColor: context.colors.fillSecondary,
 
                       // ヒントテキスト
                       hintText: "カテゴリー名を入力",
@@ -175,8 +176,8 @@ class _BigCategoryAppearanceEditAreaState
                             Container(
                               width: 20,
                               height: 20,
-                              decoration: const BoxDecoration(
-                                color: MyColors.systemfill,
+                              decoration: BoxDecoration(
+                                color: context.colors.fill,
                                 shape: BoxShape.circle,
                               ),
                             ),
@@ -196,10 +197,10 @@ class _BigCategoryAppearanceEditAreaState
                                     )
                                     .updateState(true),
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.clear,
                                 size: 14,
-                                color: MyColors.white,
+                                color: context.colors.text,
                               ),
                             ),
                           ],
@@ -211,14 +212,14 @@ class _BigCategoryAppearanceEditAreaState
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: MyColors.jet.withOpacity(0.0),
+                          color: Colors.transparent,
                         ),
                       ),
                       // 入力時の境界線
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
                         borderSide: BorderSide(
-                          color: MyColors.jet.withOpacity(0.0),
+                          color: Colors.transparent,
                         ),
                       ),
                     ),
@@ -270,7 +271,7 @@ class _BigCategoryAppearanceEditAreaState
             child: Container(
               height: 42,
               decoration: BoxDecoration(
-                color: MyColors.quarternarySystemfill,
+                color: context.colors.fillQuaternary,
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Row(

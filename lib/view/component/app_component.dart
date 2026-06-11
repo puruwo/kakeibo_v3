@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 class AppTab extends StatelessWidget implements PreferredSizeWidget {
   const AppTab({
@@ -17,7 +17,7 @@ class AppTab extends StatelessWidget implements PreferredSizeWidget {
     return TabBar(
       controller: tabController,
       indicatorSize: TabBarIndicatorSize.tab,
-      indicatorColor: MyColors.themeColor,
+      indicatorColor: context.colors.primary,
       unselectedLabelStyle: AppTextStyles.unselectedLabelStyle,
       labelStyle: AppTextStyles.selectedLabelStyle,
       indicatorWeight: 2,

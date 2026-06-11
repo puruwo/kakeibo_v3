@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 /// アプリ共通のPopupMenuButton
 ///
@@ -47,13 +47,16 @@ class AppPopupMenu<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(
+      // 新規 ThemeData を作ると AppColors 等の ThemeExtension が欠落し、
+      // child（AppPillContainer 等）の context.colors が null になるため、
+      // 現在のテーマを copyWith して splash/highlight のみ上書きする。
+      data: Theme.of(context).copyWith(
           splashColor: Colors.transparent,
           highlightColor: Colors.black.withOpacity(0.1)),
       child: PopupMenuButton<T>(
         enabled: enabled,
         offset: offset,
-        color: MyColors.tertiarySystemBackground,
+        color: context.colors.surfaceElevated2,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(borderRadius),
         ),
@@ -95,7 +98,7 @@ PopupMenuItem<T> buildCheckableMenuItem<T>({
           children: [
             if (isSelected)
               Icon(Icons.check,
-                  color: selectedColor ?? MyColors.themeColor, size: 20)
+                  color: selectedColor, size: 20)
             else
               const SizedBox(width: 20),
             const SizedBox(width: 8),
@@ -129,7 +132,7 @@ class CheckablePopupMenuItem<T> extends PopupMenuItem<T> {
             children: [
               if (isSelected)
                 Icon(Icons.check,
-                    color: selectedColor ?? MyColors.themeColor, size: 20)
+                    color: selectedColor, size: 20)
               else
                 const SizedBox(width: 20),
               const SizedBox(width: 8),

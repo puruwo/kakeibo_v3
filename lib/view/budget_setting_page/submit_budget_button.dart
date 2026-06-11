@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/budget/budget_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/button_util.dart';
@@ -85,17 +85,17 @@ class SubmitBudgetButton extends ConsumerWidget with PresentationMixin {
         );
       },
       error: (error, stackTrace) {
-        return const Icon(
+        return Icon(
           //完了チェックマーク
           Icons.done_rounded,
-          color: MyColors.white,
+          color: context.colors.text,
         );
       },
       loading: () {
-        return const Icon(
+        return Icon(
           //完了チェックマーク
           Icons.done_rounded,
-          color: MyColors.white,
+          color: context.colors.text,
         );
       },
     );

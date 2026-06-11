@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
@@ -141,8 +142,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         Text(label, style: AppTextStyles.pageHeaderText),
                         Transform.translate(
                           offset: const Offset(-4, 0),
-                          child: const Icon(Icons.arrow_drop_down,
-                              color: MyColors.systemGray2, size: 30),
+                          child: Icon(Icons.arrow_drop_down,
+                              color: context.colors.icon, size: 30),
                         ),
                       ],
                     ),
@@ -168,7 +169,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
           ),
         ],
       ),
-      backgroundColor: MyColors.secondarySystemBackground,
+      backgroundColor: context.colors.surfaceElevated,
       // ローディング → コンテンツの切り替えをフェードで行う
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),
@@ -268,10 +269,10 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                   ),
                                 );
                               },
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.add,
                                 size: 18,
-                                color: MyColors.themeColor,
+                                color: context.colors.primary,
                               ),
                               buttonText: '収入を追加',
                             ),
@@ -290,8 +291,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                               },
                               icon: SvgPicture.asset(
                                 'assets/images/ui_icon_edit.svg',
-                                colorFilter: const ColorFilter.mode(
-                                  MyColors.white,
+                                colorFilter: ColorFilter.mode(
+                                  context.colors.text,
                                   BlendMode.srcIn,
                                 ),
                                 width: 15,

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -22,7 +22,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = MyColors().getColorFromHex(value.colorCode);
+    final color = ColorCode.toColor(value.colorCode);
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
     return AppListCard(

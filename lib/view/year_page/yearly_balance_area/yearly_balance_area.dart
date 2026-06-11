@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -56,10 +56,10 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.show_chart_rounded,
                         size: 32,
-                        color: MyColors.secondaryLabel,
+                        color: context.colors.textSecondary,
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -191,9 +191,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     Container(
                                       width: 8,
                                       height: 8,
-                                      decoration: const BoxDecoration(
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: MyColors.pink,
+                                        color: context.colors.expense,
                                       ),
                                     ),
                                     const SizedBox(width: 8),
@@ -205,15 +205,17 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                             style: AppTextStyles
                                                 .appCardPrimaryTitleLabel,
                                           ),
-                                          const WidgetSpan(
+                                          WidgetSpan(
                                             alignment:
                                                 PlaceholderAlignment.middle,
                                             child: Padding(
-                                              padding: EdgeInsets.only(left: 4),
+                                              padding:
+                                                  const EdgeInsets.only(left: 4),
                                               child: Icon(
                                                 Icons.arrow_forward_ios_rounded,
                                                 size: 12,
-                                                color: MyColors.secondaryLabel,
+                                                color:
+                                                    context.colors.textSecondary,
                                               ),
                                             ),
                                           ),
@@ -249,7 +251,8 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   height: 8,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: MyColors.pink.withValues(alpha: 0.4),
+                                    color: context.colors.expense
+                                        .withValues(alpha: 0.4),
                                   ),
                                 ),
                                 const SizedBox(width: 8),
@@ -257,7 +260,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   '＋ 支出を登録する',
                                   style: AppTextStyles.appCardPrimaryTitleLabel
                                       .copyWith(
-                                    color: MyColors.secondaryLabel,
+                                    color: context.colors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -273,7 +276,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             width: isBuilt ? expenseBar : barInitialWidth,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: MyColors.pink,
+                              color: context.colors.expense,
                             ),
                             duration: const Duration(milliseconds: 500),
                           ),
@@ -307,9 +310,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     Container(
                                       width: 8,
                                       height: 8,
-                                      decoration: const BoxDecoration(
+                                      decoration: BoxDecoration(
                                         shape: BoxShape.circle,
-                                        color: MyColors.incomeEmerald,
+                                        color: context.colors.income,
                                       ),
                                     ),
                                     const SizedBox(width: 8),
@@ -321,15 +324,17 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                             style: AppTextStyles
                                                 .appCardPrimaryTitleLabel,
                                           ),
-                                          const WidgetSpan(
+                                          WidgetSpan(
                                             alignment:
                                                 PlaceholderAlignment.middle,
                                             child: Padding(
-                                              padding: EdgeInsets.only(left: 4),
+                                              padding:
+                                                  const EdgeInsets.only(left: 4),
                                               child: Icon(
                                                 Icons.arrow_forward_ios_rounded,
                                                 size: 12,
-                                                color: MyColors.secondaryLabel,
+                                                color:
+                                                    context.colors.textSecondary,
                                               ),
                                             ),
                                           ),
@@ -365,7 +370,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   height: 8,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: MyColors.incomeEmerald.withValues(
+                                    color: context.colors.income.withValues(
                                       alpha: 0.4,
                                     ),
                                   ),
@@ -375,7 +380,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   '＋ 収入を登録する',
                                   style: AppTextStyles.appCardPrimaryTitleLabel
                                       .copyWith(
-                                    color: MyColors.secondaryLabel,
+                                    color: context.colors.textSecondary,
                                   ),
                                 ),
                               ],
@@ -391,7 +396,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             width: isBuilt ? incomeBar : barInitialWidth,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
-                              color: MyColors.incomeEmerald,
+                              color: context.colors.income,
                             ),
                             duration: const Duration(milliseconds: 500),
                           ),
@@ -399,10 +404,10 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                         // 残金行（両方あるときのみ）
                         if (showBars) ...[
                           const SizedBox(height: 12.0),
-                          const Divider(
+                          Divider(
                             thickness: 1.0,
                             height: 4.0,
-                            color: MyColors.separater,
+                            color: context.colors.separator,
                           ),
                           const SizedBox(height: 4),
                           Row(

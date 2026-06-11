@@ -1,8 +1,8 @@
 // カテゴリー別サマリーリスト
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
@@ -31,7 +31,7 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
 
               ...categorySummaries.map((summary) {
                 // カテゴリーの色を取得
-                final color = MyColors().getColorFromHex(summary.colorCode);
+                final color = ColorCode.toColor(summary.colorCode);
 
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8.0),

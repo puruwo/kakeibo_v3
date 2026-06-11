@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -20,7 +20,7 @@ class DailyConfirmedFixedCostItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = MyColors().getColorFromHex(value.colorCode);
+    final color = ColorCode.toColor(value.colorCode);
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
     return AppListCard(
@@ -65,7 +65,7 @@ class DailyUnconfirmedFixedCostItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = MyColors().getColorFromHex(value.colorCode);
+    final color = ColorCode.toColor(value.colorCode);
     final priceLabel = value.estimatedPrice == 0
         ? '未確定'
         : yenmarkFormattedPriceGetter(value.estimatedPrice);

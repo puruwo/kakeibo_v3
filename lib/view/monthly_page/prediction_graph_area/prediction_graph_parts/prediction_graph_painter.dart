@@ -1,13 +1,27 @@
 // import 'dart:math' show pow, sqrt; // Removed
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 
 class PredictionGraphPainter extends CustomPainter {
-  PredictionGraphPainter({required this.data});
+  PredictionGraphPainter({
+    required this.data,
+    required this.separator,
+    required this.icon,
+    required this.expense,
+  });
 
   final PredictionGraphValue data;
+
+  /// グリッド線・基準線の色（context.colors.separator を注入）
+  final Color separator;
+
+  /// 補助線（予算ライン等）の色（context.colors.icon を注入）
+  final Color icon;
+
+  /// 支出系ラインの色（context.colors.expense を注入）
+  final Color expense;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -231,7 +245,7 @@ class PredictionGraphPainter extends CustomPainter {
     // ラインをグラフ開始位置から描画
     final lineStartX = leftMargin + graphLeftOffset;
     final paint = Paint()
-      ..color = MyColors.separater
+      ..color = separator
       ..strokeWidth = 1.0;
 
     canvas.drawLine(
@@ -301,7 +315,7 @@ class PredictionGraphPainter extends CustomPainter {
         final barHeight = expense.normalizedHeight * totalBarHeight;
 
         // UseCaseで計算された色を使用
-        var barColor = MyColors().getColorFromHex(expense.colorCode);
+        var barColor = ColorCode.toColor(expense.colorCode);
 
         // 未来日付の場合は透明度を下げる
         if (barData.isFutureDate) {
@@ -354,7 +368,7 @@ class PredictionGraphPainter extends CustomPainter {
     const xAxisLabelVerticalOffset = 5;
 
     final paint = Paint()
-      ..color = MyColors.systemGray
+      ..color = icon
       ..strokeWidth = 1.0;
 
     final y = topMargin + graphHeight;
@@ -493,7 +507,7 @@ class PredictionGraphPainter extends CustomPainter {
         : leftMargin + labelLeftPadding + textPainter.width + 8;
 
     final paint = Paint()
-      ..color = MyColors.separater
+      ..color = separator
       ..strokeWidth = 1.0;
 
     canvas.drawLine(
@@ -596,7 +610,7 @@ class PredictionGraphPainter extends CustomPainter {
         ? leftMargin
         : leftMargin + labelLeftPadding + textPainter.width + 8;
     final paint = Paint()
-      ..color = MyColors.separater
+      ..color = separator
       ..strokeWidth = 1.0;
 
     canvas.drawLine(
@@ -619,7 +633,7 @@ class PredictionGraphPainter extends CustomPainter {
       bool shouldHideLineAndMoveLabel,
       double labelTopMargin) {
     final paint = Paint()
-      ..color = MyColors.separater
+      ..color = separator
       ..strokeWidth = 0.8
       ..style = PaintingStyle.stroke;
 
@@ -689,7 +703,7 @@ class PredictionGraphPainter extends CustomPainter {
     required double labelLeftPadding,
   }) {
     final paint = Paint()
-      ..color = MyColors.pink
+      ..color = expense
       ..strokeWidth = 1.0
       ..style = PaintingStyle.stroke;
 
@@ -825,7 +839,7 @@ class PredictionGraphPainter extends CustomPainter {
       final lineStartX = leftMargin + labelLeftPadding + textPainter.width + 8;
 
       final linePaint = Paint()
-        ..color = MyColors.separater
+        ..color = separator
         ..strokeWidth = 1.0;
 
       canvas.drawLine(

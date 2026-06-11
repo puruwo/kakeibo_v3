@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'big_category_color_contoroller.g.dart';
@@ -12,7 +12,7 @@ class BigCategroyColorControllerNotifier
   @override
   Color build() {
     // 最初のデータ
-    return MyColors.expensePink;
+    return CategoryPalette.expense1;
   }
 
   // 初回設定時に利用する

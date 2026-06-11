@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 
@@ -71,9 +71,9 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
                   contentPadding: EdgeInsets.zero,
                 ),
                 textStyle: RegisterPageStyles.pickerLargeNumber,
-                trailingIcon: const Icon(
+                trailingIcon: Icon(
                   Icons.arrow_drop_down_rounded,
-                  color: MyColors.secondaryLabel,
+                  color: context.colors.textSecondary,
                 ),
                 width: 70,
                 initialSelection: selectedFrequencyNumber,
@@ -97,9 +97,9 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
                   contentPadding: EdgeInsets.zero,
                 ),
                 textStyle: RegisterPageStyles.pickerMediumText,
-                trailingIcon: const Icon(
+                trailingIcon: Icon(
                   Icons.arrow_drop_down_rounded,
-                  color: MyColors.secondaryLabel,
+                  color: context.colors.textSecondary,
                 ),
                 width: 80,
                 initialSelection: selectedIntervalUnit,
@@ -129,7 +129,7 @@ class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
                   Navigator.of(context).pop();
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: MyColors.buttonSecondary,
+                  backgroundColor: context.colors.fill,
                 ),
                 child: Text(
                   'キャンセル',

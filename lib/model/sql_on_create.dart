@@ -1,5 +1,6 @@
 import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -103,13 +104,13 @@ class DataBaseHelperHandling {
           ${SqfExpenseBigCategory.resourcePath},
           ${SqfExpenseBigCategory.displayOrder},
           ${SqfExpenseBigCategory.isDisplayed}) 
-          VALUES('食費', 'FF7171', 'assets/images/icon_meal.svg', 0, 1),
-                ('日用品', 'FB5B01', 'assets/images/icon_commodity.svg', 1, 1),
-                ('遊び娯楽', '3DD8E0', 'assets/images/icon_favo.svg', 2, 1),
-                ('交通費', '4BA6FF', 'assets/images/icon_transportation.svg', 3, 1),
-                ('衣服美容', 'BB87FF', 'assets/images/icon_clothes.svg', 4, 1),
-                ('医療費', 'DF2828', 'assets/images/icon_medical.svg', 5, 1),
-                ('雑費', 'FFC700', 'assets/images/icon_others.svg', 6, 1);
+          VALUES('食費', '${CategoryPalette.expense1Hex}', 'assets/images/icon_meal.svg', 0, 1),
+                ('日用品', '${CategoryPalette.expense2Hex}', 'assets/images/icon_commodity.svg', 1, 1),
+                ('遊び娯楽', '${CategoryPalette.expense3Hex}', 'assets/images/icon_favo.svg', 2, 1),
+                ('交通費', '${CategoryPalette.expense4Hex}', 'assets/images/icon_transportation.svg', 3, 1),
+                ('衣服美容', '${CategoryPalette.expense5Hex}', 'assets/images/icon_clothes.svg', 4, 1),
+                ('医療費', '${CategoryPalette.expense6Hex}', 'assets/images/icon_medical.svg', 5, 1),
+                ('雑費', '${CategoryPalette.expense7Hex}', 'assets/images/icon_others.svg', 6, 1);
           ''');
 
     await db.execute('''
@@ -151,8 +152,8 @@ class DataBaseHelperHandling {
           ${SqfIncomeBigCategory.colorCode},
           ${SqfIncomeBigCategory.resourcePath}) 
           VALUES
-          ('月次収入', '21D19F', 'assets/images/icon_regular_income.svg'),
-          ('ボーナス', '10B981', 'assets/images/icon_extra_income.svg');
+          ('月次収入', '${CategoryPalette.income1Hex}', 'assets/images/icon_regular_income.svg'),
+          ('ボーナス', '${CategoryPalette.income2Hex}', 'assets/images/icon_extra_income.svg');
           ''');
 
     await db.execute('''CREATE TABLE ${SqfFixedCost.tableName} (
@@ -242,11 +243,11 @@ class DataBaseHelperHandling {
           ${SqfFixedCostCategory.displayOrder},
           ${SqfFixedCostCategory.isDisplayed})
           VALUES
-          ('住居費', '8E8E93', 'assets/images/icon_home.svg', 0, 1),
-          ('サブスク', '8E8E93', 'assets/images/icon_subscription.svg', 1, 1),
-          ('通信費', '8E8E93', 'assets/images/icon_cell_tower.svg', 2, 1),
-          ('光熱費', '8E8E93', 'assets/images/icon_water_drop.svg', 3, 1),
-          ('その他', '8E8E93', 'assets/images/icon_others.svg', 4, 1);
+          ('住居費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_home.svg', 0, 1),
+          ('サブスク', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_subscription.svg', 1, 1),
+          ('通信費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_cell_tower.svg', 2, 1),
+          ('光熱費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_water_drop.svg', 3, 1),
+          ('その他', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_others.svg', 4, 1);
           ''');
 
     print('モックデータを挿入中です');

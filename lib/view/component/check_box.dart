@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 class CheckBox extends StatelessWidget {
   const CheckBox({required this.isChecked, super.key});
@@ -12,14 +12,14 @@ class CheckBox extends StatelessWidget {
         ? Container(
             height: 23,
             width: 23,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: MyColors.themeColor,
+              color: context.colors.primary,
             ),
-            child: const Icon(
+            child: Icon(
               Icons.done_rounded,
               size: 19,
-              color: MyColors.label,
+              color: context.colors.text,
             ),
           )
         : Container(
@@ -27,7 +27,7 @@ class CheckBox extends StatelessWidget {
             width: 23,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: MyColors.secondarySystemfill),
+              border: Border.all(color: context.colors.fillSecondary),
               color: Colors.transparent,
             ),
           );

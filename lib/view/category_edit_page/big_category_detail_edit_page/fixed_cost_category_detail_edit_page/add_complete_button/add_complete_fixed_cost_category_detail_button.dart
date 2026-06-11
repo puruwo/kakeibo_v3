@@ -1,11 +1,12 @@
 // packageImport
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // LocalImport
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
@@ -29,9 +30,9 @@ class AddCompleteFixedCostCategoryDetailButton extends ConsumerWidget
     final usecase = ref.read(fixedCostCategoryUsecaseProvider);
 
     return IconButton(
-      icon: const Icon(
+      icon: Icon(
         Icons.done_rounded,
-        color: MyColors.white,
+        color: context.colors.text,
       ),
       onPressed: () async {
         execute(
@@ -55,7 +56,7 @@ class AddCompleteFixedCostCategoryDetailButton extends ConsumerWidget
             final newEntity = FixedCostCategoryEntity(
               categoryName: categoryName,
               resourcePath: iconPath,
-              colorCode: MyColors().getHexFromColor(colorCode),
+              colorCode: ColorCode.toHex(colorCode),
               displayOrder: categoryOrder,
               isDisplayed: 1,
             );

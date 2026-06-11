@@ -11,6 +11,7 @@ import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_bu
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/category_reorder_page.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 
 /// カテゴリー選択エリアウィジェット
@@ -161,8 +162,8 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
           height: 8,
           decoration: BoxDecoration(
             color: index == _currentPage
-                ? MyColors.tirtiarySystemfill
-                : MyColors.separater,
+                ? context.colors.fillTertiary
+                : context.colors.separator,
             borderRadius: BorderRadius.circular(4),
           ),
         ),
@@ -187,10 +188,10 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
+            Icon(
               Icons.settings_outlined,
               size: 16,
-              color: MyColors.secondaryLabel,
+              color: context.colors.textSecondary,
             ),
             const SizedBox(width: 6),
             Text(

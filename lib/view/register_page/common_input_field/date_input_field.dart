@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/app_pill_container.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -57,10 +57,10 @@ class _DateInputFieldState extends ConsumerState<DateInputField> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Icon(
+            Icon(
               Icons.calendar_today_outlined,
               size: 16,
-              color: MyColors.label,
+              color: context.colors.text,
             ),
             const SizedBox(width: 8),
             Text(

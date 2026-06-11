@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_category_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
@@ -59,7 +59,7 @@ class BudgetCategoryArea extends ConsumerWidget {
           height: 0.25,
           indent: leftsidePadding,
           endIndent: leftsidePadding,
-          color: MyColors.separater,
+          color: context.colors.separator,
         ),
 
         // リスト部分

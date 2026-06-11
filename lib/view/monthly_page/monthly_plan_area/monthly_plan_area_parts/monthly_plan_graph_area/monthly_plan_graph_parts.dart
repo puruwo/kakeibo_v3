@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 
 class MnothlyPlanGraph extends HookConsumerWidget {
@@ -42,7 +43,7 @@ class MnothlyPlanGraph extends HookConsumerWidget {
                   ? allCategoryCardEntity.expenseCategoryRatioList[i] *
                       maxGraphWidth
                   : 0,
-              color: MyColors().getColorFromHex(
+              color: ColorCode.toColor(
                   allCategoryCardEntity.expenseCategoryColorList[i]),
               duration: const Duration(milliseconds: 500),
             );
@@ -79,7 +80,7 @@ class MnothlyPlanGraph extends HookConsumerWidget {
           width: maxGraphWidth * allCategoryCardEntity.totalBadgetRatio,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            color: MyColors.secondarySystemfill,
+            color: context.colors.fillSecondary,
           ),
         ),
         barGraph,

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
@@ -32,9 +33,9 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
     late int addedBigCategoryId;
 
     return IconButton(
-      icon: const Icon(
+      icon: Icon(
         Icons.done_rounded,
-        color: MyColors.white,
+        color: context.colors.text,
       ),
       onPressed: () async {
         execute(
@@ -60,7 +61,7 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
 
             final color =
                 ref.watch(incomeBigCategoryColorControllerNotifierProvider);
-            final colorCode = MyColors().getColorCodeFromColor(color);
+            final colorCode = ColorCode.fromColor(color);
             if (color == Colors.transparent) {
               throw const AppException('カテゴリーの色を選択してください');
             }

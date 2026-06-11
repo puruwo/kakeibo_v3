@@ -6,7 +6,7 @@ import 'package:kakeibo/util/util.dart';
 
 /// Local imports
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class FixedCostSummaryHeader extends ConsumerStatefulWidget {
@@ -57,7 +57,7 @@ class _FixedCostSummaryHeaderState
 
                 Container(
                   height: 40,
-                  color: MyColors.quarternarySystemfill,
+                  color: context.colors.fillQuaternary,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(
@@ -76,7 +76,7 @@ class _FixedCostSummaryHeaderState
                 // 未確定確定分（推定）
                 Container(
                   height: 40,
-                  color: MyColors.quarternarySystemfill,
+                  color: context.colors.fillQuaternary,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Row(

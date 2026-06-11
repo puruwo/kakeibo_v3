@@ -1,7 +1,7 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
@@ -84,7 +84,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
                           centerSpaceRadius: 25,
                           sections: categorySummaries.map((category) {
                             return PieChartSectionData(
-                              color: MyColors().getColorFromHex(
+                              color: ColorCode.toColor(
                                 category.colorCode,
                               ),
                               value: category.totalAmount.toDouble(),
@@ -124,7 +124,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
               SvgPicture.asset(
                 category.iconPath,
                 colorFilter: ColorFilter.mode(
-                  MyColors().getColorFromHex(category.colorCode),
+                  ColorCode.toColor(category.colorCode),
                   BlendMode.srcIn,
                 ),
                 semanticsLabel: 'categoryIcon',

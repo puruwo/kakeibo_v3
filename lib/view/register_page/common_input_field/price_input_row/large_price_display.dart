@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
@@ -61,7 +61,7 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
         Text(
           '¥',
           style: RegisterPageStyles.yenSymbol(
-            getPillColor(ref.watch(inputModeControllerProvider)),
+            getPillColor(context, ref.watch(inputModeControllerProvider)),
           ).copyWith(
             height: 1,
           ),
@@ -88,7 +88,7 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
               autofocus: true,
               textAlign: TextAlign.right,
               style: RegisterPageStyles.priceInput,
-              cursorColor: MyColors.themeColor,
+              cursorColor: context.colors.primary,
               cursorWidth: 3,
               cursorHeight: 42,
               maxLines: 1,

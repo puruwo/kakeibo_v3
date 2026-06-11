@@ -1,10 +1,12 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/common_widget/price_input_dialog.dart';
@@ -24,7 +26,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fixedCostExpenseUsecase = ref.read(fixedCostExpenseUsecaseProvider);
-    final color = MyColors().getColorFromHex(value.colorCode);
+    final color = ColorCode.toColor(value.colorCode);
 
     // アイコン
     final icon = FittedBox(
@@ -47,14 +49,14 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
         direction: DismissDirection.endToStart,
         key: Key(value.id.toString()),
         dragStartBehavior: DragStartBehavior.start,
-        background: Container(color: MyColors.black),
+        background: Container(color: context.colors.surface),
         secondaryBackground: Container(
-          color: MyColors.pink,
-          child: const Align(
+          color: context.colors.expense,
+          child: Align(
             alignment: Alignment.centerRight,
             child: Padding(
               padding: EdgeInsets.only(right: 18.0),
-              child: Icon(Icons.delete, color: MyColors.systemGray),
+              child: Icon(Icons.delete, color: context.colors.icon),
             ),
           ),
         ),
@@ -129,9 +131,9 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
                     ),
 
                     // nextArrowアイコン
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(right: 4),
-                      child: Icon(size: 18, Icons.remove, color: MyColors.pink),
+                      child: Icon(size: 18, Icons.remove, color: context.colors.expense),
                     ),
                   ],
                 ),
@@ -142,7 +144,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
               height: 0.25,
               indent: 50 + leftsidePadding,
               endIndent: leftsidePadding,
-              color: MyColors.separater,
+              color: context.colors.separator,
             ),
           ],
         ),

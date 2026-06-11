@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/font_style.dart';
 
 /// ============================================================================
@@ -19,7 +19,7 @@ class CalendarStyles {
   ///   - 条件: isCompact = false の場合に使用
   static final TextStyle calendarDateBoxLarge = MyFontStyle.sfUi.copyWith(
     fontSize: 11.5,
-    color: MyColors.white,
+    color: AppColorsDark.text,
     fontWeight: FontWeight.w500,
   );
 
@@ -32,7 +32,7 @@ class CalendarStyles {
   ///   - 条件: isCompact = true の場合に使用
   static final TextStyle calendarDateBoxSmall = MyFontStyle.sfUi.copyWith(
     fontSize: 11,
-    color: MyColors.white,
+    color: AppColorsDark.text,
     fontWeight: FontWeight.w500,
     height: 1.0,
   );
@@ -49,12 +49,12 @@ class CalendarStyles {
   ///   - 詳細: 「月」「火」「水」「木」「金」の曜日表示
   static final TextStyle calendarWeekdayLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 12,
-    color: MyColors.secondaryLabel,
+    color: AppColorsDark.textSecondary,
     fontWeight: FontWeight.w500,
   );
 
   // TextStyle(
-  //   color: MyColors.secondaryLabel,
+  //   color: AppColorsDark.textSecondary,
   //   fontSize: 12,
   // );
 
@@ -66,7 +66,7 @@ class CalendarStyles {
   ///   - 詳細: 「日」の曜日表示
   static final TextStyle calendarWeekdaySunday = MyFontStyle.notoSans.copyWith(
     fontSize: 12,
-    color: MyColors.pink,
+    color: AppColorsDark.expense,
     fontWeight: FontWeight.w500,
   );
 
@@ -79,7 +79,7 @@ class CalendarStyles {
   static final TextStyle calendarWeekdaySaturday = MyFontStyle.notoSans
       .copyWith(
         fontSize: 12,
-        color: MyColors.mintBlue,
+        color: AppColorsDark.income,
         fontWeight: FontWeight.w500,
       );
 
@@ -96,7 +96,7 @@ class CalendarStyles {
   ///   - 使用関数: activeDateBox(), normalDateBox()
   static final TextStyle calendarDateLabel = MyFontStyle.sfUi.copyWith(
     fontSize: 12,
-    color: MyColors.secondaryLabel,
+    color: AppColorsDark.textSecondary,
     fontWeight: FontWeight.w500,
   );
 
@@ -109,7 +109,7 @@ class CalendarStyles {
   ///   - 条件: isSunday = true の場合
   static final TextStyle calendarDateLabelSunday = MyFontStyle.sfUi.copyWith(
     fontSize: 12,
-    color: MyColors.pink,
+    color: AppColorsDark.expense,
     fontWeight: FontWeight.w500,
   );
 
@@ -122,7 +122,7 @@ class CalendarStyles {
   ///   - 条件: isSaturday = true の場合
   static final TextStyle calendarDateLabelSaturday = MyFontStyle.sfUi.copyWith(
     fontSize: 12,
-    color: MyColors.mintBlue,
+    color: AppColorsDark.income,
     fontWeight: FontWeight.w500,
   );
 
@@ -136,7 +136,7 @@ class CalendarStyles {
   static final TextStyle calendarOutOfPeriodDateLabel = MyFontStyle.sfUi
       .copyWith(
         fontSize: 12,
-        color: MyColors.tirtiaryLabel,
+        color: AppColorsDark.textTertiary,
         fontWeight: FontWeight.w500,
       );
 }

@@ -5,6 +5,7 @@ import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
@@ -133,7 +134,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
-        backgroundColor: MyColors.secondarySystemBackground,
+        backgroundColor: context.colors.surfaceElevated,
 
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -150,10 +151,10 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
               _clearInputState();
               Navigator.of(context, rootNavigator: true).pop();
             },
-            icon: const Icon(
+            icon: Icon(
               //バッテン
               Icons.close_rounded,
-              color: MyColors.white,
+              color: context.colors.text,
             ),
           ),
 
@@ -162,9 +163,9 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
               ? [
                   IconButton(
                     onPressed: () => _showDeleteConfirmDialog(context),
-                    icon: const Icon(
+                    icon: Icon(
                       Icons.delete_outline,
-                      color: MyColors.white,
+                      color: context.colors.text,
                     ),
                   ),
                 ]

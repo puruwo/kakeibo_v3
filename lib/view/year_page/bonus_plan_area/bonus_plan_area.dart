@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_bar_graph.dart';
@@ -55,10 +55,10 @@ class BonusPlanArea extends ConsumerWidget {
                     const SizedBox(
                       height: 4.0,
                     ),
-                    const Divider(
+                    Divider(
                       thickness: 1.0,
                       height: 4.0,
-                      color: MyColors.separater,
+                      color: context.colors.separator,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 4.0),

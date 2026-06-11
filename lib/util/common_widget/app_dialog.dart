@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 /// メニューダイアログの各項目を表すデータクラス
 class MenuDialogItem {
@@ -46,7 +47,7 @@ Future<void> showMenuDialog(
             // メニュー項目リスト
             Container(
               decoration: BoxDecoration(
-                color: MyColors.tirtiarySystemBackground,
+                color: context.colors.surfaceElevated2,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Column(
@@ -59,10 +60,10 @@ Future<void> showMenuDialog(
                       isLast: i == items.length - 1,
                     ),
                     if (i != items.length - 1)
-                      const Divider(
+                      Divider(
                         height: 1,
                         thickness: 1,
-                        color: MyColors.separater,
+                        color: context.colors.separator,
                       ),
                   ],
                 ],
@@ -75,7 +76,7 @@ Future<void> showMenuDialog(
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: MyColors.tirtiarySystemBackground,
+                color: context.colors.surfaceElevated2,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Material(
@@ -155,7 +156,7 @@ class _MenuItemTile extends StatelessWidget {
               Icon(
                 item.icon,
                 size: 24,
-                color: item.iconColor ?? MyColors.themeColor,
+                color: item.iconColor ?? context.colors.primary,
               ),
               const SizedBox(width: 16),
               // ラベル

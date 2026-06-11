@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/calendar_area.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_next_arrow_button.dart';
@@ -59,7 +60,7 @@ class ExpenseHistoryPage extends StatelessWidget {
       ),
 
       // 本文
-      backgroundColor: MyColors.secondarySystemBackground,
+      backgroundColor: context.colors.surfaceElevated,
       body: Column(children: [const CalendarArea(), ExpenceHistoryArea()]),
     );
   }

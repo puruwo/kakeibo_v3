@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 
 /// 入力ページ共通のピル型コンテナ
@@ -26,7 +26,7 @@ class AppPillContainer extends StatelessWidget {
       width: width,
       padding: padding,
       decoration: BoxDecoration(
-        color: MyColors.secondarySystemfill,
+        color: context.colors.fillSecondary,
         borderRadius: BorderRadius.circular(50),
       ),
       child: child,

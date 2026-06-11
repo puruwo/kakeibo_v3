@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
 /// 汎用フローティングアクションボタン。
 /// [label] を指定すると Extended（pill 形）、省略すると円形になる。
@@ -29,7 +29,7 @@ class AppFloatingActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bgColor = backgroundColor ?? MyColors.themeColor;
+    final bgColor = backgroundColor ?? context.colors.primary;
     final fgColor = foregroundColor ?? Colors.white;
     final hasLabel = label != null;
 

@@ -2,11 +2,12 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 
 /// localImport
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/fixed_cost_category_value/edit_fixed_cost_category_value.dart';
@@ -139,7 +140,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
           height: 0.25,
           indent: leftsidePadding,
           endIndent: leftsidePadding,
-          color: MyColors.separater,
+          color: context.colors.separator,
         ),
 
         // リスト部分
@@ -208,7 +209,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             child: SvgPicture.asset(
                               itemList[index].resourcePath,
                               colorFilter: ColorFilter.mode(
-                                MyColors().getColorFromHex(
+                                ColorCode.toColor(
                                   itemList[index].colorCode,
                                 ),
                                 BlendMode.srcIn,
@@ -246,9 +247,9 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                               alignment: Alignment.centerRight,
                               width: 50,
                               height: 50,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.drag_handle_rounded,
-                                color: MyColors.systemGray2,
+                                color: context.colors.icon,
                               ),
                             ),
                           ),
@@ -263,7 +264,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                     height: 0.25,
                     indent: leftsidePadding + 50,
                     endIndent: leftsidePadding,
-                    color: MyColors.separater,
+                    color: context.colors.separator,
                   ),
                 ],
               );
@@ -318,7 +319,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
           height: 0.25,
           indent: leftsidePadding,
           endIndent: leftsidePadding,
-          color: MyColors.separater,
+          color: context.colors.separator,
         ),
 
         // リスト部分
@@ -378,7 +379,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             child: SvgPicture.asset(
                               itemList[index].resourcePath,
                               colorFilter: ColorFilter.mode(
-                                MyColors().getColorFromHex(
+                                ColorCode.toColor(
                                   itemList[index].colorCode,
                                 ),
                                 BlendMode.srcIn,
@@ -405,9 +406,9 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                               alignment: Alignment.centerRight,
                               width: 50,
                               height: 50,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.drag_handle_rounded,
-                                color: MyColors.systemGray2,
+                                color: context.colors.icon,
                               ),
                             ),
                           ),
@@ -422,7 +423,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                     height: 0.25,
                     indent: leftsidePadding + 50,
                     endIndent: leftsidePadding,
-                    color: MyColors.separater,
+                    color: context.colors.separator,
                   ),
                 ],
               );

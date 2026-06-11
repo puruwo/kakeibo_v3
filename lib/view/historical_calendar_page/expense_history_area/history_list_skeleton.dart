@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 
@@ -57,7 +57,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
                         width: 150,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: MyColors.tirtiarySystemfill.withOpacity(0.5),
+                          color: context.colors.fillTertiary.withOpacity(0.5),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -70,7 +70,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
                   height: 0.25,
                   indent: leftsidePadding,
                   endIndent: leftsidePadding,
-                  color: MyColors.separater,
+                  color: context.colors.separator,
                 ),
                 // リストアイテムのスケルトン(2個)
                 ...List.generate(2, (itemIndex) {
@@ -94,7 +94,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: MyColors.tirtiarySystemfill.withOpacity(0.5),
+              color: context.colors.fillTertiary.withOpacity(0.5),
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -108,7 +108,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
                   width: double.infinity,
                   height: 14,
                   decoration: BoxDecoration(
-                    color: MyColors.tirtiarySystemfill.withOpacity(0.5),
+                    color: context.colors.fillTertiary.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -117,7 +117,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
                   width: 100,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: MyColors.tirtiarySystemfill.withOpacity(0.3),
+                    color: context.colors.fillTertiary.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -130,7 +130,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
             width: 60,
             height: 14,
             decoration: BoxDecoration(
-              color: MyColors.tirtiarySystemfill.withOpacity(0.5),
+              color: context.colors.fillTertiary.withOpacity(0.5),
               borderRadius: BorderRadius.circular(4),
             ),
           ),

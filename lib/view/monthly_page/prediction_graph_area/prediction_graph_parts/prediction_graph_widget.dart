@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/daily_expense_summary_page.dart';
@@ -50,7 +51,12 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
           child: Stack(
             children: [
               CustomPaint(
-                painter: PredictionGraphPainter(data: widget.data),
+                painter: PredictionGraphPainter(
+                  data: widget.data,
+                  separator: context.colors.separator,
+                  icon: context.colors.icon,
+                  expense: context.colors.expense,
+                ),
                 child: Container(),
               ),
               if (_selectedDate != null && _tapPosition != null)

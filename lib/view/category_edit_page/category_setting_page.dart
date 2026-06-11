@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 // localImport
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_list_area.dart';
@@ -53,7 +54,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
-        backgroundColor: MyColors.secondarySystemBackground,
+        backgroundColor: context.colors.surfaceElevated,
         // ヘッダー
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -77,7 +78,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
                 Navigator.of(context, rootNavigator: true).pop();
               }
             },
-            icon: const Icon(Icons.close, color: MyColors.white),
+            icon: Icon(Icons.close, color: context.colors.text),
           ),
 
           // タブバー（編集モード中はIgnorePointerでタップを遮断し半透明表示）

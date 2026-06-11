@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/history_list_skeleton.dart';
@@ -117,7 +117,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                         height: 0.25,
                         indent: leftsidePadding,
                         endIndent: leftsidePadding,
-                        color: MyColors.separater,
+                        color: context.colors.separator,
                       ),
 
                       //タイル

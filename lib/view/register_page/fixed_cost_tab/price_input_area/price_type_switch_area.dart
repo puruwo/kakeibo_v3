@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/register_page/price_type_switch_controller/price_type_switch_controller.dart';
 
 // 固定費のタイプを切り替えるエリア
@@ -61,8 +61,8 @@ class _PriceTypeSwitchArea extends ConsumerState<PriceTypeSwitchArea> {
                 alignment: Alignment.centerRight,
                 scale: 0.7,
                 child: Switch(
-                  activeTrackColor: MyColors.themeColor, // トグルON時のバー色
-                  inactiveTrackColor: MyColors.systemGray, // トグルOFF時のバー色
+                  activeTrackColor: context.colors.primary, // トグルON時のバー色
+                  inactiveTrackColor: context.colors.icon, // トグルOFF時のバー色
                   thumbColor: WidgetStateProperty.all(Colors.white), // トグルの丸の色
                   value: isOn,
                   onChanged: (value) {

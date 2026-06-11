@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 
 /// 固定費カテゴリー専用のアイコンリスト
 class FixedCostIcons {
@@ -19,6 +20,6 @@ class FixedCostIcons {
 /// 固定費カテゴリー専用のカラーリスト（MatBlue統一）
 class FixedCostColors {
   static const List<Color> colorList = [
-    Color(0xFF8E8E93),
+    CategoryPalette.fixedCost,
   ];
 }
