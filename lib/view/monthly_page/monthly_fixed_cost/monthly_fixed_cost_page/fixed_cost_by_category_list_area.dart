@@ -7,7 +7,6 @@ import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_
 
 /// Local imports
 import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_by_category_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
