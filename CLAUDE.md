@@ -500,9 +500,8 @@ final myDataProvider = FutureProvider<List<MyUIValue>>((ref) async {
 
 ## Testing Notes
 
-- Limited test coverage currently (2 test files)
+- Limited test coverage currently (1 test file)
 - `test/month_period_fetch_test.dart` - Tests period calculation logic
-- `test/widget_test.dart` - Basic widget test
 
 When adding tests:
 - Use `sqflite_common_ffi` for SQLite in tests (already in dev_dependencies)
