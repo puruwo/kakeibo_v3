@@ -6,6 +6,7 @@ import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
@@ -65,7 +66,7 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                             Navigator.of(dialogContext).pop(true),
                         child: const Text(
                           '削除',
-                          style: TextStyle(color: MyColors.expensePink),
+                          style: TextStyle(color: CategoryPalette.expense1),
                         ),
                       ),
                     ],
