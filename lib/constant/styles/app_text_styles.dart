@@ -337,7 +337,7 @@ class AppTextStyles {
   static final TextStyle appCardPrimaryTitleLabel = MyFontStyle.notoSans
       .copyWith(
         fontSize: 16,
-        color: MyColors.label,
+        color: AppColorsDark.text,
         fontWeight: FontWeight.w600,
         height: 1.0,
         leadingDistribution: TextLeadingDistribution.even,
