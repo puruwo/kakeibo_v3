@@ -1,7 +1,7 @@
-# セマンティックトークン仕様（確定版 / STEP4完了）
+# セマンティックトークン仕様（フェーズ0 完了）
 
 > 色監査（2026-06-06）＋設計判断に基づく確定仕様。`semantic-token-blueprint-draft.md` を置き換える。
-> これを入力として STEP5（tokens.json生成）へ進む。
+> これを入力として STEP5（tokens.json生成）へ進んだ。**フェーズ0（実装まで）完了（2026-06-11）— §0参照。**
 >
 > **確定した方針**
 > - 汎用セマンティック体系（surface/text/border/primary 等）
@@ -17,6 +17,38 @@
 > - `🔸` = Apple非準拠のブランド/ドメイン/独自色。ライト値は暫定（ライト背景での見え方を実機で要確認）
 
 色値は8桁HEX（`#RRGGBBAA`）で表記。
+
+---
+
+## 0. フェーズ0 ステータス：**完了**（2026-06-11 更新）
+
+設計→デザイン→実装 自動化パイプライン **フェーズ0（デザイントークンの単一ソース化）は完了**。
+
+- ✅ `design-tokens/tokens.json` → `tool/generate_tokens.dart` で `lib/theme/app_colors.dart` を生成（`AppColors` ThemeExtension ＋ const TextStyle 用の静的クラス `AppColorsDark` / `AppColorsLight`）
+- ✅ `MaterialApp` に light/dark テーマと `AppColors` を接続（当面 `themeMode.dark` 固定）
+- ✅ 旧 `MyColors`（`lib/constant/colors.dart`）を**全廃・ファイル削除**。UI色は **ThemeExtension に一本化** — `context.colors.*`（ランタイム）／`AppColorsDark.*`（const文脈）／`CategoryPalette.*`（データ色）
+- ✅ 色ハードコード検出フック（`scripts/check_hardcoded_color.sh` + PostToolUse）を導入
+- ✅ ダーク見た目は従来と不変（値同一マッピングを原則。意図的な例外は下表 `mintBlue→income` のみ）
+
+### 決定3（カテゴリーデータ色）：**確定** ✅
+- カテゴリーのデータ色を `CategoryPalette`（`lib/theme/category_palette.dart`、tokens.json の `category` セットから生成）で**トークン化**
+- DB文字列⇄`Color` の変換ヘルパーを `MyColors` から `ColorCode`（`lib/util/color_code.dart`）に**分離**（ロジック不変）
+- 消費側（color_select_dialog のスウォッチ／`sql_on_create` のシード／固定費定数／予測グラフ注入）を `CategoryPalette` 参照へ
+- **DB無影響**：シードの6桁HEXは全て従来値と**バイト一致を機械確認**（`expense1Hex='FF7171'` 等）。既存DBの保存値も不変
+
+### バケットB（少数参照ニュートラル等）：確定マッピング
+| 旧 MyColors | 値(dark) | 移行先 | 移行先値(dark) | 備考 |
+|---|---|---|---|---|
+| `white` | #FFFFFF | `onPrimary` / `text` | #FFFFFF | 主色/色付き背景上→`onPrimary`、surface前景→`text`（dark同値・差はlight時のみ顕在化） |
+| `black` | #000000 | `surface` | #000000 | Dismissible背景・プレースホルダ等 |
+| `systemGray2` | #636366 | `textSecondary` / `icon` | #EBEBF5 60% / #8E8E93 | 用途別（テキスト→textSecondary / アイコン→icon。実際の5箇所は全てアイコン→`icon`）。※意味優先のため厳密な値一致ではない |
+| `systemGray5` | #2C2C2C | `fillOpaque` | #2C2C30 | 確認ダイアログ背景。※僅差（下位1バイト） |
+| `mintBlue` | #36C5F1 | `income` | #21D19F | **★色変更を伴う（#36C5F1 → #21D19F、承認済み）**。カレンダーの土曜/収入色 |
+
+> バケットBは `systemGray2`/`systemGray5` の意味優先の寄せ（僅かな値差）と `mintBlue→income` の意図的色変更を含む。`white`/`black` はダークで値同一。
+
+### Painter（6c-2）
+`annual_balance_chart_painter` / `prediction_graph_painter` 内のバケットA色は、コンストラクタ引数（`final Color`）注入＋Widget側で `context.colors.*` を渡す方式に移行（const TextStyle は対象外）。
 
 ---
 
@@ -107,15 +139,17 @@
 
 ---
 
-## 3. 【決定3・未確定】データ色（カテゴリーパレット）
+## 3. 【決定3・確定 ✅】データ色（カテゴリーパレット）
 
-UIクロームではなくDBデータ（`color_code`）。現状 `MyColors` 定数とDB文字列で二重保持。
-決定3で「トークン化して単一ソース化するか / 分離維持か」を決めてから tokens.json に追加する。
-**STEP5では一旦保留**（UIクロームのトークンを先に確定させる）。
+UIクロームではなくDBデータ（`color_code`）。**`CategoryPalette`（`lib/theme/category_palette.dart`、
+tokens.json の `category` セットから生成）でトークン化済み**。旧 `MyColors` 定数との二重保持は解消。
+変換ヘルパーは `ColorCode`（`lib/util/color_code.dart`）に分離（ロジック不変・**DB無影響＝シードのバイト一致を機械確認**）。
+詳細は §0「フェーズ0 ステータス＞決定3」を参照。
 
-- 支出パレット(8): `#FF7171 #FB5B01 #3DD8E0 #4BA6FF #BB87FF #DF2828 #FFC700 #AC3E00`
-- 収入パレット(4): `#21D19F #10B981 #059669 #6EE7B7`
-- 固定費: `#8E8E93`（全カテゴリー同色）
+- 支出パレット(8): `#FF7171 #FB5B01 #3DD8E0 #4BA6FF #BB87FF #DF2828 #FFC700 #AC3E00`（`CategoryPalette.expense1..8`）
+- 収入パレット(4): `#21D19F #10B981 #059669 #6EE7B7`（`CategoryPalette.income1..4`）
+- 固定費: `#8E8E93`（全カテゴリー同色 / `CategoryPalette.fixedCost`）
+- DB保存用6桁HEX定数も併記（`CategoryPalette.expense1Hex='FF7171'` 等）— シード/注入はこれを参照
 
 ---
 
@@ -140,16 +174,15 @@ Apple準拠でない以下は、ライト背景での見え方を実機/Figmaで
 
 ---
 
-## 6. このあとの流れ
+## 6. 進捗と残課題
 
-```
-本仕様を確認（特に🔸とライト段差⚠️）
-   ↓
-STEP5: tokens.json 生成（Claude Code）← UIクロームのトークンのみ。決定3/6は後追い
-   ↓ レビュー
-STEP6: figma2flutter で lib/theme/ 生成 + MaterialApp に light/dark 接続
-       + 旧 MyColors.* → 新トークンの一括置換（約400箇所）+ flutter analyze
-       + ハードコード色 検出hook
-   ↓
-決定3（カテゴリーパレット）・決定6（共同アクセント）を確定して追補
-```
+**完了（フェーズ0）**:
+- STEP5: `tokens.json` 生成 ✅
+- STEP6: `lib/theme/` 生成 ＋ MaterialApp に light/dark 接続 ＋ 旧 `MyColors.*` 全置換（約400箇所）＋ `colors.dart` 削除 ＋ ハードコード色 検出hook ✅
+- 決定3（カテゴリーパレット）確定・実装 ✅（§0・§3）
+- バケットB（少数参照ニュートラル）の用途別移行 ✅（§0）／ Painter注入 ✅
+
+**残課題（次フェーズ）**:
+1. **ライト有効化（6c-3b）**: const TextStyle 内の `AppColorsDark.*` 直参照を剥がす（context依存化）→ `themeMode.system` へ切り替え。併せて §5 の🔸（ライト値の実機確認）と §2「面」⚠️（surface 3段差）を確定
+2. **決定6（共同カラーパレット）**: Confluence未決事項と合流し `color.couple-accent` 等を確定 → `tokens.json` 追加（§4）
+3. **Figma生成の自動化**: `tokens.json` ⇄ Figma変数 の同期、画面デザイン生成の自動化
