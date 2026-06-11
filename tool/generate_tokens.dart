@@ -164,7 +164,11 @@ void main(List<String> args) {
 
   // BuildContext 拡張
   buf.writeln('extension AppColorsX on BuildContext {');
-  buf.writeln('  AppColors get colors => Theme.of(this).extension<AppColors>()!;');
+  buf.writeln('  // 移行期: 新規 ThemeData を生成する Theme 配下など、AppColors 未登録の');
+  buf.writeln('  // subtree でも null クラッシュしないよう、未取得時はダーク既定値へフォールバックする。');
+  buf.writeln('  // （当面 themeMode.dark 固定のため dark を既定とする）');
+  buf.writeln('  AppColors get colors =>');
+  buf.writeln('      Theme.of(this).extension<AppColors>() ?? AppColors.dark;');
   buf.writeln('}');
   buf.writeln('');
 

@@ -47,7 +47,10 @@ class AppPopupMenu<T> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData(
+      // 新規 ThemeData を作ると AppColors 等の ThemeExtension が欠落し、
+      // child（AppPillContainer 等）の context.colors が null になるため、
+      // 現在のテーマを copyWith して splash/highlight のみ上書きする。
+      data: Theme.of(context).copyWith(
           splashColor: Colors.transparent,
           highlightColor: Colors.black.withOpacity(0.1)),
       child: PopupMenuButton<T>(
