@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/font_style.dart';
 
 /// ============================================================================
@@ -35,7 +35,7 @@ class RegisterPageStyles {
   static final TextStyle placeHolder = MyFontStyle.notoSans.copyWith(
     fontSize: 14,
     fontWeight: FontWeight.w500,
-    color: MyColors.secondaryLabel,
+    color: AppColorsDark.textSecondary,
   );
 
   /// 支出金額入力スタイル（ダイアログ用）
@@ -47,7 +47,7 @@ class RegisterPageStyles {
   static final TextStyle inputExpenseText = MyFontStyle.sfUi.copyWith(
     fontSize: 25,
     fontWeight: FontWeight.w500,
-    color: MyColors.label,
+    color: AppColorsDark.text,
     height: 1.0,
   );
 
@@ -68,7 +68,7 @@ class RegisterPageStyles {
   static final TextStyle inputText = MyFontStyle.notoSans.copyWith(
     fontSize: 15,
     fontWeight: FontWeight.w500,
-    color: MyColors.label,
+    color: AppColorsDark.text,
     height: 1.0,
   );
 
@@ -83,7 +83,7 @@ class RegisterPageStyles {
   ///   - エリア: large_price_display.dart (大型金額表示)
   ///   - 詳細: 入力中の金額表示
   static final TextStyle priceInput = MyFontStyle.sfUi.copyWith(
-    color: MyColors.white,
+    color: AppColorsDark.text,
     fontSize: 42,
     fontWeight: FontWeight.bold,
     height: 1.0,
@@ -96,7 +96,7 @@ class RegisterPageStyles {
   ///   - エリア: large_price_display.dart (大型金額表示)
   ///   - 詳細: 金額未入力時の「---」表示
   static final TextStyle priceUnconfirmed = MyFontStyle.sfUi.copyWith(
-    color: MyColors.secondaryLabel,
+    color: AppColorsDark.textSecondary,
     fontSize: 42,
     fontWeight: FontWeight.bold,
     height: 1.0,
@@ -147,7 +147,7 @@ class RegisterPageStyles {
   static final TextStyle categoryLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 13,
     fontWeight: FontWeight.w500,
-    color: MyColors.white,
+    color: AppColorsDark.text,
   );
 
   /// 「アイコンを並べ替える」リンク
@@ -157,7 +157,7 @@ class RegisterPageStyles {
   ///   - エリア: category_area/category_area.dart
   ///   - 詳細: カテゴリーエリア下部の並べ替えリンク
   static final TextStyle rearrangeLink = MyFontStyle.notoSans.copyWith(
-    color: MyColors.secondaryLabel,
+    color: AppColorsDark.textSecondary,
     fontWeight: FontWeight.w600,
     fontSize: 16,
   );
@@ -174,7 +174,7 @@ class RegisterPageStyles {
   ///   - 詳細: 「1」「2」...などの間隔数字表示
   static final TextStyle pickerLargeNumber = MyFontStyle.sfUi.copyWith(
     fontSize: 24,
-    color: MyColors.label,
+    color: AppColorsDark.text,
     fontWeight: FontWeight.bold,
   );
 
@@ -186,7 +186,7 @@ class RegisterPageStyles {
   ///   - 詳細: 「ヶ月」「年」などの単位表示
   static final TextStyle pickerMediumText = MyFontStyle.notoSans.copyWith(
     fontSize: 20,
-    color: MyColors.label,
+    color: AppColorsDark.text,
     fontWeight: FontWeight.bold,
   );
 
@@ -198,7 +198,7 @@ class RegisterPageStyles {
   ///   - 詳細: 「支払い額変動あり」ラベル
   static final TextStyle priceTypeSwitchLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 14,
-    color: MyColors.secondaryLabel,
+    color: AppColorsDark.textSecondary,
     fontWeight: FontWeight.w400,
   );
 
@@ -208,7 +208,7 @@ class RegisterPageStyles {
   static final TextStyle iconRearrangeDescription = MyFontStyle.notoSans
       .copyWith(
         fontSize: 14,
-        color: MyColors.secondaryLabel,
+        color: AppColorsDark.textSecondary,
         fontWeight: FontWeight.w500,
       );
 }
