@@ -137,6 +137,23 @@ A・B は C と独立。B は C-3（カップル画面生成）に効いてく�
 
 subagent・skill・hook を用意する。実装はまだしない。
 
+> **✅ 2026-06-12 実施済み**（ブランチ `claude/auto-flow-training-1/pipeline-c0-skeleton`）。
+> agents 5つ・skills 雛形3つ・CLAUDE.md 追記まで完了。
+> **残: 4. の flutter analyze hook のみ未適用**（自動実行セッションでは `.claude/settings.json` への
+> 書き込みが承認されないため）。下記スニペットを `.claude/settings.json` の
+> `hooks.PostToolUse[0].hooks` 配列に手動追加すること:
+>
+> ```json
+> {
+>   "type": "command",
+>   "command": "jq -r '.tool_input.file_path // empty' | { read -r f; case \"$f\" in *.g.dart|*.freezed.dart) exit 0;; *.dart) dart analyze --no-fatal-warnings \"$f\" 1>&2 || exit 2;; esac; }",
+>   "statusMessage": "dart analyze実行中..."
+> }
+> ```
+>
+> （`--no-fatal-warnings` は既存の warning/info で毎回ブロックされるのを防ぐため。
+> エラーのみ exit 2 で Claude にフィードバックされる。検証済み）
+
 ```
 kakeibo の設計→実装 自動化パイプラインの骨組みを作る。実コードの変更はしない。
 
