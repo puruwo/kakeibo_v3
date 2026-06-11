@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
@@ -47,7 +48,7 @@ class _IncomeCategoryAppearanceEditAreaState
             initialItem.name;
         ref
             .read(incomeBigCategoryColorControllerNotifierProvider.notifier)
-            .initState(MyColors().getColorFromHex(initialItem.colorCode));
+            .initState(ColorCode.toColor(initialItem.colorCode));
         ref
             .read(incomeBigCategoryIconControllerNotifierProvider.notifier)
             .initState(initialItem.iconPath);

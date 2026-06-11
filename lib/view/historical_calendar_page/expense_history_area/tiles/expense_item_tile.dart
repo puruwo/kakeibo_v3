@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
@@ -32,7 +33,7 @@ class ExpenseItemTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final expenseUsecase = ref.read(expenseUsecaseProvider);
-    final color = MyColors().getColorFromHex(value.colorCode);
+    final color = ColorCode.toColor(value.colorCode);
 
     // アイコン
     final icon = FittedBox(

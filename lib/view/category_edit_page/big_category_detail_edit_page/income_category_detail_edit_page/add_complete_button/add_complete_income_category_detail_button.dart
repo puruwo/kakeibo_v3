@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
@@ -60,7 +61,7 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
 
             final color =
                 ref.watch(incomeBigCategoryColorControllerNotifierProvider);
-            final colorCode = MyColors().getColorCodeFromColor(color);
+            final colorCode = ColorCode.fromColor(color);
             if (color == Colors.transparent) {
               throw const AppException('カテゴリーの色を選択してください');
             }

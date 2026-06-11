@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
@@ -141,7 +142,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
 
   /// アイコンウィジェットを構築（アニメーション付き）
   Widget animatedIcon(ReorderingCategoryItem item) {
-    final color = MyColors().getColorFromHex(item.colorCode);
+    final color = ColorCode.toColor(item.colorCode);
 
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 180),

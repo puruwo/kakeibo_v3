@@ -1,8 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
@@ -61,7 +61,7 @@ class CategorySumGraph extends HookConsumerWidget {
                 width: isBuilt.value ? barWidth : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: MyColors().getColorFromHex(
+                  color: ColorCode.toColor(
                     monthlyExpenseByCategoryEntity.categoryColor,
                   ),
                 ),
@@ -91,7 +91,7 @@ class CategorySumGraph extends HookConsumerWidget {
                 width: isBuilt.value ? barWidth : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: MyColors().getColorFromHex(
+                  color: ColorCode.toColor(
                     monthlyExpenseByCategoryEntity.categoryColor,
                   ),
                 ),
@@ -119,7 +119,7 @@ class CategorySumGraph extends HookConsumerWidget {
                 width: isBuilt.value ? barFrameMaxWidth : 0,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
-                  color: MyColors().getColorFromHex(
+                  color: ColorCode.toColor(
                     monthlyExpenseByCategoryEntity.categoryColor,
                   ),
                 ),

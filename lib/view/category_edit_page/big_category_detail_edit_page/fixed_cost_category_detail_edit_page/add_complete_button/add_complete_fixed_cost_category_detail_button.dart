@@ -1,5 +1,6 @@
 // packageImport
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // LocalImport
@@ -55,7 +56,7 @@ class AddCompleteFixedCostCategoryDetailButton extends ConsumerWidget
             final newEntity = FixedCostCategoryEntity(
               categoryName: categoryName,
               resourcePath: iconPath,
-              colorCode: MyColors().getHexFromColor(colorCode),
+              colorCode: ColorCode.toHex(colorCode),
               displayOrder: categoryOrder,
               isDisplayed: 1,
             );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -132,8 +133,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(5),
-                                          color: MyColors()
-                                              .getColorFromHex(colorCode),
+                                          color: ColorCode.toColor(colorCode),
                                         )),
                                   ),
                                 ),

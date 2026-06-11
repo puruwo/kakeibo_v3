@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
@@ -51,7 +52,7 @@ class _BigCategoryAppearanceEditAreaState
             initialItem.bigCategoryName;
         ref
             .read(bigCategroyColorControllerNotifierProvider.notifier)
-            .initState(MyColors().getColorFromHex(initialItem.colorCode));
+            .initState(ColorCode.toColor(initialItem.colorCode));
         ref
             .read(bigCategroyIconControllerNotifierProvider.notifier)
             .initState(initialItem.resourcePath);

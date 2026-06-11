@@ -1,5 +1,6 @@
 // packageImport
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // LocalImport
@@ -57,14 +58,14 @@ class UpdateCompleteFixedCostCategoryDetailButton extends ConsumerWidget
             if (originalEntity.categoryName == categoryName &&
                 originalEntity.resourcePath == iconPath &&
                 originalEntity.colorCode ==
-                    MyColors().getHexFromColor(colorCode)) {
+                    ColorCode.toHex(colorCode)) {
               throw const AppException('編集がされていません');
             }
 
             final updatedEntity = originalEntity.copyWith(
               categoryName: categoryName,
               resourcePath: iconPath,
-              colorCode: MyColors().getHexFromColor(colorCode),
+              colorCode: ColorCode.toHex(colorCode),
             );
 
             await usecase.edit(

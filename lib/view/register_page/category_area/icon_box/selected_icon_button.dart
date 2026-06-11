@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -21,7 +22,7 @@ class SelectedIconButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final color = MyColors().getColorFromHex(categoryEntity.colorCode);
+    final color = ColorCode.toColor(categoryEntity.colorCode);
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(22),

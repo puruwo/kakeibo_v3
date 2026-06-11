@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
@@ -139,7 +140,7 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                     final name = ref
                         .watch(incomeBigCategoryNameControllerProvider)
                         .text;
-                    final colorCode = MyColors().getColorCodeFromColor(
+                    final colorCode = ColorCode.fromColor(
                       ref.watch(
                         incomeBigCategoryColorControllerNotifierProvider,
                       ),

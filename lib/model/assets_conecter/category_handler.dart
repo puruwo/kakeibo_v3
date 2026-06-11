@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
-import 'package:kakeibo/constant/colors.dart';
 
 
 DatabaseHelper db = DatabaseHelper.instance;
@@ -27,7 +27,7 @@ class CategoryHandler {
           if (snapshot.data != null) {
             String path = snapshot.data![0][SqfExpenseBigCategory.resourcePath];
             String colorCode = snapshot.data![0][SqfExpenseBigCategory.colorCode];
-            final color = MyColors().getColorFromHex(colorCode);
+            final color = ColorCode.toColor(colorCode);
             Widget icon = FittedBox(
               fit: BoxFit.scaleDown,
               child: iconWidget(path,color,width: width, height: height));

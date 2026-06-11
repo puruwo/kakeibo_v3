@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:kakeibo/constant/colors.dart';
 
 /// 予算ページ用の棒グラフウィジェット
 /// 生の金額リストとdenominatorを受け取り、ウィジェット内でratioを計算する
@@ -46,7 +46,7 @@ class SummaryBarGraph extends HookConsumerWidget {
             return AnimatedContainer(
               height: 8.5,
               width: isBuilt.value ? ratio * maxGraphWidth : 0,
-              color: MyColors().getColorFromHex(colors[i]),
+              color: ColorCode.toColor(colors[i]),
               duration: const Duration(milliseconds: 500),
             );
           }),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 
 class FixedCostCategoryHeader extends StatelessWidget {
@@ -18,7 +18,7 @@ class FixedCostCategoryHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // カテゴリーの色を取得
-    final color = MyColors().getColorFromHex(colorCode);
+    final color = ColorCode.toColor(colorCode);
 
     return Column(
       children: [

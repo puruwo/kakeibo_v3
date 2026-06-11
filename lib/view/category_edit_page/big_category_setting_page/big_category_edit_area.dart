@@ -2,6 +2,7 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 
@@ -208,7 +209,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             child: SvgPicture.asset(
                               itemList[index].resourcePath,
                               colorFilter: ColorFilter.mode(
-                                MyColors().getColorFromHex(
+                                ColorCode.toColor(
                                   itemList[index].colorCode,
                                 ),
                                 BlendMode.srcIn,
@@ -378,7 +379,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             child: SvgPicture.asset(
                               itemList[index].resourcePath,
                               colorFilter: ColorFilter.mode(
-                                MyColors().getColorFromHex(
+                                ColorCode.toColor(
                                   itemList[index].colorCode,
                                 ),
                                 BlendMode.srcIn,

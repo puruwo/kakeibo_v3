@@ -1,5 +1,6 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
@@ -78,7 +79,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                 category,
                               ) {
                                 return PieChartSectionData(
-                                  color: MyColors().getColorFromHex(
+                                  color: ColorCode.toColor(
                                     category.colorCode,
                                   ),
                                   value: category.totalAmount.toDouble(),
@@ -127,7 +128,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                           SvgPicture.asset(
                                             category.iconPath,
                                             colorFilter: ColorFilter.mode(
-                                              MyColors().getColorFromHex(
+                                              ColorCode.toColor(
                                                 category.colorCode,
                                               ),
                                               BlendMode.srcIn,

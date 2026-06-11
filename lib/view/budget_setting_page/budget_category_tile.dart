@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -72,7 +73,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                       child: SvgPicture.asset(
                         widget.budgetEditValue.resourcePath,
                         colorFilter: ColorFilter.mode(
-                          MyColors().getColorFromHex(
+                          ColorCode.toColor(
                             widget.budgetEditValue.colorCode,
                           ),
                           BlendMode.srcIn,

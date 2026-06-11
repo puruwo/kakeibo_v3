@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:kakeibo/application/prediction_graph/prediction_graph_constants.dart';
 import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
@@ -242,7 +243,7 @@ class PredictionGraphDataSource {
         categoryExpenses.add(CategoryExpense(
           bigCategoryId: PredictionGraphConstants.fixedCostBarCategoryId,
           price: fixedCostForDay,
-          colorCode: MyColors().getHexFromColor(MyColors.fixedCostGray),
+          colorCode: ColorCode.toHex(MyColors.fixedCostGray),
           iconPath: '',
           categoryName: '固定費',
           normalizedHeight: 0, // 後で設定
@@ -255,7 +256,7 @@ class PredictionGraphDataSource {
         categoryExpenses.add(CategoryExpense(
           bigCategoryId: entry.key,
           price: entry.value,
-          colorCode: catInfo?.colorCode ?? MyColors().getHexFromColor(MyColors.fixedCostGray),
+          colorCode: catInfo?.colorCode ?? ColorCode.toHex(MyColors.fixedCostGray),
           iconPath: catInfo?.iconPath ?? '',
           categoryName: catInfo?.name ?? '',
           normalizedHeight: 0, // 後で設定

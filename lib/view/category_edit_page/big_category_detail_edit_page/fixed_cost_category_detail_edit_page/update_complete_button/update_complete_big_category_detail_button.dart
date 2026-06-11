@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
@@ -67,7 +68,7 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
                     .then((initialData) async {
                   final name =
                       ref.watch(bigCategoryNameControllerProvider).text;
-                  final colorCode = MyColors().getColorCodeFromColor(
+                  final colorCode = ColorCode.fromColor(
                       ref.watch(bigCategroyColorControllerNotifierProvider));
                   final resourcePath =
                       ref.watch(bigCategroyIconControllerNotifierProvider);

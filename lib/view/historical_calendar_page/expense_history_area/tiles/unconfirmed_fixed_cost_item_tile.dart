@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
@@ -25,7 +26,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fixedCostExpenseUsecase = ref.read(fixedCostExpenseUsecaseProvider);
-    final color = MyColors().getColorFromHex(value.colorCode);
+    final color = ColorCode.toColor(value.colorCode);
 
     // アイコン
     final icon = FittedBox(

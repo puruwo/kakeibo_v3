@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
@@ -60,7 +61,7 @@ class _FixedCostCategoryAppearanceEditAreaState
             .updateState(initialItem.categoryName);
         ref
             .read(fixedCostCategoryColorControllerNotifierProvider.notifier)
-            .updateState(MyColors().getColorFromHex(initialItem.colorCode));
+            .updateState(ColorCode.toColor(initialItem.colorCode));
         ref
             .read(fixedCostCategoryIconControllerNotifierProvider.notifier)
             .updateState(initialItem.resourcePath);
