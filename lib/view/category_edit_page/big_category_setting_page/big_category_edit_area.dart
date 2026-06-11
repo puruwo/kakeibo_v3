@@ -247,9 +247,9 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                               alignment: Alignment.centerRight,
                               width: 50,
                               height: 50,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.drag_handle_rounded,
-                                color: MyColors.systemGray2,
+                                color: context.colors.icon,
                               ),
                             ),
                           ),
@@ -406,9 +406,9 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                               alignment: Alignment.centerRight,
                               width: 50,
                               height: 50,
-                              child: const Icon(
+                              child: Icon(
                                 Icons.drag_handle_rounded,
-                                color: MyColors.systemGray2,
+                                color: context.colors.icon,
                               ),
                             ),
                           ),

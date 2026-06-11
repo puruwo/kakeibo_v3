@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
@@ -71,7 +70,7 @@ class ExpenseItemTile extends ConsumerWidget {
         direction: DismissDirection.endToStart,
         key: Key(value.id.toString()),
         dragStartBehavior: DragStartBehavior.start,
-        background: Container(color: MyColors.black),
+        background: Container(color: context.colors.surface),
         secondaryBackground: Container(
           color: context.colors.expense,
           child: Align(

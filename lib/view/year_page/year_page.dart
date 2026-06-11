@@ -16,7 +16,6 @@ import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_register_prompt_area.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_button_area.dart';
 import 'package:kakeibo/view/year_page/yearly_balance_area/yearly_balance_area.dart';
-import 'package:kakeibo/constant/colors.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_annual_balance_chart_value_provider.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_plan_provider.dart';
@@ -133,8 +132,8 @@ class _YearPageState extends ConsumerState<YearPage> {
                                 style: AppTextStyles.pageHeaderText),
                             Transform.translate(
                               offset: const Offset(-6, 0),
-                              child: const Icon(Icons.arrow_drop_down,
-                                  color: MyColors.systemGray2, size: 30),
+                              child: Icon(Icons.arrow_drop_down,
+                                  color: context.colors.icon, size: 30),
                             ),
                           ],
                         ),

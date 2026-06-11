@@ -27,7 +27,7 @@ Future<bool> showConfirmationDialog(
         context: context,
         builder: (BuildContext context) {
           return Dialog(
-            backgroundColor: MyColors.systemGray5,
+            backgroundColor: context.colors.fillOpaque,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(24),
             ),

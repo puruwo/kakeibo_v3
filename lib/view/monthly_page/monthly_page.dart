@@ -142,8 +142,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         Text(label, style: AppTextStyles.pageHeaderText),
                         Transform.translate(
                           offset: const Offset(-4, 0),
-                          child: const Icon(Icons.arrow_drop_down,
-                              color: MyColors.systemGray2, size: 30),
+                          child: Icon(Icons.arrow_drop_down,
+                              color: context.colors.icon, size: 30),
                         ),
                       ],
                     ),

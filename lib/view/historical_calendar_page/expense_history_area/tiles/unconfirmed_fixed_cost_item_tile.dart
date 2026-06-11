@@ -49,7 +49,7 @@ class UnconfirmedFixedCostItemTile extends ConsumerWidget {
         direction: DismissDirection.endToStart,
         key: Key(value.id.toString()),
         dragStartBehavior: DragStartBehavior.start,
-        background: Container(color: MyColors.black),
+        background: Container(color: context.colors.surface),
         secondaryBackground: Container(
           color: context.colors.expense,
           child: Align(

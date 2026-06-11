@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:kakeibo/constant/colors.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/constant/strings.dart';
 
@@ -18,7 +18,7 @@ class NoneIconBox extends StatelessWidget {
           width: 62.2 * context.screenHorizontalMagnification,
           child: Container(
             decoration: BoxDecoration(
-              color: MyColors.black,
+              color: context.colors.text,
               borderRadius: BorderRadius.circular(8),
             ),
           ),

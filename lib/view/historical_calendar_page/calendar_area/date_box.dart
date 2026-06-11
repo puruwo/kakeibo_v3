@@ -144,7 +144,7 @@ Widget calculatePriceLabel(
           // 収入は青い+アイコン、支出は赤い-アイコン
           Icon(
             isIncome ? Icons.add : Icons.remove,
-            color: isIncome ? MyColors.mintBlue : context.colors.expense,
+            color: isIncome ? context.colors.income : context.colors.expense,
             size: isCompact ? 8 : 10,
           ),
           Text(
