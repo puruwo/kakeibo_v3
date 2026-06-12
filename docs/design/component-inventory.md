@@ -4,7 +4,12 @@
 > figma-builder / figma-from-screenspec が「使ってよい部品」を判断する際の正本となる。
 > 実装側の利用ガイドは `kakeibo-common-components` スキルを参照（重複させない）。
 
-対象Figmaファイル: `UhV3dLrJDWKuOdG9ik4uHW`（デザインシステムは Component ページに整備）
+対象Figmaファイル: `UhV3dLrJDWKuOdG9ik4uHW`（デザインシステムは **kakeibo DS** ページに整備済み。旧Componentページの手作り資産とは共存・分離）
+
+> **✅ 2026-06-12 P1〜P3 作成完了**（22コンポーネント）。
+> 「kakeibo DS」ページ（nodeId `3468:4965`）にセクション P1 Atoms / P1 Molecules / P2 Input / P3 Feedback で配置。
+> 月間分析ページのドラフト再現による充足度検証も完了（Screen Drafts ページ `Draft/月間分析`）。
+> 発見されたギャップは末尾「検証で発見されたギャップ」を参照。
 
 ## 前提（整備済みの土台）
 
@@ -73,9 +78,41 @@
   - 余白・サイズ感の微調整（コードのpadding値を初期値にする）
   - ライブラリとしてのpublish操作（Figma UI上の手動操作）
 
+## 作成済みコンポーネントのnodeID（2026-06-12時点）
+
+| コンポーネント | nodeId | | コンポーネント | nodeId |
+|---|---|---|---|---|
+| kakeibo/Card | 3469:4965 | | kakeibo/TransactionTypePill | 3480:4987 |
+| kakeibo/Pill | 3470:4965 | | kakeibo/InputRow | 3482:4984 |
+| kakeibo/IconCircle | 3471:4969 | | kakeibo/PriceDisplay | 3483:4971 |
+| kakeibo/Checkbox | 3472:4969 | | kakeibo/YearMonthPicker | 3484:4971 |
+| kakeibo/Chip | 3473:4965 | | kakeibo/Dialog | 3486:4993 |
+| kakeibo/Button | 3474:4973 | | kakeibo/Snackbar | 3487:4977 |
+| kakeibo/TabItem | 3475:4973 | | kakeibo/Loader | 3487:4978 |
+| kakeibo/TabBar | 3475:4974 | | kakeibo/BottomSheet | 3488:4972 |
+| kakeibo/SectionHeader | 3476:4979 | | kakeibo/AppBar | 3488:4975 |
+| kakeibo/FAB | 3477:4978 | | kakeibo/ChartPlaceholder | 3489:4971 |
+| kakeibo/ListCard | 3478:4983 | | kakeibo/BottomNav | 3489:4984 |
+
+※IDは参考。figma-builder は名前（`kakeibo/` プレフィックス）での検索を正とする。
+
+## 検証で発見されたギャップ（月間分析ドラフト再現より）
+
+| # | ギャップ | 暫定対応 / 恒久対応 |
+|---|---|---|
+| 1 | **年月度セレクタ行**（AppBar下の「2026年6月度 ▼」）が専用部品として無い | 暫定: テキスト+▼を画面側で組む / 恒久: kakeibo/PeriodSelector を追加 |
+| 2 | **CategorySumTile**（カテゴリー別タイル: 棒グラフ+予算消化率付き）が無く ListCard で代用 | 恒久: 専用コンポーネント追加（予算バーはCategory変数バインドの矩形） |
+| 3 | **スロット制約**: Card/Pill/BottomSheet の contentスロットはインスタンスに子を追加できない | ルール化: 画面側でラッパーフレーム+重ね配置（detach禁止）。figma-from-screenspec 参照 |
+| 4 | **実アイコン未整備**: ListCard等のアイコンは円/角丸プレースホルダー | 恒久: assets/icons のSVGから Icons ページを整備し INSTANCE_SWAP 化 |
+| 5 | **カテゴリー色の切替**: ListCardのアイコン色が expense/1 固定 | 恒久: アイコンのINSTANCE_SWAP化とセットで色プロパティ設計 |
+
+### コードドリフト（design-auditor向けメモ）
+
+- `color_getter.dart`: 収入モードのピル色が `Colors.lightBlue` ハードコード（incomeトークン未使用）。DS側は income トークンに正規化済み
+
 ## 次のステップ
 
-1. P1の10個を1個ずつFigmaのComponentページに作成（各コンポーネントごとに人間レビュー）
-2. P2・P3を同様に作成
-3. `figma-from-screenspec` スキルに「画面スペック要素→本一覧のコンポーネント」マッピング表を記載
-4. 既存画面1つ（候補: 月間分析ページ）をコンポーネントだけで再現し充足度を検証
+1. ~~P1の10個を作成~~ ✅ 2026-06-12 / ~~P2・P3を作成~~ ✅ / ~~充足度検証（月間分析ドラフト）~~ ✅
+2. ギャップ#1・#2（PeriodSelector / CategorySumTile）のコンポーネント追加
+3. アイコンライブラリ整備（assets/icons → Icons ページ → INSTANCE_SWAP）
+4. C-3: confluence-reader → figma-builder の通し実行（1画面）
