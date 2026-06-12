@@ -93,18 +93,36 @@
 | kakeibo/SectionHeader | 3476:4979 | | kakeibo/AppBar | 3488:4975 |
 | kakeibo/FAB | 3477:4978 | | kakeibo/ChartPlaceholder | 3489:4971 |
 | kakeibo/ListCard | 3478:4983 | | kakeibo/BottomNav | 3489:4984 |
+| kakeibo/CategoryIcon | 3504:4995 | | | |
 
 ※IDは参考。figma-builder は名前（`kakeibo/` プレフィックス）での検索を正とする。
 
+## 実機スクリーンショットとの擦り合わせ（2026-06-13・画面遷移図参照）
+
+画面一覧ページの実機スクリーンショットと照合し、以下を実機準拠に修正済み:
+
+- **kakeibo/CategoryIcon を新設**: `assets/images/icon_*.svg` の実SVG 8種（食費/日用品/遊び娯楽/交通費/衣服美容/医療費/雑費/収入）。円形バッジ=カテゴリー色25% + シンボル=カテゴリー色（Category変数バインド）
+- **ListCard**: アイコンをCategoryIconインスタンスに差し替え。金額は実機準拠の「金額=text色（白）+ 末尾符号のみ色付き（- = expense / + = income）」構造へ変更。バリアント軸名を Price→**Type** に改名（TEXTプロパティPriceとの衝突解消）
+- **BottomNav**: 中央の入力ボタンを実機準拠の**円形**（52px）に修正
+- **AppBar**: 左=戻る矢印（Show Back、既定OFF）/ 右=設定ギア（Show Settings、既定ON）を追加。タイトル中央揃え
+- **Button**: 入力画面の確定ボタンはこのButtonの色上書き（モード色: 支出=expense/収入=income/固定費=expense）で表現する（`submit_button.dart` 準拠）
+
+※実機スクショの収入系は青（旧mintBlue系）だが、トークン決定（mintBlue→income #21D19F、承認済み）に従いDSは**incomeグリーン**を使用。
+
 ## 検証で発見されたギャップ（月間分析ドラフト再現より）
 
-| # | ギャップ | 暫定対応 / 恒久対応 |
+| # | ギャップ | 状態 |
 |---|---|---|
-| 1 | **年月度セレクタ行**（AppBar下の「2026年6月度 ▼」）が専用部品として無い | 暫定: テキスト+▼を画面側で組む / 恒久: kakeibo/PeriodSelector を追加 |
-| 2 | **CategorySumTile**（カテゴリー別タイル: 棒グラフ+予算消化率付き）が無く ListCard で代用 | 恒久: 専用コンポーネント追加（予算バーはCategory変数バインドの矩形） |
-| 3 | **スロット制約**: Card/Pill/BottomSheet の contentスロットはインスタンスに子を追加できない | ルール化: 画面側でラッパーフレーム+重ね配置（detach禁止）。figma-from-screenspec 参照 |
-| 4 | **実アイコン未整備**: ListCard等のアイコンは円/角丸プレースホルダー | 恒久: assets/icons のSVGから Icons ページを整備し INSTANCE_SWAP 化 |
-| 5 | **カテゴリー色の切替**: ListCardのアイコン色が expense/1 固定 | 恒久: アイコンのINSTANCE_SWAP化とセットで色プロパティ設計 |
+| 1 | **年月度セレクタ行**（AppBar下の「2026年6月度 ▼」）が専用部品として無い | 未対応（暫定: テキスト+▼を画面側で組む / 恒久: kakeibo/PeriodSelector） |
+| 2 | **CategorySumTile**（カテゴリー別タイル: 棒グラフ+予算消化率付き）が無く ListCard で代用 | 未対応（恒久: 専用コンポーネント追加） |
+| 3 | **スロット制約**: Card/Pill/BottomSheet の contentスロットはインスタンスに子を追加できない | ✅ ルール化済み（画面側でラッパーフレーム+重ね配置・detach禁止。figma-from-screenspec 参照） |
+| 4 | **実アイコン未整備** | ✅ 解消（kakeibo/CategoryIcon 8種を実SVGから作成） |
+| 5 | **カテゴリー色の切替**: ListCardのアイコンがType既定（食費/収入）固定 | 一部解消（行ごとの差し替えはネストインスタンスのバリアント切替で可能。INSTANCE_SWAPプロパティ化は今後） |
+
+### Figma操作の落とし穴（builder向けメモ）
+
+- **ネストインスタンスのfill不透明度**: コンポーネント側のpaint opacityがインスタンスに伝播しないことがある。インスタンス側で `fills` を明示再設定する
+- CategoryIcon以外のアイコン（ナビ・歯車・矢印等）は近似ベクター。必要に応じて実SVGへ差し替え
 
 ### コードドリフト（design-auditor向けメモ）
 
@@ -112,7 +130,7 @@
 
 ## 次のステップ
 
-1. ~~P1の10個を作成~~ ✅ 2026-06-12 / ~~P2・P3を作成~~ ✅ / ~~充足度検証（月間分析ドラフト）~~ ✅
+1. ~~P1の10個を作成~~ ✅ 2026-06-12 / ~~P2・P3を作成~~ ✅ / ~~充足度検証（月間分析ドラフト）~~ ✅ / ~~実機スクショ擦り合わせ・実アイコン化~~ ✅ 2026-06-13
 2. ギャップ#1・#2（PeriodSelector / CategorySumTile）のコンポーネント追加
-3. アイコンライブラリ整備（assets/icons → Icons ページ → INSTANCE_SWAP）
+3. CategoryIconのINSTANCE_SWAPプロパティ化（ListCardの行ごとアイコン指定を簡便に）
 4. C-3: confluence-reader → figma-builder の通し実行（1画面）
