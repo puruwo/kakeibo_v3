@@ -93,7 +93,8 @@
 | kakeibo/SectionHeader | 3476:4979 | | kakeibo/AppBar | 3488:4975 |
 | kakeibo/FAB | 3477:4978 | | kakeibo/ChartPlaceholder | 3489:4971 |
 | kakeibo/ListCard | 3478:4983 | | kakeibo/BottomNav | 3489:4984 |
-| kakeibo/CategoryIcon | 3504:4995 | | | |
+| kakeibo/CategoryIcon | 3504:4995 | | kakeibo/Dialog（作り直し後） | 3519:5001 |
+| kakeibo/PeriodSelector | 3520:4975 | | kakeibo/CategorySumTile | 3521:5020 |
 
 ※IDは参考。figma-builder は名前（`kakeibo/` プレフィックス）での検索を正とする。
 
@@ -109,12 +110,22 @@
 
 ※実機スクショの収入系は青（旧mintBlue系）だが、トークン決定（mintBlue→income #21D19F、承認済み）に従いDSは**incomeグリーン**を使用。
 
+### Dialogの作り直し（2026-06-13・実装コード準拠）
+
+旧Dialog（iOS風テキストボタン）は実装と乖離していたため削除し、`showConfirmationDialog`（app_delete_dialog.dart）準拠で再構築:
+
+- 角丸 **radius/dialog(24)**（トークン新設）、padding 24/24/24/20
+- タイトル（dialog-title 18）・本文（dialog-label 13）とも**中央揃え**
+- ボタンは **SubButton準拠の塗りつぶしStadiumボタン×2を均等幅**（高さ30・gap12）: キャンセル=fill背景 / OK=primary背景、文字はどちらも text色 Bold 14
+- 削除ダイアログも実装どおり**OKボタンはprimary**（赤の削除ボタンは存在しない）
+- 別系統の `showMenuDialog`（下からのメニューリスト・角丸12）は未コンポーネント化（必要時に追加）
+
 ## 検証で発見されたギャップ（月間分析ドラフト再現より）
 
 | # | ギャップ | 状態 |
 |---|---|---|
-| 1 | **年月度セレクタ行**（AppBar下の「2026年6月度 ▼」）が専用部品として無い | 未対応（暫定: テキスト+▼を画面側で組む / 恒久: kakeibo/PeriodSelector） |
-| 2 | **CategorySumTile**（カテゴリー別タイル: 棒グラフ+予算消化率付き）が無く ListCard で代用 | 未対応（恒久: 専用コンポーネント追加） |
+| 1 | **年月度セレクタ行**（AppBar下の「2026年6月度 ▼」） | ✅ 解消（kakeibo/PeriodSelector: pageHeaderText+▼+サブラベル、TEXT/BOOLEANプロパティ付き） |
+| 2 | **CategorySumTile**（カテゴリー別タイル: 棒グラフ+予算付き） | ✅ 解消（kakeibo/CategorySumTile: Budget=あり/超過/なし。バーh7・track=fill-secondary・fill=Category色・超過=overlay暗色。バー比率は画面側でfill幅調整） |
 | 3 | **スロット制約**: Card/Pill/BottomSheet の contentスロットはインスタンスに子を追加できない | ✅ ルール化済み（画面側でラッパーフレーム+重ね配置・detach禁止。figma-from-screenspec 参照） |
 | 4 | **実アイコン未整備** | ✅ 解消（kakeibo/CategoryIcon 8種を実SVGから作成） |
 | 5 | **カテゴリー色の切替**: ListCardのアイコンがType既定（食費/収入）固定 | 一部解消（行ごとの差し替えはネストインスタンスのバリアント切替で可能。INSTANCE_SWAPプロパティ化は今後） |
@@ -130,7 +141,6 @@
 
 ## 次のステップ
 
-1. ~~P1の10個を作成~~ ✅ 2026-06-12 / ~~P2・P3を作成~~ ✅ / ~~充足度検証（月間分析ドラフト）~~ ✅ / ~~実機スクショ擦り合わせ・実アイコン化~~ ✅ 2026-06-13
-2. ギャップ#1・#2（PeriodSelector / CategorySumTile）のコンポーネント追加
-3. CategoryIconのINSTANCE_SWAPプロパティ化（ListCardの行ごとアイコン指定を簡便に）
-4. C-3: confluence-reader → figma-builder の通し実行（1画面）
+1. ~~P1〜P3作成~~ ✅ / ~~充足度検証~~ ✅ / ~~実機擦り合わせ・実アイコン化~~ ✅ / ~~Dialog作り直し・PeriodSelector・CategorySumTile追加~~ ✅ 2026-06-13
+2. CategoryIconのINSTANCE_SWAPプロパティ化（ListCard/CategorySumTileの行ごとアイコン指定を簡便に）
+3. C-3: confluence-reader → figma-builder の通し実行（1画面）
