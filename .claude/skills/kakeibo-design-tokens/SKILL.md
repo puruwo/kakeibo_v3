@@ -10,6 +10,10 @@ description: kakeiboアプリで色を扱うすべての作業に適用する。
 - 色の単一ソースは `design-tokens/tokens.json`。**ここ以外に色値を書かない。**
 - アプリコードからは `context.colors.<token>` で参照する。`Color(0x...)` や `Colors.*` を直接書かない。
 - `lib/theme/app_colors.dart` は**生成物**。手で編集しない（`tool/generate_tokens.dart` が生成する）。
+- 色以外のデザイン値（角丸・寸法・フォント・タイポグラフィ）も tokens.json の **`global` セット**が単一ソース。
+  Figma側のVariables/スタイルはここから生成する。値を変えるときは tokens.json を先に直し、
+  対応するFlutter側定数（`appCardRadius` / `InputPageWidgetSize` / `AppTextStyles` 等）と一致させる
+  （`global` セットは現状コード生成対象外のため、コード側は手動同期）。
 
 ## 新しい色を追加する手順
 
