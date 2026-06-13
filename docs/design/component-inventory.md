@@ -133,6 +133,8 @@
 - **ネストインスタンスのfill不透明度**: コンポーネント側のpaint opacityがインスタンスに伝播しないことがある。インスタンス側で `fills` を明示再設定する
 - **プロパティキーのsuffix**: `setProperties` のキーは `Name#123:4` 形式。`instance.componentProperties` から前方一致で解決する
 - **バリアント軸名とTEXTプロパティ名の衝突回避**: 同名にしない（ListCardは Price軸→Type軸へ改名で解消）
+- **共有TEXTプロパティの伝播（重要）**: TransactionRow・InputRow は Title/Sub/Price 等を**コンポーネントTEXTプロパティ**として全バリアントで共有している。1バリアントの文字を直接編集すると**全バリアントに伝播**する。バリアントで変えられるのは icon・符号・色・dim のみで、**文字列は変えられない**。固定費行の「固定費」「固定費(未確定)」、未確定の価格「未確定」等は**画面生成時にインスタンス側でプロパティ設定**すること（コンポーネント既定値は汎用サンプル＝支出例のまま）
+- アイコン背景の形状: リスト行（TransactionRow/ListCard/BudgetRow）のカテゴリアイコンは**円背景なし**（実装は25pxのSVGを49×49 boxに配置するだけ）。一方カテゴリ選択ボタンの背景は**58×58の円**（`AppIconCircleContainer`=`BoxShape.circle`）。ナビ中央の入力ボタンは**42×42・角丸16の角丸スクエア**（円ではない）
 - 汎用アイコン（ナビ・歯車・矢印等）は近似ベクター。CategoryIconのみ実SVG
 
 ## コードドリフト（design-auditor向けメモ）
@@ -142,5 +144,6 @@
 ## 次のステップ
 
 1. ~~P1〜P3作成~~ ✅ / ~~実機擦り合わせ・実アイコン化~~ ✅ / ~~Dialog作り直し~~ ✅ / ~~リスト行・カレンダー・予算・入力系の網羅追加~~ ✅ 2026-06-13
+   - ~~画面遷移図と再照合し2件修正：CategorySelectButton(Normal/Selected)の背景を縦ピル→**58×58円**化／BottomNav中央入力ボタンを円→**角丸16の角丸スクエア**化~~ ✅ 2026-06-13。TransactionRow固定費行は共有TEXTプロパティ設計のためコンポーネント側では汎用サンプルのまま（上記builderメモ参照）
 2. CategoryIcon の INSTANCE_SWAP プロパティ化（TransactionRow/ListCard/CategorySumTile の行ごとアイコン指定を簡便に）
 3. C-3: confluence-reader → figma-builder の通し実行（1画面）
