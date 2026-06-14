@@ -180,7 +180,7 @@
   - 描画OK(12): 固定費一覧 / カテゴリ設定 / 履歴 / 全体 / 月次固定費 / カテゴリ並替 / 日別収支 / カテゴリ別支出履歴 / ボーナス計画 / 小カテゴリ履歴 / 年間収入一覧 / カテゴリ詳細編集(編集モード)
   - skip(3, goldenは生成済み): 入力モーダル(金額欄autofocusのカーソルTimerで!timersPending) / MonthlyPage・MonthlyPlanHomePage(集計の並行DBクエリがsqflite ffiで完了せずTimerリーク=実装側の直列化要)
   - BudgetSettingPageは独立ページでなくMonthlyPlan内エリア（=skip側に含まれる）。CategoryDetailEditは add モードで例外、edit モード(bigCategoryId指定)なら描画OK
-- **Golden由来の追加発見**: 入力グリッドは**小カテゴリ名**(コンビニ/外食…)を表示(Figmaは大カテゴリ名だった) / MonthlyPageの集計クエリにsqflite並行トランザクションのデッドロック懸念 / Chipのgoogle_fontsドリフト(修正済)
+- **Golden由来の追加発見**: 入力グリッドは**小カテゴリ名**(コンビニ/外食/社食/消耗品/雑貨/飲み/ライブ/ご褒美/帰省/カット…)を**所属大カテゴリのアイコンでグルーピング**して表示→**Figma入力ドラフトを実機準拠に修正済(2026-06-14、15ボタンを小カテゴリ名＋大カテゴリ単位アイコンに、末尾Emptyもカテゴリボタン化)** / MonthlyPageの集計クエリにsqflite並行トランザクションのデッドロック懸念(実装側の直列化要) / Chipのgoogle_fontsドリフト(修正済)
 
 ## 次のステップ
 
