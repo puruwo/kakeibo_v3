@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/daily_expense_summary_page.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
@@ -14,6 +16,8 @@ import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_pag
 import 'package:kakeibo/view/register_page/category_area/category_reorder_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
+import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
+import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/view/year_page/year_page.dart';
 
@@ -137,5 +141,30 @@ void main() {
 
   testWidgets('SmallCategoryExpenseHistoryPage', timeout: _pageTimeout, (tester) async {
     await pumpPage(tester, const SmallCategoryExpenseHistoryPage(smallId: 0), 'small_category_history');
+  });
+
+  testWidgets('YearlyIncomeListPage', timeout: _pageTimeout, (tester) async {
+    await pumpPage(
+      tester,
+      YearlyIncomeListPage(
+        period: PeriodValue(
+          startDatetime: DateTime(2026, 1, 1),
+          endDatetime: DateTime(2026, 12, 31),
+        ),
+      ),
+      'yearly_income',
+    );
+  });
+
+  testWidgets('CategoryDetailEditPage', timeout: _pageTimeout, (tester) async {
+    await pumpPage(
+      tester,
+      const CategoryDetailEditPage(
+        screenMode: BigCategoryDetailEditScreenMode.edit,
+        categoryType: CategoryType.expense,
+        bigCategoryId: 0,
+      ),
+      'category_detail_edit',
+    );
   });
 }
