@@ -157,7 +157,7 @@
 | `Draft/入力モーダル`(RegisterPage) | ヘッダー+TransactionTypePill+PriceDisplay+InputRow×3+CategorySelectButton×15+完了Button(支出色) | ✅ 2026-06-14 |
 | `Draft/予算設定`(BudgetSettingPage) | AppBar(戻る)+BudgetSummaryBar+BudgetRow×7+Secondary Button+BottomNav | ✅ 2026-06-14 |
 
-未作成（必要に応じて追加）: ボーナス計画 / 固定費登録一覧 / カテゴリ設定 / カテゴリ詳細編集 / 日別収支サマリ など。
+**画面フロー図の全16画面のドラフトを作成済み（2026-06-14）**。最初の5（全体/月間分析/履歴/入力モーダル/予算設定）に加え、実機golden(実データ)を正本に追加11を構築: 固定費一覧 / カテゴリ設定 / 年間収入一覧 / 月次固定費 / 日別収支サマリ / 小カテゴリ履歴 / カテゴリ別支出履歴 / ボーナス計画 / カテゴリ並替 / カテゴリ詳細編集 / 月次プラン。いずれも確立済みコンポーネント＋トークンのみで構築（命名 `Draft/<名>`・375×812・ダークモード明示）。
 
 ## Golden実描画検証（実機ウィジェット vs Figma）
 
