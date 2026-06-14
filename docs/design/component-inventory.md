@@ -136,14 +136,34 @@
 - **共有TEXTプロパティの伝播（重要）**: TransactionRow・InputRow は Title/Sub/Price 等を**コンポーネントTEXTプロパティ**として全バリアントで共有している。1バリアントの文字を直接編集すると**全バリアントに伝播**する。バリアントで変えられるのは icon・符号・色・dim のみで、**文字列は変えられない**。固定費行の「固定費」「固定費(未確定)」、未確定の価格「未確定」等は**画面生成時にインスタンス側でプロパティ設定**すること（コンポーネント既定値は汎用サンプル＝支出例のまま）
 - アイコン背景の形状: リスト行（TransactionRow/ListCard/BudgetRow）のカテゴリアイコンは**円背景なし**（実装は25pxのSVGを49×49 boxに配置するだけ）。一方カテゴリ選択ボタンの背景は**58×58の円**（`AppIconCircleContainer`=`BoxShape.circle`）。ナビ中央の入力ボタンは**42×42・角丸16の角丸スクエア**（円ではない）
 - 汎用アイコン（ナビ・歯車・矢印等）は近似ベクター。CategoryIconのみ実SVG
+- **CategoryIconのバリアントswap手順（行ごとに別カテゴリを出す）**: TransactionRow/BudgetRowのネスト`icon`インスタンスは`Category`バリアントを持つ。`icon.setProperties({Category:'日用品'})`で形状＋色を切替できる。**ただしswap直後はバッジ円が100%不透明で出てシンボルを覆う**（変数バインドpaintの不透明度が伝播しないため）。`icon.fills = []` で背景塗りを除去するとカテゴリシンボルだけ残る（リスト行は円背景なしが正）。`fills`のJSONクローン＋opacity変更は変数バインドを壊して無効化されるので**空配列が確実**
+- **ピル系（TransactionTypePill等）の10%背景**: インスタンス化すると10%背景が100%不透明になりテキストを覆うことがある。bgノードに `setBoundVariableForPaint` 後 `paint.opacity = 0.1` を再設定して直す
+- **CategorySelectButton/StackedBarGraph/Calendar のアイコン・シンボルはベイク**（CategoryIconインスタンスではない）。色だけはVector fillの直接RGBA指定で変えられるが形状swapは不可。将来CategorySelectButtonのアイコンをCategoryIconインスタンス化すれば選択グリッドも実アイコンになる（未整備）
+- **画面ドラフトはダークモードを明示設定**: 新規frameは既定でLightに解決され白背景になることがある。アプリは常時ダーク固定なので `frame.setExplicitVariableModeForCollection(ColorCollection, DarkModeId)` を必ず設定する
 
 ## コードドリフト（design-auditor向けメモ）
 
 - `color_getter.dart`: 収入モードのピル色が `Colors.lightBlue` ハードコード（incomeトークン未使用）。DS側は income に正規化済み
 
+## Screen Drafts（画面ドラフト）
+
+「Screen Drafts」ページ(`3490:4965`)に、画面フロー図(`3407:4927`)・画面一覧(`55:251`)の実機スクショとソースを正本として、確立済みコンポーネントだけで組んだ画面ドラフトを置く。命名は `Draft/<画面名>`、375×812、ダークモード明示。
+
+| ドラフト | 主な構成部品 | 状態 |
+|---|---|---|
+| `Draft/全体`(YearPage) | PeriodSelector+年間収支カード(StackedBar)+ボーナスカード+ChartPlaceholder+BottomNav(全体active) | ✅ 2026-06-14 |
+| `Draft/月間分析`(MonthlyPage) | AppBar+SectionHeader+ChartPlaceholder+CategorySumTile+BottomNav | ✅（既存） |
+| `Draft/履歴`(ExpenseHistoryPage) | AppBar+Calendar+DateSeparator+TransactionRow×4+BottomNav(履歴active) | ✅ 2026-06-14 |
+| `Draft/入力モーダル`(RegisterPage) | ヘッダー+TransactionTypePill+PriceDisplay+InputRow×3+CategorySelectButton×15+完了Button(支出色) | ✅ 2026-06-14 |
+| `Draft/予算設定`(BudgetSettingPage) | AppBar(戻る)+BudgetSummaryBar+BudgetRow×7+Secondary Button+BottomNav | ✅ 2026-06-14 |
+
+未作成（必要に応じて追加）: ボーナス計画 / 固定費登録一覧 / カテゴリ設定 / カテゴリ詳細編集 / 日別収支サマリ など。
+
 ## 次のステップ
 
 1. ~~P1〜P3作成~~ ✅ / ~~実機擦り合わせ・実アイコン化~~ ✅ / ~~Dialog作り直し~~ ✅ / ~~リスト行・カレンダー・予算・入力系の網羅追加~~ ✅ 2026-06-13
    - ~~画面遷移図と再照合し2件修正：CategorySelectButton(Normal/Selected)の背景を縦ピル→**58×58円**化／BottomNav中央入力ボタンを円→**角丸16の角丸スクエア**化~~ ✅ 2026-06-13。TransactionRow固定費行は共有TEXTプロパティ設計のためコンポーネント側では汎用サンプルのまま（上記builderメモ参照）
-2. CategoryIcon の INSTANCE_SWAP プロパティ化（TransactionRow/ListCard/CategorySumTile の行ごとアイコン指定を簡便に）
-3. C-3: confluence-reader → figma-builder の通し実行（1画面）
+   - ~~主要4タブ＋予算設定の画面ドラフトを作成~~ ✅ 2026-06-14（上記 Screen Drafts 表）
+2. CategoryIcon の INSTANCE_SWAP プロパティ化＋CategorySelectButtonのアイコンをCategoryIconインスタンス化（選択グリッドを実アイコンに）
+3. 残りの画面ドラフト（ボーナス計画/固定費一覧/カテゴリ設定 等）
+4. C-3: confluence-reader → figma-builder の通し実行（1画面）
