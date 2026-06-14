@@ -173,6 +173,15 @@
 - iOSシミュレータは旧Flutter×iOS26で `path_provider→objective_c` のネイティブエラー＋タップ自動化不可のため、Golden方式を採用
 - 制約: Material系アイコン(Icons.*)はflutter test環境でFontLoaderがハングし読込不可→golden上は豆腐□（レイアウト/色/フォント/SVG/余白/枠線は正確）。テストには `timeout: Timeout(seconds:60)` 必須
 
+### Goldenカバレッジ（2026-06-14）
+
+- **部品 9種**（`test/golden/component_golden_test.dart`）: TransactionTypePill / 履歴行4種 / ListCard / CategorySelectButton / BudgetRow / Button / 小物(Checkbox・Chip・FAB・SectionHeader) / Toggle / DateBox
+- **フルページ 13ページ**（`test/golden/page_golden_test.dart` + `db_harness.dart`(ffi+pathモックで実DB) + `page_harness.dart`(18リポジトリ注入) + runAsyncで実DB I/O完了）:
+  - 描画OK(10): 固定費一覧 / カテゴリ設定 / 履歴 / 全体 / 月次固定費 / カテゴリ並替 / 日別収支 / カテゴリ別支出履歴 / ボーナス計画 / 小カテゴリ履歴
+  - skip(3, goldenは生成済み): 入力モーダル(金額欄autofocusのカーソルTimerで!timersPending) / MonthlyPage・MonthlyPlanHomePage(集計の並行DBクエリがsqflite ffiで完了せずTimerリーク=実装側の直列化要)
+  - 未対応: YearlyIncomeListPage(PeriodValue要) / CategoryDetailEditPage(addモードで例外) / BudgetSettingPageは独立ページでなくMonthlyPlan内エリア(deadlock側)
+- **Golden由来の追加発見**: 入力グリッドは**小カテゴリ名**(コンビニ/外食…)を表示(Figmaは大カテゴリ名だった) / MonthlyPageの集計クエリにsqflite並行トランザクションのデッドロック懸念 / Chipのgoogle_fontsドリフト(修正済)
+
 ## 次のステップ
 
 1. ~~P1〜P3作成~~ ✅ / ~~実機擦り合わせ・実アイコン化~~ ✅ / ~~Dialog作り直し~~ ✅ / ~~リスト行・カレンダー・予算・入力系の網羅追加~~ ✅ 2026-06-13
