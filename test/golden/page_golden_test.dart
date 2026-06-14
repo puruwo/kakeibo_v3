@@ -9,8 +9,10 @@ import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart'
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/category_expense_hisotry_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
+import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/small_category_expanded_history_page/small_category_expanded_history_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/register_page/category_area/category_reorder_page.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/view/year_page/year_page.dart';
@@ -125,5 +127,15 @@ void main() {
 
   testWidgets('BonusHomePage', timeout: _pageTimeout, (tester) async {
     await pumpPage(tester, const BonusHomePage(), 'bonus_home');
+  });
+
+  // 入力モーダルは金額入力欄が autofocus でカーソル点滅 Timer が残る
+  // (!timersPending) ため skip。golden(実カテゴリ＋実アイコン)は生成済み。
+  testWidgets('RegisaterPageBase 入力モーダル', timeout: _pageTimeout, skip: true, (tester) async {
+    await pumpPage(tester, const RegisaterPageBase.addExpense(), 'register');
+  });
+
+  testWidgets('SmallCategoryExpenseHistoryPage', timeout: _pageTimeout, (tester) async {
+    await pumpPage(tester, const SmallCategoryExpenseHistoryPage(smallId: 0), 'small_category_history');
   });
 }
