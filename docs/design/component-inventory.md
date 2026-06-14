@@ -176,10 +176,10 @@
 ### Goldenカバレッジ（2026-06-14）
 
 - **部品 9種**（`test/golden/component_golden_test.dart`）: TransactionTypePill / 履歴行4種 / ListCard / CategorySelectButton / BudgetRow / Button / 小物(Checkbox・Chip・FAB・SectionHeader) / Toggle / DateBox
-- **フルページ 13ページ**（`test/golden/page_golden_test.dart` + `db_harness.dart`(ffi+pathモックで実DB) + `page_harness.dart`(18リポジトリ注入) + runAsyncで実DB I/O完了）:
-  - 描画OK(10): 固定費一覧 / カテゴリ設定 / 履歴 / 全体 / 月次固定費 / カテゴリ並替 / 日別収支 / カテゴリ別支出履歴 / ボーナス計画 / 小カテゴリ履歴
+- **フルページ 15ページ＝画面フロー図の全16画面をカバー**（`test/golden/page_golden_test.dart` + `db_harness.dart`(ffi+pathモックで実DB) + `page_harness.dart`(18リポジトリ注入) + runAsyncで実DB I/O完了）:
+  - 描画OK(12): 固定費一覧 / カテゴリ設定 / 履歴 / 全体 / 月次固定費 / カテゴリ並替 / 日別収支 / カテゴリ別支出履歴 / ボーナス計画 / 小カテゴリ履歴 / 年間収入一覧 / カテゴリ詳細編集(編集モード)
   - skip(3, goldenは生成済み): 入力モーダル(金額欄autofocusのカーソルTimerで!timersPending) / MonthlyPage・MonthlyPlanHomePage(集計の並行DBクエリがsqflite ffiで完了せずTimerリーク=実装側の直列化要)
-  - 未対応: YearlyIncomeListPage(PeriodValue要) / CategoryDetailEditPage(addモードで例外) / BudgetSettingPageは独立ページでなくMonthlyPlan内エリア(deadlock側)
+  - BudgetSettingPageは独立ページでなくMonthlyPlan内エリア（=skip側に含まれる）。CategoryDetailEditは add モードで例外、edit モード(bigCategoryId指定)なら描画OK
 - **Golden由来の追加発見**: 入力グリッドは**小カテゴリ名**(コンビニ/外食…)を表示(Figmaは大カテゴリ名だった) / MonthlyPageの集計クエリにsqflite並行トランザクションのデッドロック懸念 / Chipのgoogle_fontsドリフト(修正済)
 
 ## 次のステップ
