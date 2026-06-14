@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
+import 'package:kakeibo/view/budget_setting_page/budget_category_tile.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/confirmed_fixed_cost_item_tile.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
@@ -185,7 +187,42 @@ void main() {
       'category_select_button',
     );
   });
+
+  testWidgets('BudgetCategoryTile 予算行', timeout: _timeout, (tester) async {
+    await _capture(
+      tester,
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BudgetCategoryTile(
+            budgetEditValue: _budget(1, '食費', 'FF7171', 'assets/images/icon_meal.svg', 40000, 36430),
+          ),
+          BudgetCategoryTile(
+            budgetEditValue: _budget(2, '遊び', '3DD8E0', 'assets/images/icon_travel.svg', 50000, 39775),
+          ),
+          BudgetCategoryTile(
+            budgetEditValue: _budget(3, '交通費', '4BA6FF', 'assets/images/icon_transportation.svg', 5000, 5856),
+          ),
+        ],
+      ),
+      'budget_rows',
+    );
+  });
 }
+
+BudgetEditValue _budget(int id, String name, String color, String svg, int price, int lastMonth) =>
+    BudgetEditValue(
+      id: id,
+      budgetStatus: BudgetStatus.registerd,
+      expenseBigCategoryId: id,
+      month: '202608',
+      price: price,
+      lastMonthBudgetPrice: lastMonth,
+      expenseBigCategoryName: name,
+      colorCode: color,
+      resourcePath: svg,
+      displayOrder: id,
+    );
 
 ExpenseCategoryEntity _cat(String name, String color, String svg) =>
     ExpenseCategoryEntity(
