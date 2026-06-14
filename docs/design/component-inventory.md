@@ -159,11 +159,25 @@
 
 未作成（必要に応じて追加）: ボーナス計画 / 固定費登録一覧 / カテゴリ設定 / カテゴリ詳細編集 / 日別収支サマリ など。
 
+## Golden実描画検証（実機ウィジェット vs Figma）
+
+`test/golden/` のGoldenハーネス（実 `ThemeData.dark`＋`AppColors`＋バンドル実フォント noto/sf でウィジェットをPNG描画）で、実装ウィジェットとFigmaを突き合わせて精度検証した（2026-06-14）。実描画で炙り出せた実質的なズレと対応:
+
+| 対象 | 結果 / 修正 |
+|---|---|
+| TransactionTypePill | 実装に`border: Border.all(モード色)`あり→Figmaに枠線追加。収入色は実コードが`Colors.lightBlue`ハードコード→`context.colors.income`に修正(青→緑) |
+| 履歴フラット行4種 / ListCard | 構造一致 ✅ |
+| CategorySelectButton 円・状態・None | 一致 ✅。アイコンはベイク→**CategoryIconインスタンス化**しグリッドを実アイコンに修正 |
+| BudgetCategoryTile | 一致 ✅。先月実績の書式を「円後置」→「¥前置」に修正 |
+
+- iOSシミュレータは旧Flutter×iOS26で `path_provider→objective_c` のネイティブエラー＋タップ自動化不可のため、Golden方式を採用
+- 制約: Material系アイコン(Icons.*)はflutter test環境でFontLoaderがハングし読込不可→golden上は豆腐□（レイアウト/色/フォント/SVG/余白/枠線は正確）。テストには `timeout: Timeout(seconds:60)` 必須
+
 ## 次のステップ
 
 1. ~~P1〜P3作成~~ ✅ / ~~実機擦り合わせ・実アイコン化~~ ✅ / ~~Dialog作り直し~~ ✅ / ~~リスト行・カレンダー・予算・入力系の網羅追加~~ ✅ 2026-06-13
    - ~~画面遷移図と再照合し2件修正：CategorySelectButton(Normal/Selected)の背景を縦ピル→**58×58円**化／BottomNav中央入力ボタンを円→**角丸16の角丸スクエア**化~~ ✅ 2026-06-13。TransactionRow固定費行は共有TEXTプロパティ設計のためコンポーネント側では汎用サンプルのまま（上記builderメモ参照）
    - ~~主要4タブ＋予算設定の画面ドラフトを作成~~ ✅ 2026-06-14（上記 Screen Drafts 表）
-2. CategoryIcon の INSTANCE_SWAP プロパティ化＋CategorySelectButtonのアイコンをCategoryIconインスタンス化（選択グリッドを実アイコンに）
-3. 残りの画面ドラフト（ボーナス計画/固定費一覧/カテゴリ設定 等）
+2. ~~CategorySelectButtonのアイコンをCategoryIconインスタンス化（選択グリッドを実アイコンに）~~ ✅ 2026-06-14（Goldenで差を検出し修正）。残: TransactionRow/ListCard等の行アイコンを CategoryIcon INSTANCE_SWAP プロパティ化（現状は手動swap）
+3. 残りの画面ドラフト（ボーナス計画/固定費一覧/カテゴリ設定 等）／カレンダーDateBox等のGolden追加
 4. C-3: confluence-reader → figma-builder の通し実行（1画面）
