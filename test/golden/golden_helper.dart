@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
 /// バンドル済みフォント（noto_sans / sf_ui）をテストランタイムへ読み込む。
 /// これを呼ばないと golden は既定フォントになり実機と字形がずれる。
 Future<void> loadAppFonts() async {
+  // 一部ウィジェットは GoogleFonts.*() を実行時取得で使う。テストでは
+  // ネットワーク取得が失敗して例外になるため、取得を無効化する（バンドル/
+  // フォールバックで描画）。
+  GoogleFonts.config.allowRuntimeFetching = false;
   final families = <String, List<String>>{
     'noto_sans': [
       'assets/fonts/noto-sans-jp-thin-100.ttf',

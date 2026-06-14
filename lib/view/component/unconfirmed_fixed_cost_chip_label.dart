@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:kakeibo/constant/font_style.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
 class UnconfirmedFixedCostChipLabel extends StatelessWidget {
@@ -27,7 +27,7 @@ class UnconfirmedFixedCostChipLabel extends StatelessWidget {
           const SizedBox(width: 2),
           Text(
             '変動あり',
-            style: GoogleFonts.notoSans(
+            style: MyFontStyle.notoSans.copyWith(
               fontSize: 10,
               color: context.colors.primary,
               fontWeight: FontWeight.w400,

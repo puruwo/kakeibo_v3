@@ -8,7 +8,12 @@ import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_category_tile.dart';
+import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/app_floating_action_button.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
+import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/component/check_box.dart';
+import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/confirmed_fixed_cost_item_tile.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';
@@ -206,6 +211,59 @@ void main() {
         ],
       ),
       'budget_rows',
+    );
+  });
+
+  testWidgets('Button 主/サブ', timeout: _timeout, (tester) async {
+    await _capture(
+      tester,
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MainButton(onPressed: () {}, buttonText: '追加'),
+          const SizedBox(height: 12),
+          SubButton(onPressed: () {}, buttonText: 'キャンセル'),
+        ],
+      ),
+      'buttons',
+      width: 343,
+    );
+  });
+
+  testWidgets('小物パーツ Checkbox/Chip/FAB/SectionHeader', timeout: _timeout, (tester) async {
+    await _capture(
+      tester,
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: const [
+              CheckBox(isChecked: true),
+              SizedBox(width: 12),
+              CheckBox(isChecked: false),
+              SizedBox(width: 12),
+              UnconfirmedFixedCostChipLabel(),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              AppFloatingActionButton(onTap: () {}, icon: Icons.add),
+              const SizedBox(width: 16),
+              AppFloatingActionButton(onTap: () {}, icon: Icons.add, label: '追加'),
+            ],
+          ),
+          const SizedBox(height: 16),
+          const AppContentsHeader(
+            type: AppContentsHeaderType.appCardSectionTitle,
+            title: '今月の計画',
+          ),
+        ],
+      ),
+      'small_parts',
     );
   });
 }
