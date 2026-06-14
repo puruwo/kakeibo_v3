@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
@@ -7,6 +8,9 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirm
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/confirmed_fixed_cost_item_tile.dart';
+import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
+import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';
+import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/expense_item_tile.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/income_item_tile.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/unconfirmed_fixed_cost_item_tile.dart';
@@ -24,6 +28,13 @@ Future<void> _capture(
   String name, {
   double width = 375,
 }) async {
+  // 描画面を実機設計サイズ(375x812)にする。MediaQuery依存の倍率
+  // (screenHorizontalMagnification 等)を1.0にして実機寸法で描く。
+  const dpr = 3.0;
+  tester.view.physicalSize = const Size(375 * dpr, 812 * dpr);
+  tester.view.devicePixelRatio = dpr;
+  addTearDown(tester.view.resetPhysicalSize);
+  addTearDown(tester.view.resetDevicePixelRatio);
   await loadAppFonts();
   final key = GlobalKey();
   await tester.pumpWidget(
@@ -137,7 +148,58 @@ void main() {
       'app_list_card',
     );
   });
+
+  testWidgets('CategorySelectButton 状態+カテゴリ', timeout: _timeout, (tester) async {
+    await _capture(
+      tester,
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // 状態: Normal / Selected / None
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              NormalIconButton(categoryEntity: _cat('食費', 'FF7171', 'assets/images/icon_meal.svg')),
+              const SizedBox(width: 8),
+              SelectedIconButton(categoryEntity: _cat('食費', 'FF7171', 'assets/images/icon_meal.svg')),
+              const SizedBox(width: 8),
+              const NoneIconBox(),
+            ],
+          ),
+          const SizedBox(height: 16),
+          // カテゴリ別の実アイコン
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              NormalIconButton(categoryEntity: _cat('食費', 'FF7171', 'assets/images/icon_meal.svg')),
+              const SizedBox(width: 8),
+              NormalIconButton(categoryEntity: _cat('遊び', '3DD8E0', 'assets/images/icon_travel.svg')),
+              const SizedBox(width: 8),
+              NormalIconButton(categoryEntity: _cat('交通費', '4BA6FF', 'assets/images/icon_transportation.svg')),
+              const SizedBox(width: 8),
+              NormalIconButton(categoryEntity: _cat('ペット', 'BB87FF', 'assets/images/icon_pets.svg')),
+            ],
+          ),
+        ],
+      ),
+      'category_select_button',
+    );
+  });
 }
+
+ExpenseCategoryEntity _cat(String name, String color, String svg) =>
+    ExpenseCategoryEntity(
+      smallCategoryOrderKey: 0,
+      bigCategoryKey: 0,
+      displaydOrderInBig: 0,
+      categoryName: name,
+      defaultDisplayed: 1,
+      bigCategoryName: name,
+      colorCode: color,
+      resourcePath: svg,
+      displayOrder: 0,
+      isDisplayed: 1,
+    );
 
 // --- サンプル値 ---
 class _Expense {
