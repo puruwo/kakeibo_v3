@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
+import 'package:kakeibo/domain/ui_value/calendar/calendar_tile_entity.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
@@ -21,7 +23,10 @@ import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/expense_item_tile.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/income_item_tile.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/unconfirmed_fixed_cost_item_tile.dart';
+import 'package:kakeibo/view/historical_calendar_page/calendar_area/date_box.dart';
 import 'package:kakeibo/view/register_page/common_input_field/transaction_type_pill.dart';
+import 'package:kakeibo/view/register_page/fixed_cost_tab/price_input_area/price_type_switch_area.dart';
+import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 import 'golden_helper.dart';
@@ -34,6 +39,7 @@ Future<void> _capture(
   Widget child,
   String name, {
   double width = 375,
+  List<Override> overrides = const [],
 }) async {
   // 描画面を実機設計サイズ(375x812)にする。MediaQuery依存の倍率
   // (screenHorizontalMagnification 等)を1.0にして実機寸法で描く。
@@ -55,6 +61,7 @@ Future<void> _capture(
           child: SizedBox(width: width, child: child),
         ),
       ),
+      overrides: overrides,
       padding: EdgeInsets.zero,
     ),
   );
@@ -264,6 +271,47 @@ void main() {
         ],
       ),
       'small_parts',
+    );
+  });
+
+  testWidgets('Toggle 変動費スイッチ', timeout: _timeout, (tester) async {
+    await _capture(
+      tester,
+      const PriceTypeSwitchArea(originalState: false),
+      'toggle',
+      width: 280,
+    );
+  });
+
+  testWidgets('DateBox カレンダーセル', timeout: _timeout, (tester) async {
+    CalendarTileEntity cell(int day, int weekday, int exp, int inc, bool inRange) =>
+        CalendarTileEntity(
+          year: 2026,
+          month: 8,
+          day: day,
+          weekday: weekday,
+          totalExpense: exp,
+          totalIncome: inc,
+          isWithinAggregationRange: inRange,
+          shouldDisplayMonth: false,
+        );
+    await _capture(
+      tester,
+      Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          DateBox(calendarTileEntity: cell(5, 0, 3500, 1000, true), boxHeight: 54, boxWidth: 46, isCompact: false),
+          DateBox(calendarTileEntity: cell(8, 3, 678, 0, true), boxHeight: 54, boxWidth: 46, isCompact: false),
+          DateBox(calendarTileEntity: cell(15, 3, 12800, 0, true), boxHeight: 54, boxWidth: 46, isCompact: false),
+          DateBox(calendarTileEntity: cell(20, 6, 0, 5000, true), boxHeight: 54, boxWidth: 46, isCompact: false),
+          DateBox(calendarTileEntity: cell(1, 1, 0, 0, false), boxHeight: 54, boxWidth: 46, isCompact: false),
+        ],
+      ),
+      'date_box',
+      width: 280,
+      overrides: [
+        isDateboxSelectedProvider(DateTime(2026, 8, 15)).overrideWith((ref) => true),
+      ],
     );
   });
 }
