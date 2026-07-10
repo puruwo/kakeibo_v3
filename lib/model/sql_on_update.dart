@@ -1,3 +1,4 @@
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:sqflite/sqflite.dart';
@@ -177,5 +178,101 @@ class DataBaseMigrate {
     await db.execute("UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.colorCode} = '10B981' WHERE ${SqfIncomeBigCategory.id} = 2;"); // ボーナス
 
     print('=== v7マイグレーション完了 ===');
+  }
+
+  // スキーマ負債解消のマイグレーション (v7 → v8)
+  Future<void> toV8(Database db) async {
+    logger.i('=== v8マイグレーション開始: スキーマ負債解消 ===');
+
+    // 1. fixed_cost: タイポしていたカラム名 fiirst_payment_date を first_payment_date へ改名
+    //    既存マイグレーションに合わせてテーブル再作成方式で行う
+    logger.i('1. ${SqfFixedCost.tableName}のカラム名を修正中...');
+    await db.execute('''CREATE TABLE fixed_cost_new (
+          ${SqfFixedCost.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+          ${SqfFixedCost.name} TEXT NOT NULL,
+          ${SqfFixedCost.variable} INTEGER NOT NULL,
+          ${SqfFixedCost.price} INTEGER,
+          ${SqfFixedCost.estimatedPrice} INTEGER,
+          ${SqfFixedCost.fixedCostCategoryId} INTEGER NOT NULL,
+          ${SqfFixedCost.intervalNumber} INTEGER NOT NULL,
+          ${SqfFixedCost.intervalUnit} INTEGER NOT NULL,
+          ${SqfFixedCost.firstPaymentDate} TEXT NOT NULL,
+          ${SqfFixedCost.recentPaymentDate} TEXT,
+          ${SqfFixedCost.nextPaymentDate} TEXT NOT NULL,
+          ${SqfFixedCost.deleteFlag} INTEGER NOT NULL
+          );
+          ''');
+
+    await db.execute('''
+          INSERT INTO fixed_cost_new (
+            ${SqfFixedCost.id},
+            ${SqfFixedCost.name},
+            ${SqfFixedCost.variable},
+            ${SqfFixedCost.price},
+            ${SqfFixedCost.estimatedPrice},
+            ${SqfFixedCost.fixedCostCategoryId},
+            ${SqfFixedCost.intervalNumber},
+            ${SqfFixedCost.intervalUnit},
+            ${SqfFixedCost.firstPaymentDate},
+            ${SqfFixedCost.recentPaymentDate},
+            ${SqfFixedCost.nextPaymentDate},
+            ${SqfFixedCost.deleteFlag}
+          )
+          SELECT
+            ${SqfFixedCost.id},
+            ${SqfFixedCost.name},
+            ${SqfFixedCost.variable},
+            ${SqfFixedCost.price},
+            ${SqfFixedCost.estimatedPrice},
+            ${SqfFixedCost.fixedCostCategoryId},
+            ${SqfFixedCost.intervalNumber},
+            ${SqfFixedCost.intervalUnit},
+            fiirst_payment_date,
+            ${SqfFixedCost.recentPaymentDate},
+            ${SqfFixedCost.nextPaymentDate},
+            ${SqfFixedCost.deleteFlag}
+          FROM ${SqfFixedCost.tableName};
+          ''');
+
+    await db.execute('DROP TABLE ${SqfFixedCost.tableName};');
+    await db.execute(
+        'ALTER TABLE fixed_cost_new RENAME TO ${SqfFixedCost.tableName};');
+
+    // 2. fixed_cost_expense: v6マイグレーション経由の端末には fixed_cost_id 列が
+    //    存在しない（v7以降の新規インストールには存在する）ため、検査して補完する
+    logger.i('2. ${SqfFixedCostExpense.tableName}のfixed_cost_id列を検査中...');
+    final columns = await db
+        .rawQuery('PRAGMA table_info(${SqfFixedCostExpense.tableName})');
+    final hasFixedCostId = columns
+        .any((column) => column['name'] == SqfFixedCostExpense.fixedCostId);
+
+    if (hasFixedCostId) {
+      logger.i('2-1. fixed_cost_id列は既に存在するためスキップ');
+    } else {
+      logger.i('2-1. fixed_cost_id列が無いため追加・補完します');
+      await db.execute(
+          'ALTER TABLE ${SqfFixedCostExpense.tableName} ADD COLUMN ${SqfFixedCostExpense.fixedCostId} INTEGER;');
+
+      // 名前と固定費カテゴリーの一致でマスタと突合して補完する
+      // （支払実績の日付はマスタ側の支払日と一致しないため突合キーに使わない）
+      await db.execute('''
+          UPDATE ${SqfFixedCostExpense.tableName}
+          SET ${SqfFixedCostExpense.fixedCostId} = (
+            SELECT fc.${SqfFixedCost.id}
+            FROM ${SqfFixedCost.tableName} fc
+            WHERE fc.${SqfFixedCost.name} = ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.name}
+              AND fc.${SqfFixedCost.fixedCostCategoryId} = ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.fixedCostCategoryId}
+            LIMIT 1
+          )
+          WHERE ${SqfFixedCostExpense.fixedCostId} IS NULL;
+          ''');
+
+      // 突合できなかったレコードはNULLのまま保持し、件数だけログに残す
+      final unresolved = Sqflite.firstIntValue(await db.rawQuery(
+          'SELECT COUNT(*) FROM ${SqfFixedCostExpense.tableName} WHERE ${SqfFixedCostExpense.fixedCostId} IS NULL'));
+      logger.i('2-2. 突合できなかった固定費支出: $unresolved件');
+    }
+
+    logger.i('=== v8マイグレーション完了 ===');
   }
 }

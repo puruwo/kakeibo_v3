@@ -81,7 +81,7 @@ class SqfFixedCost {
   static const fixedCostCategoryId = 'fixed_cost_category_id';
   static const intervalNumber = 'interval_number';
   static const intervalUnit = 'interval_unit';
-  static const firstPaymentDate = 'fiirst_payment_date';
+  static const firstPaymentDate = 'first_payment_date';
   static const recentPaymentDate = 'recent_payment_date';
   static const nextPaymentDate = 'next_payment_date';
   static const deleteFlag = 'delete_flag';
