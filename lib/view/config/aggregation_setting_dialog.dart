@@ -154,7 +154,8 @@ class _AggregationSettingDialogState
         Icons.arrow_drop_down_rounded,
         color: context.colors.textSecondary,
       ),
-      width: 80,
+      // 2桁の数値(〜28)でも欠けないよう、参照元のpayment_frequency_picker(width:80)より広めに確保
+      width: 110,
       initialSelection: initial,
       onSelected: (value) {
         if (value != null) {
