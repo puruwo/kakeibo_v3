@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/aggregation_settings/aggregation_settings_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
@@ -168,64 +169,13 @@ class _AggregationSettingDialogState
   /// 確認ダイアログで承認されたら保存する
   Future<void> _confirmAndSave(BuildContext context) async {
     // 変更時は過去も新しい区切りで再計算されるため、保存前に必ず告知する
-    final isApproved = await showDialog<bool>(
-      context: context,
-      builder: (dialogContext) => Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Text(
-                '集計期間を変更しますか？',
-                style: AppTextStyles.dialogTitle,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
-              child: Text(
-                '過去の記録もすべて新しい区切りで再計算されます。',
-                style: AppTextStyles.dialogLabel,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: OverflowBar(
-                alignment: MainAxisAlignment.end,
-                spacing: 8,
-                children: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop(false);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: dialogContext.colors.fill,
-                    ),
-                    child: Text(
-                      'キャンセル',
-                      style: AppTextStyles.secondaryButtonText,
-                    ),
-                  ),
-                  MainButton(
-                    buttonType: ButtonColorType.main,
-                    buttonText: '変更する',
-                    onPressed: () {
-                      Navigator.of(dialogContext).pop(true);
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+    final isApproved = await showConfirmationDialog(
+      context,
+      title: '集計期間の変更',
+      message: '過去の記録もすべて新しい区切りで再計算されます。\n変更しますか？',
     );
 
-    if (isApproved != true) return;
+    if (!isApproved) return;
     if (!context.mounted) return;
 
     // スナックバー表示用にpop前へ取得しておく
