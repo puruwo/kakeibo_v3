@@ -63,7 +63,7 @@ class _IconSelectDialog extends ConsumerState<IconSelectDialog> {
           children: [
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Text('カテゴリーカラーを選択'),
+              child: Text('カテゴリーアイコンを選択'),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -118,25 +118,19 @@ Widget iconWidget(String url, String? selectedUrl, Color iconColor) {
   // 選択非選択の判定
   final isSelected = (url == selectedUrl);
 
-  return isSelected
-      // 選択時
-      ? Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 35,
-            width: 35,
-            child: CategoryHandler()
-                .iconWidget(url, iconColor, width: 15, height: 15),
-          ),
-        )
-      // 非選択時
-      : Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            height: 35,
-            width: 35,
-            child: CategoryHandler()
-                .iconWidget(url, iconColor, width: 15, height: 15),
-          ),
-        );
+  return Padding(
+    padding: const EdgeInsets.all(8.0),
+    child: Container(
+      height: 35,
+      width: 35,
+      // 選択中はカラー選択ダイアログと同じ白枠リングで示す
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border:
+            isSelected ? Border.all(color: iconColor, width: 2.5) : null,
+      ),
+      child:
+          CategoryHandler().iconWidget(url, iconColor, width: 15, height: 15),
+    ),
+  );
 }
