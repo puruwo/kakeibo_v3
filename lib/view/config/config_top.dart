@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/aggregation_settings/aggregation_settings_usecase.dart';
+import 'package:kakeibo/application/data_management/data_management_usecase.dart';
 import 'package:kakeibo/application/export/export_provider.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/config/aggregation_setting_dialog.dart';
 
 class ConfigTop extends ConsumerWidget {
@@ -70,10 +74,85 @@ class ConfigTop extends ConsumerWidget {
                 ],
               ),
             ),
+
+            const SizedBox(height: 16),
+
+            const AppContentsHeader(
+              type: AppContentsHeaderType.appCardSectionTitle,
+              title: 'データ管理',
+            ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: context.colors.fillTertiary,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  _ConfigRow(
+                    label: 'データベースを書き出す',
+                    isFirst: true,
+                    onTap: () => _exportDatabase(context, ref),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    indent: 16,
+                    color: context.colors.separator,
+                  ),
+                  _ConfigRow(
+                    label: 'すべてのデータを削除する',
+                    textColor: context.colors.expense,
+                    isLast: true,
+                    onTap: () => _confirmAndDeleteAllData(context, ref),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  /// データベースファイルを共有シートで書き出す
+  Future<void> _exportDatabase(BuildContext context, WidgetRef ref) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      await ref.read(dataManagementUsecaseProvider).exportDatabaseFile();
+    } catch (e) {
+      FailureSnackBar.show(
+        scaffoldMessenger,
+        message: '書き出しに失敗しました: $e',
+      );
+    }
+  }
+
+  /// 確認ダイアログで承認されたら全データを削除する
+  Future<void> _confirmAndDeleteAllData(
+    BuildContext context,
+    WidgetRef ref,
+  ) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    final isApproved = await showConfirmationDialog(
+      context,
+      title: 'すべてのデータを削除',
+      message: '支出・収入・固定費・予算などすべての記録を削除します。\nこの操作は取り消せません。本当に削除しますか？',
+    );
+    if (!isApproved) return;
+
+    try {
+      await ref.read(dataManagementUsecaseProvider).deleteAllData();
+      SuccessSnackBar.show(
+        scaffoldMessenger,
+        message: 'すべてのデータを削除しました',
+      );
+    } catch (e) {
+      FailureSnackBar.show(
+        scaffoldMessenger,
+        message: '削除に失敗しました: $e',
+      );
+    }
   }
 
   /// 現在の設定値を取得してから集計期間の設定ダイアログを表示する
@@ -98,12 +177,17 @@ class _ConfigRow extends StatelessWidget {
   const _ConfigRow({
     required this.label,
     required this.onTap,
+    this.textColor,
     this.isFirst = false,
     this.isLast = false,
   });
 
   final String label;
   final VoidCallback onTap;
+
+  /// ラベル色の上書き（破壊的操作の行を赤系にする用途）
+  final Color? textColor;
+
   final bool isFirst;
   final bool isLast;
 
@@ -129,7 +213,9 @@ class _ConfigRow extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: AppTextStyles.oneLineButtonText,
+                style: textColor != null
+                    ? AppTextStyles.oneLineButtonText.copyWith(color: textColor)
+                    : AppTextStyles.oneLineButtonText,
               ),
             ],
           ),

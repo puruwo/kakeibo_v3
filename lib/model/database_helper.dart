@@ -157,4 +157,22 @@ class DatabaseHelper {
     final exist = Sqflite.firstIntValue(result) == 1;
     return exist;
   }
+
+  // データベースファイルのパスを取得する（バックアップ書き出し用）
+  Future<String> getDatabasePath() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    return join(documentsDirectory.path, _databaseName);
+  }
+
+  // データベースを閉じてファイルごと削除する（全データ削除用）
+  // 次回アクセス時にonCreateから再初期化される
+  Future<void> deleteDatabaseFile() async {
+    final db = _database;
+    if (db != null) {
+      await db.close();
+    }
+    _database = null;
+    final path = await getDatabasePath();
+    await deleteDatabase(path);
+  }
 }
