@@ -185,9 +185,23 @@ class DataBaseMigrate {
     logger.i('=== v8マイグレーション開始: スキーマ負債解消 ===');
 
     // 1. fixed_cost: タイポしていたカラム名 fiirst_payment_date を first_payment_date へ改名
-    //    既存マイグレーションに合わせてテーブル再作成方式で行う
-    logger.i('1. ${SqfFixedCost.tableName}のカラム名を修正中...');
-    await db.execute('''CREATE TABLE fixed_cost_new (
+    //    既存マイグレーションに合わせてテーブル再作成方式で行う。
+    //    ただし、定数修正後かつv8バージョンbump前のビルドでDBが作成された端末は
+    //    最初から正しい first_payment_date を持つため、タイポ版カラムの有無を検査し
+    //    存在する場合のみ改名処理を行う（存在しない端末でのクラッシュを回避）。
+    logger.i('1. ${SqfFixedCost.tableName}のカラム名を検査中...');
+    final fixedCostColumns =
+        await db.rawQuery('PRAGMA table_info(${SqfFixedCost.tableName})');
+    final hasTypoPaymentDate =
+        fixedCostColumns.any((column) => column['name'] == 'fiirst_payment_date');
+
+    if (!hasTypoPaymentDate) {
+      logger.i('1-1. 既に${SqfFixedCost.firstPaymentDate}のため改名をスキップ');
+    } else {
+      logger.i('1-1. タイポ版カラムが存在するため改名します');
+      // 過去の中断で残骸テーブルがあっても再実行に耐えるよう先にDROPする
+      await db.execute('DROP TABLE IF EXISTS fixed_cost_new;');
+      await db.execute('''CREATE TABLE fixed_cost_new (
           ${SqfFixedCost.id} INTEGER PRIMARY KEY AUTOINCREMENT,
           ${SqfFixedCost.name} TEXT NOT NULL,
           ${SqfFixedCost.variable} INTEGER NOT NULL,
@@ -203,7 +217,7 @@ class DataBaseMigrate {
           );
           ''');
 
-    await db.execute('''
+      await db.execute('''
           INSERT INTO fixed_cost_new (
             ${SqfFixedCost.id},
             ${SqfFixedCost.name},
@@ -234,9 +248,10 @@ class DataBaseMigrate {
           FROM ${SqfFixedCost.tableName};
           ''');
 
-    await db.execute('DROP TABLE ${SqfFixedCost.tableName};');
-    await db.execute(
-        'ALTER TABLE fixed_cost_new RENAME TO ${SqfFixedCost.tableName};');
+      await db.execute('DROP TABLE ${SqfFixedCost.tableName};');
+      await db.execute(
+          'ALTER TABLE fixed_cost_new RENAME TO ${SqfFixedCost.tableName};');
+    }
 
     // 2. fixed_cost_expense: v6マイグレーション経由の端末には fixed_cost_id 列が
     //    存在しない（v7以降の新規インストールには存在する）ため、検査して補完する
