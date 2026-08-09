@@ -73,7 +73,7 @@ class _FixedCostSummaryHeaderState
                   ),
                 ),
                 const Divider(height: 0, color: Colors.black26, thickness: 1),
-                // 未確定確定分（推定）
+                // 未確定分（想定額での計上）
                 Container(
                   height: 40,
                   color: context.colors.fillQuaternary,
@@ -83,7 +83,7 @@ class _FixedCostSummaryHeaderState
                       children: [
                         Expanded(
                           child: Text(
-                            '未確定確定分(推定)',
+                            '未確定分（想定）',
                             style: AppTextStyles.appCardTitleLabel,
                           ),
                         ),

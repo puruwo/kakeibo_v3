@@ -121,10 +121,10 @@ class BonusPlanBarGraph extends HookConsumerWidget {
         ]);
       }
 
-      // 予算が設定されていない場合
+      // ボーナス収入が未登録の場合
       if (barGraphStatus == BarGraphStatus.noBudget) {
         return Text(
-          '予算が設定されていません',
+          'ボーナスが未登録です',
           style: AppTextStyles.listEmptyMessage,
         );
       } else {

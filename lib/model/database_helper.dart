@@ -7,7 +7,7 @@ import 'package:kakeibo/model/sql_on_create.dart';
 
 class DatabaseHelper {
   static const _databaseName = "kakeibo_v3.db"; // DB名
-  static const _databaseVersion = 7; // スキーマのバージョン指定
+  static const _databaseVersion = 8; // スキーマのバージョン指定
 
   //読み出しデータ(Map)はImmutable
   //なので'Unsupported operation: read-only'が出た時はmakeMutable関数で返す必要がある
@@ -69,6 +69,9 @@ class DatabaseHelper {
               break;
             case 7:
               await DataBaseMigrate().toV7(db);
+              break;
+            case 8:
+              await DataBaseMigrate().toV8(db);
               break;
           }
         }
@@ -153,5 +156,23 @@ class DatabaseHelper {
     final result = await db!.rawQuery(sql);
     final exist = Sqflite.firstIntValue(result) == 1;
     return exist;
+  }
+
+  // データベースファイルのパスを取得する（バックアップ書き出し用）
+  Future<String> getDatabasePath() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    return join(documentsDirectory.path, _databaseName);
+  }
+
+  // データベースを閉じてファイルごと削除する（全データ削除用）
+  // 次回アクセス時にonCreateから再初期化される
+  Future<void> deleteDatabaseFile() async {
+    final db = _database;
+    if (db != null) {
+      await db.close();
+    }
+    _database = null;
+    final path = await getDatabasePath();
+    await deleteDatabase(path);
   }
 }

@@ -7,9 +7,9 @@ import 'package:kakeibo/view/component/app_pill_container.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 
-/// 予算行（「予算」ラベルと拠出元選択）
+/// 拠出元行（「拠出元」ラベルと拠出元選択）
 ///
-/// 画像デザインの「📊 予算 | 給料 ▼」部分
+/// 画像デザインの「📊 拠出元 | 生活収支 ▼」部分
 class BudgetRow extends ConsumerStatefulWidget {
   const BudgetRow({super.key, required this.originalIncomeSourceBigCategory});
 
@@ -85,7 +85,7 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
                   color: context.colors.text,
                 ),
                 const SizedBox(width: 8),
-                Text('予算', style: RegisterPageStyles.placeHolder),
+                Text('拠出元', style: RegisterPageStyles.placeHolder),
               ],
             ),
             Row(

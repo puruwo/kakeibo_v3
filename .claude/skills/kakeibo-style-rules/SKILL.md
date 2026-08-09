@@ -1,55 +1,26 @@
 ---
 name: kakeibo-style-rules
 description: >
-  Kakeiboプロジェクトでのカラー定義・フォント定義の運用ルール。
+  Kakeiboプロジェクトでのカラー参照・フォント定義の運用ルール。
   UIコンポーネントを実装・修正するときは必ずこのSkillに従うこと。
+  カラーの詳細ルールは kakeibo-design-tokens Skill を正とする。
 ---
 
 # カラー・フォント定義ルール
 
 ## カラー定義
 
-### 基本ルール
+**カラーの運用ルールは `kakeibo-design-tokens` Skill を正とする。**
+色を扱う作業（トークン追加・UI実装・ハードコード色の置き換え等）では必ずそちらに従うこと。
 
-カラーはすべて `lib/constant/colors.dart` の `MyColors` クラスから参照すること。
+要点のみ再掲：
 
-```dart
-// ✅ 正しい
-color: MyColors.white
-color: MyColors.themeColor
-color: MyColors.secondaryLabel
-
-// ❌ 禁止
-color: Colors.white
-color: Colors.black
-color: Color(0xFFFFFFFF)  // MyColorsに同等の定義があれば禁止
-```
-
-### 新しい色が必要な場合
-
-`MyColors` に未定義の色が必要な場合は、**使用箇所に直接書かず**、必ず `colors.dart` に定義してから参照する。
-
-```dart
-// colors.dart に追加
-static const overlayDark = Color(0xBF000000);  // alpha: 0.75 相当
-
-// 使用箇所
-color: MyColors.overlayDark
-```
-
-### 透明度バリアント
-
-`.withValues(alpha: x)` や `.withOpacity(x)` で動的に透明度を変える場合：
-- ベースカラーは `MyColors` から取得する
-- 同じ透明度を複数箇所で使う場合は `MyColors` に定数化する
-
-```dart
-// 1箇所だけで使う場合（許容）
-color: MyColors.black.withValues(alpha: 0.75)
-
-// 複数箇所で使う場合 → MyColorsに定数化する
-static const backdropColor = Color(0xBF000000);  // Colors.dart に追加
-```
+- 色の単一ソースは `design-tokens/tokens.json`。ここ以外に色値を書かない
+- アプリコードからは `context.colors.<token>` で参照する（`Colors.*` / `Color(0x...)` の直書き禁止）
+- `lib/theme/app_colors.dart` は生成物（`tool/generate_tokens.dart` で生成）。手で編集しない
+- 旧 `MyColors` は廃止済み。見つけたら対応する `context.colors.*` へ置き換える
+- `const TextStyle` や `CustomPainter` など context が使えない場所の例外パターンも
+  `kakeibo-design-tokens` Skill に定義がある
 
 ---
 
@@ -74,14 +45,14 @@ style: MyFontStyle.notoSans.copyWith(...)  // 使用箇所に直接書くのは�
 
 | 用途 | 使うスタイル |
 |---|---|
-| ページAppBarのタイトル | `pageHeaderText` (white, 18, w500) |
-| ページAppBarのサブテキスト | `pageHeaderSubText` (secondaryLabel, 11, w400) |
-| セクションヘッダー（カード上部） | `appCardSectionTitle` (label, 16, w600) |
-| リストタイルのメインラベル | `listTilePrimaryTitle` (label, 14, w500) |
-| リストタイルのサブラベル | `listTileSecondaryTitle` (secondaryLabel, 13, w400) |
-| カード内の金額 | `appCardPriceLabel` (white, 20, w600) |
-| ボタンのテキスト | `mainButtonText` (label, 14, w600) |
-| ダイアログタイトル | `dialogTitle` (white, 18, w500) |
+| ページAppBarのタイトル | `pageHeaderText` (text, 18, w500) |
+| ページAppBarのサブテキスト | `pageHeaderSubText` (textSecondary, 11, w400) |
+| セクションヘッダー（カード上部） | `appCardSectionTitle` (text, 16, w600) |
+| リストタイルのメインラベル | `listTilePrimaryTitle` (text, 14, w500) |
+| リストタイルのサブラベル | `listTileSecondaryTitle` (textSecondary, 13, w400) |
+| カード内の金額 | `appCardPriceLabel` (text, 20, w600) |
+| ボタンのテキスト | `mainButtonText` (text, 14, w600) |
+| ダイアログタイトル | `dialogTitle` (text, 18, w500) |
 
 ### 新しいスタイルが必要な場合
 
@@ -92,7 +63,7 @@ style: MyFontStyle.notoSans.copyWith(...)  // 使用箇所に直接書くのは�
 /// ピッカーの選択中テキスト用スタイル
 static final TextStyle pickerSelectedLabel = MyFontStyle.notoSans.copyWith(
   fontSize: 16,
-  color: MyColors.label,
+  color: AppColorsDark.text,
   fontWeight: FontWeight.w600,
 );
 
@@ -103,7 +74,9 @@ style: AppTextStyles.pickerSelectedLabel
 定義時のフォーマット：
 - 1行のdocコメント（用途を日本語で記述）
 - `MyFontStyle.notoSans` か `MyFontStyle.sfUi` を使う（数値系は sfUi、日本語文字列は notoSans）
-- カラーは `MyColors` から参照
+- カラーは `AppColorsDark`（static 逃げ道クラス・ダーク値）から参照する
+  - static 定義内では context が使えないためのやむを得ない例外（`kakeibo-design-tokens` Skill の対応B）
+  - 使用箇所で色をモード追従させたい場合は `.copyWith(color: context.colors.<token>)` を当てる（対応A）
 
 ---
 
@@ -111,6 +84,7 @@ style: AppTextStyles.pickerSelectedLabel
 
 | 定義ファイル | クラス名 | 用途 |
 |---|---|---|
-| `lib/constant/colors.dart` | `MyColors` | カラー定数 |
+| `design-tokens/tokens.json` | - | カラーの単一ソース（`kakeibo-design-tokens` Skill 参照） |
+| `lib/theme/app_colors.dart` | `AppColors` / `AppColorsDark` | 生成されたカラートークン（手編集禁止） |
 | `lib/constant/styles/app_text_styles.dart` | `AppTextStyles` | フォントスタイル |
 | `lib/constant/font_style.dart` | `MyFontStyle` | ベースフォント（直接使用禁止） |
