@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
@@ -93,7 +94,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
           },
           // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
           loading: () => const SizedBox.shrink(),
-          error: (error, stackTrace) => Center(child: Text('Error: $error')),
+          error: (error, stackTrace) => const AppErrorState(),
         );
   }
 }

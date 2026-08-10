@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
@@ -182,7 +183,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
             );
           },
           error: (error, stackTrace) {
-            return Center(child: Text('Error: $error'));
+            return const AppErrorState();
           },
           // ローディングはトップレベル(PageLoadingIndicator)で吸収する
           loading: () => const SizedBox.shrink(),

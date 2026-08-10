@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/app_fab_stack.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/modal.dart';
@@ -76,9 +77,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
           );
         },
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('エラーが発生しました: $error', style: AppTextStyles.errorMessage),
-        ),
+        error: (error, stack) => const AppErrorState(),
       ),
     );
   }

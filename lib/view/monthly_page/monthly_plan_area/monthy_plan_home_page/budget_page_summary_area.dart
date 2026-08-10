@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
@@ -189,7 +190,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
             ));
           },
           loading: () => _wrapTop(const MonthlyPlanSkeleton()),
-          error: (error, stack) => _wrapTop(Center(child: Text('$error'))),
+          error: (error, stack) => _wrapTop(const AppErrorState()),
         );
   }
 

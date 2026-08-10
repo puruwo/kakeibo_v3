@@ -11,6 +11,7 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -203,9 +204,10 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('保存に失敗しました: $e')));
+        FailureSnackBar.show(
+          ScaffoldMessenger.of(context),
+          message: '保存に失敗しました',
+        );
       }
     }
   }

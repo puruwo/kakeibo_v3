@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
@@ -90,7 +91,7 @@ class BonusPlanArea extends ConsumerWidget {
           },
           // ローディングはトップレベル(PageLoadingIndicator)で吸収する
           loading: () => const SizedBox.shrink(),
-          error: (error, stack) => Center(child: Text('$error')),
+          error: (error, stack) => const AppErrorState(),
         );
   }
 }
