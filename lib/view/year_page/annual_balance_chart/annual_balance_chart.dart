@@ -162,6 +162,11 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                   // 塗り広げる。スクロール本体側は上下16pxのPaddingを持つため、
                   // オーバーレイをグラフ本体と同じ高さ（top:16〜totalHeight）だけに
                   // 留めると、カードの上端・下端の16px帯に背景が塗られず境界に見える。
+                  //
+                  // CardContainerはclipBehavior未指定（Clip.none）で角丸の外に子要素が
+                  // はみ出せるため、このオーバーレイの左上・左下の角もCardContainerと
+                  // 同じ半径（appCardRadius）に丸めておかないと、カードの丸みの外に
+                  // 四角い角が飛び出して見える（右側の角はグラフ中央付近で見えないため丸め不要）。
                   Positioned.fill(
                     child: IgnorePointer(
                       child: Stack(
@@ -177,6 +182,10 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                   cardSurfaceColor.withValues(alpha: 0.0),
                                 ],
                                 stops: const [0.0, 0.6, 1.0],
+                              ),
+                              borderRadius: BorderRadius.only(
+                                topLeft: appCardRadius.topLeft,
+                                bottomLeft: appCardRadius.bottomLeft,
                               ),
                             ),
                             child: SizedBox(
