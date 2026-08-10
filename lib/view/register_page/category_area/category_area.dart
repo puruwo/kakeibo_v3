@@ -222,8 +222,11 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
   }
 
   /// 行数からグリッド外枠の高さを算出。NoneIconBoxの1セル分の高さ・行間パディング(6px)と揃える
+  ///
+  /// 実機で実測ベースに微調整済み（テキストの実際の行高は端末フォントで変動するため、
+  /// 溢れを避ける安全マージンを含めた値にしている）。
   double _gridHeightFor(int rows, double screenVerticalMagnification) {
-    const rowContentHeight = 34 + 22.5; // アイコン34px + ラベル/下線ドット分
+    const rowContentHeight = 34 + 30; // アイコン34px + ラベル/下線ドット分＋安全マージン
     final rowHeight = rowContentHeight * screenVerticalMagnification;
     const interRowGap = 6.0;
     return rows * rowHeight + (rows - 1) * interRowGap;

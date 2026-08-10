@@ -12,7 +12,7 @@ class NoneIconBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 62.2 * context.screenHorizontalMagnification,
-      height: 34 * context.screenVerticalMagnification + 17 + 3 + 2.5,
+      height: 34 * context.screenVerticalMagnification + 30,
     );
   }
 }
