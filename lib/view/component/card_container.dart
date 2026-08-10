@@ -5,6 +5,8 @@ import 'package:kakeibo/theme/app_colors.dart';
 ///
 /// 背景色: MyColors.quarternarySystemfill
 /// 角丸: 18px
+/// ADR-017 #1: 極薄境界線＋上から光が当たるような微細なグラデーションハイライトで
+/// 背景（surface）との奥行きを出す。
 ///
 /// Containerの代用として使用可能。decorationは固定で、
 /// それ以外のContainerプロパティはすべて指定可能です。
@@ -59,6 +61,12 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseColor = context.colors.fillQuaternary;
+    final highlightColor = Color.alphaBlend(
+      context.colors.surfaceBorder,
+      baseColor,
+    );
+
     return Container(
       alignment: alignment,
       padding: padding,
@@ -71,7 +79,13 @@ class CardContainer extends StatelessWidget {
       transformAlignment: transformAlignment,
       clipBehavior: clipBehavior,
       decoration: BoxDecoration(
-        color: context.colors.fillQuaternary,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [highlightColor, baseColor],
+          stops: const [0.0, 0.4],
+        ),
+        border: Border.all(color: context.colors.surfaceBorder, width: 1),
         borderRadius: appCardRadius,
       ),
       child: child,

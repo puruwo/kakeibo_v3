@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/view/component/app_pill_container.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
@@ -58,76 +59,71 @@ class _MemoInputFieldState extends ConsumerState<MemoInputField> {
       onTap: () {
         _focusNode.requestFocus();
       },
-      child: Container(
-        height: InputPageWidgetSize.pillHeight,
+      // ADR-017実装メモ: 独自Containerではなく共通のAppPillContainerを経由する
+      // （境界線等の見た目の変更が1箇所に集約されるようにする）
+      child: AppPillContainer(
         width: InputPageWidgetSize.pillWidth,
-        decoration: BoxDecoration(
-          color: context.colors.fillSecondary,
-          borderRadius: BorderRadius.circular(50),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 6, 20, 5),
-          child: SizedBox(
-            height: 34,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // アイコン表示（オプション）
-                if (widget.showIcon) ...[
-                  Icon(
-                    Icons.notes_rounded,
-                    size: 18,
-                    color: context.colors.text,
-                  ),
-                  const SizedBox(width: 6),
-                ],
-                // ラベル
-                Text(
-                  widget.titleLabel,
-                  textAlign: TextAlign.left,
-                  style: RegisterPageStyles.placeHolder,
+        padding: const EdgeInsets.fromLTRB(16, 6, 20, 5),
+        child: SizedBox(
+          height: 34,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // アイコン表示（オプション）
+              if (widget.showIcon) ...[
+                Icon(
+                  Icons.notes_rounded,
+                  size: 18,
+                  color: context.colors.text,
                 ),
-                const SizedBox(width: 16),
-                // 入力フィールド
-                Expanded(
-                  child: TextFormField(
-                    controller: _enteredMemoController,
-                    focusNode: _focusNode,
-                    autofocus: false,
-                    textAlignVertical: TextAlignVertical.center,
-                    textAlign: TextAlign.right,
-                    cursorColor: context.colors.primary,
-                    cursorWidth: 2,
-                    style: RegisterPageStyles.inputText,
-                    minLines: 1,
-                    maxLines: 1,
-                    maxLength: 20,
-                    buildCounter:
-                        (
-                          BuildContext context, {
-                          required int currentLength,
-                          required bool isFocused,
-                          required int? maxLength,
-                        }) {
-                          return null;
-                        },
-                    decoration: const InputDecoration(
-                      isDense: true,
-                      filled: false,
-                      contentPadding: EdgeInsets.zero,
-                      border: InputBorder.none,
-                    ),
-                    keyboardAppearance: Brightness.dark,
-                    onTapOutside: (event) {
-                      FocusScope.of(context).unfocus();
-                    },
-                    onEditingComplete: () {
-                      FocusScope.of(context).unfocus();
-                    },
-                  ),
-                ),
+                const SizedBox(width: 6),
               ],
-            ),
+              // ラベル
+              Text(
+                widget.titleLabel,
+                textAlign: TextAlign.left,
+                style: RegisterPageStyles.placeHolder,
+              ),
+              const SizedBox(width: 16),
+              // 入力フィールド
+              Expanded(
+                child: TextFormField(
+                  controller: _enteredMemoController,
+                  focusNode: _focusNode,
+                  autofocus: false,
+                  textAlignVertical: TextAlignVertical.center,
+                  textAlign: TextAlign.right,
+                  cursorColor: context.colors.primary,
+                  cursorWidth: 2,
+                  style: RegisterPageStyles.inputText,
+                  minLines: 1,
+                  maxLines: 1,
+                  maxLength: 20,
+                  buildCounter:
+                      (
+                        BuildContext context, {
+                        required int currentLength,
+                        required bool isFocused,
+                        required int? maxLength,
+                      }) {
+                        return null;
+                      },
+                  decoration: const InputDecoration(
+                    isDense: true,
+                    filled: false,
+                    contentPadding: EdgeInsets.zero,
+                    border: InputBorder.none,
+                  ),
+                  keyboardAppearance: Brightness.dark,
+                  onTapOutside: (event) {
+                    FocusScope.of(context).unfocus();
+                  },
+                  onEditingComplete: () {
+                    FocusScope.of(context).unfocus();
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ),
