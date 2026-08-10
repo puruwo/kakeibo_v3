@@ -63,7 +63,8 @@ class CardContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final baseColor = context.colors.fillQuaternary;
     // ADR-017 #1（実機フィードバックにより調整）: ハイライトは控えめに、
-    // 縦ではなく斜め（左上→右下）にごく短い距離だけ乗せる。
+    // 縦ではなく斜め（左上→右下）に乗せる。stopsはカード全体（0.0〜1.0）に
+    // 引き伸ばし、背の高いカードでも途中に遷移の境界線が見えないようにする。
     final highlightColor = Color.alphaBlend(
       context.colors.surfaceBorder.withValues(alpha: 0.035),
       baseColor,
@@ -85,7 +86,7 @@ class CardContainer extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [highlightColor, baseColor],
-          stops: const [0.0, 0.18],
+          stops: const [0.0, 1.0],
         ),
         border: Border.all(color: context.colors.surfaceBorder, width: 1),
         borderRadius: appCardRadius,
