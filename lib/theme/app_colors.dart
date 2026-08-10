@@ -70,7 +70,7 @@ class AppColors extends ThemeExtension<AppColors> {
     surface: Color(0xFFFFFFFF),
     surfaceElevated: Color(0xFFF2F2F7),
     surfaceElevated2: Color(0xFFFFFFFF),
-    surfaceBorder: Color(0x0F000000),
+    surfaceBorder: Color(0x24000000),
     fill: Color(0x33787880),
     fillSecondary: Color(0x28787880),
     fillTertiary: Color(0x1E767680),
@@ -97,7 +97,7 @@ class AppColors extends ThemeExtension<AppColors> {
     surface: Color(0xFF0A0A0D),
     surfaceElevated: Color(0xFF1C1C1E),
     surfaceElevated2: Color(0xFF2C2C2E),
-    surfaceBorder: Color(0x12FFFFFF),
+    surfaceBorder: Color(0x24FFFFFF),
     fill: Color(0x5B787880),
     fillSecondary: Color(0x51787880),
     fillTertiary: Color(0x3D767680),
@@ -222,7 +222,7 @@ class AppColorsLight {
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceElevated = Color(0xFFF2F2F7);
   static const Color surfaceElevated2 = Color(0xFFFFFFFF);
-  static const Color surfaceBorder = Color(0x0F000000);
+  static const Color surfaceBorder = Color(0x24000000);
   static const Color fill = Color(0x33787880);
   static const Color fillSecondary = Color(0x28787880);
   static const Color fillTertiary = Color(0x1E767680);
@@ -252,7 +252,7 @@ class AppColorsDark {
   static const Color surface = Color(0xFF0A0A0D);
   static const Color surfaceElevated = Color(0xFF1C1C1E);
   static const Color surfaceElevated2 = Color(0xFF2C2C2E);
-  static const Color surfaceBorder = Color(0x12FFFFFF);
+  static const Color surfaceBorder = Color(0x24FFFFFF);
   static const Color fill = Color(0x5B787880);
   static const Color fillSecondary = Color(0x51787880);
   static const Color fillTertiary = Color(0x3D767680);

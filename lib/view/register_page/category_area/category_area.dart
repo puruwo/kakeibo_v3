@@ -102,11 +102,19 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               categoryPaginationProvider(categories.length),
             );
 
+            // ADR-020: 3行分を常に確保せず、実際のカテゴリー数から必要な行数だけ枠を取る
+            // （空セルを非表示にしても外枠が固定250pxのままだと下の要素が詰まらないため）
+            final rowsNeeded = _rowsNeededFor(categories.length);
+            final gridHeight = _gridHeightFor(
+              rowsNeeded,
+              screenVerticalMagnification,
+            );
+
             return Column(
               children: [
                 // カテゴリーグリッド
                 SizedBox(
-                  height: 250 * screenVerticalMagnification,
+                  height: gridHeight,
                   width: 343 * screenHorizontalMagnification,
                   child: PageView.builder(
                     controller: pageController,
@@ -117,6 +125,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                         categories: categories,
                         selectedCategory: selectedCategory,
                         itemsPerPage: pagination.itemsPerPage,
+                        rows: rowsNeeded,
                       );
                     },
                   ),
@@ -204,14 +213,30 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     );
   }
 
-  /// カテゴリーグリッドを構築（5列 x 3行）
+  /// カテゴリー数から必要な行数を算出（5列・最大3行）
+  int _rowsNeededFor(int categoryCount) {
+    const columns = 5;
+    const maxRows = 3;
+    if (categoryCount <= 0) return 1;
+    return (((categoryCount - 1) ~/ columns) + 1).clamp(1, maxRows);
+  }
+
+  /// 行数からグリッド外枠の高さを算出。NoneIconBoxの1セル分の高さ・行間パディング(6px)と揃える
+  double _gridHeightFor(int rows, double screenVerticalMagnification) {
+    const rowContentHeight = 34 + 22.5; // アイコン34px + ラベル/下線ドット分
+    final rowHeight = rowContentHeight * screenVerticalMagnification;
+    const interRowGap = 6.0;
+    return rows * rowHeight + (rows - 1) * interRowGap;
+  }
+
+  /// カテゴリーグリッドを構築（5列 x rows行）
   Widget _buildCategoryGrid({
     required int pageIndex,
     required List<ICategoryEntity> categories,
     required ICategoryEntity selectedCategory,
     required int itemsPerPage,
+    required int rows,
   }) {
-    const rows = 3;
     const columns = 5;
 
     return Column(
@@ -220,7 +245,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
       children: List.generate(
         rows,
         (rowIndex) => Padding(
-          padding: _getPaddingForRow(rowIndex),
+          padding: _getPaddingForRow(rowIndex, isLast: rowIndex == rows - 1),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
@@ -254,8 +279,8 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
   }
 
   /// 行位置に応じたパディングを取得
-  EdgeInsets _getPaddingForRow(int rowIndex) {
-    if (rowIndex == 2) {
+  EdgeInsets _getPaddingForRow(int rowIndex, {required bool isLast}) {
+    if (isLast) {
       return const EdgeInsets.only(bottom: 0);
     }
     return const EdgeInsets.only(bottom: 6);
