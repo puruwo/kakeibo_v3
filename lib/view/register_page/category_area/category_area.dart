@@ -5,6 +5,7 @@ import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/normal_icon_button.dart';
@@ -152,7 +153,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               ],
             );
           },
-          error: (error, stackTrace) => const Text('エラーが発生しました'),
+          error: (error, stackTrace) => const AppErrorState(),
           loading: () => const CircularProgressIndicator(),
         );
   }

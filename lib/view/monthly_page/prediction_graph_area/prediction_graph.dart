@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
-import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph_parts/prediction_graph_widget.dart';
 
@@ -32,9 +32,7 @@ class PredictionGraph extends ConsumerWidget {
         },
         // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
         loading: () => const SizedBox.shrink(),
-        error: (error, stack) => Center(
-          child: Text('エラーが発生しました', style: AppTextStyles.errorMessage),
-        ),
+        error: (error, stack) => const AppErrorState(),
       ),
     );
   }
