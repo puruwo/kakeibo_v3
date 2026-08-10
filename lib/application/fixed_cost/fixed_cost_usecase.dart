@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_service.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -6,6 +7,7 @@ import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_reposito
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain_service/system_datetime/date_scope.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
@@ -184,18 +186,16 @@ class FixedCostUsecase {
   }
 
   // マスタのレコードは削除せず、deleteFlagを1にする
-  // あわせて未確定の実績を連動削除する（確定済みは履歴として残す）
+  // あわせて未払いの実績を連動削除する（支払日が到来済みの記録は履歴として残す）
+  // 未払い分を残すと、解約したのに支出に出続ける幽霊レコードになる（→ ADR-007）
   Future<void> delete({required int id}) async {
-    // マスタの論理削除を先に行う
-    // 2つの削除はトランザクションで括られていないため、途中で失敗したときに
-    // 「マスタは生きているのに今月分の予定だけ消えている」復旧不能な状態を作らない順序にする
-    await _fixedCostRepositoryProvider.delete(id);
+    // 運用日付（アプリ起動時点の日付）を基準に、支払日の到来を判定する
+    final today =
+        DateFormat('yyyyMMdd').format(_ref.read(systemDatetimeNotifierProvider));
 
-    // 未確定実績を削除する
-    // 未確定分は集計時にマスタの想定額で代用されるため、マスタだけ論理削除すると
-    // 「解約したのに支出に出続ける」幽霊レコードになる
-    await _fixedCostExpenseRepositoryProvider.deleteUnconfirmedByFixedCostId(
-      fixedCostId: id,
+    await _fixedCostRepositoryProvider.deleteWithUnpaidExpenses(
+      id: id,
+      today: today,
     );
 
     // DBの更新回数をインクリメント

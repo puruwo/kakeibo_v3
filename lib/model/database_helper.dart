@@ -150,10 +150,12 @@ class DatabaseHelper {
     return await db!.delete(table, where: '_id = ?', whereArgs: [id]);
   }
 
-  //　条件指定の削除処理（複数行を一度に削除する）
-  Future<int> deleteWhere(String table, String where, List whereArgs) async {
+  // 複数の書き込みを1トランザクションで実行する
+  // 途中で例外が出た場合は、それまでの書き込みもすべてロールバックされる
+  Future<T> runInTransaction<T>(
+      Future<T> Function(Transaction txn) action) async {
     Database? db = await instance.database;
-    return await db!.delete(table, where: where, whereArgs: whereArgs);
+    return await db!.transaction(action);
   }
 
   // レコードがあるか確認する

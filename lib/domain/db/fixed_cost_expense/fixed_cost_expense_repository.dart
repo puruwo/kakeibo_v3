@@ -42,10 +42,6 @@ abstract class FixedCostExpenseRepository {
 
   Future<void> delete(int id);
 
-  // 固定費ID指定で未確定（is_confirmed=0）の実績をまとめて削除する
-  // 固定費マスタ削除時の連動削除に使う（確定済みは履歴として残す）
-  Future<int> deleteUnconfirmedByFixedCostId({required int fixedCostId});
-
   // 未確定の固定費支出を確定させる
   Future<void> confirmExpense({required int id, required int price});
 

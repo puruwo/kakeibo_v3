@@ -109,14 +109,6 @@ class ImplementsFixedCostExpenseRepository
     );
   }
 
-  @override
-  Future<int> deleteUnconfirmedByFixedCostId({required int fixedCostId}) async {
-    return await DatabaseHelper.instance.deleteWhere(
-      SqfFixedCostExpense.tableName,
-      '${SqfFixedCostExpense.fixedCostId} = ? AND ${SqfFixedCostExpense.isConfirmed} = 0',
-      [fixedCostId],
-    );
-  }
 
   @override
   Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriod(
@@ -173,6 +165,7 @@ class ImplementsFixedCostExpenseRepository
       WHERE fce.${SqfFixedCostExpense.date} >= '$startDate'
       AND fce.${SqfFixedCostExpense.date} <= '$endDate'
       AND fce.${SqfFixedCostExpense.isConfirmed} = 0
+      AND fc.${SqfFixedCost.deleteFlag} = 0
     ''';
     final result = await DatabaseHelper.instance.query(sql);
     if (result.isEmpty) {
@@ -187,19 +180,22 @@ class ImplementsFixedCostExpenseRepository
           {required PeriodValue period}) async {
     final sql = '''
       SELECT
-        ${SqfFixedCostExpense.id} as id,
-        ${SqfFixedCostExpense.fixedCostId} as fixedCostId,
-        ${SqfFixedCostExpense.fixedCostCategoryId} as fixedCostCategoryId,
-        ${SqfFixedCostExpense.date} as date,
-        ${SqfFixedCostExpense.price} as price,
-        ${SqfFixedCostExpense.name} as name,
-        ${SqfFixedCostExpense.confirmedCostType} as confirmedCostType,
-        ${SqfFixedCostExpense.isConfirmed} as isConfirmed
-      FROM ${SqfFixedCostExpense.tableName}
-      WHERE ${SqfFixedCostExpense.date} >= '${period.startDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
-      AND ${SqfFixedCostExpense.date} <= '${period.endDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
-      AND ${SqfFixedCostExpense.isConfirmed} = 0
-      ORDER BY ${SqfFixedCostExpense.date} DESC
+        fce.${SqfFixedCostExpense.id} as id,
+        fce.${SqfFixedCostExpense.fixedCostId} as fixedCostId,
+        fce.${SqfFixedCostExpense.fixedCostCategoryId} as fixedCostCategoryId,
+        fce.${SqfFixedCostExpense.date} as date,
+        fce.${SqfFixedCostExpense.price} as price,
+        fce.${SqfFixedCostExpense.name} as name,
+        fce.${SqfFixedCostExpense.confirmedCostType} as confirmedCostType,
+        fce.${SqfFixedCostExpense.isConfirmed} as isConfirmed
+      FROM ${SqfFixedCostExpense.tableName} fce
+      INNER JOIN ${SqfFixedCost.tableName} fc
+        ON fce.${SqfFixedCostExpense.fixedCostId} = fc.${SqfFixedCost.id}
+      WHERE fce.${SqfFixedCostExpense.date} >= '${period.startDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND fce.${SqfFixedCostExpense.date} <= '${period.endDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND fce.${SqfFixedCostExpense.isConfirmed} = 0
+      AND fc.${SqfFixedCost.deleteFlag} = 0
+      ORDER BY fce.${SqfFixedCostExpense.date} DESC
     ''';
     final result = await DatabaseHelper.instance.query(sql);
     return result.map((e) => FixedCostExpenseEntity.fromJson(e)).toList();
@@ -212,20 +208,23 @@ class ImplementsFixedCostExpenseRepository
           required int fixedCostCategoryId}) async {
     final sql = '''
       SELECT
-        ${SqfFixedCostExpense.id} as id,
-        ${SqfFixedCostExpense.fixedCostId} as fixedCostId,
-        ${SqfFixedCostExpense.fixedCostCategoryId} as fixedCostCategoryId,
-        ${SqfFixedCostExpense.date} as date,
-        ${SqfFixedCostExpense.price} as price,
-        ${SqfFixedCostExpense.name} as name,
-        ${SqfFixedCostExpense.confirmedCostType} as confirmedCostType,
-        ${SqfFixedCostExpense.isConfirmed} as isConfirmed
-      FROM ${SqfFixedCostExpense.tableName}
-      WHERE ${SqfFixedCostExpense.date} >= '${period.startDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
-      AND ${SqfFixedCostExpense.date} <= '${period.endDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
-      AND ${SqfFixedCostExpense.isConfirmed} = 0
-      AND ${SqfFixedCostExpense.fixedCostCategoryId} = $fixedCostCategoryId
-      ORDER BY ${SqfFixedCostExpense.date} DESC
+        fce.${SqfFixedCostExpense.id} as id,
+        fce.${SqfFixedCostExpense.fixedCostId} as fixedCostId,
+        fce.${SqfFixedCostExpense.fixedCostCategoryId} as fixedCostCategoryId,
+        fce.${SqfFixedCostExpense.date} as date,
+        fce.${SqfFixedCostExpense.price} as price,
+        fce.${SqfFixedCostExpense.name} as name,
+        fce.${SqfFixedCostExpense.confirmedCostType} as confirmedCostType,
+        fce.${SqfFixedCostExpense.isConfirmed} as isConfirmed
+      FROM ${SqfFixedCostExpense.tableName} fce
+      INNER JOIN ${SqfFixedCost.tableName} fc
+        ON fce.${SqfFixedCostExpense.fixedCostId} = fc.${SqfFixedCost.id}
+      WHERE fce.${SqfFixedCostExpense.date} >= '${period.startDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND fce.${SqfFixedCostExpense.date} <= '${period.endDatetime.toIso8601String().substring(0, 10).replaceAll('-', '')}'
+      AND fce.${SqfFixedCostExpense.isConfirmed} = 0
+      AND fce.${SqfFixedCostExpense.fixedCostCategoryId} = $fixedCostCategoryId
+      AND fc.${SqfFixedCost.deleteFlag} = 0
+      ORDER BY fce.${SqfFixedCostExpense.date} DESC
     ''';
     final result = await DatabaseHelper.instance.query(sql);
     return result.map((e) => FixedCostExpenseEntity.fromJson(e)).toList();

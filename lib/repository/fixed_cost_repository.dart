@@ -225,4 +225,29 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         id);
     print('chage status to delete result: $result');
   }
+
+  // マスタの論理削除と未払い実績の削除を1トランザクションで行う
+  // 片方だけ成功して「マスタは生きているのに支払い予定だけ消えている」状態にならないようにする
+  @override
+  Future<void> deleteWithUnpaidExpenses(
+      {required int id, required String today}) async {
+    await db.runInTransaction((txn) async {
+      // マスタを論理削除する
+      await txn.update(
+        SqfFixedCost.tableName,
+        {SqfFixedCost.deleteFlag: 1},
+        where: '${SqfFixedCost.id} = ?',
+        whereArgs: [id],
+      );
+
+      // 未払い実績（未確定 or 支払日が未到来）を削除する
+      // 支払日が到来済みの記録は、実際に払った事実として履歴に残す
+      await txn.delete(
+        SqfFixedCostExpense.tableName,
+        where:
+            '${SqfFixedCostExpense.fixedCostId} = ? AND (${SqfFixedCostExpense.isConfirmed} = 0 OR ${SqfFixedCostExpense.date} > ?)',
+        whereArgs: [id, today],
+      );
+    });
+  }
 }
