@@ -157,35 +157,49 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                   // 別物のため、そのまま使うと縦軸ラベル付近に境界線が見えてしまう。
                   // CardContainerが実際に描画する色（fillQuaternaryをsurfaceElevated上に
                   // 合成した色）を計算して使うことで境界をなくす。
-                  Positioned(
-                    left: 0,
-                    top: 16.0,
-                    width: AnnualBalanceChartLayout.reservedSize,
-                    height: dimensions.totalHeight,
+                  //
+                  // 背景のグラデーションはCardContainerの上下端（Widget全体の高さ）まで
+                  // 塗り広げる。スクロール本体側は上下16pxのPaddingを持つため、
+                  // オーバーレイをグラフ本体と同じ高さ（top:16〜totalHeight）だけに
+                  // 留めると、カードの上端・下端の16px帯に背景が塗られず境界に見える。
+                  Positioned.fill(
                     child: IgnorePointer(
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              cardSurfaceColor,
-                              cardSurfaceColor,
-                              cardSurfaceColor.withValues(alpha: 0.0),
-                            ],
-                            stops: const [0.0, 0.6, 1.0],
+                      child: Stack(
+                        children: [
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.centerLeft,
+                                end: Alignment.centerRight,
+                                colors: [
+                                  cardSurfaceColor,
+                                  cardSurfaceColor,
+                                  cardSurfaceColor.withValues(alpha: 0.0),
+                                ],
+                                stops: const [0.0, 0.6, 1.0],
+                              ),
+                            ),
+                            child: SizedBox(
+                              width: AnnualBalanceChartLayout.reservedSize,
+                              height: double.infinity,
+                            ),
                           ),
-                        ),
-                        child: CustomPaint(
-                          size: Size(
-                            AnnualBalanceChartLayout.reservedSize,
-                            dimensions.totalHeight,
+                          // ラベル文字はグラフ本体と同じ位置（上16px）に描画する
+                          Positioned(
+                            left: 0,
+                            top: 16.0,
+                            child: CustomPaint(
+                              size: Size(
+                                AnnualBalanceChartLayout.reservedSize,
+                                dimensions.totalHeight,
+                              ),
+                              painter: AnnualBalanceAxisLabelsPainter(
+                                scale: chartData.yAxisScale,
+                                dimensions: dimensions,
+                              ),
+                            ),
                           ),
-                          painter: AnnualBalanceAxisLabelsPainter(
-                            scale: chartData.yAxisScale,
-                            dimensions: dimensions,
-                          ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
