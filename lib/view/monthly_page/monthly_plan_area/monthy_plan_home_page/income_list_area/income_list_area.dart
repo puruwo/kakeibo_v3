@@ -1,6 +1,7 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 
 /// Local imports
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/income_list_area/income_history_tile.dart';
@@ -47,7 +48,7 @@ class _IncomeListAreaState extends ConsumerState<IncomeListArea> {
             }
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('エラー: $e')),
+          error: (e, _) => const AppErrorState(),
         );
   }
 }

@@ -11,6 +11,7 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -124,19 +125,13 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     }
   }
 
-  /// タイルのデコレーションを構築
+  /// タイルの構築。ADR-020: 選択グリッドと同じ裸アイコンに統一し円は使わない。
+  /// ドラッグ中のスケールフィードバックのみ残す。
   Widget buildTile({required Widget child, required bool isDragging}) {
     return AnimatedScale(
       duration: const Duration(milliseconds: 120),
       scale: isDragging ? 0.96 : 1.0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.colors.fillSecondary,
-          shape: BoxShape.circle,
-        ),
-        alignment: Alignment.center,
-        child: child,
-      ),
+      child: Center(child: child),
     );
   }
 
@@ -203,9 +198,10 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       }
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('保存に失敗しました: $e')));
+        FailureSnackBar.show(
+          ScaffoldMessenger.of(context),
+          message: '保存に失敗しました',
+        );
       }
     }
   }
@@ -231,42 +227,49 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  const SizedBox(height: 16),
+                  // 保存ボタンを画面下部に固定するため、それ以外のコンテンツを
+                  // Expandedで上詰めにし、余った縦スペースをここで吸収する
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
 
-                  // 説明テキスト
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'アイコンを長押しして並び替えができます',
-                      style: RegisterPageStyles.iconRearrangeDescription,
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // グリッド部分
-                  SizedBox(
-                    height: 270 * context.screenVerticalMagnification,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: pageCount,
-                      itemBuilder: (context, page) {
-                        return Padding(
+                        // 説明テキスト
+                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: _buildCategoryGrid(page, items),
-                        );
-                      },
+                          child: Text(
+                            'アイコンを長押しして並び替えができます',
+                            style: RegisterPageStyles.iconRearrangeDescription,
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // グリッド部分
+                        SizedBox(
+                          height: 270 * context.screenVerticalMagnification,
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: pageCount,
+                            itemBuilder: (context, page) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: _buildCategoryGrid(page, items),
+                              );
+                            },
+                          ),
+                        ),
+
+                        // ページインジケーター
+                        if (pageCount > 1) ...[
+                          const SizedBox(height: 16),
+                          _buildPageIndicator(),
+                        ],
+                      ],
                     ),
                   ),
-
-                  // ページインジケーター
-                  if (pageCount > 1) ...[
-                    const SizedBox(height: 16),
-                    _buildPageIndicator(),
-                    const SizedBox(height: 32),
-                  ] else ...[
-                    const SizedBox(height: 32),
-                  ],
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 8,
@@ -295,7 +298,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     final screenHorizontalMagnification = context.screenHorizontalMagnification;
 
     // アイコンサイズ
-    final iconBoxSize = 58 * screenVerticalMagnification;
+    // ADR-020: 選択グリッドと同じアイコンサイズに揃える（旧: 円背景込みで58）
+    final iconBoxSize = 34 * screenVerticalMagnification;
     final labelWidth = 62.2 * ((screenHorizontalMagnification - 1) / 5 + 1);
 
     return Column(

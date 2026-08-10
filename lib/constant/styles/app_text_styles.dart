@@ -84,7 +84,8 @@ class AppTextStyles {
   /// メインボタン用テキストスタイル
   ///
   /// 【使用箇所】
-  /// - 現在未使用（将来の拡張用、MainButtonコンポーネント内で使用予定）
+  /// - ファイル: button_util.dart（MainButton/SubButton/IconOnlyButton）
+  ///   - 詳細: Primary/Destructiveボタンのラベル（白文字、彩度の高い背景色の上で使用）
   static final TextStyle mainButtonText = MyFontStyle.notoSans.copyWith(
     fontSize: 14,
     color: AppColorsDark.text,

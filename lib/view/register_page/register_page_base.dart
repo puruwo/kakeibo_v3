@@ -165,7 +165,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
                     onPressed: () => _showDeleteConfirmDialog(context),
                     icon: Icon(
                       Icons.delete_outline,
-                      color: context.colors.text,
+                      color: context.colors.danger,
                     ),
                   ),
                 ]

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/active_fixed_cost_count_provider.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/app_navigation_list_tile.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/modal.dart';
@@ -41,6 +41,7 @@ class FixedCostButtonArea extends ConsumerWidget {
   }
 }
 
+/// ADR-016 B: 固定費一覧はボタンではなくナビゲーション行（[AppNavigationListTile]）。
 class FixedCostManagePageButton extends ConsumerWidget {
   const FixedCostManagePageButton({
     super.key,
@@ -50,53 +51,22 @@ class FixedCostManagePageButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final activeCountAsync = ref.watch(activeFixedCostCountProvider);
 
-    return AppInkWell(
-      color: context.colors.fillQuaternary,
-      borderRadius: BorderRadius.circular(50.0),
-      onTap: () async {
+    return AppNavigationListTile(
+      title: '固定費一覧',
+      trailingText: activeCountAsync.maybeWhen(
+        data: (count) => '$count件',
+        orElse: () => null,
+      ),
+      onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
             builder: ((context) => const FixedCostRegistrationListPage())));
       },
-      child: Container(
-        height: 46,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '固定費一覧',
-                style: AppTextStyles.oneLineButtonText,
-              ),
-              Row(
-                children: [
-                  activeCountAsync.when(
-                    data: (count) => Text(
-                      '$count件',
-                      style: AppTextStyles.oneLineButtonSubText,
-                    ),
-                    loading: () => const SizedBox.shrink(),
-                    error: (_, __) => const SizedBox.shrink(),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    size: 16,
-                    Icons.arrow_forward_ios_rounded,
-                    color: context.colors.textSecondary,
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
     );
   }
 }
 
+/// ADR-016 A: Icon-onlyは既存の[IconOnlyButton]（AppIconCircleContainer経由）を使う。
+/// 独自にContainerで円を組み立てない。
 class FixedCostAddButton extends StatelessWidget {
   const FixedCostAddButton({
     super.key,
@@ -104,26 +74,14 @@ class FixedCostAddButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppInkWell(
+    return IconOnlyButton(
+      icon: Icons.add_rounded,
       onTap: () {
         showAppModalBottomSheet(
           context,
           child: const RegisaterPageBase.addFixedCost(),
         );
       },
-      child: Container(
-        width: 46,
-        height: 46,
-        decoration: BoxDecoration(
-          color: context.colors.fillQuaternary,
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-        child: Icon(
-          size: 18,
-          Icons.add_rounded,
-          color: context.colors.textSecondary,
-        ),
-      ),
     );
   }
 }

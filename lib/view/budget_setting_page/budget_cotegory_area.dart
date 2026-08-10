@@ -5,6 +5,7 @@ import 'package:kakeibo/domain_service/month_period_service/period_status_servic
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_category_tile.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 
@@ -79,7 +80,7 @@ class BudgetCategoryArea extends ConsumerWidget {
                   );
                 },
                 error: (Object error, StackTrace stackTrace) {
-                  return const Text('エラーが発生しました');
+                  return const AppErrorState();
                 },
                 loading: () {
                   return const CircularProgressIndicator();

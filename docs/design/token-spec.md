@@ -80,9 +80,10 @@
 
 | トークン | light | dark | 置き換え対象 |
 |---------|-------|------|------------|
-| `color.surface` | `#FFFFFFFF` | `#000000FF` | systemBackground(2) |
+| `color.surface` | `#FFFFFFFF` | `#0A0A0DFF`（旧`#000000FF`。2026-08-10、ADR-017により持ち上げ） | systemBackground(2) |
 | `color.surface-elevated` | `#F2F2F7FF` | `#1C1C1EFF` | secondarySystemBackground(19) |
 | `color.surface-elevated-2` | `#FFFFFFFF` ⚠️ | `#2C2C2EFF` | tertiarySystemBackground(8), ハードコード#2C2C2E(2) |
+| `color.surface-border` | `#00000024`（2026-08-10新設・ADR-017） | `#FFFFFF24` | カード/ピル/リスト行の極薄境界線（1px）。フィルとは別軸の新トークン |
 
 > ⚠️ Appleの非グループ背景はライトで base/tertiary が共に白になり、3段階の差が潰れる。
 > 3段階の段差をライトでも維持したい場合は、`surface-elevated-2` ライト値を `#F2F2F7FF` にするか、
@@ -120,6 +121,7 @@
 |---------|-------|------|------------|
 | `color.expense` | `#FF7171FF` 🔸 | `#FF7171FF` | pink(支出用途 21) |
 | `color.income` | `#21D19FFF` 🔸 | `#21D19FFF` | incomeEmerald(8) |
+| `color.danger` | `#FF7171FF` 🔸 | `#FF7171FF` | （2026-08-10新設・ADR-018）削除等の破壊的操作の色。値は`color.expense`と同一（`primitive.domain.red`共有）だが意味が異なるため独立トークン化 |
 
 > 🔸 ライト背景では `#FF7171`（明るい赤）・`#21D19F`（ティール緑）ともにコントラストが弱い可能性。
 > テキスト用途で使う場合は要確認。必要なら濃色のライト変種を別途定義。

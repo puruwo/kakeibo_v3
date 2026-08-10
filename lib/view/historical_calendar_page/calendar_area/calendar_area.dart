@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/calendar/calendar_usecase.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/date_box.dart';
@@ -99,7 +100,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
         itemBuilder: (context, index) {
           return ref.watch(calendarUsecaseNotifierProvider(index)).when(
                 loading: () => const Center(child: CircularProgressIndicator()),
-                error: (error, stackTrace) => Center(child: Text('$error')),
+                error: (error, stackTrace) => const AppErrorState(),
                 data: (calendarTileEntityList) {
                   // データ取得------------------------------------------------------
 

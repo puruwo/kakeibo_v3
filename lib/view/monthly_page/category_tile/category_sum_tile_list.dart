@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/all_no_budget_type_category_sum_tile.dart';
@@ -33,7 +34,7 @@ class CategorySumTileList extends ConsumerWidget {
           },
           // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
           loading: () => const SizedBox.shrink(),
-          error: (error, stack) => Center(child: Text('$error')),
+          error: (error, stack) => const AppErrorState(),
         );
   }
 }

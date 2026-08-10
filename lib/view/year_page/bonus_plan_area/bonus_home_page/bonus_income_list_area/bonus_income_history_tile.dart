@@ -50,6 +50,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
       MenuDialogItem(
         label: '削除',
         icon: Icons.delete_outline,
+        isDestructive: true,
         onPressed: () async {
           showDeleteConfirmationDialog(
             context,

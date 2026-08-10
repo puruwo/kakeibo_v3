@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/util.dart';
@@ -67,7 +68,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                 : Container();
           },
           loading: () => const SizedBox.shrink(),
-          error: (error, stack) => Center(child: Text('$error')),
+          error: (error, stack) => const AppErrorState(),
         );
   }
 }

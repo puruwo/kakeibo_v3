@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
@@ -439,7 +440,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
           },
           // ローディングはトップレベル(PageLoadingIndicator)で吸収する
           loading: () => const SizedBox.shrink(),
-          error: (error, stack) => Center(child: Text('$error')),
+          error: (error, stack) => const AppErrorState(),
         );
   }
 }
