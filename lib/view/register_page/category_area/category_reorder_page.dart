@@ -227,42 +227,49 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  const SizedBox(height: 16),
+                  // 保存ボタンを画面下部に固定するため、それ以外のコンテンツを
+                  // Expandedで上詰めにし、余った縦スペースをここで吸収する
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        const SizedBox(height: 16),
 
-                  // 説明テキスト
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'アイコンを長押しして並び替えができます',
-                      style: RegisterPageStyles.iconRearrangeDescription,
-                    ),
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // グリッド部分
-                  SizedBox(
-                    height: 270 * context.screenVerticalMagnification,
-                    child: PageView.builder(
-                      controller: _pageController,
-                      itemCount: pageCount,
-                      itemBuilder: (context, page) {
-                        return Padding(
+                        // 説明テキスト
+                        Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: _buildCategoryGrid(page, items),
-                        );
-                      },
+                          child: Text(
+                            'アイコンを長押しして並び替えができます',
+                            style: RegisterPageStyles.iconRearrangeDescription,
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        // グリッド部分
+                        SizedBox(
+                          height: 270 * context.screenVerticalMagnification,
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: pageCount,
+                            itemBuilder: (context, page) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
+                                child: _buildCategoryGrid(page, items),
+                              );
+                            },
+                          ),
+                        ),
+
+                        // ページインジケーター
+                        if (pageCount > 1) ...[
+                          const SizedBox(height: 16),
+                          _buildPageIndicator(),
+                        ],
+                      ],
                     ),
                   ),
-
-                  // ページインジケーター
-                  if (pageCount > 1) ...[
-                    const SizedBox(height: 16),
-                    _buildPageIndicator(),
-                    const SizedBox(height: 32),
-                  ] else ...[
-                    const SizedBox(height: 32),
-                  ],
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 8,
