@@ -29,6 +29,7 @@ class CategorySumTile extends HookConsumerWidget {
     return AppInkWell(
       color: context.colors.fillQuaternary,
       borderRadius: appCardRadius,
+      border: Border.all(color: context.colors.surfaceBorder, width: 1),
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(

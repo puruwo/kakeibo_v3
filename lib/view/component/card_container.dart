@@ -62,8 +62,10 @@ class CardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor = context.colors.fillQuaternary;
+    // ADR-017 #1（実機フィードバックにより調整）: ハイライトは控えめに、
+    // 縦ではなく斜め（左上→右下）にごく短い距離だけ乗せる。
     final highlightColor = Color.alphaBlend(
-      context.colors.surfaceBorder,
+      context.colors.surfaceBorder.withValues(alpha: 0.035),
       baseColor,
     );
 
@@ -80,10 +82,10 @@ class CardContainer extends StatelessWidget {
       clipBehavior: clipBehavior,
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
           colors: [highlightColor, baseColor],
-          stops: const [0.0, 0.4],
+          stops: const [0.0, 0.18],
         ),
         border: Border.all(color: context.colors.surfaceBorder, width: 1),
         borderRadius: appCardRadius,

@@ -9,6 +9,7 @@ class AppInkWell extends StatelessWidget {
     this.color,
     this.borderRadius,
     this.highlightColor,
+    this.border,
   });
 
   final Widget child;
@@ -18,20 +19,34 @@ class AppInkWell extends StatelessWidget {
   final BorderRadius? borderRadius;
   final Color? highlightColor;
 
+  /// ADR-017: `color`を塗る「カード/行」として使う場合の境界線。
+  /// MaterialはBoxDecoration.borderを持てないため、指定時は外側にborderだけの
+  /// Containerを重ねる（未指定なら従来通りMaterialのみ、見た目は変わらない）。
+  final BoxBorder? border;
+
   @override
   Widget build(BuildContext context) {
-    return Material(
+    final resolvedRadius =
+        borderRadius ?? const BorderRadius.all(Radius.circular(12));
+
+    final material = Material(
       color: color ?? Colors.transparent,
-      borderRadius: borderRadius ?? const BorderRadius.all(Radius.circular(12)),
+      borderRadius: resolvedRadius,
       child: InkWell(
-        borderRadius:
-            borderRadius ?? const BorderRadius.all(Radius.circular(12)),
+        borderRadius: resolvedRadius,
         splashColor: Colors.transparent,
         highlightColor: highlightColor ?? Colors.black.withOpacity(0.1),
         onTap: onTap,
         onLongPress: onLongPress,
         child: child,
       ),
+    );
+
+    if (border == null) return material;
+
+    return Container(
+      decoration: BoxDecoration(border: border, borderRadius: resolvedRadius),
+      child: material,
     );
   }
 }

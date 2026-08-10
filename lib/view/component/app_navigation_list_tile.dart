@@ -27,14 +27,22 @@ class AppNavigationListTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppInkWell(
-      color: context.colors.fillQuaternary,
-      borderRadius: appCardRadius,
-      onTap: onTap,
-      child: Container(
-        height: height,
-        decoration: BoxDecoration(borderRadius: appCardRadius),
-        child: Padding(
+    // ADR-017実装メモ: MaterialベースのAppInkWellはborderを持てないため、
+    // 外側にborderだけのContainerを重ねてCardContainer/AppPillContainerと
+    // 同じ境界線を出す。
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: context.colors.surfaceBorder, width: 1),
+        borderRadius: appCardRadius,
+      ),
+      child: AppInkWell(
+        color: context.colors.fillQuaternary,
+        borderRadius: appCardRadius,
+        onTap: onTap,
+        child: Container(
+          height: height,
+          decoration: BoxDecoration(borderRadius: appCardRadius),
+          child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -57,6 +65,7 @@ class AppNavigationListTile extends StatelessWidget {
           ),
         ),
       ),
+    ),
     );
   }
 }
