@@ -36,8 +36,8 @@ class NormalIconButton extends ConsumerWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 58 * context.screenVerticalMagnification,
-            width: 58 * context.screenVerticalMagnification,
+            height: 34 * context.screenVerticalMagnification,
+            width: 34 * context.screenVerticalMagnification,
             child: Opacity(
               opacity: 0.42,
               child: FittedBox(

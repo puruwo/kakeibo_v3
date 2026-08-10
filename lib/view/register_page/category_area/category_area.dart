@@ -215,7 +215,8 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     const columns = 5;
 
     return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // ADR-020: 空セルを見せないため均等配置(spaceBetween)ではなく上詰め(start)にする
+      mainAxisAlignment: MainAxisAlignment.start,
       children: List.generate(
         rows,
         (rowIndex) => Padding(

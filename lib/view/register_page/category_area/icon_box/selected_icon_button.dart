@@ -28,8 +28,8 @@ class SelectedIconButton extends ConsumerWidget {
       child: Column(
         children: [
           SizedBox(
-            height: 58 * context.screenVerticalMagnification,
-            width: 58 * context.screenVerticalMagnification,
+            height: 34 * context.screenVerticalMagnification,
+            width: 34 * context.screenVerticalMagnification,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: SvgPicture.asset(

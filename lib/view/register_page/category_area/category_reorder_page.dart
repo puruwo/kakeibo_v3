@@ -125,19 +125,13 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     }
   }
 
-  /// タイルのデコレーションを構築
+  /// タイルの構築。ADR-020: 選択グリッドと同じ裸アイコンに統一し円は使わない。
+  /// ドラッグ中のスケールフィードバックのみ残す。
   Widget buildTile({required Widget child, required bool isDragging}) {
     return AnimatedScale(
       duration: const Duration(milliseconds: 120),
       scale: isDragging ? 0.96 : 1.0,
-      child: Container(
-        decoration: BoxDecoration(
-          color: context.colors.fillSecondary,
-          shape: BoxShape.circle,
-        ),
-        alignment: Alignment.center,
-        child: child,
-      ),
+      child: Center(child: child),
     );
   }
 
@@ -297,7 +291,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     final screenHorizontalMagnification = context.screenHorizontalMagnification;
 
     // アイコンサイズ
-    final iconBoxSize = 58 * screenVerticalMagnification;
+    // ADR-020: 選択グリッドと同じアイコンサイズに揃える（旧: 円背景込みで58）
+    final iconBoxSize = 34 * screenVerticalMagnification;
     final labelWidth = 62.2 * ((screenHorizontalMagnification - 1) / 5 + 1);
 
     return Column(
