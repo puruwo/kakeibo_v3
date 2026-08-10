@@ -40,6 +40,7 @@ class ConfigTop extends ConsumerWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: context.colors.fillTertiary,
+                border: Border.all(color: context.colors.surfaceBorder, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -85,6 +86,7 @@ class ConfigTop extends ConsumerWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: context.colors.fillTertiary,
+                border: Border.all(color: context.colors.surfaceBorder, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
