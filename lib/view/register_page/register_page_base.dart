@@ -96,8 +96,6 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
 
 class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -112,12 +110,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     });
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   @override
