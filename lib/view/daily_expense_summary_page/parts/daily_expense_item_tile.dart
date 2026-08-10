@@ -53,6 +53,7 @@ class DailyExpenseItemTile extends ConsumerWidget {
         MenuDialogItem(
           label: '削除',
           icon: Icons.delete_outline,
+          isDestructive: true,
           onPressed: () {
             showDeleteConfirmationDialog(
               context,

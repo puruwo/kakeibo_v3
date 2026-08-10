@@ -138,6 +138,7 @@ class ConfigTop extends ConsumerWidget {
       context,
       title: 'すべてのデータを削除',
       message: '支出・収入・固定費・予算などすべての記録を削除します。\nこの操作は取り消せません。本当に削除しますか？',
+      isDestructive: true,
     );
     if (!isApproved) return;
 

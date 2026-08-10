@@ -13,6 +13,10 @@ class MenuDialogItem {
   /// アイコンの色（指定しない場合はテーマカラー）
   final Color? iconColor;
 
+  /// ADR-018: 削除等の不可逆操作の項目にtrueを指定する。
+  /// アイコン・ラベルともdanger色になる（iconColorより優先）。
+  final bool isDestructive;
+
   /// タップ時のコールバック
   final VoidCallback onPressed;
 
@@ -20,6 +24,7 @@ class MenuDialogItem {
     required this.label,
     required this.icon,
     this.iconColor,
+    this.isDestructive = false,
     required this.onPressed,
   });
 }
@@ -120,6 +125,10 @@ class _MenuItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final resolvedColor = item.isDestructive
+        ? context.colors.danger
+        : (item.iconColor ?? context.colors.primary);
+
     // 最初と最後の項目に応じた角丸を計算
     const radius = Radius.circular(12);
     BorderRadius borderRadius;
@@ -156,12 +165,17 @@ class _MenuItemTile extends StatelessWidget {
               Icon(
                 item.icon,
                 size: 24,
-                color: item.iconColor ?? context.colors.primary,
+                color: resolvedColor,
               ),
               const SizedBox(width: 16),
               // ラベル
               Expanded(
-                child: Text(item.label, style: AppTextStyles.dialogList),
+                child: Text(
+                  item.label,
+                  style: item.isDestructive
+                      ? AppTextStyles.dialogList.copyWith(color: resolvedColor)
+                      : AppTextStyles.dialogList,
+                ),
               ),
             ],
           ),
