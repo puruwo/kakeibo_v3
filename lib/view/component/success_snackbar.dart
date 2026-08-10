@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 
-/// 処理成功用スナックバー
+/// 処理成功用スナックバー。
+/// ADR-018: 背景はベタ塗りせず、アイコンと文字色のみでincome色に区別する。
 class SuccessSnackBar extends SnackBar {
   SuccessSnackBar._({required String message})
       : super(
-          content: Text(message),
+          backgroundColor: AppColorsDark.surfaceElevated2,
           behavior: SnackBarBehavior.floating,
           duration: const Duration(seconds: 2),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
+          ),
+          content: Row(
+            children: [
+              const Icon(
+                Icons.check_circle_rounded,
+                size: 18,
+                color: AppColorsDark.income,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  message,
+                  style: const TextStyle(color: AppColorsDark.income),
+                ),
+              ),
+            ],
           ),
         );
 
