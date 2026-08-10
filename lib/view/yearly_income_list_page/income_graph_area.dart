@@ -8,6 +8,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 
 class IncomeGraphArea extends ConsumerStatefulWidget {
@@ -174,6 +175,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
             margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             decoration: BoxDecoration(
               color: context.colors.surfaceElevated2,
+              border: Border.all(color: context.colors.surfaceBorder, width: 1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: const Center(child: CircularProgressIndicator()),
@@ -183,11 +185,10 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
             margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
             decoration: BoxDecoration(
               color: context.colors.surfaceElevated2,
+              border: Border.all(color: context.colors.surfaceBorder, width: 1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Center(
-              child: Text('エラーが発生しました', style: AppTextStyles.errorMessage),
-            ),
+            child: const AppErrorState(),
           ),
         );
   }

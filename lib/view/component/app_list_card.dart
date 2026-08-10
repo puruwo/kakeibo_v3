@@ -243,6 +243,7 @@ class AppListCard extends StatelessWidget {
       child: AppInkWell(
         borderRadius: appCardRadius,
         color: backgroundColor ?? context.colors.fillQuaternary,
+        border: Border.all(color: context.colors.surfaceBorder, width: 1),
         onTap: onTap,
         onLongPress: onLongPress,
         child: Padding(

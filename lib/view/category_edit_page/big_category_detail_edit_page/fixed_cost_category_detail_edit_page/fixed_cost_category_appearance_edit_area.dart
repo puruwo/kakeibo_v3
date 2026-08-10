@@ -6,6 +6,7 @@ import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_prov
 import 'package:kakeibo/constant/fixed_cost_constants.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_name_controller/fixed_cost_category_name_controller.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_icon_controller/fixed_cost_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/fixed_cost_category_detail_edit_page/fixed_cost_category_color_controller/fixed_cost_category_color_controller.dart';
@@ -91,12 +92,8 @@ class _FixedCostCategoryAppearanceEditAreaState
       children: [
         Padding(
           padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-          child: Container(
+          child: CardContainer(
             alignment: Alignment.topCenter,
-            decoration: BoxDecoration(
-              color: context.colors.fillQuaternary,
-              borderRadius: BorderRadius.circular(18),
-            ),
             height: 135,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
