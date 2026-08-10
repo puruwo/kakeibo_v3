@@ -186,15 +186,17 @@ class FixedCostUsecase {
   // マスタのレコードは削除せず、deleteFlagを1にする
   // あわせて未確定の実績を連動削除する（確定済みは履歴として残す）
   Future<void> delete({required int id}) async {
-    // 未確定実績を先に削除する
+    // マスタの論理削除を先に行う
+    // 2つの削除はトランザクションで括られていないため、途中で失敗したときに
+    // 「マスタは生きているのに今月分の予定だけ消えている」復旧不能な状態を作らない順序にする
+    await _fixedCostRepositoryProvider.delete(id);
+
+    // 未確定実績を削除する
     // 未確定分は集計時にマスタの想定額で代用されるため、マスタだけ論理削除すると
     // 「解約したのに支出に出続ける」幽霊レコードになる
     await _fixedCostExpenseRepositoryProvider.deleteUnconfirmedByFixedCostId(
       fixedCostId: id,
     );
-
-    // マスタを論理削除する
-    await _fixedCostRepositoryProvider.delete(id);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

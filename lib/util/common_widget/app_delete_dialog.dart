@@ -164,7 +164,7 @@ Future<bool> showFixedCostDeleteConfirmationDialog(
   return await showConfirmationDialog(
     context,
     title: "固定費を削除",
-    message: "確定済みの支払い履歴は残りますが、\n未確定分の支払い予定は削除されます。本当に削除しますか？",
+    message: "確定済みの支払い履歴は残りますが、\n未確定分の支払いはすべて削除されます。\n本当に削除しますか？",
     confirmLabel: "OK",
     cancelLabel: "キャンセル",
     onConfirm: onConfirm,
