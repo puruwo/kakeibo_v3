@@ -29,6 +29,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.separator,
     required this.expense,
     required this.income,
+    required this.danger,
     required this.icon,
     required this.disabled,
     required this.overlay,
@@ -53,6 +54,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color separator;
   final Color expense;
   final Color income;
+  final Color danger;
   final Color icon;
   final Color disabled;
   final Color overlay;
@@ -77,6 +79,7 @@ class AppColors extends ThemeExtension<AppColors> {
     separator: Color(0x493C3C43),
     expense: Color(0xFFFF7171),
     income: Color(0xFF21D19F),
+    danger: Color(0xFFFF7171),
     icon: Color(0xFF8E8E93),
     disabled: Color(0xFFD1D1D6),
     overlay: Color(0x33000000),
@@ -102,6 +105,7 @@ class AppColors extends ThemeExtension<AppColors> {
     separator: Color(0x99545458),
     expense: Color(0xFFFF7171),
     income: Color(0xFF21D19F),
+    danger: Color(0xFFFF7171),
     icon: Color(0xFF8E8E93),
     disabled: Color(0xFF3A3A3C),
     overlay: Color(0x33000000),
@@ -128,6 +132,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? separator,
     Color? expense,
     Color? income,
+    Color? danger,
     Color? icon,
     Color? disabled,
     Color? overlay,
@@ -152,6 +157,7 @@ class AppColors extends ThemeExtension<AppColors> {
       separator: separator ?? this.separator,
       expense: expense ?? this.expense,
       income: income ?? this.income,
+      danger: danger ?? this.danger,
       icon: icon ?? this.icon,
       disabled: disabled ?? this.disabled,
       overlay: overlay ?? this.overlay,
@@ -181,6 +187,7 @@ class AppColors extends ThemeExtension<AppColors> {
       separator: Color.lerp(separator, other.separator, t)!,
       expense: Color.lerp(expense, other.expense, t)!,
       income: Color.lerp(income, other.income, t)!,
+      danger: Color.lerp(danger, other.danger, t)!,
       icon: Color.lerp(icon, other.icon, t)!,
       disabled: Color.lerp(disabled, other.disabled, t)!,
       overlay: Color.lerp(overlay, other.overlay, t)!,
@@ -219,6 +226,7 @@ class AppColorsLight {
   static const Color separator = Color(0x493C3C43);
   static const Color expense = Color(0xFFFF7171);
   static const Color income = Color(0xFF21D19F);
+  static const Color danger = Color(0xFFFF7171);
   static const Color icon = Color(0xFF8E8E93);
   static const Color disabled = Color(0xFFD1D1D6);
   static const Color overlay = Color(0x33000000);
@@ -247,6 +255,7 @@ class AppColorsDark {
   static const Color separator = Color(0x99545458);
   static const Color expense = Color(0xFFFF7171);
   static const Color income = Color(0xFF21D19F);
+  static const Color danger = Color(0xFFFF7171);
   static const Color icon = Color(0xFF8E8E93);
   static const Color disabled = Color(0xFF3A3A3C);
   static const Color overlay = Color(0x33000000);
