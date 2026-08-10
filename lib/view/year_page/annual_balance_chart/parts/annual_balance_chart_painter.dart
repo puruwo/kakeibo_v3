@@ -21,11 +21,6 @@ class AnnualBalanceChartLayout {
   /// 「250万」など 4 文字ラベルが折り返さないサイズを確保する
   static const double reservedSize = 40.0;
 
-  /// Y軸ラベルオーバーレイのうち、横スクロール分を隠すフェードアウトに使う
-  /// 追加マージン。reservedSize分は常に完全不透明を維持し、フェードは
-  /// この余白でのみ行うことで、ラベル文字自体がフェード領域と重ならないようにする
-  static const double labelFadeMargin = 16.0;
-
   /// 実際にグラフが描画される幅（Y軸ラベル分を除く）
   static const double chartAreaWidth = drawingAreaWidth - reservedSize;
 

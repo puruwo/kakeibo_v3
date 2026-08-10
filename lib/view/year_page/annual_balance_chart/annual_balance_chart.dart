@@ -157,57 +157,35 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                   // 別物のため、そのまま使うと縦軸ラベル付近に境界線が見えてしまう。
                   // CardContainerが実際に描画する色（fillQuaternaryをsurfaceElevated上に
                   // 合成した色）を計算して使うことで境界をなくす。
-                  //
-                  // フェードはreservedSizeの先（labelFadeMargin分）でのみ行う。
-                  // 以前はreservedSize自体の途中からフェードしていたため、右寄せで
-                  // 描画されるラベル文字（「300万」等）の右半分が透過ゾーンに重なり、
-                  // ラベルの真ん中あたりに境界線が見えていた。
                   Positioned(
                     left: 0,
                     top: 16.0,
-                    width: AnnualBalanceChartLayout.reservedSize +
-                        AnnualBalanceChartLayout.labelFadeMargin,
+                    width: AnnualBalanceChartLayout.reservedSize,
                     height: dimensions.totalHeight,
                     child: IgnorePointer(
-                      child: Stack(
-                        children: [
-                          DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.centerLeft,
-                                end: Alignment.centerRight,
-                                colors: [
-                                  cardSurfaceColor,
-                                  cardSurfaceColor,
-                                  cardSurfaceColor.withValues(alpha: 0.0),
-                                ],
-                                stops: [
-                                  0.0,
-                                  AnnualBalanceChartLayout.reservedSize /
-                                      (AnnualBalanceChartLayout.reservedSize +
-                                          AnnualBalanceChartLayout
-                                              .labelFadeMargin),
-                                  1.0,
-                                ],
-                              ),
-                            ),
-                            child: SizedBox(
-                              width: AnnualBalanceChartLayout.reservedSize +
-                                  AnnualBalanceChartLayout.labelFadeMargin,
-                              height: dimensions.totalHeight,
-                            ),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              cardSurfaceColor,
+                              cardSurfaceColor,
+                              cardSurfaceColor.withValues(alpha: 0.0),
+                            ],
+                            stops: const [0.0, 0.6, 1.0],
                           ),
-                          CustomPaint(
-                            size: Size(
-                              AnnualBalanceChartLayout.reservedSize,
-                              dimensions.totalHeight,
-                            ),
-                            painter: AnnualBalanceAxisLabelsPainter(
-                              scale: chartData.yAxisScale,
-                              dimensions: dimensions,
-                            ),
+                        ),
+                        child: CustomPaint(
+                          size: Size(
+                            AnnualBalanceChartLayout.reservedSize,
+                            dimensions.totalHeight,
                           ),
-                        ],
+                          painter: AnnualBalanceAxisLabelsPainter(
+                            scale: chartData.yAxisScale,
+                            dimensions: dimensions,
+                          ),
+                        ),
                       ),
                     ),
                   ),
@@ -249,11 +227,9 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
     const tooltipWidth = 160.0;
     final cx = AnnualBalanceChartLayout.cellCenterX(_selectedMonthIndex!);
     double left = cx - tooltipWidth / 2;
-    // Y軸ラベルオーバーレイ（フェード領域込みの幅）より左にならないよう防止
-    final overlayWidth = AnnualBalanceChartLayout.reservedSize +
-        AnnualBalanceChartLayout.labelFadeMargin;
-    if (left < overlayWidth) {
-      left = overlayWidth;
+    // Y軸ラベルオーバーレイ(reservedSize幅)より左にならないよう防止
+    if (left < AnnualBalanceChartLayout.reservedSize) {
+      left = AnnualBalanceChartLayout.reservedSize;
     }
     if (left + tooltipWidth > AnnualBalanceChartLayout.drawingAreaWidth) {
       left = AnnualBalanceChartLayout.drawingAreaWidth - tooltipWidth;
