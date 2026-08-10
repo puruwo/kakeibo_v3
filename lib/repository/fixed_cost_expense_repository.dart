@@ -110,6 +110,15 @@ class ImplementsFixedCostExpenseRepository
   }
 
   @override
+  Future<int> deleteUnconfirmedByFixedCostId({required int fixedCostId}) async {
+    return await DatabaseHelper.instance.deleteWhere(
+      SqfFixedCostExpense.tableName,
+      '${SqfFixedCostExpense.fixedCostId} = ? AND ${SqfFixedCostExpense.isConfirmed} = 0',
+      [fixedCostId],
+    );
+  }
+
+  @override
   Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriod(
       {required PeriodValue period}) async {
     final sql = '''
