@@ -245,9 +245,7 @@ void _onBuildComplete(BuildContext context, WidgetRef ref) async {
   // バッチが失敗しても起動は継続させる
   // 失敗した期間は batch_history に記録されないため、次回起動時にリトライされる
   try {
-    final result =
-        await ref.read(batchProcessUsecaseProvider).grobalBatchProscessing();
-    print('バッチ処理の結果: $result');
+    await ref.read(batchProcessUsecaseProvider).grobalBatchProscessing();
   } catch (e) {
     logger.e('[FAIL]: 起動時のバッチ処理に失敗しました: $e');
   }
