@@ -62,6 +62,22 @@ bool _isDateInPeriod(String date, PeriodValue period) {
 /// テストからも同じ関数でキーを組み立てられるように公開している。
 String periodKeyOf(DateTime periodStart) => periodStart.toFormattedString();
 
+/// 「日付別の返却値」を設定するMapのキーを時刻なしDateTimeにそろえる
+///
+/// テストからは `DateTime(2025, 7, 1)` のように書くのが自然だが、
+/// 呼び出し側が時刻付きのDateTimeを渡してくる可能性があるため、
+/// Fake内部では常に年月日だけのDateTimeをキーにする。
+Map<DateTime, T> _dateKeyedMap<T>(Map<DateTime, T>? source) {
+  final result = <DateTime, T>{};
+  source?.forEach((key, value) {
+    result[DateTime(key.year, key.month, key.day)] = value;
+  });
+  return result;
+}
+
+/// 日付から時刻を落とす（Fake内部の日付キー用）
+DateTime _dateKeyOf(DateTime date) => DateTime(date.year, date.month, date.day);
+
 /// 集計開始日を固定値で返すFake（既定は本番の初期設定と同じ25日）
 class FakeAggregationStartDayRepository
     implements AggregationStartDayRepository {
@@ -403,11 +419,34 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
 
 /// 支出のFake（書き込み系の呼び出し記録＋集計系の返却値設定）
 class FakeExpenseRepository implements ExpenseRepository {
-  FakeExpenseRepository({List<ExpenseEntity>? initialRecords})
-    : records = List.of(initialRecords ?? []);
+  FakeExpenseRepository({
+    List<ExpenseEntity>? initialRecords,
+    Map<DateTime, int>? dailyExpenseTotalByDate,
+    Map<DateTime, List<ExpenseEntity>>? dailyExpenseListByDate,
+  }) : records = List.of(initialRecords ?? []),
+       dailyExpenseTotalByDate = _dateKeyedMap(dailyExpenseTotalByDate),
+       dailyExpenseListByDate = _dateKeyedMap(dailyExpenseListByDate);
 
   /// 検索対象の支出レコード（fetchWithSourceCategory が参照する）
   final List<ExpenseEntity> records;
+
+  /// 日付 → その日の一般支出合計（fetchDailyExpenseByPeriod の返却値）
+  ///
+  /// 本物は「その日・拠出元が給与」の支出をSUMするが、
+  /// Fakeでは日付ごとの合計そのものを設定する方式にしている。
+  /// 未設定の日付は0を返す（本実装の該当なし相当）。
+  final Map<DateTime, int> dailyExpenseTotalByDate;
+
+  /// 日付 → その日の一般支出リスト（fetchDailyExpenseListByDate の返却値）
+  ///
+  /// 未設定の日付は空リストを返す。
+  final Map<DateTime, List<ExpenseEntity>> dailyExpenseListByDate;
+
+  /// fetchDailyExpenseByPeriod に渡された日付の記録（検証用）
+  final List<DateTime> dailyExpenseTotalDates = [];
+
+  /// fetchDailyExpenseListByDate に渡された日付の記録（検証用）
+  final List<DateTime> dailyExpenseListDates = [];
 
   final List<ExpenseEntity> insertedEntities = [];
   final List<ExpenseEntity> updatedEntities = [];
@@ -444,6 +483,17 @@ class FakeExpenseRepository implements ExpenseRepository {
   /// fetchWithSmallCategory に渡された条件の記録（検証用）
   final List<({int incomeSourceBigId, PeriodValue period, int smallCategoryId})>
   fetchWithSmallCategoryCalls = [];
+
+  /// fetchTotalExpenseByPeriodWithSmallCategoryAndSource に渡された条件の記録（検証用）
+  final List<
+    ({
+      int incomeSourceBigCategory,
+      int smallCategoryId,
+      DateTime fromDate,
+      DateTime toDate,
+    })
+  >
+  totalExpenseWithSmallCategoryAndSourceCalls = [];
 
   @override
   Future<int> fetchTotalExpenseByPeriodWithBigCategory({
@@ -510,6 +560,46 @@ class FakeExpenseRepository implements ExpenseRepository {
     // 本実装のSQLの ORDER BY id DESC に合わせる
     matched.sort((a, b) => b.id.compareTo(a.id));
     return matched;
+  }
+
+  @override
+  Future<int> fetchTotalExpenseByPeriodWithSmallCategoryAndSource({
+    required int incomeSourceBigCategory,
+    required int smallCategoryId,
+    required DateTime fromDate,
+    required DateTime toDate,
+  }) async {
+    totalExpenseWithSmallCategoryAndSourceCalls.add((
+      incomeSourceBigCategory: incomeSourceBigCategory,
+      smallCategoryId: smallCategoryId,
+      fromDate: fromDate,
+      toDate: toDate,
+    ));
+    final period = PeriodValue(startDatetime: fromDate, endDatetime: toDate);
+    return records
+        .where(
+          (e) =>
+              _isDateInPeriod(e.date, period) &&
+              e.incomeSourceBigCategory == incomeSourceBigCategory &&
+              e.paymentCategoryId == smallCategoryId,
+        )
+        .fold<int>(0, (sum, e) => sum + e.price);
+  }
+
+  @override
+  Future<int> fetchDailyExpenseByPeriod({required DateTime date}) async {
+    final key = _dateKeyOf(date);
+    dailyExpenseTotalDates.add(key);
+    return dailyExpenseTotalByDate[key] ?? 0;
+  }
+
+  @override
+  Future<List<ExpenseEntity>> fetchDailyExpenseListByDate({
+    required DateTime date,
+  }) async {
+    final key = _dateKeyOf(date);
+    dailyExpenseListDates.add(key);
+    return List.of(dailyExpenseListByDate[key] ?? const <ExpenseEntity>[]);
   }
 
   @override
