@@ -77,13 +77,19 @@ final usecase = container.read(expenseUsecaseProvider);
 
 1. `implements` + 使うメソッドのみ実装 + `noSuchMethod` — 未実装メソッドが呼ばれたら
    その場で落ちて「テスト経路の想定漏れ」を検知できる
-2. **書き込みは記録する**: `insertedEntities` / `updatedEntities` / `deletedIds` 等の検証用リストを持つ
-3. **読み取りはメモリ内で本物のSQLを模す**: 期間フィルタ・`delete_flag=0`・`ORDER BY`（例:
+2. **書き込みは記録する**: `insertedEntities` / `updatedEntities` / `deletedIds` 等の検証用リストを持つ。
+   検証用リストは「呼び出し時に何を渡されたか」をそのまま保持する（id採番後の値で上書きしない）
+3. **書き込みは状態にも反映する**: insert/update/delete は、以後の取得系メソッドから見える状態
+   （`records` 等）にも反映すること。本物のDBは INSERT した瞬間から SELECT の対象になるため、
+   記録用リストに積むだけだとFakeが本物より甘くなり、重複防止のような「既にあるか」を見る
+   ロジックのテストが素通りする。idは本物の AUTOINCREMENT 相当で採番し（既存の最大id+1等）、
+   `records` に入れるのは採番後のエンティティ・戻り値は採番されたidにする
+4. **読み取りはメモリ内で本物のSQLを模す**: 期間フィルタ・`delete_flag=0`・`ORDER BY`（例:
    fetchNextPeriodPaymentはid降順）・該当なし時のデフォルトエンティティ返却まで、
    `lib/repository/` の実装に合わせる。**合っているかはFake側のdocコメントに根拠を書く**
-4. **拡張は後方互換**: 既存コンストラクタ・メソッドのシグネチャを変えない。設定フィールドの
+5. **拡張は後方互換**: 既存コンストラクタ・メソッドのシグネチャを変えない。設定フィールドの
    追加はオプション引数か公開フィールドで
-5. 期間・日付で返り値を変えたいときは既存の方式に従う:
+6. 期間・日付で返り値を変えたいときは既存の方式に従う:
    期間キーMap（`periodKeyOf(DateTime)`）／日付キーMap（内部で時刻を正規化）。
    未設定キーは単一値・メモリ集計へフォールバック
 
