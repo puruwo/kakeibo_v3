@@ -111,16 +111,12 @@ void main() {
     expect(find.byType(RegisaterPageBase), findsNothing);
 
     await tester.tap(find.byIcon(Icons.add_rounded));
-    // 【既知の不具合の連鎖】1つ前のモーダルの dispose が
-    // LateInitializationError（_tabController未初期化）で中断されるため、
-    // ConsumerStatefulElement の購読解除まで到達せず、開き直したときに
-    // 破棄済みElementへ通知が飛んでアサーションが出る。
-    // 握りつぶさず「毎回このアサーションが出る」という実挙動を固定しておく。
+    // かつては1つ前のモーダルの dispose が LateInitializationError で中断され、
+    // ConsumerStatefulElement の購読解除まで到達しないまま開き直すと
+    // 破棄済みElementへ通知が飛んでアサーション（_ElementLifecycle.defunct）が出た。
+    // dispose修正後は開き直しても非同期エラーが出ないことを担保する。
     final errors = await pumpCatchingZoneErrors(tester);
-    expect(errors, isNotEmpty);
-    for (final error in errors) {
-      expect(error.toString(), contains('_ElementLifecycle.defunct'));
-    }
+    expect(errors, isEmpty, reason: 'モーダルを開き直しても非同期エラーが出てはいけない');
 
     expect(find.byType(RegisaterPageBase), findsOneWidget);
     expect(find.text('記録'), findsOneWidget);

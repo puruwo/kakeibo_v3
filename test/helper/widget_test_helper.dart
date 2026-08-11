@@ -239,53 +239,33 @@ Future<TestFakes> pumpApp(
   return testFakes;
 }
 
-/// 【既知の実装不具合】記録モーダル破棄時のLateInitializationErrorを消費する
-///
-/// `RegisaterPageBase` は `late TabController _tabController` を一度も初期化
-/// しないまま `dispose()` で `_tabController.dispose()` を呼ぶため、破棄のたびに
-/// 必ず `LateInitializationError` が発生する
-/// （lib/view/register_page/register_page_base.dart の initState / dispose）。
-/// 握りつぶさず「毎回このエラーが出る」という実挙動をexpectで固定しておく。
-/// 実装が修正されたらここが失敗するので、そのときヘルパーごと削除する。
-void expectKnownRegisterPageDisposeError(WidgetTester tester) {
-  final exception = tester.takeException();
-  expect(
-    exception,
-    isA<Error>(),
-    reason: 'RegisaterPageBase.dispose の LateInitializationError（既知の不具合）',
-  );
-  expect(exception.toString(), contains('_tabController'));
-}
-
 /// 記録モーダル（RegisaterPageBase）を含む画面を破棄する
 ///
-/// テスト終了時の自動unmountで上記の既知エラーが出ると全テストが落ちるため、
-/// 明示的にunmountしてエラーを消費する。
+/// かつて `RegisaterPageBase` は未初期化の `late TabController` を
+/// `dispose()` で参照し、破棄のたびに `LateInitializationError` を投げていた。
+/// 修正済みなので、ここでは「破棄しても例外が出ない」ことを担保する
+/// （再発したらこのヘルパーを使う全テストが落ちる）。
 Future<void> unmountRegisterPage(WidgetTester tester) async {
   await tester.pumpWidget(const SizedBox.shrink());
-  expectKnownRegisterPageDisposeError(tester);
+  expect(tester.takeException(), isNull, reason: '記録モーダルの破棄で例外が出てはいけない');
 }
 
 /// 開いている記録モーダルを閉じる（ヘッダー左の×ボタン）
 ///
 /// Foundationは起動時に記録モーダルを自動表示するため、
 /// 下の画面を操作するテストではまずこれで閉じる。
+/// 閉じる過程で例外が出ないことも併せて担保する。
 Future<void> closeRegisterModal(WidgetTester tester) async {
   await tester.tap(find.byIcon(Icons.close_rounded));
   final exceptions = await pumpAndCollectExceptions(tester);
-  expect(
-    exceptions,
-    hasLength(1),
-    reason: 'モーダルを閉じたときに出るのは既知のdispose不具合の1件だけのはず',
-  );
-  expect(exceptions.single.toString(), contains('_tabController'));
+  expect(exceptions, isEmpty, reason: 'モーダルを閉じるときに例外が出てはいけない');
 }
 
 /// Zoneへ投げられる非同期エラーを回収しながらpumpする
 ///
 /// riverpodはリスナー実行時の例外を `Zone.current.handleUncaughtError` へ流すため、
 /// `tester.takeException()` では捕まえられずテストが即失敗する。
-/// 既知の不具合を実挙動として固定したい箇所では、これで受け止めて内容を検証する。
+/// 非同期エラーの有無まで検証したい箇所では、これで受け止めて内容を確認する。
 Future<List<Object>> pumpCatchingZoneErrors(
   WidgetTester tester, {
   int times = 10,
