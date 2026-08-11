@@ -339,6 +339,85 @@ void main() {
 
       expect(fakeFixedCostRepository.updatedEntities, isEmpty);
     });
+
+    test('確定済みの実績が0件なら想定額は0になる', () async {
+      // 確定実績が無ければ平均は算出できず0が返る（本実装はCOALESCE相当で0.0）
+      final container = createUsecaseContainer(
+        initialRecords: const [
+          FixedCostEntity(
+            id: 7,
+            name: '新規の変動費',
+            variable: 1,
+            price: 0,
+            estimatedPrice: 4000,
+            fixedCostCategoryId: 2,
+            intervalNumber: 1,
+            intervalUnit: 1,
+            firstPaymentDate: '20250101',
+          ),
+        ],
+      );
+      fakeFixedCostExpenseRepository.estimatedPriceResult = 0;
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.updateEstimatedPrice(fixedCostId: 7);
+
+      expect(fakeFixedCostRepository.updatedEntities, hasLength(1));
+      expect(fakeFixedCostRepository.updatedEntities.first.estimatedPrice, 0);
+    });
+
+    test('更新されるのは指定したIDのマスタだけ', () async {
+      // 支出IDとマスタIDの取り違えで別マスタを書き換えないことの確認
+      final container = createUsecaseContainer(
+        initialRecords: const [
+          FixedCostEntity(
+            id: 8,
+            name: '電気代',
+            variable: 1,
+            price: 0,
+            estimatedPrice: 5000,
+            fixedCostCategoryId: 2,
+            intervalNumber: 1,
+            intervalUnit: 1,
+            firstPaymentDate: '20250101',
+          ),
+          FixedCostEntity(
+            id: 9,
+            name: 'ガス代',
+            variable: 1,
+            price: 0,
+            estimatedPrice: 3000,
+            fixedCostCategoryId: 2,
+            intervalNumber: 1,
+            intervalUnit: 1,
+            firstPaymentDate: '20250101',
+          ),
+        ],
+      );
+      fakeFixedCostExpenseRepository.estimatedPriceResult = 8000;
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.updateEstimatedPrice(fixedCostId: 8);
+
+      expect(fakeFixedCostRepository.updatedEntities.single.id, 8);
+      // 別マスタの想定額は据え置き
+      expect(
+        fakeFixedCostRepository.records
+            .firstWhere((e) => e.id == 9)
+            .estimatedPrice,
+        3000,
+      );
+    });
+
+    test('存在しないIDなら既定エンティティのvariable=0で何もしない', () async {
+      // fetchは該当なしのときid:0・variable:0の既定エンティティを返す
+      final container = createUsecaseContainer(initialRecords: const []);
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.updateEstimatedPrice(fixedCostId: 999);
+
+      expect(fakeFixedCostRepository.updatedEntities, isEmpty);
+    });
   });
 
   group('FixedCostUsecase.edit', () {

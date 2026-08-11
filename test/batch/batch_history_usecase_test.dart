@@ -224,4 +224,68 @@ void main() {
       expect(fakeFixedCostRepository.records.first.nextPaymentDate, '20250801');
     });
   });
+
+  group('BatchProcessUsecase の失敗時の扱い', () {
+    // 失敗した期間をbatch_historyに書いてしまうと「処理済み」と誤記録され、
+    // その月の固定費が二度と生成されない。次回起動でリトライさせるための保証（→ ADR-007）
+    test('実績生成が失敗したらbatch_historyを書かずに例外を投げる', () async {
+      final container = createBatchContainer(latestBatchDate: '20250630');
+      fakeFixedCostRepository.fetchNextPeriodPaymentError = Exception('DBエラー');
+      final usecase = container.read(batchProcessUsecaseProvider);
+
+      await expectLater(
+        usecase.grobalBatchProscessing(),
+        throwsA(isA<Exception>()),
+      );
+
+      expect(fakeBatchHistoryRepository.insertedEntities, isEmpty);
+    });
+
+    test('複数チャンクの途中で失敗したらその期間以降は記録されない', () async {
+      // 4/24起点なので[4/25〜5/24][5/25〜6/24][6/25〜7/24]の3チャンク。
+      // 1チャンク目から失敗させるので履歴は1件も残らない
+      final container = createBatchContainer(latestBatchDate: '20250424');
+      fakeFixedCostRepository.fetchNextPeriodPaymentError = Exception('DBエラー');
+      final usecase = container.read(batchProcessUsecaseProvider);
+
+      await expectLater(
+        usecase.grobalBatchProscessing(),
+        throwsA(isA<Exception>()),
+      );
+
+      expect(fakeBatchHistoryRepository.insertedEntities, isEmpty);
+    });
+
+    test('失敗後に再実行すると同じ期間がリトライされる', () async {
+      // 「記録しない」ことがリトライ可能性の担保になっていることを示す
+      final container = createBatchContainer(latestBatchDate: '20250630');
+      fakeFixedCostRepository.fetchNextPeriodPaymentError = Exception('DBエラー');
+      final usecase = container.read(batchProcessUsecaseProvider);
+
+      await expectLater(
+        usecase.grobalBatchProscessing(),
+        throwsA(isA<Exception>()),
+      );
+
+      // 障害が解消した想定で再実行する
+      fakeFixedCostRepository.fetchNextPeriodPaymentError = null;
+      final result = await usecase.grobalBatchProscessing();
+
+      expect(result, isTrue);
+      expect(fakeBatchHistoryRepository.insertedEntities, hasLength(1));
+      final history = fakeBatchHistoryRepository.insertedEntities.first;
+      expect(history.startDate, '20250701');
+      expect(history.endDate, '20250724');
+    });
+
+    test('正常時はbatch_historyがstatus=1で記録される', () async {
+      final container = createBatchContainer(latestBatchDate: '20250630');
+      final usecase = container.read(batchProcessUsecaseProvider);
+
+      await usecase.grobalBatchProscessing();
+
+      expect(fakeBatchHistoryRepository.insertedEntities, hasLength(1));
+      expect(fakeBatchHistoryRepository.insertedEntities.first.status, 1);
+    });
+  });
 }

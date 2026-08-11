@@ -167,10 +167,20 @@ class FakeFixedCostRepository implements FixedCostRepository {
 
   int _nextId = 1000;
 
+  /// fetchNextPeriodPayment で送出させたい例外（テストで設定する）
+  ///
+  /// 本実装はDB例外を握りつぶさず呼び出し元へ伝播させる。
+  /// 空リストを返すと、バッチが「取得失敗」と「対象0件」を区別できず、
+  /// SQLエラーでも成功として記録されてしまうため（→ ADR-007）。
+  Object? fetchNextPeriodPaymentError;
+
   @override
   Future<List<FixedCostEntity>> fetchNextPeriodPayment({
     required PeriodValue period,
   }) async {
+    if (fetchNextPeriodPaymentError != null) {
+      throw fetchNextPeriodPaymentError!;
+    }
     final matched = records.where((e) {
       if (e.deleteFlag != 0) return false;
       final next = e.nextPaymentDate;

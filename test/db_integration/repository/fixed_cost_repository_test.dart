@@ -566,4 +566,192 @@ void main() {
       expect(all.where((e) => e.deleteFlag == 1).length, 1);
     });
   });
+
+  group('deleteWithUnpaidExpenses', () {
+    // 運用日付。この日を境に「支払日が到来済みか」を判定する
+    const today = '20250706';
+
+    /// 固定費10に紐づく実績を、確定状態と支払日の組み合わせで一通り用意する
+    ///
+    /// | id | 固定費 | 日付       | 位置          | 確定 | 期待     |
+    /// |----|-------|------------|---------------|------|----------|
+    /// | 1  | 10    | 2025-06-01 | 到来済み       | 1    | 残る     |
+    /// | 2  | 10    | 2025-07-06 | 運用日付ちょうど | 1    | 残る     |
+    /// | 3  | 10    | 2025-07-07 | 未到来         | 1    | 消える   |
+    /// | 4  | 10    | 2025-06-05 | 到来済み       | 0    | 消える   |
+    /// | 5  | 20    | 2025-07-20 | 未到来         | 1    | 残る（別マスタ） |
+    Future<void> seedExpenses() async {
+      await insertFixedCostExpenseRow(
+        id: 1,
+        fixedCostId: 10,
+        fixedCostCategoryId: 1,
+        date: '20250601',
+        price: 1000,
+        name: '支払済み',
+        isConfirmed: 1,
+      );
+      await insertFixedCostExpenseRow(
+        id: 2,
+        fixedCostId: 10,
+        fixedCostCategoryId: 1,
+        date: '20250706',
+        price: 1000,
+        name: '当日',
+        isConfirmed: 1,
+      );
+      await insertFixedCostExpenseRow(
+        id: 3,
+        fixedCostId: 10,
+        fixedCostCategoryId: 1,
+        date: '20250707',
+        price: 1000,
+        name: '未到来だが確定扱い',
+        isConfirmed: 1,
+      );
+      await insertFixedCostExpenseRow(
+        id: 4,
+        fixedCostId: 10,
+        fixedCostCategoryId: 1,
+        date: '20250605',
+        price: 0,
+        name: '未確定',
+        isConfirmed: 0,
+      );
+      await insertFixedCostExpenseRow(
+        id: 5,
+        fixedCostId: 20,
+        fixedCostCategoryId: 1,
+        date: '20250720',
+        price: 3000,
+        name: '別マスタ',
+        isConfirmed: 1,
+      );
+    }
+
+    /// 残っている実績のidを昇順で返す
+    Future<List<int>> remainingExpenseIds() async {
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfFixedCostExpense.id} as id '
+        'FROM ${SqfFixedCostExpense.tableName} '
+        'ORDER BY ${SqfFixedCostExpense.id} ASC',
+      );
+      return rows.map((e) => e['id'] as int).toList();
+    }
+
+    Future<void> seedTwoMasters() async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '解約するサブスク',
+        fixedCostCategoryId: 1,
+        price: 1000,
+      );
+      await insertFixedCostRow(
+        id: 20,
+        name: '継続するサブスク',
+        fixedCostCategoryId: 1,
+        price: 3000,
+      );
+    }
+
+    test('未確定の実績は支払日が到来済みでも削除される', () async {
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      // id=4（未確定・6/5）が消える
+      expect(await remainingExpenseIds(), isNot(contains(4)));
+    });
+
+    test('支払日が運用日付より後なら確定済みでも削除される', () async {
+      // 変動なし固定費は生成時点でis_confirmed=1になるため、
+      // これが無いと解約後も当月分が支出に残り続ける
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      expect(await remainingExpenseIds(), isNot(contains(3)));
+    });
+
+    test('支払日が到来済みの確定実績は履歴として残る', () async {
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      expect(await remainingExpenseIds(), contains(1));
+    });
+
+    test('支払日が運用日付ちょうどなら「到来済み」として残る（境界値）', () async {
+      // 条件は date > today なので、当日は削除されない
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      expect(await remainingExpenseIds(), contains(2));
+    });
+
+    test('他のマスタに紐づく実績は巻き込まれない', () async {
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      // id=5は固定費20の未到来分だが、削除対象は固定費10だけ
+      expect(await remainingExpenseIds(), [1, 2, 5]);
+    });
+
+    test('マスタは物理削除されずdelete_flagが1になる', () async {
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      // 行数は減らない
+      expect(
+        await DatabaseHelper.instance.queryRowCount(SqfFixedCost.tableName),
+        2,
+      );
+      final all = await repository.fetchAll();
+      expect(all.firstWhere((e) => e.id == 10).deleteFlag, 1);
+      // 他のマスタは触らない
+      expect(all.firstWhere((e) => e.id == 20).deleteFlag, 0);
+    });
+
+    test('削除後は次回支払予定にも未確定リストにも出てこない', () async {
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+      expect(results.map((e) => e.id), isNot(contains(10)));
+    });
+
+    test('実績が1件も無いマスタでも論理削除だけは成功する', () async {
+      await seedTwoMasters();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      final all = await repository.fetchAll();
+      expect(all.firstWhere((e) => e.id == 10).deleteFlag, 1);
+    });
+  });
+
+  group('fetchNextPeriodPayment の例外伝播', () {
+    test('SQLが失敗したら空リストではなく例外が呼び出し元へ伝わる', () async {
+      // 空リストを返すと、バッチが「取得失敗」と「対象0件」を区別できず、
+      // SQLエラーでも成功として記録され、その月の固定費が二度と生成されない（→ ADR-007）
+      await DatabaseHelper.instance.query(
+        'DROP TABLE ${SqfFixedCost.tableName}',
+      );
+
+      expect(
+        () => repository.fetchNextPeriodPayment(period: _period),
+        throwsA(anything),
+      );
+    });
+  });
 }
