@@ -194,7 +194,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
 
   @override
   Future<void> update(FixedCostEntity fixedCostEntity) async {
-    final result = await db.update(
+    await db.update(
         SqfFixedCost.tableName,
         {
           SqfFixedCost.name: fixedCostEntity.name,
@@ -211,19 +211,17 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
           SqfFixedCost.deleteFlag: fixedCostEntity.deleteFlag,
         },
         fixedCostEntity.id ?? -1);
-    print('Update result: $result');
   }
 
   // レコードは削除せず、deleteFlagを1にする
   @override
   Future<void> delete(int id) async {
-    final result = await db.update(
+    await db.update(
         SqfFixedCost.tableName,
         {
           SqfFixedCost.deleteFlag: 1,
         },
         id);
-    print('chage status to delete result: $result');
   }
 
   // マスタの論理削除と未払い実績の削除を1トランザクションで行う
