@@ -92,6 +92,18 @@ final usecase = container.read(expenseUsecaseProvider);
 6. 期間・日付で返り値を変えたいときは既存の方式に従う:
    期間キーMap（`periodKeyOf(DateTime)`）／日付キーMap（内部で時刻を正規化）。
    未設定キーは単一値・メモリ集計へフォールバック
+7. **【3の例外】集計結果そのものをテストが指定したい取得系は、スタブ値方式でよい**:
+   原則は3のとおり「書き込みを状態に反映し、取得系は `records` から見せる」。
+   ただし合計額・日別集計のように**テストが集計結果を所与として与えたい取得系**は、
+   コンストラクタで渡したMapを引くだけの実装にしてよい（`records` から集計し直さない）。
+   これは**設計として意図したもの**であり、バグではない。`records` 集計へ寄せる改修をしないこと。
+   - 該当例（`FakeExpenseRepository`）: `fetchDailyExpenseByPeriod` /
+     `fetchDailyExpenseListByDate` / `fetchTotalExpenseByPeriod` /
+     `fetchTotalExpenseByPeriodWithBigCategory` などの合計額系
+   - **理由**: 集計そのもの（SQLのSUM・期間条件・カテゴリ条件）の正しさは本物のSQLを動かす
+     `test/db_integration/` の担当であり、Fakeを使うUT側の関心は
+     「集計結果を所与として、それを受け取る側のロジックが正しいか」だから。
+     UTでMapを直接指定できる方が、境界値（0円・上限・該当なし）を狙って組みやすい
 
 ## 5. テストの書き方規約
 
