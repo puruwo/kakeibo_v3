@@ -5,6 +5,7 @@ import 'package:kakeibo/batch/batch_history_usecase.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/family_page/family_page.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
@@ -241,9 +242,15 @@ void _onBuildComplete(BuildContext context, WidgetRef ref) async {
   final isInitialOpen = ref.read(initialOpenNotifierProvider);
   if (isInitialOpen == false) return;
   // 月の変わり目にバッチ処理を実行
-  final result =
-      await ref.read(batchProcessUsecaseProvider).grobalBatchProscessing();
-  print('バッチ処理の結果: $result');
+  // バッチが失敗しても起動は継続させる
+  // 失敗した期間は batch_history に記録されないため、次回起動時にリトライされる
+  try {
+    final result =
+        await ref.read(batchProcessUsecaseProvider).grobalBatchProscessing();
+    print('バッチ処理の結果: $result');
+  } catch (e) {
+    logger.e('[FAIL]: 起動時のバッチ処理に失敗しました: $e');
+  }
 
   //状態を更新
   final initialOpenNotifier = ref.read(initialOpenNotifierProvider.notifier);
