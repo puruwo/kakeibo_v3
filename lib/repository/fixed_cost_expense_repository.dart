@@ -78,7 +78,7 @@ class ImplementsFixedCostExpenseRepository
         ${SqfFixedCostExpense.confirmedCostType} as confirmedCostType,
         ${SqfFixedCostExpense.isConfirmed} as isConfirmed
       FROM ${SqfFixedCostExpense.tableName}
-      WHERE ${SqfFixedCostExpense.fixedCostCategoryId} = $fixedCostId
+      WHERE ${SqfFixedCostExpense.fixedCostId} = $fixedCostId
     ''';
     final result = await DatabaseHelper.instance.query(sql);
     return result.map((e) => FixedCostExpenseEntity.fromJson(e)).toList();
