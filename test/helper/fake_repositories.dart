@@ -250,9 +250,19 @@ class FakeFixedCostRepository implements FixedCostRepository {
     }
   }
 
+  /// マスタを論理削除する
+  ///
+  /// 本実装（ImplementsFixedCostRepository.delete）はレコードを消さず
+  /// delete_flag を 1 に UPDATE するため、Fakeも該当行の deleteFlag を 1 にする。
+  /// これにより fetchAllActive / fetchNextPeriodPayment の
+  /// 「delete_flag = 0」条件から外れる。該当行が無ければ0行更新で何もしない。
   @override
   Future<void> delete(int id) async {
     deletedIds.add(id);
+    final index = records.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      records[index] = records[index].copyWith(deleteFlag: 1);
+    }
   }
 
   /// deleteWithUnpaidExpenses で渡された内容の記録（検証用）
@@ -678,14 +688,28 @@ class FakeExpenseRepository implements ExpenseRepository {
     records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
+  /// 支出を1件更新する
+  ///
+  /// 本物は `WHERE _id = ?` で該当行を UPDATE する（更新列はid以外の全カラム）ため、
+  /// Fakeも同じidの行をエンティティごと差し替える。
+  /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
   @override
   void update(ExpenseEntity expenseEntity) {
     updatedEntities.add(expenseEntity);
+    final index = records.indexWhere((e) => e.id == expenseEntity.id);
+    if (index >= 0) {
+      records[index] = expenseEntity;
+    }
   }
 
+  /// 支出を1件削除する
+  ///
+  /// 本物は `DELETE FROM expense WHERE _id = ?` の物理削除で、直後のSELECTから
+  /// 消えるため、Fakeも [records] から取り除く。
   @override
   void delete(int id) {
     deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
   }
 
   @override
@@ -823,14 +847,28 @@ class FakeIncomeRepository implements IncomeRepository {
     records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
+  /// 収入を1件更新する
+  ///
+  /// 本物は `WHERE _id = ?` で該当行を UPDATE する（更新列はid以外の全カラム）ため、
+  /// Fakeも同じidの行をエンティティごと差し替える。
+  /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
   @override
   void update(IncomeEntity expenseEntity) {
     updatedEntities.add(expenseEntity);
+    final index = records.indexWhere((e) => e.id == expenseEntity.id);
+    if (index >= 0) {
+      records[index] = expenseEntity;
+    }
   }
 
+  /// 収入を1件削除する
+  ///
+  /// 本物は `DELETE FROM income WHERE _id = ?` の物理削除のため、
+  /// Fakeも [records] から取り除く。
   @override
   void delete(int id) {
     deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
   }
 
   @override
@@ -910,14 +948,28 @@ class FakeBudgetRepository implements BudgetRepository {
     records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
+  /// 予算を1件更新する
+  ///
+  /// 本物は `WHERE _id = ?` で該当行を UPDATE する（更新列はid以外の全カラム）ため、
+  /// Fakeも同じidの行をエンティティごと差し替える。
+  /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
   @override
   void update(BudgetEntity expenseEntity) {
     updatedEntities.add(expenseEntity);
+    final index = records.indexWhere((e) => e.id == expenseEntity.id);
+    if (index >= 0) {
+      records[index] = expenseEntity;
+    }
   }
 
+  /// 予算を1件削除する
+  ///
+  /// 本物は `DELETE FROM budget WHERE _id = ?` の物理削除のため、
+  /// Fakeも [records] から取り除く。
   @override
   void delete(int id) {
     deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
   }
 
   @override
