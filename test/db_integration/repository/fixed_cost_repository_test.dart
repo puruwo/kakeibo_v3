@@ -1,0 +1,545 @@
+// ImplementsFixedCostRepository のDB結合テスト
+//
+// 固定費マスタは「論理削除（delete_flag）」と「次回支払日での期間絞り」が肝。
+// 特に fetchNextPeriodPayment の delete_flag = 0 条件は、
+// 削除済み固定費が翌期間の支払予定として復活していた本番バグの修正点なので、
+// 回帰検知としてここで固定する。
+import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
+import 'package:kakeibo/model/database_helper.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
+import 'package:kakeibo/repository/fixed_cost_repository.dart';
+
+import '../../helper/db_test_helper.dart';
+
+/// 基準シナリオの集計期間（開始日25日設定で 2025/7/6 を選んだときの期間）
+final _period = PeriodValue(
+  startDatetime: DateTime(2025, 6, 25),
+  endDatetime: DateTime(2025, 7, 24),
+);
+
+/// 次回支払日の境界・論理削除を一度に検証できる標準フィクスチャ
+///
+/// | id | 名前       | 次回支払日 | 位置          | delete_flag |
+/// |----|------------|------------|---------------|-------------|
+/// | 1  | 期間前      | 2025-06-24 | 期間開始前日   | 0           |
+/// | 2  | 開始日ちょうど | 2025-06-25 | 期間開始日     | 0           |
+/// | 3  | 期間中      | 2025-07-01 | 期間中         | 0           |
+/// | 4  | 削除済み    | 2025-07-01 | 期間中         | 1           |
+/// | 5  | 終了日ちょうど | 2025-07-24 | 期間終了日     | 0           |
+/// | 6  | 期間後      | 2025-07-25 | 期間終了翌日   | 0           |
+Future<void> _seedStandardFixedCosts() async {
+  await insertFixedCostRow(
+    id: 1,
+    name: '期間前',
+    fixedCostCategoryId: 1,
+    price: 1000,
+    nextPaymentDate: '20250624',
+  );
+  await insertFixedCostRow(
+    id: 2,
+    name: '開始日ちょうど',
+    fixedCostCategoryId: 1,
+    price: 2000,
+    nextPaymentDate: '20250625',
+  );
+  await insertFixedCostRow(
+    id: 3,
+    name: '期間中',
+    fixedCostCategoryId: 2,
+    price: 3000,
+    nextPaymentDate: '20250701',
+  );
+  await insertFixedCostRow(
+    id: 4,
+    name: '削除済み',
+    fixedCostCategoryId: 2,
+    price: 4000,
+    nextPaymentDate: '20250701',
+    deleteFlag: 1,
+  );
+  await insertFixedCostRow(
+    id: 5,
+    name: '終了日ちょうど',
+    fixedCostCategoryId: 3,
+    price: 5000,
+    nextPaymentDate: '20250724',
+  );
+  await insertFixedCostRow(
+    id: 6,
+    name: '期間後',
+    fixedCostCategoryId: 3,
+    price: 6000,
+    nextPaymentDate: '20250725',
+  );
+}
+
+void main() {
+  setUpDbTestEnvironment();
+
+  final repository = ImplementsFixedCostRepository();
+
+  group('fetchAll', () {
+    test('論理削除済みも含めて全件をid昇順で返す', () async {
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchAll();
+
+      // delete_flag = 1 の id=4 も含まれる
+      expect(results.map((e) => e.id).toList(), [1, 2, 3, 4, 5, 6]);
+    });
+
+    test('1件も無いなら空リストを返す', () async {
+      final results = await repository.fetchAll();
+
+      expect(results, isEmpty);
+    });
+
+    test('price・estimatedPriceがNULLでも0へフォールバックしてマッピングされる', () async {
+      // fixed_cost の price / estimated_price / recent_payment_date はNULL許容
+      await insertFixedCostRow(
+        id: 1,
+        name: 'サブスクA',
+        fixedCostCategoryId: 2,
+        variable: 1,
+        intervalNumber: 3,
+        intervalUnit: 2,
+        firstPaymentDate: '20240401',
+        nextPaymentDate: '20250701',
+      );
+
+      final results = await repository.fetchAll();
+
+      expect(
+        results.single,
+        const FixedCostEntity(
+          id: 1,
+          name: 'サブスクA',
+          variable: 1,
+          price: 0,
+          estimatedPrice: 0,
+          fixedCostCategoryId: 2,
+          intervalNumber: 3,
+          intervalUnit: 2,
+          firstPaymentDate: '20240401',
+          recentPaymentDate: null,
+          nextPaymentDate: '20250701',
+          deleteFlag: 0,
+        ),
+      );
+    });
+  });
+
+  group('fetchAllActive', () {
+    test('delete_flag = 0 の固定費だけをid昇順で返す', () async {
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchAllActive();
+
+      // 論理削除済みの id=4 が落ちる
+      expect(results.map((e) => e.id).toList(), [1, 2, 3, 5, 6]);
+    });
+
+    test('全て論理削除済みなら空リストを返す', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '削除済み',
+        fixedCostCategoryId: 1,
+        deleteFlag: 1,
+      );
+
+      final results = await repository.fetchAllActive();
+
+      expect(results, isEmpty);
+    });
+  });
+
+  group('fetch', () {
+    test('id指定でその固定費を返す', () async {
+      await _seedStandardFixedCosts();
+
+      final result = await repository.fetch(fixedCostId: 3);
+
+      expect(result.id, 3);
+      expect(result.name, '期間中');
+      expect(result.price, 3000);
+    });
+
+    test('論理削除済みでもid指定なら取得できる', () async {
+      await _seedStandardFixedCosts();
+
+      final result = await repository.fetch(fixedCostId: 4);
+
+      expect(result.id, 4);
+      expect(result.deleteFlag, 1);
+    });
+
+    test('存在しないidなら空の既定エンティティを返す', () async {
+      await _seedStandardFixedCosts();
+
+      final result = await repository.fetch(fixedCostId: 999);
+
+      // 0件時は jsonList[0] で例外→catch節の既定値が返る
+      expect(result.id, 0);
+      expect(result.name, '');
+      expect(result.price, 0);
+      expect(result.nextPaymentDate, isNull);
+    });
+  });
+
+  group('fetchNextPeriodPayment', () {
+    test('期間内に次回支払日がある固定費をid降順で返す', () async {
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      // ORDER BY _id DESC。id=4は論理削除済みなので除外される
+      expect(results.map((e) => e.id).toList(), [5, 3, 2]);
+    });
+
+    test('期間開始日ちょうどの固定費を含む（next_payment_date >= 開始日）', () async {
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      expect(results.map((e) => e.nextPaymentDate), contains('20250625'));
+    });
+
+    test('期間終了日ちょうどの固定費を含む（next_payment_date <= 終了日）', () async {
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      expect(results.map((e) => e.nextPaymentDate), contains('20250724'));
+    });
+
+    test('期間開始前日・期間終了翌日の固定費は含まない', () async {
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      expect(results.map((e) => e.id), isNot(contains(1)));
+      expect(results.map((e) => e.id), isNot(contains(6)));
+    });
+
+    test('論理削除済みの固定費は期間内でも含まない', () async {
+      // 削除済み固定費が翌期間の支払予定として復活していた不具合の回帰検知
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      expect(results.map((e) => e.id), isNot(contains(4)));
+      expect(results.every((e) => e.deleteFlag == 0), isTrue);
+    });
+
+    test('期間内が論理削除済みだけなら空リストを返す', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '削除済み',
+        fixedCostCategoryId: 1,
+        nextPaymentDate: '20250701',
+        deleteFlag: 1,
+      );
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      expect(results, isEmpty);
+    });
+
+    test('年跨ぎの期間（12/25〜1/24）でも取得できる', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '期間前',
+        fixedCostCategoryId: 1,
+        nextPaymentDate: '20241224',
+      );
+      await insertFixedCostRow(
+        id: 2,
+        name: '開始日',
+        fixedCostCategoryId: 1,
+        nextPaymentDate: '20241225',
+      );
+      await insertFixedCostRow(
+        id: 3,
+        name: '年明け',
+        fixedCostCategoryId: 1,
+        nextPaymentDate: '20250101',
+      );
+      await insertFixedCostRow(
+        id: 4,
+        name: '終了日',
+        fixedCostCategoryId: 1,
+        nextPaymentDate: '20250124',
+      );
+      await insertFixedCostRow(
+        id: 5,
+        name: '期間後',
+        fixedCostCategoryId: 1,
+        nextPaymentDate: '20250125',
+      );
+
+      final results = await repository.fetchNextPeriodPayment(
+        period: PeriodValue(
+          startDatetime: DateTime(2024, 12, 25),
+          endDatetime: DateTime(2025, 1, 24),
+        ),
+      );
+
+      expect(results.map((e) => e.id).toList(), [4, 3, 2]);
+    });
+
+    test('該当が無いなら空リストを返す', () async {
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchNextPeriodPayment(
+        period: PeriodValue(
+          startDatetime: DateTime(2020, 1, 1),
+          endDatetime: DateTime(2020, 1, 31),
+        ),
+      );
+
+      expect(results, isEmpty);
+    });
+  });
+
+  group('fetchEstimatedPriceById', () {
+    test('id指定で推定支出額を返す', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '電気代',
+        fixedCostCategoryId: 4,
+        variable: 1,
+        estimatedPrice: 7800,
+      );
+
+      final result = await repository.fetchEstimatedPriceById(id: 1);
+
+      expect(result, 7800);
+    });
+
+    test('estimated_priceがNULLなら0を返す', () async {
+      await insertFixedCostRow(id: 1, name: '家賃', fixedCostCategoryId: 1);
+
+      final result = await repository.fetchEstimatedPriceById(id: 1);
+
+      expect(result, 0);
+    });
+
+    test('存在しないidなら0を返す', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '電気代',
+        fixedCostCategoryId: 4,
+        estimatedPrice: 7800,
+      );
+
+      final result = await repository.fetchEstimatedPriceById(id: 999);
+
+      expect(result, 0);
+    });
+
+    test('論理削除済みでも推定額を返す（delete_flagで絞らない）', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '削除済み',
+        fixedCostCategoryId: 4,
+        estimatedPrice: 5000,
+        deleteFlag: 1,
+      );
+
+      final result = await repository.fetchEstimatedPriceById(id: 1);
+
+      expect(result, 5000);
+    });
+  });
+
+  group('insert', () {
+    test('1件追加され、採番されたidと保存値が一致する', () async {
+      final id = await repository.insert(
+        const FixedCostEntity(
+          name: 'Netflix',
+          variable: 0,
+          price: 1490,
+          estimatedPrice: 1490,
+          fixedCostCategoryId: 2,
+          intervalNumber: 1,
+          intervalUnit: 1,
+          firstPaymentDate: '20250601',
+          recentPaymentDate: '20250601',
+          nextPaymentDate: '20250701',
+        ),
+      );
+
+      final results = await repository.fetchAll();
+      expect(results.single.id, id);
+      expect(
+        results.single,
+        FixedCostEntity(
+          id: id,
+          name: 'Netflix',
+          variable: 0,
+          price: 1490,
+          estimatedPrice: 1490,
+          fixedCostCategoryId: 2,
+          intervalNumber: 1,
+          intervalUnit: 1,
+          firstPaymentDate: '20250601',
+          recentPaymentDate: '20250601',
+          nextPaymentDate: '20250701',
+          deleteFlag: 0,
+        ),
+      );
+    });
+
+    test('idはエンティティの値ではなくAUTOINCREMENTで採番される', () async {
+      // 既存の最大idの次が採番される
+      await insertFixedCostRow(id: 50, name: '既存', fixedCostCategoryId: 1);
+
+      final id = await repository.insert(
+        const FixedCostEntity(
+          id: 1,
+          name: '新規',
+          variable: 0,
+          fixedCostCategoryId: 1,
+          intervalNumber: 1,
+          intervalUnit: 1,
+          firstPaymentDate: '20250601',
+          nextPaymentDate: '20250701',
+        ),
+      );
+
+      expect(id, 51);
+    });
+  });
+
+  group('update', () {
+    test('指定idの行だけが書き換わる', () async {
+      await _seedStandardFixedCosts();
+
+      await repository.update(
+        const FixedCostEntity(
+          id: 3,
+          name: '変更後',
+          variable: 1,
+          price: 9999,
+          estimatedPrice: 8888,
+          fixedCostCategoryId: 5,
+          intervalNumber: 2,
+          intervalUnit: 2,
+          firstPaymentDate: '20240101',
+          recentPaymentDate: '20250601',
+          nextPaymentDate: '20250801',
+          deleteFlag: 0,
+        ),
+      );
+
+      final results = await repository.fetchAll();
+      final updated = results.firstWhere((e) => e.id == 3);
+      expect(updated.name, '変更後');
+      expect(updated.price, 9999);
+      expect(updated.estimatedPrice, 8888);
+      expect(updated.fixedCostCategoryId, 5);
+      expect(updated.nextPaymentDate, '20250801');
+
+      // 他の行は変化しない
+      expect(results.firstWhere((e) => e.id == 2).price, 2000);
+      expect(results.length, 6);
+    });
+
+    test('recentPaymentDate・nextPaymentDateがnullなら空文字で保存される', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '家賃',
+        fixedCostCategoryId: 1,
+        recentPaymentDate: '20250601',
+        nextPaymentDate: '20250701',
+      );
+
+      await repository.update(
+        const FixedCostEntity(
+          id: 1,
+          name: '家賃',
+          variable: 0,
+          fixedCostCategoryId: 1,
+          intervalNumber: 1,
+          intervalUnit: 1,
+          firstPaymentDate: '20250101',
+          recentPaymentDate: null,
+          nextPaymentDate: null,
+        ),
+      );
+
+      final results = await repository.fetchAll();
+      // update側で `?? ''` されるためNULLではなく空文字になる
+      expect(results.single.recentPaymentDate, '');
+      expect(results.single.nextPaymentDate, '');
+    });
+
+    test('idがnullなら（WHERE _id = -1 になり）1件も更新されない', () async {
+      await _seedStandardFixedCosts();
+
+      await repository.update(
+        const FixedCostEntity(
+          id: null,
+          name: '変更後',
+          variable: 0,
+          price: 9999,
+          fixedCostCategoryId: 1,
+          intervalNumber: 1,
+          intervalUnit: 1,
+          firstPaymentDate: '20250101',
+          nextPaymentDate: '20250701',
+        ),
+      );
+
+      final results = await repository.fetchAll();
+      expect(results.map((e) => e.price).toList(), [
+        1000,
+        2000,
+        3000,
+        4000,
+        5000,
+        6000,
+      ]);
+    });
+  });
+
+  group('delete', () {
+    test('物理削除ではなくdelete_flagが1になる', () async {
+      await _seedStandardFixedCosts();
+
+      await repository.delete(3);
+
+      // 行数は減らない
+      expect(
+        await DatabaseHelper.instance.queryRowCount(SqfFixedCost.tableName),
+        6,
+      );
+      final all = await repository.fetchAll();
+      expect(all.firstWhere((e) => e.id == 3).deleteFlag, 1);
+      // アクティブ一覧からは消える
+      final active = await repository.fetchAllActive();
+      expect(active.map((e) => e.id).toList(), [1, 2, 5, 6]);
+    });
+
+    test('論理削除した固定費は次回支払予定から外れる', () async {
+      await _seedStandardFixedCosts();
+
+      await repository.delete(3);
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+      expect(results.map((e) => e.id).toList(), [5, 2]);
+    });
+
+    test('存在しないidを指定しても他の行は変わらない', () async {
+      await _seedStandardFixedCosts();
+
+      await repository.delete(999);
+
+      final all = await repository.fetchAll();
+      expect(all.every((e) => e.id == 4 ? e.deleteFlag == 1 : true), isTrue);
+      expect(all.where((e) => e.deleteFlag == 1).length, 1);
+    });
+  });
+}

@@ -244,6 +244,31 @@ Future<int> insertFixedCostRow({
   });
 }
 
+/// 支出大カテゴリーの表示フラグ（is_displayed）を書き換える
+///
+/// カテゴリー集計SQLの「非表示かつ実績なしのカテゴリーを隠す」条件を検証するために使う。
+/// マスタはonCreateでシード済みなので、投入ではなく更新で状態を作る。
+Future<int> updateExpenseBigCategoryIsDisplayed({
+  required int id,
+  required int isDisplayed,
+}) {
+  return DatabaseHelper.instance.update(SqfExpenseBigCategory.tableName, {
+    SqfExpenseBigCategory.isDisplayed: isDisplayed,
+  }, id);
+}
+
+/// 支出小カテゴリーの既定表示フラグ（default_displayed）を書き換える
+///
+/// 小カテゴリータイルSQLの「既定非表示かつ実績なしのタイルを隠す」条件の検証用。
+Future<int> updateExpenseSmallCategoryDefaultDisplayed({
+  required int id,
+  required int defaultDisplayed,
+}) {
+  return DatabaseHelper.instance.update(SqfExpenseSmallCategory.tableName, {
+    SqfExpenseSmallCategory.defaultDisplayed: defaultDisplayed,
+  }, id);
+}
+
 /// 固定費支出（支払実績）を1件投入する
 Future<int> insertFixedCostExpenseRow({
   required int fixedCostId,
