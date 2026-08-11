@@ -488,8 +488,12 @@ class FakeExpenseRepository implements ExpenseRepository {
        dailyExpenseTotalByDate = _dateKeyedMap(dailyExpenseTotalByDate),
        dailyExpenseListByDate = _dateKeyedMap(dailyExpenseListByDate);
 
-  /// 検索対象の支出レコード（fetchWithSourceCategory が参照する）
+  /// 検索対象の支出レコード（fetchWithSourceCategory が参照する。insert/update/deleteで変化する）
   final List<ExpenseEntity> records;
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   /// 日付 → その日の一般支出合計（fetchDailyExpenseByPeriod の返却値）
   ///
@@ -663,9 +667,15 @@ class FakeExpenseRepository implements ExpenseRepository {
     return List.of(dailyExpenseListByDate[key] ?? const <ExpenseEntity>[]);
   }
 
+  /// 支出を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映して
+  /// 以後の取得系メソッドから見えるようにする（idはAUTOINCREMENT相当で採番）。
+  /// [insertedEntities] には渡された内容そのものを記録する。
   @override
   void insert(ExpenseEntity expenseEntity) {
     insertedEntities.add(expenseEntity);
+    records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
   @override
@@ -690,8 +700,12 @@ class FakeIncomeRepository implements IncomeRepository {
   }) : records = List.of(initialRecords ?? []),
        smallCategoryToBigCategory = Map.of(smallCategoryToBigCategory ?? {});
 
-  /// 集計対象の収入レコード
+  /// 集計対象の収入レコード（insertで増える）
   final List<IncomeEntity> records;
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   /// 収入小カテゴリーID → 収入大カテゴリーID の対応
   ///
@@ -799,9 +813,14 @@ class FakeIncomeRepository implements IncomeRepository {
         .fold<int>(0, (sum, e) => sum + e.price);
   }
 
+  /// 収入を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映する
+  /// （idはAUTOINCREMENT相当で採番。[insertedEntities] は渡された内容そのもの）。
   @override
   void insert(IncomeEntity expenseEntity) {
     insertedEntities.add(expenseEntity);
+    records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
   @override
@@ -823,8 +842,12 @@ class FakeBudgetRepository implements BudgetRepository {
   FakeBudgetRepository({List<BudgetEntity>? initialRecords})
     : records = List.of(initialRecords ?? []);
 
-  /// 検索対象の予算レコード
+  /// 検索対象の予算レコード（insertで増える）
   final List<BudgetEntity> records;
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   final List<BudgetEntity> insertedEntities = [];
   final List<BudgetEntity> updatedEntities = [];
@@ -877,9 +900,14 @@ class FakeBudgetRepository implements BudgetRepository {
     return matched.first;
   }
 
+  /// 予算を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映する
+  /// （idはAUTOINCREMENT相当で採番。[insertedEntities] は渡された内容そのもの）。
   @override
   void insert(BudgetEntity expenseEntity) {
     insertedEntities.add(expenseEntity);
+    records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
   @override
@@ -1165,6 +1193,9 @@ class FakeExpenseSmallCategoryRepository
   final List<ExpenseSmallCategoryEntity> updatedEntities = [];
   final List<ExpenseSmallCategoryEntity> addedEntities = [];
 
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  int _nextId = 1000;
+
   /// getMaxSmallCategoryOrderKey に渡された大カテゴリーIDの記録（検証用）
   final List<int> getMaxOrderKeyBigCategoryIds = [];
 
@@ -1214,10 +1245,16 @@ class FakeExpenseSmallCategoryRepository
     }
   }
 
+  /// 小カテゴリーを1件追加する
+  ///
+  /// 本物はAUTOINCREMENTでidが採番され、戻り値はそのidになる。
+  /// [addedEntities] には渡された内容そのもの（採番前）を記録する。
   @override
-  Future<void> add({required ExpenseSmallCategoryEntity entity}) async {
+  Future<int> add({required ExpenseSmallCategoryEntity entity}) async {
     addedEntities.add(entity);
-    records.add(entity);
+    final id = _nextId++;
+    records.add(entity.copyWith(id: id));
+    return id;
   }
 
   @override
