@@ -7,6 +7,8 @@
 // NoSuchMethodError になる（呼ばれた時点でテストが落ちるので検知できる）。
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
+import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
+import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/core/month_value/month_value.dart';
 import 'package:kakeibo/domain/db/aggregation_start_day_entity/aggregation_start_day_entity.dart';
@@ -19,6 +21,10 @@ import 'package:kakeibo/domain/db/budget/budget_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
@@ -48,6 +54,13 @@ bool _isDateInPeriod(String date, PeriodValue period) {
   final end = period.endDatetime.toFormattedString();
   return date.compareTo(start) >= 0 && date.compareTo(end) <= 0;
 }
+
+/// 「期間別の返却値」を設定するMapのキーを作る
+///
+/// 年間グラフのように「12ヶ月それぞれ違う金額」を返させたいとき、
+/// Fake側は期間開始日の 'yyyyMMdd' をキーにして返却値を引く。
+/// テストからも同じ関数でキーを組み立てられるように公開している。
+String periodKeyOf(DateTime periodStart) => periodStart.toFormattedString();
 
 /// 集計開始日を固定値で返すFake（既定は本番の初期設定と同じ25日）
 class FakeAggregationStartDayRepository
@@ -240,6 +253,26 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
   /// delete で渡されたidの記録（検証用）
   final List<int> deletedIds = [];
 
+  /// 期間別の確定固定費合計（キーは期間開始日のyyyyMMdd）
+  ///
+  /// キーが無い期間は、これまで通りメモリ内レコードからの集計になる。
+  final Map<String, int> confirmedTotalByPeriodStart = {};
+
+  /// 未確定固定費の推定額合計（既定は0）
+  ///
+  /// 本物は fixed_cost.estimated_price をJOINして合算するが、
+  /// Fakeは固定費マスタを持たないため合計額そのものを設定する方式にしている。
+  int unconfirmedEstimatedTotalResult = 0;
+
+  /// 期間別の未確定固定費推定額合計（キーは期間開始日のyyyyMMdd）
+  ///
+  /// キーが無い期間は [unconfirmedEstimatedTotalResult] を返す。
+  final Map<String, int> unconfirmedEstimatedTotalByPeriodStart = {};
+
+  /// 合計取得メソッドに渡された期間の記録（検証用）
+  final List<PeriodValue> confirmedTotalPeriods = [];
+  final List<PeriodValue> unconfirmedEstimatedTotalPeriods = [];
+
   @override
   Future<void> delete(int id) async {
     deletedIds.add(id);
@@ -271,9 +304,24 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
   Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriod({
     required PeriodValue period,
   }) async {
+    confirmedTotalPeriods.add(period);
+    final byPeriod =
+        confirmedTotalByPeriodStart[periodKeyOf(period.startDatetime)];
+    if (byPeriod != null) return byPeriod;
     return records
         .where((e) => _isDateInPeriod(e.date, period) && e.isConfirmed == 1)
         .fold<int>(0, (sum, e) => sum + e.price);
+  }
+
+  @override
+  Future<int> fetchTotalUnconfirmedFixedCostEstimatedWithPeriod({
+    required PeriodValue period,
+  }) async {
+    unconfirmedEstimatedTotalPeriods.add(period);
+    return unconfirmedEstimatedTotalByPeriodStart[periodKeyOf(
+          period.startDatetime,
+        )] ??
+        unconfirmedEstimatedTotalResult;
   }
 
   @override
@@ -355,6 +403,12 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
 
 /// 支出のFake（書き込み系の呼び出し記録＋集計系の返却値設定）
 class FakeExpenseRepository implements ExpenseRepository {
+  FakeExpenseRepository({List<ExpenseEntity>? initialRecords})
+    : records = List.of(initialRecords ?? []);
+
+  /// 検索対象の支出レコード（fetchWithSourceCategory が参照する）
+  final List<ExpenseEntity> records;
+
   final List<ExpenseEntity> insertedEntities = [];
   final List<ExpenseEntity> updatedEntities = [];
   final List<int> deletedIds = [];
@@ -365,13 +419,61 @@ class FakeExpenseRepository implements ExpenseRepository {
   /// Fakeでは合計額そのものを設定する方式にしている。
   int totalExpenseByPeriodWithBigCategoryResult = 0;
 
+  /// 期間別の合計額（キーは期間開始日のyyyyMMdd）
+  ///
+  /// キーが無い期間は [totalExpenseByPeriodWithBigCategoryResult] を返す。
+  final Map<String, int>
+  totalExpenseByPeriodWithBigCategoryResultByPeriodStart = {};
+
+  /// fetchTotalExpenseByPeriod が返す合計額（拠出元の指定なし）
+  int totalExpenseByPeriodResult = 0;
+
+  /// 期間別の合計額（キーは期間開始日のyyyyMMdd）
+  ///
+  /// キーが無い期間は [totalExpenseByPeriodResult] を返す。
+  final Map<String, int> totalExpenseByPeriodResultByPeriodStart = {};
+
+  /// 合計取得メソッドに渡された期間の記録（検証用）
+  final List<({DateTime fromDate, DateTime toDate})>
+  totalExpenseByPeriodRanges = [];
+
   @override
   Future<int> fetchTotalExpenseByPeriodWithBigCategory({
     required int incomeSourceBigCategory,
     required DateTime fromDate,
     required DateTime toDate,
   }) async {
-    return totalExpenseByPeriodWithBigCategoryResult;
+    return totalExpenseByPeriodWithBigCategoryResultByPeriodStart[periodKeyOf(
+          fromDate,
+        )] ??
+        totalExpenseByPeriodWithBigCategoryResult;
+  }
+
+  @override
+  Future<int> fetchTotalExpenseByPeriod({
+    required DateTime fromDate,
+    required DateTime toDate,
+  }) async {
+    totalExpenseByPeriodRanges.add((fromDate: fromDate, toDate: toDate));
+    return totalExpenseByPeriodResultByPeriodStart[periodKeyOf(fromDate)] ??
+        totalExpenseByPeriodResult;
+  }
+
+  @override
+  Future<List<ExpenseEntity>> fetchWithSourceCategory({
+    required int incomeSourceBigId,
+    required PeriodValue period,
+  }) async {
+    final matched = records
+        .where(
+          (e) =>
+              _isDateInPeriod(e.date, period) &&
+              e.incomeSourceBigCategory == incomeSourceBigId,
+        )
+        .toList();
+    // 本実装のSQLの ORDER BY id DESC に合わせる
+    matched.sort((a, b) => b.id.compareTo(a.id));
+    return matched;
   }
 
   @override
@@ -414,11 +516,29 @@ class FakeIncomeRepository implements IncomeRepository {
   final List<IncomeEntity> updatedEntities = [];
   final List<int> deletedIds = [];
 
+  /// 期間別の大カテゴリー収入合計（キーは期間開始日のyyyyMMdd）
+  ///
+  /// キーが無い期間は、これまで通りメモリ内レコードからの集計になる。
+  final Map<String, int> sumWithBigCategoryAndPeriodResultByPeriodStart = {};
+
+  /// 期間別の収入合計（キーは期間開始日のyyyyMMdd・カテゴリー指定なし）
+  ///
+  /// キーが無い期間は、これまで通りメモリ内レコードからの集計になる。
+  final Map<String, int> sumWithPeriodResultByPeriodStart = {};
+
+  /// calcurateSumWithPeriod に渡された期間の記録（検証用）
+  final List<PeriodValue> sumWithPeriodPeriods = [];
+
   @override
   Future<int> calcurateSumWithBigCategoryAndPeriod({
     required PeriodValue period,
     required int bigCategoryId,
   }) async {
+    final byPeriod =
+        sumWithBigCategoryAndPeriodResultByPeriodStart[periodKeyOf(
+          period.startDatetime,
+        )];
+    if (byPeriod != null) return byPeriod;
     return records
         .where(
           (e) =>
@@ -426,6 +546,40 @@ class FakeIncomeRepository implements IncomeRepository {
               smallCategoryToBigCategory[e.categoryId] == bigCategoryId,
         )
         .fold<int>(0, (sum, e) => sum + e.price);
+  }
+
+  @override
+  Future<int> calcurateSumWithPeriod({required PeriodValue period}) async {
+    sumWithPeriodPeriods.add(period);
+    final byPeriod =
+        sumWithPeriodResultByPeriodStart[periodKeyOf(period.startDatetime)];
+    if (byPeriod != null) return byPeriod;
+    return records
+        .where((e) => _isDateInPeriod(e.date, period))
+        .fold<int>(0, (sum, e) => sum + e.price);
+  }
+
+  @override
+  Future<List<IncomeEntity>> fetchWithCategoryAndPeriod({
+    required PeriodValue period,
+    required int categoryId,
+  }) async {
+    // 本実装は income → 小カテゴリー → 大カテゴリー のJOINで
+    // 「大カテゴリーID = categoryId」を条件にしている
+    return records
+        .where(
+          (e) =>
+              _isDateInPeriod(e.date, period) &&
+              smallCategoryToBigCategory[e.categoryId] == categoryId,
+        )
+        .toList();
+  }
+
+  @override
+  Future<List<IncomeEntity>> fetchWithoutCategory({
+    required PeriodValue period,
+  }) async {
+    return records.where((e) => _isDateInPeriod(e.date, period)).toList();
   }
 
   @override
@@ -690,6 +844,153 @@ class FakeIncomeSmallCategoryRepository
     required int bigCategoryId,
   }) async {
     return records.where((e) => e.bigCategoryKey == bigCategoryId).toList();
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+/// 1日分の支出・収入サマリーのFake
+///
+/// 本物はSQLで日毎に集計するため、Fakeでは日付ごとの結果を直接持たせる。
+/// 未設定の日付は「合計0」のエンティティを返す（本実装の該当なし相当）。
+class FakeDailyExpenseRepository implements DailyExpenseRepository {
+  FakeDailyExpenseRepository({Map<DateTime, DailyExpenseEntity>? dailyExpenses})
+    : dailyExpenses = Map.of(dailyExpenses ?? {});
+
+  /// 日付（時刻を持たないDateTime）→ その日の集計結果
+  final Map<DateTime, DailyExpenseEntity> dailyExpenses;
+
+  /// fetchWithCategory に渡された日付の記録（検証用）
+  final List<DateTime> fetchedDates = [];
+
+  @override
+  Future<DailyExpenseEntity> fetchWithCategory({
+    required int incomeSourceBigId,
+    required DateTime dateTime,
+  }) async {
+    final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
+    fetchedDates.add(date);
+    return dailyExpenses[date] ?? DailyExpenseEntity(date: date);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+/// 支出小カテゴリーマスタのFake
+///
+/// [records] の並び順がそのまま fetchAll の順序になる。
+class FakeExpenseSmallCategoryRepository
+    implements ExpenseSmallCategoryRepository {
+  FakeExpenseSmallCategoryRepository({
+    List<ExpenseSmallCategoryEntity>? initialRecords,
+  }) : records = List.of(initialRecords ?? []);
+
+  /// 支出小カテゴリーマスタ
+  final List<ExpenseSmallCategoryEntity> records;
+
+  /// update / add で渡された内容の記録（検証用）
+  final List<ExpenseSmallCategoryEntity> updatedEntities = [];
+  final List<ExpenseSmallCategoryEntity> addedEntities = [];
+
+  @override
+  Future<List<ExpenseSmallCategoryEntity>> fetchAll() async => List.of(records);
+
+  @override
+  Future<ExpenseSmallCategoryEntity> fetchBySmallCategory({
+    required int smallCategoryId,
+  }) async {
+    return records.firstWhere((e) => e.id == smallCategoryId);
+  }
+
+  @override
+  Future<List<ExpenseSmallCategoryEntity>> fetchByBigCategory({
+    required int bigCategoryId,
+  }) async {
+    return records.where((e) => e.bigCategoryKey == bigCategoryId).toList();
+  }
+
+  @override
+  Future<List<int>> fetchSmallCategoryIdListByBigCategoryId({
+    required int bigCategoryId,
+  }) async {
+    return records
+        .where((e) => e.bigCategoryKey == bigCategoryId)
+        .map((e) => e.id)
+        .toList();
+  }
+
+  @override
+  Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId}) async {
+    // 本実装は1件も無いとき0を返す
+    return records.fold<int>(
+      0,
+      (max, e) => e.smallCategoryOrderKey > max ? e.smallCategoryOrderKey : max,
+    );
+  }
+
+  @override
+  Future<void> update({required ExpenseSmallCategoryEntity entity}) async {
+    updatedEntities.add(entity);
+    final index = records.indexWhere((e) => e.id == entity.id);
+    if (index >= 0) {
+      records[index] = entity;
+    }
+  }
+
+  @override
+  Future<void> add({required ExpenseSmallCategoryEntity entity}) async {
+    addedEntities.add(entity);
+    records.add(entity);
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+/// 支出大カテゴリーマスタのFake
+///
+/// [records] の並び順がそのまま fetchAll の順序になる。
+class FakeExpenseBigCategoryRepository implements ExpenseBigCategoryRepository {
+  FakeExpenseBigCategoryRepository({
+    List<ExpenseBigCategoryEntity>? initialRecords,
+  }) : records = List.of(initialRecords ?? []);
+
+  /// 支出大カテゴリーマスタ
+  final List<ExpenseBigCategoryEntity> records;
+
+  /// update / add で渡された内容の記録（検証用）
+  final List<ExpenseBigCategoryEntity> updatedEntities = [];
+  final List<ExpenseBigCategoryEntity> addedEntities = [];
+
+  int _nextId = 1000;
+
+  @override
+  Future<List<ExpenseBigCategoryEntity>> fetchAll() async => List.of(records);
+
+  @override
+  Future<ExpenseBigCategoryEntity> fetchByBigCategory({
+    required int bigCategoryId,
+  }) async {
+    return records.firstWhere((e) => e.id == bigCategoryId);
+  }
+
+  @override
+  Future<void> update({required ExpenseBigCategoryEntity entity}) async {
+    updatedEntities.add(entity);
+    final index = records.indexWhere((e) => e.id == entity.id);
+    if (index >= 0) {
+      records[index] = entity;
+    }
+  }
+
+  @override
+  Future<int> add({required ExpenseBigCategoryEntity entity}) async {
+    final id = _nextId++;
+    records.add(entity.copyWith(id: id));
+    addedEntities.add(entity);
+    return id;
   }
 
   @override
