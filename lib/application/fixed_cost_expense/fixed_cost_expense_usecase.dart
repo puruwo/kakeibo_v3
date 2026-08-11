@@ -43,7 +43,9 @@ class FixedCostExpenseUsecase {
       price: confirmedPrice,
     );
 
-    _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
+    // 想定支出の再計算完了を待たないと、失敗を検知できず
+    // 確定直後の画面が古い想定額のままになるためawaitする
+    await _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
         fixedCostId: tileValue.fixedCostId);
 
     // DBの更新回数をインクリメント
