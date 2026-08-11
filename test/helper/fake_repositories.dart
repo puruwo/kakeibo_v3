@@ -285,12 +285,21 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
   FakeFixedCostExpenseRepository({List<FixedCostExpenseEntity>? initialRecords})
     : records = List.of(initialRecords ?? []);
 
-  /// fetchFixedCostExpenseWithCostId が参照する既存レコード（updateで置き換わる）
+  /// 取得系メソッドが参照する現在のレコード状態（insert/update/deleteで変化する）
   final List<FixedCostExpenseEntity> records;
 
   /// insert / update で渡された内容の記録（検証用）
+  ///
+  /// [records] と違い「呼び出し時に何を渡されたか」をそのまま保持する
+  /// （insertのid採番前の値が入る）。
   final List<FixedCostExpenseEntity> insertedEntities = [];
   final List<FixedCostExpenseEntity> updatedEntities = [];
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  ///
+  /// 事前データ [records] の最大id+1から始め、deleteされても払い出し済みidは再利用しない。
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   /// fetchFixedCostEstimatedPriceById が返す過去支払いの平均額（テストで設定する）
   double estimatedPriceResult = 0;
@@ -327,10 +336,17 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
     records.removeWhere((e) => e.id == id);
   }
 
+  /// 実績を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映して
+  /// 以後の取得系メソッドから見えるようにする。idはAUTOINCREMENT相当で採番し、
+  /// 戻り値は採番されたid（本実装と同じ）。
   @override
   Future<int> insert(FixedCostExpenseEntity entity) async {
     insertedEntities.add(entity);
-    return insertedEntities.length;
+    final id = _nextId++;
+    records.add(entity.copyWith(id: id));
+    return id;
   }
 
   @override
@@ -439,16 +455,14 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
   /// 固定費IDと支払い日が一致する実績が既にあるか
   ///
   /// 本実装は fixed_cost_expense を COUNT(*) するだけなので、
-  /// 事前データ [records] に加えて、このFakeへ insert 済みのものも既存として扱う
-  /// （本物のDBでは挿入直後から件数に数えられるため）。
+  /// 現在のレコード状態 [records] に一致行があるかで判定する
+  /// （insert済みのものも [records] に入っているため既存として数えられる）。
   @override
   Future<bool> existsByFixedCostIdAndDate({
     required int fixedCostId,
     required String date,
   }) async {
-    bool matches(FixedCostExpenseEntity e) =>
-        e.fixedCostId == fixedCostId && e.date == date;
-    return records.any(matches) || insertedEntities.any(matches);
+    return records.any((e) => e.fixedCostId == fixedCostId && e.date == date);
   }
 
   @override
