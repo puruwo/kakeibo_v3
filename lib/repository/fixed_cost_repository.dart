@@ -140,7 +140,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.nextPaymentDate} AS nextPaymentDate,
         a.${SqfFixedCost.deleteFlag} AS deleteFlag
       FROM ${SqfFixedCost.tableName} a
-      WHERE a.${SqfFixedCost.nextPaymentDate} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.nextPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      WHERE a.${SqfFixedCost.nextPaymentDate} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.nextPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)} AND a.${SqfFixedCost.deleteFlag} = 0
       ORDER BY a.${SqfFixedCost.id} DESC;
     ''';
 
