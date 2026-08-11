@@ -8,6 +8,7 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain_service/system_datetime/date_scope.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
@@ -84,7 +85,7 @@ class FixedCostUsecase {
       final insertedFixedCostRecord = insertRecord.copyWith(id: id);
 
       // fixedCostExpenseEntityを作成し、DBに挿入する
-      FixedCostService().insertToFixedCostExpense(
+      await FixedCostService().insertToFixedCostExpense(
         _ref,
         insertedFixedCostRecord,
         insertRecord.firstPaymentDate,
@@ -95,8 +96,18 @@ class FixedCostUsecase {
     updateDBCountNotifier.incrementState();
   }
 
+  // 1マスタあたりに回収する支払い周期の上限
+  // 支払い周期が不正なマスタで無限ループにならないようにするための保険
+  // 月次なら20年分に相当し、正常なデータがこの回数に達することはない
+  static const int _maxCatchUpCycles = 240;
+
   // 月の変わり目に呼ばれる処理
-  // その月に支払いがある固定費を取得し、expenseに支出データを追加する
+  // その月までに支払いがある固定費を取得し、expenseに支出データを追加する
+  //
+  // 取得条件には期間開始日の下限が無いため、過去のバッチで取りこぼして
+  // next_payment_dateが過去日のまま固定されたマスタもここに含まれる。
+  // そのため1マスタにつき、next_payment_dateが期間終了日を超えるまで繰り返し、
+  // 複数周期ぶんの実績をまとめて生成して追いつかせる。
   Future<void> addExpenseForFixedCost(PeriodValue periodValue) async {
     // 期間を指定して支払いがある固定費を取得
     final fixedCostList =
@@ -104,20 +115,59 @@ class FixedCostUsecase {
       period: periodValue,
     );
 
+    // 期間終了日（yyyyMMdd）。日付は同形式の文字列なので辞書順比較で大小判定できる
+    final periodEndDate = DateFormat('yyyyMMdd').format(periodValue.endDatetime);
+
     // 支払いがある固定費に対して、支出データを追加する
     for (final fixedCostEntity in fixedCostList) {
-      // fixedCostExpenseEntityを作成し、DBに挿入する
-      FixedCostService().insertToFixedCostExpense(
-        _ref,
-        fixedCostEntity,
-        fixedCostEntity.nextPaymentDate ?? '00000000',
-      );
-      // 次の支払い日と最近支払い日を埋めて、更新用データを作成
-      final updateRecord =
-          FixedCostService().populateNextPaymentEntity(fixedCostEntity);
+      // 支払い周期が不正なマスタは次の支払い日を計算できず、日付が前進しない
+      // 処理を打ち切り、他のマスタの処理は継続する
+      if ((fixedCostEntity.intervalUnit != 1 &&
+              fixedCostEntity.intervalUnit != 2) ||
+          fixedCostEntity.intervalNumber <= 0) {
+        logger.e(
+            '[FAIL]: 固定費マスタの支払い周期が不正です id=${fixedCostEntity.id} intervalUnit=${fixedCostEntity.intervalUnit} intervalNumber=${fixedCostEntity.intervalNumber}');
+        continue;
+      }
 
-      // fixed_costを更新する
-      await _fixedCostRepositoryProvider.update(updateRecord);
+      var currentEntity = fixedCostEntity;
+      var cycleCount = 0;
+
+      // 次の支払い日が期間終了日を超えるまで、周期ぶんの実績を生成し続ける
+      while ((currentEntity.nextPaymentDate ?? '').compareTo(periodEndDate) <=
+          0) {
+        if (cycleCount >= _maxCatchUpCycles) {
+          logger.e(
+              '[FAIL]: 固定費の回収が上限($_maxCatchUpCycles回)に達したため打ち切ります id=${fixedCostEntity.id}');
+          break;
+        }
+        cycleCount++;
+
+        final paymentDate = currentEntity.nextPaymentDate ?? '00000000';
+
+        // 同じ支払い日の実績が既にある場合は生成しない（多重生成の防止）
+        // ただしスキップした場合も次の支払い日は進める
+        final alreadyExists =
+            await _fixedCostExpenseRepositoryProvider.existsByFixedCostIdAndDate(
+          fixedCostId: currentEntity.id!,
+          date: paymentDate,
+        );
+        if (!alreadyExists) {
+          // fixedCostExpenseEntityを作成し、DBに挿入する
+          await FixedCostService().insertToFixedCostExpense(
+            _ref,
+            currentEntity,
+            paymentDate,
+          );
+        }
+
+        // 次の支払い日と最近支払い日を埋めて、次の周期へ進める
+        currentEntity =
+            FixedCostService().populateNextPaymentEntity(currentEntity);
+      }
+
+      // 何周期進んだかに関わらず、fixed_costの更新は最後に1回だけ行う
+      await _fixedCostRepositoryProvider.update(currentEntity);
     }
 
     // DBの更新回数をインクリメント

@@ -121,7 +121,9 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
     }
   }
 
-  // 次の支払い期間に含まれるレコードを取得する
+  // 支払い日が期間終了日までに到来しているレコードを取得する
+  // 期間開始日という下限は設けない。過去のバッチで取りこぼして next_payment_date が
+  // 過去日のまま固定されたマスタも拾い、追いつかせるため
   @override
   Future<List<FixedCostEntity>> fetchNextPeriodPayment(
       {required PeriodValue period}) async {
@@ -140,21 +142,19 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.nextPaymentDate} AS nextPaymentDate,
         a.${SqfFixedCost.deleteFlag} AS deleteFlag
       FROM ${SqfFixedCost.tableName} a
-      WHERE a.${SqfFixedCost.nextPaymentDate} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfFixedCost.nextPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      WHERE a.${SqfFixedCost.nextPaymentDate} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       AND a.${SqfFixedCost.deleteFlag} = 0
       ORDER BY a.${SqfFixedCost.id} DESC;
     ''';
 
-    try {
-      final jsonList = await db.query(sql);
-      final results =
-          jsonList.map((json) => FixedCostEntity.fromJson(json)).toList();
+    // ここでは例外を握りつぶさない
+    // 空リストを返すと、呼び出し元（バッチ）が「取得失敗」と「対象0件」を区別できず、
+    // SQLエラーでも「対象0件で成功」と記録され、その月の固定費が二度と生成されなくなるため
+    final jsonList = await db.query(sql);
+    final results =
+        jsonList.map((json) => FixedCostEntity.fromJson(json)).toList();
 
-      return results;
-    } catch (e) {
-      logger.e('[FAIL]: $e');
-      return [];
-    }
+    return results;
   }
 
   // 変動あり固定費の推定支出を取得する

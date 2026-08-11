@@ -317,4 +317,19 @@ class ImplementsFixedCostExpenseRepository
     final results = await DatabaseHelper.instance.query(sql);
     return results.map((e) => FixedCostExpenseEntity.fromJson(e)).toList();
   }
+
+  // 固定費IDと支払い日を指定して、実績がすでに存在するか確認する
+  // バッチの取り残し回収で、同じ支払い日の実績を二重生成しないために使う
+  @override
+  Future<bool> existsByFixedCostIdAndDate(
+      {required int fixedCostId, required String date}) async {
+    final sql = '''
+      SELECT COUNT(*)
+      FROM ${SqfFixedCostExpense.tableName}
+      WHERE ${SqfFixedCostExpense.fixedCostId} = $fixedCostId
+      AND ${SqfFixedCostExpense.date} = '$date'
+    ''';
+    final count = await DatabaseHelper.instance.queryFirstIntValue(sql);
+    return (count ?? 0) > 0;
+  }
 }

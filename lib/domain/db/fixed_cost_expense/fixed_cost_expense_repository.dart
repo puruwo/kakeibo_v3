@@ -54,4 +54,11 @@ abstract class FixedCostExpenseRepository {
   // 固定費ID指定ですでに記録済みのレコードをリスト取得する
   Future<List<FixedCostExpenseEntity>> fetchFixedCostExpenseWithCostId(
       {required int fixedCostId});
+
+  /// 固定費IDと支払い日を指定して、実績がすでに存在するか確認する
+  ///
+  /// バッチが同じ支払い日の実績を二重生成しないための判定に使う。
+  /// [date] は `yyyyMMdd` 形式。
+  Future<bool> existsByFixedCostIdAndDate(
+      {required int fixedCostId, required String date});
 }
