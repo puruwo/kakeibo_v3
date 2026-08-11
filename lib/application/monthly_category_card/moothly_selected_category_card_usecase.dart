@@ -12,10 +12,11 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 //  このプロバイダは、選択されたカテゴリーに基づいてカテゴリーカードのリストを提供します。
 
 final monthlySelectedCategoryCardNotifierProvider =
-    AsyncNotifierProvider.family<MonthlySelectedCategoryCardUsecaseNotifier,
-        CategoryCardEntity, RequestMonthlyCateoryCard>(
-  MonthlySelectedCategoryCardUsecaseNotifier.new,
-);
+    AsyncNotifierProvider.family<
+      MonthlySelectedCategoryCardUsecaseNotifier,
+      CategoryCardEntity,
+      RequestMonthlyCateoryCard
+    >(MonthlySelectedCategoryCardUsecaseNotifier.new);
 
 class MonthlySelectedCategoryCardUsecaseNotifier
     extends FamilyAsyncNotifier<CategoryCardEntity, RequestMonthlyCateoryCard> {
@@ -29,10 +30,12 @@ class MonthlySelectedCategoryCardUsecaseNotifier
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
-    _categoryAccountingRepositoryProvider =
-        ref.read(categoryAccountingRepositoryProvider);
-    _smallCategoryTileRepository =
-        ref.read(smallCategoryTileRepositoryProvider);
+    _categoryAccountingRepositoryProvider = ref.read(
+      categoryAccountingRepositoryProvider,
+    );
+    _smallCategoryTileRepository = ref.read(
+      smallCategoryTileRepositoryProvider,
+    );
     _budgetRepository = ref.read(budgetRepositoryProvider);
 
     return fetch(request);
@@ -44,55 +47,71 @@ class MonthlySelectedCategoryCardUsecaseNotifier
     DateTime toDate = request.dateScope.aggregationMonthPeriod.endDatetime;
 
     // 大カテゴリー(タイル情報つき)の情報を取得する
-    final accountingValue =
-        await _categoryAccountingRepositoryProvider.fetchSelectedCategory(
-            incomeSourceBigCategoryId:
-                IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
-            expenseBigCategoryId: request.bigId,
-            fromDate: fromDate,
-            toDate: toDate);
+    final accountingValue = await _categoryAccountingRepositoryProvider
+        .fetchSelectedCategory(
+          incomeSourceBigCategoryId:
+              IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
+          expenseBigCategoryId: request.bigId,
+          fromDate: fromDate,
+          toDate: toDate,
+        );
 
     // カテゴリータイルのリストの並び順でList<SmallCategoryTileExpenceEntity>を取得する
 
     // そのカテゴリーの予算を取得する
     final budget = await _budgetRepository.fetchMonthly(
-        id: accountingValue.id, month: request.dateScope.representativeMonth);
+      id: accountingValue.id,
+      month: request.dateScope.representativeMonth,
+    );
 
     // タイル内の小カテゴリーのリスト情報を取得する
     final smallCategory = await _smallCategoryTileRepository.fetchAll(
-        incomeSourceBigCategoryId:
-            IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
-        bigCategoryId: accountingValue.id,
-        fromDate: fromDate,
-        toDate: toDate);
+      incomeSourceBigCategoryId:
+          IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
+      bigCategoryId: accountingValue.id,
+      fromDate: fromDate,
+      toDate: toDate,
+    );
 
     // グラフのタイプを決定する
     final GraphType graphType = budget != 0
         ? accountingValue.totalExpenseByBigCategory > budget
-            ? GraphType.hasBudgetButOver
-            : GraphType.hasBudget
+              ? GraphType.hasBudgetButOver
+              : GraphType.hasBudget
         : GraphType.noBudget;
 
     // グラフの比率を計算する
-    final double graphRatio = graphType == GraphType.hasBudget
-        ? graphType == GraphType.hasBudgetButOver
-            ? 1
-            : (accountingValue.totalExpenseByBigCategory / budget)
-        : 0.0;
+    final double graphRatio;
+    switch (graphType) {
+      case GraphType.hasBudget:
+        // 支出/予算（0〜1の範囲）
+        graphRatio = accountingValue.totalExpenseByBigCategory / budget;
+        break;
+      case GraphType.hasBudgetButOver:
+        // 予算到達点の割合: budget/expense でバーのどこまでが予算分かを示す
+        graphRatio = budget / accountingValue.totalExpenseByBigCategory;
+        break;
+      default:
+        graphRatio = 0.0;
+    }
 
     // グラフの分母比率を計算する
     final double graphDenomiratorRatio =
-        graphType == GraphType.hasBudget ? 1.0 : 0.0;
+        graphType == GraphType.hasBudget ||
+            graphType == GraphType.hasBudgetButOver
+        ? 1.0
+        : 0.0;
 
     // カードのvalueに代入
     final result = CategoryCardEntity(
-        graphType: graphType,
-        graphRatio: graphRatio,
-        graphDenomiratorRatio: graphDenomiratorRatio,
-        monthlyExpense: accountingValue.totalExpenseByBigCategory,
-        monthlyBudget: budget,
-        monthlyExpenseByCategoryEntity: accountingValue,
-        smallCategoryList: smallCategory);
+      graphType: graphType,
+      graphRatio: graphRatio,
+      graphDenomiratorRatio: graphDenomiratorRatio,
+      monthlyExpense: accountingValue.totalExpenseByBigCategory,
+      monthlyBudget: budget,
+      monthlyExpenseByCategoryEntity: accountingValue,
+      smallCategoryList: smallCategory,
+    );
 
     return result;
   }
