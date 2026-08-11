@@ -101,8 +101,8 @@ class FakeBatchHistoryRepository implements BatchHistoryRepository {
 /// 固定費マスタのFake
 ///
 /// [records] に事前データを積んでおくと、fetchNextPeriodPayment が
-/// 「nextPaymentDateが期間内 かつ deleteFlag=0」のレコードを返す
-/// （本実装のSQL条件を模したもの）。
+/// 「nextPaymentDateが期間内 かつ deleteFlag=0」のレコードを
+/// id降順で返す（本実装のSQL条件・ORDER BY と同じ振る舞い）。
 class FakeFixedCostRepository implements FixedCostRepository {
   FakeFixedCostRepository({List<FixedCostEntity>? initialRecords})
     : records = List.of(initialRecords ?? []);
@@ -121,7 +121,7 @@ class FakeFixedCostRepository implements FixedCostRepository {
   Future<List<FixedCostEntity>> fetchNextPeriodPayment({
     required PeriodValue period,
   }) async {
-    return records.where((e) {
+    final matched = records.where((e) {
       if (e.deleteFlag != 0) return false;
       final next = e.nextPaymentDate;
       if (next == null) return false;
@@ -129,11 +129,31 @@ class FakeFixedCostRepository implements FixedCostRepository {
       return !nextDate.isBefore(period.startDatetime) &&
           !nextDate.isAfter(period.endDatetime);
     }).toList();
+    // 本実装のSQLの ORDER BY id DESC に合わせてid降順で返す
+    matched.sort((a, b) => (b.id ?? 0).compareTo(a.id ?? 0));
+    return matched;
   }
 
   @override
-  Future<FixedCostEntity> fetch({required int fixedCostId}) async =>
-      records.firstWhere((e) => e.id == fixedCostId);
+  Future<FixedCostEntity> fetch({required int fixedCostId}) async {
+    // 本実装は該当レコードが無いとき例外ではなくid:0の既定エンティティを返すため、それに合わせる
+    return records.firstWhere(
+      (e) => e.id == fixedCostId,
+      orElse: () => const FixedCostEntity(
+        id: 0,
+        name: '',
+        variable: 0,
+        price: 0,
+        fixedCostCategoryId: 0,
+        intervalNumber: 0,
+        intervalUnit: 0,
+        firstPaymentDate: '',
+        recentPaymentDate: null,
+        nextPaymentDate: null,
+        deleteFlag: 0,
+      ),
+    );
+  }
 
   @override
   Future<int> insert(FixedCostEntity entity) async {
@@ -166,7 +186,7 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
   FakeFixedCostExpenseRepository({List<FixedCostExpenseEntity>? initialRecords})
     : records = List.of(initialRecords ?? []);
 
-  /// fetchFixedCostExpenseWithCostId が参照する既存レコード
+  /// fetchFixedCostExpenseWithCostId が参照する既存レコード（updateで置き換わる）
   final List<FixedCostExpenseEntity> records;
 
   /// insert / update で渡された内容の記録（検証用）
@@ -199,6 +219,10 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
   @override
   Future<void> update(FixedCostExpenseEntity entity) async {
     updatedEntities.add(entity);
+    final index = records.indexWhere((e) => e.id == entity.id);
+    if (index >= 0) {
+      records[index] = entity;
+    }
   }
 
   @override

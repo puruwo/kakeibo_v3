@@ -7,8 +7,21 @@ import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_reposito
 import '../../helper/fake_repositories.dart';
 import '../../helper/test_container.dart';
 
-/// テストコードからRefを取り出すためのProvider
-final _refProvider = Provider<Ref>((ref) => ref);
+/// insertToFixedCostExpense をProviderのbuild内で実行するためのProvider
+///
+/// Refはbuildスコープの外へ持ち出さず、テストからはこのProviderをreadすることで
+/// 実行をトリガーする。
+final _insertToFixedCostExpenseProvider =
+    Provider.family<void, ({FixedCostEntity entity, String paymentDate})>((
+      ref,
+      arg,
+    ) {
+      FixedCostService().insertToFixedCostExpense(
+        ref,
+        arg.entity,
+        arg.paymentDate,
+      );
+    });
 
 void main() {
   group('FixedCostService.populateNextPaymentEntity', () {
@@ -99,7 +112,6 @@ void main() {
           fixedCostExpenseRepositoryProvider.overrideWithValue(fakeRepository),
         ],
       );
-      final ref = container.read(_refProvider);
 
       const entity = FixedCostEntity(
         id: 10,
@@ -112,7 +124,12 @@ void main() {
         firstPaymentDate: '20250601',
       );
 
-      FixedCostService().insertToFixedCostExpense(ref, entity, '20250701');
+      container.read(
+        _insertToFixedCostExpenseProvider((
+          entity: entity,
+          paymentDate: '20250701',
+        )),
+      );
 
       expect(fakeRepository.insertedEntities, hasLength(1));
       final inserted = fakeRepository.insertedEntities.first;
@@ -132,7 +149,6 @@ void main() {
           fixedCostExpenseRepositoryProvider.overrideWithValue(fakeRepository),
         ],
       );
-      final ref = container.read(_refProvider);
 
       const entity = FixedCostEntity(
         id: 11,
@@ -145,7 +161,12 @@ void main() {
         firstPaymentDate: '20250601',
       );
 
-      FixedCostService().insertToFixedCostExpense(ref, entity, '20250710');
+      container.read(
+        _insertToFixedCostExpenseProvider((
+          entity: entity,
+          paymentDate: '20250710',
+        )),
+      );
 
       expect(fakeRepository.insertedEntities, hasLength(1));
       final inserted = fakeRepository.insertedEntities.first;
