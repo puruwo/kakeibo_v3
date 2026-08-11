@@ -43,8 +43,10 @@ class FixedCostExpenseUsecase {
       price: confirmedPrice,
     );
 
-    _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
-        fixedCostId: tileValue.fixedCostId);
+    // 想定額の更新が終わってからDBの更新回数を進めるため、完了まで待つ
+    await _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
+      fixedCostId: tileValue.fixedCostId,
+    );
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
@@ -59,9 +61,7 @@ class FixedCostExpenseUsecase {
   }
 
   /// 固定費支出を編集する
-  Future<void> edit({
-    required FixedCostExpenseEntity entity,
-  }) async {
+  Future<void> edit({required FixedCostExpenseEntity entity}) async {
     // エラーチェック
     if (entity.price <= 0) {
       throw const AppException('0円以上で入力してください');
