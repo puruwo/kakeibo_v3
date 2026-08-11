@@ -151,7 +151,7 @@ class FakeBatchHistoryRepository implements BatchHistoryRepository {
 /// 固定費マスタのFake
 ///
 /// [records] に事前データを積んでおくと、fetchNextPeriodPayment が
-/// 「nextPaymentDateが期間内 かつ deleteFlag=0」のレコードを
+/// 「nextPaymentDateが期間終了日以前 かつ deleteFlag=0」のレコードを
 /// id降順で返す（本実装のSQL条件・ORDER BY と同じ振る舞い）。
 class FakeFixedCostRepository implements FixedCostRepository {
   FakeFixedCostRepository({List<FixedCostEntity>? initialRecords})
@@ -160,24 +160,34 @@ class FakeFixedCostRepository implements FixedCostRepository {
   /// 現在のマスタ状態（insert/updateで変化する）
   final List<FixedCostEntity> records;
 
-  /// insert / update / delete で渡された内容の記録（検証用）
+  /// insert / update で渡された内容の記録（検証用）
   final List<FixedCostEntity> insertedEntities = [];
   final List<FixedCostEntity> updatedEntities = [];
-  final List<int> deletedIds = [];
 
   int _nextId = 1000;
+
+  /// fetchNextPeriodPayment で送出させたい例外（テストで設定する）
+  ///
+  /// 本実装はDB例外を握りつぶさず呼び出し元へ伝播させる。
+  /// 空リストを返すと、バッチが「取得失敗」と「対象0件」を区別できず、
+  /// SQLエラーでも成功として記録されてしまうため（→ ADR-007）。
+  Object? fetchNextPeriodPaymentError;
 
   @override
   Future<List<FixedCostEntity>> fetchNextPeriodPayment({
     required PeriodValue period,
   }) async {
+    if (fetchNextPeriodPaymentError != null) {
+      throw fetchNextPeriodPaymentError!;
+    }
     final matched = records.where((e) {
       if (e.deleteFlag != 0) return false;
       final next = e.nextPaymentDate;
       if (next == null) return false;
-      final nextDate = next.toDateTime();
-      return !nextDate.isBefore(period.startDatetime) &&
-          !nextDate.isAfter(period.endDatetime);
+      // 本実装のSQLは期間開始日という下限を持たない
+      // 過去のバッチで取りこぼしてnextPaymentDateが過去日のまま固定された
+      // マスタも拾い、追いつかせるため（→ ADR-007）
+      return !next.toDateTime().isAfter(period.endDatetime);
     }).toList();
     // 本実装のSQLの ORDER BY id DESC に合わせてid降順で返す
     matched.sort((a, b) => (b.id ?? 0).compareTo(a.id ?? 0));
@@ -239,9 +249,25 @@ class FakeFixedCostRepository implements FixedCostRepository {
     }
   }
 
+  /// deleteWithUnpaidExpenses で渡された内容の記録（検証用）
+  final List<({int id, String today})> deletedWithUnpaidExpensesArgs = [];
+
+  /// マスタの論理削除と未払い実績の削除（本実装は1トランザクション）
+  ///
+  /// Fakeは固定費支出を持たないため、ここではマスタ側の論理削除（deleteFlag=1）と
+  /// 引数の記録だけを行う。実績側の削除条件
+  /// （is_confirmed=0 または date > today）は本物のSQLでしか検証できないため、
+  /// test/db_integration/repository/fixed_cost_repository_test.dart で検証する。
   @override
-  Future<void> delete(int id) async {
-    deletedIds.add(id);
+  Future<void> deleteWithUnpaidExpenses({
+    required int id,
+    required String today,
+  }) async {
+    deletedWithUnpaidExpensesArgs.add((id: id, today: today));
+    final index = records.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      records[index] = records[index].copyWith(deleteFlag: 1);
+    }
   }
 
   @override
@@ -253,12 +279,21 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
   FakeFixedCostExpenseRepository({List<FixedCostExpenseEntity>? initialRecords})
     : records = List.of(initialRecords ?? []);
 
-  /// fetchFixedCostExpenseWithCostId が参照する既存レコード（updateで置き換わる）
+  /// 取得系メソッドが参照する現在のレコード状態（insert/update/deleteで変化する）
   final List<FixedCostExpenseEntity> records;
 
   /// insert / update で渡された内容の記録（検証用）
+  ///
+  /// [records] と違い「呼び出し時に何を渡されたか」をそのまま保持する
+  /// （insertのid採番前の値が入る）。
   final List<FixedCostExpenseEntity> insertedEntities = [];
   final List<FixedCostExpenseEntity> updatedEntities = [];
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  ///
+  /// 事前データ [records] の最大id+1から始め、deleteされても払い出し済みidは再利用しない。
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   /// fetchFixedCostEstimatedPriceById が返す過去支払いの平均額（テストで設定する）
   double estimatedPriceResult = 0;
@@ -295,10 +330,17 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
     records.removeWhere((e) => e.id == id);
   }
 
+  /// 実績を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映して
+  /// 以後の取得系メソッドから見えるようにする。idはAUTOINCREMENT相当で採番し、
+  /// 戻り値は採番されたid（本実装と同じ）。
   @override
   Future<int> insert(FixedCostExpenseEntity entity) async {
     insertedEntities.add(entity);
-    return insertedEntities.length;
+    final id = _nextId++;
+    records.add(entity.copyWith(id: id));
+    return id;
   }
 
   @override
@@ -404,6 +446,19 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
     return records.where((e) => e.fixedCostId == fixedCostId).toList();
   }
 
+  /// 固定費IDと支払い日が一致する実績が既にあるか
+  ///
+  /// 本実装は fixed_cost_expense を COUNT(*) するだけなので、
+  /// 現在のレコード状態 [records] に一致行があるかで判定する
+  /// （insert済みのものも [records] に入っているため既存として数えられる）。
+  @override
+  Future<bool> existsByFixedCostIdAndDate({
+    required int fixedCostId,
+    required String date,
+  }) async {
+    return records.any((e) => e.fixedCostId == fixedCostId && e.date == date);
+  }
+
   @override
   Future<void> update(FixedCostExpenseEntity entity) async {
     updatedEntities.add(entity);
@@ -427,8 +482,12 @@ class FakeExpenseRepository implements ExpenseRepository {
        dailyExpenseTotalByDate = _dateKeyedMap(dailyExpenseTotalByDate),
        dailyExpenseListByDate = _dateKeyedMap(dailyExpenseListByDate);
 
-  /// 検索対象の支出レコード（fetchWithSourceCategory が参照する）
+  /// 検索対象の支出レコード（fetchWithSourceCategory が参照する。insert/update/deleteで変化する）
   final List<ExpenseEntity> records;
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   /// 日付 → その日の一般支出合計（fetchDailyExpenseByPeriod の返却値）
   ///
@@ -602,19 +661,39 @@ class FakeExpenseRepository implements ExpenseRepository {
     return List.of(dailyExpenseListByDate[key] ?? const <ExpenseEntity>[]);
   }
 
+  /// 支出を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映して
+  /// 以後の取得系メソッドから見えるようにする（idはAUTOINCREMENT相当で採番）。
+  /// [insertedEntities] には渡された内容そのものを記録する。
   @override
   void insert(ExpenseEntity expenseEntity) {
     insertedEntities.add(expenseEntity);
+    records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
+  /// 支出を1件更新する
+  ///
+  /// 本物は `WHERE _id = ?` で該当行を UPDATE する（更新列はid以外の全カラム）ため、
+  /// Fakeも同じidの行をエンティティごと差し替える。
+  /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
   @override
   void update(ExpenseEntity expenseEntity) {
     updatedEntities.add(expenseEntity);
+    final index = records.indexWhere((e) => e.id == expenseEntity.id);
+    if (index >= 0) {
+      records[index] = expenseEntity;
+    }
   }
 
+  /// 支出を1件削除する
+  ///
+  /// 本物は `DELETE FROM expense WHERE _id = ?` の物理削除で、直後のSELECTから
+  /// 消えるため、Fakeも [records] から取り除く。
   @override
   void delete(int id) {
     deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
   }
 
   @override
@@ -629,8 +708,12 @@ class FakeIncomeRepository implements IncomeRepository {
   }) : records = List.of(initialRecords ?? []),
        smallCategoryToBigCategory = Map.of(smallCategoryToBigCategory ?? {});
 
-  /// 集計対象の収入レコード
+  /// 集計対象の収入レコード（insertで増える）
   final List<IncomeEntity> records;
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   /// 収入小カテゴリーID → 収入大カテゴリーID の対応
   ///
@@ -738,19 +821,38 @@ class FakeIncomeRepository implements IncomeRepository {
         .fold<int>(0, (sum, e) => sum + e.price);
   }
 
+  /// 収入を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映する
+  /// （idはAUTOINCREMENT相当で採番。[insertedEntities] は渡された内容そのもの）。
   @override
   void insert(IncomeEntity expenseEntity) {
     insertedEntities.add(expenseEntity);
+    records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
+  /// 収入を1件更新する
+  ///
+  /// 本物は `WHERE _id = ?` で該当行を UPDATE する（更新列はid以外の全カラム）ため、
+  /// Fakeも同じidの行をエンティティごと差し替える。
+  /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
   @override
   void update(IncomeEntity expenseEntity) {
     updatedEntities.add(expenseEntity);
+    final index = records.indexWhere((e) => e.id == expenseEntity.id);
+    if (index >= 0) {
+      records[index] = expenseEntity;
+    }
   }
 
+  /// 収入を1件削除する
+  ///
+  /// 本物は `DELETE FROM income WHERE _id = ?` の物理削除のため、
+  /// Fakeも [records] から取り除く。
   @override
   void delete(int id) {
     deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
   }
 
   @override
@@ -762,8 +864,12 @@ class FakeBudgetRepository implements BudgetRepository {
   FakeBudgetRepository({List<BudgetEntity>? initialRecords})
     : records = List.of(initialRecords ?? []);
 
-  /// 検索対象の予算レコード
+  /// 検索対象の予算レコード（insertで増える）
   final List<BudgetEntity> records;
+
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  late int _nextId =
+      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
 
   final List<BudgetEntity> insertedEntities = [];
   final List<BudgetEntity> updatedEntities = [];
@@ -816,19 +922,38 @@ class FakeBudgetRepository implements BudgetRepository {
     return matched.first;
   }
 
+  /// 予算を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映する
+  /// （idはAUTOINCREMENT相当で採番。[insertedEntities] は渡された内容そのもの）。
   @override
   void insert(BudgetEntity expenseEntity) {
     insertedEntities.add(expenseEntity);
+    records.add(expenseEntity.copyWith(id: _nextId++));
   }
 
+  /// 予算を1件更新する
+  ///
+  /// 本物は `WHERE _id = ?` で該当行を UPDATE する（更新列はid以外の全カラム）ため、
+  /// Fakeも同じidの行をエンティティごと差し替える。
+  /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
   @override
   void update(BudgetEntity expenseEntity) {
     updatedEntities.add(expenseEntity);
+    final index = records.indexWhere((e) => e.id == expenseEntity.id);
+    if (index >= 0) {
+      records[index] = expenseEntity;
+    }
   }
 
+  /// 予算を1件削除する
+  ///
+  /// 本物は `DELETE FROM budget WHERE _id = ?` の物理削除のため、
+  /// Fakeも [records] から取り除く。
   @override
   void delete(int id) {
     deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
   }
 
   @override
@@ -1104,6 +1229,9 @@ class FakeExpenseSmallCategoryRepository
   final List<ExpenseSmallCategoryEntity> updatedEntities = [];
   final List<ExpenseSmallCategoryEntity> addedEntities = [];
 
+  /// 次に採番するid（本物のAUTOINCREMENT相当）
+  int _nextId = 1000;
+
   /// getMaxSmallCategoryOrderKey に渡された大カテゴリーIDの記録（検証用）
   final List<int> getMaxOrderKeyBigCategoryIds = [];
 
@@ -1153,10 +1281,16 @@ class FakeExpenseSmallCategoryRepository
     }
   }
 
+  /// 小カテゴリーを1件追加する
+  ///
+  /// 本物はAUTOINCREMENTでidが採番され、戻り値はそのidになる。
+  /// [addedEntities] には渡された内容そのもの（採番前）を記録する。
   @override
-  Future<void> add({required ExpenseSmallCategoryEntity entity}) async {
+  Future<int> add({required ExpenseSmallCategoryEntity entity}) async {
     addedEntities.add(entity);
-    records.add(entity);
+    final id = _nextId++;
+    records.add(entity.copyWith(id: id));
+    return id;
   }
 
   @override

@@ -150,6 +150,14 @@ class DatabaseHelper {
     return await db!.delete(table, where: '_id = ?', whereArgs: [id]);
   }
 
+  // 複数の書き込みを1トランザクションで実行する
+  // 途中で例外が出た場合は、それまでの書き込みもすべてロールバックされる
+  Future<T> runInTransaction<T>(
+      Future<T> Function(Transaction txn) action) async {
+    Database? db = await instance.database;
+    return await db!.transaction(action);
+  }
+
   // レコードがあるか確認する
   Future<bool> hasData(String sql) async {
     Database? db = await instance.database;

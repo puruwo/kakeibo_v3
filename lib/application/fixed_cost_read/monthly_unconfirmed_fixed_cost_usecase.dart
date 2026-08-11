@@ -66,6 +66,8 @@ class MonthlyUnconfirmedFixedCostUsecaseNotifier
             date: DateTime.parse(
               '${fixedCostExpense.date.substring(0, 4)}-${fixedCostExpense.date.substring(4, 6)}-${fixedCostExpense.date.substring(6, 8)}',
             ),
+            // 固定費マスタのIDを渡す
+            // 支出IDを渡すと、確定後の想定支出の再計算がマスタを引けず不発になる
             fixedCostId: fixedCostExpense.fixedCostId,
             name: fixedCostExpense.name,
             variable: fixedCostEntity.variable,

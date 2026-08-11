@@ -35,11 +35,12 @@ class FixedCostService {
   }
 
   /// 固定費の支出エンティティを作成し、fixed_cost_expenseに挿入する
-  insertToFixedCostExpense(
+  /// 挿入の失敗を呼び出し元が検知できるよう、完了を待てるFutureを返す
+  Future<void> insertToFixedCostExpense(
     Ref ref,
     FixedCostEntity fixedCostEntity,
     String paymentDate,
-  ) {
+  ) async {
     // FixedCostExpenseEntityを作成
     final fixedCostExpenseEntity = FixedCostExpenseEntity(
         fixedCostId: fixedCostEntity.id!, // 固定費ID
@@ -55,7 +56,9 @@ class FixedCostService {
         );
 
     // 挿入
-    ref.read(fixedCostExpenseRepositoryProvider).insert(fixedCostExpenseEntity);
+    await ref
+        .read(fixedCostExpenseRepositoryProvider)
+        .insert(fixedCostExpenseEntity);
   }
 
   /// 確定した固定費の合計と未確定の固定費の合計値をまとめて返却する

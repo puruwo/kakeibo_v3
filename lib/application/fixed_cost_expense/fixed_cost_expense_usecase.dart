@@ -44,6 +44,7 @@ class FixedCostExpenseUsecase {
     );
 
     // 想定額の更新が終わってからDBの更新回数を進めるため、完了まで待つ
+    // awaitしないと失敗を検知できず、確定直後の画面が古い想定額のままになる
     await _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
       fixedCostId: tileValue.fixedCostId,
     );

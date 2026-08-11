@@ -150,3 +150,24 @@ Future<bool> showDeleteConfirmationDialog(
     isDestructive: true,
   );
 }
+
+/// 固定費マスタの削除確認ダイアログを表示する
+///
+/// マスタを削除すると未払い分の支払いも連動削除されるため、
+/// 汎用の削除ダイアログとは別文言で、何が残り何が消えるかを明示する（→ ADR-007）。
+///
+/// [onConfirm] - 確認ボタンを押したときのコールバック
+Future<bool> showFixedCostDeleteConfirmationDialog(
+  BuildContext context, {
+  VoidCallback? onConfirm,
+}) async {
+  return await showConfirmationDialog(
+    context,
+    title: "固定費を削除",
+    message: "支払日が過ぎた記録は残りますが、\n未確定分と今後の予定は削除されます。\n本当に削除しますか？",
+    confirmLabel: "OK",
+    cancelLabel: "キャンセル",
+    onConfirm: onConfirm,
+    isDestructive: true,
+  );
+}

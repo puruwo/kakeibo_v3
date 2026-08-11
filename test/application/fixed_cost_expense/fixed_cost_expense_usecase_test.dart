@@ -184,6 +184,67 @@ void main() {
       // 固定額の固定費なので想定額更新は何もせず、カウンタは1のまま
       expect(dbCount.read(), 1);
     });
+
+    test('変動なしの固定費では想定額の再計算をスキップする', () async {
+      final container = createUsecaseContainer(
+        fixedCosts: const [
+          FixedCostEntity(
+            id: 10,
+            name: '家賃',
+            variable: 0,
+            price: 80000,
+            estimatedPrice: 80000,
+            fixedCostCategoryId: 1,
+            intervalNumber: 1,
+            intervalUnit: 1,
+            firstPaymentDate: '20250101',
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostExpenseUsecaseProvider);
+
+      await usecase.confirmExpense(
+        tileValue: buildTile(id: 100, fixedCostId: 10),
+        confirmedPrice: 80000,
+      );
+
+      // 確定自体は行われるが、マスタの想定額は書き換えない
+      expect(fakeFixedCostExpenseRepository.confirmedExpenses, hasLength(1));
+      expect(fakeFixedCostRepository.updatedEntities, isEmpty);
+    });
+
+    test('確定操作から戻った時点で想定額の再計算が完了している', () async {
+      // 再計算をawaitしないと、確定直後の画面が古い想定額のまま描画される
+      final container = createUsecaseContainer(
+        fixedCosts: const [
+          FixedCostEntity(
+            id: 10,
+            name: '電気代',
+            variable: 1,
+            estimatedPrice: 5000,
+            fixedCostCategoryId: 2,
+            intervalNumber: 1,
+            intervalUnit: 1,
+            firstPaymentDate: '20250101',
+          ),
+        ],
+      );
+      fakeFixedCostExpenseRepository.estimatedPriceResult = 7200;
+      final usecase = container.read(fixedCostExpenseUsecaseProvider);
+
+      await usecase.confirmExpense(
+        tileValue: buildTile(id: 100, fixedCostId: 10),
+        confirmedPrice: 7200,
+      );
+
+      // awaitが無いとこの時点ではまだ5000のまま
+      expect(
+        fakeFixedCostRepository.records
+            .firstWhere((e) => e.id == 10)
+            .estimatedPrice,
+        7200,
+      );
+    });
   });
 
   group('FixedCostExpenseUsecase.edit', () {

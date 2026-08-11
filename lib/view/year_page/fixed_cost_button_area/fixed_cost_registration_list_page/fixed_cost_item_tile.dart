@@ -70,7 +70,7 @@ class FixedCostItemTile extends ConsumerWidget {
               icon: Icons.delete_outline,
               isDestructive: true,
               onPressed: () async {
-                showDeleteConfirmationDialog(
+                showFixedCostDeleteConfirmationDialog(
                   context,
                   onConfirm: () {
                     ref.read(fixedCostUsecaseProvider).delete(id: item.id!);
