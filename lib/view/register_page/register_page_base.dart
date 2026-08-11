@@ -94,8 +94,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
       _RegisaterPageBaseState();
 }
 
-class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
-    with SingleTickerProviderStateMixin {
+class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
