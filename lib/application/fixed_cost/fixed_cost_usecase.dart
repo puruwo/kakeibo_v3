@@ -130,20 +130,26 @@ class FixedCostUsecase {
         continue;
       }
 
+      // 次の支払い日が未設定のマスタは周期計算の起点が無く、日付が前進しない
+      // 処理を打ち切り、他のマスタの処理は継続する
+      if (fixedCostEntity.nextPaymentDate == null) {
+        logger.e('[FAIL]: 固定費マスタの次の支払い日が未設定です id=${fixedCostEntity.id}');
+        continue;
+      }
+
       var currentEntity = fixedCostEntity;
+      // 処理中の支払い日。populateNextPaymentEntityは必ず次の支払い日を埋めるためnullにならない
+      var paymentDate = fixedCostEntity.nextPaymentDate!;
       var cycleCount = 0;
 
       // 次の支払い日が期間終了日を超えるまで、周期ぶんの実績を生成し続ける
-      while ((currentEntity.nextPaymentDate ?? '').compareTo(periodEndDate) <=
-          0) {
+      while (paymentDate.compareTo(periodEndDate) <= 0) {
         if (cycleCount >= _maxCatchUpCycles) {
           logger.e(
               '[FAIL]: 固定費の回収が上限($_maxCatchUpCycles回)に達したため打ち切ります id=${fixedCostEntity.id}');
           break;
         }
         cycleCount++;
-
-        final paymentDate = currentEntity.nextPaymentDate ?? '00000000';
 
         // 同じ支払い日の実績が既にある場合は生成しない（多重生成の防止）
         // ただしスキップした場合も次の支払い日は進める
@@ -164,6 +170,7 @@ class FixedCostUsecase {
         // 次の支払い日と最近支払い日を埋めて、次の周期へ進める
         currentEntity =
             FixedCostService().populateNextPaymentEntity(currentEntity);
+        paymentDate = currentEntity.nextPaymentDate!;
       }
 
       // 何周期進んだかに関わらず、fixed_costの更新は最後に1回だけ行う
