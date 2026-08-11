@@ -437,6 +437,14 @@ class FakeExpenseRepository implements ExpenseRepository {
   final List<({DateTime fromDate, DateTime toDate})>
   totalExpenseByPeriodRanges = [];
 
+  /// fetchWithSourceCategory に渡された条件の記録（検証用）
+  final List<({int incomeSourceBigId, PeriodValue period})>
+  fetchWithSourceCategoryCalls = [];
+
+  /// fetchWithSmallCategory に渡された条件の記録（検証用）
+  final List<({int incomeSourceBigId, PeriodValue period, int smallCategoryId})>
+  fetchWithSmallCategoryCalls = [];
+
   @override
   Future<int> fetchTotalExpenseByPeriodWithBigCategory({
     required int incomeSourceBigCategory,
@@ -464,11 +472,39 @@ class FakeExpenseRepository implements ExpenseRepository {
     required int incomeSourceBigId,
     required PeriodValue period,
   }) async {
+    fetchWithSourceCategoryCalls.add((
+      incomeSourceBigId: incomeSourceBigId,
+      period: period,
+    ));
     final matched = records
         .where(
           (e) =>
               _isDateInPeriod(e.date, period) &&
               e.incomeSourceBigCategory == incomeSourceBigId,
+        )
+        .toList();
+    // 本実装のSQLの ORDER BY id DESC に合わせる
+    matched.sort((a, b) => b.id.compareTo(a.id));
+    return matched;
+  }
+
+  @override
+  Future<List<ExpenseEntity>> fetchWithSmallCategory({
+    required int incomeSourceBigId,
+    required PeriodValue period,
+    required int smallCategoryId,
+  }) async {
+    fetchWithSmallCategoryCalls.add((
+      incomeSourceBigId: incomeSourceBigId,
+      period: period,
+      smallCategoryId: smallCategoryId,
+    ));
+    final matched = records
+        .where(
+          (e) =>
+              _isDateInPeriod(e.date, period) &&
+              e.incomeSourceBigCategory == incomeSourceBigId &&
+              e.paymentCategoryId == smallCategoryId,
         )
         .toList();
     // 本実装のSQLの ORDER BY id DESC に合わせる
@@ -529,6 +565,18 @@ class FakeIncomeRepository implements IncomeRepository {
   /// calcurateSumWithPeriod に渡された期間の記録（検証用）
   final List<PeriodValue> sumWithPeriodPeriods = [];
 
+  /// fetchWithCategoryAndPeriod に渡された条件の記録（検証用）
+  final List<({int categoryId, PeriodValue period})>
+  fetchWithCategoryAndPeriodCalls = [];
+
+  @override
+  Future<List<IncomeEntity>> fetchAll() async {
+    // 本実装のSQLの ORDER BY id ASC に合わせる
+    final all = List.of(records);
+    all.sort((a, b) => a.id.compareTo(b.id));
+    return all;
+  }
+
   @override
   Future<int> calcurateSumWithBigCategoryAndPeriod({
     required PeriodValue period,
@@ -564,6 +612,10 @@ class FakeIncomeRepository implements IncomeRepository {
     required PeriodValue period,
     required int categoryId,
   }) async {
+    fetchWithCategoryAndPeriodCalls.add((
+      categoryId: categoryId,
+      period: period,
+    ));
     // 本実装は income → 小カテゴリー → 大カテゴリー のJOINで
     // 「大カテゴリーID = categoryId」を条件にしている
     return records
@@ -829,6 +881,19 @@ class FakeIncomeSmallCategoryRepository
   /// 収入小カテゴリーマスタ
   final List<IncomeSmallCategoryEntity> records;
 
+  /// add / update で渡された内容の記録（検証用）
+  final List<IncomeSmallCategoryEntity> addedEntities = [];
+  final List<IncomeSmallCategoryEntity> updatedEntities = [];
+
+  /// delete / deleteByBigCategory で渡されたidの記録（検証用）
+  final List<int> deletedIds = [];
+  final List<int> deletedBigCategoryIds = [];
+
+  /// getMaxSmallCategoryOrderKey に渡された大カテゴリーIDの記録（検証用）
+  final List<int> getMaxOrderKeyBigCategoryIds = [];
+
+  int _nextId = 1000;
+
   @override
   Future<List<IncomeSmallCategoryEntity>> fetchAll() async => List.of(records);
 
@@ -844,6 +909,61 @@ class FakeIncomeSmallCategoryRepository
     required int bigCategoryId,
   }) async {
     return records.where((e) => e.bigCategoryKey == bigCategoryId).toList();
+  }
+
+  @override
+  Future<List<int>> fetchSmallCategoryIdListByBigCategoryId({
+    required int bigCategoryId,
+  }) async {
+    return records
+        .where((e) => e.bigCategoryKey == bigCategoryId)
+        .map((e) => e.id)
+        .toList();
+  }
+
+  @override
+  Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId}) async {
+    getMaxOrderKeyBigCategoryIds.add(bigCategoryId);
+    // 本実装は大カテゴリーで絞らず全件の最大値を返す（1件も無いときは0）
+    return records.fold<int>(
+      0,
+      (max, e) => e.smallCategoryOrderKey > max ? e.smallCategoryOrderKey : max,
+    );
+  }
+
+  @override
+  Future<int> add({required IncomeSmallCategoryEntity entity}) async {
+    final id = _nextId++;
+    records.add(entity.copyWith(id: id));
+    addedEntities.add(entity);
+    return id;
+  }
+
+  @override
+  Future<void> update({required IncomeSmallCategoryEntity entity}) async {
+    updatedEntities.add(entity);
+    final index = records.indexWhere((e) => e.id == entity.id);
+    if (index >= 0) {
+      records[index] = entity;
+    }
+  }
+
+  @override
+  Future<void> delete({required int id}) async {
+    deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
+  }
+
+  @override
+  Future<List<int>> deleteByBigCategory({required int bigCategoryId}) async {
+    deletedBigCategoryIds.add(bigCategoryId);
+    // 本実装は削除した小カテゴリーIDのリストを返す
+    final ids = records
+        .where((e) => e.bigCategoryKey == bigCategoryId)
+        .map((e) => e.id)
+        .toList();
+    records.removeWhere((e) => e.bigCategoryKey == bigCategoryId);
+    return ids;
   }
 
   @override
@@ -894,6 +1014,9 @@ class FakeExpenseSmallCategoryRepository
   final List<ExpenseSmallCategoryEntity> updatedEntities = [];
   final List<ExpenseSmallCategoryEntity> addedEntities = [];
 
+  /// getMaxSmallCategoryOrderKey に渡された大カテゴリーIDの記録（検証用）
+  final List<int> getMaxOrderKeyBigCategoryIds = [];
+
   @override
   Future<List<ExpenseSmallCategoryEntity>> fetchAll() async => List.of(records);
 
@@ -923,7 +1046,8 @@ class FakeExpenseSmallCategoryRepository
 
   @override
   Future<int> getMaxSmallCategoryOrderKey({required int bigCategoryId}) async {
-    // 本実装は1件も無いとき0を返す
+    getMaxOrderKeyBigCategoryIds.add(bigCategoryId);
+    // 本実装は大カテゴリーで絞らず全件の最大値を返す（1件も無いときは0）
     return records.fold<int>(
       0,
       (max, e) => e.smallCategoryOrderKey > max ? e.smallCategoryOrderKey : max,
@@ -1006,6 +1130,15 @@ class FakeIncomeBigCategoryRepository implements IncomeBigCategoryRepository {
   /// 収入大カテゴリーマスタ
   final List<IncomeBigCategoryEntity> records;
 
+  /// add / update で渡された内容の記録（検証用）
+  final List<IncomeBigCategoryEntity> addedEntities = [];
+  final List<IncomeBigCategoryEntity> updatedEntities = [];
+
+  /// delete で渡されたidの記録（検証用）
+  final List<int> deletedIds = [];
+
+  int _nextId = 1000;
+
   @override
   Future<List<IncomeBigCategoryEntity>> fetchAll() async => List.of(records);
 
@@ -1014,6 +1147,39 @@ class FakeIncomeBigCategoryRepository implements IncomeBigCategoryRepository {
     required int bigCategoryId,
   }) async {
     return records.firstWhere((e) => e.id == bigCategoryId);
+  }
+
+  @override
+  Future<int> add({required IncomeBigCategoryEntity entity}) async {
+    final id = _nextId++;
+    records.add(entity.copyWith(id: id));
+    addedEntities.add(entity);
+    return id;
+  }
+
+  @override
+  Future<void> update({required IncomeBigCategoryEntity entity}) async {
+    updatedEntities.add(entity);
+    final index = records.indexWhere((e) => e.id == entity.id);
+    if (index >= 0) {
+      records[index] = entity;
+    }
+  }
+
+  @override
+  Future<void> delete({required int id}) async {
+    // 本実装は id=1（月次収入）/ id=2（ボーナス）を削除させないため、それに合わせる
+    if (id == 1 || id == 2) {
+      throw StateError('id=1（月次収入）/ id=2（ボーナス）は削除できません');
+    }
+    deletedIds.add(id);
+    records.removeWhere((e) => e.id == id);
+  }
+
+  @override
+  Future<int> getMaxId() async {
+    // 本実装は1件も無いとき0を返す
+    return records.fold<int>(0, (max, e) => e.id > max ? e.id : max);
   }
 
   @override
