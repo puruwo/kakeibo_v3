@@ -1,5 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
@@ -13,6 +14,12 @@ void main() {
     date: '20250706',
     price: 1200,
     paymentCategoryId: 1,
+  );
+
+  // 基準シナリオの集計期間（6/25〜7/24）。テストデータの日付はこの中に置く
+  final period = PeriodValue(
+    startDatetime: DateTime(2025, 6, 25),
+    endDatetime: DateTime(2025, 7, 24),
   );
 
   group('ExpenseUsecase.add', () {
@@ -200,9 +207,71 @@ void main() {
       expect(fakeRepository.updatedEntities, hasLength(1));
       expect(fakeRepository.updatedEntities.first.price, 1500);
     });
+
+    test('編集後は取得系が更新後の金額を返す', () async {
+      // 支出ID=10 を事前に置き、更新がSELECT結果へ反映されることを見る
+      const stored = ExpenseEntity(
+        id: 10,
+        date: '20250706',
+        price: 1200,
+        paymentCategoryId: 1,
+      );
+      final fakeRepository = FakeExpenseRepository(initialRecords: [stored]);
+      final container = createContainer(
+        overrides: [
+          expenseRepositoryProvider.overrideWithValue(fakeRepository),
+        ],
+      );
+      final usecase = container.read(expenseUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: stored,
+        editEntity: stored.copyWith(price: 1500),
+      );
+
+      final fetched = await fakeRepository.fetchWithSourceCategory(
+        incomeSourceBigId: stored.incomeSourceBigCategory,
+        period: period,
+      );
+      expect(fetched, hasLength(1));
+      expect(fetched.first.price, 1500);
+    });
   });
 
   group('ExpenseUsecase.delete', () {
+    test('削除後は取得系に含まれない', () async {
+      // 支出ID=10（削除対象）とID=11（残る方）を区別できるよう2件置く
+      const target = ExpenseEntity(
+        id: 10,
+        date: '20250706',
+        price: 1200,
+        paymentCategoryId: 1,
+      );
+      const other = ExpenseEntity(
+        id: 11,
+        date: '20250707',
+        price: 800,
+        paymentCategoryId: 1,
+      );
+      final fakeRepository = FakeExpenseRepository(
+        initialRecords: [target, other],
+      );
+      final container = createContainer(
+        overrides: [
+          expenseRepositoryProvider.overrideWithValue(fakeRepository),
+        ],
+      );
+      final usecase = container.read(expenseUsecaseProvider);
+
+      await usecase.delete(id: 10);
+
+      final fetched = await fakeRepository.fetchWithSourceCategory(
+        incomeSourceBigId: target.incomeSourceBigCategory,
+        period: period,
+      );
+      expect(fetched.map((e) => e.id), [11]);
+    });
+
     test('リポジトリのdeleteに委譲する', () async {
       final fakeRepository = FakeExpenseRepository();
       final container = createContainer(
