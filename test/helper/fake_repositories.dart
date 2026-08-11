@@ -160,10 +160,9 @@ class FakeFixedCostRepository implements FixedCostRepository {
   /// 現在のマスタ状態（insert/updateで変化する）
   final List<FixedCostEntity> records;
 
-  /// insert / update / delete で渡された内容の記録（検証用）
+  /// insert / update で渡された内容の記録（検証用）
   final List<FixedCostEntity> insertedEntities = [];
   final List<FixedCostEntity> updatedEntities = [];
-  final List<int> deletedIds = [];
 
   int _nextId = 1000;
 
@@ -247,21 +246,6 @@ class FakeFixedCostRepository implements FixedCostRepository {
     final index = records.indexWhere((e) => e.id == entity.id);
     if (index >= 0) {
       records[index] = entity;
-    }
-  }
-
-  /// マスタを論理削除する
-  ///
-  /// 本実装（ImplementsFixedCostRepository.delete）はレコードを消さず
-  /// delete_flag を 1 に UPDATE するため、Fakeも該当行の deleteFlag を 1 にする。
-  /// これにより fetchAllActive / fetchNextPeriodPayment の
-  /// 「delete_flag = 0」条件から外れる。該当行が無ければ0行更新で何もしない。
-  @override
-  Future<void> delete(int id) async {
-    deletedIds.add(id);
-    final index = records.indexWhere((e) => e.id == id);
-    if (index >= 0) {
-      records[index] = records[index].copyWith(deleteFlag: 1);
     }
   }
 

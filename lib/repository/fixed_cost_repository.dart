@@ -213,17 +213,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         fixedCostEntity.id ?? -1);
   }
 
-  // レコードは削除せず、deleteFlagを1にする
-  @override
-  Future<void> delete(int id) async {
-    await db.update(
-        SqfFixedCost.tableName,
-        {
-          SqfFixedCost.deleteFlag: 1,
-        },
-        id);
-  }
-
   // マスタの論理削除と未払い実績の削除を1トランザクションで行う
   // 片方だけ成功して「マスタは生きているのに支払い予定だけ消えている」状態にならないようにする
   @override

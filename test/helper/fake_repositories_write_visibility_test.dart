@@ -9,9 +9,9 @@ import 'fake_repositories.dart';
 /// Fakeが記録用リストへ積むだけだと本物より甘くなり、
 /// 「削除したら一覧から消える」類の検証が素通りする。
 ///
-/// ここでは lib 側に呼び出し元が無く usecase 経由で検証できないメソッドを扱う
-/// （FixedCostRepository.delete はIFにあるが現状 usecase からは
-/// deleteWithUnpaidExpenses しか呼ばれていない）。
+/// ここでは usecase 経由のテストでは見えない「状態への反映」を扱う
+/// （FixedCostUsecase.delete のテストは deleteWithUnpaidExpenses へ渡した
+/// 引数の記録しか検証しないため、論理削除が取得系に効くかはここで押さえる）。
 void main() {
   // 固定費マスタの雛形。id と deleteFlag だけをテストごとに変える
   const template = FixedCostEntity(
@@ -28,7 +28,10 @@ void main() {
     deleteFlag: 0,
   );
 
-  group('FakeFixedCostRepository.delete', () {
+  group('FakeFixedCostRepository.deleteWithUnpaidExpenses', () {
+    // 運用日付。Fakeは実績を持たないためマスタ側の論理削除だけに効く
+    const today = '20250706';
+
     test('削除したマスタは fetchAllActive に含まれない（論理削除）', () async {
       // ID=10（削除対象）とID=11（残る方）を区別できるよう2件置く
       final repository = FakeFixedCostRepository(
@@ -38,7 +41,7 @@ void main() {
         ],
       );
 
-      await repository.delete(10);
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
 
       final active = await repository.fetchAllActive();
       expect(active.map((e) => e.id), [11]);
@@ -50,12 +53,14 @@ void main() {
         initialRecords: [template.copyWith(id: 10)],
       );
 
-      await repository.delete(10);
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
 
       expect(repository.records, hasLength(1));
       expect(repository.records.single.deleteFlag, 1);
       // 検証用の記録リストは従来どおり残す
-      expect(repository.deletedIds, [10]);
+      expect(repository.deletedWithUnpaidExpensesArgs, [
+        (id: 10, today: today),
+      ]);
     });
   });
 }

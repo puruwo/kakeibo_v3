@@ -28,8 +28,6 @@ abstract interface class FixedCostRepository {
   Future<int> insert(FixedCostEntity entity);
 
   Future<void> update(FixedCostEntity entity);
-  
-  Future<void> delete(int id);
 
   /// マスタの論理削除と、未払い実績の削除を1トランザクションで行う
   ///

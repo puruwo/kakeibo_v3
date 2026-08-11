@@ -517,8 +517,6 @@ void main() {
       expect(fakeFixedCostRepository.deletedWithUnpaidExpensesArgs, [
         (id: 42, today: '20250706'),
       ]);
-      // 素のdeleteは使わない（未払い実績が残ってしまうため）
-      expect(fakeFixedCostRepository.deletedIds, isEmpty);
     });
   });
 }

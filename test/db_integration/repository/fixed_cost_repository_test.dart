@@ -529,44 +529,6 @@ void main() {
     });
   });
 
-  group('delete', () {
-    test('物理削除ではなくdelete_flagが1になる', () async {
-      await _seedStandardFixedCosts();
-
-      await repository.delete(3);
-
-      // 行数は減らない
-      expect(
-        await DatabaseHelper.instance.queryRowCount(SqfFixedCost.tableName),
-        6,
-      );
-      final all = await repository.fetchAll();
-      expect(all.firstWhere((e) => e.id == 3).deleteFlag, 1);
-      // アクティブ一覧からは消える
-      final active = await repository.fetchAllActive();
-      expect(active.map((e) => e.id).toList(), [1, 2, 5, 6]);
-    });
-
-    test('論理削除した固定費は次回支払予定から外れる', () async {
-      await _seedStandardFixedCosts();
-
-      await repository.delete(3);
-
-      final results = await repository.fetchNextPeriodPayment(period: _period);
-      expect(results.map((e) => e.id).toList(), [5, 2, 1]);
-    });
-
-    test('存在しないidを指定しても他の行は変わらない', () async {
-      await _seedStandardFixedCosts();
-
-      await repository.delete(999);
-
-      final all = await repository.fetchAll();
-      expect(all.every((e) => e.id == 4 ? e.deleteFlag == 1 : true), isTrue);
-      expect(all.where((e) => e.deleteFlag == 1).length, 1);
-    });
-  });
-
   group('deleteWithUnpaidExpenses', () {
     // 運用日付。この日を境に「支払日が到来済みか」を判定する
     const today = '20250706';
@@ -718,6 +680,22 @@ void main() {
       expect(all.firstWhere((e) => e.id == 10).deleteFlag, 1);
       // 他のマスタは触らない
       expect(all.firstWhere((e) => e.id == 20).deleteFlag, 0);
+      // アクティブ一覧からは消える
+      final active = await repository.fetchAllActive();
+      expect(active.map((e) => e.id).toList(), [20]);
+    });
+
+    test('存在しないidを指定してもマスタも実績も変わらない', () async {
+      await seedTwoMasters();
+      await seedExpenses();
+
+      await repository.deleteWithUnpaidExpenses(id: 999, today: today);
+
+      // どのマスタも論理削除されない
+      final all = await repository.fetchAll();
+      expect(all.every((e) => e.deleteFlag == 0), isTrue);
+      // 実績も1件も消えない
+      expect(await remainingExpenseIds(), [1, 2, 3, 4, 5]);
     });
 
     test('削除後は次回支払予定にも未確定リストにも出てこない', () async {
