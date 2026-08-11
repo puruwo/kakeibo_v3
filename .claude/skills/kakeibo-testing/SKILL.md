@@ -1,11 +1,12 @@
 ---
 name: kakeibo-testing
 description: >
-  kakeiboのユニットテスト（ロジック層）の構築・追加・修正ルール。
+  kakeiboのテスト（ロジックUT・DB結合・Widget結合）の構築・追加・修正ルール。
   テストを書くとき・Fakeリポジトリを触るとき・「テストを書いて/直して」と
   依頼されたときは必ずこのSkillに従うこと。
-  対象はutil/domain_service/application/batchのロジックUT
-  （Widgetテスト・DB結合テストは対象外）。
+  対象はutil/domain_service/application/batchのUTと
+  test/db_integration（repository層の本物SQL検証）・test/widget（画面）。
+  E2E・ゴールデンテストは対象外。
 ---
 
 # kakeibo ユニットテスト構築ガイド
@@ -30,7 +31,13 @@ test/
     fake_repositories.dart   # 全リポジトリのFake（noSuchMethod方式・呼び出し記録つき）
     test_container.dart      # createContainer / aggregationSettingOverrides /
                              # buildDateScope / listenUpdateDBCount / FixedSystemDatetimeNotifier
-  util/ domain_service/ application/ batch/   # lib/ のディレクトリ構成に対応させる
+    db_test_helper.dart      # DB結合テスト基盤（ffi・path_provider差し替え・resetDatabase・
+                             # settleDbWrites・直SQLフィクスチャ投入）
+    widget_test_helper.dart  # Widgetテスト基盤（TestFakes・pumpApp・実フォント読込・
+                             # 既知バグ消費ヘルパー）
+  util/ domain_service/ application/ batch/   # ロジックUT（lib/ の構成に対応させる）
+  db_integration/            # repository層の本物SQL・スキーマ/マイグレーション検証
+  widget/                    # 画面のWidget結合テスト（1画面=1ファイル）
 ```
 
 - テストファイルは対象と同じ相対パスに `<対象名>_test.dart` で置く
@@ -114,8 +121,15 @@ flutter test                           # 既存全件＋新規全件パス（1�
 - テストのみのcommitは ✈️feature、Fake等の基盤修正のみは ♻️refactor
 - テストのみの変更ならTestFlightトリガーは不要（lib/にバグ修正が入ったら必要）
 
-## 8. スコープ外（別の仕組みでやること）
+## 8. DB結合・Widget結合テストの要点（2026-08-11新設・PR #57/#58）
 
-- **repository層のSQL検証** → DB結合テスト（`sqflite_common_ffi` 導入済み・未着手）
-- **Widget結合テスト** → 未着手（ユーザー要望として記録済み）
-- 生成ファイル（*.g.dart / *.freezed.dart）・薄い委譲のみのProvider・view層
+- **DB結合**（`test/db_integration/`）: 本物の `DatabaseHelper` をffiで動かし本物のSQLを検証する。
+  各ファイルの main() 冒頭で `setUpDbTestEnvironment()` を呼ぶ（一時ディレクトリ・毎テストの
+  onCreate再作成・DebugSeeder無効化を面倒みてくれる）。void戻りの書き込みは
+  `settleDbWrites()` で完了待ち。前提データは直SQLフィクスチャ（insertExpenseRow等）で投入
+- **Widget結合**（`test/widget/`）: `pumpApp`＋`TestFakes`（main.dartと同じDIでFakeを注入）。
+  **`pumpAndSettle` は使わない**（無限アニメでタイムアウト）。記録モーダル破棄の既知バグは
+  `closeRegisterModal` / `unmountRegisterPage` で明示消費する（詳細はwidget_test_helper.dartの
+  docコメント）。検証対象は表示・操作・Fakeの呼び出し記録（ロジックの再検証はしない）
+- **スコープ外**: E2E（integration_test）・ゴールデンテスト・
+  生成ファイル（*.g.dart / *.freezed.dart）・薄い委譲のみのProvider
