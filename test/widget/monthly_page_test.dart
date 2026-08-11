@@ -353,16 +353,13 @@ void main() {
     await pumpTimes(tester);
 
     await tester.tap(find.text('食費'));
-    // 【発見事項】遷移先の小カテゴリー行は幅を screenWidth-64 から按分するが、
-    // 実際の行幅はそれより2px狭いため、iPhone14/15幅(390pt)では
-    // RenderFlexが2pxオーバーフローする（lib/view/monthly_page/category_tile/
+    // 遷移先の小カテゴリー行はかつて幅を screenWidth-64 から按分しており、
+    // 実際の行幅はそれより2px狭いため iPhone14/15幅(390pt) では
+    // RenderFlexが2pxオーバーフローしていた（lib/view/monthly_page/category_tile/
     // big_category_expense_history_page/expanded_category_sum_tile.dart）。
-    // 握りつぶさず、現状は必ずオーバーフローが出ることを固定しておく。
+    // 行の制約を按分基準にする修正が入ったので、遷移しても例外は出ない。
     final errors = await pumpAndCollectExceptions(tester);
-    expect(errors, isNotEmpty);
-    for (final error in errors) {
-      expect(error.toString(), contains('A RenderFlex overflowed'));
-    }
+    expect(errors, isEmpty, reason: '遷移先の描画で例外が出てはいけない');
 
     // 遷移先（カテゴリー別利用状況）に小カテゴリー（外食）が並ぶ
     expect(find.text('カテゴリー別利用状況'), findsOneWidget);

@@ -138,17 +138,19 @@ void main() {
     ),
   );
 
-  /// 【既知の実装バグ】小カテゴリー行の幅計算が2px溢れる
+  /// 描画中に例外（RenderFlexオーバーフロー等）が1件も出ないことを確認する
   ///
-  /// `expanded_category_sum_tile.dart` の小カテゴリー行は幅を
-  /// `screenWidth - 64` から 0.45/0.15/0.4 で按分するが、実際の行幅は
-  /// それより2px狭いため、iPhone14/15幅(390pt)では必ず
-  /// RenderFlexが2pxオーバーフローする（小カテゴリー1行につき1件）。
-  /// 握りつぶさず実挙動を固定する。
-  void expectOnlyKnownOverflow(List<FlutterErrorDetails> errors) {
-    for (final error in errors) {
-      expect(error.exceptionAsString(), contains('A RenderFlex overflowed'));
-    }
+  /// かつて `expanded_category_sum_tile.dart` の小カテゴリー行は幅を
+  /// `screenWidth - 64` から 0.45/0.15/0.4 で按分しており、実際の行幅は
+  /// それより2px狭いため iPhone14/15幅(390pt) では小カテゴリー1行につき
+  /// 1件のオーバーフローが必ず出ていた。行の制約を按分基準にする修正が
+  /// 入っているので、例外ゼロを回帰検知に使う。
+  void expectNoRenderErrors(List<FlutterErrorDetails> errors) {
+    expect(
+      errors.map((error) => error.exceptionAsString()),
+      isEmpty,
+      reason: '小カテゴリー行が溢れて例外を出してはいけない',
+    );
   }
 
   /// FlutterErrorを1件ずつ回収しながら [body] を実行する
@@ -187,8 +189,7 @@ void main() {
 
   testWidgets('カテゴリーサマリーに支出合計と予算が出る', (tester) async {
     final errors = await pumpHistoryPage(tester, buildFakes());
-    expect(errors, isNotEmpty); // 既知のオーバーフローが必ず出る
-    expectOnlyKnownOverflow(errors);
+    expectNoRenderErrors(errors);
 
     expect(find.text('カテゴリー別利用状況'), findsOneWidget); // AppBar
     // 大カテゴリー名はサマリーカードと支出タイル3件の計4箇所に出る
@@ -203,7 +204,7 @@ void main() {
 
   testWidgets('小カテゴリーの内訳が名前・件数・金額で並ぶ', (tester) async {
     final errors = await pumpHistoryPage(tester, buildFakes());
-    expectOnlyKnownOverflow(errors);
+    expectNoRenderErrors(errors);
 
     // 小カテゴリー名は内訳行と履歴タイルの両方に出る
     expect(find.text('外食'), findsWidgets);
@@ -216,7 +217,7 @@ void main() {
 
   testWidgets('日付ごとに支出履歴が新しい順で並ぶ', (tester) async {
     final errors = await pumpHistoryPage(tester, buildFakes());
-    expectOnlyKnownOverflow(errors);
+    expectNoRenderErrors(errors);
 
     // 日付ヘッダー（7/5 → 7/3 → 7/1 の降順）
     expect(find.text('2025年7月5日(土)'), findsOneWidget);
@@ -232,14 +233,14 @@ void main() {
 
   testWidgets('小カテゴリー行のタップで小カテゴリー展開ページへ遷移する', (tester) async {
     final errors = await pumpHistoryPage(tester, buildFakes());
-    expectOnlyKnownOverflow(errors);
+    expectNoRenderErrors(errors);
 
     // 内訳行の「中食」（カード内の先頭側）をタップする
     final afterTap = await collectingErrors(() async {
       await tester.tap(find.text('中食').first);
       await pumpTimes(tester);
     });
-    expectOnlyKnownOverflow(afterTap);
+    expectNoRenderErrors(afterTap);
 
     // 遷移先は小カテゴリー1件分の履歴だけになる
     expect(find.text('カテゴリー別利用状況'), findsOneWidget);
@@ -249,13 +250,13 @@ void main() {
 
   testWidgets('支出タイルのタップで編集モーダルが開く', (tester) async {
     final errors = await pumpHistoryPage(tester, buildFakes());
-    expectOnlyKnownOverflow(errors);
+    expectNoRenderErrors(errors);
 
     final afterTap = await collectingErrors(() async {
       await tester.tap(find.text(' ランチ'));
       await pumpTimes(tester);
     });
-    expectOnlyKnownOverflow(afterTap);
+    expectNoRenderErrors(afterTap);
 
     expect(find.byType(RegisaterPageBase), findsOneWidget);
     expect(find.text('編集'), findsOneWidget);
@@ -269,8 +270,7 @@ void main() {
       tester,
       buildFakes(withRecords: false),
     );
-    // 小カテゴリー内訳の行が無いのでオーバーフローも起きない
-    expect(errors, isEmpty);
+    expectNoRenderErrors(errors);
 
     expect(find.text('記録がまだありません'), findsOneWidget);
   });
