@@ -189,16 +189,17 @@ void main() {
   });
 
   group('fetchNextPeriodPayment', () {
-    test('期間内に次回支払日がある固定費をid降順で返す', () async {
+    test('次回支払日が期間終了日以前の固定費をid降順で返す', () async {
       await _seedStandardFixedCosts();
 
       final results = await repository.fetchNextPeriodPayment(period: _period);
 
-      // ORDER BY _id DESC。id=4は論理削除済みなので除外される
-      expect(results.map((e) => e.id).toList(), [5, 3, 2]);
+      // ORDER BY _id DESC。id=4は論理削除済み・id=6は期間終了翌日なので除外される
+      // id=1（期間開始前日）は取り残しとして拾う（下限が無い）
+      expect(results.map((e) => e.id).toList(), [5, 3, 2, 1]);
     });
 
-    test('期間開始日ちょうどの固定費を含む（next_payment_date >= 開始日）', () async {
+    test('期間開始日ちょうどの固定費を含む', () async {
       await _seedStandardFixedCosts();
 
       final results = await repository.fetchNextPeriodPayment(period: _period);
@@ -214,13 +215,35 @@ void main() {
       expect(results.map((e) => e.nextPaymentDate), contains('20250724'));
     });
 
-    test('期間開始前日・期間終了翌日の固定費は含まない', () async {
+    test('期間終了翌日の固定費は含まない', () async {
       await _seedStandardFixedCosts();
 
       final results = await repository.fetchNextPeriodPayment(period: _period);
 
-      expect(results.map((e) => e.id), isNot(contains(1)));
       expect(results.map((e) => e.id), isNot(contains(6)));
+    });
+
+    test('期間開始日より前に取り残された固定費も含む（下限を設けない）', () async {
+      // 過去のバッチで取りこぼしてnext_payment_dateが過去日のまま固定された
+      // マスタを拾えないと、その固定費の実績が二度と生成されない（→ ADR-007）
+      await _seedStandardFixedCosts();
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      expect(results.map((e) => e.id), contains(1));
+    });
+
+    test('数ヶ月前に取り残された固定費も拾える', () async {
+      await insertFixedCostRow(
+        id: 1,
+        name: '3ヶ月取り残し',
+        fixedCostCategoryId: 1,
+        nextPaymentDate: '20250401',
+      );
+
+      final results = await repository.fetchNextPeriodPayment(period: _period);
+
+      expect(results.map((e) => e.id).toList(), [1]);
     });
 
     test('論理削除済みの固定費は期間内でも含まない', () async {
@@ -286,7 +309,8 @@ void main() {
         ),
       );
 
-      expect(results.map((e) => e.id).toList(), [4, 3, 2]);
+      // id=5（期間終了翌日）だけが外れる。id=1は取り残しとして拾う
+      expect(results.map((e) => e.id).toList(), [4, 3, 2, 1]);
     });
 
     test('該当が無いなら空リストを返す', () async {
@@ -529,7 +553,7 @@ void main() {
       await repository.delete(3);
 
       final results = await repository.fetchNextPeriodPayment(period: _period);
-      expect(results.map((e) => e.id).toList(), [5, 2]);
+      expect(results.map((e) => e.id).toList(), [5, 2, 1]);
     });
 
     test('存在しないidを指定しても他の行は変わらない', () async {

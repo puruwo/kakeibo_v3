@@ -496,6 +496,8 @@ void main() {
 
   group('fetchUnconfirmedFixedCostExpenseWithPeriod', () {
     test('期間内の未確定行だけを日付降順で返す', () async {
+      // 未確定リストはfixed_costとINNER JOINするためマスタが要る
+      await _seedFixedCostMasters();
       await _seedStandardFixedCostExpenses();
       await insertFixedCostExpenseRow(
         id: 7,
@@ -515,6 +517,8 @@ void main() {
     });
 
     test('期間外の未確定行は含まない', () async {
+      // 未確定リストはfixed_costとINNER JOINするためマスタが要る
+      await _seedFixedCostMasters();
       await insertFixedCostExpenseRow(
         id: 1,
         fixedCostId: 10,
@@ -569,6 +573,8 @@ void main() {
 
   group('fetchUnconfirmedFixedCostExpenseWithPeriodAndCategory', () {
     test('指定カテゴリーの未確定行だけを返す', () async {
+      // 未確定リストはfixed_costとINNER JOINするためマスタが要る
+      await _seedFixedCostMasters();
       await _seedStandardFixedCostExpenses();
       await insertFixedCostExpenseRow(
         id: 7,
@@ -605,16 +611,27 @@ void main() {
   });
 
   group('fetchByFixedCostId', () {
-    test('引数名に反し、fixed_cost_category_id で絞り込む（実装準拠）', () async {
+    test('fixed_cost_id で絞り込む', () async {
+      // かつては引数名に反してfixed_cost_category_idで絞り込んでいたため、
+      // 別カテゴリーの実績を巻き込んでいた。その回帰検知
       await _seedStandardFixedCostExpenses();
 
-      final results = await repository.fetchByFixedCostId(fixedCostId: 2);
+      final results = await repository.fetchByFixedCostId(fixedCostId: 10);
 
-      // カテゴリー2の行（id=3,4）が返る。固定費ID=2の行は存在しない
-      expect(_sortedIds(results), [3, 4]);
+      // 固定費ID=10の行（id=1,2,6）が返る
+      expect(_sortedIds(results), [1, 2, 6]);
     });
 
-    test('該当カテゴリーが無いなら空リストを返す', () async {
+    test('カテゴリーIDが一致するだけの行は含まない', () async {
+      await _seedStandardFixedCostExpenses();
+
+      // 2はカテゴリーIDとしては存在する（id=3,4）が、固定費IDとしては存在しない
+      final results = await repository.fetchByFixedCostId(fixedCostId: 2);
+
+      expect(results, isEmpty);
+    });
+
+    test('該当する固定費IDが無いなら空リストを返す', () async {
       await _seedStandardFixedCostExpenses();
 
       final results = await repository.fetchByFixedCostId(fixedCostId: 999);

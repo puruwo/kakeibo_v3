@@ -151,7 +151,7 @@ class FakeBatchHistoryRepository implements BatchHistoryRepository {
 /// 固定費マスタのFake
 ///
 /// [records] に事前データを積んでおくと、fetchNextPeriodPayment が
-/// 「nextPaymentDateが期間内 かつ deleteFlag=0」のレコードを
+/// 「nextPaymentDateが期間終了日以前 かつ deleteFlag=0」のレコードを
 /// id降順で返す（本実装のSQL条件・ORDER BY と同じ振る舞い）。
 class FakeFixedCostRepository implements FixedCostRepository {
   FakeFixedCostRepository({List<FixedCostEntity>? initialRecords})
@@ -175,9 +175,10 @@ class FakeFixedCostRepository implements FixedCostRepository {
       if (e.deleteFlag != 0) return false;
       final next = e.nextPaymentDate;
       if (next == null) return false;
-      final nextDate = next.toDateTime();
-      return !nextDate.isBefore(period.startDatetime) &&
-          !nextDate.isAfter(period.endDatetime);
+      // 本実装のSQLは期間開始日という下限を持たない
+      // 過去のバッチで取りこぼしてnextPaymentDateが過去日のまま固定された
+      // マスタも拾い、追いつかせるため（→ ADR-007）
+      return !next.toDateTime().isAfter(period.endDatetime);
     }).toList();
     // 本実装のSQLの ORDER BY id DESC に合わせてid降順で返す
     matched.sort((a, b) => (b.id ?? 0).compareTo(a.id ?? 0));
@@ -242,6 +243,27 @@ class FakeFixedCostRepository implements FixedCostRepository {
   @override
   Future<void> delete(int id) async {
     deletedIds.add(id);
+  }
+
+  /// deleteWithUnpaidExpenses で渡された内容の記録（検証用）
+  final List<({int id, String today})> deletedWithUnpaidExpensesArgs = [];
+
+  /// マスタの論理削除と未払い実績の削除（本実装は1トランザクション）
+  ///
+  /// Fakeは固定費支出を持たないため、ここではマスタ側の論理削除（deleteFlag=1）と
+  /// 引数の記録だけを行う。実績側の削除条件
+  /// （is_confirmed=0 または date > today）は本物のSQLでしか検証できないため、
+  /// test/db_integration/repository/fixed_cost_repository_test.dart で検証する。
+  @override
+  Future<void> deleteWithUnpaidExpenses({
+    required int id,
+    required String today,
+  }) async {
+    deletedWithUnpaidExpensesArgs.add((id: id, today: today));
+    final index = records.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      records[index] = records[index].copyWith(deleteFlag: 1);
+    }
   }
 
   @override
@@ -402,6 +424,21 @@ class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
     required int fixedCostId,
   }) async {
     return records.where((e) => e.fixedCostId == fixedCostId).toList();
+  }
+
+  /// 固定費IDと支払い日が一致する実績が既にあるか
+  ///
+  /// 本実装は fixed_cost_expense を COUNT(*) するだけなので、
+  /// 事前データ [records] に加えて、このFakeへ insert 済みのものも既存として扱う
+  /// （本物のDBでは挿入直後から件数に数えられるため）。
+  @override
+  Future<bool> existsByFixedCostIdAndDate({
+    required int fixedCostId,
+    required String date,
+  }) async {
+    bool matches(FixedCostExpenseEntity e) =>
+        e.fixedCostId == fixedCostId && e.date == date;
+    return records.any(matches) || insertedEntities.any(matches);
   }
 
   @override

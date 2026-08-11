@@ -427,13 +427,19 @@ void main() {
   });
 
   group('FixedCostUsecase.delete', () {
-    test('リポジトリのdeleteに委譲する', () async {
+    test('deleteWithUnpaidExpensesに委譲し、運用日付を基準日として渡す', () async {
+      // 単なる論理削除ではなく、未払い実績の連動削除とセットで委譲する（→ ADR-007）
       final container = createUsecaseContainer();
       final usecase = container.read(fixedCostUsecaseProvider);
 
       await usecase.delete(id: 42);
 
-      expect(fakeFixedCostRepository.deletedIds, [42]);
+      // 基準シナリオのシステム日時 2025/7/6 が today として渡る
+      expect(fakeFixedCostRepository.deletedWithUnpaidExpensesArgs, [
+        (id: 42, today: '20250706'),
+      ]);
+      // 素のdeleteは使わない（未払い実績が残ってしまうため）
+      expect(fakeFixedCostRepository.deletedIds, isEmpty);
     });
   });
 }
