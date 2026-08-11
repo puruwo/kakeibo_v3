@@ -72,9 +72,13 @@ void main() {
     ),
   ];
 
-  TestFakes buildFakes() => TestFakes(
+  /// 記録モーダル用のFake束を組み立てる
+  ///
+  /// [withExpenseCategories] をfalseにすると支出小カテゴリーが0件になる
+  /// （カテゴリー未登録の初期状態を再現する）。
+  TestFakes buildFakes({bool withExpenseCategories = true}) => TestFakes(
     expenseSmallCategory: FakeExpenseSmallCategoryRepository(
-      initialRecords: expenseSmallCategories,
+      initialRecords: withExpenseCategories ? expenseSmallCategories : const [],
     ),
     expenseBigCategory: FakeExpenseBigCategoryRepository(
       initialRecords: expenseBigCategories,
@@ -331,6 +335,53 @@ void main() {
 
       expect(fakes.expense.insertedEntities, hasLength(1));
       expect(fakes.expense.insertedEntities.single.price, 1888887);
+
+      await waitForSnackBarDismissed(tester);
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('小カテゴリーが0件でもモーダルは開ける（初期選択で落ちない）', (tester) async {
+      final fakes = buildFakes(withExpenseCategories: false);
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: fakes,
+      );
+      // 初期選択カテゴリーの解決はpostFrameCallbackの非同期処理なので、
+      // Zoneへ流れる例外まで拾って「1件も出ない」ことを見る
+      final errors = await pumpCatchingZoneErrors(tester);
+      expect(errors, isEmpty, reason: 'カテゴリー0件でも非同期エラーが出てはいけない');
+      expect(tester.takeException(), isNull);
+
+      // 画面自体は出て、カテゴリーグリッドだけが空になる
+      expect(find.text('記録'), findsOneWidget);
+      expect(find.byType(SelectedIconButton), findsNothing);
+      expect(find.text('アイコンを並べ替える'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('小カテゴリー0件のまま保存するとカテゴリー未選択のエラーになる', (tester) async {
+      final fakes = buildFakes(withExpenseCategories: false);
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: fakes,
+      );
+      await pumpTimes(tester);
+
+      // 金額は正しく入れて、カテゴリー未選択だけが引っかかる状態にする
+      await tester.enterText(priceField(), '1200');
+      await tester.pump();
+      await tester.tap(find.text('追加'));
+      await pumpTimes(tester);
+
+      expect(fakes.expense.insertedEntities, isEmpty);
+      expect(find.text('カテゴリーを選択してください'), findsOneWidget);
 
       await waitForSnackBarDismissed(tester);
       await unmountRegisterPage(tester);

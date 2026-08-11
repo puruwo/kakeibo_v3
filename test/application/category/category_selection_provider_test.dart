@@ -221,6 +221,32 @@ void main() {
       expect(zero.categoryName, '日用品');
       expect(negative.id, 11);
     });
+
+    test('カテゴリーが1件も無いなら未選択（ID 0）のカテゴリーを返す', () async {
+      // 支出小カテゴリーだけ空にする（マスタ検索へ進むと該当なしで落ちる状態）
+      final container = createContainer(
+        overrides: [
+          expenseSmallCategoryRepositoryProvider.overrideWithValue(
+            FakeExpenseSmallCategoryRepository(initialRecords: const []),
+          ),
+          expensebigCategoryRepositoryProvider.overrideWithValue(
+            FakeExpenseBigCategoryRepository(
+              initialRecords: expenseBigCategories,
+            ),
+          ),
+        ],
+      );
+
+      final category = await container.read(
+        categoryByModeProvider(
+          mode: TransactionMode.expense,
+          categoryId: 0,
+        ).future,
+      );
+
+      expect(category.id, 0);
+      expect(category.categoryName, '');
+    });
   });
 
   group('categoriesByModeProvider', () {

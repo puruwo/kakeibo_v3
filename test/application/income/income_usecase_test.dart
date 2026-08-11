@@ -50,6 +50,27 @@ void main() {
       );
     });
 
+    test('カテゴリー未選択（ID 0）ならエラーで登録しない', () async {
+      final fakeRepository = FakeIncomeRepository();
+      final container = createContainer(
+        overrides: [incomeRepositoryProvider.overrideWithValue(fakeRepository)],
+      );
+      final usecase = container.read(incomeUsecaseProvider);
+
+      // 収入小カテゴリーが0件だと未選択のまま保存操作まで進める
+      await expectLater(
+        () => usecase.add(incomeEntity: validEntity.copyWith(categoryId: 0)),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            'カテゴリーを選択してください',
+          ),
+        ),
+      );
+      expect(fakeRepository.insertedEntities, isEmpty);
+    });
+
     test('正常な登録はリポジトリに挿入する', () async {
       final fakeRepository = FakeIncomeRepository();
       final container = createContainer(
@@ -79,6 +100,29 @@ void main() {
           isA<AppException>().having((e) => e.message, 'message', '変更がありません'),
         ),
       );
+    });
+
+    test('カテゴリー未選択（ID 0）ならエラーで更新しない', () async {
+      final fakeRepository = FakeIncomeRepository();
+      final container = createContainer(
+        overrides: [incomeRepositoryProvider.overrideWithValue(fakeRepository)],
+      );
+      final usecase = container.read(incomeUsecaseProvider);
+
+      await expectLater(
+        () => usecase.edit(
+          originalEntity: validEntity,
+          editEntity: validEntity.copyWith(categoryId: 0),
+        ),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            'カテゴリーを選択してください',
+          ),
+        ),
+      );
+      expect(fakeRepository.updatedEntities, isEmpty);
     });
 
     test('正常な編集はリポジトリを更新する', () async {

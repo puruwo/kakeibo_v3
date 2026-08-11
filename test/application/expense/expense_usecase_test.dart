@@ -74,6 +74,31 @@ void main() {
       expect(fakeRepository.insertedEntities.first.price, 1888887);
     });
 
+    test('カテゴリー未選択（ID 0）ならエラーで登録しない', () async {
+      final fakeRepository = FakeExpenseRepository();
+      final container = createContainer(
+        overrides: [
+          expenseRepositoryProvider.overrideWithValue(fakeRepository),
+        ],
+      );
+      final usecase = container.read(expenseUsecaseProvider);
+
+      // 支出小カテゴリーが0件だと未選択のまま保存操作まで進める
+      await expectLater(
+        () => usecase.add(
+          expenseEntity: validEntity.copyWith(paymentCategoryId: 0),
+        ),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            'カテゴリーを選択してください',
+          ),
+        ),
+      );
+      expect(fakeRepository.insertedEntities, isEmpty);
+    });
+
     test('登録するとDB更新カウンタが増える（画面リフレッシュの合図）', () async {
       final fakeRepository = FakeExpenseRepository();
       final container = createContainer(
@@ -131,6 +156,31 @@ void main() {
           ),
         ),
       );
+    });
+
+    test('カテゴリー未選択（ID 0）ならエラーで更新しない', () async {
+      final fakeRepository = FakeExpenseRepository();
+      final container = createContainer(
+        overrides: [
+          expenseRepositoryProvider.overrideWithValue(fakeRepository),
+        ],
+      );
+      final usecase = container.read(expenseUsecaseProvider);
+
+      await expectLater(
+        () => usecase.edit(
+          originalEntity: validEntity,
+          editEntity: validEntity.copyWith(paymentCategoryId: 0),
+        ),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            'カテゴリーを選択してください',
+          ),
+        ),
+      );
+      expect(fakeRepository.updatedEntities, isEmpty);
     });
 
     test('正常な編集はリポジトリを更新する', () async {
