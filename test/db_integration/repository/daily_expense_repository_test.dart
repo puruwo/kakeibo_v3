@@ -36,7 +36,6 @@ void main() {
       await insertIncomeRow(id: 1, date: '20250701', price: 300000);
 
       final result = await repository.fetchWithCategory(
-        incomeSourceBigId: 1,
         dateTime: DateTime(2025, 7, 1),
       );
 
@@ -65,7 +64,6 @@ void main() {
       );
 
       final result = await repository.fetchWithCategory(
-        incomeSourceBigId: 1,
         dateTime: DateTime(2025, 7, 1),
       );
 
@@ -92,14 +90,15 @@ void main() {
       );
 
       final result = await repository.fetchWithCategory(
-        incomeSourceBigId: 1,
         dateTime: DateTime(2025, 7, 1),
       );
 
       expect(result.totalExpense, 9200);
     });
 
-    test('引数のincomeSourceBigIdは絞り込みに使われずボーナス拠出の支出も合算される（実装準拠）', () async {
+    test('ボーナス拠出の支出も合算される（履歴タブ=家計全体スコープ）', () async {
+      // Q-11の決着（2026-08-12）: 拠出元で絞らないのは仕様。
+      // 分析・予測（給与のみ=一般会計）との画面間の差は意図された区分
       await insertExpenseRow(
         id: 1,
         date: '20250701',
@@ -113,18 +112,12 @@ void main() {
         incomeSourceBigCategory: 2,
       );
 
-      final salary = await repository.fetchWithCategory(
-        incomeSourceBigId: 1,
-        dateTime: DateTime(2025, 7, 1),
-      );
-      final bonus = await repository.fetchWithCategory(
-        incomeSourceBigId: 2,
+      final result = await repository.fetchWithCategory(
         dateTime: DateTime(2025, 7, 1),
       );
 
-      // SQLに income_source_big_category の条件が無いため、どちらも全額が返る
-      expect(salary.totalExpense, 400);
-      expect(bonus.totalExpense, 400);
+      // SQLに income_source_big_category の条件が無く、全拠出元の合計が返る
+      expect(result.totalExpense, 400);
     });
 
     test('前日・翌日のデータは合算しない', () async {
@@ -134,7 +127,6 @@ void main() {
       await insertIncomeRow(id: 1, date: '20250630', price: 1000);
 
       final result = await repository.fetchWithCategory(
-        incomeSourceBigId: 1,
         dateTime: DateTime(2025, 7, 1),
       );
 
@@ -155,7 +147,6 @@ void main() {
       );
 
       final result = await repository.fetchWithCategory(
-        incomeSourceBigId: 1,
         dateTime: DateTime(2025, 7, 1),
       );
 
@@ -164,7 +155,6 @@ void main() {
 
     test('その日にデータが1件も無いなら0円のエンティティを返す', () async {
       final result = await repository.fetchWithCategory(
-        incomeSourceBigId: 1,
         dateTime: DateTime(2025, 7, 1),
       );
 

@@ -55,9 +55,9 @@ class CalendarUsecaseNotifier
     for (var i = 0; thisLoopDatetime.isBefore(shiftedPeriod.endDatetime); i++) {
       thisLoopDatetime = shiftedPeriod.startDatetime.add(Duration(days: i));
 
-      // incomeSourceBigIdは0を指定して、月次カテゴリーのデータを取得する
-      final DailyExpenseEntity dailyExpenseEntity = await _repository
-          .fetchWithCategory(incomeSourceBigId: 0, dateTime: thisLoopDatetime);
+      // 日別合計は家計全体（全拠出元＋固定費）で集計する（履歴タブ=家計全体スコープ）
+      final DailyExpenseEntity dailyExpenseEntity =
+          await _repository.fetchWithCategory(dateTime: thisLoopDatetime);
 
       // カレンダーの日付表示に月を表示するかどうか（1日のみ）
       bool shouldDisplayMonth = dailyExpenseEntity.date.day == 1;

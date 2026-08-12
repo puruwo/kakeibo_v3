@@ -10,7 +10,7 @@ final dailyExpenseRepositoryProvider = Provider<DailyExpenseRepository>(
 /// 1日の支出データに関するリポジトリ
 abstract interface class DailyExpenseRepository {
 
-  /// 日付指定して全データを取得する
-  /// カテゴリー指定あり
-  Future<DailyExpenseEntity> fetchWithCategory({required int incomeSourceBigId, required DateTime dateTime});
+  /// 日付を指定してその日の支出・収入合計を取得する
+  /// 支出は家計全体（全拠出元＋固定費）を合算する
+  Future<DailyExpenseEntity> fetchWithCategory({required DateTime dateTime});
 }

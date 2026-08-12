@@ -11,7 +11,7 @@ DatabaseHelper db = DatabaseHelper.instance;
 class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
   @override
   Future<DailyExpenseEntity> fetchWithCategory(
-      {required int incomeSourceBigId, required DateTime dateTime}) async {
+      {required DateTime dateTime}) async {
     // 日付指定
     final whereArgs = DateFormat('yyyyMMdd').format(dateTime);
 
