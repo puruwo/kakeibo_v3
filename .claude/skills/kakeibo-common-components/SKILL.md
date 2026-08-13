@@ -26,6 +26,7 @@ Containerに `BoxDecoration` を直接書く前に、必ずこのドキュメン
 | `UnconfirmedFixedCostChipLabel` | 「変動あり」表示用チップ | 角丸4px + テーマカラーborder | `lib/view/component/unconfirmed_fixed_cost_chip_label.dart` |
 | `CheckBox` | 円形チェックボックス | shape: circle / 状態で色切替 | `lib/view/component/check_box.dart` |
 | `showAppYearMonthPicker` | AppBar下ドロップダウン年月度・年度ピッカー | Overlay式。月度モード（年＋月ドラム）と年度モード（年ドラム）の2種 | `lib/view/component/app_year_month_picker.dart` |
+| `AppEmptyState` | 次アクションがある空状態の共通カード（ADR-022） | CardContainer + アイコン32px + 見出し + 説明1行 + Primaryボタン | `lib/view/component/app_empty_state.dart` |
 
 ---
 
@@ -230,6 +231,40 @@ await ref.read(homeSelectedDatetimeNotifierProvider.notifier)
 - 戻り値の `DateTime` 全体は信頼せず、`picked.year` / `picked.month` のみ使うのが安全。正規化は呼び出し側（`updateStateAsYear` など）が行う。
 
 詳細は `kakeibo-period-patterns` スキルも参照。
+
+---
+
+### 8. AppEmptyState
+
+ADR-022「空状態パターンの使い分け」に基づく、**次アクションがある空状態**の共通カード。
+記録が0件で、そのセクションから登録導線（Primaryボタン）を出せる場合に使う。
+
+```dart
+import 'package:kakeibo/view/component/app_empty_state.dart';
+
+AppEmptyState(
+  icon: Icons.show_chart_rounded,
+  title: '家計簿をはじめましょう',
+  description: '毎日の収支を記録するとグラフが表示されます',
+  buttonLabel: '＋ 記録を追加する',
+  onPressed: () {
+    showAppModalBottomSheet(
+      context,
+      child: const RegisaterPageBase.addExpense(),
+    );
+  },
+)
+```
+
+**使い分け（ADR-022）**
+
+| 状況 | 使うもの |
+|---|---|
+| 次アクションがある（そのセクションから登録導線を出せる） | `AppEmptyState`（カード形式） |
+| 次アクションが無い従属領域（グラフ・サブリスト・絞り込み結果） | `AppTextStyles.listEmptyMessage` の1行テキスト |
+| 取得失敗（エラー） | `AppErrorState`（`AppTextStyles.errorMessage`） |
+
+カード形式の空状態は1画面につき原則1つまで。
 
 ---
 

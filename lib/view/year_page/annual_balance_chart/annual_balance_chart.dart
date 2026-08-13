@@ -43,7 +43,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                 width: double.infinity,
                 height: 30,
                 child: Center(
-                  child: Text('まだ記録がありません', style: AppTextStyles.errorMessage),
+                  child: Text('まだ記録がありません', style: AppTextStyles.listEmptyMessage),
                 ),
               );
             }

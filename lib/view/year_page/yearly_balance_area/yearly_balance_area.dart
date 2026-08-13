@@ -6,7 +6,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -47,48 +47,17 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
           data: (yearlyBalanceValue) {
             if (yearlyBalanceValue.yearlyBalanceType ==
                 YearlyBalanceType.noRecorod) {
-              return CardContainer(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 20.0,
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(
-                        Icons.show_chart_rounded,
-                        size: 32,
-                        color: context.colors.textSecondary,
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        '家計簿をはじめましょう',
-                        style: AppTextStyles.appCardTitleLabel,
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '毎日の収支を記録するとグラフが表示されます',
-                        style: AppTextStyles.listCardSecondaryTitle,
-                        textAlign: TextAlign.center,
-                      ),
-                      const SizedBox(height: 16),
-                      SizedBox(
-                        width: double.infinity,
-                        child: MainButton(
-                          buttonText: '＋ 記録を追加する',
-                          onPressed: () {
-                            showAppModalBottomSheet(
-                              context,
-                              child: const RegisaterPageBase.addExpense(),
-                            );
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+              return AppEmptyState(
+                icon: Icons.show_chart_rounded,
+                title: '家計簿をはじめましょう',
+                description: '毎日の収支を記録するとグラフが表示されます',
+                buttonLabel: '＋ 記録を追加する',
+                onPressed: () {
+                  showAppModalBottomSheet(
+                    context,
+                    child: const RegisaterPageBase.addExpense(),
+                  );
+                },
               );
             }
             return LayoutBuilder(
