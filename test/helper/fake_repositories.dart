@@ -1190,7 +1190,8 @@ class FakeIncomeSmallCategoryRepository
 /// 1日分の支出・収入サマリーのFake
 ///
 /// 本物はSQLで日毎に集計するため、Fakeでは日付ごとの結果を直接持たせる。
-/// 未設定の日付は「合計0」のエンティティを返す（本実装の該当なし相当）。
+/// 本実装は期間内をGROUP BY dateで返し、データの無い日は結果に含まれない
+/// （0埋めは呼び出し元の責務）ため、Fakeも期間内の設定済み日付だけを返す。
 class FakeDailyExpenseRepository implements DailyExpenseRepository {
   FakeDailyExpenseRepository({Map<DateTime, DailyExpenseEntity>? dailyExpenses})
     : dailyExpenses = Map.of(dailyExpenses ?? {});
@@ -1198,16 +1199,21 @@ class FakeDailyExpenseRepository implements DailyExpenseRepository {
   /// 日付（時刻を持たないDateTime）→ その日の集計結果
   final Map<DateTime, DailyExpenseEntity> dailyExpenses;
 
-  /// fetchWithCategory に渡された日付の記録（検証用）
-  final List<DateTime> fetchedDates = [];
+  /// fetchDailyTotalsByPeriod に渡された期間の記録（検証用）
+  final List<({DateTime fromDate, DateTime toDate})> fetchedPeriods = [];
 
   @override
-  Future<DailyExpenseEntity> fetchWithCategory({
-    required DateTime dateTime,
+  Future<List<DailyExpenseEntity>> fetchDailyTotalsByPeriod({
+    required DateTime fromDate,
+    required DateTime toDate,
   }) async {
-    final date = DateTime(dateTime.year, dateTime.month, dateTime.day);
-    fetchedDates.add(date);
-    return dailyExpenses[date] ?? DailyExpenseEntity(date: date);
+    final from = DateTime(fromDate.year, fromDate.month, fromDate.day);
+    final to = DateTime(toDate.year, toDate.month, toDate.day);
+    fetchedPeriods.add((fromDate: from, toDate: to));
+    return [
+      for (final entry in dailyExpenses.entries)
+        if (!entry.key.isBefore(from) && !entry.key.isAfter(to)) entry.value,
+    ];
   }
 
   @override

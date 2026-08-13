@@ -9,8 +9,10 @@ final dailyExpenseRepositoryProvider = Provider<DailyExpenseRepository>(
 
 /// 1日の支出データに関するリポジトリ
 abstract interface class DailyExpenseRepository {
-
-  /// 日付を指定してその日の支出・収入合計を取得する
-  /// 支出は家計全体（全拠出元＋固定費）を合算する
-  Future<DailyExpenseEntity> fetchWithCategory({required DateTime dateTime});
+  /// 期間を指定して日ごとの支出・収入合計を取得する
+  /// 支出は家計全体（全拠出元＋固定費）を合算する。データの無い日は結果に含まれない
+  Future<List<DailyExpenseEntity>> fetchDailyTotalsByPeriod({
+    required DateTime fromDate,
+    required DateTime toDate,
+  });
 }
