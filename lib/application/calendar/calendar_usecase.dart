@@ -47,17 +47,31 @@ class CalendarUsecaseNotifier
     final PeriodValue shiftedPeriod =
         PeriodValue(startDatetime: startDatetime, endDatetime: endDatetime);
 
+    // 期間内の日別合計を1回のレンジクエリでまとめて取得する（家計全体スコープ。
+    // 日数分の直列クエリを避ける）。データの無い日は結果に含まれないため日付キーのMapに引き直す
+    final dailyTotals = await _repository.fetchDailyTotalsByPeriod(
+      fromDate: shiftedPeriod.startDatetime,
+      toDate: shiftedPeriod.endDatetime,
+    );
+    final totalsByDate = {
+      for (final e in dailyTotals)
+        DateTime(e.date.year, e.date.month, e.date.day): e,
+    };
+
     // 期間内の日毎の支出データを取得する
     final List<CalendarTileEntity> inPeriodCalendarTileList = [];
 
-    // 期間開始日から終了日までのデータを取得する
+    // 期間開始日から終了日までのタイルを組み立てる
     DateTime thisLoopDatetime = shiftedPeriod.startDatetime;
     for (var i = 0; thisLoopDatetime.isBefore(shiftedPeriod.endDatetime); i++) {
       thisLoopDatetime = shiftedPeriod.startDatetime.add(Duration(days: i));
 
-      // 日別合計は家計全体（全拠出元＋固定費）で集計する（履歴タブ=家計全体スコープ）
-      final DailyExpenseEntity dailyExpenseEntity =
-          await _repository.fetchWithCategory(dateTime: thisLoopDatetime);
+      // データの無い日は0円のエンティティで埋める
+      final DailyExpenseEntity dailyExpenseEntity = totalsByDate[DateTime(
+              thisLoopDatetime.year,
+              thisLoopDatetime.month,
+              thisLoopDatetime.day)] ??
+          DailyExpenseEntity(date: thisLoopDatetime);
 
       // カレンダーの日付表示に月を表示するかどうか（1日のみ）
       bool shouldDisplayMonth = dailyExpenseEntity.date.day == 1;
