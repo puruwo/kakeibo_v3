@@ -1,7 +1,7 @@
 // ImplementsBudgetRepository のDB結合テスト
 //
-// 予算は「同じ月・同じカテゴリーに複数行が積み上がる」設計なので、
-// どの行が採用されるか（MAX(_id) か ORDER BY _id ASC か）を本物のSQLで固定する。
+// 同じ月・同じカテゴリーに複数行あるときの採用規則は
+// 「最新行（MAX(_id)）」に統一されている（ADR-024）。読み側3メソッドで固定する。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/month_value/month_value.dart';
 import 'package:kakeibo/domain/db/budget/budget_entity.dart';
@@ -148,7 +148,8 @@ void main() {
       expect(total, 72000);
     });
 
-    test('同じカテゴリーに複数行あれば全て合計される（MAX(_id)では絞らない）', () async {
+    test('同じカテゴリーに複数行あればカテゴリーごと最新行（MAX(_id)）のみ合計する', () async {
+      // ADR-024 の採用規則反映（旧実装は全行SUMで75000に二重計上されていた）
       await insertBudgetRow(
         id: 1,
         expenseBigCategoryId: 1,
@@ -164,8 +165,34 @@ void main() {
 
       final total = await repository.fetchMonthlyAll(month: _month);
 
-      // fetchMonthlyByBigCategory と違い、履歴行がそのまま足し込まれる
-      expect(total, 75000);
+      expect(total, 40000);
+    });
+
+    test('複数カテゴリーに重複行が混在してもカテゴリーごと最新行の合計になる', () async {
+      // カテゴリー1: 35000 → 40000（最新40000を採用）
+      await insertBudgetRow(
+        id: 1,
+        expenseBigCategoryId: 1,
+        month: '202506',
+        price: 35000,
+      );
+      await insertBudgetRow(
+        id: 3,
+        expenseBigCategoryId: 1,
+        month: '202506',
+        price: 40000,
+      );
+      // カテゴリー2: 重複なし
+      await insertBudgetRow(
+        id: 2,
+        expenseBigCategoryId: 2,
+        month: '202506',
+        price: 5000,
+      );
+
+      final total = await repository.fetchMonthlyAll(month: _month);
+
+      expect(total, 45000);
     });
 
     test('別の月の予算は合計に含まない', () async {
@@ -208,7 +235,8 @@ void main() {
       expect(price, 9000);
     });
 
-    test('同じ月・同じカテゴリーが複数あるとid昇順の先頭を返す', () async {
+    test('同じ月・同じカテゴリーが複数あると最新行（MAX(_id)）を返す', () async {
+      // ADR-024 の採用規則反映（旧実装はid昇順の先頭=最古行の35000を返していた）
       await insertBudgetRow(
         id: 1,
         expenseBigCategoryId: 1,
@@ -224,9 +252,8 @@ void main() {
 
       final price = await repository.fetchMonthly(id: 1, month: _month);
 
-      // fetchMonthlyByBigCategory は MAX(_id) の 40000 を返すのに対し、
-      // こちらは ORDER BY _id ASC の先頭（最初に登録した行）を返す
-      expect(price, 35000);
+      // fetchMonthlyByBigCategory と同じく最後に登録した行が有効になる
+      expect(price, 40000);
     });
 
     test('別の月の予算は拾わない', () async {

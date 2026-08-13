@@ -877,23 +877,25 @@ class FakeBudgetRepository implements BudgetRepository {
 
   @override
   Future<int> fetchMonthly({required int id, required MonthValue month}) async {
-    // 本実装は該当行が無いとき0を返す（ORDER BY id ASC の先頭を採用）
-    final matched =
-        records
-            .where(
-              (e) => e.month == month.month && e.expenseBigCategoryId == id,
-            )
-            .toList()
-          ..sort((a, b) => a.id.compareTo(b.id));
-    return matched.isEmpty ? 0 : matched.first.price;
+    // 本実装は fetchMonthlyByBigCategory（最新行採用・該当なしはprice 0）への委譲（ADR-024）
+    final budget = await fetchMonthlyByBigCategory(
+      month: month,
+      expenseBigCategoryId: id,
+    );
+    return budget.price;
   }
 
   @override
   Future<int> fetchMonthlyAll({required MonthValue month}) async {
-    // 本実装は月の全カテゴリー合計（該当なしは0）
-    return records
-        .where((e) => e.month == month.month)
-        .fold<int>(0, (sum, e) => sum + e.price);
+    // 本実装は月のカテゴリーごと最新行（MAX(_id)）のみを合計する（該当なしは0。ADR-024）
+    final latestByCategory = <int, BudgetEntity>{};
+    for (final e in records.where((e) => e.month == month.month)) {
+      final current = latestByCategory[e.expenseBigCategoryId];
+      if (current == null || e.id > current.id) {
+        latestByCategory[e.expenseBigCategoryId] = e;
+      }
+    }
+    return latestByCategory.values.fold<int>(0, (sum, e) => sum + e.price);
   }
 
   @override
@@ -1201,7 +1203,6 @@ class FakeDailyExpenseRepository implements DailyExpenseRepository {
 
   @override
   Future<DailyExpenseEntity> fetchWithCategory({
-    required int incomeSourceBigId,
     required DateTime dateTime,
   }) async {
     final date = DateTime(dateTime.year, dateTime.month, dateTime.day);

@@ -142,15 +142,4 @@ class BudgetUsecase {
     // DBの更新回数をインクリメント
     _updateDBCountNotifier.incrementState();
   }
-
-  // 新規登録処理
-  Future<void> add({required BudgetEntity entity}) async {
-    _budgetRepositoryProvider.insert(entity);
-
-    // providerをdisposeしてリフレッシュ
-    _invalidateBudgetRepositoryProvider();
-
-    // DBの更新回数をインクリメント
-    _updateDBCountNotifier.incrementState();
-  }
 }

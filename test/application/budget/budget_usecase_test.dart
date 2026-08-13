@@ -1,6 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/application/budget/budget_usecase.dart';
-import 'package:kakeibo/domain/db/budget/budget_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
@@ -141,26 +140,6 @@ void main() {
       expect(fakeRepository.updatedEntities.first.expenseBigCategoryId, 1);
       expect(fakeRepository.insertedEntities, hasLength(1));
       expect(fakeRepository.insertedEntities.first.expenseBigCategoryId, 2);
-    });
-  });
-
-  group('BudgetUsecase.add', () {
-    test('リポジトリに挿入する', () async {
-      final fakeRepository = FakeBudgetRepository();
-      final container = createContainer(
-        overrides: [budgetRepositoryProvider.overrideWithValue(fakeRepository)],
-      );
-      final usecase = container.read(budgetUsecaseProvider);
-
-      await usecase.add(
-        entity: const BudgetEntity(
-          expenseBigCategoryId: 1,
-          month: '202507',
-          price: 30000,
-        ),
-      );
-
-      expect(fakeRepository.insertedEntities, hasLength(1));
     });
   });
 }
