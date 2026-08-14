@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
@@ -21,7 +22,7 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
             return Column(children: [
               // 区切り線
               const Padding(
-                padding: EdgeInsets.symmetric(vertical: 12.0),
+                padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
                 child: Divider(
                   height: 1,
                   thickness: 1,
@@ -34,7 +35,7 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
                 final color = ColorCode.toColor(summary.colorCode);
 
                 return Padding(
-                  padding: const EdgeInsets.only(bottom: 8.0),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -48,7 +49,7 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
                             width: 24,
                             height: 24,
                           ),
-                          const SizedBox(width: 12),
+                          const SizedBox(width: AppSpacing.md),
                           Text(summary.categoryName,
                               style: AppTextStyles.listTilePrimaryTitle),
                         ],

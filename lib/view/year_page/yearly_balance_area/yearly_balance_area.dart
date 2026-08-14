@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/ui_value/yearly_balance_value/yearly_balance_value.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
@@ -131,12 +132,15 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                 return CardContainer(
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: AppSpacing.lg,
+                      vertical: AppSpacing.sm,
+                    ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 8),
+                        const SizedBox(height: AppSpacing.sm),
 
                         // ========== 支出行 ==========
                         if (hasExpense)
@@ -166,7 +170,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                         color: context.colors.expense,
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: AppSpacing.sm),
                                     Text.rich(
                                       TextSpan(
                                         children: [
@@ -179,8 +183,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                             alignment:
                                                 PlaceholderAlignment.middle,
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.only(left: 4),
+                                              padding: const EdgeInsets.only(
+                                                left: AppSpacing.xs,
+                                              ),
                                               child: Icon(
                                                 Icons.arrow_forward_ios_rounded,
                                                 size: 12,
@@ -225,7 +230,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                         .withValues(alpha: 0.4),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: AppSpacing.sm),
                                 Text(
                                   '＋ 支出を登録する',
                                   style: AppTextStyles.appCardPrimaryTitleLabel
@@ -237,7 +242,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             ),
                           ),
 
-                        const SizedBox(height: 8.0),
+                        const SizedBox(height: AppSpacing.sm),
 
                         // 支出バー（両方あるときのみ）
                         if (showBars)
@@ -251,7 +256,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             duration: const Duration(milliseconds: 500),
                           ),
 
-                        SizedBox(height: showBars ? 16.0 : 8.0),
+                        SizedBox(
+                          height: showBars ? AppSpacing.lg : AppSpacing.sm,
+                        ),
 
                         // ========== 収入行 ==========
                         if (hasIncome)
@@ -285,7 +292,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                         color: context.colors.income,
                                       ),
                                     ),
-                                    const SizedBox(width: 8),
+                                    const SizedBox(width: AppSpacing.sm),
                                     Text.rich(
                                       TextSpan(
                                         children: [
@@ -298,8 +305,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                             alignment:
                                                 PlaceholderAlignment.middle,
                                             child: Padding(
-                                              padding:
-                                                  const EdgeInsets.only(left: 4),
+                                              padding: const EdgeInsets.only(
+                                                left: AppSpacing.xs,
+                                              ),
                                               child: Icon(
                                                 Icons.arrow_forward_ios_rounded,
                                                 size: 12,
@@ -345,7 +353,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 8),
+                                const SizedBox(width: AppSpacing.sm),
                                 Text(
                                   '＋ 収入を登録する',
                                   style: AppTextStyles.appCardPrimaryTitleLabel
@@ -357,7 +365,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             ),
                           ),
 
-                        const SizedBox(height: 8.0),
+                        const SizedBox(height: AppSpacing.sm),
 
                         // 収入バー（両方あるときのみ）
                         if (showBars)
@@ -373,13 +381,13 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
 
                         // 残金行（両方あるときのみ）
                         if (showBars) ...[
-                          const SizedBox(height: 12.0),
+                          const SizedBox(height: AppSpacing.md),
                           Divider(
                             thickness: 1.0,
                             height: 4.0,
                             color: context.colors.separator,
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: AppSpacing.xs),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -399,7 +407,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                           ),
                         ],
 
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xs),
                       ],
                     ),
                   ),

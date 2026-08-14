@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 
 enum AppContentsHeaderType {
   appCardSectionTitle,
@@ -79,12 +80,12 @@ class AppContentsHeader extends StatelessWidget {
                   // カスタムアイコンウィジェット
                   if (iconWidget != null) ...[
                     iconWidget!,
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.sm),
                   ]
                   // IconDataアイコン
                   else if (icon != null) ...[
                     Icon(icon, size: 18, color: effectiveTitleStyle.color),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: AppSpacing.xs),
                   ],
                   Text(
                     icon == null && iconWidget == null ? ' $title' : title,

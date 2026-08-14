@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/active_fixed_cost_count_provider.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/app_navigation_list_tile.dart';
 import 'package:kakeibo/view/component/button_util.dart';
@@ -31,7 +32,7 @@ class FixedCostButtonArea extends ConsumerWidget {
           child: FixedCostManagePageButton(),
         ),
         SizedBox(
-          width: 8,
+          width: AppSpacing.sm,
         ),
         FixedCostAddButton(),
       ],

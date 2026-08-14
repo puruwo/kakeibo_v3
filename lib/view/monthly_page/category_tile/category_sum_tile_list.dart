@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
@@ -10,7 +11,7 @@ class CategorySumTileList extends ConsumerWidget {
   const CategorySumTileList({Key? key}) : super(key: key);
 
   // カード間の間隔
-  static const double cardSpacing = 8.0;
+  static const double cardSpacing = AppSpacing.sm;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

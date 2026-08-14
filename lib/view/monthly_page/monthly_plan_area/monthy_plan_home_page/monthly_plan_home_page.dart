@@ -1,6 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/budget_setting_page/budget_cotegory_area.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/budget_page_summary_area.dart';
@@ -33,7 +34,7 @@ class MonthlyPlanHomePage extends ConsumerWidget {
             const SafeArea(
               top: false,
               child: Padding(
-                padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+                padding: EdgeInsets.all(AppSpacing.lg),
                 child: MonthlyPlanHomeFooter(),
               ),
             ),

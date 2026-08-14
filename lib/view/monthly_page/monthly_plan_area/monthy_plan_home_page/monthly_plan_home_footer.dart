@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/budget/budget_usecase.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -54,7 +55,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
 
         // 過去月でない場合のみ「予算を編集する」ボタンを表示
         if (!isPast) ...[
-          const SizedBox(width: 8.0), // ボタン間のスペース
+          const SizedBox(width: AppSpacing.sm), // ボタン間のスペース
 
           Expanded(
             child: MainButton(

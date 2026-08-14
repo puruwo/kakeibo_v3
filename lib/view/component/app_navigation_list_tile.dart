@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -43,7 +44,7 @@ class AppNavigationListTile extends StatelessWidget {
           height: height,
           decoration: BoxDecoration(borderRadius: appCardRadius),
           child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -52,7 +53,7 @@ class AppNavigationListTile extends StatelessWidget {
                 children: [
                   if (trailingText != null) ...[
                     Text(trailingText!, style: AppTextStyles.listTileLegendTitle),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: AppSpacing.sm),
                   ],
                   Icon(
                     size: 16,

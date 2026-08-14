@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
 class UnconfirmedFixedCostChipLabel extends StatelessWidget {
@@ -11,7 +12,7 @@ class UnconfirmedFixedCostChipLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      margin: const EdgeInsets.only(right: 4),
+      margin: const EdgeInsets.only(right: AppSpacing.xs),
       decoration: BoxDecoration(
           color: context.colors.primarySubtle,
           borderRadius: BorderRadius.circular(4),

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 /// localImport
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/app_component.dart';
@@ -80,7 +81,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
           children: [
             // 上部（ここに通常の内容など追加）
             const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: BonusPlanArea(),
             ),
             DraggableScrollableSheet(
@@ -105,7 +106,10 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                       controller: scrollController,
                       physics: const ClampingScrollPhysics(),
                       child: Padding(
-                        padding: const EdgeInsets.only(top: 0, bottom: 4.0),
+                        padding: const EdgeInsets.only(
+                          top: 0,
+                          bottom: AppSpacing.xs,
+                        ),
                         child: Center(
                           child: Container(
                             width: 40,
@@ -165,7 +169,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                                   // ボーナス支出のエリア
                                   Padding(
                                     padding: EdgeInsets.symmetric(
-                                      horizontal: 16.0,
+                                      horizontal: AppSpacing.lg,
                                     ),
                                     child: BonusExpenseListArea(),
                                   ),
@@ -182,12 +186,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                             const SafeArea(
                               top: false,
                               child: Padding(
-                                padding: EdgeInsets.fromLTRB(
-                                  16.0,
-                                  16.0,
-                                  16.0,
-                                  16.0,
-                                ),
+                                padding: EdgeInsets.all(AppSpacing.lg),
                                 child: BonusHomeFooter(),
                               ),
                             ),

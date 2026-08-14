@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain_service/month_period_service/aggregation_start_day_provider.dart';
@@ -375,18 +376,21 @@ class _AppYearMonthPickerOverlayState
               child: FadeTransition(
                 opacity: _fadeAnimation,
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.md,
+                  ),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       _buildHeaderCard(),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       _buildPickerSection(),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       _buildButtonRow(),
                       SizedBox(
-                        height: MediaQuery.of(context).padding.bottom + 8,
+                        height: MediaQuery.of(context).padding.bottom +
+                            AppSpacing.sm,
                       ),
                     ],
                   ),
@@ -534,7 +538,7 @@ class _AppYearMonthPickerOverlayState
 
   Widget _buildSelectionOverlay() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       decoration: BoxDecoration(
         color: context.colors.disabled.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(8),
@@ -549,7 +553,7 @@ class _AppYearMonthPickerOverlayState
           child: CupertinoButton(
             color: context.colors.disabled,
             borderRadius: BorderRadius.circular(28),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
             onPressed: _onResetToCurrent,
             child: Text(
               widget.mode == AppYearMonthPickerMode.yearMonth
@@ -559,18 +563,18 @@ class _AppYearMonthPickerOverlayState
             ),
           ),
         ),
-        const SizedBox(width: 8),
+        const SizedBox(width: AppSpacing.sm),
         Expanded(
           child: CupertinoButton(
             color: context.colors.primary,
             borderRadius: BorderRadius.circular(28),
-            padding: const EdgeInsets.symmetric(vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
             onPressed: _onConfirm,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Icon(Icons.check, color: context.colors.onPrimary, size: 18),
-                const SizedBox(width: 4),
+                const SizedBox(width: AppSpacing.xs),
                 Text('適用', style: AppTextStyles.mainButtonText),
               ],
             ),

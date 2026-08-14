@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -31,14 +32,15 @@ class MonthlyFixedCostPage extends ConsumerWidget {
               ),
               child: const Column(
                 children: [
-                  SizedBox(height: 16),
+                  SizedBox(height: AppSpacing.lg),
 
                   // ヘッダー
                   FixedCostSummaryHeader(),
 
                   // カテゴリー別リスト
                   Padding(
-                    padding: EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+                    padding: EdgeInsets.fromLTRB(
+                        AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
                     child: FixedCostByCategoryListArea(),
                   ),
                 ],
@@ -50,7 +52,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
           SafeArea(
             top: false,
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 16.0),
+              padding: const EdgeInsets.all(AppSpacing.lg),
               child: Row(
                 children: [
                   // 固定費を管理ボタン
@@ -70,7 +72,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
                   ),
 
                   // 間の隙間
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
 
                   // 固定費を新しく登録する
                   Expanded(

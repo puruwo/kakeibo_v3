@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show NumberFormat;
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
@@ -27,7 +28,7 @@ class AnnualBalanceTooltip extends StatelessWidget {
       onTap: onTap,
       child: Container(
         constraints: const BoxConstraints(minWidth: 140),
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
           color: const Color(0xFF2C2C2E),
           borderRadius: BorderRadius.circular(8),
@@ -44,9 +45,9 @@ class AnnualBalanceTooltip extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text('${value.month}月', style: GraphTextStyles.tooltipDate),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSpacing.sm),
             const Divider(height: 1, color: Colors.white24),
-            const SizedBox(height: 6),
+            const SizedBox(height: AppSpacing.sm),
             _row(label: '収入', amount: value.monthlyIncome, color: context.colors.income),
             const SizedBox(height: 2),
             _row(label: '支出', amount: value.monthlyExpense, color: context.colors.expense),

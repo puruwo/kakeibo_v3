@@ -7,6 +7,7 @@ import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/income_list_area/income_history_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_income_history_value_provider.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 class IncomeListArea extends ConsumerStatefulWidget {
@@ -31,7 +32,8 @@ class _IncomeListAreaState extends ConsumerState<IncomeListArea> {
           data: (valueList) {
             if (valueList.isNotEmpty) {
               return ListView.builder(
-                padding: const EdgeInsets.fromLTRB(16, 8.0, 16.0, 0),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, 0),
                 shrinkWrap: true,
                 itemCount: valueList.length,
                 itemBuilder: (context, index) {

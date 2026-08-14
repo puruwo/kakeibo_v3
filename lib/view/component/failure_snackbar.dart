@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
 /// 処理失敗(エラー)用のスナックバー。
@@ -19,7 +20,7 @@ class FailureSnackBar extends SnackBar {
                 size: 18,
                 color: AppColorsDark.danger,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: AppSpacing.sm),
               Expanded(
                 child: Text(
                   message,
