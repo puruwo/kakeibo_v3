@@ -6,6 +6,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
+import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
 import 'package:kakeibo/view/year_page/year_page.dart';
@@ -151,6 +152,8 @@ void main() {
 
     // 固定費マスタ0件 → 誘導カード
     expect(find.text('固定費を登録しましょう'), findsOneWidget);
+    // ADR-022: 誘導カードは共通コンポーネント AppEmptyState で表示される
+    expect(find.byType(AppEmptyState), findsOneWidget);
     expect(find.text('固定費一覧'), findsNothing);
   });
 

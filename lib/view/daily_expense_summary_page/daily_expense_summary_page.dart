@@ -143,7 +143,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
       width: double.infinity,
       height: 120,
       child: Center(
-        child: Text('この日の支出はありません', style: AppTextStyles.errorMessage),
+        child: Text('この日の支出はありません', style: AppTextStyles.listEmptyMessage),
       ),
     );
   }
