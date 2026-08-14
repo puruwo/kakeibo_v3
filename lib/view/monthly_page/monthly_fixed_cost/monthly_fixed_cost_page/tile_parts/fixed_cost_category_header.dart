@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 
 class FixedCostCategoryHeader extends StatelessWidget {
@@ -35,7 +36,8 @@ class FixedCostCategoryHeader extends StatelessWidget {
         ),
         Divider(height: 0, thickness: 1),
 
-        SizedBox(height: 10),
+        // 旧10px。区切り線直下の詰め余白は sm へ切り下げ（ツールチップ内周の 10→md とは用途が異なる）
+        SizedBox(height: AppSpacing.sm),
       ],
     );
   }

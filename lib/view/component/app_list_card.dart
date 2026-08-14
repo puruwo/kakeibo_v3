@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -47,7 +48,7 @@ class AppListCard extends StatelessWidget {
     this.onLongPress,
     this.backgroundColor,
     this.height = 69.0,
-    this.bottomPadding = 8.0,
+    this.bottomPadding = AppSpacing.sm,
     this.priceWidth = 128.0,
   });
 
@@ -213,7 +214,7 @@ class AppListCard extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 4),
+        const SizedBox(width: AppSpacing.xs),
         Text(
           isIncome ? '+' : '-',
           style: isIncome
@@ -227,7 +228,10 @@ class AppListCard extends StatelessWidget {
     final underPriceWidget = Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (customWidget != null) ...[customWidget!, const SizedBox(width: 4)],
+        if (customWidget != null) ...[
+          customWidget!,
+          const SizedBox(width: AppSpacing.xs),
+        ],
         if (customUnderPriceLabel != null)
           Text(
             customUnderPriceLabel!,
@@ -258,7 +262,7 @@ class AppListCard extends StatelessWidget {
               children: [
                 // 左端: アイコンエリア
                 icon,
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
 
                 // 中央: タイトルエリア
                 Expanded(
@@ -268,7 +272,7 @@ class AppListCard extends StatelessWidget {
                     children: [
                       if (firstRow != null) firstRow,
                       if (firstRow != null && secondRow != null)
-                        const SizedBox(height: 4),
+                        const SizedBox(height: AppSpacing.xs),
                       if (secondRow != null) secondRow,
                     ],
                   ),

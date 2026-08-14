@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_area.dart';
@@ -20,7 +21,7 @@ class MonthlyPlanArea extends ConsumerWidget {
         children: [
           const MnothlyPlanGraphArea(),
           const MonthlyIncomeGraphArea(),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.md),
           // 今月の収支行: realSavings != 0 のとき表示
           modelAsync.when(
             data: (model) {
@@ -34,9 +35,10 @@ class MonthlyPlanArea extends ConsumerWidget {
                     indent: 16,
                     endIndent: 16,
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                    padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

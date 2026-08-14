@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
@@ -51,7 +52,7 @@ class AppFloatingActionButton extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(icon, color: fgColor, size: 24),
-                      const SizedBox(width: 8),
+                      const SizedBox(width: AppSpacing.sm),
                       Text(
                         label!,
                         style: AppTextStyles.mainButtonText.copyWith(

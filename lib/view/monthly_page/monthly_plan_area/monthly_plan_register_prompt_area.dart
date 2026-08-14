@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 
@@ -15,7 +16,7 @@ class MonthlyPlanRegisterPromptArea extends StatelessWidget {
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
+          horizontal: AppSpacing.lg,
           vertical: 20.0,
         ),
         child: Column(
@@ -26,12 +27,12 @@ class MonthlyPlanRegisterPromptArea extends StatelessWidget {
               size: 32,
               color: context.colors.textSecondary,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               '今月の収支を記録しましょう',
               style: AppTextStyles.appCardTitleLabel,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               '収入や予算を登録すると今月の収支が表示されます',
               style: AppTextStyles.listCardSecondaryTitle,

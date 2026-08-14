@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/category_card_entity.dart';
 import 'package:kakeibo/util/util.dart';
@@ -20,7 +21,7 @@ class PriceLabel extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.only(left: 12.0),
+      padding: const EdgeInsets.only(left: AppSpacing.md),
       child: Text(
         paymentSumLabel,
         textAlign: TextAlign.end,

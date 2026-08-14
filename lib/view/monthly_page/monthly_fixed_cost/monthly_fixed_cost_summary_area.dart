@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_category_summary_list.dart';
@@ -16,7 +17,8 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
           data: (summaryValue) {
             return CardContainer(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
+                padding: const EdgeInsets.symmetric(
+                    horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -49,7 +51,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                               '確定分',
                               style: AppTextStyles.appCardTertiaryTitleLabel,
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: AppSpacing.sm),
                             Text(
                               yenmarkFormattedPriceGetter(summaryValue.fixedCostSum),
                               overflow: TextOverflow.ellipsis,
@@ -59,7 +61,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                           ],
                         ),
 
-                        const SizedBox(width: 16),
+                        const SizedBox(width: AppSpacing.lg),
 
                         // 予想分
                         Row(
@@ -70,7 +72,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                               '予想分',
                               style: AppTextStyles.appCardTertiaryTitleLabel,
                             ),
-                            const SizedBox(width: 6),
+                            const SizedBox(width: AppSpacing.sm),
                             Text(
                               summaryValue.unconfirmedFixedCostSum == 0
                                   ? '---'

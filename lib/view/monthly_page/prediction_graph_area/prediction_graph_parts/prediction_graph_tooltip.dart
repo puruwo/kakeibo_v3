@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 
@@ -30,7 +31,7 @@ class GraphTooltip extends StatelessWidget {
       child: IntrinsicWidth(
         child: Container(
           constraints: const BoxConstraints(minWidth: 140),
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
             color: const Color(0xFF2C2C2E), // ダークグレー背景
             borderRadius: BorderRadius.circular(8),
@@ -55,7 +56,7 @@ class GraphTooltip extends StatelessWidget {
                     '${date.month}/${date.day}',
                     style: GraphTextStyles.tooltipDate,
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: AppSpacing.sm),
                   const Spacer(),
                   RichText(
                     text: TextSpan(
@@ -74,9 +75,9 @@ class GraphTooltip extends StatelessWidget {
                 ],
               ),
               if (categoryExpenses.isNotEmpty) ...[
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 const Divider(height: 1, color: Colors.white24),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 // カテゴリー別支出（金額の降順でソート）
                 ...(List<CategoryExpense>.from(categoryExpenses)
                       ..sort((a, b) => b.price.compareTo(a.price)))
@@ -104,7 +105,7 @@ class GraphTooltip extends StatelessWidget {
     final color = Color(colorValue);
 
     return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
+      padding: const EdgeInsets.only(bottom: AppSpacing.xs),
       child: Row(
         children: [
           // カテゴリーアイコン（カテゴリー色で表示）

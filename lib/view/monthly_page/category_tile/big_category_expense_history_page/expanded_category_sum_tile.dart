@@ -3,6 +3,7 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/util/util.dart';
@@ -44,8 +45,8 @@ class ExpandedCategoryTile extends ConsumerWidget {
               ),
             ),
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   // 小カテゴリーリスト部分の width 配分計算用
@@ -184,7 +185,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                       overflow: TextOverflow.ellipsis,
                                     ),
                                     const SizedBox(
-                                      width: 8,
+                                      width: AppSpacing.sm,
                                     ),
                                     MyIcon.next,
                                   ],

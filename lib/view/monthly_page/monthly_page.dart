@@ -4,6 +4,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
@@ -216,7 +217,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                             title: '支出グラフ',
                           ),
                           PredictionGraph(dateScope: scope),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: AppSpacing.md),
                         ],
                       );
                     },
@@ -249,7 +250,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       isNoData
                           ? const MonthlyPlanRegisterPromptArea()
                           : const MonthlyPlanArea(),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       Row(
                         children: [
                           Expanded(
@@ -277,7 +278,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                               buttonText: '収入を追加',
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          const SizedBox(width: AppSpacing.sm),
                           Expanded(
                             child: MainButton(
                               buttonType: ButtonColorType.main,
@@ -303,7 +304,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                     ],
                   );
                 },
@@ -324,7 +325,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
 
               const CategorySumTileList(),
 
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
 
               AppContentsHeader(
                 type: AppContentsHeaderType.appCardSectionTitle,

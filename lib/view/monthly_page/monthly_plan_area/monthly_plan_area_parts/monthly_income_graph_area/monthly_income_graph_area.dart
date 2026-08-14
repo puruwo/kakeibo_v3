@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_income_graph_area/monthly_income_graph_parts.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
@@ -15,7 +16,8 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
           data: (allCategoryCardEntity) {
             return allCategoryCardEntity.cardStatusType.hasIncome
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                    padding: const EdgeInsets.fromLTRB(AppSpacing.lg,
+                        AppSpacing.lg, AppSpacing.lg, AppSpacing.xs),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -33,7 +35,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                   style: AppTextStyles.appCardTitleLabel,
                                 ),
                                 const SizedBox(
-                                  width: 8,
+                                  width: AppSpacing.sm,
                                 ),
                                 // 総収入
                                 Text(
@@ -50,7 +52,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                           ],
                         ),
                         const SizedBox(
-                          height: 4,
+                          height: AppSpacing.xs,
                         ),
                         Container(
                           alignment: Alignment.centerLeft,

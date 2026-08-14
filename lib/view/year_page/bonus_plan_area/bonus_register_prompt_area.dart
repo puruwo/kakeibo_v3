@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
@@ -22,7 +23,7 @@ class BonusRegisterPromptArea extends ConsumerWidget {
       width: double.infinity,
       child: Padding(
         padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
+          horizontal: AppSpacing.lg,
           vertical: 20.0,
         ),
         child: Column(
@@ -33,18 +34,18 @@ class BonusRegisterPromptArea extends ConsumerWidget {
               size: 32,
               color: context.colors.textSecondary,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             Text(
               'ボーナスを登録しましょう',
               style: AppTextStyles.appCardTitleLabel,
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: AppSpacing.xs),
             Text(
               'ボーナスを登録すると利用状況が表示されます',
               style: AppTextStyles.listCardSecondaryTitle,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             SizedBox(
               width: double.infinity,
               child: MainButton(

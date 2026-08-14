@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
@@ -26,8 +27,8 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
       categoryTile.smallCategoryList;
 
   static const double priceLabelWidth = 100.0;
-  static const double gapBetweenLabelAndIcon = 12.0;
-  static const double gapBetweenGraphAndLabel = 12.0;
+  static const double gapBetweenLabelAndIcon = AppSpacing.md;
+  static const double gapBetweenGraphAndLabel = AppSpacing.md;
   // iconWidthはiconのサイズ決定には利用していない
   static const double iconWidth = 15.0;
 
@@ -57,8 +58,8 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
             ),
           ),
           child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
               child: LayoutBuilder(
                 builder: (context, constraints) => Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

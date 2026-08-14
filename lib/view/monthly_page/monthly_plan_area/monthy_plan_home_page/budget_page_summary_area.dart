@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
@@ -25,10 +26,11 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+            padding: const EdgeInsets.fromLTRB(
+                AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
             child: child,
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
         ],
       );
 
@@ -67,7 +69,8 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                   // 予算エリア
                   if (allCategoryCardEntity.cardStatusType.hasBudget)
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                      padding: const EdgeInsets.fromLTRB(
+                          AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -79,7 +82,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                                 '予算',
                                 style: AppTextStyles.appCardTitleLabel,
                               ),
-                              const SizedBox(width: 8),
+                              const SizedBox(width: AppSpacing.sm),
                               Text(
                                 yenmarkFormattedPriceGetter(
                                     allCategoryCardEntity
@@ -91,7 +94,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: AppSpacing.xs),
                           Container(
                             alignment: Alignment.centerLeft,
                             child: LayoutBuilder(
@@ -113,7 +116,8 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                   // 収入エリア
                   if (allCategoryCardEntity.cardStatusType.hasIncome)
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+                      padding: const EdgeInsets.fromLTRB(AppSpacing.lg,
+                          AppSpacing.lg, AppSpacing.lg, AppSpacing.xs),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -130,7 +134,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                                     '総収入',
                                     style: AppTextStyles.appCardTitleLabel,
                                   ),
-                                  const SizedBox(width: 8),
+                                  const SizedBox(width: AppSpacing.sm),
                                   Text(
                                     yenmarkFormattedPriceGetter(
                                         allCategoryCardEntity
@@ -165,7 +169,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                                 ),
                             ],
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: AppSpacing.xs),
                           Container(
                             alignment: Alignment.centerLeft,
                             child: LayoutBuilder(
@@ -184,7 +188,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                       ),
                     ),
 
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                 ],
               ),
             ));
