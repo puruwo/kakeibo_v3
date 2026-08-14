@@ -50,7 +50,7 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
                           ),
                           const SizedBox(width: 12),
                           Text(summary.categoryName,
-                              style: AppTextStyles.appCardSecondaryTitleLabel),
+                              style: AppTextStyles.listTilePrimaryTitle),
                         ],
                       ),
                       // 金額 or 未確定
@@ -63,7 +63,7 @@ class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
                             )
                           : Text(
                               '未確定',
-                              style: AppTextStyles.appCardSecondaryTitleLabel,
+                              style: AppTextStyles.listTilePrimaryTitle,
                             ),
                     ],
                   ),

@@ -144,7 +144,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                                             child: Text(
                                               category.categoryName,
                                               style: AppTextStyles
-                                                  .appCardSecondaryTitleLabel,
+                                                  .listTilePrimaryTitle,
                                             ),
                                           ),
                                           const SizedBox(width: 8),

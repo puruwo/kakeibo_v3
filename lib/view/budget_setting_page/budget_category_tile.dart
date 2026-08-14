@@ -238,7 +238,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                           ? Text(
                                               ' 円',
                                               style: AppTextStyles
-                                                  .listTileYenLabel,
+                                                  .listCardSecondaryTitle,
                                             )
                                           : null,
                                     ),

@@ -118,7 +118,7 @@ class _AggregationSettingDialogState
                   ),
                   child: Text(
                     'キャンセル',
-                    style: AppTextStyles.secondaryButtonText,
+                    style: AppTextStyles.mainButtonText,
                   ),
                 ),
 
