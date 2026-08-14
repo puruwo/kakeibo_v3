@@ -229,7 +229,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   yenmarkFormattedPriceGetter(
                                     yearlyBalanceValue.yearlyExpense,
                                   ),
-                                  style: AppTextStyles.listCardPriceLabel,
+                                  style: AppTextStyles.listTilePriceLabel,
                                 ),
                               ],
                             ),
@@ -348,7 +348,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   yenmarkFormattedPriceGetter(
                                     yearlyBalanceValue.yearlyIncome,
                                   ),
-                                  style: AppTextStyles.listCardPriceLabel,
+                                  style: AppTextStyles.listTilePriceLabel,
                                 ),
                               ],
                             ),

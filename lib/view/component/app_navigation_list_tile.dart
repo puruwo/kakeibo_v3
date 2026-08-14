@@ -51,7 +51,7 @@ class AppNavigationListTile extends StatelessWidget {
               Row(
                 children: [
                   if (trailingText != null) ...[
-                    Text(trailingText!, style: AppTextStyles.oneLineButtonSubText),
+                    Text(trailingText!, style: AppTextStyles.listTileLegendTitle),
                     const SizedBox(width: 8),
                   ],
                   Icon(

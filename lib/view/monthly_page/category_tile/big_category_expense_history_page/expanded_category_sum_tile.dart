@@ -148,7 +148,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                       smallCategoryList[index]
                                           .smallCategoryName,
                                       style: AppTextStyles
-                                          .appCardSecondaryTitleLabel,
+                                          .listTilePrimaryTitle,
                                       textAlign: TextAlign.start,
                                       overflow: TextOverflow.ellipsis,
                                     ),

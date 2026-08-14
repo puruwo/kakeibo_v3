@@ -136,7 +136,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
               Expanded(
                 child: Text(
                   category.categoryName,
-                  style: AppTextStyles.appCardSecondaryTitleLabel,
+                  style: AppTextStyles.listTilePrimaryTitle,
                 ),
               ),
               const SizedBox(width: 8),

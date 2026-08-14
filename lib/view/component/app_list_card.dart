@@ -144,7 +144,7 @@ class AppListCard extends StatelessWidget {
                   primaryTitle,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.listCardTitleLabel,
+                  style: AppTextStyles.listTilePrimaryTitle,
                 ),
               ),
               if (secondaryTitle != null && secondaryTitle!.isNotEmpty)
@@ -209,7 +209,7 @@ class AppListCard extends StatelessWidget {
             child: Text(
               priceLabel,
               textAlign: TextAlign.end,
-              style: priceLabelStyle ?? AppTextStyles.listCardPriceLabel,
+              style: priceLabelStyle ?? AppTextStyles.listTilePriceLabel,
             ),
           ),
         ),

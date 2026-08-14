@@ -42,9 +42,8 @@ class MainButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color backgroundColor = buttonColor ?? buttonType.resolveColor(context);
-    final textStyle = buttonType == ButtonColorType.secondary
-        ? AppTextStyles.secondaryButtonText
-        : AppTextStyles.mainButtonText;
+    // ADR-017 #4: secondaryButtonTextはmainButtonTextと同値だったため統合（種別によらず同一スタイル）
+    final textStyle = AppTextStyles.mainButtonText;
 
     return SizedBox(
       height: 40,
@@ -102,9 +101,7 @@ class SubButton extends StatelessWidget {
           fit: BoxFit.scaleDown,
           child: Text(
             buttonText,
-            style: buttonType == ButtonColorType.secondary
-                ? AppTextStyles.secondaryButtonText
-                : AppTextStyles.mainButtonText,
+            style: AppTextStyles.mainButtonText,
           ),
         ),
       ),
