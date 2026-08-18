@@ -10,6 +10,7 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
+import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 
 import '../helper/fake_repositories.dart';
@@ -195,7 +196,7 @@ void main() {
     await unmountRegisterPage(tester);
   });
 
-  testWidgets('固定費が1件も登録されていないときは空メッセージになる', (tester) async {
+  testWidgets('固定費が1件も登録されていないときは登録誘導カードになる', (tester) async {
     await pumpApp(
       tester,
       home: const FixedCostRegistrationListPage(),
@@ -203,8 +204,11 @@ void main() {
     );
     await pumpTimes(tester);
 
-    expect(find.text('固定費が登録されていません'), findsOneWidget);
-    // 空状態ではFAB（追加導線）ごと出ない
+    // B-04対応: 0件時は ADR-022 の AppEmptyState（次アクションあり）で追加導線を出す
+    expect(find.byType(AppEmptyState), findsOneWidget);
+    expect(find.text('固定費を登録しましょう'), findsOneWidget);
+    expect(find.text('＋ 固定費を登録する'), findsOneWidget);
+    // FAB はリストがある分岐にしか無い（導線はカードのボタンが担う）
     expect(find.text('固定費を追加'), findsNothing);
   });
 
