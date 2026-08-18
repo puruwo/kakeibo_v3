@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
@@ -29,6 +30,7 @@ class CategorySumTile extends HookConsumerWidget {
     return AppInkWell(
       color: context.colors.fillQuaternary,
       borderRadius: appCardRadius,
+      border: Border.all(color: context.colors.surfaceBorder, width: 1),
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -52,7 +54,8 @@ class CategorySumTile extends HookConsumerWidget {
             ),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               mainAxisSize: MainAxisSize.max,
@@ -91,7 +94,7 @@ class CategorySumTile extends HookConsumerWidget {
                     ],
                   ),
                 ),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.md),
                 MyIcon.next,
               ],
             ),

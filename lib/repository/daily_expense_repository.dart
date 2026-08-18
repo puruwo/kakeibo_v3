@@ -10,10 +10,13 @@ DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
   @override
-  Future<DailyExpenseEntity> fetchWithCategory(
-      {required int incomeSourceBigId, required DateTime dateTime}) async {
-    // 日付指定
-    final whereArgs = DateFormat('yyyyMMdd').format(dateTime);
+  Future<List<DailyExpenseEntity>> fetchDailyTotalsByPeriod({
+    required DateTime fromDate,
+    required DateTime toDate,
+  }) async {
+    // 期間指定（yyyyMMddの固定長数字なので大小比較が日付順と一致する）
+    final fromArgs = DateFormat('yyyyMMdd').format(fromDate);
+    final toArgs = DateFormat('yyyyMMdd').format(toDate);
 
     final sql = '''
       SELECT
@@ -27,7 +30,7 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
           ${SqfExpense.price} as price,
           0 AS incomePrice
         FROM ${SqfExpense.tableName}
-        WHERE ${SqfExpense.date} = $whereArgs
+        WHERE ${SqfExpense.date} >= $fromArgs AND ${SqfExpense.date} <= $toArgs
 
         UNION ALL
 
@@ -42,7 +45,7 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
         FROM ${SqfFixedCostExpense.tableName}
         LEFT JOIN ${SqfFixedCost.tableName} 
           ON ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.fixedCostId} = ${SqfFixedCost.tableName}.${SqfFixedCost.id}
-        WHERE ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} = $whereArgs
+        WHERE ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} >= $fromArgs AND ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} <= $toArgs
 
         UNION ALL
 
@@ -52,22 +55,16 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
           0 as price,
           ${SqfIncome.price} AS incomePrice
         FROM ${SqfIncome.tableName}
-        WHERE ${SqfIncome.date} = $whereArgs
+        WHERE ${SqfIncome.date} >= $fromArgs AND ${SqfIncome.date} <= $toArgs
       )
       GROUP BY date
     ''';
 
     // 実行
-    final dailyExpense = await db.query(sql);
+    final dailyExpenseList = await db.query(sql);
 
     // logger.i('====SQLが実行されました====\n ImplementsDailyExpenseRepository\n$sql');
 
-    // もしデータがない場合
-    if (dailyExpense.isEmpty) {
-      return DailyExpenseEntity(
-          date: dateTime, totalExpense: 0, totalIncome: 0);
-    }
-    // データがある場合
-    return DailyExpenseEntity.fromJson(dailyExpense.first);
+    return dailyExpenseList.map(DailyExpenseEntity.fromJson).toList();
   }
 }

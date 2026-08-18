@@ -235,7 +235,7 @@ String getHexFromColor(Color color);
 - `MyFontStyle.notoSans` / `sfUi` を使用箇所で直接 `copyWith` するのは禁止。
 - 必ず `AppTextStyles` 等の集約クラスに新規トークンとして定義してから参照する。
 
-### 3.2 AppTextStyles（48 トークン）
+### 3.2 AppTextStyles（41 トークン）
 
 定義ファイル: `lib/constant/styles/app_text_styles.dart`
 
@@ -244,7 +244,7 @@ String getHexFromColor(Color color);
 | トークン | family / size / weight / color |
 |---------|--------------------------------|
 | `pageHeaderText` | noto / 18 / w500 / `white` |
-| `pageHeaderSubText` | noto / 11 / w400 / `secondaryLabel` |
+| `pageHeaderSubText` | noto / 11 / w300 / `secondaryLabel` |
 
 #### Dialog（3）
 
@@ -261,15 +261,12 @@ String getHexFromColor(Color color);
 | `selectedLabelStyle` | noto / 14 / w600 / `themeColor` | `AppTab` の選択中タブ |
 | `unselectedLabelStyle` | noto / 14 / w300 / `secondaryLabel` | `AppTab` の非選択タブ |
 
-#### Button（7）
+#### Button（4）
 
 | トークン | family / size / weight / color |
 |---------|--------------------------------|
 | `mainButtonText` | noto / 14 / w600 / `label` |
-| `subButtonText` | noto / 15 / w600 / `themeColor` |
 | `oneLineButtonText` | noto / 13 / w500 / `label` |
-| `oneLineButtonSubText` | noto / 14 / w400 / `secondaryLabel` |
-| `secondaryButtonText` | noto / 14 / w600 / `label` |
 | `whiteButtonText` | noto / 17 / w600 / `white` |
 | `textButtonTextStyle` | noto / 12 / w500 / `themeColor` |
 
@@ -288,31 +285,28 @@ String getHexFromColor(Color color);
 | `listCardSectionTitle` | sf / 14 / w600 / `secondaryLabel` |
 | `listTileSectionTitle` | sf / 13 / w500 / `secondaryLabel` |
 
-#### ListTile（10）
+#### ListTile（9）
 
 | トークン | family / size / weight / color |
 |---------|--------------------------------|
 | `listTilePrimaryTitle` | noto / 14 / w500 / `label` |
-| `listTileSecondaryTitle` | noto / 13 / w400 / `secondaryLabel` |
-| `listTileTirtiaryTitle` | noto / 11 / w400 / `secondaryLabel` |
-| `listTilePriceLabel` | sf / 17 / w500 / `label` |
+| `listTileSecondaryTitle` | noto / 13 / w300 / `secondaryLabel` |
+| `listTileTirtiaryTitle` | noto / 11 / w300 / `secondaryLabel` |
+| `listTilePriceLabel` | sf / 17 / w600 / `label` |
 | `listTileSubPriceLabel` | sf / 15 / w400 / `secondaryLabel` |
 | `listTileInputPriceLabel` | sf / 19 / w500 / `label` |
 | `listTileTextFieldHint` | noto / 15 / w600 / `tirtiaryLabel` |
 | `listTileUnconfirmedPriceLabel` | noto / 15 / w500 / `label` |
-| `listTileYenLabel` | noto / 12 / w500 / `secondaryLabel` |
-| `listTileLegendTitle` | noto / 14 / w400 / `secondaryLabel` |
+| `listTileLegendTitle` | noto / 14 / w300 / `secondaryLabel` |
 
-#### ListCard（6）
+#### ListCard（4）
 
 | トークン | family / size / weight / color |
 |---------|--------------------------------|
-| `listCardTitleLabel` | noto / 14 / w500 / `label` |
 | `listCardUnconfirmedPriceLabel` | noto / 14 / w700 / `label` |
 | `listCardSecondaryTitle` | noto / 12 / w500 / `secondaryLabel` |
 | `listCardMinusLabel` | sf / 16 / w600 / `pink` |
 | `listCardPlusLabel` | sf / 16 / w600 / `incomeEmerald` |
-| `listCardPriceLabel` | sf / 17 / w600 / `label` |
 
 #### AppCard Primary（3）
 
@@ -321,16 +315,14 @@ String getHexFromColor(Color color);
 | トークン | family / size / weight / color |
 |---------|--------------------------------|
 | `appCardTitleLabel` | noto / 14 / w500 / `secondaryLabel` |
-| `appCardPriceLabel` | sf / 20 / w600 / `white` |
-| `appCardPriceUnit` | noto / 13 / w500 / `secondaryLabel` |
+| `appCardPrimaryTitleLabel` | noto / 16 / w600 / `label` / h1.0 |
+| `appCardPriceLabel` | sf / 20 / w700 / `white` |
 
-#### AppCard Secondary（3）
+#### AppCard Secondary（1）
 
 | トークン | family / size / weight / color |
 |---------|--------------------------------|
-| `appCardSecondaryTitleLabel` | noto / 14 / w500 / `white` |
 | `appCardSecondaryPriceLabel` | sf / 16 / w500 / `white` |
-| `appCardSecondaryPriceUnit` | noto / 10 / w500 / `secondaryLabel` |
 
 #### AppCard Tertiary（3）
 
@@ -352,6 +344,13 @@ String getHexFromColor(Color color);
 |---------|--------------------------------|------|
 | `appCardGraphLabel` | noto / 11 / w600 / `white` | 円グラフ内ラベル |
 | `popupMenuItemLabel({textColor, isSelected})` | noto / 14 / 動的 / 動的 | 選択時 bold、未選択時 normal |
+
+#### BottomNav（2）
+
+| トークン | family / size / weight / color |
+|---------|--------------------------------|
+| `bottomNavSelectedLabel` | noto / 11 / w600 / `label` |
+| `bottomNavUnselectedLabel` | noto / 11 / w500 / `secondaryLabel` |
 
 ---
 

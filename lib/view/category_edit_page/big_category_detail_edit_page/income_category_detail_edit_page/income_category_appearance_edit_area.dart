@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/icon_select_dialog.dart';
@@ -66,12 +67,8 @@ class _IncomeCategoryAppearanceEditAreaState
         // 大カテゴリーの設定ボックス
         Padding(
           padding: const EdgeInsets.only(right: 16.0, left: 16.0),
-          child: Container(
+          child: CardContainer(
             alignment: Alignment.topCenter,
-            decoration: BoxDecoration(
-              color: context.colors.fillQuaternary,
-              borderRadius: BorderRadius.circular(18),
-            ),
             height: 135,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -235,6 +232,7 @@ class _IncomeCategoryAppearanceEditAreaState
               height: 42,
               decoration: BoxDecoration(
                 color: context.colors.fillQuaternary,
+                border: Border.all(color: context.colors.surfaceBorder, width: 1),
                 borderRadius: BorderRadius.circular(50),
               ),
               child: Row(

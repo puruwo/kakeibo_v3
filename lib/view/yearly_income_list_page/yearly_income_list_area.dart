@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecase.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_card.dart';
 
 class YearlyIncomeListArea extends ConsumerStatefulWidget {
@@ -77,12 +78,7 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (error, stack) => Center(
-            child: Text(
-              'エラーが発生しました: $error',
-              style: AppTextStyles.errorMessage,
-            ),
-          ),
+          error: (error, stack) => const AppErrorState(),
         );
   }
 }

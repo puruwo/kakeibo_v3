@@ -4,6 +4,7 @@ import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
+import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -26,6 +27,10 @@ Future<ICategoryEntity> categoryByMode(
     if (categories.isNotEmpty) {
       return categories.first;
     }
+    // カテゴリーが1件も無いときは「未選択」のまま返す。
+    // ID 0のままマスタ検索へ進むと該当レコードが無く例外になり、
+    // 呼び出し元（CategoryArea）はその例外を表示する経路を持たないため。
+    return _unselectedCategory;
   }
 
   return switch (mode) {
@@ -39,6 +44,23 @@ Future<ICategoryEntity> categoryByMode(
         .fetchCategoryBySmallId(categoryId),
   };
 }
+
+/// カテゴリーが1件も無いときに返す「未選択」カテゴリー
+///
+/// 選択状態の初期値（SelectCategoryControllerNotifier.build）と同じ空エンティティ。
+/// id が 0 なので、この状態のまま保存しようとすると各Usecaseの入口で弾かれる。
+const ICategoryEntity _unselectedCategory = ExpenseCategoryEntity(
+  smallCategoryOrderKey: -1,
+  bigCategoryKey: -1,
+  displaydOrderInBig: -1,
+  categoryName: '',
+  defaultDisplayed: -1,
+  bigCategoryName: '',
+  colorCode: '',
+  resourcePath: '',
+  displayOrder: -1,
+  isDisplayed: -1,
+);
 
 /// TransactionModeに応じたカテゴリーリストを取得するProvider
 ///

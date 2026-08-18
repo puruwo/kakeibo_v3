@@ -28,6 +28,12 @@ abstract interface class FixedCostRepository {
   Future<int> insert(FixedCostEntity entity);
 
   Future<void> update(FixedCostEntity entity);
-  
-  Future<void> delete(int id);
+
+  /// マスタの論理削除と、未払い実績の削除を1トランザクションで行う
+  ///
+  /// 未払い実績 = 未確定（`is_confirmed = 0`）または支払日が [today] より後のもの。
+  /// 支払日が到来済みの記録は履歴として残す（→ ADR-007）。
+  /// [today] は運用日付（`yyyyMMdd`）。
+  Future<void> deleteWithUnpaidExpenses(
+      {required int id, required String today});
 }

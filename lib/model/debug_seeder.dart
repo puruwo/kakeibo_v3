@@ -9,9 +9,11 @@ import 'package:sqflite/sqflite.dart';
 /// 呼び出し元（sql_on_create.dart）で kDebugMode ガードしているため、
 /// リリースビルドの新規インストールには投入されない。
 /// デバッグビルドで空状態の動作を確認したい場合は [enabled] を false にする。
+/// DB結合テストも同様に `DebugSeeder.enabled = false` でモックデータ投入を止める
+/// （flutter test は kDebugMode = true のため、切れないと onCreate で混入する）。
 class DebugSeeder {
   /// デバッグビルドでモックデータを投入するかどうかのスイッチ
-  static const bool enabled = true;
+  static bool enabled = true;
 
   Future<void> insert(Database db) async {
     logger.i('開発用モックデータを挿入中です');

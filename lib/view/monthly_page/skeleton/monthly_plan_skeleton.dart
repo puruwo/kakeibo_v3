@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
 /// 今月の計画エリアのスケルトンスクリーン
@@ -30,7 +31,8 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
       opacity: _isVisible ? 1.0 : 0.0,
       duration: const Duration(milliseconds: 100),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+        padding: const EdgeInsets.fromLTRB(
+            AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -45,7 +47,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 Container(
                   width: 80,
                   height: 14,
@@ -65,7 +67,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             // グラフバーのスケルトン
             Container(
               width: double.infinity,
@@ -75,7 +77,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             // 総収入ヘッダーのスケルトン
             Row(
               children: [
@@ -87,7 +89,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                const SizedBox(width: 8),
+                const SizedBox(width: AppSpacing.sm),
                 Container(
                   width: 80,
                   height: 14,
@@ -107,7 +109,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: AppSpacing.sm),
             // 収入グラフバーのスケルトン
             Container(
               width: double.infinity,
@@ -117,7 +119,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: AppSpacing.md),
           ],
         ),
       ),

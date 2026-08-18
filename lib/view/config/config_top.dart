@@ -40,6 +40,7 @@ class ConfigTop extends ConsumerWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: context.colors.fillTertiary,
+                border: Border.all(color: context.colors.surfaceBorder, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -85,6 +86,7 @@ class ConfigTop extends ConsumerWidget {
               width: double.infinity,
               decoration: BoxDecoration(
                 color: context.colors.fillTertiary,
+                border: Border.all(color: context.colors.surfaceBorder, width: 1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -138,6 +140,7 @@ class ConfigTop extends ConsumerWidget {
       context,
       title: 'すべてのデータを削除',
       message: '支出・収入・固定費・予算などすべての記録を削除します。\nこの操作は取り消せません。本当に削除しますか？',
+      isDestructive: true,
     );
     if (!isApproved) return;
 

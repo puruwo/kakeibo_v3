@@ -4,6 +4,7 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/batch_history/batch_history_entity.dart';
 import 'package:kakeibo/domain/db/batch_history/batch_history_repository.dart';
 import 'package:kakeibo/domain_service/system_datetime/date_scope.dart';
+import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
@@ -72,8 +73,17 @@ class BatchProcessUsecase {
     // =========バッチ処理==========
     // 月の変わり目に呼ばれる処理
 
-    await _ref.read(fixedCostUsecaseProvider).addExpenseForFixedCost(
-        periodValue); // その月に支払いがある固定費を取得し、fixed_cost_expenseに支出データを追加する
+    // その月に支払いがある固定費を取得し、fixed_cost_expenseに支出データを追加する
+    // 失敗した場合は batch_history を書かずに例外を再送出する
+    // 「処理済み」と記録しないことで、次回起動時に同じ期間が自動でリトライされる
+    try {
+      await _ref
+          .read(fixedCostUsecaseProvider)
+          .addExpenseForFixedCost(periodValue);
+    } catch (e) {
+      logger.e('[FAIL]: 固定費の実績生成に失敗したため、この期間はbatch_historyに記録しません: $e');
+      rethrow;
+    }
 
     // ===========================
 
@@ -82,7 +92,8 @@ class BatchProcessUsecase {
         startDate: periodValue.startDatetime.toFormattedString(),
         endDate: periodValue.endDatetime.toFormattedString(),
         status: 1);
-    _batchHistoryRepositoryProvider.insert(insertEntity);
+    // 記録の完了を待たずに次へ進むと、失敗を検知できないためawaitする
+    await _batchHistoryRepositoryProvider.insert(insertEntity);
 
     // DBの更新を管理するnotifierを取得
     final updateDBCountNotifier =

@@ -10,20 +10,26 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 // 月の未確定分固定費を取得するユースケース
 
 final monthlyUnconfirmedFixedCostNotifierProvider =
-    AsyncNotifierProvider.family<MonthlyUnconfirmedFixedCostUsecaseNotifier,
-        List<MonthlyUnconfirmedFixedCostTileValue>, PeriodValue>(
-  MonthlyUnconfirmedFixedCostUsecaseNotifier.new,
-);
+    AsyncNotifierProvider.family<
+      MonthlyUnconfirmedFixedCostUsecaseNotifier,
+      List<MonthlyUnconfirmedFixedCostTileValue>,
+      PeriodValue
+    >(MonthlyUnconfirmedFixedCostUsecaseNotifier.new);
 
-class MonthlyUnconfirmedFixedCostUsecaseNotifier extends FamilyAsyncNotifier<
-    List<MonthlyUnconfirmedFixedCostTileValue>, PeriodValue> {
+class MonthlyUnconfirmedFixedCostUsecaseNotifier
+    extends
+        FamilyAsyncNotifier<
+          List<MonthlyUnconfirmedFixedCostTileValue>,
+          PeriodValue
+        > {
   late FixedCostExpenseRepository _fixedCostExpenseRepo;
   late FixedCostCategoryRepository _fixedCostCategoryRepo;
   late FixedCostRepository _fixedCostRepo;
 
   @override
   Future<List<MonthlyUnconfirmedFixedCostTileValue>> build(
-      PeriodValue selectedMonthPeriod) async {
+    PeriodValue selectedMonthPeriod,
+  ) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
@@ -43,20 +49,26 @@ class MonthlyUnconfirmedFixedCostUsecaseNotifier extends FamilyAsyncNotifier<
       // 未確定のもののみ処理
       if (fixedCostExpense.isConfirmed == 0) {
         final category = await _fixedCostCategoryRepo.fetch(
-            id: fixedCostExpense.fixedCostCategoryId);
+          id: fixedCostExpense.fixedCostCategoryId,
+        );
         final fixedCostEntity = await _fixedCostRepo.fetch(
-            fixedCostId: fixedCostExpense.fixedCostId);
+          fixedCostId: fixedCostExpense.fixedCostId,
+        );
         // 支払い頻度のラベルを取得するために、valueを生成
         final PaymentFrequencyValue frequencyValue =
             PaymentFrequencyValue.fromDB(
-                intervalNumber: fixedCostEntity.intervalNumber,
-                intervalUnitNumber: fixedCostEntity.intervalUnit);
+              intervalNumber: fixedCostEntity.intervalNumber,
+              intervalUnitNumber: fixedCostEntity.intervalUnit,
+            );
         values.add(
           MonthlyUnconfirmedFixedCostTileValue(
             id: fixedCostExpense.id,
             date: DateTime.parse(
-                '${fixedCostExpense.date.substring(0, 4)}-${fixedCostExpense.date.substring(4, 6)}-${fixedCostExpense.date.substring(6, 8)}'),
-            fixedCostId: fixedCostExpense.id, // 固定費IDの代わりに固定費支出IDを使用
+              '${fixedCostExpense.date.substring(0, 4)}-${fixedCostExpense.date.substring(4, 6)}-${fixedCostExpense.date.substring(6, 8)}',
+            ),
+            // 固定費マスタのIDを渡す
+            // 支出IDを渡すと、確定後の想定支出の再計算がマスタを引けず不発になる
+            fixedCostId: fixedCostExpense.fixedCostId,
             name: fixedCostExpense.name,
             variable: fixedCostEntity.variable,
             estimatedPrice: fixedCostEntity.estimatedPrice,

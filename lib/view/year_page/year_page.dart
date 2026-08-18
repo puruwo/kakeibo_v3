@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
@@ -206,9 +207,9 @@ class _YearPageState extends ConsumerState<YearPage> {
                         },
                       ),
                       const YearlyBalanceArea(),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: AppSpacing.sm),
                       const FixedCostButtonArea(),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.lg),
                       Consumer(
                         builder: (context, ref, _) {
                           final displayAsync =
@@ -235,14 +236,14 @@ class _YearPageState extends ConsumerState<YearPage> {
                                         },
                                       ),
                                       const BonusPlanArea(),
-                                      const SizedBox(height: 16),
+                                      const SizedBox(height: AppSpacing.lg),
                                     ],
                                   );
                                 case BonusSectionDisplayType.registerPrompt:
                                   return Column(
                                     children: const [
                                       BonusRegisterPromptArea(),
-                                      SizedBox(height: 16),
+                                      SizedBox(height: AppSpacing.lg),
                                     ],
                                   );
                                 case BonusSectionDisplayType.hidden:

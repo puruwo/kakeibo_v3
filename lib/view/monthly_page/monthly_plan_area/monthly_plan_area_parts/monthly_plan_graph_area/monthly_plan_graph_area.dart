@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthly_plan_area_parts/monthly_plan_graph_area/monthly_plan_graph_parts.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
@@ -15,7 +17,8 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
             return allCategoryCardEntity.cardStatusType.hasExpense ||
                     allCategoryCardEntity.cardStatusType.hasBudget
                 ? Padding(
-                    padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                    padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -28,7 +31,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                               style: AppTextStyles.appCardTitleLabel,
                             ),
                             const SizedBox(
-                              width: 8,
+                              width: AppSpacing.sm,
                             ),
                             // カテゴリー総支出
                             Text(
@@ -72,7 +75,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                           ],
                         ),
                         const SizedBox(
-                          height: 4,
+                          height: AppSpacing.xs,
                         ),
                         Container(
                           alignment: Alignment.centerLeft,
@@ -89,7 +92,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
           },
           // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
           loading: () => const SizedBox.shrink(),
-          error: (error, stack) => Center(child: Text('$error')),
+          error: (error, stack) => const AppErrorState(),
         );
   }
 }

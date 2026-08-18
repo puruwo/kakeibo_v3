@@ -31,6 +31,10 @@ class IncomeUsecase {
     if (incomeEntity.price >= 99999999) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
+    // 収入小カテゴリーが1件も無いと未選択（ID 0）のまま保存できてしまうため入口で弾く
+    if (incomeEntity.categoryId <= 0) {
+      throw const AppException('カテゴリーを選択してください');
+    }
 
     // incomeにデータを追加する
     _incomeRepositoryProvider.insert(incomeEntity);
@@ -55,6 +59,9 @@ class IncomeUsecase {
     }
     if (editEntity.price >= 99999999) {
       throw const AppException('金額の入力値が大き過ぎます');
+    }
+    if (editEntity.categoryId <= 0) {
+      throw const AppException('カテゴリーを選択してください');
     }
 
     // incomeにデータを追加する

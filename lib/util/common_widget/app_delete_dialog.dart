@@ -12,6 +12,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 /// [onConfirm] - 確認ボタンを押したときのコールバック
 /// [onCancel] - キャンセルボタンを押したときのコールバック（オプション）
 /// [barrierDismissible] - 外側タップで閉じるか（デフォルト: false）
+/// [isDestructive] - ADR-018: 削除等の不可逆操作の確認ならtrue。確認ボタンがdanger色になる
 Future<bool> showConfirmationDialog(
   BuildContext context, {
   required String title,
@@ -21,6 +22,7 @@ Future<bool> showConfirmationDialog(
   VoidCallback? onConfirm,
   VoidCallback? onCancel,
   bool barrierDismissible = false,
+  bool isDestructive = false,
 }) async {
   return await showDialog(
         barrierDismissible: barrierDismissible,
@@ -74,8 +76,10 @@ Future<bool> showConfirmationDialog(
                       // 確認ボタン
                       Expanded(
                         child: SubButton(
-                          buttonType: ButtonColorType.main,
-                          buttonText: "OK",
+                          buttonType: isDestructive
+                              ? ButtonColorType.danger
+                              : ButtonColorType.main,
+                          buttonText: confirmLabel,
                           onPressed: () {
                             onConfirm?.call();
                             Navigator.of(context).pop(true);
@@ -143,5 +147,27 @@ Future<bool> showDeleteConfirmationDialog(
     confirmLabel: "OK",
     cancelLabel: "キャンセル",
     onConfirm: onConfirm,
+    isDestructive: true,
+  );
+}
+
+/// 固定費マスタの削除確認ダイアログを表示する
+///
+/// マスタを削除すると未払い分の支払いも連動削除されるため、
+/// 汎用の削除ダイアログとは別文言で、何が残り何が消えるかを明示する（→ ADR-007）。
+///
+/// [onConfirm] - 確認ボタンを押したときのコールバック
+Future<bool> showFixedCostDeleteConfirmationDialog(
+  BuildContext context, {
+  VoidCallback? onConfirm,
+}) async {
+  return await showConfirmationDialog(
+    context,
+    title: "固定費を削除",
+    message: "支払日が過ぎた記録は残りますが、\n未確定分と今後の予定は削除されます。\n本当に削除しますか？",
+    confirmLabel: "OK",
+    cancelLabel: "キャンセル",
+    onConfirm: onConfirm,
+    isDestructive: true,
   );
 }

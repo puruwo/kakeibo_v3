@@ -94,10 +94,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
       _RegisaterPageBaseState();
 }
 
-class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
+class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -112,12 +109,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
     });
 
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
   }
 
   @override
@@ -165,7 +156,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
                     onPressed: () => _showDeleteConfirmDialog(context),
                     icon: Icon(
                       Icons.delete_outline,
-                      color: context.colors.text,
+                      color: context.colors.danger,
                     ),
                   ),
                 ]
@@ -210,6 +201,17 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase>
 
   /// 削除確認ダイアログを表示
   void _showDeleteConfirmDialog(BuildContext context) async {
+    // 固定費マスタの削除は未確定分の支払い予定も連動削除されるため、専用文言で告知する
+    if (widget.transactionMode == TransactionMode.fixedCost) {
+      await showFixedCostDeleteConfirmationDialog(
+        context,
+        onConfirm: () {
+          _executeDelete();
+        },
+      );
+      return;
+    }
+
     await showDeleteConfirmationDialog(
       context,
       onConfirm: () {

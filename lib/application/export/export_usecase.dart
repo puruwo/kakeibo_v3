@@ -60,22 +60,16 @@ class ExportUsecase {
           .fetchBySmallCategory(smallCategoryId: expense.paymentCategoryId);
 
       // 小カテゴリーのレコードから大カテゴリーidを取得し、大カテゴリーの情報を取得する
-      final expenseBigCategory =
-          await _bigCategoryRepository.fetchByBigCategory(
-              bigCategoryId: expenseSmallCategory.bigCategoryKey);
+      final expenseBigCategory = await _bigCategoryRepository
+          .fetchByBigCategory(
+            bigCategoryId: expenseSmallCategory.bigCategoryKey,
+          );
 
       final incomeBigCategory = await _incomeBigCategoryRepository
           .fetchByBigCategory(bigCategoryId: expense.incomeSourceBigCategory);
 
       // iconPathを加工
-      // assets/images/icon_〇〇.svg → 〇〇
-      final iconName = expenseBigCategory.resourcePath
-          .split('/')
-          .last
-          .split('.')
-          .first
-          .split('_')
-          .last;
+      final iconName = extractIconName(expenseBigCategory.resourcePath);
 
       final expenseHistoryTileValue = ExportValue(
         id: expense.id,
@@ -107,9 +101,10 @@ class ExportUsecase {
           .fetchBySmallCategory(smallCategoryId: income.categoryId);
 
       // 小カテゴリーのレコードから大カテゴリーidを取得し、大カテゴリーの情報を取得する
-      final incomeBigCategory =
-          await _incomeBigCategoryRepository.fetchByBigCategory(
-              bigCategoryId: incomeSmallCategory.bigCategoryKey);
+      final incomeBigCategory = await _incomeBigCategoryRepository
+          .fetchByBigCategory(
+            bigCategoryId: incomeSmallCategory.bigCategoryKey,
+          );
 
       final incomeExportValue = ExportIncomeValue(
         id: income.id,
@@ -134,17 +129,11 @@ class ExportUsecase {
     for (var fixedCostExpense in fixedCostExpenseList) {
       // 固定費カテゴリーの情報を取得する
       final fixedCostCategory = await _fixedCostCategoryRepository.fetch(
-          id: fixedCostExpense.fixedCostCategoryId);
+        id: fixedCostExpense.fixedCostCategoryId,
+      );
 
       // iconPathを加工
-      // assets/images/icon_〇〇.svg → 〇〇
-      final iconName = fixedCostCategory.resourcePath
-          .split('/')
-          .last
-          .split('.')
-          .first
-          .split('_')
-          .last;
+      final iconName = extractIconName(fixedCostCategory.resourcePath);
 
       fixedCostExportList.add([
         fixedCostExpense.id,
@@ -163,66 +152,11 @@ class ExportUsecase {
     }
 
     // ===== CSVを構築 =====
-    // 支出セクション
-    const expenseHeader = [
-      'ID',
-      '日付',
-      '購入金額',
-      'メモ',
-      '大カテゴリー名',
-      '大カテゴリーID',
-      'カテゴリー名',
-      'カテゴリーID',
-      '色コード',
-      'アイコン情報',
-      '拠出元',
-      '拠出元ID'
-    ];
-
-    // 収入セクション
-    const incomeHeader = [
-      'ID',
-      '日付',
-      '金額',
-      'メモ',
-      '大カテゴリー名',
-      '大カテゴリーID',
-      'カテゴリー名',
-      'カテゴリーID',
-    ];
-
-    // 固定費セクション
-    const fixedCostHeader = [
-      'ID',
-      '日付',
-      '金額',
-      '名称',
-      'カテゴリー名',
-      'カテゴリーID',
-      '色コード',
-      'アイコン情報',
-      '金額タイプ',
-      '金額タイプID',
-      '確定状態',
-      '確定状態ID',
-    ];
-
-    // 全体をCSV形式に変換（支出テーブル → 空行 → 収入テーブル → 空行 → 固定費テーブル）
-    final allData = [
-      ['【支出データ】'],
-      expenseHeader,
-      ...expenseExportList,
-      [], // 空行でセクションを区切る
-      ['【収入データ】'],
-      incomeHeader,
-      ...incomeExportList,
-      [], // 空行でセクションを区切る
-      ['【固定費データ】'],
-      fixedCostHeader,
-      ...fixedCostExportList,
-    ];
-
-    final csvString = const ListToCsvConverter().convert(allData);
+    final csvString = buildExportCsvString(
+      expenseRows: expenseExportList,
+      incomeRows: incomeExportList,
+      fixedCostRows: fixedCostExportList,
+    );
 
     // CSVファイルを作成
     await makeCsvFile('export.csv', csvString);
@@ -230,6 +164,84 @@ class ExportUsecase {
     // CSVファイルを共有
     await shareCsvFile('export.csv');
   }
+}
+
+/// 支出・収入・固定費の各行リストからエクスポート用のCSV文字列を構築する
+///
+/// ヘッダー定義と「【支出データ】→行→空行→【収入データ】→行→空行→【固定費データ】→行」の
+/// 連結・CSV変換までを担当する（ファイルI/O・共有シートの表示は含まない）。
+String buildExportCsvString({
+  required List<List> expenseRows,
+  required List<List> incomeRows,
+  required List<List> fixedCostRows,
+}) {
+  // 支出セクション
+  const expenseHeader = [
+    'ID',
+    '日付',
+    '購入金額',
+    'メモ',
+    '大カテゴリー名',
+    '大カテゴリーID',
+    'カテゴリー名',
+    'カテゴリーID',
+    '色コード',
+    'アイコン情報',
+    '拠出元',
+    '拠出元ID',
+  ];
+
+  // 収入セクション
+  const incomeHeader = [
+    'ID',
+    '日付',
+    '金額',
+    'メモ',
+    '大カテゴリー名',
+    '大カテゴリーID',
+    'カテゴリー名',
+    'カテゴリーID',
+  ];
+
+  // 固定費セクション
+  const fixedCostHeader = [
+    'ID',
+    '日付',
+    '金額',
+    '名称',
+    'カテゴリー名',
+    'カテゴリーID',
+    '色コード',
+    'アイコン情報',
+    '金額タイプ',
+    '金額タイプID',
+    '確定状態',
+    '確定状態ID',
+  ];
+
+  // 全体をCSV形式に変換（支出テーブル → 空行 → 収入テーブル → 空行 → 固定費テーブル）
+  final allData = [
+    ['【支出データ】'],
+    expenseHeader,
+    ...expenseRows,
+    [], // 空行でセクションを区切る
+    ['【収入データ】'],
+    incomeHeader,
+    ...incomeRows,
+    [], // 空行でセクションを区切る
+    ['【固定費データ】'],
+    fixedCostHeader,
+    ...fixedCostRows,
+  ];
+
+  return const ListToCsvConverter().convert(allData);
+}
+
+/// アイコンのリソースパスからアイコン名を取り出す
+///
+/// assets/images/icon_〇〇.svg → 〇〇
+String extractIconName(String resourcePath) {
+  return resourcePath.split('/').last.split('.').first.split('_').last;
 }
 
 Future<void> makeCsvFile(String fileName, String csvString) async {

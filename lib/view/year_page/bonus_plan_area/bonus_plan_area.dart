@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
@@ -17,7 +19,10 @@ class BonusPlanArea extends ConsumerWidget {
             return CardContainer(
               width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(16.0, 6.0, 16.0, 8.0),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.lg,
+                  vertical: AppSpacing.sm,
+                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
@@ -61,7 +66,12 @@ class BonusPlanArea extends ConsumerWidget {
                       color: context.colors.separator,
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 12.0, 0, 4.0),
+                      padding: const EdgeInsets.fromLTRB(
+                        0,
+                        AppSpacing.md,
+                        0,
+                        AppSpacing.xs,
+                      ),
                       child: BonusPlanBarGraph(
                         expense: bonusPlanValue.yearlyBonusExpense,
                         budget: bonusPlanValue.yearlyBonusIncome,
@@ -90,7 +100,7 @@ class BonusPlanArea extends ConsumerWidget {
           },
           // ローディングはトップレベル(PageLoadingIndicator)で吸収する
           loading: () => const SizedBox.shrink(),
-          error: (error, stack) => Center(child: Text('$error')),
+          error: (error, stack) => const AppErrorState(),
         );
   }
 }

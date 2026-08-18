@@ -1,6 +1,7 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/confirmed_fixed_cost_tile.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/unconfirmed_fixed_cost_tile.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/fixed_cost_category_header.dart';
@@ -106,7 +107,7 @@ class _FixedCostByCategoryListAreaState
             }
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('エラー: $e')),
+          error: (e, _) => const AppErrorState(),
         );
   }
 }

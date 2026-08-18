@@ -1,7 +1,9 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_history_tile.dart';
 
 /// Local imports
@@ -34,7 +36,7 @@ class _BonusExpenseListArea extends ConsumerState<BonusExpenseListArea> {
           data: (valueList) {
             if (valueList.isNotEmpty) {
               return ListView.builder(
-                padding: const EdgeInsets.only(top: 16.0),
+                padding: const EdgeInsets.only(top: AppSpacing.lg),
                 controller: widget.scrollController,
                 shrinkWrap: true,
                 physics: const BouncingScrollPhysics(), // デフォルトで「必要なときだけスクロール」
@@ -53,7 +55,7 @@ class _BonusExpenseListArea extends ConsumerState<BonusExpenseListArea> {
             }
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('エラー: $e')),
+          error: (e, _) => const AppErrorState(),
         );
   }
 }

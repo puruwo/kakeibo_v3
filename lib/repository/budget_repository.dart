@@ -60,13 +60,20 @@ class ImplementsBudgetRepository implements BudgetRepository {
   }
 
   // 月の合計予算を算出する
+  // 同一月・同一カテゴリーに複数行あるときはカテゴリーごと最新行（MAX(_id)）のみを合計する
   @override
   Future<int> fetchMonthlyAll({required MonthValue month}) async {
     final sql = '''
-      SELECT 
-        SUM(${SqfBudget.price}) AS totalPrice
+      SELECT
+        SUM(a.${SqfBudget.price}) AS totalPrice
       FROM ${SqfBudget.tableName} a
-      WHERE a.${SqfBudget.month} = ${month.month};
+      INNER JOIN (
+        SELECT MAX(${SqfBudget.id}) AS max_id
+        FROM ${SqfBudget.tableName}
+        WHERE ${SqfBudget.month} = ${month.month}
+        GROUP BY ${SqfBudget.expenseBigCategoryId}
+      ) b
+      ON a.${SqfBudget.id} = b.max_id;
     ''';
 
     try {
@@ -81,27 +88,12 @@ class ImplementsBudgetRepository implements BudgetRepository {
     }
   }
   // 月の一つのカテゴリーの予算を算出する
+  // 重複行の採用規則（最新行=MAX(_id)）を1本化するため fetchMonthlyByBigCategory に委譲する
   @override
   Future<int> fetchMonthly({required int id, required MonthValue month}) async {
-    final sql = '''
-      SELECT 
-        ${SqfBudget.price} AS price
-      FROM ${SqfBudget.tableName} a
-      WHERE a.${SqfBudget.month} = ${month.month}
-      AND a.${SqfBudget.expenseBigCategoryId} = $id
-      ORDER BY a.${SqfBudget.id} ASC;
-    ''';
-
-    try {
-      final result = await db.queryFirstIntValue(sql);
-      // logger.i(
-      //     '====SQLが実行されました====\n ImplementsBudgetRepository fetchAll()\n$sql');
-
-      return result ?? 0; // nullの場合は0を返す
-    } catch (e) {
-      logger.e('[FAIL]: $e');
-      return 0;
-    }
+    final budget = await fetchMonthlyByBigCategory(
+        month: month, expenseBigCategoryId: id);
+    return budget.price;
   }
 
   @override

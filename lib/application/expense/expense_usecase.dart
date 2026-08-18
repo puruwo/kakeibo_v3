@@ -28,6 +28,10 @@ class ExpenseUsecase {
     if (expenseEntity.price >= 1888888) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
+    // 支出小カテゴリーが1件も無いと未選択（ID 0）のまま保存できてしまうため入口で弾く
+    if (expenseEntity.paymentCategoryId <= 0) {
+      throw const AppException('カテゴリーを選択してください');
+    }
 
     // tbl001にデータを追加する
     _expenseRepositoryProvider.insert(expenseEntity);
@@ -50,6 +54,9 @@ class ExpenseUsecase {
     }
     if (editEntity.price >= 1888888) {
       throw const AppException('金額の入力値が大き過ぎます');
+    }
+    if (editEntity.paymentCategoryId <= 0) {
+      throw const AppException('カテゴリーを選択してください');
     }
 
     // expenseテーブルにデータを更新する

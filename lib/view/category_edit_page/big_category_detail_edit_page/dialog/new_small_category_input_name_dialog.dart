@@ -141,7 +141,7 @@ class _NewSmallCategoryInputNameDialog
                   ),
                   child: Text(
                     'キャンセル',
-                    style: AppTextStyles.secondaryButtonText,
+                    style: AppTextStyles.mainButtonText,
                   ),
                 ),
                 MainButton(

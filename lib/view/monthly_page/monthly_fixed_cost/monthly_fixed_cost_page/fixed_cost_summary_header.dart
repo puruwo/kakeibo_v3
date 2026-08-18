@@ -1,6 +1,8 @@
 /// Package imports
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 
@@ -37,7 +39,8 @@ class _FixedCostSummaryHeaderState
               children: [
                 // ヘッダー
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                   child: Row(
                     children: [
                       Expanded(
@@ -59,7 +62,8 @@ class _FixedCostSummaryHeaderState
                   height: 40,
                   color: context.colors.fillQuaternary,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -78,7 +82,8 @@ class _FixedCostSummaryHeaderState
                   height: 40,
                   color: context.colors.fillQuaternary,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                     child: Row(
                       children: [
                         Expanded(
@@ -99,7 +104,7 @@ class _FixedCostSummaryHeaderState
             );
           },
           loading: () => const Center(child: CircularProgressIndicator()),
-          error: (e, _) => Center(child: Text('エラー: $e')),
+          error: (e, _) => const AppErrorState(),
         );
   }
 }
