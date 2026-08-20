@@ -119,13 +119,16 @@ class AppTextStyles {
 
   /// エラーメッセージスタイル
   ///
+  /// [listEmptyMessage]（空状態）とは意味的に分離し、ADR-018の失敗トーストと同じ
+  /// danger色で「異常」を伝える（空状態は情報が無いだけなのでtextSecondaryのまま）。
+  ///
   /// 【使用箇所】
   /// - ページ: 各ページ
   ///   - エリア: メインコンテンツ
-  ///   - 詳細: エラー発生時の表示
+  ///   - 詳細: エラー発生時の表示（AppErrorState）
   static final TextStyle errorMessage = MyFontStyle.notoSans.copyWith(
     fontSize: 16,
-    color: AppColorsDark.textSecondary,
+    color: AppColorsDark.danger,
     fontWeight: FontWeight.w400,
   );
 

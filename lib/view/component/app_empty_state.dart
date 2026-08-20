@@ -10,16 +10,23 @@ import 'package:kakeibo/view/component/card_container.dart';
 /// （CardContainer + アイコン + 見出し + 説明1行 + Primaryボタン）。
 /// 次アクションが無い従属領域（グラフ・サブリスト・絞り込み結果）の空状態は
 /// [AppTextStyles.listEmptyMessage] の1行テキスト、取得失敗は `AppErrorState` を使うこと。
-/// カード形式の空状態は1画面につき原則1つまで。
+/// カード形式の空状態は1画面につき原則1つまで（「記録を追加」「固定費を登録」「ボーナスを登録」
+/// のように**別々の次アクション**を持つカードが同一画面に並ぶことは例外として許容する）。
+///
+/// [buttonLabel] / [onPressed] を省略するとボタン無し（アイコン＋見出し＋説明のみ）になる。
+/// 次アクションのボタンが画面側の別領域に既にある場合（分析タブ「今月の収支」等）に使う。
 class AppEmptyState extends StatelessWidget {
   const AppEmptyState({
     super.key,
     required this.icon,
     required this.title,
     required this.description,
-    required this.buttonLabel,
-    required this.onPressed,
-  });
+    this.buttonLabel,
+    this.onPressed,
+  }) : assert(
+          (buttonLabel == null) == (onPressed == null),
+          'buttonLabel と onPressed は両方指定するか両方省略すること',
+        );
 
   /// 見出しの上に表示するアイコン
   final IconData icon;
@@ -30,11 +37,11 @@ class AppEmptyState extends StatelessWidget {
   /// 説明1行（例: 「毎日の収支を記録するとグラフが表示されます」）
   final String description;
 
-  /// Primaryボタンのラベル（例: 「＋ 記録を追加する」）
-  final String buttonLabel;
+  /// Primaryボタンのラベル（例: 「＋ 記録を追加する」）。null ならボタンを出さない
+  final String? buttonLabel;
 
-  /// Primaryボタン押下時の処理
-  final VoidCallback onPressed;
+  /// Primaryボタン押下時の処理。null ならボタンを出さない
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -54,11 +61,17 @@ class AppEmptyState extends StatelessWidget {
               style: AppTextStyles.listCardSecondaryTitle,
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: MainButton(buttonText: buttonLabel, onPressed: onPressed),
-            ),
+            // 両方セット／両方なしは assert で保証済みなので片側だけ見る
+            if (buttonLabel != null) ...[
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: MainButton(
+                  buttonText: buttonLabel!,
+                  onPressed: onPressed!,
+                ),
+              ),
+            ],
           ],
         ),
       ),

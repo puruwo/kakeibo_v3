@@ -8,6 +8,7 @@ import 'package:kakeibo/view/component/app_fab_stack.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/config/config_top.dart';
+import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_call_to_action_button.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -19,6 +20,9 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
     final fixedCostListAsync = ref.watch(
       fixedCostRegistrationListNotifierProvider,
     );
+    // 透過AppBarの下に潜らないための上部余白（空状態・リストで共通）
+    final topInset =
+        MediaQuery.of(context).padding.top + kToolbarHeight + AppSpacing.lg;
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -44,12 +48,17 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
       ),
       body: fixedCostListAsync.when(
         data: (fixedCostList) {
+          // 0件時は ADR-022 の「次アクションあり」空状態カードで追加導線を出す
+          // （FAB はリストがある分岐にしか無いため、ここで導線を切らさない）
           if (fixedCostList.categoryGroups.isEmpty) {
-            return Center(
-              child: Text(
-                '固定費が登録されていません',
-                style: AppTextStyles.listEmptyMessage,
+            return Padding(
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                topInset,
+                AppSpacing.lg,
+                0,
               ),
+              child: const FixedCostRegistrationCallToActionButton(),
             );
           }
 
@@ -64,9 +73,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
             child: ListView.builder(
               padding: EdgeInsets.fromLTRB(
                 AppSpacing.lg,
-                MediaQuery.of(context).padding.top +
-                    kToolbarHeight +
-                    AppSpacing.lg,
+                topInset,
                 AppSpacing.lg,
                 fabBottomOf(context) + 46,
               ),

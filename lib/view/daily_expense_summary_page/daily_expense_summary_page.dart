@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/domain/ui_value/daily_expense_summary_value/daily_expense_summary_value.dart';
@@ -43,9 +44,8 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
       body: summaryAsync.when(
         data: (summary) => _buildContent(context, summary),
         loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('データの取得に失敗しました', style: AppTextStyles.errorMessage),
-        ),
+        error: (error, stack) =>
+            const AppErrorState(message: 'データの取得に失敗しました'),
       ),
     );
   }

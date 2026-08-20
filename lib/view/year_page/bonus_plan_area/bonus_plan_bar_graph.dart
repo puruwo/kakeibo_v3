@@ -121,18 +121,11 @@ class BonusPlanBarGraph extends HookConsumerWidget {
         ]);
       }
 
-      // ボーナス収入が未登録の場合
-      if (barGraphStatus == BarGraphStatus.noBudget) {
-        return Text(
-          'ボーナスが未登録です',
-          style: AppTextStyles.listEmptyMessage,
-        );
-      } else {
-        return Text(
-          '予期せぬエラーが発生しました',
-          style: AppTextStyles.listEmptyMessage,
-        );
-      }
+      // ボーナス収入が未登録の場合（underBudget / overBudget を処理した後なので残りは noBudget のみ）
+      return Text(
+        'ボーナスが未登録です',
+        style: AppTextStyles.listEmptyMessage,
+      );
     }));
   }
 }

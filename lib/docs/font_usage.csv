@@ -8,8 +8,8 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.selectedLabelStyle
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.unselectedLabelStyle,タブ,noto_sans,14,w300,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.mainButtonText,ボタン,noto_sans,14,w600,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.oneLineButtonText,ボタン,noto_sans,13,w500,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listEmptyMessage,エラー,noto_sans,16,w400,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.errorMessage,エラー,noto_sans,16,w400,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listEmptyMessage,空状態,noto_sans,16,w400,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.errorMessage,エラー,noto_sans,16,w400,AppColorsDark.danger,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.whiteButtonText,ボタン,noto_sans,17,w600,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.appCardSectionTitle,見出し,noto_sans,16,w600,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardSectionTitle,見出し,sf_ui,14,w600,AppColorsDark.textSecondary,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み

@@ -192,6 +192,30 @@ void main() {
     expect(find.text('¥ 250,000'), findsOneWidget);
   });
 
+  testWidgets('記録はあるがボーナスが未登録なら登録誘導カード（AppEmptyState）になる', (tester) async {
+    await pumpApp(
+      tester,
+      home: const YearPage(),
+      fakes: buildFakes(
+        bonusIncome: 0,
+        bonusExpense: 0,
+        // 生活収支に記録があるときだけボーナス誘導カードが出る（記録ゼロなら非表示）
+        monthlyIncome: const {mayKey: 300000},
+        monthlyExpense: const {mayKey: 120000},
+      ),
+    );
+    await pumpTimes(tester);
+
+    // Q-15: ボーナス誘導カードも ADR-022 の AppEmptyState で表示される
+    expect(find.text('ボーナスを登録しましょう'), findsOneWidget);
+    expect(find.text('＋ ボーナスを登録する'), findsOneWidget);
+    expect(sectionTitle('ボーナス利用状況'), findsNothing);
+    expect(find.byType(BonusPlanArea), findsNothing);
+    // 固定費0件の誘導カードと並ぶ（別アクション同士の並存はADR-022の例外として許容）
+    expect(find.text('固定費を登録しましょう'), findsOneWidget);
+    expect(find.byType(AppEmptyState), findsNWidgets(2));
+  });
+
   testWidgets('ボーナスの「さらに表示する」でボーナスホームへ遷移する', (tester) async {
     await pumpApp(
       tester,

@@ -133,12 +133,8 @@ class YearlyBalanceBarGraph extends HookConsumerWidget {
           );
         }
 
-        // 予算が設定されていない場合
-        if (barGraphStatus == YearlyBalanceBarGraphStatus.noBudget) {
-          return Text('予算が設定されていません', style: AppTextStyles.listEmptyMessage);
-        } else {
-          return Text('予期せぬエラーが発生しました', style: AppTextStyles.errorMessage);
-        }
+        // 予算が設定されていない場合（underBudget / overBudget を処理した後なので残りは noBudget のみ）
+        return Text('予算が設定されていません', style: AppTextStyles.listEmptyMessage);
       }),
     );
   }

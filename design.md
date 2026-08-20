@@ -275,7 +275,7 @@ String getHexFromColor(Color color);
 | トークン | family / size / weight / color |
 |---------|--------------------------------|
 | `listEmptyMessage` | noto / 16 / w400 / `secondaryLabel` |
-| `errorMessage` | noto / 16 / w400 / `secondaryLabel` |
+| `errorMessage` | noto / 16 / w400 / `danger`（空状態と意味的に分離・ADR-018） |
 
 #### Section Title（3）
 

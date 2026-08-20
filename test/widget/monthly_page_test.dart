@@ -15,6 +15,8 @@ import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
+import 'package:kakeibo/view/component/app_empty_state.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 
@@ -397,6 +399,13 @@ void main() {
 
     expect(find.text('今月の収支を記録しましょう'), findsOneWidget);
     expect(find.text('収入や予算を登録すると今月の収支が表示されます'), findsOneWidget);
+    // Q-15: 誘導カードは AppEmptyState のボタン無し版（導線は下の「収入を追加 / 予算を編集」）
+    final emptyState = find.byType(AppEmptyState);
+    expect(emptyState, findsOneWidget);
+    expect(
+      find.descendant(of: emptyState, matching: find.byType(MainButton)),
+      findsNothing,
+    );
     // データなしのとき支出グラフのセクションごと消える
     expect(sectionTitle('支出グラフ'), findsNothing);
     expect(find.byType(PredictionGraph), findsNothing);
