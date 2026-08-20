@@ -7,7 +7,7 @@ part of 'editting_income_small_category_list.dart';
 // **************************************************************************
 
 String _$edittingIncomeSmallCategoryListNotifierHash() =>
-    r'eaaa724510398c5a713ecb1c31f5a379b42e7c03';
+    r'a125f79628c62c6c44244e5008aba591c3a6e771';
 
 /// See also [EdittingIncomeSmallCategoryListNotifier].
 @ProviderFor(EdittingIncomeSmallCategoryListNotifier)

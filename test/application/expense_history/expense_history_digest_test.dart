@@ -105,7 +105,7 @@ void main() {
       final call = fakeExpenseRepository.fetchWithSourceCategoryCalls.single;
       expect(
         call.incomeSourceBigId,
-        IncomeBigCategoryConstants.incomeSourceIdSalary,
+        AccountTypeConstants.living,
       );
       expect(call.period, period);
       expect(result.map((e) => e.id), [1]);
@@ -122,7 +122,7 @@ void main() {
       final call = fakeExpenseRepository.fetchWithSourceCategoryCalls.single;
       expect(
         call.incomeSourceBigId,
-        IncomeBigCategoryConstants.incomeSourceIdBonus,
+        AccountTypeConstants.special,
       );
       expect(call.period, period);
       expect(result.map((e) => e.id), [2]);

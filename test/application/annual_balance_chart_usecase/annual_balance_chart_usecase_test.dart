@@ -34,7 +34,7 @@ void main() {
     Map<String, int> unconfirmedFixedCost = const {},
   }) {
     final incomeRepository = FakeIncomeRepository()
-      ..sumWithBigCategoryAndPeriodResultByPeriodStart.addAll(income);
+      ..sumWithAccountTypeAndPeriodResultByPeriodStart.addAll(income);
     final expenseRepository = FakeExpenseRepository()
       ..totalExpenseByPeriodWithBigCategoryResultByPeriodStart.addAll(
         regularExpense,

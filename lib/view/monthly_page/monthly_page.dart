@@ -68,7 +68,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
 
     // いずれかがloading中ならフルスケルトン
     // _isMonthSwitching は updateState 後 provider 再評価開始までの数フレームを埋める
-    final isAnyLoading = _isMonthSwitching ||
+    final isAnyLoading =
+        _isMonthSwitching ||
         dateScopeAsync.isLoading ||
         scope == null ||
         (graphAsync?.isLoading ?? true) ||
@@ -105,7 +106,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
               analyzePageSelectedDatetimeNotifierProvider,
             );
             final label = yyyyMMtoMMGetter(monthPeriod);
-            // 月ラベルの下に「一般会計」を小さく表示し、ボーナスを含まない分析画面であることを示す
+            // 月ラベルの下に「生活収支」を小さく表示し、特別枠を含まない分析画面であることを示す
+            // （ADR-025: UI上の会計種別ラベルは「生活収支/特別枠」で統一）
             return GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
@@ -122,9 +124,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 // ピッカーが閉じた瞬間に強制ローディング表示にしてチラつきを防ぐ
                 setState(() => _isMonthSwitching = true);
                 ref
-                    .read(
-                      analyzePageSelectedDatetimeNotifierProvider.notifier,
-                    )
+                    .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
                     .updateState(picked);
               },
               child: AnimatedSwitcher(
@@ -143,15 +143,15 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         Text(label, style: AppTextStyles.pageHeaderText),
                         Transform.translate(
                           offset: const Offset(-4, 0),
-                          child: Icon(Icons.arrow_drop_down,
-                              color: context.colors.icon, size: 30),
+                          child: Icon(
+                            Icons.arrow_drop_down,
+                            color: context.colors.icon,
+                            size: 30,
+                          ),
                         ),
                       ],
                     ),
-                    Text(
-                      '一般会計',
-                      style: AppTextStyles.pageHeaderSubText,
-                    ),
+                    Text('生活収支', style: AppTextStyles.pageHeaderSubText),
                   ],
                 ),
               ),
@@ -182,172 +182,182 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
         child: isAnyLoading
             ? const PageLoadingIndicator(key: ValueKey('loading'))
             : SingleChildScrollView(
-        key: const ValueKey('content'),
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: context.leftsidePadding),
-          child: Column(
-            children: [
-              // AppBarのぶんだけスペースをあける
-              SizedBox(
-                height: MediaQuery.of(context).padding.top + kToolbarHeight,
-              ),
-
-              // 支出グラフ（支出・予算・収入がすべて0のときは非表示）
-              Consumer(
-                builder: (context, ref, _) {
-                  final dateScope = ref.watch(
-                    analyzePageDateScopeEntityProvider,
-                  );
-                  return dateScope.when(
-                    data: (scope) {
-                      final graphData = ref.watch(
-                        predictionGraphDataProvider(scope),
-                      );
-                      final isNoData =
-                          graphData.whenOrNull(
-                            data: (data) =>
-                                !data.predictionGraphLineType.shouldShowGraph,
-                          ) ??
-                          true;
-                      if (isNoData) return const SizedBox.shrink();
-                      return Column(
-                        children: [
-                          const AppContentsHeader(
-                            type: AppContentsHeaderType.appCardSectionTitle,
-                            title: '支出グラフ',
-                          ),
-                          PredictionGraph(dateScope: scope),
-                          const SizedBox(height: AppSpacing.md),
-                        ],
-                      );
-                    },
-                    // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
-                    loading: () => const SizedBox.shrink(),
-                    error: (error, stack) => const SizedBox.shrink(),
-                  );
-                },
-              ),
-
-              // KAN-113: noData時はグラフを誘導カードに差し替え、ボタンセクションは常時表示
-              Consumer(
-                builder: (context, ref, _) {
-                  final modelAsync =
-                      ref.watch(resolvedAllCategoryCardModelProvider);
-                  final isNoData =
-                      modelAsync.whenOrNull(
-                        data: (model) =>
-                            model.cardStatusType ==
-                            AllCategoryCardStatusType.noData,
-                      ) ??
-                      false;
-
-                  return Column(
+                key: const ValueKey('content'),
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.leftsidePadding,
+                  ),
+                  child: Column(
                     children: [
-                      const AppContentsHeader(
-                        type: AppContentsHeaderType.appCardSectionTitle,
-                        title: '今月の収支',
+                      // AppBarのぶんだけスペースをあける
+                      SizedBox(
+                        height:
+                            MediaQuery.of(context).padding.top + kToolbarHeight,
                       ),
-                      isNoData
-                          ? const MonthlyPlanRegisterPromptArea()
-                          : const MonthlyPlanArea(),
-                      const SizedBox(height: AppSpacing.sm),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: MainButton(
-                              buttonType: ButtonColorType.secondary,
-                              onPressed: () {
-                                final dateScope = ref
-                                    .read(analyzePageDateScopeEntityProvider)
-                                    .value;
-                                if (dateScope == null) return;
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => YearlyIncomeListPage(
-                                      period:
-                                          dateScope.aggregationMonthPeriod,
+
+                      // 支出グラフ（支出・予算・収入がすべて0のときは非表示）
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final dateScope = ref.watch(
+                            analyzePageDateScopeEntityProvider,
+                          );
+                          return dateScope.when(
+                            data: (scope) {
+                              final graphData = ref.watch(
+                                predictionGraphDataProvider(scope),
+                              );
+                              final isNoData =
+                                  graphData.whenOrNull(
+                                    data: (data) => !data
+                                        .predictionGraphLineType
+                                        .shouldShowGraph,
+                                  ) ??
+                                  true;
+                              if (isNoData) return const SizedBox.shrink();
+                              return Column(
+                                children: [
+                                  const AppContentsHeader(
+                                    type: AppContentsHeaderType
+                                        .appCardSectionTitle,
+                                    title: '支出グラフ',
+                                  ),
+                                  PredictionGraph(dateScope: scope),
+                                  const SizedBox(height: AppSpacing.md),
+                                ],
+                              );
+                            },
+                            // ローディングはトップレベル(MonthlyPageFullSkeleton)で吸収する
+                            loading: () => const SizedBox.shrink(),
+                            error: (error, stack) => const SizedBox.shrink(),
+                          );
+                        },
+                      ),
+
+                      // KAN-113: noData時はグラフを誘導カードに差し替え、ボタンセクションは常時表示
+                      Consumer(
+                        builder: (context, ref, _) {
+                          final modelAsync = ref.watch(
+                            resolvedAllCategoryCardModelProvider,
+                          );
+                          final isNoData =
+                              modelAsync.whenOrNull(
+                                data: (model) =>
+                                    model.cardStatusType ==
+                                    AllCategoryCardStatusType.noData,
+                              ) ??
+                              false;
+
+                          return Column(
+                            children: [
+                              const AppContentsHeader(
+                                type: AppContentsHeaderType.appCardSectionTitle,
+                                title: '今月の収支',
+                              ),
+                              isNoData
+                                  ? const MonthlyPlanRegisterPromptArea()
+                                  : const MonthlyPlanArea(),
+                              const SizedBox(height: AppSpacing.sm),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: MainButton(
+                                      buttonType: ButtonColorType.secondary,
+                                      onPressed: () {
+                                        final dateScope = ref
+                                            .read(
+                                              analyzePageDateScopeEntityProvider,
+                                            )
+                                            .value;
+                                        if (dateScope == null) return;
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                YearlyIncomeListPage(
+                                                  period: dateScope
+                                                      .aggregationMonthPeriod,
+                                                ),
+                                          ),
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.add,
+                                        size: 18,
+                                        color: context.colors.primary,
+                                      ),
+                                      buttonText: '収入を追加',
                                     ),
                                   ),
-                                );
-                              },
-                              icon: Icon(
-                                Icons.add,
-                                size: 18,
-                                color: context.colors.primary,
-                              ),
-                              buttonText: '収入を追加',
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.sm),
-                          Expanded(
-                            child: MainButton(
-                              buttonType: ButtonColorType.main,
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        const MonthlyPlanHomePage(),
+                                  const SizedBox(width: AppSpacing.sm),
+                                  Expanded(
+                                    child: MainButton(
+                                      buttonType: ButtonColorType.main,
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                          MaterialPageRoute(
+                                            builder: (context) =>
+                                                const MonthlyPlanHomePage(),
+                                          ),
+                                        );
+                                      },
+                                      icon: SvgPicture.asset(
+                                        'assets/images/ui_icon_edit.svg',
+                                        colorFilter: ColorFilter.mode(
+                                          context.colors.text,
+                                          BlendMode.srcIn,
+                                        ),
+                                        width: 15,
+                                        height: 15,
+                                      ),
+                                      buttonText: '予算を編集',
+                                    ),
                                   ),
-                                );
-                              },
-                              icon: SvgPicture.asset(
-                                'assets/images/ui_icon_edit.svg',
-                                colorFilter: ColorFilter.mode(
-                                  context.colors.text,
-                                  BlendMode.srcIn,
-                                ),
-                                width: 15,
-                                height: 15,
+                                ],
                               ),
-                              buttonText: '予算を編集',
-                            ),
-                          ),
-                        ],
+                              const SizedBox(height: AppSpacing.sm),
+                            ],
+                          );
+                        },
                       ),
+
+                      AppContentsHeader(
+                        type: AppContentsHeaderType.appCardSectionTitle,
+                        title: 'カテゴリー別',
+                        subLabel: 'カテゴリー設定',
+                        isLinkable: true,
+                        onTap: () {
+                          showAppModalBottomSheet(
+                            context,
+                            child: const CategorySettingPage(),
+                          );
+                        },
+                      ),
+
+                      const CategorySumTileList(),
+
                       const SizedBox(height: AppSpacing.sm),
+
+                      AppContentsHeader(
+                        type: AppContentsHeaderType.appCardSectionTitle,
+                        title: '固定費',
+                        subLabel: 'さらに表示',
+                        isLinkable: true,
+                        onTap: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const MonthlyFixedCostPage(),
+                            ),
+                          );
+                        },
+                      ),
+
+                      const MonthlyFixedCostSummaryArea(),
+
+                      const SizedBox(height: 128),
                     ],
-                  );
-                },
+                  ),
+                ),
               ),
-
-              AppContentsHeader(
-                type: AppContentsHeaderType.appCardSectionTitle,
-                title: 'カテゴリー別',
-                subLabel: 'カテゴリー設定',
-                isLinkable: true,
-                onTap: () {
-                  showAppModalBottomSheet(
-                    context,
-                    child: const CategorySettingPage(),
-                  );
-                },
-              ),
-
-              const CategorySumTileList(),
-
-              const SizedBox(height: AppSpacing.sm),
-
-              AppContentsHeader(
-                type: AppContentsHeaderType.appCardSectionTitle,
-                title: '固定費',
-                subLabel: 'さらに表示',
-                isLinkable: true,
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const MonthlyFixedCostPage(),
-                    ),
-                  );
-                },
-              ),
-
-              const MonthlyFixedCostSummaryArea(),
-
-              const SizedBox(height: 128),
-            ],
-          ),
-        ),
-      ),
       ),
     );
   }

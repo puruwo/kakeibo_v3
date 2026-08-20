@@ -68,6 +68,8 @@ class SqfIncomeBigCategory {
   static const name = 'name';
   static const colorCode = 'color_code';
   static const resourcePath = 'resource_path';
+  // 会計種別（1=生活収支, 2=特別枠）。v9で追加
+  static const accountType = 'account_type';
 }
 
 class SqfFixedCost {

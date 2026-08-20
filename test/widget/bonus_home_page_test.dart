@@ -113,9 +113,9 @@ void main() {
     await pumpApp(tester, home: const BonusHomePage(), fakes: buildFakes());
     await pumpTimes(tester);
 
-    expect(find.text('ボーナス利用状況'), findsOneWidget); // AppBar
-    expect(find.text('ボーナス支出'), findsOneWidget);
-    expect(find.text('ボーナス収入'), findsOneWidget);
+    expect(find.text('特別枠の利用状況'), findsOneWidget); // AppBar
+    expect(find.text('特別枠支出'), findsOneWidget);
+    expect(find.text('特別枠収入'), findsOneWidget);
 
     // ボーナス拠出の支出タイル（大カテゴリー＋小カテゴリー＋日付＋メモ）
     expect(find.text('生活費'), findsOneWidget);
@@ -134,7 +134,7 @@ void main() {
     await pumpApp(tester, home: const BonusHomePage(), fakes: buildFakes());
     await pumpTimes(tester);
 
-    await tester.tap(find.text('ボーナス収入'));
+    await tester.tap(find.text('特別枠収入'));
     await pumpTimes(tester);
 
     expect(find.text('賞与'), findsOneWidget);
@@ -165,7 +165,7 @@ void main() {
     await pumpApp(tester, home: const BonusHomePage(), fakes: buildFakes());
     await pumpTimes(tester);
 
-    await tester.tap(find.text('ボーナス収入'));
+    await tester.tap(find.text('特別枠収入'));
     await pumpTimes(tester);
 
     await tester.tap(find.text('賞与'));
@@ -188,7 +188,7 @@ void main() {
 
     expect(find.text('記録がまだありません'), findsOneWidget);
 
-    await tester.tap(find.text('ボーナス収入'));
+    await tester.tap(find.text('特別枠収入'));
     await pumpTimes(tester);
 
     expect(find.text('記録がまだありません'), findsOneWidget);

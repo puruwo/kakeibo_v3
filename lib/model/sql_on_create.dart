@@ -131,18 +131,21 @@ class DataBaseHelperHandling {
             ${SqfIncomeBigCategory.id} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${SqfIncomeBigCategory.name} TEXT NOT NULL,
             ${SqfIncomeBigCategory.colorCode} TEXT NOT NULL,
-            ${SqfIncomeBigCategory.resourcePath} TEXT NOT NULL
+            ${SqfIncomeBigCategory.resourcePath} TEXT NOT NULL,
+            ${SqfIncomeBigCategory.accountType} INTEGER NOT NULL DEFAULT 1
           )
           ;''');
 
+    // account_type: 1=生活収支, 2=特別枠（ADR-025）
     await db.execute('''
           INSERT INTO ${SqfIncomeBigCategory.tableName} (
           ${SqfIncomeBigCategory.name},
           ${SqfIncomeBigCategory.colorCode},
-          ${SqfIncomeBigCategory.resourcePath}) 
+          ${SqfIncomeBigCategory.resourcePath},
+          ${SqfIncomeBigCategory.accountType})
           VALUES
-          ('月次収入', '${CategoryPalette.income1Hex}', 'assets/images/icon_regular_income.svg'),
-          ('ボーナス', '${CategoryPalette.income2Hex}', 'assets/images/icon_extra_income.svg');
+          ('月次収入', '${CategoryPalette.income1Hex}', 'assets/images/icon_regular_income.svg', 1),
+          ('ボーナス', '${CategoryPalette.income2Hex}', 'assets/images/icon_extra_income.svg', 2);
           ''');
 
     await db.execute('''CREATE TABLE ${SqfFixedCost.tableName} (
@@ -177,8 +180,9 @@ class DataBaseHelperHandling {
     final currentPeriodStart = now.day >= defaultAggregationStartDay
         ? DateTime(now.year, now.month, defaultAggregationStartDay)
         : DateTime(now.year, now.month - 1, defaultAggregationStartDay);
-    final initialBatchProcessedDate =
-        currentPeriodStart.add(const Duration(days: -1)).toFormattedString();
+    final initialBatchProcessedDate = currentPeriodStart
+        .add(const Duration(days: -1))
+        .toFormattedString();
     await db.execute('''
           INSERT INTO ${SqfBatchHistory.tableName} (
           ${SqfBatchHistory.startDate},

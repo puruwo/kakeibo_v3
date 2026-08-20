@@ -77,11 +77,10 @@ class MonthlyAllCategoryTileUsecaseNotifier
     );
 
     // 全カテゴリーの支出を取得
-    // 大カテゴリーIDを0にすることで、ボーナスを除くカテゴリーの支出を取得する
+    // 拠出元=生活収支を指定して、特別枠充当を除くカテゴリーの支出を取得する
     final allCategoryExpense = await _expenseRepositoryProvider
         .fetchTotalExpenseByPeriodWithBigCategory(
-          incomeSourceBigCategory:
-              IncomeBigCategoryConstants.incomeSourceIdSalary,
+          incomeSourceBigCategory: AccountTypeConstants.living,
           fromDate: fromDate,
           toDate: toDate,
         );
@@ -100,8 +99,7 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // カテゴリータイルのリストを取得する
     final categoryEntityList = await _categoryAccountingRepositoryProvider
         .fetchAll(
-          incomeSourceBigCategoryId:
-              IncomeBigCategoryConstants.incomeSourceIdSalary,
+          incomeSourceBigCategoryId: AccountTypeConstants.living,
           fromDate: fromDate,
           toDate: toDate,
         );
@@ -179,11 +177,11 @@ class MonthlyAllCategoryTileUsecaseNotifier
     // ============================================
 
     // 収入を取得
-    // ボーナス除くカテゴリーの収入のみ取得する
+    // 会計種別=生活収支のカテゴリーの収入のみ取得する（特別枠系を除く。ADR-025）
     final allCategoryIncome = await _incomeRepositoryProvider
-        .calcurateSumWithBigCategoryAndPeriod(
+        .calcurateSumWithAccountTypeAndPeriod(
           period: dateScope.aggregationMonthPeriod,
-          bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary,
+          accountType: AccountTypeConstants.living,
         );
 
     // 固定費も一般支出も全て足した支出
@@ -290,6 +288,11 @@ class MonthlyAllCategoryTileUsecaseNotifier
       for (var bigCategory in incomeBigCategoryList)
         bigCategory.id: bigCategory.colorCode,
     };
+    // ID→会計種別のマップ（特別枠系カテゴリーの内訳除外に使う。ADR-025）
+    final Map<int, int> incomeBigCategoryAccountTypeMap = {
+      for (var bigCategory in incomeBigCategoryList)
+        bigCategory.id: bigCategory.accountType,
+    };
 
     // カテゴリー別の収入を集計
     List<String> incomeCategoryNameList = [];
@@ -298,9 +301,11 @@ class MonthlyAllCategoryTileUsecaseNotifier
     List<String> incomeCategoryColorList = [];
 
     for (var category in incomeSmallCategoryList) {
-      // ボーナスカテゴリー（bigCategoryKey = 1）は除外
-      if (category.bigCategoryKey ==
-          IncomeBigCategoryConstants.incomeSourceIdBonus) {
+      // 会計種別=生活収支のカテゴリーだけを内訳に含める（上の収入合計と同じ条件。ADR-025）
+      // 大カテゴリーが解決できない場合も除外し、合計（SQL側で生活収支に限定）との
+      // 不一致を起こさない
+      if (incomeBigCategoryAccountTypeMap[category.bigCategoryKey] !=
+          AccountTypeConstants.living) {
         continue;
       }
 

@@ -189,8 +189,7 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
     this.price = 0,
     this.paymentCategoryId = 0,
     this.memo = '',
-    this.incomeSourceBigCategory =
-        IncomeBigCategoryConstants.incomeSourceIdSalary,
+    this.incomeSourceBigCategory = AccountTypeConstants.living,
   });
 
   factory _$ExpenseEntityImpl.fromJson(Map<String, dynamic> json) =>

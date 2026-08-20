@@ -151,8 +151,9 @@ class DataBaseMigrate {
     await db.execute('DROP TABLE ${SqfExpense.tableName};');
 
     // 新テーブルをリネーム
-    await db
-        .execute('ALTER TABLE expense_new RENAME TO ${SqfExpense.tableName};');
+    await db.execute(
+      'ALTER TABLE expense_new RENAME TO ${SqfExpense.tableName};',
+    );
 
     print('=== v6マイグレーション完了 ===');
   }
@@ -162,20 +163,40 @@ class DataBaseMigrate {
     print('=== v7マイグレーション開始: カテゴリーカラー更新 ===');
 
     // 支出大カテゴリーのカラー更新
-    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FF7171' WHERE ${SqfExpenseBigCategory.id} = 1;"); // 食費
-    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FB5B01' WHERE ${SqfExpenseBigCategory.id} = 2;"); // 日用品
-    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = '3DD8E0' WHERE ${SqfExpenseBigCategory.id} = 3;"); // 遊び娯楽
-    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = '4BA6FF' WHERE ${SqfExpenseBigCategory.id} = 4;"); // 交通費
-    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'BB87FF' WHERE ${SqfExpenseBigCategory.id} = 5;"); // 衣服美容
-    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'DF2828' WHERE ${SqfExpenseBigCategory.id} = 6;"); // 医療費
-    await db.execute("UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FFC700' WHERE ${SqfExpenseBigCategory.id} = 7;"); // 雑費
+    await db.execute(
+      "UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FF7171' WHERE ${SqfExpenseBigCategory.id} = 1;",
+    ); // 食費
+    await db.execute(
+      "UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FB5B01' WHERE ${SqfExpenseBigCategory.id} = 2;",
+    ); // 日用品
+    await db.execute(
+      "UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = '3DD8E0' WHERE ${SqfExpenseBigCategory.id} = 3;",
+    ); // 遊び娯楽
+    await db.execute(
+      "UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = '4BA6FF' WHERE ${SqfExpenseBigCategory.id} = 4;",
+    ); // 交通費
+    await db.execute(
+      "UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'BB87FF' WHERE ${SqfExpenseBigCategory.id} = 5;",
+    ); // 衣服美容
+    await db.execute(
+      "UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'DF2828' WHERE ${SqfExpenseBigCategory.id} = 6;",
+    ); // 医療費
+    await db.execute(
+      "UPDATE ${SqfExpenseBigCategory.tableName} SET ${SqfExpenseBigCategory.colorCode} = 'FFC700' WHERE ${SqfExpenseBigCategory.id} = 7;",
+    ); // 雑費
 
     // 固定費カテゴリーのカラーを全て統一（MatBlue）
-    await db.execute("UPDATE ${SqfFixedCostCategory.tableName} SET ${SqfFixedCostCategory.colorCode} = '8E8E93';");
+    await db.execute(
+      "UPDATE ${SqfFixedCostCategory.tableName} SET ${SqfFixedCostCategory.colorCode} = '8E8E93';",
+    );
 
     // 収入大カテゴリーのカラー更新
-    await db.execute("UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.colorCode} = '21D19F' WHERE ${SqfIncomeBigCategory.id} = 1;"); // 月次収入
-    await db.execute("UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.colorCode} = '10B981' WHERE ${SqfIncomeBigCategory.id} = 2;"); // ボーナス
+    await db.execute(
+      "UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.colorCode} = '21D19F' WHERE ${SqfIncomeBigCategory.id} = 1;",
+    ); // 月次収入
+    await db.execute(
+      "UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.colorCode} = '10B981' WHERE ${SqfIncomeBigCategory.id} = 2;",
+    ); // ボーナス
 
     print('=== v7マイグレーション完了 ===');
   }
@@ -190,10 +211,12 @@ class DataBaseMigrate {
     //    最初から正しい first_payment_date を持つため、タイポ版カラムの有無を検査し
     //    存在する場合のみ改名処理を行う（存在しない端末でのクラッシュを回避）。
     logger.i('1. ${SqfFixedCost.tableName}のカラム名を検査中...');
-    final fixedCostColumns =
-        await db.rawQuery('PRAGMA table_info(${SqfFixedCost.tableName})');
-    final hasTypoPaymentDate =
-        fixedCostColumns.any((column) => column['name'] == 'fiirst_payment_date');
+    final fixedCostColumns = await db.rawQuery(
+      'PRAGMA table_info(${SqfFixedCost.tableName})',
+    );
+    final hasTypoPaymentDate = fixedCostColumns.any(
+      (column) => column['name'] == 'fiirst_payment_date',
+    );
 
     if (!hasTypoPaymentDate) {
       logger.i('1-1. 既に${SqfFixedCost.firstPaymentDate}のため改名をスキップ');
@@ -250,23 +273,27 @@ class DataBaseMigrate {
 
       await db.execute('DROP TABLE ${SqfFixedCost.tableName};');
       await db.execute(
-          'ALTER TABLE fixed_cost_new RENAME TO ${SqfFixedCost.tableName};');
+        'ALTER TABLE fixed_cost_new RENAME TO ${SqfFixedCost.tableName};',
+      );
     }
 
     // 2. fixed_cost_expense: v6マイグレーション経由の端末には fixed_cost_id 列が
     //    存在しない（v7以降の新規インストールには存在する）ため、検査して補完する
     logger.i('2. ${SqfFixedCostExpense.tableName}のfixed_cost_id列を検査中...');
-    final columns = await db
-        .rawQuery('PRAGMA table_info(${SqfFixedCostExpense.tableName})');
-    final hasFixedCostId = columns
-        .any((column) => column['name'] == SqfFixedCostExpense.fixedCostId);
+    final columns = await db.rawQuery(
+      'PRAGMA table_info(${SqfFixedCostExpense.tableName})',
+    );
+    final hasFixedCostId = columns.any(
+      (column) => column['name'] == SqfFixedCostExpense.fixedCostId,
+    );
 
     if (hasFixedCostId) {
       logger.i('2-1. fixed_cost_id列は既に存在するためスキップ');
     } else {
       logger.i('2-1. fixed_cost_id列が無いため追加・補完します');
       await db.execute(
-          'ALTER TABLE ${SqfFixedCostExpense.tableName} ADD COLUMN ${SqfFixedCostExpense.fixedCostId} INTEGER;');
+        'ALTER TABLE ${SqfFixedCostExpense.tableName} ADD COLUMN ${SqfFixedCostExpense.fixedCostId} INTEGER;',
+      );
 
       // 名前と固定費カテゴリーの一致でマスタと突合して補完する
       // （支払実績の日付はマスタ側の支払日と一致しないため突合キーに使わない）
@@ -283,11 +310,48 @@ class DataBaseMigrate {
           ''');
 
       // 突合できなかったレコードはNULLのまま保持し、件数だけログに残す
-      final unresolved = Sqflite.firstIntValue(await db.rawQuery(
-          'SELECT COUNT(*) FROM ${SqfFixedCostExpense.tableName} WHERE ${SqfFixedCostExpense.fixedCostId} IS NULL'));
+      final unresolved = Sqflite.firstIntValue(
+        await db.rawQuery(
+          'SELECT COUNT(*) FROM ${SqfFixedCostExpense.tableName} WHERE ${SqfFixedCostExpense.fixedCostId} IS NULL',
+        ),
+      );
       logger.i('2-2. 突合できなかった固定費支出: $unresolved件');
     }
 
     logger.i('=== v8マイグレーション完了 ===');
+  }
+
+  // 収入大カテゴリーへの会計種別導入マイグレーション (v8 → v9)
+  // ADR-025: 集計スコープをカテゴリーID（1/2）決め打ちから
+  // カテゴリーごとの会計種別（1=生活収支, 2=特別枠）に変更する
+  Future<void> toV9(Database db) async {
+    logger.i('=== v9マイグレーション開始: 会計種別（account_type）導入 ===');
+
+    // 中断・再実行に耐えるよう、列の有無を検査してから追加する
+    logger.i('1. ${SqfIncomeBigCategory.tableName}のaccount_type列を検査中...');
+    final columns = await db.rawQuery(
+      'PRAGMA table_info(${SqfIncomeBigCategory.tableName})',
+    );
+    final hasAccountType = columns.any(
+      (column) => column['name'] == SqfIncomeBigCategory.accountType,
+    );
+
+    if (hasAccountType) {
+      logger.i('1-1. account_type列は既に存在するためスキップ');
+    } else {
+      logger.i('1-1. account_type列を追加します（デフォルト=生活収支）');
+      await db.execute(
+        'ALTER TABLE ${SqfIncomeBigCategory.tableName} ADD COLUMN ${SqfIncomeBigCategory.accountType} INTEGER NOT NULL DEFAULT 1;',
+      );
+
+      // 既定カテゴリー「ボーナス(id=2)」のみ特別枠に設定する
+      // （id=1「月次収入」およびユーザー追加済みのid=3以降はデフォルトの生活収支のまま。
+      //   従来id=3以降はどの集計にも属さない孤児だったため、生活収支への編入が最も安全）
+      await db.execute(
+        'UPDATE ${SqfIncomeBigCategory.tableName} SET ${SqfIncomeBigCategory.accountType} = 2 WHERE ${SqfIncomeBigCategory.id} = 2;',
+      );
+    }
+
+    logger.i('=== v9マイグレーション完了 ===');
   }
 }

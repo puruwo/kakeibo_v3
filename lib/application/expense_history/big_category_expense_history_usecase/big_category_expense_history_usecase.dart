@@ -15,18 +15,23 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // 支出タイルのValueを小カテゴリー指定して取得し、日付ごとにグループ分けして返却するプロバイダ
 
-final bigCategoryExpenseHistoryNotifierProvider = AsyncNotifierProvider.family<
-    BigCategoryExpenseHistoryUsecaseNotifier,
-    List<ExpenseHistoryTileGroupValue>,
-    RequestBigExpenseHistory>(
-  BigCategoryExpenseHistoryUsecaseNotifier.new,
-);
+final bigCategoryExpenseHistoryNotifierProvider =
+    AsyncNotifierProvider.family<
+      BigCategoryExpenseHistoryUsecaseNotifier,
+      List<ExpenseHistoryTileGroupValue>,
+      RequestBigExpenseHistory
+    >(BigCategoryExpenseHistoryUsecaseNotifier.new);
 
-class BigCategoryExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
-    List<ExpenseHistoryTileGroupValue>, RequestBigExpenseHistory> {
+class BigCategoryExpenseHistoryUsecaseNotifier
+    extends
+        FamilyAsyncNotifier<
+          List<ExpenseHistoryTileGroupValue>,
+          RequestBigExpenseHistory
+        > {
   @override
   Future<List<ExpenseHistoryTileGroupValue>> build(
-      RequestBigExpenseHistory request) async {
+    RequestBigExpenseHistory request,
+  ) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
@@ -45,9 +50,10 @@ class BigCategoryExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
     for (int i = 0; i < smallCategoryIdList.length; i++) {
       // 小カテゴリーIdを指定して、月次支出のタイル情報を取得する
       final records = await _service.fetchTileList(
-          IncomeBigCategoryConstants.incomeSourceIdSalary,
-          request.monthPeriodValue,
-          smallId: smallCategoryIdList[i]);
+        AccountTypeConstants.living,
+        request.monthPeriodValue,
+        smallId: smallCategoryIdList[i],
+      );
       entities.addAll(records);
     }
 
@@ -59,7 +65,9 @@ class BigCategoryExpenseHistoryUsecaseNotifier extends FamilyAsyncNotifier<
     //型指定してやらんとエラーになる、Object型で判定される
     SplayTreeMap<DateTime, List<ExpenseHistoryTileValue>> sortedGroup =
         SplayTreeMap.from(
-            grouped, (DateTime key1, DateTime key2) => key2.compareTo(key1));
+          grouped,
+          (DateTime key1, DateTime key2) => key2.compareTo(key1),
+        );
 
     final List<ExpenseHistoryTileGroupValue> result = [];
 

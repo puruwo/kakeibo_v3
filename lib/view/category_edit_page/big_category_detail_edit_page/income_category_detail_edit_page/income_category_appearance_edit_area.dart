@@ -9,16 +9,17 @@ import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/icon_select_dialog.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
+import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/category_setting_row.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_account_type_controller/income_big_category_account_type_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_color_controller/income_big_category_color_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_name_controller/income_big_category_name_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
 
 class IncomeCategoryAppearanceEditArea extends ConsumerStatefulWidget {
-  const IncomeCategoryAppearanceEditArea({
-    required this.bigId,
-    super.key,
-  });
+  const IncomeCategoryAppearanceEditArea({required this.bigId, super.key});
 
   final int bigId;
 
@@ -52,14 +53,25 @@ class _IncomeCategoryAppearanceEditAreaState
         ref
             .read(incomeBigCategoryIconControllerNotifierProvider.notifier)
             .initState(initialItem.iconPath);
+        ref
+            .read(
+              incomeBigCategoryAccountTypeControllerNotifierProvider.notifier,
+            )
+            .initState(initialItem.accountType);
       });
     });
   }
 
+  /// 既定カテゴリー（月次収入・ボーナス）は会計種別を変更不可にする
+  ///
+  /// 既定2カテゴリーの種別を入れ替えると既存の全集計スコープが入れ替わるため、
+  /// 削除禁止と同じ基準でロックする（ADR-025）
+  bool get _isAccountTypeLocked =>
+      IncomeBigCategoryConstants.isDefaultCategory(widget.bigId);
+
   @override
   Widget build(BuildContext context) {
-    final iconPath =
-        ref.watch(incomeBigCategoryIconControllerNotifierProvider);
+    final iconPath = ref.watch(incomeBigCategoryIconControllerNotifierProvider);
     final color = ref.watch(incomeBigCategoryColorControllerNotifierProvider);
 
     return Column(
@@ -94,8 +106,7 @@ class _IncomeCategoryAppearanceEditAreaState
                         padding: const EdgeInsets.only(top: 16.0, left: 18),
                         child: SvgPicture.asset(
                           iconPath,
-                          colorFilter:
-                              ColorFilter.mode(color, BlendMode.srcIn),
+                          colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
                           semanticsLabel: 'categoryIcon',
                           width: 45,
                           height: 45,
@@ -120,8 +131,9 @@ class _IncomeCategoryAppearanceEditAreaState
                   width: 313,
                   height: 48,
                   child: TextFormField(
-                    controller:
-                        ref.watch(incomeBigCategoryNameControllerProvider),
+                    controller: ref.watch(
+                      incomeBigCategoryNameControllerProvider,
+                    ),
                     autofocus: true,
                     textAlignVertical: TextAlignVertical.center,
                     textAlign: TextAlign.center,
@@ -179,15 +191,11 @@ class _IncomeCategoryAppearanceEditAreaState
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                        ),
+                        borderSide: BorderSide(color: Colors.transparent),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide(
-                          color: Colors.transparent,
-                        ),
+                        borderSide: BorderSide(color: Colors.transparent),
                       ),
                     ),
                     keyboardAppearance: Brightness.dark,
@@ -226,40 +234,72 @@ class _IncomeCategoryAppearanceEditAreaState
               },
             );
           },
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Container(
-              height: 42,
+          child: CategorySettingRow(
+            label: 'カテゴリーカラー',
+            trailing: Container(
+              height: 16,
+              width: 16,
               decoration: BoxDecoration(
-                color: context.colors.fillQuaternary,
-                border: Border.all(color: context.colors.surfaceBorder, width: 1),
-                borderRadius: BorderRadius.circular(50),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 16.0, right: 8),
-                    child: Container(
-                      height: 16,
-                      width: 16,
-                      decoration: BoxDecoration(
-                        color: ref.watch(
-                          incomeBigCategoryColorControllerNotifierProvider,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                  Text('カテゴリーカラー',
-                      style: AppTextStyles.listTileSecondaryTitle),
-                ],
+                color: ref.watch(
+                  incomeBigCategoryColorControllerNotifierProvider,
+                ),
+                shape: BoxShape.circle,
               ),
             ),
           ),
         ),
+
+        const SizedBox(height: 8.0),
+
+        // 会計種別選択（生活収支 / 特別枠。ADR-025）
+        _buildAccountTypeRow(context),
       ],
+    );
+  }
+
+  // 会計種別の選択行を構築する
+  // 既定カテゴリー（月次収入・ボーナス）は表示のみで変更不可
+  Widget _buildAccountTypeRow(BuildContext context) {
+    final accountType = ref.watch(
+      incomeBigCategoryAccountTypeControllerNotifierProvider,
+    );
+
+    final rowContent = CategorySettingRow(
+      label: '会計種別',
+      locked: _isAccountTypeLocked,
+      trailing: Text(
+        AccountTypeConstants.label(accountType),
+        style: AppTextStyles.listTileSecondaryTitle,
+      ),
+    );
+
+    if (_isAccountTypeLocked) {
+      return rowContent;
+    }
+
+    return AppPopupMenu<int>(
+      onSelected: (selected) {
+        ref
+            .read(
+              incomeBigCategoryAccountTypeControllerNotifierProvider.notifier,
+            )
+            .updateState(selected);
+      },
+      itemBuilder: (context) => [
+        buildCheckableMenuItem(
+          value: AccountTypeConstants.living,
+          label: AccountTypeConstants.livingLabel,
+          isSelected: accountType == AccountTypeConstants.living,
+          selectedColor: context.colors.primary,
+        ),
+        buildCheckableMenuItem(
+          value: AccountTypeConstants.special,
+          label: AccountTypeConstants.specialLabel,
+          isSelected: accountType == AccountTypeConstants.special,
+          selectedColor: context.colors.primary,
+        ),
+      ],
+      child: rowContent,
     );
   }
 }

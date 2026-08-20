@@ -15,12 +15,12 @@ import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final annualBalanceChartNotifierProvider = AsyncNotifierProvider.family<
-    AnnualBalanceChartUsecaseNotifier,
-    AnnualBalanceChartValue,
-    DateScopeEntity>(
-  AnnualBalanceChartUsecaseNotifier.new,
-);
+final annualBalanceChartNotifierProvider =
+    AsyncNotifierProvider.family<
+      AnnualBalanceChartUsecaseNotifier,
+      AnnualBalanceChartValue,
+      DateScopeEntity
+    >(AnnualBalanceChartUsecaseNotifier.new);
 
 class AnnualBalanceChartUsecaseNotifier
     extends FamilyAsyncNotifier<AnnualBalanceChartValue, DateScopeEntity> {
@@ -50,40 +50,46 @@ class AnnualBalanceChartUsecaseNotifier
   }
 
   // その年の月ごとの収支を取得する
-  Future<AnnualBalanceChartValue> fetch(
-      {required DateScopeEntity dateScope}) async {
+  Future<AnnualBalanceChartValue> fetch({
+    required DateScopeEntity dateScope,
+  }) async {
     final monthBalanceValues = <MonthlyBalanceValue>[];
 
     // 「現在月度」は systemDatetime（運用日時）から導出する
     // selectedDate ベースで計算すると年度切替後に当該年度の開始月以降が
     // すべて未来扱いになるため、実際の今日を基準にする
     final systemDate = ref.read(systemDatetimeNotifierProvider);
-    final currentMonthPeriod =
-        await _monthPeriodService.fetchMonthPeriod(systemDate);
+    final currentMonthPeriod = await _monthPeriodService.fetchMonthPeriod(
+      systemDate,
+    );
 
     // 一番最初の月の期間を取得
-    final firstMonthPeriod = await _monthPeriodService
-        .fetchMonthPeriod(dateScope.yearPeriod.startDatetime);
+    final firstMonthPeriod = await _monthPeriodService.fetchMonthPeriod(
+      dateScope.yearPeriod.startDatetime,
+    );
 
     // 未来
     bool hasNoRecord = true;
     for (int i = 0; i < 12; i++) {
-      final pueryPeriod =
-          _monthPeriodService.fetchShiftedMonthPeriod(firstMonthPeriod, i);
+      final pueryPeriod = _monthPeriodService.fetchShiftedMonthPeriod(
+        firstMonthPeriod,
+        i,
+      );
 
-      // ボーナス以外の収入を取得
-      final income =
-          await _incomeRepository.calcurateSumWithBigCategoryAndPeriod(
-              period: pueryPeriod,
-              bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
+      // 会計種別=生活収支の収入を取得（ADR-025: 特別枠系カテゴリーを除く全収入）
+      final income = await _incomeRepository
+          .calcurateSumWithAccountTypeAndPeriod(
+            period: pueryPeriod,
+            accountType: AccountTypeConstants.living,
+          );
 
-      // ボーナス支出以外の一般支出を取得
-      final regularExpense =
-          await _expenseRepository.fetchTotalExpenseByPeriodWithBigCategory(
-              incomeSourceBigCategory:
-                  IncomeBigCategoryConstants.incomeSourceIdSalary,
-              fromDate: pueryPeriod.startDatetime,
-              toDate: pueryPeriod.endDatetime);
+      // 拠出元=生活収支の一般支出を取得（特別枠充当の支出を除く）
+      final regularExpense = await _expenseRepository
+          .fetchTotalExpenseByPeriodWithBigCategory(
+            incomeSourceBigCategory: AccountTypeConstants.living,
+            fromDate: pueryPeriod.startDatetime,
+            toDate: pueryPeriod.endDatetime,
+          );
 
       // 確定済み固定費支出を取得（生活収支に合算）
       final fixedCostExpense = await _fixedCostExpenseRepository
@@ -92,7 +98,8 @@ class AnnualBalanceChartUsecaseNotifier
       // 未確定固定費の推定額を取得（生活収支に合算）
       final unconfirmedFixedCostExpense = await _fixedCostExpenseRepository
           .fetchTotalUnconfirmedFixedCostEstimatedWithPeriod(
-              period: pueryPeriod);
+            period: pueryPeriod,
+          );
 
       final expense =
           regularExpense + fixedCostExpense + unconfirmedFixedCostExpense;
@@ -117,8 +124,9 @@ class AnnualBalanceChartUsecaseNotifier
         hasNoRecord = false;
       }
 
-      final monthNumber =
-          await _aRMService.fetchMonth(pueryPeriod.startDatetime);
+      final monthNumber = await _aRMService.fetchMonth(
+        pueryPeriod.startDatetime,
+      );
 
       monthBalanceValues.add(
         MonthlyBalanceValue(

@@ -19,6 +19,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.surfaceElevated,
     required this.surfaceElevated2,
     required this.surfaceBorder,
+    required this.surfaceBorderSubtle,
     required this.fill,
     required this.fillSecondary,
     required this.fillTertiary,
@@ -45,6 +46,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color surfaceElevated;
   final Color surfaceElevated2;
   final Color surfaceBorder;
+  final Color surfaceBorderSubtle;
   final Color fill;
   final Color fillSecondary;
   final Color fillTertiary;
@@ -71,6 +73,7 @@ class AppColors extends ThemeExtension<AppColors> {
     surfaceElevated: Color(0xFFF2F2F7),
     surfaceElevated2: Color(0xFFFFFFFF),
     surfaceBorder: Color(0x24000000),
+    surfaceBorderSubtle: Color(0x14000000),
     fill: Color(0x33787880),
     fillSecondary: Color(0x28787880),
     fillTertiary: Color(0x1E767680),
@@ -98,6 +101,7 @@ class AppColors extends ThemeExtension<AppColors> {
     surfaceElevated: Color(0xFF1C1C1E),
     surfaceElevated2: Color(0xFF2C2C2E),
     surfaceBorder: Color(0x24FFFFFF),
+    surfaceBorderSubtle: Color(0x14FFFFFF),
     fill: Color(0x5B787880),
     fillSecondary: Color(0x51787880),
     fillTertiary: Color(0x3D767680),
@@ -126,6 +130,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? surfaceElevated,
     Color? surfaceElevated2,
     Color? surfaceBorder,
+    Color? surfaceBorderSubtle,
     Color? fill,
     Color? fillSecondary,
     Color? fillTertiary,
@@ -152,6 +157,7 @@ class AppColors extends ThemeExtension<AppColors> {
       surfaceElevated: surfaceElevated ?? this.surfaceElevated,
       surfaceElevated2: surfaceElevated2 ?? this.surfaceElevated2,
       surfaceBorder: surfaceBorder ?? this.surfaceBorder,
+      surfaceBorderSubtle: surfaceBorderSubtle ?? this.surfaceBorderSubtle,
       fill: fill ?? this.fill,
       fillSecondary: fillSecondary ?? this.fillSecondary,
       fillTertiary: fillTertiary ?? this.fillTertiary,
@@ -183,6 +189,7 @@ class AppColors extends ThemeExtension<AppColors> {
       surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t)!,
       surfaceElevated2: Color.lerp(surfaceElevated2, other.surfaceElevated2, t)!,
       surfaceBorder: Color.lerp(surfaceBorder, other.surfaceBorder, t)!,
+      surfaceBorderSubtle: Color.lerp(surfaceBorderSubtle, other.surfaceBorderSubtle, t)!,
       fill: Color.lerp(fill, other.fill, t)!,
       fillSecondary: Color.lerp(fillSecondary, other.fillSecondary, t)!,
       fillTertiary: Color.lerp(fillTertiary, other.fillTertiary, t)!,
@@ -223,6 +230,7 @@ class AppColorsLight {
   static const Color surfaceElevated = Color(0xFFF2F2F7);
   static const Color surfaceElevated2 = Color(0xFFFFFFFF);
   static const Color surfaceBorder = Color(0x24000000);
+  static const Color surfaceBorderSubtle = Color(0x14000000);
   static const Color fill = Color(0x33787880);
   static const Color fillSecondary = Color(0x28787880);
   static const Color fillTertiary = Color(0x1E767680);
@@ -253,6 +261,7 @@ class AppColorsDark {
   static const Color surfaceElevated = Color(0xFF1C1C1E);
   static const Color surfaceElevated2 = Color(0xFF2C2C2E);
   static const Color surfaceBorder = Color(0x24FFFFFF);
+  static const Color surfaceBorderSubtle = Color(0x14FFFFFF);
   static const Color fill = Color(0x5B787880);
   static const Color fillSecondary = Color(0x51787880);
   static const Color fillTertiary = Color(0x3D767680);

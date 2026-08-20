@@ -6,10 +6,12 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/bonus_plan_value/bonus_plan_value.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final bonusPlanNotifierProvider = AsyncNotifierProvider.family<
-    BonusPlanUsecaseNotifier, BonusPlanValue, PeriodValue>(
-  BonusPlanUsecaseNotifier.new,
-);
+final bonusPlanNotifierProvider =
+    AsyncNotifierProvider.family<
+      BonusPlanUsecaseNotifier,
+      BonusPlanValue,
+      PeriodValue
+    >(BonusPlanUsecaseNotifier.new);
 
 // yearlyPageのボーナスタイルのデータを取得するユースケース
 class BonusPlanUsecaseNotifier
@@ -30,21 +32,23 @@ class BonusPlanUsecaseNotifier
     return fetch(selectedYearPeriod: selectedYearPeriod);
   }
 
-  Future<BonusPlanValue> fetch(
-      {required PeriodValue selectedYearPeriod}) async {
-    // カテゴリーIDを2で指定することで、ボーナス収入の合計を取得する
-    final yearlyBonusIncome =
-        await _incomeRepository.calcurateSumWithBigCategoryAndPeriod(
-            period: selectedYearPeriod,
-            bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdBonus);
+  Future<BonusPlanValue> fetch({
+    required PeriodValue selectedYearPeriod,
+  }) async {
+    // 会計種別=特別枠の収入合計を取得する（ADR-025: 特別枠系カテゴリー全体の合算）
+    final yearlyBonusIncome = await _incomeRepository
+        .calcurateSumWithAccountTypeAndPeriod(
+          period: selectedYearPeriod,
+          accountType: AccountTypeConstants.special,
+        );
 
-    // カテゴリーIDを2で指定することで、ボーナス分の支出の合計を取得する
-    final yearlyBonusExpense =
-        await _expenseRepository.fetchTotalExpenseByPeriodWithBigCategory(
-            incomeSourceBigCategory:
-                IncomeBigCategoryConstants.incomeSourceIdBonus,
-            fromDate: selectedYearPeriod.startDatetime,
-            toDate: selectedYearPeriod.endDatetime);
+    // 拠出元=特別枠の支出合計を取得する
+    final yearlyBonusExpense = await _expenseRepository
+        .fetchTotalExpenseByPeriodWithBigCategory(
+          incomeSourceBigCategory: AccountTypeConstants.special,
+          fromDate: selectedYearPeriod.startDatetime,
+          toDate: selectedYearPeriod.endDatetime,
+        );
 
     // 予定貯金を計算
     final lastBonusPrice = yearlyBonusIncome - yearlyBonusExpense;

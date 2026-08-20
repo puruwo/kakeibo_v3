@@ -21,7 +21,7 @@ IncomeEntity _$IncomeEntityFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$IncomeEntity {
-  int get id => throw _privateConstructorUsedError;
+  int get id => throw _privateConstructorUsedError; // 収入小カテゴリーID（既定は小カテゴリー「給与」）
   int get categoryId => throw _privateConstructorUsedError;
   String get date => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
@@ -160,7 +160,7 @@ class __$$IncomeEntityImplCopyWithImpl<$Res>
 class _$IncomeEntityImpl implements _IncomeEntity {
   const _$IncomeEntityImpl({
     this.id = 0,
-    this.categoryId = IncomeBigCategoryConstants.incomeSourceIdSalary,
+    this.categoryId = IncomeSmallCategoryConstants.salary,
     required this.date,
     this.price = 0,
     this.memo = '',
@@ -172,6 +172,7 @@ class _$IncomeEntityImpl implements _IncomeEntity {
   @override
   @JsonKey()
   final int id;
+  // 収入小カテゴリーID（既定は小カテゴリー「給与」）
   @override
   @JsonKey()
   final int categoryId;
@@ -234,7 +235,7 @@ abstract class _IncomeEntity implements IncomeEntity {
       _$IncomeEntityImpl.fromJson;
 
   @override
-  int get id;
+  int get id; // 収入小カテゴリーID（既定は小カテゴリー「給与」）
   @override
   int get categoryId;
   @override

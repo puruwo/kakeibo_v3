@@ -35,8 +35,8 @@ class BonusHomeFooter extends ConsumerWidget {
           final today = ref.read(systemDatetimeNotifierProvider);
           final newExpense = ExpenseEntity(
             date: DateFormat('yyyyMMdd').format(today),
-            incomeSourceBigCategory:
-                IncomeBigCategoryConstants.incomeSourceIdBonus,
+            // 拠出元=特別枠の支出として追加する
+            incomeSourceBigCategory: AccountTypeConstants.special,
             memo: '',
           );
           showAppModalBottomSheet(
@@ -58,7 +58,8 @@ class BonusHomeFooter extends ConsumerWidget {
           final today = ref.read(systemDatetimeNotifierProvider);
           final newIncome = IncomeEntity(
             date: DateFormat('yyyyMMdd').format(today),
-            categoryId: IncomeBigCategoryConstants.incomeSourceIdBonus,
+            // 初期選択は小カテゴリー「ボーナス」（大カテゴリーIDではなく小カテゴリーID）
+            categoryId: IncomeSmallCategoryConstants.bonus,
           );
           showAppModalBottomSheet(
             context,

@@ -168,7 +168,7 @@ void main() {
             price: 9999,
             paymentCategoryId: 11,
             incomeSourceBigCategory:
-                IncomeBigCategoryConstants.incomeSourceIdBonus,
+                AccountTypeConstants.special,
           ),
         ],
       );
@@ -187,7 +187,7 @@ void main() {
         calls.every(
           (c) =>
               c.incomeSourceBigCategory ==
-              IncomeBigCategoryConstants.incomeSourceIdSalary,
+              AccountTypeConstants.living,
         ),
         isTrue,
       );

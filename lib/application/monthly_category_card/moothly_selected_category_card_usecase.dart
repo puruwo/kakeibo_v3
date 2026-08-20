@@ -49,8 +49,7 @@ class MonthlySelectedCategoryCardUsecaseNotifier
     // 大カテゴリー(タイル情報つき)の情報を取得する
     final accountingValue = await _categoryAccountingRepositoryProvider
         .fetchSelectedCategory(
-          incomeSourceBigCategoryId:
-              IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
+          incomeSourceBigCategoryId: AccountTypeConstants.living, // ボーナスを除く
           expenseBigCategoryId: request.bigId,
           fromDate: fromDate,
           toDate: toDate,
@@ -66,8 +65,7 @@ class MonthlySelectedCategoryCardUsecaseNotifier
 
     // タイル内の小カテゴリーのリスト情報を取得する
     final smallCategory = await _smallCategoryTileRepository.fetchAll(
-      incomeSourceBigCategoryId:
-          IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
+      incomeSourceBigCategoryId: AccountTypeConstants.living, // ボーナスを除く
       bigCategoryId: accountingValue.id,
       fromDate: fromDate,
       toDate: toDate,

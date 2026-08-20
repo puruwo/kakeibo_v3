@@ -7,17 +7,19 @@ import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.da
 
 final resolvedBonusIncomeHistoryValueProvider =
     FutureProvider<List<IncomeHistoryTileValue>>((ref) async {
-  // 選択された日付から集計期間を取得する
-  final yearPeriodValue = await ref.watch(
-      homeDateScopeEntityProvider.selectAsync((data) => data.yearPeriod));
+      // 選択された日付から集計期間を取得する
+      final yearPeriodValue = await ref.watch(
+        homeDateScopeEntityProvider.selectAsync((data) => data.yearPeriod),
+      );
 
-  // リクエスト用のEntityを作成する
-  // idは2を指定して、ボーナス収入の履歴を取得する
-  final request = RequestIncomeHistoryUsecase(
-      bigId: IncomeBigCategoryConstants.incomeSourceIdBonus,
-      selectedMonthPeriod: yearPeriodValue);
+      // リクエスト用のEntityを作成する
+      // 会計種別=特別枠を指定して、特別枠の収入履歴を取得する
+      final request = RequestIncomeHistoryUsecase(
+        accountType: AccountTypeConstants.special,
+        selectedMonthPeriod: yearPeriodValue,
+      );
 
-  // 選択された集計期間を元に、Entityを取得する
-  final result = ref.watch(incomeHistoryNotifierProvider(request).future);
-  return result;
-});
+      // 選択された集計期間を元に、Entityを取得する
+      final result = ref.watch(incomeHistoryNotifierProvider(request).future);
+      return result;
+    });

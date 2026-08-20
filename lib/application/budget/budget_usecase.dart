@@ -42,8 +42,9 @@ class BudgetUsecase {
       _ref.read(updateDBCountNotifierProvider.notifier);
 
   /// [fetchAll] メソッドは、全てのエクスポートの情報を取得する
-  Future<List<BudgetEditValue>> fetchAll(
-      {required DateScopeEntity dateScope}) async {
+  Future<List<BudgetEditValue>> fetchAll({
+    required DateScopeEntity dateScope,
+  }) async {
     // 大カテゴリーの一覧情報を取得する
     final expenseBigCategoryList = await _bigCategoryRepository.fetchAll();
 
@@ -53,10 +54,11 @@ class BudgetUsecase {
     // 各valueの情報を取得する
     for (var bigCategory in expenseBigCategoryList) {
       // SqfBudgetから大カテゴリーを指定して予算データを取得する
-      final budgetEntity =
-          await _budgetRepositoryProvider.fetchMonthlyByBigCategory(
-              month: dateScope.representativeMonth,
-              expenseBigCategoryId: bigCategory.id);
+      final budgetEntity = await _budgetRepositoryProvider
+          .fetchMonthlyByBigCategory(
+            month: dateScope.representativeMonth,
+            expenseBigCategoryId: bigCategory.id,
+          );
 
       // 大カテゴリーの支出合計を取得する
       final smallCategoryList = await _smallCategoryRepository
@@ -64,19 +66,23 @@ class BudgetUsecase {
 
       // 現在月の場合は先月の支出、過去月の場合は当月の支出を表示
       final targetPeriod = dateScope.periodStatus == PeriodStatus.current
-          ? _monthPeriodService.fetchShiftedMonthPeriod(dateScope.aggregationMonthPeriod, -1)
+          ? _monthPeriodService.fetchShiftedMonthPeriod(
+              dateScope.aggregationMonthPeriod,
+              -1,
+            )
           : dateScope.aggregationMonthPeriod;
 
-      final referenceExpenseTotal =
-          await Future.wait(smallCategoryList.map((e) async {
-        return await _expenseRepository
-            .fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
-                incomeSourceBigCategory:
-                    IncomeBigCategoryConstants.incomeSourceIdSalary,
+      final referenceExpenseTotal = await Future.wait(
+        smallCategoryList.map((e) async {
+          return await _expenseRepository
+              .fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
+                incomeSourceBigCategory: AccountTypeConstants.living,
                 fromDate: targetPeriod.startDatetime,
                 toDate: targetPeriod.endDatetime,
-                smallCategoryId: e.id);
-      })).then((values) => values.fold<int>(0, (a, b) => a + b));
+                smallCategoryId: e.id,
+              );
+        }),
+      ).then((values) => values.fold<int>(0, (a, b) => a + b));
 
       final budgetEditValue = BudgetEditValue(
         id: budgetEntity.id,
@@ -107,9 +113,10 @@ class BudgetUsecase {
   }
 
   // 編集処理
-  Future<void> edit(
-      {required List<BudgetEditValue> originalValues,
-      required List<int> editPrice}) async {
+  Future<void> edit({
+    required List<BudgetEditValue> originalValues,
+    required List<int> editPrice,
+  }) async {
     //エラーチェック
     if (originalValues.length != editPrice.length) {
       // リストの長さが一致しない場合

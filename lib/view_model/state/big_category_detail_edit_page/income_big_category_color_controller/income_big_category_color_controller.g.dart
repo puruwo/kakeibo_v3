@@ -7,7 +7,7 @@ part of 'income_big_category_color_controller.dart';
 // **************************************************************************
 
 String _$incomeBigCategoryColorControllerNotifierHash() =>
-    r'268937e59bc0d89b55a7ebfebf8daa09a0ff6e2a';
+    r'c3218b3baaba43ec07e83ba56d5c801ff8f067fd';
 
 /// See also [IncomeBigCategoryColorControllerNotifier].
 @ProviderFor(IncomeBigCategoryColorControllerNotifier)

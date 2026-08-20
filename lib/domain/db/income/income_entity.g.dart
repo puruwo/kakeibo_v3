@@ -11,7 +11,7 @@ _$IncomeEntityImpl _$$IncomeEntityImplFromJson(Map<String, dynamic> json) =>
       id: (json['id'] as num?)?.toInt() ?? 0,
       categoryId:
           (json['categoryId'] as num?)?.toInt() ??
-          IncomeBigCategoryConstants.incomeSourceIdSalary,
+          IncomeSmallCategoryConstants.salary,
       date: json['date'] as String,
       price: (json['price'] as num?)?.toInt() ?? 0,
       memo: json['memo'] as String? ?? '',

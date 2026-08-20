@@ -726,9 +726,116 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
+  // toV9: 会計種別（account_type）導入
+  // -------------------------------------------------------------------------
+  group('toV9: income_big_categoryへの会計種別導入', () {
+    /// v8以前の形状（account_type列なし）の income_big_category を作る
+    ///
+    /// 出典: lib/model/sql_on_create.dart のv8時点のCREATE文
+    /// （account_type列はv9で追加されるため、当時の字面をそのまま置く）
+    Future<Database> createV8ShapeIncomeBigCategory({
+      bool withThirdCategory = false,
+    }) async {
+      final db = await databaseFactory.openDatabase(inMemoryDatabasePath);
+      addTearDown(db.close);
+      await db.execute('''
+        CREATE TABLE income_big_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          color_code TEXT NOT NULL,
+          resource_path TEXT NOT NULL
+        );
+      ''');
+      await db.execute('''
+        INSERT INTO income_big_category (name, color_code, resource_path)
+        VALUES ('月次収入', '21D19F', 'assets/images/icon_regular_income.svg'),
+               ('ボーナス', '10B981', 'assets/images/icon_extra_income.svg');
+      ''');
+      if (withThirdCategory) {
+        // 従来仕様でユーザーが追加できてしまっていた第3カテゴリー
+        await db.execute('''
+          INSERT INTO income_big_category (name, color_code, resource_path)
+          VALUES ('副業', '059669', 'assets/images/icon_regular_income.svg');
+        ''');
+      }
+      return db;
+    }
+
+    test('account_type列が追加され、月次収入=1（生活収支）・ボーナス=2（特別枠）になる', () async {
+      final db = await createV8ShapeIncomeBigCategory();
+
+      await DataBaseMigrate().toV9(db);
+
+      final columns = await _columnNames(db, SqfIncomeBigCategory.tableName);
+      expect(columns.contains(SqfIncomeBigCategory.accountType), isTrue);
+
+      final rows = await db.query(
+        SqfIncomeBigCategory.tableName,
+        orderBy: SqfIncomeBigCategory.id,
+      );
+      expect(rows[0][SqfIncomeBigCategory.accountType], 1); // 月次収入=生活収支
+      expect(rows[1][SqfIncomeBigCategory.accountType], 2); // ボーナス=特別枠
+    });
+
+    test('既存の第3カテゴリー（旧仕様の孤児）は生活収支（1）に編入される', () async {
+      final db = await createV8ShapeIncomeBigCategory(withThirdCategory: true);
+
+      await DataBaseMigrate().toV9(db);
+
+      final rows = await db.query(
+        SqfIncomeBigCategory.tableName,
+        orderBy: SqfIncomeBigCategory.id,
+      );
+      expect(rows[2]['name'], '副業');
+      expect(rows[2][SqfIncomeBigCategory.accountType], 1);
+    });
+
+    test('2回連続で実行しても列は重複せず値も変わらない（冪等性）', () async {
+      final db = await createV8ShapeIncomeBigCategory();
+
+      await DataBaseMigrate().toV9(db);
+      await DataBaseMigrate().toV9(db);
+
+      final columns = await db.rawQuery(
+        'PRAGMA table_info(${SqfIncomeBigCategory.tableName})',
+      );
+      final accountTypeColumns = columns
+          .where((c) => c['name'] == SqfIncomeBigCategory.accountType)
+          .toList();
+      expect(accountTypeColumns.length, 1);
+
+      final rows = await db.query(
+        SqfIncomeBigCategory.tableName,
+        orderBy: SqfIncomeBigCategory.id,
+      );
+      expect(rows[0][SqfIncomeBigCategory.accountType], 1);
+      expect(rows[1][SqfIncomeBigCategory.accountType], 2);
+    });
+
+    test('account_type列が既にあるDB（v9適用後の値変更あり）では値を上書きしない', () async {
+      final db = await createV8ShapeIncomeBigCategory();
+      await DataBaseMigrate().toV9(db);
+      // ユーザーが第3カテゴリーを特別枠として追加した状態を再現
+      await db.execute('''
+        INSERT INTO income_big_category (name, color_code, resource_path, account_type)
+        VALUES ('副業', '059669', 'assets/images/icon_regular_income.svg', 2);
+      ''');
+
+      await DataBaseMigrate().toV9(db);
+
+      final rows = await db.query(
+        SqfIncomeBigCategory.tableName,
+        orderBy: SqfIncomeBigCategory.id,
+      );
+      // 再実行しても特別枠のまま（列が存在する場合はスキップされる）
+      expect(rows[2][SqfIncomeBigCategory.accountType], 2);
+    });
+  });
+
+  // -------------------------------------------------------------------------
   // マイグレーションチェーン（本番のonUpgrade経路）
   // -------------------------------------------------------------------------
-  group('マイグレーションチェーン v6 → v8', () {
+  group('マイグレーションチェーン v6 → v9', () {
     /// v6形状のDBファイルを DatabaseHelper のパスに作って閉じる
     ///
     /// テーブル定義はv6時点のもの（fixed_costはタイポ列 /
@@ -845,7 +952,7 @@ void main() {
       await db.close();
     }
 
-    test('v6形状のDBを開くとonUpgradeでv7・v8が順に適用されuser_versionが8になる', () async {
+    test('v6形状のDBを開くとonUpgradeでv7・v8・v9が順に適用されuser_versionが9になる', () async {
       final path = await currentDatabasePath();
       await createV6DatabaseFile(path);
 
@@ -853,7 +960,7 @@ void main() {
       final db = await openTestDatabase();
 
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 8);
+      expect(rows.first.values.first, 9);
     });
 
     test('チェーン適用後はv7の色更新とv8の列追加・バックフィルが両方反映される', () async {
@@ -889,6 +996,14 @@ void main() {
       final expenses = await db.query(SqfFixedCostExpense.tableName);
       expect(expenses.length, 1);
       expect(expenses[0][SqfFixedCostExpense.fixedCostId], 1);
+
+      // v9: 会計種別の追加と既定値の付与
+      final incomeBigCategories = await db.query(
+        SqfIncomeBigCategory.tableName,
+        orderBy: SqfIncomeBigCategory.id,
+      );
+      expect(incomeBigCategories[0][SqfIncomeBigCategory.accountType], 1);
+      expect(incomeBigCategories[1][SqfIncomeBigCategory.accountType], 2);
     });
   });
 }

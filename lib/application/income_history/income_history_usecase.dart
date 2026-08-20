@@ -8,15 +8,19 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final incomeHistoryNotifierProvider = AsyncNotifierProvider.family<
-    IncomeHistoryUsecaseNotifier,
-    List<IncomeHistoryTileValue>,
-    RequestIncomeHistoryUsecase>(
-  IncomeHistoryUsecaseNotifier.new,
-);
+final incomeHistoryNotifierProvider =
+    AsyncNotifierProvider.family<
+      IncomeHistoryUsecaseNotifier,
+      List<IncomeHistoryTileValue>,
+      RequestIncomeHistoryUsecase
+    >(IncomeHistoryUsecaseNotifier.new);
 
-class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
-    List<IncomeHistoryTileValue>, RequestIncomeHistoryUsecase> {
+class IncomeHistoryUsecaseNotifier
+    extends
+        FamilyAsyncNotifier<
+          List<IncomeHistoryTileValue>,
+          RequestIncomeHistoryUsecase
+        > {
   // 収入履歴に関するリポジトリ
   late IncomeRepository _incomeRepositoryProvider;
 
@@ -28,7 +32,8 @@ class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
 
   @override
   Future<List<IncomeHistoryTileValue>> build(
-      RequestIncomeHistoryUsecase request) async {
+    RequestIncomeHistoryUsecase request,
+  ) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
@@ -39,18 +44,26 @@ class IncomeHistoryUsecaseNotifier extends FamilyAsyncNotifier<
     _bigCategoryRepository = ref.read(incomeBigCategoryRepositoryProvider);
 
     return fetch(
-        bigId: request.bigId, selectedMonthPeriod: request.selectedMonthPeriod);
+      accountType: request.accountType,
+      selectedMonthPeriod: request.selectedMonthPeriod,
+    );
   }
 
   // 期間指定でタイルデータを取得する
-  Future<List<IncomeHistoryTileValue>> fetch(
-      {required int bigId, required PeriodValue selectedMonthPeriod}) async {
+  Future<List<IncomeHistoryTileValue>> fetch({
+    required int accountType,
+    required PeriodValue selectedMonthPeriod,
+  }) async {
     final service = IncomeHistoryService(
-        bigCategoryRepo: _bigCategoryRepository,
-        incomeRepo: _incomeRepositoryProvider,
-        smallCategoryRepo: _smallCategoryRepository);
+      bigCategoryRepo: _bigCategoryRepository,
+      incomeRepo: _incomeRepositoryProvider,
+      smallCategoryRepo: _smallCategoryRepository,
+    );
 
-    final result = await service.fetchTileList(bigId, selectedMonthPeriod);
+    final result = await service.fetchTileList(
+      accountType,
+      selectedMonthPeriod,
+    );
 
     return result;
   }

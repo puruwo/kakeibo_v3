@@ -106,93 +106,6 @@ void main() {
     });
   });
 
-  group('fetchWithCategoryAndPeriod', () {
-    test('指定した大カテゴリーに紐付く小カテゴリーの収入だけを返す', () async {
-      await _seedStandardIncomes();
-
-      final results = await repository.fetchWithCategoryAndPeriod(
-        period: _period,
-        categoryId: 1,
-      );
-
-      // 大カテゴリー1（給与・小遣い・臨時収入）の期間内3件
-      // ※SQLにORDER BYが無いため順序は保証されない
-      expect(_sortedIds(results), [2, 3, 5]);
-    });
-
-    test('大カテゴリー2を指定するとボーナスの収入だけを返す', () async {
-      await _seedStandardIncomes();
-
-      final results = await repository.fetchWithCategoryAndPeriod(
-        period: _period,
-        categoryId: 2,
-      );
-
-      expect(_sortedIds(results), [4]);
-    });
-
-    test('期間開始日・終了日ちょうどの収入を含む', () async {
-      await _seedStandardIncomes();
-
-      final results = await repository.fetchWithCategoryAndPeriod(
-        period: _period,
-        categoryId: 1,
-      );
-
-      expect(results.map((e) => e.date), contains('20250625'));
-      expect(results.map((e) => e.date), contains('20250724'));
-    });
-
-    test('期間開始前日・終了翌日の収入は含まない', () async {
-      await _seedStandardIncomes();
-
-      final results = await repository.fetchWithCategoryAndPeriod(
-        period: _period,
-        categoryId: 1,
-      );
-
-      expect(results.map((e) => e.date), isNot(contains('20250624')));
-      expect(results.map((e) => e.date), isNot(contains('20250725')));
-    });
-
-    test('マスタに無い小カテゴリーIDの収入はINNER JOINで除外される', () async {
-      // 収入小カテゴリーは onCreate の4件のみ。99は存在しない
-      await insertIncomeRow(
-        id: 1,
-        date: '20250701',
-        price: 100,
-        smallCategoryId: 1,
-      );
-      await insertIncomeRow(
-        id: 2,
-        date: '20250701',
-        price: 999,
-        smallCategoryId: 99,
-      );
-
-      final results = await repository.fetchWithCategoryAndPeriod(
-        period: _period,
-        categoryId: 1,
-      );
-
-      expect(_sortedIds(results), [1]);
-    });
-
-    test('該当が無いなら空リストを返す', () async {
-      await _seedStandardIncomes();
-
-      final results = await repository.fetchWithCategoryAndPeriod(
-        period: PeriodValue(
-          startDatetime: DateTime(2020, 1, 1),
-          endDatetime: DateTime(2020, 1, 31),
-        ),
-        categoryId: 1,
-      );
-
-      expect(results, isEmpty);
-    });
-  });
-
   group('fetchWithoutCategory', () {
     test('カテゴリーで絞らず期間内の収入を全て返す', () async {
       await _seedStandardIncomes();
@@ -216,7 +129,7 @@ void main() {
     });
 
     test('マスタに無い小カテゴリーIDの収入もJOINしないので返る', () async {
-      // fetchWithCategoryAndPeriod との違いを固定する
+      // fetchWithAccountTypeAndPeriod（JOINで落ちる）との違いを固定する
       await insertIncomeRow(
         id: 1,
         date: '20250701',
@@ -236,51 +149,94 @@ void main() {
     });
   });
 
-  group('calcurateSumWithBigCategoryAndPeriod', () {
-    test('指定した大カテゴリーの期間内収入を合計する', () async {
+  group('fetchWithAccountTypeAndPeriod', () {
+    test('会計種別=生活収支なら特別枠（ボーナス）以外の期間内収入を返す', () async {
       await _seedStandardIncomes();
 
-      final total = await repository.calcurateSumWithBigCategoryAndPeriod(
+      final results = await repository.fetchWithAccountTypeAndPeriod(
         period: _period,
-        bigCategoryId: 1,
+        accountType: 1,
+      );
+
+      // 給与(2)・小遣い(3)・臨時収入(5)。ボーナス(4)と期間外(1,6)は含まない
+      expect(_sortedIds(results), [2, 3, 5]);
+    });
+
+    test('会計種別=特別枠ならボーナスの期間内収入だけを返す', () async {
+      await _seedStandardIncomes();
+
+      final results = await repository.fetchWithAccountTypeAndPeriod(
+        period: _period,
+        accountType: 2,
+      );
+
+      expect(_sortedIds(results), [4]);
+    });
+
+    test('ユーザー追加の第3カテゴリーは会計種別に応じたスコープに含まれる', () async {
+      await _seedStandardIncomes();
+      // 特別枠のユーザー追加カテゴリー「副業」（大id=3・小id=5）を作る
+      await insertIncomeBigCategoryRow(id: 3, name: '副業', accountType: 2);
+      await insertIncomeSmallCategoryRow(id: 5, bigCategoryKey: 3, name: '案件A');
+      await insertIncomeRow(
+        id: 7,
+        date: '20250710',
+        price: 500,
+        smallCategoryId: 5,
+      );
+
+      final special = await repository.fetchWithAccountTypeAndPeriod(
+        period: _period,
+        accountType: 2,
+      );
+      final living = await repository.fetchWithAccountTypeAndPeriod(
+        period: _period,
+        accountType: 1,
+      );
+
+      // 副業(7)はボーナス(4)と同じ特別枠スコープに入り、生活収支には混入しない
+      expect(_sortedIds(special), [4, 7]);
+      expect(_sortedIds(living), [2, 3, 5]);
+    });
+  });
+
+  group('calcurateSumWithAccountTypeAndPeriod', () {
+    test('会計種別=生活収支の期間内収入を合計する', () async {
+      await _seedStandardIncomes();
+
+      final total = await repository.calcurateSumWithAccountTypeAndPeriod(
+        period: _period,
+        accountType: 1,
       );
 
       // 100(給与) + 200(小遣い) + 400(臨時収入)
       expect(total, 700);
     });
 
-    test('別の大カテゴリーの収入は混入しない', () async {
+    test('会計種別=特別枠は第3カテゴリーの収入も合算する', () async {
       await _seedStandardIncomes();
+      await insertIncomeBigCategoryRow(id: 3, name: '副業', accountType: 2);
+      await insertIncomeSmallCategoryRow(id: 5, bigCategoryKey: 3, name: '案件A');
+      await insertIncomeRow(
+        id: 7,
+        date: '20250710',
+        price: 500,
+        smallCategoryId: 5,
+      );
 
-      final total = await repository.calcurateSumWithBigCategoryAndPeriod(
+      final total = await repository.calcurateSumWithAccountTypeAndPeriod(
         period: _period,
-        bigCategoryId: 2,
+        accountType: 2,
       );
 
-      expect(total, 300);
-    });
-
-    test('期間開始日ちょうどだけを範囲にすればその日の分だけ合計する', () async {
-      await _seedStandardIncomes();
-
-      final total = await repository.calcurateSumWithBigCategoryAndPeriod(
-        period: PeriodValue(
-          startDatetime: DateTime(2025, 6, 25),
-          endDatetime: DateTime(2025, 6, 25),
-        ),
-        bigCategoryId: 1,
-      );
-
-      // 前日(6/24)の1円は含まれない
-      expect(total, 100);
+      // 300(ボーナス) + 500(副業)
+      expect(total, 800);
     });
 
     test('該当が無いなら0を返す（SUMのNULLを0へフォールバック）', () async {
-      await _seedStandardIncomes();
-
-      final total = await repository.calcurateSumWithBigCategoryAndPeriod(
+      final total = await repository.calcurateSumWithAccountTypeAndPeriod(
         period: _period,
-        bigCategoryId: 99,
+        accountType: 2,
       );
 
       expect(total, 0);

@@ -16,14 +16,15 @@ class BonusRegisterPromptArea extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AppEmptyState(
       icon: Icons.savings_rounded,
-      title: 'ボーナスを登録しましょう',
-      description: 'ボーナスを登録すると利用状況が表示されます',
-      buttonLabel: '＋ ボーナスを登録する',
+      title: '特別枠の収入を登録しましょう',
+      description: 'ボーナスなどの収入を登録すると利用状況が表示されます',
+      buttonLabel: '＋ 収入を登録する',
       onPressed: () {
         final today = ref.read(systemDatetimeNotifierProvider);
         final newIncome = IncomeEntity(
           date: DateFormat('yyyyMMdd').format(today),
-          categoryId: IncomeBigCategoryConstants.incomeSourceIdBonus,
+          // 初期選択は小カテゴリー「ボーナス」（大カテゴリーIDではなく小カテゴリーID）
+          categoryId: IncomeSmallCategoryConstants.bonus,
         );
         showAppModalBottomSheet(
           context,
