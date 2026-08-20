@@ -37,7 +37,7 @@ kakeibo（Flutter家計簿アプリ、現在ダークのみ、カップル/共�
 
 | ファイル | 役割 |
 |---------|------|
-| `design-tokens/tokens.json` | **全色の唯一の定義元**。primitive / light / dark / category の4セット（Tokens Studio形式） |
+| `design-tokens/tokens.json` | **デザイン値の唯一の定義元**。色4セット（primitive / light / dark / category）+ global（角丸・寸法・フォント・タイポ21種、Figma同期用）のTokens Studio形式 |
 | `tool/generate_tokens.dart` | tokens.json → Dartコード生成スクリプト（`dart run tool/generate_tokens.dart`） |
 | `lib/theme/app_colors.dart`（生成物） | `AppColors`（ThemeExtension・22トークン）+ `context.colors` 拡張 + const用 `AppColorsDark`/`AppColorsLight` |
 | `lib/theme/category_palette.dart`（生成物） | カテゴリーの支出8色/収入4色/固定費色（Color とDB用hex文字列） |
