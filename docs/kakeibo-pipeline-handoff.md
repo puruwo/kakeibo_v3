@@ -43,7 +43,7 @@ kakeibo（Flutter家計簿アプリ、現在ダークのみ、カップル/共�
 | `lib/theme/category_palette.dart`（生成物） | カテゴリーの支出8色/収入4色/固定費色（Color とDB用hex文字列） |
 | `lib/util/color_code.dart` | hex↔Color 変換ヘルパー（旧 MyColors から分離） |
 | `lib/main.dart` | MaterialApp に light/dark 両テーマ登録。`themeMode: ThemeMode.dark` 固定 |
-| `scripts/check_hardcoded_color.sh` + `.claude/settings.json` | ハードコード色 検出 hook |
+| `scripts/check_hardcoded_color.sh` + `.claude/settings.json` | hook群（ハードコード色検出・生成物手編集ブロック・dart format自動実行・dart analyze） |
 
 `lib/constant/colors.dart`（旧 `MyColors`、47定数）は**削除済み**。
 
@@ -60,7 +60,7 @@ kakeibo（Flutter家計簿アプリ、現在ダークのみ、カップル/共�
 
 - 色の単一ソースは tokens.json。それ以外に色値を書かない
 - アプリからは `context.colors.<token>`。`Color(0x...)` / `Colors.*` を直書きしない
-- `app_colors.dart` / `category_palette.dart` は生成物（手編集禁止）
+- `app_colors.dart` / `category_palette.dart` は生成物（手編集禁止。PreToolUse hookで機械的にブロック）
 - 半透明色の変換規則: tokens は `#RRGGBBAA`、Flutter は `0xAARRGGBB`（アルファ先頭）
 - const TextStyle は `AppColorsDark.*`、CustomPainter は constructor で色注入
 
@@ -390,7 +390,7 @@ description は「Figmaデザインから Flutter 実装設計を作る作業で
   context を持つ呼び出し側から色を渡す
 - **既存挙動・データを壊さない検証を必須に。** DB無影響（バイト一致）、見た目不変を毎回確認
 - **生成物は手編集しない。** tokens.json を直して再生成
-- **新規流入を hook で止める。** ハードコード色検出を常時オン
+- **新規流入を hook で止める。** ハードコード色検出・生成物手編集ブロックを常時オン
 - **1機能ずつ・人間レビューを挟む。** 特にFigma生成は叩き台。一気通貫の完全自動は最後
 
 ---

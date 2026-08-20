@@ -1,5 +1,17 @@
 {
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r f; case \"$f\" in */lib/theme/app_colors.dart|*/lib/theme/category_palette.dart) echo \"生成物ファイルは手編集禁止です。design-tokens/tokens.json を編集し dart run tool/generate_tokens.dart で再生成してください（kakeibo-design-tokensスキル参照）\" 1>&2; exit 2;; *.g.dart|*.freezed.dart) echo \"生成物ファイルは手編集禁止です。元の定義ファイルを編集し dart run build_runner build --delete-conflicting-outputs で再生成してください\" 1>&2; exit 2;; esac; }",
+            "statusMessage": "生成物ファイル保護チェック中..."
+          }
+        ]
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Edit|Write",
@@ -8,6 +20,11 @@
             "type": "command",
             "command": "jq -r '.tool_input.file_path // empty' | { read -r f; [ -n \"$f\" ] && bash \"${CLAUDE_PROJECT_DIR:-.}/scripts/check_hardcoded_color.sh\" --quiet \"$f\"; } 2>/dev/null || true",
             "statusMessage": "ハードコード色チェック中..."
+          },
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.file_path // empty' | { read -r f; case \"$f\" in *.dart) dart format \"$f\" >/dev/null 2>&1 || true;; esac; }",
+            "statusMessage": "dart format実行中..."
           },
           {
             "type": "command",
