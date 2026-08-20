@@ -144,3 +144,8 @@ dart run build_runner build --delete-conflicting-outputs
 - `confluence-to-screenspec` — 画面スペックの変換手順と出力フォーマット（雛形）
 - `figma-to-implplan` — Figma → 実装設計の手順とトークン読み替え規則（雛形）
 - `figma-from-screenspec` — 画面スペック → Figma組み立て手順（C-2後に整備）
+
+### 開発支援 subagent / skill
+
+- `test-writer`（agent） — UseCase/domain_service/repositoryのテスト生成専門。テスト追加のみで実コードは変更しない
+- `new-feature-scaffold`（skill） — データを扱う新機能追加の足場生成手順（entity→repository→usecase→UIの命名・配置・雛形）
