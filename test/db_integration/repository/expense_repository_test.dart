@@ -630,4 +630,296 @@ void main() {
       );
     });
   });
+
+  // ---------------------------------------------------------------------
+  // 固定費系のクエリ（v10で fixed_cost_expense から移管）
+  // ---------------------------------------------------------------------
+
+  /// 固定費マスタ10・20に紐づく実績と通常支出を混在させた標準フィクスチャ
+  ///
+  /// | id | 固定費 | 日付       | 確定 | 実額  | 予想額 |
+  /// |----|-------|------------|------|-------|--------|
+  /// | 10 | 10    | 2025-06-25 | 1    | 6000  | NULL   |
+  /// | 11 | 10    | 2025-07-01 | 1    | 8000  | 5000   |
+  /// | 12 | 10    | 2025-07-10 | 0    | NULL  | 5000   |
+  /// | 13 | 20    | 2025-07-10 | 0    | NULL  | 3000   |
+  /// | 14 | NULL  | 2025-07-10 | 1    | 999   | NULL   |
+  Future<void> seedFixedCostRows() async {
+    await insertExpenseRow(
+      id: 10,
+      date: '20250625',
+      price: 6000,
+      fixedCostId: 10,
+    );
+    await insertExpenseRow(
+      id: 11,
+      date: '20250701',
+      price: 8000,
+      fixedCostId: 10,
+      estimatedPrice: 5000,
+    );
+    await insertExpenseRow(
+      id: 12,
+      date: '20250710',
+      price: null,
+      fixedCostId: 10,
+      isConfirmed: 0,
+      estimatedPrice: 5000,
+    );
+    await insertExpenseRow(
+      id: 13,
+      date: '20250710',
+      price: null,
+      fixedCostId: 20,
+      isConfirmed: 0,
+      estimatedPrice: 3000,
+    );
+    // 固定費に紐づかない通常支出（どのクエリの対象にもならない）
+    await insertExpenseRow(id: 14, date: '20250710', price: 999);
+  }
+
+  group('fetchById', () {
+    test('指定idの行を返す', () async {
+      await seedFixedCostRows();
+
+      final result = await repository.fetchById(id: 12);
+
+      expect(result?.id, 12);
+      expect(result?.price, isNull);
+      expect(result?.isConfirmed, 0);
+      expect(result?.estimatedPrice, 5000);
+    });
+
+    test('存在しないidならnullを返す', () async {
+      await seedFixedCostRows();
+
+      expect(await repository.fetchById(id: 999), isNull);
+    });
+  });
+
+  group('insertFixedCostExpense', () {
+    test('固定費列つきで挿入され、採番されたidが返る', () async {
+      final id = await repository.insertFixedCostExpense(
+        const ExpenseEntity(
+          date: '20250710',
+          price: null,
+          paymentCategoryId: 2,
+          memo: '電気代',
+          fixedCostId: 10,
+          isConfirmed: 0,
+          estimatedPrice: 5000,
+        ),
+      );
+
+      final inserted = await repository.fetchById(id: id);
+      expect(inserted?.fixedCostId, 10);
+      expect(inserted?.isConfirmed, 0);
+      // 実額はNULLのまま保存される（price NULL許容化。仕様 §4.1）
+      expect(inserted?.price, isNull);
+      expect(inserted?.estimatedPrice, 5000);
+      expect(inserted?.memo, '電気代');
+    });
+  });
+
+  group('existsByFixedCostIdAndDate', () {
+    test('固定費IDと支払い日が一致する行があればtrue', () async {
+      await seedFixedCostRows();
+
+      expect(
+        await repository.existsByFixedCostIdAndDate(
+          fixedCostId: 10,
+          date: '20250701',
+        ),
+        isTrue,
+      );
+    });
+
+    test('日付が一致しなければfalse', () async {
+      await seedFixedCostRows();
+
+      expect(
+        await repository.existsByFixedCostIdAndDate(
+          fixedCostId: 10,
+          date: '20250702',
+        ),
+        isFalse,
+      );
+    });
+
+    test('別マスタの同じ日付は重複とみなさない', () async {
+      await seedFixedCostRows();
+
+      expect(
+        await repository.existsByFixedCostIdAndDate(
+          fixedCostId: 30,
+          date: '20250710',
+        ),
+        isFalse,
+      );
+    });
+  });
+
+  group('fetchUnconfirmedFixedCostExpenseByPeriod', () {
+    test('期間内の未確定の固定費行だけを返す', () async {
+      await seedFixedCostRows();
+
+      final results = await repository
+          .fetchUnconfirmedFixedCostExpenseByPeriod(period: _period);
+
+      // 確定行(10,11)・通常支出(14)は含まれない
+      expect(results.map((e) => e.id).toList()..sort(), [12, 13]);
+    });
+
+    test('期間外の未確定行は含まれない', () async {
+      await insertExpenseRow(
+        id: 20,
+        date: '20250725',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 5000,
+      );
+
+      final results = await repository
+          .fetchUnconfirmedFixedCostExpenseByPeriod(period: _period);
+
+      expect(results, isEmpty);
+    });
+  });
+
+  group('confirmFixedCostExpense', () {
+    test('実額が入りis_confirmedが1になる（予想額は残る）', () async {
+      await seedFixedCostRows();
+
+      await repository.confirmFixedCostExpense(id: 12, price: 7200);
+
+      final row = await repository.fetchById(id: 12);
+      expect(row?.price, 7200);
+      expect(row?.isConfirmed, 1);
+      // 予実の乖離を行に残すため予想額は消さない（仕様 §3）
+      expect(row?.estimatedPrice, 5000);
+    });
+  });
+
+  group('fetchConfirmedFixedCostPriceAverage', () {
+    test('確定行の実額の平均を返す', () async {
+      await seedFixedCostRows();
+
+      // 6000と8000の平均
+      expect(
+        await repository.fetchConfirmedFixedCostPriceAverage(fixedCostId: 10),
+        7000,
+      );
+    });
+
+    test('確定行が0件ならnullを返す', () async {
+      // 未確定行しか無いマスタ20。nullは「更新しない」の判定に使う（仕様 §6.5）
+      await seedFixedCostRows();
+
+      expect(
+        await repository.fetchConfirmedFixedCostPriceAverage(fixedCostId: 20),
+        isNull,
+      );
+    });
+
+    test('該当マスタが無い場合もnullを返す', () async {
+      await seedFixedCostRows();
+
+      expect(
+        await repository.fetchConfirmedFixedCostPriceAverage(fixedCostId: 999),
+        isNull,
+      );
+    });
+  });
+
+  group('updateEstimatedPriceOfUnconfirmedRows', () {
+    test('同じマスタの未確定行だけ予想額が更新される', () async {
+      await seedFixedCostRows();
+
+      await repository.updateEstimatedPriceOfUnconfirmedRows(
+        fixedCostId: 10,
+        estimatedPrice: 7000,
+      );
+
+      expect((await repository.fetchById(id: 12))?.estimatedPrice, 7000);
+      // 確定行は据え置き（予実の記録なので上書きしない）
+      expect((await repository.fetchById(id: 11))?.estimatedPrice, 5000);
+      // 別マスタの未確定行も据え置き
+      expect((await repository.fetchById(id: 13))?.estimatedPrice, 3000);
+    });
+
+    test('実額priceには書き込まない', () async {
+      await seedFixedCostRows();
+
+      await repository.updateEstimatedPriceOfUnconfirmedRows(
+        fixedCostId: 10,
+        estimatedPrice: 7000,
+      );
+
+      expect((await repository.fetchById(id: 12))?.price, isNull);
+      expect((await repository.fetchById(id: 11))?.price, 8000);
+    });
+  });
+
+  group('deleteUnpaidFixedCostExpenses', () {
+    // 運用日付。この日を境に「支払日が到来済みか」を判定する
+    const today = '20250706';
+
+    test('未確定行と支払日未到来の確定行だけが消える', () async {
+      await seedFixedCostRows();
+      // 支払日未到来の確定行（消える）
+      await insertExpenseRow(
+        id: 15,
+        date: '20250707',
+        price: 6000,
+        fixedCostId: 10,
+      );
+      // 運用日付ちょうどの確定行（境界値・残る）
+      await insertExpenseRow(
+        id: 16,
+        date: '20250706',
+        price: 6000,
+        fixedCostId: 10,
+      );
+
+      await repository.deleteUnpaidFixedCostExpenses(
+        fixedCostId: 10,
+        today: today,
+      );
+
+      final results = await repository.fetchAll();
+      // 10・11（到来済みの確定行）と16（当日）が残り、別マスタ13・通常支出14も残る
+      expect(results.map((e) => e.id).toList(), [10, 11, 13, 14, 16]);
+    });
+
+    test('残った確定行のfixed_cost_idは保持される', () async {
+      // 通常支出化しない（マスタは論理削除のため参照は切れない。仕様 §6.4）
+      await seedFixedCostRows();
+
+      await repository.deleteUnpaidFixedCostExpenses(
+        fixedCostId: 10,
+        today: today,
+      );
+
+      expect((await repository.fetchById(id: 10))?.fixedCostId, 10);
+    });
+  });
+
+  group('updateSmallCategoryByFixedCostId', () {
+    test('同じマスタの行だけカテゴリーが一括変更される', () async {
+      await seedFixedCostRows();
+
+      await repository.updateSmallCategoryByFixedCostId(
+        fixedCostId: 10,
+        expenseSmallCategoryId: 7,
+      );
+
+      final results = await repository.fetchAll();
+      expect(
+        results.map((e) => e.paymentCategoryId).toList(),
+        // id順 10,11,12（変更）／13,14（据え置き＝フィクスチャ既定の1）
+        [7, 7, 7, 1, 1],
+      );
+    });
+  });
 }

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_service.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
@@ -23,6 +24,10 @@ class FixedCostUsecase {
   FixedCostRepository get _fixedCostRepositoryProvider =>
       _ref.read(fixedCostRepositoryProvider);
 
+  ExpenseRepository get _expenseRepositoryProvider =>
+      _ref.read(expenseRepositoryProvider);
+
+  // 多重生成防止の旧テーブル検査用（T6で削除する）
   FixedCostExpenseRepository get _fixedCostExpenseRepositoryProvider =>
       _ref.read(fixedCostExpenseRepositoryProvider);
 
@@ -60,7 +65,9 @@ class FixedCostUsecase {
     if (fixedCostEntity.price >= 99999999) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
-    if (fixedCostEntity.fixedCostCategoryId <= 0) {
+    // カテゴリーの参照先は支出小カテゴリー（仕様 §3）
+    // 旧列 fixedCostCategoryId はT6で削除するまで併存するだけで、判定には使わない
+    if (fixedCostEntity.expenseSmallCategoryId <= 0) {
       throw const AppException('カテゴリーを選択してください');
     }
 
@@ -153,11 +160,21 @@ class FixedCostUsecase {
 
         // 同じ支払い日の実績が既にある場合は生成しない（多重生成の防止）
         // ただしスキップした場合も次の支払い日は進める
+        //
+        // T6までは expense と fixed_cost_expense の両方を検査する。
+        // T2〜T5の中間状態では「新規実績はexpense・既存実績は旧テーブル」に
+        // 分かれており、旧テーブルに生成済みの支払日を見落とすと、
+        // 旧集計（getFixedCostTotal）が残るT3まで二重計上になるため。
         final alreadyExists =
-            await _fixedCostExpenseRepositoryProvider.existsByFixedCostIdAndDate(
-          fixedCostId: currentEntity.id!,
-          date: paymentDate,
-        );
+            await _expenseRepositoryProvider.existsByFixedCostIdAndDate(
+                  fixedCostId: currentEntity.id!,
+                  date: paymentDate,
+                ) ||
+                await _fixedCostExpenseRepositoryProvider
+                    .existsByFixedCostIdAndDate(
+                  fixedCostId: currentEntity.id!,
+                  date: paymentDate,
+                );
         if (!alreadyExists) {
           // fixedCostExpenseEntityを作成し、DBに挿入する
           await FixedCostService().insertToFixedCostExpense(
@@ -181,7 +198,11 @@ class FixedCostUsecase {
     updateDBCountNotifier.incrementState();
   }
 
-  // 変動固定費の想定支出を更新する
+  // 変動固定費の想定支出を再計算し、未確定行の予想額まで同期する（仕様 §6.5）
+  //
+  // 推定額＝いま当該マスタに紐づく確定行（is_confirmed=1）のpriceの平均（現在状態主義）。
+  // 再計算・マスタ更新・行同期はリポジトリ側で同一トランザクションにまとめる。
+  // 確定行が0件のときは更新しない（最後の値を保持する）。
   Future<void> updateEstimatedPrice({required int fixedCostId}) async {
     // fixedCostEntityを取得
     final fixedCostEntity =
@@ -192,19 +213,9 @@ class FixedCostUsecase {
       return;
     }
 
-    // 固定費支出の過去の支払いから平均価格情報を取得
-    final pastExpensesAverage = await _fixedCostExpenseRepositoryProvider
-        .fetchFixedCostEstimatedPriceById(
+    await _fixedCostRepositoryProvider.recalculateEstimatedPriceWithSync(
       fixedCostId: fixedCostId,
     );
-
-    // 想定支出額を更新
-    final updatedFixedCostEntity = fixedCostEntity.copyWith(
-      estimatedPrice: pastExpensesAverage.toInt(),
-    );
-
-    // 更新処理を実行
-    await _fixedCostRepositoryProvider.update(updatedFixedCostEntity);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
@@ -221,11 +232,12 @@ class FixedCostUsecase {
     }
 
     // カテゴリーが変わったら
-    if (originalEntity.fixedCostCategoryId != editEntity.fixedCostCategoryId) {
-      // 過去のfixed_cost_entityのレコードを修正する
+    if (originalEntity.expenseSmallCategoryId !=
+        editEntity.expenseSmallCategoryId) {
+      // 過去の実績（expenseの固定費行）のカテゴリーを一括変更する
       await _fixedCostExpenseServiceProvider.changeCategoryOfExistingRecord(
           originalEntity: originalEntity,
-          fixedCostCategoryId: editEntity.fixedCostCategoryId);
+          expenseSmallCategoryId: editEntity.expenseSmallCategoryId);
     }
 
     // データを編集する（全てのフィールドを更新）
@@ -235,8 +247,11 @@ class FixedCostUsecase {
       variable: editEntity.variable,
       estimatedPrice: editEntity.estimatedPrice,
       fixedCostCategoryId: editEntity.fixedCostCategoryId,
+      expenseSmallCategoryId: editEntity.expenseSmallCategoryId,
     );
-    await _fixedCostRepositoryProvider.update(newEntity);
+    // マスタの金額・推定額を手動編集した場合に備え、
+    // 未確定行の予想額の同期まで同一トランザクションで実行する（仕様 §6.5）
+    await _fixedCostRepositoryProvider.updateWithUnconfirmedRowsSync(newEntity);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

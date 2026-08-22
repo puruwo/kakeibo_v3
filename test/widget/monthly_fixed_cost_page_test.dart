@@ -5,6 +5,7 @@
 // 金額の集計ロジックそのものは monthly_fixed_cost_summary_usecase_test（UT）で担保済み。
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
@@ -79,6 +80,29 @@ void main() {
   /// 月間固定費ページ用のFake束を組み立てる
   ///
   /// [withRecords] をfalseにすると固定費支出が1件も無い状態（空状態）になる。
+  // 確定操作の書き込み先はexpenseの固定費行（v10）。
+  // 表示元は旧テーブルのままなので（T3で切替）、同じ内容を両方に積む
+  const expenseFixedCostRows = [
+    ExpenseEntity(
+      id: 100,
+      date: '20250701',
+      price: 80000,
+      paymentCategoryId: 11,
+      memo: '家賃',
+      fixedCostId: 10,
+    ),
+    ExpenseEntity(
+      id: 200,
+      date: '20250710',
+      price: null,
+      paymentCategoryId: 12,
+      memo: '電気代',
+      fixedCostId: 30,
+      isConfirmed: 0,
+      estimatedPrice: 6000,
+    ),
+  ];
+
   TestFakes buildFakes({bool withRecords = true}) => TestFakes(
     fixedCost: FakeFixedCostRepository(
       initialRecords: withRecords ? fixedCosts : const [],
@@ -88,6 +112,9 @@ void main() {
     ),
     fixedCostExpense: FakeFixedCostExpenseRepository(
       initialRecords: withRecords ? fixedCostExpenses : const [],
+    ),
+    expense: FakeExpenseRepository(
+      initialRecords: withRecords ? expenseFixedCostRows : const [],
     ),
   );
 
@@ -172,11 +199,11 @@ void main() {
     await tester.tap(find.text('OK'));
     await pumpTimes(tester);
 
-    // 渡すのは固定費マスタID(30)ではなく固定費支出のID(200)
+    // 渡すのは固定費マスタID(30)ではなく実績行のID(200)
     // （確定操作のID取り違えを起こした本番バグの回帰検知）
-    expect(fakes.fixedCostExpense.confirmedExpenses, hasLength(1));
-    expect(fakes.fixedCostExpense.confirmedExpenses.single.id, 200);
-    expect(fakes.fixedCostExpense.confirmedExpenses.single.price, 7200);
+    expect(fakes.expense.confirmedExpenses, hasLength(1));
+    expect(fakes.expense.confirmedExpenses.single.id, 200);
+    expect(fakes.expense.confirmedExpenses.single.price, 7200);
 
     // 確定後は変動費の想定額更新まで走る（対象は固定費マスタID=30）
     expect(fakes.fixedCost.updatedEntities, hasLength(1));
@@ -194,7 +221,7 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('金額を入力してください'), findsOneWidget);
-    expect(fakes.fixedCostExpense.confirmedExpenses, isEmpty);
+    expect(fakes.expense.confirmedExpenses, isEmpty);
 
     await waitForSnackBarDismissed(tester);
   });
@@ -211,7 +238,7 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('未確定固定費の金額を入力'), findsNothing);
-    expect(fakes.fixedCostExpense.confirmedExpenses, isEmpty);
+    expect(fakes.expense.confirmedExpenses, isEmpty);
   });
 
   testWidgets('固定費支出が1件も無いときは記録なしメッセージになる', (tester) async {

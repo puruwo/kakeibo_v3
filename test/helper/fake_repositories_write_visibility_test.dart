@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 
 import 'fake_repositories.dart';
@@ -61,6 +63,131 @@ void main() {
       expect(repository.deletedWithUnpaidExpensesArgs, [
         (id: 10, today: today),
       ]);
+    });
+
+    test('連動する支出Fakeを渡すと未払い実績も取得系から消える', () async {
+      // 本物はマスタの論理削除とexpenseの未払い行削除を1トランザクションで行う
+      final expenseRepository = FakeExpenseRepository(
+        initialRecords: const [
+          // 支払日到来済みの確定行（残る）
+          ExpenseEntity(id: 1, date: '20250705', price: 1000, fixedCostId: 10),
+          // 未確定行（消える）
+          ExpenseEntity(
+            id: 2,
+            date: '20250705',
+            price: null,
+            fixedCostId: 10,
+            isConfirmed: 0,
+            estimatedPrice: 1000,
+          ),
+          // 支払日未到来の確定行（消える）
+          ExpenseEntity(id: 3, date: '20250710', price: 1000, fixedCostId: 10),
+        ],
+      );
+      final repository = FakeFixedCostRepository(
+        initialRecords: [template.copyWith(id: 10)],
+        expenseRepository: expenseRepository,
+      );
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      expect(expenseRepository.records.map((e) => e.id), [1]);
+    });
+  });
+
+  group('FakeExpenseRepository の固定費系クエリ', () {
+    /// 固定費行の雛形（マスタID=10に紐づく）
+    const fixedCostRow = ExpenseEntity(
+      id: 1,
+      date: '20250701',
+      price: null,
+      paymentCategoryId: 12,
+      fixedCostId: 10,
+      isConfirmed: 0,
+      estimatedPrice: 5000,
+    );
+
+    test('挿入した固定費行は直後の重複判定・期間取得から見える', () async {
+      final repository = FakeExpenseRepository();
+
+      final id = await repository.insertFixedCostExpense(fixedCostRow);
+
+      expect(id, isPositive);
+      expect(
+        await repository.existsByFixedCostIdAndDate(
+          fixedCostId: 10,
+          date: '20250701',
+        ),
+        isTrue,
+      );
+      final unconfirmed = await repository
+          .fetchUnconfirmedFixedCostExpenseByPeriod(
+            period: PeriodValue(
+              startDatetime: DateTime(2025, 6, 25),
+              endDatetime: DateTime(2025, 7, 24),
+            ),
+          );
+      expect(unconfirmed, hasLength(1));
+    });
+
+    test('確定させた行は未確定一覧から消え、平均の根拠に入る', () async {
+      final repository = FakeExpenseRepository(
+        initialRecords: const [fixedCostRow],
+      );
+
+      await repository.confirmFixedCostExpense(id: 1, price: 6000);
+
+      final unconfirmed = await repository
+          .fetchUnconfirmedFixedCostExpenseByPeriod(
+            period: PeriodValue(
+              startDatetime: DateTime(2025, 6, 25),
+              endDatetime: DateTime(2025, 7, 24),
+            ),
+          );
+      expect(unconfirmed, isEmpty);
+      expect(
+        await repository.fetchConfirmedFixedCostPriceAverage(fixedCostId: 10),
+        6000,
+      );
+    });
+
+    test('確定行が0件なら平均はnull（更新しない判定に使う）', () async {
+      final repository = FakeExpenseRepository(
+        initialRecords: const [fixedCostRow],
+      );
+
+      expect(
+        await repository.fetchConfirmedFixedCostPriceAverage(fixedCostId: 10),
+        isNull,
+      );
+    });
+
+    test('カテゴリー一括変更は同じマスタの行にだけ効く', () async {
+      final repository = FakeExpenseRepository(
+        initialRecords: const [
+          fixedCostRow,
+          ExpenseEntity(
+            id: 2,
+            date: '20250701',
+            price: 500,
+            paymentCategoryId: 12,
+            fixedCostId: 11,
+          ),
+          // 通常支出（fixed_cost_id が NULL）は対象外
+          ExpenseEntity(id: 3, date: '20250701', price: 300,
+              paymentCategoryId: 12),
+        ],
+      );
+
+      await repository.updateSmallCategoryByFixedCostId(
+        fixedCostId: 10,
+        expenseSmallCategoryId: 33,
+      );
+
+      expect(
+        repository.records.map((e) => e.paymentCategoryId),
+        [33, 12, 12],
+      );
     });
   });
 }

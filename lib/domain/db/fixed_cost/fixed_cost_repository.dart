@@ -36,4 +36,18 @@ abstract interface class FixedCostRepository {
   /// [today] は運用日付（`yyyyMMdd`）。
   Future<void> deleteWithUnpaidExpenses(
       {required int id, required String today});
+
+  /// 変動固定費の推定額を再計算し、未確定行の予想額まで同期する（仕様 §6.5）
+  ///
+  /// 「確定行の平均を求める → マスタの estimated_price を更新する →
+  /// 当該マスタの未確定行の estimated_price を一括更新する」を
+  /// 1トランザクションで実行する。同期だけ失敗して行側が古い値で
+  /// 固定される状態を作らないため。
+  /// 確定行が0件のときは何も更新しない（最後の値を保持する）。
+  Future<void> recalculateEstimatedPriceWithSync({required int fixedCostId});
+
+  /// マスタの更新と、未確定行の予想額の同期を1トランザクションで行う（仕様 §6.5）
+  ///
+  /// マスタの金額・推定額をユーザーが手動編集したときに使う。
+  Future<void> updateWithUnconfirmedRowsSync(FixedCostEntity entity);
 }

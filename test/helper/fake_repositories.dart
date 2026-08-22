@@ -155,11 +155,22 @@ class FakeBatchHistoryRepository implements BatchHistoryRepository {
 /// 「nextPaymentDateが期間終了日以前 かつ deleteFlag=0」のレコードを
 /// id降順で返す（本実装のSQL条件・ORDER BY と同じ振る舞い）。
 class FakeFixedCostRepository implements FixedCostRepository {
-  FakeFixedCostRepository({List<FixedCostEntity>? initialRecords})
-    : records = List.of(initialRecords ?? []);
+  FakeFixedCostRepository({
+    List<FixedCostEntity>? initialRecords,
+    this.expenseRepository,
+  }) : records = List.of(initialRecords ?? []);
 
   /// 現在のマスタ状態（insert/updateで変化する）
   final List<FixedCostEntity> records;
+
+  /// 連動する支出のFake（省略可）
+  ///
+  /// 本物は「マスタ更新＋expenseの固定費行の更新／削除」を1トランザクションで
+  /// 実行する（deleteWithUnpaidExpenses・推定額の同期。仕様 §6.4・§6.5）。
+  /// Fakeは別インスタンスなので、実績側にも効かせたいテストではここに
+  /// [FakeExpenseRepository] を渡す。未指定のときは実績が0件のDBと同じ挙動になる。
+  /// 生成順の都合で後から差し込めるよう、finalにしていない。
+  FakeExpenseRepository? expenseRepository;
 
   /// insert / update で渡された内容の記録（検証用）
   final List<FixedCostEntity> insertedEntities = [];
@@ -255,10 +266,11 @@ class FakeFixedCostRepository implements FixedCostRepository {
 
   /// マスタの論理削除と未払い実績の削除（本実装は1トランザクション）
   ///
-  /// Fakeは固定費支出を持たないため、ここではマスタ側の論理削除（deleteFlag=1）と
-  /// 引数の記録だけを行う。実績側の削除条件
-  /// （is_confirmed=0 または date > today）は本物のSQLでしか検証できないため、
-  /// test/db_integration/repository/fixed_cost_repository_test.dart で検証する。
+  /// マスタ側は論理削除（deleteFlag=1）。実績側は [expenseRepository] を
+  /// 渡した場合のみ、本実装と同じ条件
+  /// （fixed_cost_id 一致 かつ is_confirmed=0 または date > today）で削除する。
+  /// SQLそのものの検証は
+  /// test/db_integration/repository/fixed_cost_repository_test.dart で行う。
   @override
   Future<void> deleteWithUnpaidExpenses({
     required int id,
@@ -269,6 +281,46 @@ class FakeFixedCostRepository implements FixedCostRepository {
     if (index >= 0) {
       records[index] = records[index].copyWith(deleteFlag: 1);
     }
+    await expenseRepository?.deleteUnpaidFixedCostExpenses(
+      fixedCostId: id,
+      today: today,
+    );
+  }
+
+  /// 推定額の再計算・マスタ更新・未確定行の同期（本実装は1トランザクション）
+  ///
+  /// 確定行の平均は [expenseRepository] から取得する。
+  /// 確定行が0件（＝平均がnull）のときは何も更新しない（仕様 §6.5）。
+  @override
+  Future<void> recalculateEstimatedPriceWithSync({
+    required int fixedCostId,
+  }) async {
+    final average = await expenseRepository?.fetchConfirmedFixedCostPriceAverage(
+      fixedCostId: fixedCostId,
+    );
+    if (average == null) return;
+
+    final estimatedPrice = average.toInt();
+    final index = records.indexWhere((e) => e.id == fixedCostId);
+    if (index >= 0) {
+      final updated = records[index].copyWith(estimatedPrice: estimatedPrice);
+      records[index] = updated;
+      updatedEntities.add(updated);
+    }
+    await expenseRepository?.updateEstimatedPriceOfUnconfirmedRows(
+      fixedCostId: fixedCostId,
+      estimatedPrice: estimatedPrice,
+    );
+  }
+
+  /// マスタ更新と未確定行の予想額の同期（本実装は1トランザクション）
+  @override
+  Future<void> updateWithUnconfirmedRowsSync(FixedCostEntity entity) async {
+    await update(entity);
+    await expenseRepository?.updateEstimatedPriceOfUnconfirmedRows(
+      fixedCostId: entity.id ?? -1,
+      estimatedPrice: entity.estimatedPrice,
+    );
   }
 
   @override
@@ -679,7 +731,7 @@ class FakeExpenseRepository implements ExpenseRepository {
   /// Fakeも同じidの行をエンティティごと差し替える。
   /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
   @override
-  void update(ExpenseEntity expenseEntity) {
+  Future<void> update(ExpenseEntity expenseEntity) async {
     updatedEntities.add(expenseEntity);
     final index = records.indexWhere((e) => e.id == expenseEntity.id);
     if (index >= 0) {
@@ -695,6 +747,173 @@ class FakeExpenseRepository implements ExpenseRepository {
   void delete(int id) {
     deletedIds.add(id);
     records.removeWhere((e) => e.id == id);
+  }
+
+  // -------------------------------------------------------------------------
+  // 固定費系のクエリ（v10で fixed_cost_expense から移管）
+  //
+  // 固定費行の判定は fixedCostId != null の1条件（本実装の
+  // fixed_cost_id IS NOT NULL と同じ）。書き込みは本物と同様 [records] に
+  // 反映し、以後の取得系から見えるようにする。
+  // -------------------------------------------------------------------------
+
+  /// insertFixedCostExpense で渡された内容の記録（検証用）
+  final List<ExpenseEntity> insertedFixedCostExpenses = [];
+
+  /// confirmFixedCostExpense で渡された内容の記録（検証用）
+  final List<({int id, int price})> confirmedExpenses = [];
+
+  /// updateEstimatedPriceOfUnconfirmedRows で渡された内容の記録（検証用）
+  final List<({int fixedCostId, int estimatedPrice})> syncedEstimatedPrices =
+      [];
+
+  /// deleteUnpaidFixedCostExpenses で渡された内容の記録（検証用）
+  final List<({int fixedCostId, String today})> deletedUnpaidArgs = [];
+
+  /// updateSmallCategoryByFixedCostId で渡された内容の記録（検証用）
+  final List<({int fixedCostId, int expenseSmallCategoryId})>
+  changedCategoryArgs = [];
+
+  @override
+  Future<ExpenseEntity?> fetchById({required int id}) async {
+    for (final record in records) {
+      if (record.id == id) return record;
+    }
+    return null;
+  }
+
+  /// 固定費の実績行を1件挿入する
+  ///
+  /// 本物はINSERT直後からSELECTの対象になるため [records] にも反映する。
+  /// 戻り値は採番されたid（本実装と同じ）。
+  @override
+  Future<int> insertFixedCostExpense(ExpenseEntity expenseEntity) async {
+    insertedFixedCostExpenses.add(expenseEntity);
+    insertedEntities.add(expenseEntity);
+    final id = _nextId++;
+    records.add(expenseEntity.copyWith(id: id));
+    return id;
+  }
+
+  /// 固定費IDと支払い日が一致する行が既にあるか
+  ///
+  /// 本実装は COUNT(*) するだけなので、現在のレコード状態で判定する
+  /// （insert済みのものも [records] に入っているため既存として数えられる）。
+  @override
+  Future<bool> existsByFixedCostIdAndDate({
+    required int fixedCostId,
+    required String date,
+  }) async {
+    return records.any((e) => e.fixedCostId == fixedCostId && e.date == date);
+  }
+
+  @override
+  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostExpenseByPeriod({
+    required PeriodValue period,
+  }) async {
+    final matched = records
+        .where(
+          (e) =>
+              _isDateInPeriod(e.date, period) &&
+              e.fixedCostId != null &&
+              e.isConfirmed == 0,
+        )
+        .toList();
+    // 本実装のSQLの ORDER BY date DESC に合わせる（同日はid昇順で安定させる）
+    matched.sort((a, b) {
+      final byDate = b.date.compareTo(a.date);
+      return byDate != 0 ? byDate : a.id.compareTo(b.id);
+    });
+    return matched;
+  }
+
+  /// 未確定行を確定させる（price設定＋is_confirmed=1）
+  ///
+  /// 本実装は estimated_price を触らないため、Fakeも据え置く（仕様 §3）。
+  @override
+  Future<void> confirmFixedCostExpense({
+    required int id,
+    required int price,
+  }) async {
+    confirmedExpenses.add((id: id, price: price));
+    final index = records.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      records[index] = records[index].copyWith(price: price, isConfirmed: 1);
+    }
+  }
+
+  /// 確定済み固定費行のpriceの平均（対象0件はnull）
+  ///
+  /// 本実装は AVG(price) で、対象0件のときNULLが返る。
+  /// price IS NOT NULL の条件も本実装に合わせる。
+  @override
+  Future<double?> fetchConfirmedFixedCostPriceAverage({
+    required int fixedCostId,
+  }) async {
+    final prices = records
+        .where(
+          (e) =>
+              e.fixedCostId == fixedCostId &&
+              e.isConfirmed == 1 &&
+              e.price != null,
+        )
+        .map((e) => e.price!)
+        .toList();
+    if (prices.isEmpty) return null;
+    return prices.fold<int>(0, (sum, p) => sum + p) / prices.length;
+  }
+
+  @override
+  Future<void> updateEstimatedPriceOfUnconfirmedRows({
+    required int fixedCostId,
+    required int estimatedPrice,
+  }) async {
+    syncedEstimatedPrices.add((
+      fixedCostId: fixedCostId,
+      estimatedPrice: estimatedPrice,
+    ));
+    for (var i = 0; i < records.length; i++) {
+      final record = records[i];
+      if (record.fixedCostId == fixedCostId && record.isConfirmed == 0) {
+        records[i] = record.copyWith(estimatedPrice: estimatedPrice);
+      }
+    }
+  }
+
+  /// 未払い固定費行の一括削除
+  ///
+  /// 本実装の条件 `fixed_cost_id = ? AND (is_confirmed = 0 OR date > ?)` を模す。
+  /// 日付は同形式のyyyyMMdd文字列なので辞書順比較で大小判定できる。
+  @override
+  Future<void> deleteUnpaidFixedCostExpenses({
+    required int fixedCostId,
+    required String today,
+  }) async {
+    deletedUnpaidArgs.add((fixedCostId: fixedCostId, today: today));
+    records.removeWhere(
+      (e) =>
+          e.fixedCostId == fixedCostId &&
+          (e.isConfirmed == 0 || e.date.compareTo(today) > 0),
+    );
+  }
+
+  @override
+  Future<void> updateSmallCategoryByFixedCostId({
+    required int fixedCostId,
+    required int expenseSmallCategoryId,
+  }) async {
+    changedCategoryArgs.add((
+      fixedCostId: fixedCostId,
+      expenseSmallCategoryId: expenseSmallCategoryId,
+    ));
+    for (var i = 0; i < records.length; i++) {
+      final record = records[i];
+      if (record.fixedCostId == fixedCostId) {
+        records[i] = record.copyWith(
+          paymentCategoryId: expenseSmallCategoryId,
+        );
+      }
+    }
   }
 
   @override

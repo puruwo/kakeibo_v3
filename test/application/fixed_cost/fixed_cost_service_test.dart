@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 
 import '../../helper/fake_repositories.dart';
 import '../../helper/test_container.dart';
@@ -105,11 +105,11 @@ void main() {
   });
 
   group('FixedCostService.insertToFixedCostExpense', () {
-    test('固定額（variable=0）はマスタの金額で確定済みとして挿入する', () {
-      final fakeRepository = FakeFixedCostExpenseRepository();
+    test('固定額（variable=0）はマスタの金額で確定済みの支出行として挿入する', () {
+      final fakeRepository = FakeExpenseRepository();
       final container = createContainer(
         overrides: [
-          fixedCostExpenseRepositoryProvider.overrideWithValue(fakeRepository),
+          expenseRepositoryProvider.overrideWithValue(fakeRepository),
         ],
       );
 
@@ -119,6 +119,8 @@ void main() {
         variable: 0,
         price: 80000,
         fixedCostCategoryId: 2,
+        // カテゴリーの参照先は支出小カテゴリー（仕様 §3）
+        expenseSmallCategoryId: 21,
         intervalNumber: 1,
         intervalUnit: 1,
         firstPaymentDate: '20250601',
@@ -131,22 +133,25 @@ void main() {
         )),
       );
 
-      expect(fakeRepository.insertedEntities, hasLength(1));
-      final inserted = fakeRepository.insertedEntities.first;
+      expect(fakeRepository.insertedFixedCostExpenses, hasLength(1));
+      final inserted = fakeRepository.insertedFixedCostExpenses.first;
       expect(inserted.fixedCostId, 10);
-      expect(inserted.fixedCostCategoryId, 2);
+      expect(inserted.paymentCategoryId, 21);
       expect(inserted.date, '20250701');
       expect(inserted.price, 80000);
-      expect(inserted.name, '家賃');
-      expect(inserted.confirmedCostType, 0);
+      // 確定型は予想額を持たない（実額のみ。仕様 §3）
+      expect(inserted.estimatedPrice, isNull);
+      expect(inserted.memo, '家賃');
       expect(inserted.isConfirmed, 1);
+      // 拠出元は通常支出と同じ既定値（1=生活支出）
+      expect(inserted.incomeSourceBigCategory, 1);
     });
 
-    test('変動額（variable=1）は金額0円・未確定として挿入する', () {
-      final fakeRepository = FakeFixedCostExpenseRepository();
+    test('変動額（variable=1）は実額なし・予想額つきの未確定行として挿入する', () {
+      final fakeRepository = FakeExpenseRepository();
       final container = createContainer(
         overrides: [
-          fixedCostExpenseRepositoryProvider.overrideWithValue(fakeRepository),
+          expenseRepositoryProvider.overrideWithValue(fakeRepository),
         ],
       );
 
@@ -155,7 +160,9 @@ void main() {
         name: '電気代',
         variable: 1,
         price: 5000,
+        estimatedPrice: 6200,
         fixedCostCategoryId: 3,
+        expenseSmallCategoryId: 22,
         intervalNumber: 1,
         intervalUnit: 1,
         firstPaymentDate: '20250601',
@@ -168,11 +175,50 @@ void main() {
         )),
       );
 
-      expect(fakeRepository.insertedEntities, hasLength(1));
-      final inserted = fakeRepository.insertedEntities.first;
-      expect(inserted.price, 0);
-      expect(inserted.confirmedCostType, 1);
+      expect(fakeRepository.insertedFixedCostExpenses, hasLength(1));
+      final inserted = fakeRepository.insertedFixedCostExpenses.first;
+      // 実額は未確定なのでNULL。予想額はマスタの推定額を転記する
+      expect(inserted.price, isNull);
+      expect(inserted.estimatedPrice, 6200);
       expect(inserted.isConfirmed, 0);
+      // 実効金額は予想額で代替される
+      expect(inserted.effectivePrice, 6200);
+    });
+
+    test('挿入直後から取得系に見える（既存判定の対象になる）', () async {
+      final fakeRepository = FakeExpenseRepository();
+      final container = createContainer(
+        overrides: [
+          expenseRepositoryProvider.overrideWithValue(fakeRepository),
+        ],
+      );
+
+      const entity = FixedCostEntity(
+        id: 12,
+        name: 'サブスク',
+        variable: 0,
+        price: 1000,
+        fixedCostCategoryId: 1,
+        expenseSmallCategoryId: 23,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250601',
+      );
+
+      container.read(
+        _insertToFixedCostExpenseProvider((
+          entity: entity,
+          paymentDate: '20250701',
+        )),
+      );
+
+      expect(
+        await fakeRepository.existsByFixedCostIdAndDate(
+          fixedCostId: 12,
+          date: '20250701',
+        ),
+        isTrue,
+      );
     });
   });
 }
