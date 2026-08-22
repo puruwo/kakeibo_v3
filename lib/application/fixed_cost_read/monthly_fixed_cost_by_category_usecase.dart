@@ -43,8 +43,7 @@ class MonthlyFixedCostByCategoryUsecaseNotifier extends FamilyAsyncNotifier<
 
       result.add(
         MonthlyFixedCostByCategoryGroup(
-          // 支出大カテゴリーid（フィールド名の変更はT5）
-          fixedCostCategoryId: mapEntry.key,
+          expenseBigCategoryId: mapEntry.key,
           categoryName: items.first.bigCategoryName,
           colorCode: items.first.colorCode,
           resourcePath: items.first.resourcePath,

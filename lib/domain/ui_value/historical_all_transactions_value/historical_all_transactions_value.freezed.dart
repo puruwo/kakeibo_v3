@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$HistoricalAllTransactionsValue {
-  /// 通常支出（ボーナス除く）- 日付でグループ化済み
+  /// 支出（ボーナス除く。固定費行も含む）- 日付でグループ化済み
   List<ExpenseHistoryTileGroupValue> get expenses =>
       throw _privateConstructorUsedError;
 
@@ -31,14 +31,6 @@ mixin _$HistoricalAllTransactionsValue {
 
   /// ボーナス収入
   List<IncomeHistoryTileValue> get bonusIncomes =>
-      throw _privateConstructorUsedError;
-
-  /// 固定費（確定）
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts =>
-      throw _privateConstructorUsedError;
-
-  /// 固定費（未確定）
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts =>
       throw _privateConstructorUsedError;
 
   /// Create a copy of HistoricalAllTransactionsValue
@@ -64,8 +56,6 @@ abstract class $HistoricalAllTransactionsValueCopyWith<$Res> {
     List<ExpenseHistoryTileValue> bonusExpenses,
     List<IncomeHistoryTileValue> incomes,
     List<IncomeHistoryTileValue> bonusIncomes,
-    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
   });
 }
 
@@ -91,8 +81,6 @@ class _$HistoricalAllTransactionsValueCopyWithImpl<
     Object? bonusExpenses = null,
     Object? incomes = null,
     Object? bonusIncomes = null,
-    Object? confirmedFixedCosts = null,
-    Object? unconfirmedFixedCosts = null,
   }) {
     return _then(
       _value.copyWith(
@@ -112,14 +100,6 @@ class _$HistoricalAllTransactionsValueCopyWithImpl<
                 ? _value.bonusIncomes
                 : bonusIncomes // ignore: cast_nullable_to_non_nullable
                       as List<IncomeHistoryTileValue>,
-            confirmedFixedCosts: null == confirmedFixedCosts
-                ? _value.confirmedFixedCosts
-                : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                      as List<MonthlyConfirmedFixedCostTileValue>,
-            unconfirmedFixedCosts: null == unconfirmedFixedCosts
-                ? _value.unconfirmedFixedCosts
-                : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                      as List<MonthlyUnconfirmedFixedCostTileValue>,
           )
           as $Val,
     );
@@ -140,8 +120,6 @@ abstract class _$$HistoricalAllTransactionsValueImplCopyWith<$Res>
     List<ExpenseHistoryTileValue> bonusExpenses,
     List<IncomeHistoryTileValue> incomes,
     List<IncomeHistoryTileValue> bonusIncomes,
-    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
   });
 }
 
@@ -167,8 +145,6 @@ class __$$HistoricalAllTransactionsValueImplCopyWithImpl<$Res>
     Object? bonusExpenses = null,
     Object? incomes = null,
     Object? bonusIncomes = null,
-    Object? confirmedFixedCosts = null,
-    Object? unconfirmedFixedCosts = null,
   }) {
     return _then(
       _$HistoricalAllTransactionsValueImpl(
@@ -188,14 +164,6 @@ class __$$HistoricalAllTransactionsValueImplCopyWithImpl<$Res>
             ? _value._bonusIncomes
             : bonusIncomes // ignore: cast_nullable_to_non_nullable
                   as List<IncomeHistoryTileValue>,
-        confirmedFixedCosts: null == confirmedFixedCosts
-            ? _value._confirmedFixedCosts
-            : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                  as List<MonthlyConfirmedFixedCostTileValue>,
-        unconfirmedFixedCosts: null == unconfirmedFixedCosts
-            ? _value._unconfirmedFixedCosts
-            : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                  as List<MonthlyUnconfirmedFixedCostTileValue>,
       ),
     );
   }
@@ -210,20 +178,15 @@ class _$HistoricalAllTransactionsValueImpl
     required final List<ExpenseHistoryTileValue> bonusExpenses,
     required final List<IncomeHistoryTileValue> incomes,
     required final List<IncomeHistoryTileValue> bonusIncomes,
-    required final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    required final List<MonthlyUnconfirmedFixedCostTileValue>
-    unconfirmedFixedCosts,
   }) : _expenses = expenses,
        _bonusExpenses = bonusExpenses,
        _incomes = incomes,
-       _bonusIncomes = bonusIncomes,
-       _confirmedFixedCosts = confirmedFixedCosts,
-       _unconfirmedFixedCosts = unconfirmedFixedCosts;
+       _bonusIncomes = bonusIncomes;
 
-  /// 通常支出（ボーナス除く）- 日付でグループ化済み
+  /// 支出（ボーナス除く。固定費行も含む）- 日付でグループ化済み
   final List<ExpenseHistoryTileGroupValue> _expenses;
 
-  /// 通常支出（ボーナス除く）- 日付でグループ化済み
+  /// 支出（ボーナス除く。固定費行も含む）- 日付でグループ化済み
   @override
   List<ExpenseHistoryTileGroupValue> get expenses {
     if (_expenses is EqualUnmodifiableListView) return _expenses;
@@ -264,33 +227,9 @@ class _$HistoricalAllTransactionsValueImpl
     return EqualUnmodifiableListView(_bonusIncomes);
   }
 
-  /// 固定費（確定）
-  final List<MonthlyConfirmedFixedCostTileValue> _confirmedFixedCosts;
-
-  /// 固定費（確定）
-  @override
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts {
-    if (_confirmedFixedCosts is EqualUnmodifiableListView)
-      return _confirmedFixedCosts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_confirmedFixedCosts);
-  }
-
-  /// 固定費（未確定）
-  final List<MonthlyUnconfirmedFixedCostTileValue> _unconfirmedFixedCosts;
-
-  /// 固定費（未確定）
-  @override
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts {
-    if (_unconfirmedFixedCosts is EqualUnmodifiableListView)
-      return _unconfirmedFixedCosts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_unconfirmedFixedCosts);
-  }
-
   @override
   String toString() {
-    return 'HistoricalAllTransactionsValue(expenses: $expenses, bonusExpenses: $bonusExpenses, incomes: $incomes, bonusIncomes: $bonusIncomes, confirmedFixedCosts: $confirmedFixedCosts, unconfirmedFixedCosts: $unconfirmedFixedCosts)';
+    return 'HistoricalAllTransactionsValue(expenses: $expenses, bonusExpenses: $bonusExpenses, incomes: $incomes, bonusIncomes: $bonusIncomes)';
   }
 
   @override
@@ -307,14 +246,6 @@ class _$HistoricalAllTransactionsValueImpl
             const DeepCollectionEquality().equals(
               other._bonusIncomes,
               _bonusIncomes,
-            ) &&
-            const DeepCollectionEquality().equals(
-              other._confirmedFixedCosts,
-              _confirmedFixedCosts,
-            ) &&
-            const DeepCollectionEquality().equals(
-              other._unconfirmedFixedCosts,
-              _unconfirmedFixedCosts,
             ));
   }
 
@@ -325,8 +256,6 @@ class _$HistoricalAllTransactionsValueImpl
     const DeepCollectionEquality().hash(_bonusExpenses),
     const DeepCollectionEquality().hash(_incomes),
     const DeepCollectionEquality().hash(_bonusIncomes),
-    const DeepCollectionEquality().hash(_confirmedFixedCosts),
-    const DeepCollectionEquality().hash(_unconfirmedFixedCosts),
   );
 
   /// Create a copy of HistoricalAllTransactionsValue
@@ -350,12 +279,9 @@ abstract class _HistoricalAllTransactionsValue
     required final List<ExpenseHistoryTileValue> bonusExpenses,
     required final List<IncomeHistoryTileValue> incomes,
     required final List<IncomeHistoryTileValue> bonusIncomes,
-    required final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    required final List<MonthlyUnconfirmedFixedCostTileValue>
-    unconfirmedFixedCosts,
   }) = _$HistoricalAllTransactionsValueImpl;
 
-  /// 通常支出（ボーナス除く）- 日付でグループ化済み
+  /// 支出（ボーナス除く。固定費行も含む）- 日付でグループ化済み
   @override
   List<ExpenseHistoryTileGroupValue> get expenses;
 
@@ -370,14 +296,6 @@ abstract class _HistoricalAllTransactionsValue
   /// ボーナス収入
   @override
   List<IncomeHistoryTileValue> get bonusIncomes;
-
-  /// 固定費（確定）
-  @override
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts;
-
-  /// 固定費（未確定）
-  @override
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts;
 
   /// Create a copy of HistoricalAllTransactionsValue
   /// with the given fields replaced by the non-null parameter values.

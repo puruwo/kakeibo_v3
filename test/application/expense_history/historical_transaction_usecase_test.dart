@@ -20,8 +20,6 @@ import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_histo
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/domain/ui_value/historical_all_transactions_value/historical_all_transactions_value.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
-import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
-import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 
 import '../../helper/fake_repositories.dart';
 import '../../helper/test_container.dart';
@@ -40,6 +38,8 @@ void main() {
     required DateTime date,
     int price = 1000,
     int incomeSourceBigCategory = 1,
+    int? fixedCostId,
+    int isConfirmed = 1,
   }) {
     return ExpenseHistoryTileValue(
       id: id,
@@ -51,6 +51,8 @@ void main() {
       colorCode: 'FFAA00',
       iconPath: 'assets/images/icon_life.svg',
       incomeSourceBigCategory: incomeSourceBigCategory,
+      fixedCostId: fixedCostId,
+      isConfirmed: isConfirmed,
     );
   }
 
@@ -68,45 +70,6 @@ void main() {
       bigCategoryName: '給与',
       colorCode: '0000FF',
       iconPath: 'assets/images/icon_salary.svg',
-    );
-  }
-
-  MonthlyConfirmedFixedCostTileValue buildConfirmedFixedCostTile({
-    required int id,
-    required DateTime date,
-  }) {
-    return MonthlyConfirmedFixedCostTileValue(
-      id: id,
-      date: date,
-      price: 80000,
-      name: '家賃',
-      variable: 0,
-      intervalNumber: 1,
-      intervalUnit: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-      frequencyLabel: '毎月',
-    );
-  }
-
-  MonthlyUnconfirmedFixedCostTileValue buildUnconfirmedFixedCostTile({
-    required int id,
-    required DateTime date,
-  }) {
-    return MonthlyUnconfirmedFixedCostTileValue(
-      id: id,
-      date: date,
-      fixedCostId: 30,
-      name: '電気代',
-      variable: 1,
-      intervalNumber: 1,
-      intervalUnit: 1,
-      estimatedPrice: 6000,
-      categoryName: '光熱費',
-      colorCode: '00AAFF',
-      resourcePath: 'assets/images/icon_utility.svg',
-      frequencyLabel: '毎月',
     );
   }
 
@@ -268,7 +231,7 @@ void main() {
   }
 
   group('groupTransactionsByDate', () {
-    test('6種の取引の日付がすべて集約される', () {
+    test('4種の取引の日付がすべて集約される', () {
       final transactions = HistoricalAllTransactionsValue(
         expenses: [
           ExpenseHistoryTileGroupValue(
@@ -281,24 +244,16 @@ void main() {
         bonusExpenses: [buildExpenseTile(id: 2, date: DateTime(2025, 7, 2))],
         incomes: [buildIncomeTile(id: 3, date: DateTime(2025, 7, 3))],
         bonusIncomes: [buildIncomeTile(id: 4, date: DateTime(2025, 7, 4))],
-        confirmedFixedCosts: [
-          buildConfirmedFixedCostTile(id: 5, date: DateTime(2025, 7, 5)),
-        ],
-        unconfirmedFixedCosts: [
-          buildUnconfirmedFixedCostTile(id: 6, date: DateTime(2025, 7, 6)),
-        ],
       );
 
       final result = groupTransactionsByDate(transactions);
 
-      expect(result, hasLength(6));
+      expect(result, hasLength(4));
       expect(result.map((g) => g.date).toSet(), {
         DateTime(2025, 7, 1),
         DateTime(2025, 7, 2),
         DateTime(2025, 7, 3),
         DateTime(2025, 7, 4),
-        DateTime(2025, 7, 5),
-        DateTime(2025, 7, 6),
       });
     });
 
@@ -321,8 +276,6 @@ void main() {
         bonusExpenses: const [],
         incomes: [buildIncomeTile(id: 3, date: DateTime(2025, 7, 5))],
         bonusIncomes: const [],
-        confirmedFixedCosts: const [],
-        unconfirmedFixedCosts: const [],
       );
 
       final result = groupTransactionsByDate(transactions);
@@ -343,6 +296,8 @@ void main() {
             expenseHistoryTileValueList: [
               buildExpenseTile(id: 1, date: date),
               buildExpenseTile(id: 2, date: date),
+              // 固定費行も同じ expenses に入る（v10）
+              buildExpenseTile(id: 6, date: date, fixedCostId: 10),
             ],
           ),
         ],
@@ -351,10 +306,6 @@ void main() {
         ],
         incomes: [buildIncomeTile(id: 4, date: date)],
         bonusIncomes: [buildIncomeTile(id: 5, date: date)],
-        confirmedFixedCosts: [buildConfirmedFixedCostTile(id: 6, date: date)],
-        unconfirmedFixedCosts: [
-          buildUnconfirmedFixedCostTile(id: 7, date: date),
-        ],
       );
 
       final result = groupTransactionsByDate(transactions);
@@ -362,12 +313,10 @@ void main() {
       expect(result, hasLength(1));
       final group = result.single;
       expect(group.date, date);
-      expect(group.expenses.map((e) => e.id), [1, 2]);
+      expect(group.expenses.map((e) => e.id), [1, 2, 6]);
       expect(group.bonusExpenses.map((e) => e.id), [3]);
       expect(group.incomes.map((e) => e.id), [4]);
       expect(group.bonusIncomes.map((e) => e.id), [5]);
-      expect(group.confirmedFixedCosts.map((e) => e.id), [6]);
-      expect(group.unconfirmedFixedCosts.map((e) => e.id), [7]);
     });
 
     test('その日に存在しない種別は空リストになる', () {
@@ -376,8 +325,6 @@ void main() {
         bonusExpenses: const [],
         incomes: [buildIncomeTile(id: 1, date: DateTime(2025, 7, 3))],
         bonusIncomes: const [],
-        confirmedFixedCosts: const [],
-        unconfirmedFixedCosts: const [],
       );
 
       final result = groupTransactionsByDate(transactions);
@@ -387,8 +334,6 @@ void main() {
       expect(group.expenses, isEmpty);
       expect(group.bonusExpenses, isEmpty);
       expect(group.bonusIncomes, isEmpty);
-      expect(group.confirmedFixedCosts, isEmpty);
-      expect(group.unconfirmedFixedCosts, isEmpty);
     });
 
     test('データが1件も無ければ空リストを返す', () {
@@ -397,8 +342,6 @@ void main() {
         bonusExpenses: [],
         incomes: [],
         bonusIncomes: [],
-        confirmedFixedCosts: [],
-        unconfirmedFixedCosts: [],
       );
 
       expect(groupTransactionsByDate(transactions), isEmpty);
@@ -533,17 +476,17 @@ void main() {
         historicalTransactionNotifierProvider(period).future,
       );
 
-      // 固定費行は confirmedFixedCosts / unconfirmedFixedCosts へ回るため、
-      // 通常支出のリストには入らない（日次サマリの3本立てを維持する）
-      expect(
-        result.expenses.single.expenseHistoryTileValueList.map((e) => e.id),
-        [1],
-      );
+      // 固定費行も同じ expenses に入る（v10。仕様 §8.4）
+      // 7/1グループ（id=1の通常支出と id=100 の確定固定費）と
+      // 7/5グループ（id=200 の未確定固定費）に分かれる
+      final allExpenseIds = result.expenses
+          .expand((g) => g.expenseHistoryTileValueList)
+          .map((e) => e.id)
+          .toList();
+      expect(allExpenseIds, containsAll([1, 100, 200]));
       expect(result.bonusExpenses.map((e) => e.id), [2]);
       expect(result.incomes.map((e) => e.id), [1]);
       expect(result.bonusIncomes.map((e) => e.id), [2]);
-      expect(result.confirmedFixedCosts.map((e) => e.id), [100]);
-      expect(result.unconfirmedFixedCosts.map((e) => e.id), [200]);
     });
   });
 }

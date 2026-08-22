@@ -28,27 +28,34 @@ class BudgetCategoryArea extends ConsumerWidget {
 
     return Column(
       children: [
+        // 見出し「カテゴリー別予算」と、その右に凡例「先月の支出／今月の予算」を置く（仕様 §8.5）
         Padding(
-          padding: EdgeInsets.fromLTRB(leftsidePadding, 8, leftsidePadding, 0),
+          padding: EdgeInsets.fromLTRB(leftsidePadding, 8, leftsidePadding, 6),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 50),
-                child: Text('カテゴリー', style: AppTextStyles.listTileLegendTitle),
+              Expanded(
+                child: Text(
+                  'カテゴリー別予算',
+                  style: AppTextStyles.insetGroupHeader,
+                ),
               ),
-              Row(
-                children: [
-                  Text(expenseLabel, style: AppTextStyles.listTileLegendTitle),
-                  SizedBox(
-                    width: 123,
-                    child: Text(
-                      '今月の予算',
-                      textAlign: TextAlign.right,
-                      style: AppTextStyles.listTileLegendTitle,
-                    ),
-                  ),
-                ],
+              SizedBox(
+                width: 72,
+                child: Text(
+                  expenseLabel,
+                  textAlign: TextAlign.right,
+                  style: AppTextStyles.listTileLegendTitle,
+                ),
+              ),
+              SizedBox(
+                width: 116,
+                child: Text(
+                  '今月の予算',
+                  textAlign: TextAlign.right,
+                  style: AppTextStyles.listTileLegendTitle,
+                ),
               ),
             ],
           ),

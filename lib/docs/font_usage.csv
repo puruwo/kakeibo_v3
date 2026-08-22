@@ -24,6 +24,8 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileTextFieldH
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileUnconfirmedPriceLabel,金額,noto_sans,15,w500,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listTileLegendTitle,ラベル,noto_sans,14,w300,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardUnconfirmedPriceLabel,金額,noto_sans,14,w700,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.budgetFixedCostForecastLabel,ラベル,noto_sans,11,w400,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.chipLabel,ラベル,noto_sans,10,w400,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardSecondaryTitle,ラベル,noto_sans,12,w500,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardMinusLabel,金額,sf_ui,16,w600,AppColorsDark.expense,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.listCardPlusLabel,金額,sf_ui,16,w600,AppColorsDark.income,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
@@ -81,3 +83,8 @@ lib/view/register_page/common_input_field/price_input_row/large_price_display.da
 lib/util/common_widget/app_dialog.dart,AppDialog,Text,ボタン,noto_sans,18,w600(copyWith),AppColorsDark.text,定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
 lib/util/common_widget/app_delete_dialog.dart,AppDeleteDialog,Text,ボタン,noto_sans,14,w600,context.colors.onPrimary(copyWith),定数参照+copyWith,使用(notoSans/間接),copyWithで上書き
 lib/view/component/app_floating_action_button.dart,AppFloatingActionButton,Text,ラベル,noto_sans,14,w600,dynamic(引数依存),定数参照+copyWith(mainButtonText),使用(notoSans/間接),copyWithで上書き
+lib/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/fixed_cost_tile_subtitle.dart,FixedCostTileSubtitle,Text.rich,ラベル,noto_sans,12,w500,dynamic(text/textTertiary/textSecondary),定数参照+copyWith(listCardSecondaryTitle),使用(notoSans/間接),copyWithで上書き
+lib/view/budget_setting_page/budget_category_tile.dart,BudgetCategoryTile,Text(固定費見込み),ラベル,noto_sans,11,w400,dynamic(textSecondary/danger),定数参照+copyWith(budgetFixedCostForecastLabel),使用(notoSans/間接),copyWithで上書き
+lib/view/budget_setting_page/budget_category_tile.dart,BudgetCategoryTile,TextField(予算入力),金額,sf_ui,19,w500,dynamic(text/danger),定数参照+copyWith(listTileInputPriceLabel),使用(sfUi/間接),copyWithで上書き
+lib/view/monthly_page/monthly_plan_area/monthy_plan_home_page/budget_page_summary_area.dart,BudgetPageSummaryArea,Text(予定収支),金額,sf_ui,15,w500,dynamic(income/expense),定数参照+copyWith(insetGroupHistoryPrice),使用(sfUi/間接),copyWithで上書き
+lib/view/monthly_page/monthly_plan_area/monthy_plan_home_page/budget_page_summary_area.dart,BudgetPageSummaryArea,Text(予定収支ラベル),ラベル,noto_sans,14,w500,AppColorsDark.textSecondary(copyWith),定数参照+copyWith(insetGroupLabel),使用(notoSans/間接),copyWithで上書き

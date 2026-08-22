@@ -20,25 +20,17 @@ mixin _$DailyExpenseSummaryValue {
   /// 対象日
   DateTime get date => throw _privateConstructorUsedError;
 
-  /// カテゴリー別にグループ化された生活支出
+  /// カテゴリー別にグループ化された支出（固定費行も含む）
   List<ExpenseCategoryGroup> get expensesByCategory =>
       throw _privateConstructorUsedError;
 
-  /// 固定費（確定）
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts =>
-      throw _privateConstructorUsedError;
+  /// 変動費（固定費以外の支出）合計
+  int get variableExpenseTotal => throw _privateConstructorUsedError;
 
-  /// 固定費（未確定）
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts =>
-      throw _privateConstructorUsedError;
+  /// 固定費合計（未確定は予想額で計上）
+  int get fixedCostTotal => throw _privateConstructorUsedError;
 
-  /// 生活支出合計
-  int get expenseTotal => throw _privateConstructorUsedError;
-
-  /// 固定費（確定）合計
-  int get confirmedFixedCostTotal => throw _privateConstructorUsedError;
-
-  /// 固定費（未確定）合計
+  /// 固定費のうち未確定分の合計
   int get unconfirmedFixedCostTotal => throw _privateConstructorUsedError;
 
   /// 総支出
@@ -68,10 +60,8 @@ abstract class $DailyExpenseSummaryValueCopyWith<$Res> {
   $Res call({
     DateTime date,
     List<ExpenseCategoryGroup> expensesByCategory,
-    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
-    int expenseTotal,
-    int confirmedFixedCostTotal,
+    int variableExpenseTotal,
+    int fixedCostTotal,
     int unconfirmedFixedCostTotal,
     int totalExpense,
     bool hasNoData,
@@ -99,10 +89,8 @@ class _$DailyExpenseSummaryValueCopyWithImpl<
   $Res call({
     Object? date = null,
     Object? expensesByCategory = null,
-    Object? confirmedFixedCosts = null,
-    Object? unconfirmedFixedCosts = null,
-    Object? expenseTotal = null,
-    Object? confirmedFixedCostTotal = null,
+    Object? variableExpenseTotal = null,
+    Object? fixedCostTotal = null,
     Object? unconfirmedFixedCostTotal = null,
     Object? totalExpense = null,
     Object? hasNoData = null,
@@ -118,21 +106,13 @@ class _$DailyExpenseSummaryValueCopyWithImpl<
                 ? _value.expensesByCategory
                 : expensesByCategory // ignore: cast_nullable_to_non_nullable
                       as List<ExpenseCategoryGroup>,
-            confirmedFixedCosts: null == confirmedFixedCosts
-                ? _value.confirmedFixedCosts
-                : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                      as List<MonthlyConfirmedFixedCostTileValue>,
-            unconfirmedFixedCosts: null == unconfirmedFixedCosts
-                ? _value.unconfirmedFixedCosts
-                : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                      as List<MonthlyUnconfirmedFixedCostTileValue>,
-            expenseTotal: null == expenseTotal
-                ? _value.expenseTotal
-                : expenseTotal // ignore: cast_nullable_to_non_nullable
+            variableExpenseTotal: null == variableExpenseTotal
+                ? _value.variableExpenseTotal
+                : variableExpenseTotal // ignore: cast_nullable_to_non_nullable
                       as int,
-            confirmedFixedCostTotal: null == confirmedFixedCostTotal
-                ? _value.confirmedFixedCostTotal
-                : confirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
+            fixedCostTotal: null == fixedCostTotal
+                ? _value.fixedCostTotal
+                : fixedCostTotal // ignore: cast_nullable_to_non_nullable
                       as int,
             unconfirmedFixedCostTotal: null == unconfirmedFixedCostTotal
                 ? _value.unconfirmedFixedCostTotal
@@ -168,10 +148,8 @@ abstract class _$$DailyExpenseSummaryValueImplCopyWith<$Res>
   $Res call({
     DateTime date,
     List<ExpenseCategoryGroup> expensesByCategory,
-    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
-    int expenseTotal,
-    int confirmedFixedCostTotal,
+    int variableExpenseTotal,
+    int fixedCostTotal,
     int unconfirmedFixedCostTotal,
     int totalExpense,
     bool hasNoData,
@@ -199,10 +177,8 @@ class __$$DailyExpenseSummaryValueImplCopyWithImpl<$Res>
   $Res call({
     Object? date = null,
     Object? expensesByCategory = null,
-    Object? confirmedFixedCosts = null,
-    Object? unconfirmedFixedCosts = null,
-    Object? expenseTotal = null,
-    Object? confirmedFixedCostTotal = null,
+    Object? variableExpenseTotal = null,
+    Object? fixedCostTotal = null,
     Object? unconfirmedFixedCostTotal = null,
     Object? totalExpense = null,
     Object? hasNoData = null,
@@ -218,21 +194,13 @@ class __$$DailyExpenseSummaryValueImplCopyWithImpl<$Res>
             ? _value._expensesByCategory
             : expensesByCategory // ignore: cast_nullable_to_non_nullable
                   as List<ExpenseCategoryGroup>,
-        confirmedFixedCosts: null == confirmedFixedCosts
-            ? _value._confirmedFixedCosts
-            : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                  as List<MonthlyConfirmedFixedCostTileValue>,
-        unconfirmedFixedCosts: null == unconfirmedFixedCosts
-            ? _value._unconfirmedFixedCosts
-            : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                  as List<MonthlyUnconfirmedFixedCostTileValue>,
-        expenseTotal: null == expenseTotal
-            ? _value.expenseTotal
-            : expenseTotal // ignore: cast_nullable_to_non_nullable
+        variableExpenseTotal: null == variableExpenseTotal
+            ? _value.variableExpenseTotal
+            : variableExpenseTotal // ignore: cast_nullable_to_non_nullable
                   as int,
-        confirmedFixedCostTotal: null == confirmedFixedCostTotal
-            ? _value.confirmedFixedCostTotal
-            : confirmedFixedCostTotal // ignore: cast_nullable_to_non_nullable
+        fixedCostTotal: null == fixedCostTotal
+            ? _value.fixedCostTotal
+            : fixedCostTotal // ignore: cast_nullable_to_non_nullable
                   as int,
         unconfirmedFixedCostTotal: null == unconfirmedFixedCostTotal
             ? _value.unconfirmedFixedCostTotal
@@ -261,28 +229,23 @@ class _$DailyExpenseSummaryValueImpl implements _DailyExpenseSummaryValue {
   _$DailyExpenseSummaryValueImpl({
     required this.date,
     required final List<ExpenseCategoryGroup> expensesByCategory,
-    required final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    required final List<MonthlyUnconfirmedFixedCostTileValue>
-    unconfirmedFixedCosts,
-    required this.expenseTotal,
-    required this.confirmedFixedCostTotal,
+    required this.variableExpenseTotal,
+    required this.fixedCostTotal,
     required this.unconfirmedFixedCostTotal,
     required this.totalExpense,
     required this.hasNoData,
     required final List<CategorySummary> categorySummaries,
   }) : _expensesByCategory = expensesByCategory,
-       _confirmedFixedCosts = confirmedFixedCosts,
-       _unconfirmedFixedCosts = unconfirmedFixedCosts,
        _categorySummaries = categorySummaries;
 
   /// 対象日
   @override
   final DateTime date;
 
-  /// カテゴリー別にグループ化された生活支出
+  /// カテゴリー別にグループ化された支出（固定費行も含む）
   final List<ExpenseCategoryGroup> _expensesByCategory;
 
-  /// カテゴリー別にグループ化された生活支出
+  /// カテゴリー別にグループ化された支出（固定費行も含む）
   @override
   List<ExpenseCategoryGroup> get expensesByCategory {
     if (_expensesByCategory is EqualUnmodifiableListView)
@@ -291,39 +254,15 @@ class _$DailyExpenseSummaryValueImpl implements _DailyExpenseSummaryValue {
     return EqualUnmodifiableListView(_expensesByCategory);
   }
 
-  /// 固定費（確定）
-  final List<MonthlyConfirmedFixedCostTileValue> _confirmedFixedCosts;
-
-  /// 固定費（確定）
+  /// 変動費（固定費以外の支出）合計
   @override
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts {
-    if (_confirmedFixedCosts is EqualUnmodifiableListView)
-      return _confirmedFixedCosts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_confirmedFixedCosts);
-  }
+  final int variableExpenseTotal;
 
-  /// 固定費（未確定）
-  final List<MonthlyUnconfirmedFixedCostTileValue> _unconfirmedFixedCosts;
-
-  /// 固定費（未確定）
+  /// 固定費合計（未確定は予想額で計上）
   @override
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts {
-    if (_unconfirmedFixedCosts is EqualUnmodifiableListView)
-      return _unconfirmedFixedCosts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_unconfirmedFixedCosts);
-  }
+  final int fixedCostTotal;
 
-  /// 生活支出合計
-  @override
-  final int expenseTotal;
-
-  /// 固定費（確定）合計
-  @override
-  final int confirmedFixedCostTotal;
-
-  /// 固定費（未確定）合計
+  /// 固定費のうち未確定分の合計
   @override
   final int unconfirmedFixedCostTotal;
 
@@ -349,7 +288,7 @@ class _$DailyExpenseSummaryValueImpl implements _DailyExpenseSummaryValue {
 
   @override
   String toString() {
-    return 'DailyExpenseSummaryValue(date: $date, expensesByCategory: $expensesByCategory, confirmedFixedCosts: $confirmedFixedCosts, unconfirmedFixedCosts: $unconfirmedFixedCosts, expenseTotal: $expenseTotal, confirmedFixedCostTotal: $confirmedFixedCostTotal, unconfirmedFixedCostTotal: $unconfirmedFixedCostTotal, totalExpense: $totalExpense, hasNoData: $hasNoData, categorySummaries: $categorySummaries)';
+    return 'DailyExpenseSummaryValue(date: $date, expensesByCategory: $expensesByCategory, variableExpenseTotal: $variableExpenseTotal, fixedCostTotal: $fixedCostTotal, unconfirmedFixedCostTotal: $unconfirmedFixedCostTotal, totalExpense: $totalExpense, hasNoData: $hasNoData, categorySummaries: $categorySummaries)';
   }
 
   @override
@@ -362,21 +301,10 @@ class _$DailyExpenseSummaryValueImpl implements _DailyExpenseSummaryValue {
               other._expensesByCategory,
               _expensesByCategory,
             ) &&
-            const DeepCollectionEquality().equals(
-              other._confirmedFixedCosts,
-              _confirmedFixedCosts,
-            ) &&
-            const DeepCollectionEquality().equals(
-              other._unconfirmedFixedCosts,
-              _unconfirmedFixedCosts,
-            ) &&
-            (identical(other.expenseTotal, expenseTotal) ||
-                other.expenseTotal == expenseTotal) &&
-            (identical(
-                  other.confirmedFixedCostTotal,
-                  confirmedFixedCostTotal,
-                ) ||
-                other.confirmedFixedCostTotal == confirmedFixedCostTotal) &&
+            (identical(other.variableExpenseTotal, variableExpenseTotal) ||
+                other.variableExpenseTotal == variableExpenseTotal) &&
+            (identical(other.fixedCostTotal, fixedCostTotal) ||
+                other.fixedCostTotal == fixedCostTotal) &&
             (identical(
                   other.unconfirmedFixedCostTotal,
                   unconfirmedFixedCostTotal,
@@ -397,10 +325,8 @@ class _$DailyExpenseSummaryValueImpl implements _DailyExpenseSummaryValue {
     runtimeType,
     date,
     const DeepCollectionEquality().hash(_expensesByCategory),
-    const DeepCollectionEquality().hash(_confirmedFixedCosts),
-    const DeepCollectionEquality().hash(_unconfirmedFixedCosts),
-    expenseTotal,
-    confirmedFixedCostTotal,
+    variableExpenseTotal,
+    fixedCostTotal,
     unconfirmedFixedCostTotal,
     totalExpense,
     hasNoData,
@@ -423,11 +349,8 @@ abstract class _DailyExpenseSummaryValue implements DailyExpenseSummaryValue {
   factory _DailyExpenseSummaryValue({
     required final DateTime date,
     required final List<ExpenseCategoryGroup> expensesByCategory,
-    required final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    required final List<MonthlyUnconfirmedFixedCostTileValue>
-    unconfirmedFixedCosts,
-    required final int expenseTotal,
-    required final int confirmedFixedCostTotal,
+    required final int variableExpenseTotal,
+    required final int fixedCostTotal,
     required final int unconfirmedFixedCostTotal,
     required final int totalExpense,
     required final bool hasNoData,
@@ -438,27 +361,19 @@ abstract class _DailyExpenseSummaryValue implements DailyExpenseSummaryValue {
   @override
   DateTime get date;
 
-  /// カテゴリー別にグループ化された生活支出
+  /// カテゴリー別にグループ化された支出（固定費行も含む）
   @override
   List<ExpenseCategoryGroup> get expensesByCategory;
 
-  /// 固定費（確定）
+  /// 変動費（固定費以外の支出）合計
   @override
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts;
+  int get variableExpenseTotal;
 
-  /// 固定費（未確定）
+  /// 固定費合計（未確定は予想額で計上）
   @override
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts;
+  int get fixedCostTotal;
 
-  /// 生活支出合計
-  @override
-  int get expenseTotal;
-
-  /// 固定費（確定）合計
-  @override
-  int get confirmedFixedCostTotal;
-
-  /// 固定費（未確定）合計
+  /// 固定費のうち未確定分の合計
   @override
   int get unconfirmedFixedCostTotal;
 
@@ -493,7 +408,7 @@ mixin _$ExpenseCategoryGroup {
   /// カテゴリー色コード
   String get colorCode => throw _privateConstructorUsedError;
 
-  /// このカテゴリーに属する支出リスト
+  /// このカテゴリーに属する支出リスト（固定費行も含む）
   List<ExpenseHistoryTileValue> get expenses =>
       throw _privateConstructorUsedError;
 
@@ -663,10 +578,10 @@ class _$ExpenseCategoryGroupImpl implements _ExpenseCategoryGroup {
   @override
   final String colorCode;
 
-  /// このカテゴリーに属する支出リスト
+  /// このカテゴリーに属する支出リスト（固定費行も含む）
   final List<ExpenseHistoryTileValue> _expenses;
 
-  /// このカテゴリーに属する支出リスト
+  /// このカテゴリーに属する支出リスト（固定費行も含む）
   @override
   List<ExpenseHistoryTileValue> get expenses {
     if (_expenses is EqualUnmodifiableListView) return _expenses;
@@ -743,7 +658,7 @@ abstract class _ExpenseCategoryGroup implements ExpenseCategoryGroup {
   @override
   String get colorCode;
 
-  /// このカテゴリーに属する支出リスト
+  /// このカテゴリーに属する支出リスト（固定費行も含む）
   @override
   List<ExpenseHistoryTileValue> get expenses;
 

@@ -22,7 +22,6 @@ mixin _$MonthPlanCardModel {
   int get allCategoryTotalExpense => throw _privateConstructorUsedError;
   int get allCategoryTotalBudget => throw _privateConstructorUsedError;
   int get allCategoryTotalIncome => throw _privateConstructorUsedError;
-  int get allFixedCostExpense => throw _privateConstructorUsedError;
   int get denominator => throw _privateConstructorUsedError;
   int get realSavings => throw _privateConstructorUsedError;
   double get totalBadgetRatio =>
@@ -70,7 +69,6 @@ abstract class $MonthPlanCardModelCopyWith<$Res> {
     int allCategoryTotalExpense,
     int allCategoryTotalBudget,
     int allCategoryTotalIncome,
-    int allFixedCostExpense,
     int denominator,
     int realSavings,
     double totalBadgetRatio,
@@ -110,7 +108,6 @@ class _$MonthPlanCardModelCopyWithImpl<$Res, $Val extends MonthPlanCardModel>
     Object? allCategoryTotalExpense = null,
     Object? allCategoryTotalBudget = null,
     Object? allCategoryTotalIncome = null,
-    Object? allFixedCostExpense = null,
     Object? denominator = null,
     Object? realSavings = null,
     Object? totalBadgetRatio = null,
@@ -146,10 +143,6 @@ class _$MonthPlanCardModelCopyWithImpl<$Res, $Val extends MonthPlanCardModel>
             allCategoryTotalIncome: null == allCategoryTotalIncome
                 ? _value.allCategoryTotalIncome
                 : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
-                      as int,
-            allFixedCostExpense: null == allFixedCostExpense
-                ? _value.allFixedCostExpense
-                : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
                       as int,
             denominator: null == denominator
                 ? _value.denominator
@@ -239,7 +232,6 @@ abstract class _$$AllCategoryCardModelImplCopyWith<$Res>
     int allCategoryTotalExpense,
     int allCategoryTotalBudget,
     int allCategoryTotalIncome,
-    int allFixedCostExpense,
     int denominator,
     int realSavings,
     double totalBadgetRatio,
@@ -278,7 +270,6 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
     Object? allCategoryTotalExpense = null,
     Object? allCategoryTotalBudget = null,
     Object? allCategoryTotalIncome = null,
-    Object? allFixedCostExpense = null,
     Object? denominator = null,
     Object? realSavings = null,
     Object? totalBadgetRatio = null,
@@ -314,10 +305,6 @@ class __$$AllCategoryCardModelImplCopyWithImpl<$Res>
         allCategoryTotalIncome: null == allCategoryTotalIncome
             ? _value.allCategoryTotalIncome
             : allCategoryTotalIncome // ignore: cast_nullable_to_non_nullable
-                  as int,
-        allFixedCostExpense: null == allFixedCostExpense
-            ? _value.allFixedCostExpense
-            : allFixedCostExpense // ignore: cast_nullable_to_non_nullable
                   as int,
         denominator: null == denominator
             ? _value.denominator
@@ -400,7 +387,6 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
     required this.allCategoryTotalExpense,
     required this.allCategoryTotalBudget,
     required this.allCategoryTotalIncome,
-    required this.allFixedCostExpense,
     required this.denominator,
     required this.realSavings,
     required this.totalBadgetRatio,
@@ -441,8 +427,6 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
   final int allCategoryTotalBudget;
   @override
   final int allCategoryTotalIncome;
-  @override
-  final int allFixedCostExpense;
   @override
   final int denominator;
   @override
@@ -583,7 +567,7 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
 
   @override
   String toString() {
-    return 'MonthPlanCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, allFixedCostExpense: $allFixedCostExpense, denominator: $denominator, realSavings: $realSavings, totalBadgetRatio: $totalBadgetRatio, expenseCategoryNameList: $expenseCategoryNameList, expenseCategoryList: $expenseCategoryList, expenseCategoryRatioList: $expenseCategoryRatioList, expenseCategoryIconPathList: $expenseCategoryIconPathList, expenseCategoryColorList: $expenseCategoryColorList, incomeCategoryNameList: $incomeCategoryNameList, incomeCategoryList: $incomeCategoryList, incomeCategoryRatioList: $incomeCategoryRatioList, incomeCategoryIconPathList: $incomeCategoryIconPathList, incomeCategoryColorList: $incomeCategoryColorList, budgetCategoryNameList: $budgetCategoryNameList, budgetCategoryList: $budgetCategoryList, budgetCategoryIconPathList: $budgetCategoryIconPathList, budgetCategoryColorList: $budgetCategoryColorList)';
+    return 'MonthPlanCardModel(cardStatusType: $cardStatusType, allCategoryTotalExpense: $allCategoryTotalExpense, allCategoryTotalBudget: $allCategoryTotalBudget, allCategoryTotalIncome: $allCategoryTotalIncome, denominator: $denominator, realSavings: $realSavings, totalBadgetRatio: $totalBadgetRatio, expenseCategoryNameList: $expenseCategoryNameList, expenseCategoryList: $expenseCategoryList, expenseCategoryRatioList: $expenseCategoryRatioList, expenseCategoryIconPathList: $expenseCategoryIconPathList, expenseCategoryColorList: $expenseCategoryColorList, incomeCategoryNameList: $incomeCategoryNameList, incomeCategoryList: $incomeCategoryList, incomeCategoryRatioList: $incomeCategoryRatioList, incomeCategoryIconPathList: $incomeCategoryIconPathList, incomeCategoryColorList: $incomeCategoryColorList, budgetCategoryNameList: $budgetCategoryNameList, budgetCategoryList: $budgetCategoryList, budgetCategoryIconPathList: $budgetCategoryIconPathList, budgetCategoryColorList: $budgetCategoryColorList)';
   }
 
   @override
@@ -602,8 +586,6 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
                 other.allCategoryTotalBudget == allCategoryTotalBudget) &&
             (identical(other.allCategoryTotalIncome, allCategoryTotalIncome) ||
                 other.allCategoryTotalIncome == allCategoryTotalIncome) &&
-            (identical(other.allFixedCostExpense, allFixedCostExpense) ||
-                other.allFixedCostExpense == allFixedCostExpense) &&
             (identical(other.denominator, denominator) ||
                 other.denominator == denominator) &&
             (identical(other.realSavings, realSavings) ||
@@ -675,7 +657,6 @@ class _$AllCategoryCardModelImpl implements _AllCategoryCardModel {
     allCategoryTotalExpense,
     allCategoryTotalBudget,
     allCategoryTotalIncome,
-    allFixedCostExpense,
     denominator,
     realSavings,
     totalBadgetRatio,
@@ -714,7 +695,6 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
     required final int allCategoryTotalExpense,
     required final int allCategoryTotalBudget,
     required final int allCategoryTotalIncome,
-    required final int allFixedCostExpense,
     required final int denominator,
     required final int realSavings,
     required final double totalBadgetRatio,
@@ -742,8 +722,6 @@ abstract class _AllCategoryCardModel implements MonthPlanCardModel {
   int get allCategoryTotalBudget;
   @override
   int get allCategoryTotalIncome;
-  @override
-  int get allFixedCostExpense;
   @override
   int get denominator;
   @override

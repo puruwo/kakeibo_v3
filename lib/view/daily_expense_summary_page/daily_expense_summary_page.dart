@@ -10,7 +10,6 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_graph_area.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_item_tile.dart';
-import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_fixed_cost_item_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_daily_expense_summary_provider.dart';
 
 /// 日次支出サマリーページ（フルモーダル形式）
@@ -71,41 +70,16 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
               DailyExpenseGraphArea(
                 totalExpense: summary.totalExpense,
                 categorySummaries: summary.categorySummaries,
+                variableExpenseTotal: summary.variableExpenseTotal,
+                fixedCostTotal: summary.fixedCostTotal,
+                unconfirmedFixedCostTotal: summary.unconfirmedFixedCostTotal,
               ),
               const SizedBox(height: 24),
 
-              // 生活支出セクション（カテゴリー別グループ）
+              // 支出セクション（カテゴリー別グループ。固定費行も同じ一覧に並ぶ）
               if (summary.expensesByCategory.isNotEmpty) ...[
                 ...summary.expensesByCategory.map((categoryGroup) {
                   return _buildCategoryGroup(categoryGroup);
-                }),
-              ],
-
-              // 固定費（確定）セクション
-              if (summary.confirmedFixedCosts.isNotEmpty) ...[
-                DailyExpenseSummaryHeader(
-                  categoryName: '固定費合計',
-                  categoryTotal: summary.confirmedFixedCostTotal,
-                ),
-                ...summary.confirmedFixedCosts.map((fixedCost) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: DailyConfirmedFixedCostItemTile(value: fixedCost),
-                  );
-                }),
-              ],
-
-              // 固定費（未確定）セクション
-              if (summary.unconfirmedFixedCosts.isNotEmpty) ...[
-                DailyExpenseSummaryHeader(
-                  categoryName: '固定費(未確定)合計',
-                  categoryTotal: summary.unconfirmedFixedCostTotal,
-                ),
-                ...summary.unconfirmedFixedCosts.map((fixedCost) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: DailyUnconfirmedFixedCostItemTile(value: fixedCost),
-                  );
                 }),
               ],
             ],

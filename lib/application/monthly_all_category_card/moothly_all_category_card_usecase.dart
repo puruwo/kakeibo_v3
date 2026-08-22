@@ -300,8 +300,6 @@ class MonthlyAllCategoryTileUsecaseNotifier
       allCategoryTotalExpense: allCategoryTotalExpense,
       allCategoryTotalBudget: allBudget,
       allCategoryTotalIncome: allCategoryIncome,
-      // 固定費セグメントは廃止したため常に0（フィールド自体の除去はT5）
-      allFixedCostExpense: 0,
       realSavings: allCategoryIncome - allCategoryTotalExpense,
       denominator: denominator,
       totalBadgetRatio: totalBadgetRatio,

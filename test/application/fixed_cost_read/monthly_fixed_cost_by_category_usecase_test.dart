@@ -41,13 +41,13 @@ void main() {
       );
 
       expect(result, hasLength(2));
-      final utility = result.firstWhere((e) => e.fixedCostCategoryId == 2);
+      final utility = result.firstWhere((e) => e.expenseBigCategoryId == 2);
       expect(utility.items, hasLength(2));
       // 日付昇順なので 7/5 の未確定分が先、7/10 の確定分が後
       expect(utility.items.first, isA<MonthlyUnconfirmedFixedCostTileValue>());
       expect(utility.items.last, isA<MonthlyConfirmedFixedCostTileValue>());
 
-      final housing = result.firstWhere((e) => e.fixedCostCategoryId == 1);
+      final housing = result.firstWhere((e) => e.expenseBigCategoryId == 1);
       expect(housing.items, hasLength(1));
       expect(housing.items.first, isA<MonthlyConfirmedFixedCostTileValue>());
     });
@@ -64,13 +64,13 @@ void main() {
         monthlyFixedCostByCategoryNotifierProvider(period).future,
       );
 
-      final housing = result.firstWhere((e) => e.fixedCostCategoryId == 1);
+      final housing = result.firstWhere((e) => e.expenseBigCategoryId == 1);
       expect(housing.categoryName, housing.items.first.categoryName);
       expect(housing.colorCode, housing.items.first.colorCode);
       expect(housing.resourcePath, housing.items.first.resourcePath);
       expect(housing.categoryName, '住居');
 
-      final utility = result.firstWhere((e) => e.fixedCostCategoryId == 2);
+      final utility = result.firstWhere((e) => e.expenseBigCategoryId == 2);
       expect(utility.categoryName, '光熱費');
       expect(utility.resourcePath, 'assets/images/icon_utility.svg');
     });
@@ -86,7 +86,7 @@ void main() {
       );
 
       expect(result, hasLength(1));
-      expect(result.single.fixedCostCategoryId, 1);
+      expect(result.single.expenseBigCategoryId, 1);
       // 2行目に出す小カテゴリー名は行ごとに保持される（仕様 §8.5 案A）
       expect(
         result.single.items.map((e) => e.smallCategoryName).toList(),

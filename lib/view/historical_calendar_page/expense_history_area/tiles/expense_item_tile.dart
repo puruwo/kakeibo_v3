@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
@@ -12,7 +13,9 @@ import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_histo
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_expense_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class ExpenseItemTile extends ConsumerWidget {
@@ -34,6 +37,11 @@ class ExpenseItemTile extends ConsumerWidget {
     final expenseUsecase = ref.read(expenseUsecaseProvider);
     final color = ColorCode.toColor(value.colorCode);
 
+    // 固定費由来の行かどうか（仕様 §8.4）
+    final isFixedCost = value.fixedCostId != null;
+    // 未確定の固定費行は金額が未入力
+    final isUnconfirmed = isFixedCost && value.isConfirmed == 0;
+
     // アイコン
     final icon = FittedBox(
       fit: BoxFit.scaleDown,
@@ -45,14 +53,20 @@ class ExpenseItemTile extends ConsumerWidget {
         height: 25,
       ),
     );
-    // 値段ラベル
-    final priceLabel = value.price == 0
-        ? '未確定'
+    // 値段ラベル（未確定の固定費行は「未入力」）
+    final priceLabel = isUnconfirmed
+        ? '未入力'
         : yenmarkFormattedPriceGetter(value.price);
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
       onTap: () async {
+        // 固定費行は編集範囲が違うため専用シートを開く（仕様 §6.6）
+        if (isFixedCost) {
+          await openFixedCostExpenseEditSheet(context, ref,
+              expenseId: value.id);
+          return;
+        }
         final expenseEntity = ExpenseEntity(
           id: value.id,
           date: DateFormat('yyyyMMdd').format(value.date),
@@ -88,7 +102,12 @@ class ExpenseItemTile extends ConsumerWidget {
           return null;
         },
         onDismissed: (direction) {
-          expenseUsecase.delete(id: value.id);
+          // 固定費行の削除は推定額の再計算を伴うため専用ユースケースを使う（仕様 §6.5）
+          if (isFixedCost) {
+            ref.read(fixedCostExpenseUsecaseProvider).delete(id: value.id);
+          } else {
+            expenseUsecase.delete(id: value.id);
+          }
         },
         child: Column(
           children: [
@@ -113,14 +132,21 @@ class ExpenseItemTile extends ConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // 大カテゴリー
+                          // 大カテゴリー（固定費行には「固定費」チップを添える）
                           SizedBox(
                             width: 153 * screenHorizontalMagnification,
-                            child: Text(
-                              value.bigCategoryName,
-                              textAlign: TextAlign.start,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.listTilePrimaryTitle,
+                            child: Row(
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    value.bigCategoryName,
+                                    textAlign: TextAlign.start,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTextStyles.listTilePrimaryTitle,
+                                  ),
+                                ),
+                                if (isFixedCost) const FixedCostChipLabel(),
+                              ],
                             ),
                           ),
 
@@ -162,7 +188,9 @@ class ExpenseItemTile extends ConsumerWidget {
                           priceLabel,
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
-                          style: AppTextStyles.listTilePriceLabel,
+                          style: isUnconfirmed
+                              ? AppTextStyles.listTileUnconfirmedPriceLabel
+                              : AppTextStyles.listTilePriceLabel,
                         ),
                       ),
                     ),

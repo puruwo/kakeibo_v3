@@ -3,13 +3,17 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
+import 'package:kakeibo/view/component/fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_expense_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class DailyExpenseItemTile extends ConsumerWidget {
@@ -23,8 +27,14 @@ class DailyExpenseItemTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final color = ColorCode.toColor(value.colorCode);
+
+    // 固定費由来の行かどうか（仕様 §8.4）
+    final isFixedCost = value.fixedCostId != null;
+    // 未確定の固定費行は金額が未入力
+    final isUnconfirmed = isFixedCost && value.isConfirmed == 0;
+
     final priceLabel =
-        value.price == 0 ? '未確定' : yenmarkFormattedPriceGetter(value.price);
+        isUnconfirmed ? '未入力' : yenmarkFormattedPriceGetter(value.price);
 
     return AppListCard(
       iconPath: value.iconPath,
@@ -33,10 +43,23 @@ class DailyExpenseItemTile extends ConsumerWidget {
       secondaryTitle: value.smallCategoryName,
       subtitleLeading: value.memo,
       priceLabel: priceLabel,
+      priceLabelStyle:
+          isUnconfirmed ? AppTextStyles.listCardUnconfirmedPriceLabel : null,
+      // 固定費行の識別チップ
+      customWidget: isFixedCost ? const FixedCostChipLabel() : null,
       isIncome: false,
-      onTap: () => _showEditSheet(context),
+      onTap: () async => await _openEditSheet(context, ref),
       onLongPress: () => _showMenuDialog(context, ref),
     );
+  }
+
+  /// 編集シートを開く（固定費行は編集範囲が違う専用シート。仕様 §6.6）
+  Future<void> _openEditSheet(BuildContext context, WidgetRef ref) async {
+    if (value.fixedCostId != null) {
+      await openFixedCostExpenseEditSheet(context, ref, expenseId: value.id);
+      return;
+    }
+    _showEditSheet(context);
   }
 
   Future<void> _showMenuDialog(BuildContext context, WidgetRef ref) async {
@@ -46,8 +69,8 @@ class DailyExpenseItemTile extends ConsumerWidget {
         MenuDialogItem(
           label: '編集',
           icon: Icons.edit_outlined,
-          onPressed: () {
-            _showEditSheet(context);
+          onPressed: () async {
+            await _openEditSheet(context, ref);
           },
         ),
         MenuDialogItem(
@@ -58,7 +81,14 @@ class DailyExpenseItemTile extends ConsumerWidget {
             showDeleteConfirmationDialog(
               context,
               onConfirm: () {
-                ref.read(expenseUsecaseProvider).delete(id: value.id);
+                // 固定費行の削除は推定額の再計算を伴うため専用ユースケースを使う（仕様 §6.5）
+                if (value.fixedCostId != null) {
+                  ref
+                      .read(fixedCostExpenseUsecaseProvider)
+                      .delete(id: value.id);
+                } else {
+                  ref.read(expenseUsecaseProvider).delete(id: value.id);
+                }
               },
             );
           },

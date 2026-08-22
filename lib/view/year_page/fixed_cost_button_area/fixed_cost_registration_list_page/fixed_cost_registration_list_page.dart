@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/app_fab_stack.dart';
@@ -30,13 +31,13 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text('固定費', style: AppTextStyles.pageHeaderText),
         actions: [
           IconButton(
-            icon: const Icon(Icons.settings, color: Colors.white),
+            icon: Icon(Icons.settings, color: context.colors.text),
             onPressed: () => {
               // 設定画面にrootのNavigatorで遷移
               Navigator.of(context, rootNavigator: true).push(

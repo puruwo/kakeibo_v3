@@ -30,7 +30,6 @@ class MonthPlanCardModel with _$MonthPlanCardModel {
     required int allCategoryTotalExpense,
     required int allCategoryTotalBudget,
     required int allCategoryTotalIncome,
-    required int allFixedCostExpense,
     required int denominator,
     required int realSavings,
     required double totalBadgetRatio,

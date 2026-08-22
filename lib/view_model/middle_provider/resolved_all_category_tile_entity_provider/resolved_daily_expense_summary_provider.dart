@@ -32,22 +32,23 @@ final resolvedDailyExpenseSummaryProvider = FutureProvider.family
     orElse: () => DailyTransactionGroup(date: date),
   );
 
-  // 合計金額を計算
-  final expenseTotal =
-      dailyGroup.expenses.fold<int>(0, (sum, e) => sum + e.price);
-  final confirmedFixedCostTotal =
-      dailyGroup.confirmedFixedCosts.fold<int>(0, (sum, e) => sum + e.price);
-  final unconfirmedFixedCostTotal = dailyGroup.unconfirmedFixedCosts
-      .fold<int>(0, (sum, e) => sum + e.estimatedPrice);
-  final totalExpense =
-      expenseTotal + confirmedFixedCostTotal + unconfirmedFixedCostTotal;
+  // 合計金額を計算（固定費行も expense に含まれるため fixedCostId で振り分ける。仕様 §8.4）
+  // price は実効金額（未確定行は予想額）が入っている
+  final variableExpenseTotal = dailyGroup.expenses
+      .where((e) => e.fixedCostId == null)
+      .fold<int>(0, (sum, e) => sum + e.price);
+  final fixedCostTotal = dailyGroup.expenses
+      .where((e) => e.fixedCostId != null)
+      .fold<int>(0, (sum, e) => sum + e.price);
+  final unconfirmedFixedCostTotal = dailyGroup.expenses
+      .where((e) => e.fixedCostId != null && e.isConfirmed == 0)
+      .fold<int>(0, (sum, e) => sum + e.price);
+  final totalExpense = variableExpenseTotal + fixedCostTotal;
 
   // すべて空の場合
-  final hasNoData = dailyGroup.expenses.isEmpty &&
-      dailyGroup.confirmedFixedCosts.isEmpty &&
-      dailyGroup.unconfirmedFixedCosts.isEmpty;
+  final hasNoData = dailyGroup.expenses.isEmpty;
 
-  // 生活支出をカテゴリー別にグループ化
+  // 支出をカテゴリー別にグループ化（固定費行も同じカテゴリーに入る）
   final expensesByCategory = _groupExpensesByCategory(dailyGroup.expenses);
 
   // グラフ用カテゴリーサマリー
@@ -57,10 +58,8 @@ final resolvedDailyExpenseSummaryProvider = FutureProvider.family
   return DailyExpenseSummaryValue(
     date: date,
     expensesByCategory: expensesByCategory,
-    confirmedFixedCosts: dailyGroup.confirmedFixedCosts,
-    unconfirmedFixedCosts: dailyGroup.unconfirmedFixedCosts,
-    expenseTotal: expenseTotal,
-    confirmedFixedCostTotal: confirmedFixedCostTotal,
+    variableExpenseTotal: variableExpenseTotal,
+    fixedCostTotal: fixedCostTotal,
     unconfirmedFixedCostTotal: unconfirmedFixedCostTotal,
     totalExpense: totalExpense,
     hasNoData: hasNoData,
@@ -68,7 +67,7 @@ final resolvedDailyExpenseSummaryProvider = FutureProvider.family
   );
 });
 
-/// 支出をカテゴリー別にグループ化
+/// 支出をカテゴリー別にグループ化（固定費行も含む）
 List<ExpenseCategoryGroup> _groupExpensesByCategory(
     List<ExpenseHistoryTileValue> expenses) {
   final Map<String, List<ExpenseHistoryTileValue>> grouped = {};

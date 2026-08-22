@@ -29,10 +29,22 @@ class DailyExpenseGraphArea extends StatelessWidget {
     super.key,
     required this.totalExpense,
     required this.categorySummaries,
+    this.variableExpenseTotal = 0,
+    this.fixedCostTotal = 0,
+    this.unconfirmedFixedCostTotal = 0,
   });
 
   final int totalExpense;
   final List<CategorySummary> categorySummaries;
+
+  /// 変動費（固定費以外の支出）の合計
+  final int variableExpenseTotal;
+
+  /// 固定費（fixed_cost_id を持つ支出）の合計
+  final int fixedCostTotal;
+
+  /// 固定費のうち未確定分（予想額で計上）の合計
+  final int unconfirmedFixedCostTotal;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +76,13 @@ class DailyExpenseGraphArea extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Divider(height: 0, thickness: 1),
+
+          // 変動費／固定費／うち未確定 の内訳（仕様 §8.4）
+          _breakdownRow('変動費', variableExpenseTotal),
+          _breakdownRow('固定費', fixedCostTotal),
+          if (unconfirmedFixedCostTotal > 0)
+            _breakdownRow('うち未確定', unconfirmedFixedCostTotal),
+
           const SizedBox(height: 16),
           // 円グラフとカテゴリー一覧
           categorySummaries.length == 1
@@ -109,6 +128,23 @@ class DailyExpenseGraphArea extends StatelessWidget {
   }
 
   /// カテゴリー一覧ウィジェット
+  /// 内訳の1行（ラベルと金額）
+  Widget _breakdownRow(String label, int amount) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: AppTextStyles.appCardTertiaryTitleLabel),
+          Text(
+            yenmarkFormattedPriceGetter(amount),
+            style: AppTextStyles.appCardTertiaryPriceLabel,
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget _buildCategoryList() {
     return Column(
       mainAxisSize: MainAxisSize.min,

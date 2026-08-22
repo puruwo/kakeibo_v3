@@ -17,7 +17,8 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$MonthlyFixedCostByCategoryGroup {
-  int get fixedCostCategoryId => throw _privateConstructorUsedError;
+  /// 支出大カテゴリーid（v10で固定費カテゴリーから移行）
+  int get expenseBigCategoryId => throw _privateConstructorUsedError;
   String get categoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get resourcePath => throw _privateConstructorUsedError;
@@ -42,7 +43,7 @@ abstract class $MonthlyFixedCostByCategoryGroupCopyWith<$Res> {
       >;
   @useResult
   $Res call({
-    int fixedCostCategoryId,
+    int expenseBigCategoryId,
     String categoryName,
     String colorCode,
     String resourcePath,
@@ -68,7 +69,7 @@ class _$MonthlyFixedCostByCategoryGroupCopyWithImpl<
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? fixedCostCategoryId = null,
+    Object? expenseBigCategoryId = null,
     Object? categoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
@@ -76,9 +77,9 @@ class _$MonthlyFixedCostByCategoryGroupCopyWithImpl<
   }) {
     return _then(
       _value.copyWith(
-            fixedCostCategoryId: null == fixedCostCategoryId
-                ? _value.fixedCostCategoryId
-                : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
+            expenseBigCategoryId: null == expenseBigCategoryId
+                ? _value.expenseBigCategoryId
+                : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
                       as int,
             categoryName: null == categoryName
                 ? _value.categoryName
@@ -112,7 +113,7 @@ abstract class _$$MonthlyFixedCostByCategoryGroupImplCopyWith<$Res>
   @override
   @useResult
   $Res call({
-    int fixedCostCategoryId,
+    int expenseBigCategoryId,
     String categoryName,
     String colorCode,
     String resourcePath,
@@ -138,7 +139,7 @@ class __$$MonthlyFixedCostByCategoryGroupImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? fixedCostCategoryId = null,
+    Object? expenseBigCategoryId = null,
     Object? categoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
@@ -146,9 +147,9 @@ class __$$MonthlyFixedCostByCategoryGroupImplCopyWithImpl<$Res>
   }) {
     return _then(
       _$MonthlyFixedCostByCategoryGroupImpl(
-        fixedCostCategoryId: null == fixedCostCategoryId
-            ? _value.fixedCostCategoryId
-            : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
+        expenseBigCategoryId: null == expenseBigCategoryId
+            ? _value.expenseBigCategoryId
+            : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
                   as int,
         categoryName: null == categoryName
             ? _value.categoryName
@@ -176,15 +177,16 @@ class __$$MonthlyFixedCostByCategoryGroupImplCopyWithImpl<$Res>
 class _$MonthlyFixedCostByCategoryGroupImpl
     implements _MonthlyFixedCostByCategoryGroup {
   const _$MonthlyFixedCostByCategoryGroupImpl({
-    required this.fixedCostCategoryId,
+    required this.expenseBigCategoryId,
     required this.categoryName,
     required this.colorCode,
     required this.resourcePath,
     required final List<IMonthlyFixedTileValue> items,
   }) : _items = items;
 
+  /// 支出大カテゴリーid（v10で固定費カテゴリーから移行）
   @override
-  final int fixedCostCategoryId;
+  final int expenseBigCategoryId;
   @override
   final String categoryName;
   @override
@@ -201,7 +203,7 @@ class _$MonthlyFixedCostByCategoryGroupImpl
 
   @override
   String toString() {
-    return 'MonthlyFixedCostByCategoryGroup(fixedCostCategoryId: $fixedCostCategoryId, categoryName: $categoryName, colorCode: $colorCode, resourcePath: $resourcePath, items: $items)';
+    return 'MonthlyFixedCostByCategoryGroup(expenseBigCategoryId: $expenseBigCategoryId, categoryName: $categoryName, colorCode: $colorCode, resourcePath: $resourcePath, items: $items)';
   }
 
   @override
@@ -209,8 +211,8 @@ class _$MonthlyFixedCostByCategoryGroupImpl
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$MonthlyFixedCostByCategoryGroupImpl &&
-            (identical(other.fixedCostCategoryId, fixedCostCategoryId) ||
-                other.fixedCostCategoryId == fixedCostCategoryId) &&
+            (identical(other.expenseBigCategoryId, expenseBigCategoryId) ||
+                other.expenseBigCategoryId == expenseBigCategoryId) &&
             (identical(other.categoryName, categoryName) ||
                 other.categoryName == categoryName) &&
             (identical(other.colorCode, colorCode) ||
@@ -223,7 +225,7 @@ class _$MonthlyFixedCostByCategoryGroupImpl
   @override
   int get hashCode => Object.hash(
     runtimeType,
-    fixedCostCategoryId,
+    expenseBigCategoryId,
     categoryName,
     colorCode,
     resourcePath,
@@ -247,15 +249,16 @@ class _$MonthlyFixedCostByCategoryGroupImpl
 abstract class _MonthlyFixedCostByCategoryGroup
     implements MonthlyFixedCostByCategoryGroup {
   const factory _MonthlyFixedCostByCategoryGroup({
-    required final int fixedCostCategoryId,
+    required final int expenseBigCategoryId,
     required final String categoryName,
     required final String colorCode,
     required final String resourcePath,
     required final List<IMonthlyFixedTileValue> items,
   }) = _$MonthlyFixedCostByCategoryGroupImpl;
 
+  /// 支出大カテゴリーid（v10で固定費カテゴリーから移行）
   @override
-  int get fixedCostCategoryId;
+  int get expenseBigCategoryId;
   @override
   String get categoryName;
   @override

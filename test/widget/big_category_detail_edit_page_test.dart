@@ -275,63 +275,6 @@ void main() {
     });
   });
 
-  group('固定費カテゴリー', () {
-    Future<TestFakes> pumpEditPage(WidgetTester tester) async {
-      final fakes = buildFakes();
-      await pumpApp(
-        tester,
-        home: const CategoryDetailEditPage(
-          screenMode: BigCategoryDetailEditScreenMode.edit,
-          categoryType: CategoryType.fixedCost,
-          bigCategoryId: 1,
-        ),
-        fakes: fakes,
-      );
-      await pumpTimes(tester);
-      return fakes;
-    }
-
-    testWidgets('固定費は名前だけ編集でき小カテゴリー一覧を持たない', (tester) async {
-      await pumpEditPage(tester);
-
-      expect(find.text('カテゴリーの設定'), findsOneWidget);
-      expect(find.text('住居'), findsOneWidget); // 名前入力欄の初期値
-      // 固定費カテゴリーは小カテゴリーを持たないので一覧ごと出ない
-      expect(find.text('+ 新しい項目を追加'), findsNothing);
-      expect(find.text('並べ替え'), findsNothing);
-    });
-
-    testWidgets('名前を変えて完了すると固定費カテゴリーがupdateされる', (tester) async {
-      final fakes = await pumpEditPage(tester);
-
-      await tester.enterText(nameField(), '家賃・住居費');
-      await pumpTimes(tester, times: 3);
-      await tester.tap(doneButton());
-      await pumpTimes(tester);
-
-      expect(fakes.fixedCostCategory.updatedEntities, hasLength(1));
-      final updated = fakes.fixedCostCategory.updatedEntities.single;
-      expect(updated.id, 1);
-      expect(updated.categoryName, '家賃・住居費');
-
-      await waitForSnackBarDismissed(tester);
-    });
-
-    testWidgets('名前を空にして完了するとエラー文言が出て保存されない', (tester) async {
-      final fakes = await pumpEditPage(tester);
-
-      await tester.enterText(nameField(), '');
-      await pumpTimes(tester, times: 3);
-      await tester.tap(doneButton());
-      await pumpTimes(tester);
-
-      expect(find.textContaining('カテゴリー名を入力してください'), findsOneWidget);
-      expect(fakes.fixedCostCategory.updatedEntities, isEmpty);
-
-      await waitForSnackBarDismissed(tester);
-    });
-  });
-
   group('収入カテゴリー', () {
     Future<TestFakes> pumpEditPage(WidgetTester tester) async {
       final fakes = buildFakes();

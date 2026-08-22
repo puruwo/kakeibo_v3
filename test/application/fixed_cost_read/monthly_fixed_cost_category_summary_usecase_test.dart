@@ -39,8 +39,8 @@ void main() {
       );
 
       expect(result, hasLength(2));
-      final housing = result.firstWhere((e) => e.fixedCostCategoryId == 1);
-      final utility = result.firstWhere((e) => e.fixedCostCategoryId == 2);
+      final housing = result.firstWhere((e) => e.expenseBigCategoryId == 1);
+      final utility = result.firstWhere((e) => e.expenseBigCategoryId == 2);
       expect(housing.categoryName, '住居');
       expect(housing.colorCode, 'FFAA00');
       expect(housing.resourcePath, 'assets/images/icon_home.svg');
@@ -61,11 +61,11 @@ void main() {
       );
 
       expect(
-        result.firstWhere((e) => e.fixedCostCategoryId == 1).isAllConfirmed,
+        result.firstWhere((e) => e.expenseBigCategoryId == 1).isAllConfirmed,
         isTrue,
       );
       expect(
-        result.firstWhere((e) => e.fixedCostCategoryId == 2).isAllConfirmed,
+        result.firstWhere((e) => e.expenseBigCategoryId == 2).isAllConfirmed,
         isFalse,
       );
     });
@@ -84,12 +84,12 @@ void main() {
       );
 
       expect(
-        result.firstWhere((e) => e.fixedCostCategoryId == 1).totalAmount,
+        result.firstWhere((e) => e.expenseBigCategoryId == 1).totalAmount,
         80000,
       );
       // 確定7200 + 未確定の予想額6000
       expect(
-        result.firstWhere((e) => e.fixedCostCategoryId == 2).totalAmount,
+        result.firstWhere((e) => e.expenseBigCategoryId == 2).totalAmount,
         13200,
       );
     });
@@ -105,7 +105,7 @@ void main() {
       );
 
       expect(result, hasLength(1));
-      expect(result.single.fixedCostCategoryId, 1);
+      expect(result.single.expenseBigCategoryId, 1);
       expect(result.single.totalAmount, 110000);
     });
 

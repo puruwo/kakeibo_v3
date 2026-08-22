@@ -247,6 +247,21 @@ class AppTextStyles {
         fontWeight: FontWeight.w700,
       );
 
+  /// 予算行に併記する固定費見込みラベル（「固定費 ¥1,980」）
+  static final TextStyle budgetFixedCostForecastLabel = MyFontStyle.notoSans
+      .copyWith(
+        fontSize: 11,
+        color: AppColorsDark.textSecondary,
+        fontWeight: FontWeight.w400,
+      );
+
+  /// チップ（「固定費」等）のラベル用スタイル
+  static final TextStyle chipLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 10,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w400,
+  );
+
   static final TextStyle listCardSecondaryTitle = MyFontStyle.notoSans.copyWith(
     fontSize: 12,
     color: AppColorsDark.textSecondary,

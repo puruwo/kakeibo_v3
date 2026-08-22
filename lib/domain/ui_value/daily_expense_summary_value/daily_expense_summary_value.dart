@@ -1,7 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
-import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirmed_fixed_cost_tile_value/monthly_confirmed_fixed_cost_tile_value.dart';
-import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_graph_area.dart';
 
 part 'daily_expense_summary_value.freezed.dart';
@@ -14,22 +12,16 @@ class DailyExpenseSummaryValue with _$DailyExpenseSummaryValue {
     /// 対象日
     required DateTime date,
 
-    /// カテゴリー別にグループ化された生活支出
+    /// カテゴリー別にグループ化された支出（固定費行も含む）
     required List<ExpenseCategoryGroup> expensesByCategory,
 
-    /// 固定費（確定）
-    required List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
+    /// 変動費（固定費以外の支出）合計
+    required int variableExpenseTotal,
 
-    /// 固定費（未確定）
-    required List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
+    /// 固定費合計（未確定は予想額で計上）
+    required int fixedCostTotal,
 
-    /// 生活支出合計
-    required int expenseTotal,
-
-    /// 固定費（確定）合計
-    required int confirmedFixedCostTotal,
-
-    /// 固定費（未確定）合計
+    /// 固定費のうち未確定分の合計
     required int unconfirmedFixedCostTotal,
 
     /// 総支出
@@ -56,7 +48,7 @@ class ExpenseCategoryGroup with _$ExpenseCategoryGroup {
     /// カテゴリー色コード
     required String colorCode,
 
-    /// このカテゴリーに属する支出リスト
+    /// このカテゴリーに属する支出リスト（固定費行も含む）
     required List<ExpenseHistoryTileValue> expenses,
 
     /// カテゴリー内の支出合計

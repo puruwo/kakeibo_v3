@@ -76,6 +76,16 @@ void main() {
       paymentCategoryId: 11,
       memo: 'スーパー',
     ),
+    // 固定費由来の支出行（明細に「固定費」チップが付く。仕様 §7.2）
+    ExpenseEntity(
+      id: 4,
+      date: '20250702',
+      price: 2000,
+      paymentCategoryId: 11,
+      memo: '宅配ミール',
+      fixedCostId: 10,
+      isConfirmed: 1,
+    ),
   ];
 
   // カード上部のサマリー（大カテゴリー合計＝35,000）
@@ -192,8 +202,8 @@ void main() {
     expectNoRenderErrors(errors);
 
     expect(find.text('カテゴリー別利用状況'), findsOneWidget); // AppBar
-    // 大カテゴリー名はサマリーカードと支出タイル3件の計4箇所に出る
-    expect(find.text('食費'), findsNWidgets(4));
+    // 大カテゴリー名はサマリーカードと支出タイル4件（固定費行を含む）の計5箇所に出る
+    expect(find.text('食費'), findsNWidgets(5));
     expect(find.text('¥ 35,000'), findsOneWidget); // 大カテゴリー合計
     // 予算ラベルはRichText（「予算 」＋金額）
     expect(
@@ -229,6 +239,19 @@ void main() {
     expect(find.text(' スーパー'), findsOneWidget);
     expect(find.text('¥ 12,000'), findsOneWidget);
     expect(find.text('¥ 18,000'), findsOneWidget);
+  });
+
+  testWidgets('日付別明細の固定費行にだけ「固定費」チップが付く', (tester) async {
+    final errors = await pumpHistoryPage(tester, buildFakes());
+    expectNoRenderErrors(errors);
+
+    // 固定費由来の1行だけにチップが出る
+    expect(find.text('固定費'), findsOneWidget);
+    expect(find.text(' 宅配ミール'), findsOneWidget);
+    // 小カテゴリー一覧は固定費/変動費を区別しない（内訳行も追加しない）
+    expect(find.text('外食'), findsOneWidget);
+    expect(find.text('中食'), findsOneWidget);
+    expect(find.text('変動費'), findsNothing);
   });
 
   testWidgets('小カテゴリー行のタップで小カテゴリー展開ページへ遷移する', (tester) async {
