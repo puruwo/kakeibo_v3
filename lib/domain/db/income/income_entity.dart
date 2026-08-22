@@ -12,7 +12,8 @@ part 'income_entity.g.dart';
 class IncomeEntity with _$IncomeEntity {
   const factory IncomeEntity({
     @Default(0) int id,
-    @Default(IncomeBigCategoryConstants.incomeSourceIdSalary) int categoryId,
+    // 収入小カテゴリーID（既定は小カテゴリー「給与」）
+    @Default(IncomeSmallCategoryConstants.salary) int categoryId,
     required String date,
     @Default(0) int price,
     @Default('') String memo,

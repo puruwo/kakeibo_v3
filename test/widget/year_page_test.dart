@@ -48,8 +48,8 @@ void main() {
       // 年間収支カードの総収入（カテゴリー指定なしの期間合計）
       ..sumWithPeriodResultByPeriodStart[yearKey] = income
       // ボーナス収入（大カテゴリー指定つき）。生活収支チャートも同じマップを見る
-      ..sumWithBigCategoryAndPeriodResultByPeriodStart[yearKey] = bonusIncome
-      ..sumWithBigCategoryAndPeriodResultByPeriodStart.addAll(monthlyIncome);
+      ..sumWithAccountTypeAndPeriodResultByPeriodStart[yearKey] = bonusIncome
+      ..sumWithAccountTypeAndPeriodResultByPeriodStart.addAll(monthlyIncome);
     final expenseRepository = FakeExpenseRepository()
       ..totalExpenseByPeriodResultByPeriodStart[yearKey] = expense
       ..totalExpenseByPeriodWithBigCategoryResultByPeriodStart[yearKey] =
@@ -184,11 +184,11 @@ void main() {
     );
     await pumpTimes(tester);
 
-    expect(sectionTitle('ボーナス利用状況'), findsOneWidget);
+    expect(sectionTitle('特別枠の利用状況'), findsOneWidget);
     expect(find.byType(BonusPlanArea), findsOneWidget);
     expect(find.text('¥ 400,000'), findsOneWidget); // ボーナス収入
     expect(find.text('¥ 150,000'), findsOneWidget); // 利用額
-    expect(find.text('ボーナス残額'), findsOneWidget);
+    expect(find.text('残額'), findsOneWidget);
     expect(find.text('¥ 250,000'), findsOneWidget);
   });
 
@@ -207,9 +207,9 @@ void main() {
     await pumpTimes(tester);
 
     // Q-15: ボーナス誘導カードも ADR-022 の AppEmptyState で表示される
-    expect(find.text('ボーナスを登録しましょう'), findsOneWidget);
-    expect(find.text('＋ ボーナスを登録する'), findsOneWidget);
-    expect(sectionTitle('ボーナス利用状況'), findsNothing);
+    expect(find.text('特別枠の収入を登録しましょう'), findsOneWidget);
+    expect(find.text('＋ 収入を登録する'), findsOneWidget);
+    expect(sectionTitle('特別枠の利用状況'), findsNothing);
     expect(find.byType(BonusPlanArea), findsNothing);
     // 固定費0件の誘導カードと並ぶ（別アクション同士の並存はADR-022の例外として許容）
     expect(find.text('固定費を登録しましょう'), findsOneWidget);
@@ -228,7 +228,7 @@ void main() {
     await pumpTimes(tester);
 
     // ボーナスホーム画面のヘッダー（セクション見出しではなくページタイトル）
-    expect(find.text('ボーナス利用状況'), findsOneWidget);
+    expect(find.text('特別枠の利用状況'), findsOneWidget);
   });
 
   testWidgets('総収入行をタップすると年間収入リストへ遷移する', (tester) async {
@@ -264,7 +264,7 @@ void main() {
     // 記録なしのときは年間収支ヘッダー・生活収支セクション・ボーナスは出ない
     expect(sectionTitle('年間収支'), findsNothing);
     expect(sectionTitle('生活収支'), findsNothing);
-    expect(sectionTitle('ボーナス利用状況'), findsNothing);
+    expect(sectionTitle('特別枠の利用状況'), findsNothing);
   });
 
   testWidgets('ヘッダーをタップすると年度ピッカーが開く', (tester) async {

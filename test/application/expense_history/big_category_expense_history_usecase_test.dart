@@ -223,7 +223,7 @@ void main() {
       expect(calls.map((e) => e.smallCategoryId), [10, 11]);
       expect(
         calls.map((e) => e.incomeSourceBigId),
-        everyElement(IncomeBigCategoryConstants.incomeSourceIdSalary),
+        everyElement(AccountTypeConstants.living),
       );
       expect(calls.map((e) => e.period), everyElement(period));
     });

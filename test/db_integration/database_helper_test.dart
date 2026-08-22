@@ -38,11 +38,23 @@ void main() {
       );
     });
 
-    test('新規作成直後のスキーマバージョンは8になる', () async {
+    test('新規作成直後のスキーマバージョンは9になる', () async {
       final db = await openTestDatabase();
       // DatabaseHelper._databaseVersion と一致していること
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 8);
+      expect(rows.first.values.first, 9);
+    });
+
+    test('income_big_categoryは会計種別を持ち、月次収入=1・ボーナス=2で作成される', () async {
+      // ADR-025: onCreate初期データの会計種別（1=生活収支, 2=特別枠）
+      final db = await openTestDatabase();
+      final rows = await db.query(
+        SqfIncomeBigCategory.tableName,
+        orderBy: SqfIncomeBigCategory.id,
+      );
+      expect(rows, hasLength(2));
+      expect(rows[0][SqfIncomeBigCategory.accountType], 1);
+      expect(rows[1][SqfIncomeBigCategory.accountType], 2);
     });
 
     test('fixed_cost_expenseはfixed_cost_id列を持って作成される', () async {

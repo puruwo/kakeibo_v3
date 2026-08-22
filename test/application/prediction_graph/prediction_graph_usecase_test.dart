@@ -67,7 +67,7 @@ void main() {
         ...aggregationSettingOverrides(systemDate: systemDate),
         incomeRepositoryProvider.overrideWithValue(
           FakeIncomeRepository()
-            ..sumWithBigCategoryAndPeriodResultByPeriodStart.addAll(income),
+            ..sumWithAccountTypeAndPeriodResultByPeriodStart.addAll(income),
         ),
         budgetRepositoryProvider.overrideWithValue(
           FakeBudgetRepository(initialRecords: budgets),

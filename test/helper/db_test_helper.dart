@@ -183,6 +183,48 @@ Future<int> insertIncomeRow({
   });
 }
 
+/// 収入大カテゴリーを1件投入する
+///
+/// [accountType] は会計種別（1=生活収支 / 2=特別枠。ADR-025）。
+/// onCreateのシードは 1=月次収入(生活収支) / 2=ボーナス(特別枠) の2件で、
+/// ユーザー追加カテゴリー（id=3以降）を再現するときに使う。
+Future<int> insertIncomeBigCategoryRow({
+  required String name,
+  String colorCode = '21D19F',
+  String resourcePath = 'assets/images/icon_regular_income.svg',
+  int accountType = 1,
+  int? id,
+}) {
+  return DatabaseHelper.instance.insert(SqfIncomeBigCategory.tableName, {
+    SqfIncomeBigCategory.id: ?id,
+    SqfIncomeBigCategory.name: name,
+    SqfIncomeBigCategory.colorCode: colorCode,
+    SqfIncomeBigCategory.resourcePath: resourcePath,
+    SqfIncomeBigCategory.accountType: accountType,
+  });
+}
+
+/// 収入小カテゴリーを1件投入する
+///
+/// onCreateのシード（id=1〜4）に続くユーザー追加の小カテゴリーを再現するときに使う。
+Future<int> insertIncomeSmallCategoryRow({
+  required int bigCategoryKey,
+  required String name,
+  int smallCategoryOrderKey = 99,
+  int displayedOrderInBig = 99,
+  int defaultDisplayed = 1,
+  int? id,
+}) {
+  return DatabaseHelper.instance.insert(SqfIncomeSmallCategory.tableName, {
+    SqfIncomeSmallCategory.id: ?id,
+    SqfIncomeSmallCategory.bigCategoryKey: bigCategoryKey,
+    SqfIncomeSmallCategory.name: name,
+    SqfIncomeSmallCategory.smallCategoryOrderKey: smallCategoryOrderKey,
+    SqfIncomeSmallCategory.displayedOrderInBig: displayedOrderInBig,
+    SqfIncomeSmallCategory.defaultDisplayed: defaultDisplayed,
+  });
+}
+
 /// 予算行を1件投入する（[month] は 'yyyyMM' 形式）
 Future<int> insertBudgetRow({
   required int expenseBigCategoryId,

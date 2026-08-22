@@ -62,12 +62,14 @@ void main() {
       name: '給与',
       colorCode: '0000FF',
       iconPath: '',
+      accountType: 1, // 生活収支
     ),
     IncomeBigCategoryEntity(
       id: 2,
       name: 'ボーナス',
       colorCode: 'FF00FF',
       iconPath: '',
+      accountType: 2, // 特別枠
     ),
   ];
 
@@ -559,7 +561,7 @@ void main() {
         normalExpense: 50000,
         incomes: [
           buildIncome(id: 1, categoryId: 1, price: 200000),
-          // ボーナス（大カテゴリー2）は集計にも内訳にも含めない
+          // 会計種別=特別枠（ボーナス）は集計にも内訳にも含めない
           buildIncome(id: 2, categoryId: 2, price: 100000),
           // 副業は0円なので内訳に出ない
           buildIncome(id: 3, categoryId: 3, price: 0),

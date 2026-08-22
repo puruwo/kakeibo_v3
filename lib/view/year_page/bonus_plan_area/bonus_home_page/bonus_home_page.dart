@@ -73,7 +73,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
-          title: Text('ボーナス利用状況', style: AppTextStyles.pageHeaderText),
+          title: Text('特別枠の利用状況', style: AppTextStyles.pageHeaderText),
         ),
 
         // 本体
@@ -152,8 +152,8 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
                                   AppTab(
                                     tabController: _tabController,
                                     tabs: const [
-                                      Tab(text: 'ボーナス支出'),
-                                      Tab(text: 'ボーナス収入'),
+                                      Tab(text: '特別枠支出'),
+                                      Tab(text: '特別枠収入'),
                                     ],
                                   ),
                                 ],

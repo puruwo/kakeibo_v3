@@ -18,6 +18,7 @@ import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/in
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/income_category_detail_edit_page/update_complete_button/update_complete_income_category_detail_button.dart';
 
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_account_type_controller/income_big_category_account_type_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
@@ -74,6 +75,9 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
                 );
                 ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
                 ref.invalidate(edittingIncomeSmallCategoryListNotifierProvider);
+                ref.invalidate(
+                  incomeBigCategoryAccountTypeControllerNotifierProvider,
+                );
               } else {
                 ref.invalidate(fixedCostCategoryNameControllerNotifierProvider);
                 ref.invalidate(fixedCostCategoryIconControllerNotifierProvider);

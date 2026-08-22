@@ -5,6 +5,7 @@
 // override して使用してください」に対応する実装）。
 // テストで使うメソッドのみ実装し、未実装メソッドは noSuchMethod 経由で
 // NoSuchMethodError になる（呼ばれた時点でテストが落ちるので検知できる）。
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
@@ -705,8 +706,12 @@ class FakeIncomeRepository implements IncomeRepository {
   FakeIncomeRepository({
     List<IncomeEntity>? initialRecords,
     Map<int, int>? smallCategoryToBigCategory,
+    Map<int, int>? bigCategoryToAccountType,
   }) : records = List.of(initialRecords ?? []),
-       smallCategoryToBigCategory = Map.of(smallCategoryToBigCategory ?? {});
+       smallCategoryToBigCategory = Map.of(smallCategoryToBigCategory ?? {}),
+       bigCategoryToAccountType = Map.of(
+         bigCategoryToAccountType ?? {1: 1, 2: 2},
+       );
 
   /// 集計対象の収入レコード（insertで増える）
   final List<IncomeEntity> records;
@@ -721,14 +726,28 @@ class FakeIncomeRepository implements IncomeRepository {
   /// 解決するが、Fakeではこのマップで代用する。
   final Map<int, int> smallCategoryToBigCategory;
 
+  /// 収入大カテゴリーID → 会計種別（1=生活収支, 2=特別枠）の対応
+  ///
+  /// 本物は income_big_category.account_type（v9で追加）で解決する。
+  /// 既定は onCreate 初期データと同じ {1: 生活収支, 2: 特別枠}。
+  final Map<int, int> bigCategoryToAccountType;
+
   final List<IncomeEntity> insertedEntities = [];
   final List<IncomeEntity> updatedEntities = [];
   final List<int> deletedIds = [];
 
-  /// 期間別の大カテゴリー収入合計（キーは期間開始日のyyyyMMdd）
+  /// 期間別の収入合計スタブ（キーは期間開始日のyyyyMMdd。会計種別に依らない）
   ///
   /// キーが無い期間は、これまで通りメモリ内レコードからの集計になる。
-  final Map<String, int> sumWithBigCategoryAndPeriodResultByPeriodStart = {};
+  /// 同一開始日の期間で生活収支/特別枠に別の値を与えたい場合は
+  /// [sumWithAccountTypeAndPeriodResult]（会計種別込みキー）を使う。
+  final Map<String, int> sumWithAccountTypeAndPeriodResultByPeriodStart = {};
+
+  /// 会計種別×期間開始日をキーにした収入合計スタブ
+  ///
+  /// キーは (accountType, 期間開始日yyyyMMdd)。
+  /// [sumWithAccountTypeAndPeriodResultByPeriodStart] より優先して引かれる。
+  final Map<(int, String), int> sumWithAccountTypeAndPeriodResult = {};
 
   /// 期間別の収入合計（キーは期間開始日のyyyyMMdd・カテゴリー指定なし）
   ///
@@ -738,9 +757,9 @@ class FakeIncomeRepository implements IncomeRepository {
   /// calcurateSumWithPeriod に渡された期間の記録（検証用）
   final List<PeriodValue> sumWithPeriodPeriods = [];
 
-  /// fetchWithCategoryAndPeriod に渡された条件の記録（検証用）
-  final List<({int categoryId, PeriodValue period})>
-  fetchWithCategoryAndPeriodCalls = [];
+  /// fetchWithAccountTypeAndPeriod に渡された条件の記録（検証用）
+  final List<({int accountType, PeriodValue period})>
+  fetchWithAccountTypeAndPeriodCalls = [];
 
   @override
   Future<List<IncomeEntity>> fetchAll() async {
@@ -748,25 +767,6 @@ class FakeIncomeRepository implements IncomeRepository {
     final all = List.of(records);
     all.sort((a, b) => a.id.compareTo(b.id));
     return all;
-  }
-
-  @override
-  Future<int> calcurateSumWithBigCategoryAndPeriod({
-    required PeriodValue period,
-    required int bigCategoryId,
-  }) async {
-    final byPeriod =
-        sumWithBigCategoryAndPeriodResultByPeriodStart[periodKeyOf(
-          period.startDatetime,
-        )];
-    if (byPeriod != null) return byPeriod;
-    return records
-        .where(
-          (e) =>
-              _isDateInPeriod(e.date, period) &&
-              smallCategoryToBigCategory[e.categoryId] == bigCategoryId,
-        )
-        .fold<int>(0, (sum, e) => sum + e.price);
   }
 
   @override
@@ -781,30 +781,66 @@ class FakeIncomeRepository implements IncomeRepository {
   }
 
   @override
-  Future<List<IncomeEntity>> fetchWithCategoryAndPeriod({
+  Future<List<IncomeEntity>> fetchWithoutCategory({
     required PeriodValue period,
-    required int categoryId,
   }) async {
-    fetchWithCategoryAndPeriodCalls.add((
-      categoryId: categoryId,
+    return records.where((e) => _isDateInPeriod(e.date, period)).toList();
+  }
+
+  /// 大カテゴリーIDから会計種別を解決する
+  ///
+  /// 本物は income_big_category.account_type を参照する。
+  /// 小カテゴリーがマップに無い場合はJOIN不成立（=集計対象外）として null を返す。
+  /// 大カテゴリーが [bigCategoryToAccountType] に未登録の場合は、
+  /// 実DBの `account_type INTEGER NOT NULL DEFAULT 1` に合わせて生活収支(1)を返す
+  /// （実DBでは会計種別が欠損した行は存在し得ないため）。
+  int? _accountTypeOf(int smallCategoryId) {
+    final bigId = smallCategoryToBigCategory[smallCategoryId];
+    if (bigId == null) return null;
+    return bigCategoryToAccountType[bigId] ?? 1;
+  }
+
+  @override
+  Future<List<IncomeEntity>> fetchWithAccountTypeAndPeriod({
+    required PeriodValue period,
+    required int accountType,
+  }) async {
+    fetchWithAccountTypeAndPeriodCalls.add((
+      accountType: accountType,
       period: period,
     ));
     // 本実装は income → 小カテゴリー → 大カテゴリー のJOINで
-    // 「大カテゴリーID = categoryId」を条件にしている
+    // 「income_big_category.account_type = accountType」を条件にしている
     return records
         .where(
           (e) =>
               _isDateInPeriod(e.date, period) &&
-              smallCategoryToBigCategory[e.categoryId] == categoryId,
+              _accountTypeOf(e.categoryId) == accountType,
         )
         .toList();
   }
 
   @override
-  Future<List<IncomeEntity>> fetchWithoutCategory({
+  Future<int> calcurateSumWithAccountTypeAndPeriod({
     required PeriodValue period,
+    required int accountType,
   }) async {
-    return records.where((e) => _isDateInPeriod(e.date, period)).toList();
+    // 合計額系はテストが集計結果を所与として与えられるスタブ値方式（§4-7）。
+    // 会計種別込みキー → 期間開始日のみのキー の順で引く
+    final periodKey = periodKeyOf(period.startDatetime);
+    final byTypeAndPeriod =
+        sumWithAccountTypeAndPeriodResult[(accountType, periodKey)];
+    if (byTypeAndPeriod != null) return byTypeAndPeriod;
+    final byPeriod = sumWithAccountTypeAndPeriodResultByPeriodStart[periodKey];
+    if (byPeriod != null) return byPeriod;
+    // 本実装は fetchWithAccountTypeAndPeriod と同じJOIN条件のSUM
+    return records
+        .where(
+          (e) =>
+              _isDateInPeriod(e.date, period) &&
+              _accountTypeOf(e.categoryId) == accountType,
+        )
+        .fold<int>(0, (sum, e) => sum + e.price);
   }
 
   @override
@@ -1399,8 +1435,8 @@ class FakeIncomeBigCategoryRepository implements IncomeBigCategoryRepository {
 
   @override
   Future<void> delete({required int id}) async {
-    // 本実装は id=1（月次収入）/ id=2（ボーナス）を削除させないため、それに合わせる
-    if (id == 1 || id == 2) {
+    // 本実装は既定カテゴリー（月次収入・ボーナス）を削除させないため、それに合わせる
+    if (IncomeBigCategoryConstants.isDefaultCategory(id)) {
       throw StateError('id=1（月次収入）/ id=2（ボーナス）は削除できません');
     }
     deletedIds.add(id);

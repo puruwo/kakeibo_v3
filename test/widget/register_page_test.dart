@@ -212,7 +212,7 @@ void main() {
       await unmountRegisterPage(tester);
     });
 
-    testWidgets('拠出元をボーナスに変えるとinsert値に反映される', (tester) async {
+    testWidgets('拠出元を特別枠に変えるとinsert値に反映される', (tester) async {
       final fakes = buildFakes();
       await pumpApp(
         tester,
@@ -226,14 +226,14 @@ void main() {
       await tester.enterText(priceField(), '5000');
       await tester.tap(find.text('生活収支')); // 拠出元ピルを開く
       await pumpTimes(tester, times: 5);
-      await tester.tap(find.text('ボーナス').last);
+      await tester.tap(find.text('特別枠').last);
       await pumpTimes(tester, times: 5);
 
       await tester.tap(find.text('追加'));
       await pumpTimes(tester);
 
       expect(fakes.expense.insertedEntities, hasLength(1));
-      // ボーナス拠出元のID=2
+      // 特別枠の会計種別値=2
       expect(fakes.expense.insertedEntities.single.incomeSourceBigCategory, 2);
 
       await waitForSnackBarDismissed(tester);

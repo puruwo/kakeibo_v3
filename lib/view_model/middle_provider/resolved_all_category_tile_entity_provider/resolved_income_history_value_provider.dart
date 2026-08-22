@@ -7,17 +7,21 @@ import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_da
 
 final resolvedIncomeHistoryValueProvider =
     FutureProvider<List<IncomeHistoryTileValue>>((ref) async {
-  // 選択された日付から集計期間を取得する
-  final monthPeriodValue = await ref.watch(analyzePageDateScopeEntityProvider
-      .selectAsync((data) => data.aggregationMonthPeriod));
+      // 選択された日付から集計期間を取得する
+      final monthPeriodValue = await ref.watch(
+        analyzePageDateScopeEntityProvider.selectAsync(
+          (data) => data.aggregationMonthPeriod,
+        ),
+      );
 
-  // リクエスト用のEntityを作成する
-  // idは1を指定して、月次収入の履歴を取得する
-  final request = RequestIncomeHistoryUsecase(
-      bigId: IncomeBigCategoryConstants.incomeSourceIdSalary,
-      selectedMonthPeriod: monthPeriodValue);
+      // リクエスト用のEntityを作成する
+      // 会計種別=生活収支を指定して、生活収支の収入履歴を取得する
+      final request = RequestIncomeHistoryUsecase(
+        accountType: AccountTypeConstants.living,
+        selectedMonthPeriod: monthPeriodValue,
+      );
 
-  // 選択された集計期間を元に、Entityを取得する
-  final result = ref.watch(incomeHistoryNotifierProvider(request).future);
-  return result;
-});
+      // 選択された集計期間を元に、Entityを取得する
+      final result = ref.watch(incomeHistoryNotifierProvider(request).future);
+      return result;
+    });

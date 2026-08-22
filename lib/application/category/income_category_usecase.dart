@@ -1,3 +1,4 @@
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/core/category_entity/income_category_entity/income_category_entity.dart';
 
@@ -43,17 +44,18 @@ class IncomeCategoryUsecase {
   /// [fetchAllCategory] メソッドは、収入カテゴリーを全て取得する
   Future<List<IncomeCategoryEntity>> fetchAllCategory() async {
     // 小カテゴリーを取得する
-    final smallCategoryEntityList =
-        await _smallCategoryRepositoryProvider.fetchAll();
+    final smallCategoryEntityList = await _smallCategoryRepositoryProvider
+        .fetchAll();
 
     final results = <IncomeCategoryEntity>[];
 
     for (IncomeSmallCategoryEntity smallCategoryEntity
         in smallCategoryEntityList) {
       // 大カテゴリーを取得する
-      final incomeBigCategoryEntity =
-          await _bigCategoryRepositoryProvider.fetchByBigCategory(
-              bigCategoryId: smallCategoryEntity.bigCategoryKey);
+      final incomeBigCategoryEntity = await _bigCategoryRepositoryProvider
+          .fetchByBigCategory(
+            bigCategoryId: smallCategoryEntity.bigCategoryKey,
+          );
 
       // カテゴリー情報をまとめてentityに格納する
       final categoryEntity = IncomeCategoryEntity(
@@ -75,7 +77,8 @@ class IncomeCategoryUsecase {
 
     // smallCategoryOrderKeyの昇順で並び替える
     results.sort(
-        ((a, b) => a.smallCategoryOrderKey.compareTo(b.smallCategoryOrderKey)));
+      ((a, b) => a.smallCategoryOrderKey.compareTo(b.smallCategoryOrderKey)),
+    );
 
     // smallCategoryOrderKeyが歯抜けの場合の対策として整数連続値でsortKeyを付与する
     int i = 0;
@@ -127,7 +130,7 @@ class IncomeCategoryUsecase {
 
   /// [fetchAllBigCategoriesWithSmallList] は smallCategory の情報を添えて全ての大カテゴリーを取得する
   Future<List<EditIncomeBigCategoryValue>>
-      fetchAllBigCategoriesWithSmallList() async {
+  fetchAllBigCategoriesWithSmallList() async {
     final list = await _bigCategoryRepositoryProvider.fetchAll();
 
     final bigCategoryList = <EditIncomeBigCategoryValue>[];
@@ -145,14 +148,16 @@ class IncomeCategoryUsecase {
         }
       }
 
-      bigCategoryList.add(EditIncomeBigCategoryValue(
-        id: element.id,
-        colorCode: element.colorCode,
-        bigCategoryName: element.name,
-        resourcePath: element.iconPath,
-        incomeSmallCategoryList: smallCategoryEntity,
-        incomeSmallCategoryNameText: smallCategoryNameText,
-      ));
+      bigCategoryList.add(
+        EditIncomeBigCategoryValue(
+          id: element.id,
+          colorCode: element.colorCode,
+          bigCategoryName: element.name,
+          resourcePath: element.iconPath,
+          incomeSmallCategoryList: smallCategoryEntity,
+          incomeSmallCategoryNameText: smallCategoryNameText,
+        ),
+      );
     }
 
     bigCategoryList.sort((a, b) => a.id.compareTo(b.id));
@@ -162,27 +167,32 @@ class IncomeCategoryUsecase {
 
   /// [fetchSmallCategoriesByBig] は bigId 指定で smallCategory の一覧を取得する
   Future<List<EditIncomeSmallCategoryValue>> fetchSmallCategoriesByBig(
-      int bigCategoryId) async {
+    int bigCategoryId,
+  ) async {
     final fetchList = await _smallCategoryRepositoryProvider.fetchByBigCategory(
-        bigCategoryId: bigCategoryId);
+      bigCategoryId: bigCategoryId,
+    );
 
     final resultList = <EditIncomeSmallCategoryValue>[];
 
     for (var element in fetchList) {
-      resultList.add(EditIncomeSmallCategoryValue(
-        id: element.id,
-        bigCategoryKey: element.bigCategoryKey,
-        name: element.smallCategoryName,
-        smallCategoryOrderKey: element.smallCategoryOrderKey,
-        displayOrderInBig: element.displayedOrderInBig,
-        defaultDisplayed: element.defaultDisplayed,
-        editedStateDisplayOrder: element.displayedOrderInBig,
-        etitedStateIsChecked: element.defaultDisplayed == 1,
-      ));
+      resultList.add(
+        EditIncomeSmallCategoryValue(
+          id: element.id,
+          bigCategoryKey: element.bigCategoryKey,
+          name: element.smallCategoryName,
+          smallCategoryOrderKey: element.smallCategoryOrderKey,
+          displayOrderInBig: element.displayedOrderInBig,
+          defaultDisplayed: element.defaultDisplayed,
+          editedStateDisplayOrder: element.displayedOrderInBig,
+          etitedStateIsChecked: element.defaultDisplayed == 1,
+        ),
+      );
     }
 
-    resultList
-        .sort(((a, b) => a.displayOrderInBig.compareTo(b.displayOrderInBig)));
+    resultList.sort(
+      ((a, b) => a.displayOrderInBig.compareTo(b.displayOrderInBig)),
+    );
 
     int i = 0;
     for (EditIncomeSmallCategoryValue smallCategoryEntity in resultList) {
@@ -212,10 +222,10 @@ class IncomeCategoryUsecase {
     _updateDBCountNotifier.incrementState();
   }
 
-  /// 大カテゴリー削除（id=1, id=2 は削除不可）
+  /// 大カテゴリー削除（既定カテゴリー: 月次収入・ボーナスは削除不可）
   /// 紐づく小カテゴリーと income レコードも削除する
   Future<void> deleteBig(int bigId) async {
-    if (bigId == 1 || bigId == 2) {
+    if (IncomeBigCategoryConstants.isDefaultCategory(bigId)) {
       throw const AppException('このカテゴリーは削除できません');
     }
 
@@ -233,8 +243,9 @@ class IncomeCategoryUsecase {
     }
 
     // 小カテゴリーを削除
-    await _smallCategoryRepositoryProvider
-        .deleteByBigCategory(bigCategoryId: bigId);
+    await _smallCategoryRepositoryProvider.deleteByBigCategory(
+      bigCategoryId: bigId,
+    );
 
     // 大カテゴリーを削除
     await _bigCategoryRepositoryProvider.delete(id: bigId);
@@ -293,9 +304,10 @@ class IncomeCategoryUsecase {
     if (originalValues.length < editValues.length) {
       final addedElements = editValues.sublist(originalValues.length);
 
-      int maxOrderKey =
-          await _smallCategoryRepositoryProvider.getMaxSmallCategoryOrderKey(
-              bigCategoryId: addedElements.first.bigCategoryKey);
+      int maxOrderKey = await _smallCategoryRepositoryProvider
+          .getMaxSmallCategoryOrderKey(
+            bigCategoryId: addedElements.first.bigCategoryKey,
+          );
 
       for (var element in addedElements) {
         maxOrderKey++;

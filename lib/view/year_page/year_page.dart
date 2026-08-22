@@ -55,13 +55,15 @@ class _YearPageState extends ConsumerState<YearPage> {
     final yearlyBalanceAsync = ref.watch(resolvedYearlyBalanceValueProvider);
     final bonusDisplayAsync = ref.watch(resolvedBonusSectionDisplayProvider);
     final bonusPlanAsync = ref.watch(resolvedBonusPlanValueProvider);
-    final annualBalanceAsync =
-        ref.watch(resolvedAnnualBalanceChartValueProvider);
+    final annualBalanceAsync = ref.watch(
+      resolvedAnnualBalanceChartValueProvider,
+    );
     final activeFixedCostCountAsync = ref.watch(activeFixedCostCountProvider);
 
     // いずれかがloading中ならフルローディング
     // _isYearSwitching は updateState 後 provider 再評価開始までの数フレームを埋める
-    final isAnyLoading = _isYearSwitching ||
+    final isAnyLoading =
+        _isYearSwitching ||
         dateScopeAsync.isLoading ||
         yearlyBalanceAsync.isLoading ||
         bonusDisplayAsync.isLoading ||
@@ -89,7 +91,9 @@ class _YearPageState extends ConsumerState<YearPage> {
         title: Consumer(
           builder: (context, ref, _) {
             final asyncValue = ref.watch(homeDateScopeEntityProvider);
-            final selectedDate = ref.watch(homeSelectedDatetimeNotifierProvider);
+            final selectedDate = ref.watch(
+              homeSelectedDatetimeNotifierProvider,
+            );
             return asyncValue.when(
               data: (activeDt) => GestureDetector(
                 behavior: HitTestBehavior.opaque,
@@ -118,8 +122,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                     final end = activeDt.yearPeriod.endDatetime;
                     final periodLabel =
                         '${start.year}年${start.month}月 - ${end.year}年${end.month}月';
-                    final yearLabel =
-                        '${activeDt.representativeYear.year}年度';
+                    final yearLabel = '${activeDt.representativeYear.year}年度';
                     return Column(
                       key: ValueKey('${start.year}${start.month}'),
                       mainAxisSize: MainAxisSize.min,
@@ -129,12 +132,17 @@ class _YearPageState extends ConsumerState<YearPage> {
                           children: [
                             // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
                             const SizedBox(width: 32),
-                            Text(periodLabel,
-                                style: AppTextStyles.pageHeaderText),
+                            Text(
+                              periodLabel,
+                              style: AppTextStyles.pageHeaderText,
+                            ),
                             Transform.translate(
                               offset: const Offset(-6, 0),
-                              child: Icon(Icons.arrow_drop_down,
-                                  color: context.colors.icon, size: 30),
+                              child: Icon(
+                                Icons.arrow_drop_down,
+                                color: context.colors.icon,
+                                size: 30,
+                              ),
                             ),
                           ],
                         ),
@@ -175,21 +183,23 @@ class _YearPageState extends ConsumerState<YearPage> {
             : SingleChildScrollView(
                 key: const ValueKey('content'),
                 child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: context.leftsidePadding),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: context.leftsidePadding,
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       // AppBarのぶんだけスペースをあける
                       SizedBox(
-                        height: MediaQuery.of(context).padding.top +
-                            kToolbarHeight,
+                        height:
+                            MediaQuery.of(context).padding.top + kToolbarHeight,
                       ),
 
                       Consumer(
                         builder: (context, ref, _) {
-                          final asyncValue =
-                              ref.watch(resolvedYearlyBalanceValueProvider);
+                          final asyncValue = ref.watch(
+                            resolvedYearlyBalanceValueProvider,
+                          );
                           // 記録が一切ないときはセクションヘッダーを非表示
                           final shouldHide = asyncValue.maybeWhen(
                             data: (value) =>
@@ -212,8 +222,9 @@ class _YearPageState extends ConsumerState<YearPage> {
                       const SizedBox(height: AppSpacing.lg),
                       Consumer(
                         builder: (context, ref, _) {
-                          final displayAsync =
-                              ref.watch(resolvedBonusSectionDisplayProvider);
+                          final displayAsync = ref.watch(
+                            resolvedBonusSectionDisplayProvider,
+                          );
                           return displayAsync.maybeWhen(
                             data: (type) {
                               switch (type) {
@@ -223,7 +234,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                                       AppContentsHeader(
                                         type: AppContentsHeaderType
                                             .appCardSectionTitle,
-                                        title: 'ボーナス利用状況',
+                                        title: '特別枠の利用状況',
                                         subLabel: 'さらに表示する',
                                         isLinkable: true,
                                         onTap: () {
@@ -256,8 +267,9 @@ class _YearPageState extends ConsumerState<YearPage> {
                       ),
                       Consumer(
                         builder: (context, ref, _) {
-                          final asyncValue = ref
-                              .watch(resolvedAnnualBalanceChartValueProvider);
+                          final asyncValue = ref.watch(
+                            resolvedAnnualBalanceChartValueProvider,
+                          );
                           // データなし時はセクションごと非表示
                           final shouldHide = asyncValue.maybeWhen(
                             data: (value) => value.hasNoRecord,

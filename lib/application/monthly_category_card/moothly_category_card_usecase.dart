@@ -8,12 +8,12 @@ import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/
 import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final monthlyCategoryCardNotifierProvider = AsyncNotifierProvider.family<
-    MonthlyCategoryCardUsecaseNotifier,
-    List<CategoryCardEntity>,
-    DateScopeEntity>(
-  MonthlyCategoryCardUsecaseNotifier.new,
-);
+final monthlyCategoryCardNotifierProvider =
+    AsyncNotifierProvider.family<
+      MonthlyCategoryCardUsecaseNotifier,
+      List<CategoryCardEntity>,
+      DateScopeEntity
+    >(MonthlyCategoryCardUsecaseNotifier.new);
 
 class MonthlyCategoryCardUsecaseNotifier
     extends FamilyAsyncNotifier<List<CategoryCardEntity>, DateScopeEntity> {
@@ -27,10 +27,12 @@ class MonthlyCategoryCardUsecaseNotifier
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
-    _categoryAccountingRepositoryProvider =
-        ref.read(categoryAccountingRepositoryProvider);
-    _smallCategoryTileRepository =
-        ref.read(smallCategoryTileRepositoryProvider);
+    _categoryAccountingRepositoryProvider = ref.read(
+      categoryAccountingRepositoryProvider,
+    );
+    _smallCategoryTileRepository = ref.read(
+      smallCategoryTileRepositoryProvider,
+    );
     _budgetRepository = ref.read(budgetRepositoryProvider);
 
     return fetch(dateScope);
@@ -43,25 +45,27 @@ class MonthlyCategoryCardUsecaseNotifier
 
     // 大カテゴリー(タイル情報つき)のリストを取得する
     final categoryList = await _categoryAccountingRepositoryProvider.fetchAll(
-        incomeSourceBigCategoryId:
-            IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
-        fromDate: fromDate,
-        toDate: toDate);
+      incomeSourceBigCategoryId: AccountTypeConstants.living, // ボーナスを除く
+      fromDate: fromDate,
+      toDate: toDate,
+    );
 
     // カテゴリータイルのリストの並び順でList<SmallCategoryTileExpenceEntity>を取得する
     List<CategoryCardEntity> categoryTileList = [];
     for (int i = 0; i < categoryList.length; i++) {
       // そのカテゴリーの予算を取得する
       final budget = await _budgetRepository.fetchMonthly(
-          id: categoryList[i].id, month: dateScope.representativeMonth);
+        id: categoryList[i].id,
+        month: dateScope.representativeMonth,
+      );
 
       // タイル内の小カテゴリーのリスト情報を取得する
       final smallCategoryList = await _smallCategoryTileRepository.fetchAll(
-          incomeSourceBigCategoryId:
-              IncomeBigCategoryConstants.incomeSourceIdSalary, // ボーナスを除く
-          bigCategoryId: categoryList[i].id,
-          fromDate: fromDate,
-          toDate: toDate);
+        incomeSourceBigCategoryId: AccountTypeConstants.living, // ボーナスを除く
+        bigCategoryId: categoryList[i].id,
+        fromDate: fromDate,
+        toDate: toDate,
+      );
 
       // そのカテゴリーの支出を取得する
       final expense = smallCategoryList
@@ -71,11 +75,11 @@ class MonthlyCategoryCardUsecaseNotifier
       // グラフのタイプを決定する
       final GraphType graphType = budget != 0
           ? expense > budget
-              ? GraphType.hasBudgetButOver
-              : GraphType.hasBudget
+                ? GraphType.hasBudgetButOver
+                : GraphType.hasBudget
           : expense == 0
-              ? GraphType.noExpenseNoBudget
-              : GraphType.noBudgetOtherHasBudget;
+          ? GraphType.noExpenseNoBudget
+          : GraphType.noBudgetOtherHasBudget;
 
       // グラフの比率を計算する
       final double graphRatio;
@@ -94,19 +98,22 @@ class MonthlyCategoryCardUsecaseNotifier
 
       final double? graphDenomiratorRatio =
           graphType == GraphType.hasBudget ||
-                  graphType == GraphType.hasBudgetButOver
-              ? 1.0
-              : null;
+              graphType == GraphType.hasBudgetButOver
+          ? 1.0
+          : null;
 
       // カードのvalueに代入
-      categoryTileList.add(CategoryCardEntity(
+      categoryTileList.add(
+        CategoryCardEntity(
           graphType: graphType,
           graphRatio: graphRatio,
           graphDenomiratorRatio: graphDenomiratorRatio,
           monthlyBudget: budget,
           monthlyExpense: expense,
           monthlyExpenseByCategoryEntity: categoryList[i],
-          smallCategoryList: smallCategoryList));
+          smallCategoryList: smallCategoryList,
+        ),
+      );
     }
 
     // 全てのカードで予算が設定されていなければ、最大の支出を取得し
@@ -120,8 +127,10 @@ class MonthlyCategoryCardUsecaseNotifier
       }
     }
     if (isAllNoBudget == true) {
-      final maxExpense =
-          categoryTileList.map((e) => e).fold(0, (temporaryMax, expense) {
+      final maxExpense = categoryTileList.map((e) => e).fold(0, (
+        temporaryMax,
+        expense,
+      ) {
         if (expense.monthlyExpense > temporaryMax) {
           temporaryMax = expense.monthlyExpense;
         }

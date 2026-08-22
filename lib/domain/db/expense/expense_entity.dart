@@ -16,8 +16,7 @@ class ExpenseEntity with _$ExpenseEntity {
     @Default(0) int price,
     @Default(0) int paymentCategoryId,
     @Default('') String memo,
-    @Default(IncomeBigCategoryConstants.incomeSourceIdSalary)
-    int incomeSourceBigCategory,
+    @Default(AccountTypeConstants.living) int incomeSourceBigCategory,
   }) = _ExpenseEntity;
 
   @override

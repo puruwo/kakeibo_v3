@@ -14,7 +14,9 @@ class BonusPlanArea extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(resolvedBonusPlanValueProvider).when(
+    return ref
+        .watch(resolvedBonusPlanValueProvider)
+        .when(
           data: (bonusPlanValue) {
             return CardContainer(
               width: double.infinity,
@@ -27,39 +29,34 @@ class BonusPlanArea extends ConsumerWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
-                        children: [
-                          Text(
-                            'ボーナス',
-                            style: AppTextStyles.appCardTitleLabel,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.baseline,
+                      textBaseline: TextBaseline.alphabetic,
+                      children: [
+                        Text('収入', style: AppTextStyles.appCardTitleLabel),
+                        Text(
+                          yenmarkFormattedPriceGetter(
+                            bonusPlanValue.yearlyBonusIncome,
                           ),
-                          Text(
-                            yenmarkFormattedPriceGetter(
-                                bonusPlanValue.yearlyBonusIncome),
-                            style: AppTextStyles.appCardPriceLabel,
-                          ),
-                        ]),
+                          style: AppTextStyles.appCardPriceLabel,
+                        ),
+                      ],
+                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text(
-                          '利用額',
-                          style: AppTextStyles.appCardTitleLabel,
-                        ),
+                        Text('利用額', style: AppTextStyles.appCardTitleLabel),
                         Text(
                           yenmarkFormattedPriceGetter(
-                              bonusPlanValue.yearlyBonusExpense),
+                            bonusPlanValue.yearlyBonusExpense,
+                          ),
                           style: AppTextStyles.appCardPriceLabel,
                         ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 4.0,
-                    ),
+                    const SizedBox(height: 4.0),
                     Divider(
                       thickness: 1.0,
                       height: 4.0,
@@ -82,13 +79,11 @@ class BonusPlanArea extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.baseline,
                       textBaseline: TextBaseline.alphabetic,
                       children: [
-                        Text(
-                          'ボーナス残額',
-                          style: AppTextStyles.appCardTitleLabel,
-                        ),
+                        Text('残額', style: AppTextStyles.appCardTitleLabel),
                         Text(
                           yenmarkFormattedPriceGetter(
-                              bonusPlanValue.lastBonusPrice),
+                            bonusPlanValue.lastBonusPrice,
+                          ),
                           style: AppTextStyles.appCardPriceLabel,
                         ),
                       ],

@@ -21,16 +21,20 @@ class PredictionGraphUsecase {
 
   late final IncomeRepository _incomeRepo = ref.read(incomeRepositoryProvider);
   late final BudgetRepository _budgetRepo = ref.read(budgetRepositoryProvider);
-  late final PredictionGraphDataSource _dataSource =
-      ref.read(predictionGraphDataSourceProvider);
-  late final PredictionGraphLayoutCalculator _layoutCalc =
-      ref.read(predictionGraphLayoutCalculatorProvider);
-  late final PredictionGraphPredictor _predictor =
-      ref.read(predictionGraphPredictorProvider);
+  late final PredictionGraphDataSource _dataSource = ref.read(
+    predictionGraphDataSourceProvider,
+  );
+  late final PredictionGraphLayoutCalculator _layoutCalc = ref.read(
+    predictionGraphLayoutCalculatorProvider,
+  );
+  late final PredictionGraphPredictor _predictor = ref.read(
+    predictionGraphPredictorProvider,
+  );
 
   /// 予測グラフのデータを取得
   Future<PredictionGraphValue> fetchPredictionGraphData(
-      DateScopeEntity dateScope) async {
+    DateScopeEntity dateScope,
+  ) async {
     // 期間を取得
     final fromDate = dateScope.aggregationMonthPeriod.startDatetime;
     final toDate = dateScope.aggregationMonthPeriod.endDatetime;
@@ -73,27 +77,34 @@ class PredictionGraphUsecase {
     // 累積支出データを取得（thisMonthは today まで、lastMonth は月末まで）
     final cumulativeToDate =
         predictionGraphLineType == PredictionGraphLineType.thisMonth
-            ? today
-            : toDate;
+        ? today
+        : toDate;
     final cumulativePriceData = await _dataSource.fetchCumulativeByDate(
-        fromDate: fromDate, toDate: cumulativeToDate);
+      fromDate: fromDate,
+      toDate: cumulativeToDate,
+    );
 
-    // 収入を取得
-    final income = await _incomeRepo.calcurateSumWithBigCategoryAndPeriod(
-        period: dateScope.aggregationMonthPeriod,
-        bigCategoryId: IncomeBigCategoryConstants.incomeSourceIdSalary);
+    // 会計種別=生活収支の収入を取得（ADR-025: 特別枠系カテゴリーを除く全収入）
+    final income = await _incomeRepo.calcurateSumWithAccountTypeAndPeriod(
+      period: dateScope.aggregationMonthPeriod,
+      accountType: AccountTypeConstants.living,
+    );
 
     // 予算を取得
-    final budget =
-        await _budgetRepo.fetchMonthlyAll(month: dateScope.representativeMonth);
+    final budget = await _budgetRepo.fetchMonthlyAll(
+      month: dateScope.representativeMonth,
+    );
 
     // 今月の固定費支出を取得
-    final fixedCostExpenseTotal =
-        await FixedCostService().getFixedCostTotal(ref, dateScope);
+    final fixedCostExpenseTotal = await FixedCostService().getFixedCostTotal(
+      ref,
+      dateScope,
+    );
 
     // 予算と固定費を合算
-    final budgetIncludeFixedCost =
-        budget == 0 ? 0 : budget + fixedCostExpenseTotal;
+    final budgetIncludeFixedCost = budget == 0
+        ? 0
+        : budget + fixedCostExpenseTotal;
 
     // 支出なし・予算なし・収入なしの場合はグラフ表示不要
     // isEmpty ではなく実際の合計値で判定する（最終日に0エントリーが追加されるケースに対応）
@@ -146,7 +157,9 @@ class PredictionGraphUsecase {
 
     // 横軸ラベルを生成
     final xAxisLabels = _layoutCalc.generateXAxisLabels(
-        fromDate: fromDate, toDate: toDate);
+      fromDate: fromDate,
+      toDate: toDate,
+    );
 
     // ラベル表示ロジック（重なりを考慮）
     final labelDisplayDecision = _layoutCalc.decideLabelDisplay(
@@ -184,7 +197,10 @@ class PredictionGraphUsecase {
 
     // 棒グラフデータを取得
     final dailyBarResult = await _dataSource.fetchDailyBarData(
-        fromDate: fromDate, toDate: toDate, today: today);
+      fromDate: fromDate,
+      toDate: toDate,
+      today: today,
+    );
     final dailyBarDataList = dailyBarResult.dailyBarDataList;
     final barMaxValue = dailyBarResult.barMaxValue;
 

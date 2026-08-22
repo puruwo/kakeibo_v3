@@ -1,3 +1,4 @@
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_account_type_controller/income_big_category_account_type_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_color_controller/income_big_category_color_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_name_controller/income_big_category_name_controller.dart';
@@ -34,7 +36,7 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
     return Row(
       children: [
         // 削除ボタン（id=1, id=2 は表示しない）
-        if (bigId != 1 && bigId != 2)
+        if (!IncomeBigCategoryConstants.isDefaultCategory(bigId))
           IconButton(
             icon: Icon(
               Icons.delete_outline_rounded,
@@ -56,13 +58,11 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                     ),
                     actions: [
                       TextButton(
-                        onPressed: () =>
-                            Navigator.of(dialogContext).pop(false),
+                        onPressed: () => Navigator.of(dialogContext).pop(false),
                         child: const Text('キャンセル'),
                       ),
                       TextButton(
-                        onPressed: () =>
-                            Navigator.of(dialogContext).pop(true),
+                        onPressed: () => Navigator.of(dialogContext).pop(true),
                         child: const Text(
                           '削除',
                           style: TextStyle(color: CategoryPalette.expense1),
@@ -94,11 +94,14 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                   );
 
                   ref.invalidate(
-                      isIncomeSmallCategoryListEditedNotifierProvider);
+                    isIncomeSmallCategoryListEditedNotifierProvider,
+                  );
                   ref.invalidate(
-                      isIncomeBigCategoryAppearanceEditedNotifierProvider);
+                    isIncomeBigCategoryAppearanceEditedNotifierProvider,
+                  );
                   ref.invalidate(
-                      edittingIncomeSmallCategoryListNotifierProvider);
+                    edittingIncomeSmallCategoryListNotifierProvider,
+                  );
 
                   Navigator.of(context).pop();
                 },
@@ -108,24 +111,24 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
 
         // 完了ボタン
         IconButton(
-          icon: Icon(
-            Icons.done_rounded,
-            color: context.colors.text,
-          ),
+          icon: Icon(Icons.done_rounded, color: context.colors.text),
           onPressed: () async {
             execute(
               context,
               action: () async {
                 final isBigChanged = ref.watch(
-                    isIncomeBigCategoryAppearanceEditedNotifierProvider);
-                final isSmallChanged = ref
-                    .watch(isIncomeSmallCategoryListEditedNotifierProvider);
+                  isIncomeBigCategoryAppearanceEditedNotifierProvider,
+                );
+                final isSmallChanged = ref.watch(
+                  isIncomeSmallCategoryListEditedNotifierProvider,
+                );
                 if (!isBigChanged && !isSmallChanged) {
                   throw const AppException('編集がされていません');
                 }
 
-                final editedList =
-                    ref.watch(edittingIncomeSmallCategoryListNotifierProvider);
+                final editedList = ref.watch(
+                  edittingIncomeSmallCategoryListNotifierProvider,
+                );
                 for (EditIncomeSmallCategoryValue value in editedList) {
                   if (value.name.isEmpty) {
                     throw const AppException('名前が入力されていない項目名があります');
@@ -134,9 +137,9 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
 
                 // 大カテゴリー編集
                 if (isBigChanged) {
-                  await ref
-                      .read(anIncomeBigCategoryProvider(bigId).future)
-                      .then((initialData) async {
+                  await ref.read(anIncomeBigCategoryProvider(bigId).future).then((
+                    initialData,
+                  ) async {
                     final name = ref
                         .watch(incomeBigCategoryNameControllerProvider)
                         .text;
@@ -149,11 +152,21 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                       incomeBigCategoryIconControllerNotifierProvider,
                     );
 
+                    // 会計種別（ADR-025）。既定カテゴリーはUIでロックしているため
+                    // 元の値を維持し、それ以外はコントローラの選択値を使う
+                    final accountType =
+                        IncomeBigCategoryConstants.isDefaultCategory(bigId)
+                        ? initialData.accountType
+                        : ref.watch(
+                            incomeBigCategoryAccountTypeControllerNotifierProvider,
+                          );
+
                     final editEntity = IncomeBigCategoryEntity(
                       id: initialData.id,
                       name: name,
                       colorCode: colorCode,
                       iconPath: resourcePath,
+                      accountType: accountType,
                     );
 
                     await usecase.bigEdit(
@@ -168,11 +181,11 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                   await ref
                       .read(allIncomeSmallCategoriesListProvider(bigId).future)
                       .then((initialData) async {
-                    await usecase.smallEdit(
-                      originalValues: initialData,
-                      editValues: editedList,
-                    );
-                  });
+                        await usecase.smallEdit(
+                          originalValues: initialData,
+                          editValues: editedList,
+                        );
+                      });
                 }
               },
               succesAction: () async {
@@ -188,12 +201,11 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                   message: '登録が完了しました',
                 );
 
+                ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
                 ref.invalidate(
-                    isIncomeSmallCategoryListEditedNotifierProvider);
-                ref.invalidate(
-                    isIncomeBigCategoryAppearanceEditedNotifierProvider);
-                ref.invalidate(
-                    edittingIncomeSmallCategoryListNotifierProvider);
+                  isIncomeBigCategoryAppearanceEditedNotifierProvider,
+                );
+                ref.invalidate(edittingIncomeSmallCategoryListNotifierProvider);
 
                 Navigator.of(context).pop();
               },

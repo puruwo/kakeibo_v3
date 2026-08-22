@@ -7,7 +7,7 @@ part of 'editting_small_category_edit_list.dart';
 // **************************************************************************
 
 String _$edittingSmallCategoryListNotifierHash() =>
-    r'0889e90ab3b77806298d1b6d7abcae9d36699d73';
+    r'c6f82d09d6c7960028fd0b021676e7eb0026dc8b';
 
 /// See also [EdittingSmallCategoryListNotifier].
 @ProviderFor(EdittingSmallCategoryListNotifier)

@@ -14,10 +14,7 @@ import 'package:kakeibo/view/yearly_income_list_page/income_graph_area.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_area.dart';
 
 class YearlyIncomeListPage extends ConsumerWidget {
-  const YearlyIncomeListPage({
-    super.key,
-    required this.period,
-  });
+  const YearlyIncomeListPage({super.key, required this.period});
 
   final PeriodValue period;
 
@@ -26,64 +23,61 @@ class YearlyIncomeListPage extends ConsumerWidget {
     final fabBottom = fabBottomOf(context);
 
     return Scaffold(
-        extendBodyBehindAppBar: true,
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          flexibleSpace: const GlassAppBarBackground(),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          title: Text(
-            '収入一覧',
-            style: AppTextStyles.pageHeaderText,
-          ),
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        flexibleSpace: const GlassAppBarBackground(),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
         ),
-        body: AppFabStack(
-          fabLabel: '収入を追加',
-          onFabTap: () {
-            final today = ref.read(systemDatetimeNotifierProvider);
-            final newIncome = IncomeEntity(
-              date: DateFormat('yyyyMMdd').format(today),
-              categoryId: IncomeBigCategoryConstants.incomeSourceIdSalary,
-            );
-            showAppModalBottomSheet(
-              context,
-              child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
-            );
-          },
-          child: CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  // extendBodyBehindAppBar:true のとき padding.top はステータスバー高さのみ。
-                  // AppBar(kToolbarHeight)分も加算してカードをAppBar下端に揃える。
-                  padding: EdgeInsets.fromLTRB(
-                    16,
-                    MediaQuery.of(context).padding.top + kToolbarHeight + 16,
-                    16,
-                    0,
-                  ),
-                  child: IncomeGraphArea(
-                    period: period,
-                  ),
+        title: Text('収入一覧', style: AppTextStyles.pageHeaderText),
+      ),
+      body: AppFabStack(
+        fabLabel: '収入を追加',
+        onFabTap: () {
+          final today = ref.read(systemDatetimeNotifierProvider);
+          final newIncome = IncomeEntity(
+            date: DateFormat('yyyyMMdd').format(today),
+            // 初期選択は小カテゴリー「給与」（大カテゴリーIDではなく小カテゴリーID）
+            categoryId: IncomeSmallCategoryConstants.salary,
+          );
+          showAppModalBottomSheet(
+            context,
+            child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
+          );
+        },
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Padding(
+                // extendBodyBehindAppBar:true のとき padding.top はステータスバー高さのみ。
+                // AppBar(kToolbarHeight)分も加算してカードをAppBar下端に揃える。
+                padding: EdgeInsets.fromLTRB(
+                  16,
+                  MediaQuery.of(context).padding.top + kToolbarHeight + 16,
+                  16,
+                  0,
                 ),
+                child: IncomeGraphArea(period: period),
               ),
-              SliverToBoxAdapter(
-                child: YearlyIncomeListArea(
-                  period: period,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                ),
+            ),
+            SliverToBoxAdapter(
+              child: YearlyIncomeListArea(
+                period: period,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
               ),
-              // コンテンツが短いときは残りスペースを静かに埋める（余分なスクロールなし）
-              // コンテンツが長いときはFAB + マージン分の余白だけ確保する
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: SizedBox(height: fabBottom + 46),
-              ),
-            ],
-          ),
-        ));
+            ),
+            // コンテンツが短いときは残りスペースを静かに埋める（余分なスクロールなし）
+            // コンテンツが長いときはFAB + マージン分の余白だけ確保する
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: SizedBox(height: fabBottom + 46),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }

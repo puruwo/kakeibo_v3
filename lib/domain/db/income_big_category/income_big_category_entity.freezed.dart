@@ -26,7 +26,9 @@ mixin _$IncomeBigCategoryEntity {
   int get id => throw _privateConstructorUsedError;
   String get name => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
-  String get iconPath => throw _privateConstructorUsedError;
+  String get iconPath =>
+      throw _privateConstructorUsedError; // 会計種別（1=生活収支, 2=特別枠）。ADR-025
+  int get accountType => throw _privateConstructorUsedError;
 
   /// Serializes this IncomeBigCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -45,7 +47,13 @@ abstract class $IncomeBigCategoryEntityCopyWith<$Res> {
     $Res Function(IncomeBigCategoryEntity) then,
   ) = _$IncomeBigCategoryEntityCopyWithImpl<$Res, IncomeBigCategoryEntity>;
   @useResult
-  $Res call({int id, String name, String colorCode, String iconPath});
+  $Res call({
+    int id,
+    String name,
+    String colorCode,
+    String iconPath,
+    int accountType,
+  });
 }
 
 /// @nodoc
@@ -70,6 +78,7 @@ class _$IncomeBigCategoryEntityCopyWithImpl<
     Object? name = null,
     Object? colorCode = null,
     Object? iconPath = null,
+    Object? accountType = null,
   }) {
     return _then(
       _value.copyWith(
@@ -89,6 +98,10 @@ class _$IncomeBigCategoryEntityCopyWithImpl<
                 ? _value.iconPath
                 : iconPath // ignore: cast_nullable_to_non_nullable
                       as String,
+            accountType: null == accountType
+                ? _value.accountType
+                : accountType // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -104,7 +117,13 @@ abstract class _$$IncomeBigCategoryEntityImplCopyWith<$Res>
   ) = __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String name, String colorCode, String iconPath});
+  $Res call({
+    int id,
+    String name,
+    String colorCode,
+    String iconPath,
+    int accountType,
+  });
 }
 
 /// @nodoc
@@ -129,6 +148,7 @@ class __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>
     Object? name = null,
     Object? colorCode = null,
     Object? iconPath = null,
+    Object? accountType = null,
   }) {
     return _then(
       _$IncomeBigCategoryEntityImpl(
@@ -148,6 +168,10 @@ class __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>
             ? _value.iconPath
             : iconPath // ignore: cast_nullable_to_non_nullable
                   as String,
+        accountType: null == accountType
+            ? _value.accountType
+            : accountType // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -161,6 +185,7 @@ class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
     required this.name,
     required this.colorCode,
     required this.iconPath,
+    this.accountType = AccountTypeConstants.living,
   }) : super._();
 
   factory _$IncomeBigCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
@@ -174,10 +199,14 @@ class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
   final String colorCode;
   @override
   final String iconPath;
+  // 会計種別（1=生活収支, 2=特別枠）。ADR-025
+  @override
+  @JsonKey()
+  final int accountType;
 
   @override
   String toString() {
-    return 'IncomeBigCategoryEntity(id: $id, name: $name, colorCode: $colorCode, iconPath: $iconPath)';
+    return 'IncomeBigCategoryEntity(id: $id, name: $name, colorCode: $colorCode, iconPath: $iconPath, accountType: $accountType)';
   }
 
   @override
@@ -190,12 +219,15 @@ class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
             (identical(other.iconPath, iconPath) ||
-                other.iconPath == iconPath));
+                other.iconPath == iconPath) &&
+            (identical(other.accountType, accountType) ||
+                other.accountType == accountType));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, id, name, colorCode, iconPath);
+  int get hashCode =>
+      Object.hash(runtimeType, id, name, colorCode, iconPath, accountType);
 
   /// Create a copy of IncomeBigCategoryEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -220,6 +252,7 @@ abstract class _IncomeBigCategoryEntity extends IncomeBigCategoryEntity {
     required final String name,
     required final String colorCode,
     required final String iconPath,
+    final int accountType,
   }) = _$IncomeBigCategoryEntityImpl;
   const _IncomeBigCategoryEntity._() : super._();
 
@@ -233,7 +266,9 @@ abstract class _IncomeBigCategoryEntity extends IncomeBigCategoryEntity {
   @override
   String get colorCode;
   @override
-  String get iconPath;
+  String get iconPath; // 会計種別（1=生活収支, 2=特別枠）。ADR-025
+  @override
+  int get accountType;
 
   /// Create a copy of IncomeBigCategoryEntity
   /// with the given fields replaced by the non-null parameter values.

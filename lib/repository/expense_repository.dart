@@ -14,7 +14,8 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   // 全ての支出情報を取得する
   @override
   Future<List<ExpenseEntity>> fetchAll() async {
-    const sql = '''
+    const sql =
+        '''
       SELECT 
         a.${SqfExpense.id} AS id,
         a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId, 
@@ -31,8 +32,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       // logger.i(
       //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
 
-      final results =
-          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+      final results = jsonList
+          .map((json) => ExpenseEntity.fromJson(json))
+          .toList();
 
       return results;
     } catch (e) {
@@ -43,9 +45,12 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // カテゴリーを指定しないで取得する
   @override
-  Future<List<ExpenseEntity>> fetchWithSourceCategory(
-      {required int incomeSourceBigId, required PeriodValue period}) async {
-    final sql = '''
+  Future<List<ExpenseEntity>> fetchWithSourceCategory({
+    required int incomeSourceBigId,
+    required PeriodValue period,
+  }) async {
+    final sql =
+        '''
       SELECT
         a.${SqfExpense.id} AS id,
         a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId,
@@ -64,8 +69,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       // logger.i(
       //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
 
-      final results =
-          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+      final results = jsonList
+          .map((json) => ExpenseEntity.fromJson(json))
+          .toList();
 
       return results;
     } catch (e) {
@@ -76,11 +82,13 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // カテゴリーと拠出元を指定して取得する
   @override
-  Future<List<ExpenseEntity>> fetchWithSmallCategory(
-      {required int incomeSourceBigId,
-      required PeriodValue period,
-      required int smallCategoryId}) async {
-    final sql = '''
+  Future<List<ExpenseEntity>> fetchWithSmallCategory({
+    required int incomeSourceBigId,
+    required PeriodValue period,
+    required int smallCategoryId,
+  }) async {
+    final sql =
+        '''
       SELECT
         a.${SqfExpense.id} AS id,
         a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId,
@@ -99,8 +107,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       // logger.i(
       //     '====SQLが実行されました====\n ImplementsExpenseRepository fetchWithoutCategory(MonthPeriodValue period)\n$sql');
 
-      final results =
-          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+      final results = jsonList
+          .map((json) => ExpenseEntity.fromJson(json))
+          .toList();
 
       return results;
     } catch (e) {
@@ -111,9 +120,12 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // 期間を指定して支出の合計を取得する
   @override
-  Future<int> fetchTotalExpenseByPeriod(
-      {required DateTime fromDate, required DateTime toDate}) async {
-    final sql = '''
+  Future<int> fetchTotalExpenseByPeriod({
+    required DateTime fromDate,
+    required DateTime toDate,
+  }) async {
+    final sql =
+        '''
       SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName} 
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)};
       ''';
@@ -132,11 +144,13 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // 期間とカテゴリーを指定して支出の合計を取得する
   @override
-  Future<int> fetchTotalExpenseByPeriodWithBigCategory(
-      {required int incomeSourceBigCategory,
-      required DateTime fromDate,
-      required DateTime toDate}) async {
-    final sql = '''
+  Future<int> fetchTotalExpenseByPeriodWithBigCategory({
+    required int incomeSourceBigCategory,
+    required DateTime fromDate,
+    required DateTime toDate,
+  }) async {
+    final sql =
+        '''
       SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName}
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
       AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory;
@@ -156,12 +170,14 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   // 期間とカテゴリーを指定して支出の合計を取得する
   @override
-  Future<int> fetchTotalExpenseByPeriodWithSmallCategoryAndSource(
-      {required int incomeSourceBigCategory,
-      required int smallCategoryId,
-      required DateTime fromDate,
-      required DateTime toDate}) async {
-    final sql = '''
+  Future<int> fetchTotalExpenseByPeriodWithSmallCategoryAndSource({
+    required int incomeSourceBigCategory,
+    required int smallCategoryId,
+    required DateTime fromDate,
+    required DateTime toDate,
+  }) async {
+    final sql =
+        '''
       SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName}
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
       AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory
@@ -183,12 +199,13 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   // 期間を指定して日毎の支出データを取得する（通常支出のみ）
   @override
   Future<int> fetchDailyExpenseByPeriod({required DateTime date}) async {
-    final sql = '''
+    final sql =
+        '''
       SELECT
         SUM(${SqfExpense.price}) AS sum_price_daily
       FROM ${SqfExpense.tableName}
       WHERE ${SqfExpense.date} = ${DateFormat('yyyyMMdd').format(date)}
-      AND ${SqfExpense.incomeSourceBigCategory} = ${IncomeBigCategoryConstants.incomeSourceIdSalary}
+      AND ${SqfExpense.incomeSourceBigCategory} = ${AccountTypeConstants.living}
       GROUP BY ${SqfExpense.date}
       ORDER BY ${SqfExpense.date} ASC
     ''';
@@ -207,9 +224,11 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   /// 日付を指定して支出リストを取得する（生活支出のみ）
   @override
-  Future<List<ExpenseEntity>> fetchDailyExpenseListByDate(
-      {required DateTime date}) async {
-    final sql = '''
+  Future<List<ExpenseEntity>> fetchDailyExpenseListByDate({
+    required DateTime date,
+  }) async {
+    final sql =
+        '''
       SELECT
         a.${SqfExpense.id} AS id,
         a.${SqfExpense.expenseSmallCategoryId} AS paymentCategoryId,
@@ -219,14 +238,15 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} = ${DateFormat('yyyyMMdd').format(date)}
-      AND a.${SqfExpense.incomeSourceBigCategory} = ${IncomeBigCategoryConstants.incomeSourceIdSalary}
+      AND a.${SqfExpense.incomeSourceBigCategory} = ${AccountTypeConstants.living}
       ORDER BY a.${SqfExpense.id} ASC
     ''';
 
     try {
       final jsonList = await db.query(sql);
-      final results =
-          jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+      final results = jsonList
+          .map((json) => ExpenseEntity.fromJson(json))
+          .toList();
       return results;
     } catch (e) {
       logger.e('[FAIL]: $e');
@@ -241,7 +261,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       SqfExpense.date: expenseEntity.date,
       SqfExpense.price: expenseEntity.price,
       SqfExpense.memo: expenseEntity.memo,
-      SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory
+      SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory,
     });
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseRepository insert(ExpenseEntity expenseEntity)\n${SqfExpense.tableName}でinsert\n  expenseEntity: \n$expenseEntity');
@@ -249,17 +269,13 @@ class ImplementsExpenseRepository implements ExpenseRepository {
 
   @override
   void update(ExpenseEntity expenseEntity) {
-    db.update(
-        SqfExpense.tableName,
-        {
-          SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
-          SqfExpense.date: expenseEntity.date,
-          SqfExpense.price: expenseEntity.price,
-          SqfExpense.memo: expenseEntity.memo,
-          SqfExpense.incomeSourceBigCategory:
-              expenseEntity.incomeSourceBigCategory
-        },
-        expenseEntity.id);
+    db.update(SqfExpense.tableName, {
+      SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
+      SqfExpense.date: expenseEntity.date,
+      SqfExpense.price: expenseEntity.price,
+      SqfExpense.memo: expenseEntity.memo,
+      SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory,
+    }, expenseEntity.id);
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseRepository update(ExpenseEntity expenseEntity)\n ${SqfExpense.tableName}でupdate\n expenseEntity: \n$expenseEntity');
   }

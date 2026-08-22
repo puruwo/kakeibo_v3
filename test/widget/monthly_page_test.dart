@@ -227,7 +227,7 @@ void main() {
 
     // 集計期間6/25〜7/24（開始日が月初でないので2ヶ月表記）
     expect(find.text('2025年 6 - 7月'), findsOneWidget);
-    expect(find.text('一般会計'), findsOneWidget);
+    expect(find.text('生活収支'), findsOneWidget);
   });
 
   testWidgets('予測グラフが描画される', (tester) async {
@@ -415,7 +415,7 @@ void main() {
     await pumpApp(tester, home: const MonthlyPage(), fakes: buildFakes());
     await pumpTimes(tester);
 
-    await tester.tap(find.text('一般会計'));
+    await tester.tap(find.text('生活収支'));
     await pumpTimes(tester);
 
     expect(find.text('適用'), findsOneWidget);

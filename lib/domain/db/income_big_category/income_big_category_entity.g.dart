@@ -13,6 +13,8 @@ _$IncomeBigCategoryEntityImpl _$$IncomeBigCategoryEntityImplFromJson(
   name: json['name'] as String,
   colorCode: json['colorCode'] as String,
   iconPath: json['iconPath'] as String,
+  accountType:
+      (json['accountType'] as num?)?.toInt() ?? AccountTypeConstants.living,
 );
 
 Map<String, dynamic> _$$IncomeBigCategoryEntityImplToJson(
@@ -22,4 +24,5 @@ Map<String, dynamic> _$$IncomeBigCategoryEntityImplToJson(
   'name': instance.name,
   'colorCode': instance.colorCode,
   'iconPath': instance.iconPath,
+  'accountType': instance.accountType,
 };

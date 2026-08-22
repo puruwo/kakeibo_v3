@@ -19,9 +19,10 @@ class BudgetRow extends ConsumerStatefulWidget {
   ConsumerState<BudgetRow> createState() => _BudgetRowState();
 }
 
+/// 拠出元の選択肢（会計種別。ADR-025で「ボーナス」から「特別枠」に改称）
 enum IncomeSourceBigCategory {
-  living('生活収支', IncomeBigCategoryConstants.incomeSourceIdSalary),
-  bonus('ボーナス', IncomeBigCategoryConstants.incomeSourceIdBonus);
+  living(AccountTypeConstants.livingLabel, AccountTypeConstants.living),
+  special(AccountTypeConstants.specialLabel, AccountTypeConstants.special);
 
   const IncomeSourceBigCategory(this.label, this.value);
 

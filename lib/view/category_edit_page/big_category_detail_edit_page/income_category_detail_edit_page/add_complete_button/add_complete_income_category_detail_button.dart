@@ -10,6 +10,7 @@ import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
+import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_account_type_controller/income_big_category_account_type_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_color_controller/income_big_category_color_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_name_controller/income_big_category_name_controller.dart';
@@ -33,22 +34,21 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
     late int addedBigCategoryId;
 
     return IconButton(
-      icon: Icon(
-        Icons.done_rounded,
-        color: context.colors.text,
-      ),
+      icon: Icon(Icons.done_rounded, color: context.colors.text),
       onPressed: () async {
         execute(
           context,
           action: () async {
-            final name =
-                ref.watch(incomeBigCategoryNameControllerProvider).text;
+            final name = ref
+                .watch(incomeBigCategoryNameControllerProvider)
+                .text;
             if (name.isEmpty) {
               throw const AppException('カテゴリー名を入力してください');
             }
 
-            final editedSmallList =
-                ref.watch(edittingIncomeSmallCategoryListNotifierProvider);
+            final editedSmallList = ref.watch(
+              edittingIncomeSmallCategoryListNotifierProvider,
+            );
             if (editedSmallList.isEmpty) {
               throw const AppException('項目を1つ以上入力してください');
             }
@@ -59,18 +59,25 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
               }
             }
 
-            final color =
-                ref.watch(incomeBigCategoryColorControllerNotifierProvider);
+            final color = ref.watch(
+              incomeBigCategoryColorControllerNotifierProvider,
+            );
             final colorCode = ColorCode.fromColor(color);
             if (color == Colors.transparent) {
               throw const AppException('カテゴリーの色を選択してください');
             }
 
-            final resourcePath =
-                ref.watch(incomeBigCategoryIconControllerNotifierProvider);
+            final resourcePath = ref.watch(
+              incomeBigCategoryIconControllerNotifierProvider,
+            );
             if (resourcePath.isEmpty) {
               throw const AppException('カテゴリーのアイコンを選択してください');
             }
+
+            // 会計種別（生活収支/特別枠）を取得する（ADR-025）
+            final accountType = ref.watch(
+              incomeBigCategoryAccountTypeControllerNotifierProvider,
+            );
 
             // 大カテゴリー登録（IDはAUTOINCREMENTで採番）
             final entity = IncomeBigCategoryEntity(
@@ -78,6 +85,7 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
               name: name,
               colorCode: colorCode,
               iconPath: resourcePath,
+              accountType: accountType,
             );
             final addedBigId = await usecase.addBig(entity);
             addedBigCategoryId = addedBigId;
@@ -91,13 +99,12 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
             }
           },
           succesAction: () async {
-            ref
-                .read(updateDBCountNotifierProvider.notifier)
-                .incrementState();
+            ref.read(updateDBCountNotifierProvider.notifier).incrementState();
 
             ref.invalidate(allIncomeBigCategoriesWithSmallListProvider);
             ref.invalidate(
-                allIncomeSmallCategoriesListProvider(addedBigCategoryId));
+              allIncomeSmallCategoriesListProvider(addedBigCategoryId),
+            );
 
             SuccessSnackBar.show(
               ScaffoldMessenger.of(context),
@@ -105,8 +112,7 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
             );
 
             ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
-            ref.invalidate(
-                isIncomeBigCategoryAppearanceEditedNotifierProvider);
+            ref.invalidate(isIncomeBigCategoryAppearanceEditedNotifierProvider);
 
             Navigator.of(context).pop();
           },

@@ -11,16 +11,19 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // 支出タイルのValueを取得し、日付ごとにグループ分けせずにそのままリストで返却するプロバイダ
 
-final expenseHistoryDigestNotifierProvider = AsyncNotifierProvider.family<
-    ExpenseHistoryUsecaseNotifier, List<ExpenseHistoryTileValue>, PeriodValue>(
-  ExpenseHistoryUsecaseNotifier.new,
-);
+final expenseHistoryDigestNotifierProvider =
+    AsyncNotifierProvider.family<
+      ExpenseHistoryUsecaseNotifier,
+      List<ExpenseHistoryTileValue>,
+      PeriodValue
+    >(ExpenseHistoryUsecaseNotifier.new);
 
 class ExpenseHistoryUsecaseNotifier
     extends FamilyAsyncNotifier<List<ExpenseHistoryTileValue>, PeriodValue> {
   @override
   Future<List<ExpenseHistoryTileValue>> build(
-      PeriodValue selectedMonthPeriod) async {
+    PeriodValue selectedMonthPeriod,
+  ) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
@@ -30,9 +33,11 @@ class ExpenseHistoryUsecaseNotifier
       bigCategoryRepo: ref.read(expensebigCategoryRepositoryProvider),
     );
 
-    // incomeSourceBigIdは1を指定して、月次支出のみを取得する
+    // 拠出元=生活収支を指定して、特別枠充当以外の支出のみを取得する
     final entities = await _service.fetchTileList(
-        IncomeBigCategoryConstants.incomeSourceIdSalary, selectedMonthPeriod);
+      AccountTypeConstants.living,
+      selectedMonthPeriod,
+    );
 
     return entities;
   }

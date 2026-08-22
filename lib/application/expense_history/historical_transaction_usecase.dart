@@ -24,45 +24,52 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 // 履歴ページ用の全トランザクションデータを取得するプロバイダ
 // 支出（ボーナス除く）、ボーナス支出、収入（月次）、ボーナス収入、固定費（確定/未確定）を取得
 
-final historicalTransactionNotifierProvider = AsyncNotifierProvider.family<
-    HistoricalTransactionUsecaseNotifier,
-    HistoricalAllTransactionsValue,
-    PeriodValue>(
-  HistoricalTransactionUsecaseNotifier.new,
-);
+final historicalTransactionNotifierProvider =
+    AsyncNotifierProvider.family<
+      HistoricalTransactionUsecaseNotifier,
+      HistoricalAllTransactionsValue,
+      PeriodValue
+    >(HistoricalTransactionUsecaseNotifier.new);
 
 class HistoricalTransactionUsecaseNotifier
     extends FamilyAsyncNotifier<HistoricalAllTransactionsValue, PeriodValue> {
   @override
   Future<HistoricalAllTransactionsValue> build(
-      PeriodValue selectedMonthPeriod) async {
+    PeriodValue selectedMonthPeriod,
+  ) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
     // 各データを取得
     final expenses = await _fetchExpenses(selectedMonthPeriod);
     final bonusExpenses = await ref.watch(
-        bonusExpenseHistoryDigestNotifierProvider(selectedMonthPeriod).future);
+      bonusExpenseHistoryDigestNotifierProvider(selectedMonthPeriod).future,
+    );
 
-    // 月次収入取得用のリクエスト（bigId=1）
+    // 生活収支の収入取得用のリクエスト（会計種別=生活収支）
     final incomeRequest = RequestIncomeHistoryUsecase(
-        bigId: IncomeBigCategoryConstants.incomeSourceIdSalary,
-        selectedMonthPeriod: selectedMonthPeriod);
-    final incomes =
-        await ref.watch(incomeHistoryNotifierProvider(incomeRequest).future);
+      accountType: AccountTypeConstants.living,
+      selectedMonthPeriod: selectedMonthPeriod,
+    );
+    final incomes = await ref.watch(
+      incomeHistoryNotifierProvider(incomeRequest).future,
+    );
 
-    // ボーナス収入取得用のリクエスト（bigId=2）
+    // 特別枠の収入取得用のリクエスト（会計種別=特別枠）
     final bonusIncomeRequest = RequestIncomeHistoryUsecase(
-        bigId: IncomeBigCategoryConstants.incomeSourceIdBonus,
-        selectedMonthPeriod: selectedMonthPeriod);
-    final bonusIncomes = await ref
-        .watch(incomeHistoryNotifierProvider(bonusIncomeRequest).future);
+      accountType: AccountTypeConstants.special,
+      selectedMonthPeriod: selectedMonthPeriod,
+    );
+    final bonusIncomes = await ref.watch(
+      incomeHistoryNotifierProvider(bonusIncomeRequest).future,
+    );
 
-    final confirmedFixedCosts = await ref
-        .watch(monthlyFixedCostNotifierProvider(selectedMonthPeriod).future);
+    final confirmedFixedCosts = await ref.watch(
+      monthlyFixedCostNotifierProvider(selectedMonthPeriod).future,
+    );
     final unconfirmedFixedCosts = await ref.watch(
-        monthlyUnconfirmedFixedCostNotifierProvider(selectedMonthPeriod)
-            .future);
+      monthlyUnconfirmedFixedCostNotifierProvider(selectedMonthPeriod).future,
+    );
 
     return HistoricalAllTransactionsValue(
       expenses: expenses,
@@ -76,16 +83,19 @@ class HistoricalTransactionUsecaseNotifier
 
   // 通常支出（ボーナス除く）を取得して日付でグループ分け
   Future<List<ExpenseHistoryTileGroupValue>> _fetchExpenses(
-      PeriodValue selectedMonthPeriod) async {
+    PeriodValue selectedMonthPeriod,
+  ) async {
     final service = ExpenseHistoryService(
       expenseRepo: ref.read(expenseRepositoryProvider),
       smallCategoryRepo: ref.read(expenseSmallCategoryRepositoryProvider),
       bigCategoryRepo: ref.read(expensebigCategoryRepositoryProvider),
     );
 
-    // incomeSourceBigIdは1を指定して、月次支出のみを取得する
+    // 拠出元=生活収支を指定して、特別枠充当以外の支出のみを取得する
     final entities = await service.fetchTileList(
-        IncomeBigCategoryConstants.incomeSourceIdSalary, selectedMonthPeriod);
+      AccountTypeConstants.living,
+      selectedMonthPeriod,
+    );
 
     // 取得したタイルデータをDateTimeでグループ分けする
     final grouped = entities.groupListsBy<DateTime>((e) => e.date);
@@ -93,7 +103,9 @@ class HistoricalTransactionUsecaseNotifier
     // DateTimeで分けられたグループを、上から降順に並び替える
     SplayTreeMap<DateTime, List<ExpenseHistoryTileValue>> sortedGroup =
         SplayTreeMap.from(
-            grouped, (DateTime key1, DateTime key2) => key2.compareTo(key1));
+          grouped,
+          (DateTime key1, DateTime key2) => key2.compareTo(key1),
+        );
 
     final List<ExpenseHistoryTileGroupValue> result = [];
 
@@ -117,7 +129,8 @@ class HistoricalTransactionUsecaseNotifier
 
 /// HistoricalAllTransactionsValue を DailyTransactionGroup のリストに変換して日付順にソートする
 List<DailyTransactionGroup> groupTransactionsByDate(
-    HistoricalAllTransactionsValue transactionData) {
+  HistoricalAllTransactionsValue transactionData,
+) {
   final Set<DateTime> dates = {};
 
   // 各データのdateを集約
@@ -143,7 +156,8 @@ List<DailyTransactionGroup> groupTransactionsByDate(
   final sortedDates = dates.toList()..sort((a, b) => b.compareTo(a));
 
   List<DailyTransactionGroup> tileGroupList = sortedDates.map((date) {
-    final expenses = transactionData.expenses
+    final expenses =
+        transactionData.expenses
             .firstWhereOrNull((g) => DateUtils.isSameDay(g.date, date))
             ?.expenseHistoryTileValueList ??
         [];

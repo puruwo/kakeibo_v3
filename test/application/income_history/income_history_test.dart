@@ -49,19 +49,21 @@ void main() {
     ),
   ];
 
-  // 収入大カテゴリー（1:給与 / 2:ボーナス）
+  // 収入大カテゴリー（1:給与=生活収支 / 2:ボーナス=特別枠）
   const bigCategories = [
     IncomeBigCategoryEntity(
       id: 1,
       name: '給与',
       colorCode: '0000FF',
       iconPath: 'assets/images/icon_salary.svg',
+      accountType: 1, // 生活収支
     ),
     IncomeBigCategoryEntity(
       id: 2,
       name: 'ボーナス',
       colorCode: 'FF00FF',
       iconPath: 'assets/images/icon_bonus.svg',
+      accountType: 2, // 特別枠
     ),
   ];
 
@@ -107,7 +109,7 @@ void main() {
   }
 
   group('IncomeHistoryService.fetchTileList', () {
-    test('大カテゴリーIDと期間で取得し、日付変換とカテゴリー結合が行われる', () async {
+    test('会計種別と期間で取得し、日付変換とカテゴリー結合が行われる', () async {
       final service = buildService(
         incomes: const [
           IncomeEntity(
@@ -117,7 +119,7 @@ void main() {
             price: 300000,
             memo: '6月分',
           ),
-          // 大カテゴリーが異なるので対象外
+          // 会計種別が異なる（特別枠）ので対象外
           IncomeEntity(id: 2, categoryId: 20, date: '20250710', price: 500000),
           // 期間外なので対象外
           IncomeEntity(id: 3, categoryId: 11, date: '20250624', price: 20000),
@@ -126,13 +128,14 @@ void main() {
 
       final result = await service.fetchTileList(1, period);
 
-      // 大カテゴリーIDと期間がそのままリポジトリへ渡る
+      // 会計種別と期間がそのままリポジトリへ渡る
       expect(
-        fakeIncomeRepository.fetchWithCategoryAndPeriodCalls,
+        fakeIncomeRepository.fetchWithAccountTypeAndPeriodCalls,
         hasLength(1),
       );
-      final call = fakeIncomeRepository.fetchWithCategoryAndPeriodCalls.single;
-      expect(call.categoryId, 1);
+      final call =
+          fakeIncomeRepository.fetchWithAccountTypeAndPeriodCalls.single;
+      expect(call.accountType, 1);
       expect(call.period, period);
 
       final tile = result.single;
@@ -171,7 +174,7 @@ void main() {
   });
 
   group('IncomeHistoryUsecaseNotifier.build', () {
-    test('bigId=1（給与）のリクエストで月次収入が取得される', () async {
+    test('会計種別=生活収支のリクエストで生活収支の収入が取得される', () async {
       final container = createUsecaseContainer(
         incomes: const [
           IncomeEntity(id: 1, categoryId: 10, date: '20250625', price: 300000),
@@ -181,7 +184,10 @@ void main() {
 
       final result = await container.read(
         incomeHistoryNotifierProvider(
-          RequestIncomeHistoryUsecase(bigId: 1, selectedMonthPeriod: period),
+          RequestIncomeHistoryUsecase(
+            accountType: 1,
+            selectedMonthPeriod: period,
+          ),
         ).future,
       );
 
@@ -189,7 +195,7 @@ void main() {
       expect(result.single.bigCategoryName, '給与');
     });
 
-    test('bigId=2（ボーナス）のリクエストでボーナス収入が取得される', () async {
+    test('会計種別=特別枠のリクエストで特別枠の収入が取得される', () async {
       final container = createUsecaseContainer(
         incomes: const [
           IncomeEntity(id: 1, categoryId: 10, date: '20250625', price: 300000),
@@ -199,7 +205,10 @@ void main() {
 
       final result = await container.read(
         incomeHistoryNotifierProvider(
-          RequestIncomeHistoryUsecase(bigId: 2, selectedMonthPeriod: period),
+          RequestIncomeHistoryUsecase(
+            accountType: 2,
+            selectedMonthPeriod: period,
+          ),
         ).future,
       );
 

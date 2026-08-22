@@ -13,16 +13,16 @@ abstract interface class IncomeRepository {
   // / 全ての支出情報を取得する
   Future<List<IncomeEntity>> fetchAll();
 
-  /// 期間とカテゴリーを指定してレコードを取得する
-  Future<List<IncomeEntity>> fetchWithCategoryAndPeriod({
+  /// 期間と会計種別（1=生活収支, 2=特別枠）を指定してレコードを取得する
+  Future<List<IncomeEntity>> fetchWithAccountTypeAndPeriod({
     required PeriodValue period,
-    required int categoryId,
+    required int accountType,
   });
 
-  /// 期間とカテゴリーを指定して収入の合計値を取得する
-  Future<int> calcurateSumWithBigCategoryAndPeriod({
+  /// 期間と会計種別（1=生活収支, 2=特別枠）を指定して収入の合計値を取得する
+  Future<int> calcurateSumWithAccountTypeAndPeriod({
     required PeriodValue period,
-    required int bigCategoryId,
+    required int accountType,
   });
 
   /// 期間と小カテゴリーを指定して収入の合計値を取得する
@@ -32,14 +32,13 @@ abstract interface class IncomeRepository {
   });
 
   /// 期間を指定して収入の合計値を取得する
-  Future<int> calcurateSumWithPeriod({
-    required PeriodValue period,
-  });
+  Future<int> calcurateSumWithPeriod({required PeriodValue period});
 
   /// 期間指定してデータを取得する
   /// カテゴリーの指定はしない
-  Future<List<IncomeEntity>> fetchWithoutCategory(
-      {required PeriodValue period});
+  Future<List<IncomeEntity>> fetchWithoutCategory({
+    required PeriodValue period,
+  });
 
   void insert(IncomeEntity expenseEntity);
 

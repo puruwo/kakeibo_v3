@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/model/database_helper.dart';
 
 //Freezedで生成されるデータクラス
@@ -17,10 +18,11 @@ class IncomeBigCategoryEntity with _$IncomeBigCategoryEntity {
     required String name,
     required String colorCode,
     required String iconPath,
+    // 会計種別（1=生活収支, 2=特別枠）。ADR-025
+    @Default(AccountTypeConstants.living) int accountType,
   }) = _IncomeBigCategoryEntity;
 
   @override
   factory IncomeBigCategoryEntity.fromJson(Map<String, dynamic> json) =>
       _$IncomeBigCategoryEntityFromJson(json);
-
 }

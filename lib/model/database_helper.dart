@@ -7,7 +7,7 @@ import 'package:kakeibo/model/sql_on_create.dart';
 
 class DatabaseHelper {
   static const _databaseName = "kakeibo_v3.db"; // DB名
-  static const _databaseVersion = 8; // スキーマのバージョン指定
+  static const _databaseVersion = 9; // スキーマのバージョン指定
 
   //読み出しデータ(Map)はImmutable
   //なので'Unsupported operation: read-only'が出た時はmakeMutable関数で返す必要がある
@@ -43,7 +43,8 @@ class DatabaseHelper {
     String path = join(documentsDirectory.path, _databaseName);
     // データベース接続
     return await openDatabase(
-      path, version: _databaseVersion,
+      path,
+      version: _databaseVersion,
 
       // テーブル作成とレコード挿入
       onCreate: (Database db, int version) async {
@@ -73,6 +74,9 @@ class DatabaseHelper {
             case 8:
               await DataBaseMigrate().toV8(db);
               break;
+            case 9:
+              await DataBaseMigrate().toV9(db);
+              break;
           }
         }
         print('アップデートが完了しました');
@@ -97,7 +101,10 @@ class DatabaseHelper {
 
   //条件指定
   Future<List<Map<String, dynamic>>> queryRowsWhere(
-      String table, String where, List whereArgs) async {
+    String table,
+    String where,
+    List whereArgs,
+  ) async {
     Database? db = await instance.database;
     return await db!.query(table, where: where, whereArgs: whereArgs);
   }
@@ -106,7 +113,8 @@ class DatabaseHelper {
   Future<int?> queryRowCount(String table) async {
     Database? db = await instance.database;
     return Sqflite.firstIntValue(
-        await db!.rawQuery('SELECT COUNT(*) FROM $table'));
+      await db!.rawQuery('SELECT COUNT(*) FROM $table'),
+    );
   }
 
   // SQL入力のクエリ処理
@@ -153,7 +161,8 @@ class DatabaseHelper {
   // 複数の書き込みを1トランザクションで実行する
   // 途中で例外が出た場合は、それまでの書き込みもすべてロールバックされる
   Future<T> runInTransaction<T>(
-      Future<T> Function(Transaction txn) action) async {
+    Future<T> Function(Transaction txn) action,
+  ) async {
     Database? db = await instance.database;
     return await db!.transaction(action);
   }
