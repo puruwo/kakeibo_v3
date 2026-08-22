@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/domain/ui_value/daily_transaction_group/daily_transaction_group.dart';
-import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/confirmed_fixed_cost_item_tile.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/expense_item_tile.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/income_item_tile.dart';
-import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/unconfirmed_fixed_cost_item_tile.dart';
 
 class TransactionHistoryGroupTile extends ConsumerWidget {
   const TransactionHistoryGroupTile({
@@ -26,25 +24,7 @@ class TransactionHistoryGroupTile extends ConsumerWidget {
     // すべてのリストを結合してWidgetのリストを作成する
     final List<Widget> tileWidgets = [];
 
-    // 固定費(確定)
-    for (var item in group.confirmedFixedCosts) {
-      tileWidgets.add(ConfirmedFixedCostItemTile(
-        value: item,
-        leftsidePadding: leftsidePadding,
-        screenHorizontalMagnification: screenHorizontalMagnification,
-      ));
-    }
-
-    // 固定費(未確定)
-    for (var item in group.unconfirmedFixedCosts) {
-      tileWidgets.add(UnconfirmedFixedCostItemTile(
-        value: item,
-        leftsidePadding: leftsidePadding,
-        screenHorizontalMagnification: screenHorizontalMagnification,
-      ));
-    }
-
-    // 支出
+    // 支出（固定費行も同じタイルで表示する。仕様 §8.4）
     for (var item in group.expenses) {
       tileWidgets.add(ExpenseItemTile(
         value: item,

@@ -6,7 +6,8 @@ part 'monthly_fixed_cost_category_summary_value.freezed.dart';
 @freezed
 class MonthlyFixedCostCategorySummaryValue with _$MonthlyFixedCostCategorySummaryValue {
   const factory MonthlyFixedCostCategorySummaryValue({
-    required int fixedCostCategoryId,
+    /// 支出大カテゴリーid（v10で固定費カテゴリーから移行）
+    required int expenseBigCategoryId,
     required String categoryName,
     required String colorCode,
     required String resourcePath,

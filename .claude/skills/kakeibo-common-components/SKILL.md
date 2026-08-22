@@ -24,6 +24,7 @@ Containerに `BoxDecoration` を直接書く前に、必ずこのドキュメン
 | `AppPillContainer` | ピル型（角丸50px）コンテナ | 背景: `secondarySystemfill` / 角丸: 50px / 高さ: `pillHeight` | `lib/view/component/app_pill_container.dart` |
 | `AppIconCircleContainer` | アイコンボタン用円形背景 | shape: circle / 色は省略時 `secondarySystemfill` | `lib/view/component/app_icon_circle_container.dart` |
 | `UnconfirmedFixedCostChipLabel` | 「変動あり」表示用チップ | 角丸4px + テーマカラーborder | `lib/view/component/unconfirmed_fixed_cost_chip_label.dart` |
+| `FixedCostChipLabel` | 明細行が固定費由来であることを示す「固定費」チップ | 角丸4px + `icon` border / 背景 `fillTertiary` | `lib/view/component/fixed_cost_chip_label.dart` |
 | `CheckBox` | 円形チェックボックス | shape: circle / 状態で色切替 | `lib/view/component/check_box.dart` |
 | `showAppYearMonthPicker` | AppBar下ドロップダウン年月度・年度ピッカー | Overlay式。月度モード（年＋月ドラム）と年度モード（年ドラム）の2種 | `lib/view/component/app_year_month_picker.dart` |
 | `AppEmptyState` | 次アクションがある空状態の共通カード（ADR-022） | CardContainer + アイコン32px + 見出し + 説明1行 + Primaryボタン | `lib/view/component/app_empty_state.dart` |
@@ -87,6 +88,9 @@ AppListCard(
 ```
 
 履歴・カレンダー・分析画面のリストはすべてこれを利用すること。新たに `Container` + `Row` で似たレイアウトを書かない。
+
+2行目に色を混在させたテキスト（例: 月次固定費ビューの「小カテゴリー › 日付」）を置きたい場合は、
+`subtitleLeading`（String）ではなく `subtitleLeadingWidget`（Widget）を渡す。
 
 ---
 
@@ -166,9 +170,15 @@ AppIconCircleContainer(
 
 ---
 
-### 5. UnconfirmedFixedCostChipLabel
+### 5. UnconfirmedFixedCostChipLabel / FixedCostChipLabel
 
-「変動あり」表示専用のチップ。固定費の変動表示でのみ使用する。新規にチップ系UIを作るときは、まずこれが流用できないか確認すること。
+`UnconfirmedFixedCostChipLabel` は「変動あり」表示専用のチップ。固定費マスタの変動表示でのみ使用する。
+
+`FixedCostChipLabel` は「固定費」チップ。v10で固定費の実績が expense に統合されたため、
+履歴・日次サマリ・カテゴリー詳細の明細行で通常支出と区別する目的で使う
+（判定は `ExpenseHistoryTileValue.fixedCostId != null`。仕様 §7.2 / §8.4）。
+
+新規にチップ系UIを作るときは、まずこの2つが流用できないか確認すること。
 
 ---
 

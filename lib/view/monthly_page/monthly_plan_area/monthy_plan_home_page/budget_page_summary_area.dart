@@ -6,31 +6,40 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/util.dart';
-import 'package:kakeibo/view/component/card_container.dart';
+import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/summary_bar_graph.dart';
 import 'package:kakeibo/view/monthly_page/skeleton/monthly_plan_skeleton.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_all_category_tile_entity_provider.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
 
-/// 予算ページ上部のサマリーエリア
-/// 予算合計と収入合計のみを表示する（支出のテキスト情報は含まない）
-/// 棒グラフは予算カテゴリー別と収入カテゴリー別でそれぞれ表示する
-/// denominator = max(予算合計, 収入合計) で両方の棒グラフを統一スケールにする
+/// 予算ページ上部のサマリーエリア（見出しなしのインセットグループ。仕様 §8.5）
+///
+/// 「予算」行＝カテゴリー別予算額の構成比バー＋合計、
+/// 「総収入」行＝収入カテゴリー別の構成比バー＋合計、「予定収支」行の3行で構成する。
+/// denominator = max(予算合計, 収入合計) で両方の棒グラフを統一スケールにする。
+/// 固定費の自動加算セグメントは廃止した（仕様 §7.3）。
 class BudgetPageSummaryArea extends HookConsumerWidget {
   const BudgetPageSummaryArea({super.key});
 
-  /// 外側余白とカードを包むヘルパー（空でない場合のみ使用）
+  /// ラベル列の幅（「予算」「総収入」を揃える）
+  static const double _labelWidth = 56;
+
+  /// 金額列の幅
+  static const double _amountWidth = 84;
+
+  /// 外側余白でグループを包むヘルパー（空でない場合のみ使用）
   Widget _wrapTop(Widget child) => Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
+                AppSpacing.lg, AppSpacing.sm, AppSpacing.lg, 0),
             child: child,
           ),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.md),
         ],
       );
 
@@ -61,136 +70,33 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                 allCategoryCardEntity.allCategoryTotalIncome -
                     allCategoryCardEntity.allCategoryTotalBudget;
 
-            return _wrapTop(CardContainer(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // 予算エリア
-                  if (allCategoryCardEntity.cardStatusType.hasBudget)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(
-                          AppSpacing.lg, AppSpacing.lg, AppSpacing.lg, 0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Text(
-                                '予算',
-                                style: AppTextStyles.appCardTitleLabel,
-                              ),
-                              const SizedBox(width: AppSpacing.sm),
-                              Text(
-                                yenmarkFormattedPriceGetter(
-                                    allCategoryCardEntity
-                                        .allCategoryTotalBudget),
-                                textAlign: TextAlign.end,
-                                overflow: TextOverflow.ellipsis,
-                                style: AppTextStyles
-                                    .appCardOptionalSecondaryPriceLabel,
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: LayoutBuilder(
-                              builder: (context, constraints) =>
-                                  SummaryBarGraph(
-                                amounts:
-                                    allCategoryCardEntity.budgetCategoryList,
-                                colors:
-                                    allCategoryCardEntity.budgetCategoryColorList,
-                                denominator: budgetIncomeDenominator,
-                                maxGraphWidth: constraints.maxWidth,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+            return _wrapTop(AppInsetGroup(
+              children: [
+                // 予算行
+                if (allCategoryCardEntity.cardStatusType.hasBudget)
+                  _barRow(
+                    context,
+                    label: '予算',
+                    amounts: allCategoryCardEntity.budgetCategoryList,
+                    colors: allCategoryCardEntity.budgetCategoryColorList,
+                    denominator: budgetIncomeDenominator,
+                    total: allCategoryCardEntity.allCategoryTotalBudget,
+                  ),
 
-                  // 収入エリア
-                  if (allCategoryCardEntity.cardStatusType.hasIncome)
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(AppSpacing.lg,
-                          AppSpacing.lg, AppSpacing.lg, AppSpacing.xs),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.baseline,
-                            textBaseline: TextBaseline.alphabetic,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.baseline,
-                                textBaseline: TextBaseline.alphabetic,
-                                children: [
-                                  Text(
-                                    '総収入',
-                                    style: AppTextStyles.appCardTitleLabel,
-                                  ),
-                                  const SizedBox(width: AppSpacing.sm),
-                                  Text(
-                                    yenmarkFormattedPriceGetter(
-                                        allCategoryCardEntity
-                                            .allCategoryTotalIncome),
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: AppTextStyles
-                                        .appCardOptionalSecondaryPriceLabel,
-                                  ),
-                                ],
-                              ),
-                              // 予定収支
-                              if (projectedSavings != 0)
-                                Flexible(
-                                  child: RichText(
-                                    textAlign: TextAlign.end,
-                                    overflow: TextOverflow.ellipsis,
-                                    text: TextSpan(children: [
-                                      TextSpan(
-                                        text: '予定収支 ',
-                                        style: AppTextStyles
-                                            .appCardTertiaryTitleLabel,
-                                      ),
-                                      TextSpan(
-                                        text: signedYenmarkFormattedPriceGetter(
-                                            projectedSavings),
-                                        style: AppTextStyles
-                                            .appCardTertiaryPriceLabel,
-                                      ),
-                                    ]),
-                                  ),
-                                ),
-                            ],
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            child: LayoutBuilder(
-                              builder: (context, constraints) =>
-                                  SummaryBarGraph(
-                                amounts:
-                                    allCategoryCardEntity.incomeCategoryList,
-                                colors:
-                                    allCategoryCardEntity.incomeCategoryColorList,
-                                denominator: budgetIncomeDenominator,
-                                maxGraphWidth: constraints.maxWidth,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                // 総収入行
+                if (allCategoryCardEntity.cardStatusType.hasIncome)
+                  _barRow(
+                    context,
+                    label: '総収入',
+                    amounts: allCategoryCardEntity.incomeCategoryList,
+                    colors: allCategoryCardEntity.incomeCategoryColorList,
+                    denominator: budgetIncomeDenominator,
+                    total: allCategoryCardEntity.allCategoryTotalIncome,
+                  ),
 
-                  const SizedBox(height: AppSpacing.md),
-                ],
-              ),
+                // 予定収支行
+                _projectedSavingsRow(context, projectedSavings),
+              ],
             ));
           },
           loading: () => _wrapTop(const MonthlyPlanSkeleton()),
@@ -198,7 +104,84 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
         );
   }
 
+  /// 構成比バーつきの1行（ラベル／バー／合計）
+  Widget _barRow(
+    BuildContext context, {
+    required String label,
+    required List<int> amounts,
+    required List<String> colors,
+    required int denominator,
+    required int total,
+  }) {
+    return SizedBox(
+      height: kAppInsetRowHeight,
+      child: Padding(
+        padding: const EdgeInsets.only(left: kAppInsetRowIndent, right: 12),
+        child: Row(
+          children: [
+            SizedBox(
+              width: _labelWidth,
+              child: Text(label, style: AppTextStyles.insetGroupLabel),
+            ),
+            Expanded(
+              child: LayoutBuilder(
+                builder: (context, constraints) => SummaryBarGraph(
+                  amounts: amounts,
+                  colors: colors,
+                  denominator: denominator,
+                  maxGraphWidth: constraints.maxWidth,
+                ),
+              ),
+            ),
+            const SizedBox(width: AppSpacing.sm),
+            SizedBox(
+              width: _amountWidth,
+              child: Text(
+                yenmarkFormattedPriceGetter(total),
+                textAlign: TextAlign.right,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.insetGroupHistoryPrice,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 予定収支の行（収入超過は income 色、予算超過は expense 色）
+  Widget _projectedSavingsRow(BuildContext context, int projectedSavings) {
+    final color = projectedSavings < 0
+        ? context.colors.expense
+        : context.colors.income;
+
+    return SizedBox(
+      height: kAppInsetRowHeight,
+      child: Padding(
+        padding: const EdgeInsets.only(left: kAppInsetRowIndent, right: 12),
+        child: Row(
+          children: [
+            Text(
+              '予定収支',
+              style: AppTextStyles.insetGroupLabel
+                  .copyWith(color: context.colors.textSecondary),
+            ),
+            const Spacer(),
+            Text(
+              signedYenmarkFormattedPriceGetter(projectedSavings, showPlusSign: true),
+              textAlign: TextAlign.right,
+              overflow: TextOverflow.ellipsis,
+              style: AppTextStyles.insetGroupHistoryPrice.copyWith(color: color),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   /// 編集中の予算値でモデルの予算関連データを上書きする
+  ///
+  /// 固定費セグメントを廃止したため、予算リストは通常カテゴリーの入力値だけで構築する。
   MonthPlanCardModel _applyEditingOverrides(
     WidgetRef ref,
     MonthPlanCardModel originalModel,
@@ -210,56 +193,23 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
         ref.watch(resolvedBudgetEditValueProvider).valueOrNull;
     if (budgetEditValues == null) return originalModel;
 
-    // 元の通常カテゴリー予算のうち price > 0 の件数を取得
-    // モデルの budgetCategoryList は [通常カテゴリー(price>0)] + [固定費カテゴリー] の順
-    final originalNormalBudgetCount =
-        budgetEditValues.where((e) => e.price > 0).length;
-
-    // 固定費カテゴリー部分を元のモデルから取り出す
-    final fixedCostBudgetAmounts =
-        originalModel.budgetCategoryList.length > originalNormalBudgetCount
-            ? originalModel.budgetCategoryList
-                .sublist(originalNormalBudgetCount)
-            : <int>[];
-    final fixedCostBudgetColors =
-        originalModel.budgetCategoryColorList.length > originalNormalBudgetCount
-            ? originalModel.budgetCategoryColorList
-                .sublist(originalNormalBudgetCount)
-            : <String>[];
-
-    // 編集値を反映した通常カテゴリーの予算リストを構築
-    List<int> newNormalBudgetAmounts = [];
-    List<String> newNormalBudgetColors = [];
-    int newNormalBudgetTotal = 0;
+    // 編集値を反映した予算リストを構築（予算合計＝カテゴリー予算の合計のみ。仕様 §7.3）
+    final List<int> newBudgetAmounts = [];
+    final List<String> newBudgetColors = [];
+    int newTotalBudget = 0;
 
     for (var budgetEdit in budgetEditValues) {
-      final price =
-          editingPrices.containsKey(budgetEdit.expenseBigCategoryId)
-              ? editingPrices[budgetEdit.expenseBigCategoryId]!
-              : budgetEdit.price;
-      newNormalBudgetTotal += price;
+      final price = editingPrices.containsKey(budgetEdit.expenseBigCategoryId)
+          ? editingPrices[budgetEdit.expenseBigCategoryId]!
+          : budgetEdit.price;
+      newTotalBudget += price;
       if (price > 0) {
-        newNormalBudgetAmounts.add(price);
-        newNormalBudgetColors.add(budgetEdit.colorCode);
+        newBudgetAmounts.add(price);
+        newBudgetColors.add(budgetEdit.colorCode);
       }
     }
 
-    // 通常カテゴリー + 固定費カテゴリーを結合
-    final newBudgetCategoryList = [
-      ...newNormalBudgetAmounts,
-      ...fixedCostBudgetAmounts,
-    ];
-    final newBudgetCategoryColorList = [
-      ...newNormalBudgetColors,
-      ...fixedCostBudgetColors,
-    ];
-
-    // 予算合計 = 通常カテゴリー合計 + 固定費（通常カテゴリーが0なら0）
-    final newTotalBudget = newNormalBudgetTotal > 0
-        ? newNormalBudgetTotal + originalModel.allFixedCostExpense
-        : 0;
-
-    // 予算が新たに設定された場合、cardStatusTypeを更新して予算セクションを表示
+    // 予算が新たに設定された場合、cardStatusTypeを更新して予算行を表示
     AllCategoryCardStatusType cardStatusType = originalModel.cardStatusType;
     if (newTotalBudget > 0 && !originalModel.cardStatusType.hasBudget) {
       cardStatusType = originalModel.cardStatusType.hasIncome
@@ -270,8 +220,8 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
     return originalModel.copyWith(
       cardStatusType: cardStatusType,
       allCategoryTotalBudget: newTotalBudget,
-      budgetCategoryList: newBudgetCategoryList,
-      budgetCategoryColorList: newBudgetCategoryColorList,
+      budgetCategoryList: newBudgetAmounts,
+      budgetCategoryColorList: newBudgetColors,
     );
   }
 }

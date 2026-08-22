@@ -17,6 +17,7 @@ import 'package:kakeibo/view/component/card_container.dart';
 /// - [primaryTitle]: メインタイトル (1行目左側)
 /// - [secondaryTitle]: サブタイトル (1行目右側、オプション)
 /// - [subtitleLeading]: サブタイトル行の左側 (2行目左側)
+/// - [subtitleLeadingWidget]: サブタイトル行の左側を自前のWidgetで置き換える（指定時は[subtitleLeading]より優先）
 /// - [subtitleTrailing]: サブタイトル行の右側 (2行目右側、オプション)
 /// - [priceLabel]: 値段ラベル (フォーマット済み)
 /// - [isIncome]: 収入/支出フラグ
@@ -37,6 +38,7 @@ class AppListCard extends StatelessWidget {
     required this.primaryTitle,
     this.secondaryTitle,
     this.subtitleLeading,
+    this.subtitleLeadingWidget,
     this.subtitleTrailing,
     required this.priceLabel,
     this.priceLabelStyle,
@@ -66,6 +68,9 @@ class AppListCard extends StatelessWidget {
 
   /// サブタイトル行の左側 (2行目の左側)
   final String? subtitleLeading;
+
+  /// サブタイトル行の左側を自前のWidgetで置き換える（指定時は[subtitleLeading]より優先）
+  final Widget? subtitleLeadingWidget;
 
   /// サブタイトル行の右側 (2行目の右側、オプション)
   final String? subtitleTrailing;
@@ -161,6 +166,7 @@ class AppListCard extends StatelessWidget {
 
     // 2行目: subtitleLeading + subtitleTrailing
     final hasSecondRow =
+        subtitleLeadingWidget != null ||
         (subtitleLeading?.isNotEmpty ?? false) ||
         (subtitleTrailing?.isNotEmpty ?? false);
     final secondRow = hasSecondRow
@@ -168,7 +174,9 @@ class AppListCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              if (subtitleLeading != null && subtitleLeading!.isNotEmpty)
+              if (subtitleLeadingWidget != null)
+                Flexible(child: subtitleLeadingWidget!)
+              else if (subtitleLeading != null && subtitleLeading!.isNotEmpty)
                 ConstrainedBox(
                   constraints: const BoxConstraints(minWidth: 70),
                   child: Text(

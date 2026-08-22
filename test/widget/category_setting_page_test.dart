@@ -1,12 +1,11 @@
 // カテゴリー設定画面（lib/view/category_edit_page/category_setting_page.dart）
 // のWidget結合テスト
 //
-// 一般（支出）・固定費・収入の3タブの切り替えと、各タブの一覧表示、
+// 支出・収入の2タブの切り替えと、各タブの一覧表示、
 // 詳細編集ページへの導線を見る。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
@@ -61,21 +60,6 @@ void main() {
     ),
   ];
 
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-    FixedCostCategoryEntity(
-      id: 2,
-      categoryName: '光熱費',
-      colorCode: '00AAFF',
-      resourcePath: 'assets/images/icon_bolt.svg',
-    ),
-  ];
-
   const incomeBigCategories = [
     IncomeBigCategoryEntity(
       id: 1,
@@ -117,9 +101,6 @@ void main() {
     expenseSmallCategory: FakeExpenseSmallCategoryRepository(
       initialRecords: expenseSmallCategories,
     ),
-    fixedCostCategory: FakeFixedCostCategoryRepository(
-      initialRecords: fixedCostCategories,
-    ),
     incomeBigCategory: FakeIncomeBigCategoryRepository(
       initialRecords: incomeBigCategories,
     ),
@@ -128,7 +109,7 @@ void main() {
     ),
   );
 
-  testWidgets('初期表示は一般タブで支出大カテゴリーが小カテゴリー付きで並ぶ', (tester) async {
+  testWidgets('初期表示は支出タブで支出大カテゴリーが小カテゴリー付きで並ぶ', (tester) async {
     await pumpApp(
       tester,
       home: const CategorySettingPage(),
@@ -137,10 +118,11 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('カテゴリー設定'), findsOneWidget); // AppBar
-    // タブは3つ
-    expect(find.text('一般'), findsOneWidget);
-    expect(find.text('固定費'), findsOneWidget);
+    // タブは支出・収入の2つ（固定費タブは廃止）
+    expect(find.text('支出'), findsOneWidget);
     expect(find.text('収入'), findsOneWidget);
+    expect(find.text('一般'), findsNothing);
+    expect(find.text('固定費'), findsNothing);
 
     // 一覧の凡例
     expect(find.text('カテゴリー'), findsOneWidget);
@@ -155,26 +137,6 @@ void main() {
     expect(find.text('+ 新しいカテゴリーを追加'), findsOneWidget);
   });
 
-  testWidgets('固定費タブに切り替えると固定費カテゴリーが並ぶ', (tester) async {
-    await pumpApp(
-      tester,
-      home: const CategorySettingPage(),
-      fakes: buildFakes(),
-    );
-    await pumpTimes(tester);
-
-    // 切り替え前は固定費カテゴリーが見えない
-    expect(find.text('住居'), findsNothing);
-
-    await tester.tap(find.text('固定費'));
-    await pumpTimes(tester);
-
-    expect(find.text('住居'), findsOneWidget);
-    expect(find.text('光熱費'), findsOneWidget);
-    // 一般タブの内容は消える
-    expect(find.text('生活費'), findsNothing);
-  });
-
   testWidgets('収入タブに切り替えると収入カテゴリーが並びフッターが出ない', (tester) async {
     await pumpApp(
       tester,
@@ -183,7 +145,7 @@ void main() {
     );
     await pumpTimes(tester);
 
-    // 一般タブでは並び替えフッターが出る
+    // 支出タブでは並び替えフッターが出る
     expect(find.text('表示・並び替え'), findsOneWidget);
 
     await tester.tap(find.text('収入'));

@@ -1,7 +1,8 @@
 // 日次支出サマリーページ（lib/view/daily_expense_summary_page/）のWidget結合テスト
 //
-// 1日ぶんの支出が総額・カテゴリー別・固定費に分かれて出るか、
-// タイルから編集モーダルへ入れるか、記録なしの日の表示を見る。
+// 1日ぶんの支出が総額・変動費/固定費の内訳・カテゴリー別に出るか、
+// 固定費行に「固定費」チップが付くか、タイルから編集モーダルへ入れるか、
+// 記録なしの日の表示を見る。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
@@ -161,7 +162,7 @@ void main() {
     expect(find.text('ディナー'), findsNothing);
   });
 
-  testWidgets('確定済み固定費が固定費セクションに出る', (tester) async {
+  testWidgets('ヘッダーに変動費・固定費の内訳が出る', (tester) async {
     await pumpApp(
       tester,
       home: DailyExpenseSummaryPage(date: targetDate),
@@ -169,11 +170,29 @@ void main() {
     );
     await pumpTimes(tester);
 
-    expect(find.text('固定費合計'), findsOneWidget);
-    expect(find.text('家賃'), findsOneWidget);
-    expect(find.text('固定費'), findsOneWidget); // タイルのサブラベル
-    // セクション合計とタイル金額の2箇所に出る
-    expect(find.text('¥ 80,000'), findsNWidgets(2));
+    // 変動費／固定費 の内訳（未確定分が無いので「うち未確定」行は出ない。仕様 §8.4）
+    expect(find.text('変動費'), findsOneWidget);
+    expect(find.text('固定費'), findsWidgets);
+    expect(find.text('うち未確定'), findsNothing);
+    // 変動費＝1,200＋800、固定費＝80,000
+    expect(find.text('¥ 2,000'), findsWidgets);
+    expect(find.text('¥ 80,000'), findsWidgets);
+  });
+
+  testWidgets('固定費行は通常支出と同じタイルに「固定費」チップ付きで並ぶ', (tester) async {
+    await pumpApp(
+      tester,
+      home: DailyExpenseSummaryPage(date: targetDate),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    // 固定費行も支出カテゴリー（住居）のグループに入る
+    expect(find.text('住居'), findsWidgets);
+    // 「固定費」は内訳ヘッダーとタイルのチップの2箇所に出る
+    expect(find.text('固定費'), findsNWidgets(2));
+    // メモ（固定費名）はタイルのサブタイトルに出る
+    expect(find.text('家賃'), findsWidgets);
   });
 
   testWidgets('支出タイルのタップで編集モーダルが開く', (tester) async {

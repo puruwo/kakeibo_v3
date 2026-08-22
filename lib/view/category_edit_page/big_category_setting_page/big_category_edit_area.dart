@@ -4,20 +4,16 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
-import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
 
 /// localImport
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
-import 'package:kakeibo/domain/ui_value/fixed_cost_category_value/edit_fixed_cost_category_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/check_box.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
-import 'package:kakeibo/view_model/state/fixed_cost_category_edit_page/editting_fixed_cost_category_list/editting_fixed_cost_category_list.dart';
-import 'package:kakeibo/view_model/state/fixed_cost_category_edit_page/is_fixed_cost_category_list_edited/is_fixed_cost_category_list_edited.dart';
 
 class BigCategoryEditArea extends ConsumerStatefulWidget {
   const BigCategoryEditArea({super.key, required this.categoryType});
@@ -41,34 +37,12 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
           // 収入カテゴリーは編集モードを持たないため何もしない
           return;
         }
-        if (widget.categoryType == CategoryType.expense) {
-          final initialList = await ref.read(
-            allBigCategoriesWithSmallListProvider.future,
-          );
-          ref
-              .read(edittingBigCategoryListNotifierProvider.notifier)
-              .setData(initialList);
-        } else {
-          // 固定費カテゴリーの場合
-          final categories = await ref.read(
-            allFixedCostCategoriesProvider.future,
-          );
-          final editList = categories.map((category) {
-            return EditFixedCostCategoryValue(
-              id: category.id,
-              name: category.categoryName,
-              colorCode: category.colorCode,
-              resourcePath: category.resourcePath,
-              displayOrder: category.displayOrder,
-              isDisplayed: category.isDisplayed,
-              editedStateDisplayOrder: category.displayOrder,
-              editedStateIsChecked: category.isDisplayed == 1,
-            );
-          }).toList();
-          ref
-              .read(edittingFixedCostCategoryListNotifierProvider.notifier)
-              .setData(editList);
-        }
+        final initialList = await ref.read(
+          allBigCategoriesWithSmallListProvider.future,
+        );
+        ref
+            .read(edittingBigCategoryListNotifierProvider.notifier)
+            .setData(initialList);
       });
     });
   }
@@ -85,14 +59,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
       // 収入カテゴリーは編集モードを持たない
       return const SizedBox.shrink();
     }
-    if (widget.categoryType == CategoryType.expense) {
-      return _buildExpenseCategoryEditArea(leftsidePadding, listSTextBoxOffset);
-    } else {
-      return _buildFixedCostCategoryEditArea(
-        leftsidePadding,
-        listSTextBoxOffset,
-      );
-    }
+    return _buildExpenseCategoryEditArea(leftsidePadding, listSTextBoxOffset);
   }
 
   // 一般カテゴリーの編集エリア
@@ -236,165 +203,6 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             child: Text(
                               itemList[index].expenseSmallCategoryNameText,
                               style: AppTextStyles.listTileSecondaryTitle,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ),
-
-                          // 並べ替えアイコン
-                          ReorderableDragStartListener(
-                            index: index,
-                            child: Container(
-                              alignment: Alignment.centerRight,
-                              width: 50,
-                              height: 50,
-                              child: Icon(
-                                Icons.drag_handle_rounded,
-                                color: context.colors.icon,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-
-                  //区切り線
-                  Divider(
-                    thickness: 0.25,
-                    height: 0.25,
-                    indent: leftsidePadding + 50,
-                    endIndent: leftsidePadding,
-                    color: context.colors.separator,
-                  ),
-                ],
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  // 固定費カテゴリーの編集エリア
-  Widget _buildFixedCostCategoryEditArea(
-    double leftsidePadding,
-    double listSTextBoxOffset,
-  ) {
-    final itemList = ref.watch(edittingFixedCostCategoryListNotifierProvider);
-
-    return Column(
-      children: [
-        // ヘッダーまでの余白
-        SizedBox(height: 8),
-
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Text('表示', style: AppTextStyles.listTileLegendTitle),
-                    const SizedBox(width: 18),
-                    SizedBox(
-                      width: 110 + listSTextBoxOffset,
-                      child: Text(
-                        'カテゴリー',
-                        style: AppTextStyles.listTileLegendTitle,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Text('並べ替え', style: AppTextStyles.listTileLegendTitle),
-            ],
-          ),
-        ),
-
-        //区切り線
-        Divider(
-          thickness: 0.25,
-          height: 0.25,
-          indent: leftsidePadding,
-          endIndent: leftsidePadding,
-          color: context.colors.separator,
-        ),
-
-        // リスト部分
-        Expanded(
-          child: ReorderableListView.builder(
-            buildDefaultDragHandles: false,
-            onReorder: (oldIndex, newIndex) {
-              ref
-                  .read(edittingFixedCostCategoryListNotifierProvider.notifier)
-                  .reorder(oldIndex, newIndex);
-
-              ref
-                  .read(isFixedCostCategoryListEditedNotifierProvider.notifier)
-                  .updateState(true);
-            },
-            itemCount: itemList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return Column(
-                key: Key('$index'),
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
-                    child: SizedBox(
-                      height: 50,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // チェックボックス
-                          Padding(
-                            padding: const EdgeInsets.all(12.5),
-                            child: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  ref
-                                      .read(
-                                        edittingFixedCostCategoryListNotifierProvider
-                                            .notifier,
-                                      )
-                                      .toggleDisplay(index);
-                                  ref
-                                      .read(
-                                        isFixedCostCategoryListEditedNotifierProvider
-                                            .notifier,
-                                      )
-                                      .updateState(true);
-                                });
-                              },
-                              child: CheckBox(
-                                isChecked: itemList[index].editedStateIsChecked,
-                              ),
-                            ),
-                          ),
-
-                          // アイコン
-                          Padding(
-                            padding: const EdgeInsets.all(12.5),
-                            child: SvgPicture.asset(
-                              itemList[index].resourcePath,
-                              colorFilter: ColorFilter.mode(
-                                ColorCode.toColor(
-                                  itemList[index].colorCode,
-                                ),
-                                BlendMode.srcIn,
-                              ),
-                              semanticsLabel: 'categoryIcon',
-                              width: 25,
-                              height: 25,
-                            ),
-                          ),
-
-                          // カテゴリー名
-                          Expanded(
-                            child: Text(
-                              itemList[index].name,
-                              style: AppTextStyles.listTilePrimaryTitle,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

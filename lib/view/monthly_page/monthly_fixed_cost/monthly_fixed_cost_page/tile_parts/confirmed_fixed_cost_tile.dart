@@ -6,6 +6,7 @@ import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/fixed_cost_tile_subtitle.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_expense_edit_sheet.dart';
 
 class ConfirmedFixedCostTile extends ConsumerWidget {
@@ -27,7 +28,11 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
 
     return AppListCard(
       primaryTitle: value.name,
-      subtitleLeading: paymentDateLabel,
+      // 2行目は「小カテゴリー › 日付」（案A。仕様 §8.5）
+      subtitleLeadingWidget: FixedCostTileSubtitle(
+        smallCategoryName: value.smallCategoryName,
+        dateLabel: paymentDateLabel,
+      ),
       priceLabel: priceLabel,
       isIncome: false,
       customUnderPriceLabel: value.frequencyLabel,

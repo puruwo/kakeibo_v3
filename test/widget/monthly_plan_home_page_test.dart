@@ -9,9 +9,11 @@ import 'package:kakeibo/domain/db/budget/budget_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 
 import '../helper/fake_repositories.dart';
@@ -80,6 +82,33 @@ void main() {
     ),
   ];
 
+  // 固定費見込みの元になるマスタと実績行（生活費カテゴリー・当期間内）
+  // 次回支払日は期間（6/25〜7/24）より後にして未生成分の周期展開と二重にならないようにする
+  const fixedCosts = [
+    FixedCostEntity(
+      id: 10,
+      name: '家賃',
+      variable: 0,
+      price: 30000,
+      fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 10,
+      intervalNumber: 1,
+      intervalUnit: 1,
+      firstPaymentDate: '20250101',
+      nextPaymentDate: '20250801',
+    ),
+  ];
+
+  const fixedCostExpense = ExpenseEntity(
+    id: 100,
+    date: '20250701',
+    price: 30000,
+    paymentCategoryId: 10,
+    memo: '家賃',
+    fixedCostId: 10,
+    isConfirmed: 1,
+  );
+
   const incomeSmallCategories = [
     IncomeSmallCategoryEntity(
       id: 1,
@@ -114,8 +143,17 @@ void main() {
       ),
     ],
     int income = 300000,
+    bool withFixedCost = false,
   }) => TestFakes(
-    expense: FakeExpenseRepository(initialRecords: lastPeriodExpenses),
+    expense: FakeExpenseRepository(
+      initialRecords: [
+        ...lastPeriodExpenses,
+        if (withFixedCost) fixedCostExpense,
+      ],
+    ),
+    fixedCost: FakeFixedCostRepository(
+      initialRecords: withFixedCost ? fixedCosts : const [],
+    ),
     budget: FakeBudgetRepository(initialRecords: budgets),
     expenseBigCategory: FakeExpenseBigCategoryRepository(
       initialRecords: expenseBigCategories,
@@ -151,11 +189,9 @@ void main() {
     expect(find.text('¥ 50,000'), findsWidgets); // 予算合計（固定費なし）
     expect(find.text('総収入'), findsOneWidget);
     expect(find.text('¥ 300,000'), findsOneWidget);
-    // 予定収支＝収入300,000－予算50,000（RichTextの「予定収支 」＋金額）
-    expect(
-      find.textContaining('予定収支 ¥ 250,000', findRichText: true),
-      findsOneWidget,
-    );
+    // 予定収支＝収入300,000－予算50,000
+    expect(find.text('予定収支'), findsOneWidget);
+    expect(find.text('¥ +250,000'), findsOneWidget);
   });
 
   testWidgets('カテゴリー別の予算一覧に凡例・カテゴリー名・先月の支出が並ぶ', (tester) async {
@@ -166,8 +202,8 @@ void main() {
     );
     await pumpTimes(tester);
 
-    // 一覧の凡例（現在月なので参照期間は「先月の支出」）
-    expect(find.text('カテゴリー'), findsOneWidget);
+    // 一覧の見出しと凡例（現在月なので参照期間は「先月の支出」）
+    expect(find.text('カテゴリー別予算'), findsOneWidget);
     expect(find.text('先月の支出'), findsOneWidget);
     expect(find.text('今月の予算'), findsOneWidget);
 
@@ -181,7 +217,7 @@ void main() {
     expect(find.text('非表示カテゴリー'), findsNothing);
   });
 
-  testWidgets('予算未登録のカテゴリーは入力欄が0で初期表示される', (tester) async {
+  testWidgets('予算未登録のカテゴリーは入力欄が空でヒント「金額を入力」が出る', (tester) async {
     await pumpApp(
       tester,
       home: const MonthlyPlanHomePage(),
@@ -189,12 +225,10 @@ void main() {
     );
     await pumpTimes(tester);
 
-    // 登録済み（生活費）は登録額、未登録（交通費）は0が入る
-    // （NumberTextInputFormatter.formatInitialValue が0を'0'に変換するため、
-    //   TextFieldのヒント「金額を入力」は実際には表示されない）
+    // 登録済み（生活費）は登録額、未登録（交通費）は空欄＋ヒント（仕様 §8.5）
     expect(find.text('50,000'), findsOneWidget);
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('金額を入力'), findsNothing);
+    expect(find.text('0'), findsNothing);
+    expect(find.text('金額を入力'), findsOneWidget);
   });
 
   testWidgets('「予算を編集する」でフッターが編集完了ボタンに変わる', (tester) async {
@@ -278,6 +312,64 @@ void main() {
     expect(find.text('予算を編集する'), findsOneWidget);
   });
 
+  testWidgets('固定費見込みがあるカテゴリーは名称の下に「固定費 ¥」が出る', (tester) async {
+    await pumpApp(
+      tester,
+      home: const MonthlyPlanHomePage(),
+      fakes: buildFakes(withFixedCost: true),
+    );
+    await pumpTimes(tester);
+
+    // 生活費の固定費見込み30,000（仕様 §7.3）
+    expect(find.text('固定費 ¥ 30,000'), findsOneWidget);
+    // 見込み0円の交通費には出ない
+    expect(find.textContaining('固定費 ¥ 0'), findsNothing);
+  });
+
+  testWidgets('予算が固定費見込みを下回る行は固定費と予算額がdanger色になる', (tester) async {
+    await pumpApp(
+      tester,
+      home: const MonthlyPlanHomePage(),
+      fakes: buildFakes(
+        withFixedCost: true,
+        // 生活費の予算20,000 < 固定費見込み30,000
+        budgets: const [
+          BudgetEntity(
+            id: 1,
+            expenseBigCategoryId: 1,
+            month: monthKey,
+            price: 20000,
+          ),
+        ],
+      ),
+    );
+    await pumpTimes(tester);
+
+    final forecastLabel =
+        tester.widget<Text>(find.text('固定費 ¥ 30,000'));
+    expect(forecastLabel.style?.color, AppColorsDark.danger);
+
+    final priceField = tester.widget<TextField>(
+      find.byType(TextField).at(0),
+    );
+    expect(priceField.style?.color, AppColorsDark.danger);
+  });
+
+  testWidgets('予算合計に固定費見込みは加算されない', (tester) async {
+    await pumpApp(
+      tester,
+      home: const MonthlyPlanHomePage(),
+      fakes: buildFakes(withFixedCost: true),
+    );
+    await pumpTimes(tester);
+
+    // 予算合計＝カテゴリー予算50,000のみ（固定費見込み30,000は足さない。仕様 §7.3）
+    expect(find.text('¥ 50,000'), findsWidgets);
+    expect(find.text('¥ 80,000'), findsNothing);
+    // 予定収支も固定費を含まない（300,000 - 50,000）
+    expect(find.text('¥ +250,000'), findsOneWidget);
+  });
+
   testWidgets('「カテゴリー編集・追加」でカテゴリー設定画面が開く', (tester) async {
     await pumpApp(
       tester,
@@ -290,6 +382,7 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('カテゴリー設定'), findsOneWidget);
-    expect(find.text('一般'), findsOneWidget);
+    // カテゴリー設定は支出／収入の2タブ（固定費タブは廃止）
+    expect(find.text('支出'), findsOneWidget);
   });
 }

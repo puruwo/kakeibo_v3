@@ -18,6 +18,8 @@ final _privateConstructorUsedError = UnsupportedError(
 /// @nodoc
 mixin _$DailyTransactionGroup {
   DateTime get date => throw _privateConstructorUsedError;
+
+  /// 支出（固定費行も含む。固定費かどうかは fixedCostId で判定する）
   List<ExpenseHistoryTileValue> get expenses =>
       throw _privateConstructorUsedError;
   List<ExpenseHistoryTileValue> get bonusExpenses =>
@@ -25,10 +27,6 @@ mixin _$DailyTransactionGroup {
   List<IncomeHistoryTileValue> get incomes =>
       throw _privateConstructorUsedError;
   List<IncomeHistoryTileValue> get bonusIncomes =>
-      throw _privateConstructorUsedError;
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts =>
-      throw _privateConstructorUsedError;
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts =>
       throw _privateConstructorUsedError;
 
   /// Create a copy of DailyTransactionGroup
@@ -51,8 +49,6 @@ abstract class $DailyTransactionGroupCopyWith<$Res> {
     List<ExpenseHistoryTileValue> bonusExpenses,
     List<IncomeHistoryTileValue> incomes,
     List<IncomeHistoryTileValue> bonusIncomes,
-    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
   });
 }
 
@@ -79,8 +75,6 @@ class _$DailyTransactionGroupCopyWithImpl<
     Object? bonusExpenses = null,
     Object? incomes = null,
     Object? bonusIncomes = null,
-    Object? confirmedFixedCosts = null,
-    Object? unconfirmedFixedCosts = null,
   }) {
     return _then(
       _value.copyWith(
@@ -104,14 +98,6 @@ class _$DailyTransactionGroupCopyWithImpl<
                 ? _value.bonusIncomes
                 : bonusIncomes // ignore: cast_nullable_to_non_nullable
                       as List<IncomeHistoryTileValue>,
-            confirmedFixedCosts: null == confirmedFixedCosts
-                ? _value.confirmedFixedCosts
-                : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                      as List<MonthlyConfirmedFixedCostTileValue>,
-            unconfirmedFixedCosts: null == unconfirmedFixedCosts
-                ? _value.unconfirmedFixedCosts
-                : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                      as List<MonthlyUnconfirmedFixedCostTileValue>,
           )
           as $Val,
     );
@@ -133,8 +119,6 @@ abstract class _$$DailyTransactionGroupImplCopyWith<$Res>
     List<ExpenseHistoryTileValue> bonusExpenses,
     List<IncomeHistoryTileValue> incomes,
     List<IncomeHistoryTileValue> bonusIncomes,
-    List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
   });
 }
 
@@ -158,8 +142,6 @@ class __$$DailyTransactionGroupImplCopyWithImpl<$Res>
     Object? bonusExpenses = null,
     Object? incomes = null,
     Object? bonusIncomes = null,
-    Object? confirmedFixedCosts = null,
-    Object? unconfirmedFixedCosts = null,
   }) {
     return _then(
       _$DailyTransactionGroupImpl(
@@ -183,14 +165,6 @@ class __$$DailyTransactionGroupImplCopyWithImpl<$Res>
             ? _value._bonusIncomes
             : bonusIncomes // ignore: cast_nullable_to_non_nullable
                   as List<IncomeHistoryTileValue>,
-        confirmedFixedCosts: null == confirmedFixedCosts
-            ? _value._confirmedFixedCosts
-            : confirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                  as List<MonthlyConfirmedFixedCostTileValue>,
-        unconfirmedFixedCosts: null == unconfirmedFixedCosts
-            ? _value._unconfirmedFixedCosts
-            : unconfirmedFixedCosts // ignore: cast_nullable_to_non_nullable
-                  as List<MonthlyUnconfirmedFixedCostTileValue>,
       ),
     );
   }
@@ -205,20 +179,18 @@ class _$DailyTransactionGroupImpl implements _DailyTransactionGroup {
     final List<ExpenseHistoryTileValue> bonusExpenses = const [],
     final List<IncomeHistoryTileValue> incomes = const [],
     final List<IncomeHistoryTileValue> bonusIncomes = const [],
-    final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts =
-        const [],
-    final List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts =
-        const [],
   }) : _expenses = expenses,
        _bonusExpenses = bonusExpenses,
        _incomes = incomes,
-       _bonusIncomes = bonusIncomes,
-       _confirmedFixedCosts = confirmedFixedCosts,
-       _unconfirmedFixedCosts = unconfirmedFixedCosts;
+       _bonusIncomes = bonusIncomes;
 
   @override
   final DateTime date;
+
+  /// 支出（固定費行も含む。固定費かどうかは fixedCostId で判定する）
   final List<ExpenseHistoryTileValue> _expenses;
+
+  /// 支出（固定費行も含む。固定費かどうかは fixedCostId で判定する）
   @override
   @JsonKey()
   List<ExpenseHistoryTileValue> get expenses {
@@ -254,29 +226,9 @@ class _$DailyTransactionGroupImpl implements _DailyTransactionGroup {
     return EqualUnmodifiableListView(_bonusIncomes);
   }
 
-  final List<MonthlyConfirmedFixedCostTileValue> _confirmedFixedCosts;
-  @override
-  @JsonKey()
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts {
-    if (_confirmedFixedCosts is EqualUnmodifiableListView)
-      return _confirmedFixedCosts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_confirmedFixedCosts);
-  }
-
-  final List<MonthlyUnconfirmedFixedCostTileValue> _unconfirmedFixedCosts;
-  @override
-  @JsonKey()
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts {
-    if (_unconfirmedFixedCosts is EqualUnmodifiableListView)
-      return _unconfirmedFixedCosts;
-    // ignore: implicit_dynamic_type
-    return EqualUnmodifiableListView(_unconfirmedFixedCosts);
-  }
-
   @override
   String toString() {
-    return 'DailyTransactionGroup(date: $date, expenses: $expenses, bonusExpenses: $bonusExpenses, incomes: $incomes, bonusIncomes: $bonusIncomes, confirmedFixedCosts: $confirmedFixedCosts, unconfirmedFixedCosts: $unconfirmedFixedCosts)';
+    return 'DailyTransactionGroup(date: $date, expenses: $expenses, bonusExpenses: $bonusExpenses, incomes: $incomes, bonusIncomes: $bonusIncomes)';
   }
 
   @override
@@ -294,14 +246,6 @@ class _$DailyTransactionGroupImpl implements _DailyTransactionGroup {
             const DeepCollectionEquality().equals(
               other._bonusIncomes,
               _bonusIncomes,
-            ) &&
-            const DeepCollectionEquality().equals(
-              other._confirmedFixedCosts,
-              _confirmedFixedCosts,
-            ) &&
-            const DeepCollectionEquality().equals(
-              other._unconfirmedFixedCosts,
-              _unconfirmedFixedCosts,
             ));
   }
 
@@ -313,8 +257,6 @@ class _$DailyTransactionGroupImpl implements _DailyTransactionGroup {
     const DeepCollectionEquality().hash(_bonusExpenses),
     const DeepCollectionEquality().hash(_incomes),
     const DeepCollectionEquality().hash(_bonusIncomes),
-    const DeepCollectionEquality().hash(_confirmedFixedCosts),
-    const DeepCollectionEquality().hash(_unconfirmedFixedCosts),
   );
 
   /// Create a copy of DailyTransactionGroup
@@ -337,12 +279,12 @@ abstract class _DailyTransactionGroup implements DailyTransactionGroup {
     final List<ExpenseHistoryTileValue> bonusExpenses,
     final List<IncomeHistoryTileValue> incomes,
     final List<IncomeHistoryTileValue> bonusIncomes,
-    final List<MonthlyConfirmedFixedCostTileValue> confirmedFixedCosts,
-    final List<MonthlyUnconfirmedFixedCostTileValue> unconfirmedFixedCosts,
   }) = _$DailyTransactionGroupImpl;
 
   @override
   DateTime get date;
+
+  /// 支出（固定費行も含む。固定費かどうかは fixedCostId で判定する）
   @override
   List<ExpenseHistoryTileValue> get expenses;
   @override
@@ -351,10 +293,6 @@ abstract class _DailyTransactionGroup implements DailyTransactionGroup {
   List<IncomeHistoryTileValue> get incomes;
   @override
   List<IncomeHistoryTileValue> get bonusIncomes;
-  @override
-  List<MonthlyConfirmedFixedCostTileValue> get confirmedFixedCosts;
-  @override
-  List<MonthlyUnconfirmedFixedCostTileValue> get unconfirmedFixedCosts;
 
   /// Create a copy of DailyTransactionGroup
   /// with the given fields replaced by the non-null parameter values.

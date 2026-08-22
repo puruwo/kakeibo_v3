@@ -205,16 +205,6 @@ void main() {
 
       expect(result.allCategoryTotalBudget, 120000);
     });
-
-    test('固定費セグメント用のフィールドは常に0（除去はT5）', () async {
-      final container = createCardContainer(totalExpense: 130000);
-
-      final result = await container.read(
-        monthlyAllCategoryCardNotifierProvider(dateScope).future,
-      );
-
-      expect(result.allFixedCostExpense, 0);
-    });
   });
 
   group('MonthlyAllCategoryTileUsecaseNotifier のステータス判定', () {
@@ -512,7 +502,6 @@ void main() {
         result.expenseCategoryIconPathList.last,
         'assets/images/icon_3.svg',
       );
-      expect(result.allFixedCostExpense, 0);
     });
 
     test('収入内訳はボーナスと0円のカテゴリーを除外する', () async {

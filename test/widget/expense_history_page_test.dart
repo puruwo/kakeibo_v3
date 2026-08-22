@@ -266,14 +266,17 @@ void main() {
     expect(find.text(' 外食'), findsOneWidget);
     expect(find.text(' ランチ'), findsOneWidget);
     expect(find.text('¥ 3,000'), findsOneWidget);
-    // 確定済み固定費タイル
-    expect(find.text('家賃'), findsOneWidget);
-    expect(find.text('固定費'), findsOneWidget);
+    // 固定費行も同じ支出タイルで並び、「固定費」チップで識別する（v10。仕様 §8.4）
+    expect(find.text('住居'), findsOneWidget);
+    // 小カテゴリー名とメモが同じ「家賃」なので2件出る
+    expect(find.text(' 家賃'), findsNWidgets(2));
     expect(find.text('¥ 80,000'), findsOneWidget);
-    // 未確定固定費タイル
-    expect(find.text('電気代'), findsOneWidget);
-    expect(find.text('固定費(未確定)'), findsOneWidget);
-    expect(find.text('未確定'), findsOneWidget);
+    expect(find.text('光熱費'), findsOneWidget);
+    expect(find.text(' 電気'), findsOneWidget);
+    // 未確定の固定費行は金額が「未入力」
+    expect(find.text('未入力'), findsOneWidget);
+    // 確定済み・未確定の2行に「固定費」チップが付く
+    expect(find.text('固定費'), findsNWidgets(2));
     // 収入タイル
     expect(find.text('給与'), findsOneWidget);
     expect(find.text('¥ 250,000'), findsOneWidget);
@@ -290,7 +293,7 @@ void main() {
     expect(find.text('記録がまだありません'), findsOneWidget);
   });
 
-  testWidgets('未確定固定費タイルのタップで固定費行の編集シートが開く', (tester) async {
+  testWidgets('未確定の固定費行のタップで固定費行の編集シートが開く', (tester) async {
     await pumpApp(
       tester,
       home: const ExpenseHistoryPage(),
@@ -298,7 +301,7 @@ void main() {
     );
     await pumpTimes(tester);
 
-    await tester.tap(find.text('電気代').first);
+    await tester.tap(find.text(' 電気代').first);
     await pumpTimes(tester);
 
     // v10で未確定の確定操作は編集シートに一本化した（仕様 §6.6）
@@ -313,7 +316,7 @@ void main() {
     await pumpApp(tester, home: const ExpenseHistoryPage(), fakes: fakes);
     await pumpTimes(tester);
 
-    await tester.tap(find.text('電気代').first);
+    await tester.tap(find.text(' 電気代').first);
     await pumpTimes(tester);
 
     // シート上の最初のTextFormFieldが金額欄

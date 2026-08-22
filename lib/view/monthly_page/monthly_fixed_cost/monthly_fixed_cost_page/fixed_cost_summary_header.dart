@@ -45,7 +45,7 @@ class _FixedCostSummaryHeaderState
                     children: [
                       Expanded(
                         child: Text(
-                          '今月の支払い予定',
+                          '今月の固定費',
                           style: AppTextStyles.appCardTitleLabel,
                         ),
                       ),
@@ -88,7 +88,7 @@ class _FixedCostSummaryHeaderState
                       children: [
                         Expanded(
                           child: Text(
-                            '未確定分（想定）',
+                            '未確定分（予想）',
                             style: AppTextStyles.appCardTitleLabel,
                           ),
                         ),

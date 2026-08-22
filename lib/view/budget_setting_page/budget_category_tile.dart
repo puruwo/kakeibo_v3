@@ -11,6 +11,7 @@ import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
+import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
@@ -41,7 +42,6 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
     // リスト内テキストボックスの拡大部を計算
     // iphoneProMaxの横幅が430で、それより大きい端末では拡大しない
     // 大カテゴリーと小カテゴリーで増幅分を2等分する
-    final listSTextBoxOffset = context.screenHorizontalMagnification / 2;
 
     // カレンダーサイズから左の空白の大きさを計算
     final leftsidePadding = 14.5 * context.screenHorizontalMagnification;
@@ -54,13 +54,28 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
     // 非編集時はTextFieldを表示しないので、編集時のみ表示する
     final state = ref.watch(footerStateControllerNotifierProvider);
 
+    // 固定費見込み（大カテゴリー単位。0円のカテゴリーには表示しない。仕様 §7.3）
+    final forecast = ref
+            .watch(resolvedFixedCostForecastValueProvider)
+            .valueOrNull
+            ?.amountOf(widget.budgetEditValue.expenseBigCategoryId) ??
+        0;
+
+    // 入力中の値を優先して予算額とみなす（編集中も警告色を追従させるため）
+    final enteredPrice =
+        int.tryParse(controller.text.replaceAll(RegExp(r'\D'), '')) ??
+            widget.budgetEditValue.price;
+
+    // 予算が固定費見込みを下回るときは固定費の文字と予算額をdanger色にする（仕様 §8.5）
+    final isUnderFixedCost = forecast > 0 && enteredPrice < forecast;
+
     return Column(
       children: [
         // リスト本体
         Column(
           children: [
-            SizedBox(
-              height: 50,
+            ConstrainedBox(
+              constraints: const BoxConstraints(minHeight: 54),
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
                 child: Row(
@@ -89,13 +104,32 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         mainAxisSize: MainAxisSize.max,
                         children: [
-                          // カテゴリー名
-                          SizedBox(
-                            width: 70 + listSTextBoxOffset * 2,
-                            child: Text(
-                              widget.budgetEditValue.expenseBigCategoryName,
-                              style: AppTextStyles.listTilePrimaryTitle,
-                              overflow: TextOverflow.ellipsis,
+                          // カテゴリー名（固定費見込みがあれば下に「固定費 ¥」を添える）
+                          // 固定費見込みのサブラベルが切れないよう可変幅にする
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  widget
+                                      .budgetEditValue.expenseBigCategoryName,
+                                  style: AppTextStyles.listTilePrimaryTitle,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                if (forecast > 0)
+                                  Text(
+                                    '固定費 ${yenmarkFormattedPriceGetter(forecast)}',
+                                    style: AppTextStyles
+                                        .budgetFixedCostForecastLabel
+                                        .copyWith(
+                                      color: isUnderFixedCost
+                                          ? context.colors.danger
+                                          : context.colors.textSecondary,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                              ],
                             ),
                           ),
 
@@ -141,13 +175,27 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                 _focusNode.requestFocus();
                               }
                             },
-                            child: Row(
+                            // 金額グループは固定幅にして「先月の支出」列の位置を揃える
+                            child: SizedBox(
+                              width: 120,
+                              child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               crossAxisAlignment: CrossAxisAlignment.baseline,
                               textBaseline: TextBaseline.alphabetic,
                               children: [
-                                SizedBox(
-                                  width: 100,
+                                // 「¥」は入力欄の外に置き、数字の直前に密着させる（仕様 §8.5）
+                                if (controller.text.isNotEmpty)
+                                  Text(
+                                    '¥',
+                                    style: AppTextStyles.listTileInputPriceLabel
+                                        .copyWith(
+                                      color: isUnderFixedCost
+                                          ? context.colors.danger
+                                          : context.colors.text,
+                                    ),
+                                  ),
+                                Flexible(
+                                  child: IntrinsicWidth(
                                   child: TextField(
                                     controller: controller,
                                     focusNode: _focusNode,
@@ -155,8 +203,13 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                     // テキストフィールドのプロパティ
                                     textAlign: TextAlign.right,
                                     textAlignVertical: TextAlignVertical.top,
-                                    style:
-                                        AppTextStyles.listTileInputPriceLabel,
+                                    style: AppTextStyles
+                                        .listTileInputPriceLabel
+                                        .copyWith(
+                                      color: isUnderFixedCost
+                                          ? context.colors.danger
+                                          : context.colors.text,
+                                    ),
                                     inputFormatters: [
                                       // カンマのフォーマット
                                       NumberTextInputFormatter(),
@@ -233,14 +286,6 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                         ),
                                       ),
 
-                                      // 入力テキストの末尾に「円」を表示
-                                      suffix: controller.text.isNotEmpty
-                                          ? Text(
-                                              ' 円',
-                                              style: AppTextStyles
-                                                  .listCardSecondaryTitle,
-                                            )
-                                          : null,
                                     ),
                                     keyboardType: TextInputType.number,
 
@@ -283,8 +328,10 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                       FocusScope.of(context).unfocus();
                                     },
                                   ),
+                                  ),
                                 ),
                               ],
+                              ),
                             ),
                           ),
                         ],

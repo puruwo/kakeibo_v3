@@ -12,14 +12,11 @@ import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_ca
 import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
-import 'package:kakeibo/view_model/state/fixed_cost_category_edit_page/editting_fixed_cost_category_list/editting_fixed_cost_category_list.dart';
-import 'package:kakeibo/view_model/state/fixed_cost_category_edit_page/is_fixed_cost_category_list_edited/is_fixed_cost_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 
 // カテゴリータイプのEnum
 enum CategoryType {
-  expense, // 一般（支出）
-  fixedCost, // 固定費
+  expense, // 支出
   income, // 収入
 }
 
@@ -38,7 +35,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -70,8 +67,6 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
                 // 編集モードなら、providerを破棄して状態を非編集モードに変更
                 ref.invalidate(isBigCategoryListEditedNotifierProvider);
                 ref.invalidate(edittingBigCategoryListNotifierProvider);
-                ref.invalidate(isFixedCostCategoryListEditedNotifierProvider);
-                ref.invalidate(edittingFixedCostCategoryListNotifierProvider);
                 ref.read(editModeNotifierProvider.notifier).updateState();
               } else {
                 // 非編集モード時は閉じる
@@ -91,8 +86,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
                 child: AppTab(
                   tabController: _tabController,
                   tabs: const [
-                    Tab(text: '一般'),
-                    Tab(text: '固定費'),
+                    Tab(text: '支出'),
                     Tab(text: '収入'),
                   ],
                 ),
@@ -106,15 +100,9 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
           controller: _tabController,
           physics: const NeverScrollableScrollPhysics(),
           children: [
-            // 一般カテゴリータブ
+            // 支出カテゴリータブ
             _buildCategoryContent(
               categoryType: CategoryType.expense,
-              editmodeProvider: editmodeProvider,
-            ),
-
-            // 固定費カテゴリータブ
-            _buildCategoryContent(
-              categoryType: CategoryType.fixedCost,
               editmodeProvider: editmodeProvider,
             ),
 

@@ -128,7 +128,7 @@ void main() {
     ),
   );
 
-  testWidgets('ヘッダーに支払い予定・確定分・未確定分（想定）の金額が出る', (tester) async {
+  testWidgets('ヘッダーに今月の固定費・確定分・未確定分（予想）の金額が出る', (tester) async {
     await pumpApp(
       tester,
       home: const MonthlyFixedCostPage(),
@@ -137,13 +137,13 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('固定費'), findsOneWidget); // AppBar
-    expect(find.text('今月の支払い予定'), findsOneWidget);
-    // 支払い予定＝確定80,000＋未確定の想定6,000
+    expect(find.text('今月の固定費'), findsOneWidget);
+    // 今月の固定費＝確定80,000＋未確定の予想6,000
     expect(find.text('¥ 86,000'), findsOneWidget);
     expect(find.text('確定分'), findsOneWidget);
     // 確定分はヘッダーと確定済みタイルの2箇所に出る
     expect(find.text('¥ 80,000'), findsNWidgets(2));
-    expect(find.text('未確定分（想定）'), findsOneWidget);
+    expect(find.text('未確定分（予想）'), findsOneWidget);
     expect(find.text('¥ 6,000'), findsOneWidget);
   });
 
@@ -157,9 +157,13 @@ void main() {
 
     // カテゴリーヘッダー（アイコン付きなので見出しに先頭スペースは付かない）
     expect(find.text('住居'), findsOneWidget);
-    expect(find.text('家賃'), findsOneWidget);
-    // 支払い日は 'yyyy/M/d'（20250701 → 2025/7/1）
-    expect(find.text('2025/7/1'), findsOneWidget);
+    // 1行目は固定費名、2行目は「小カテゴリー › 日付」（案A。仕様 §8.5）
+    expect(find.text('家賃'), findsWidgets);
+    // 支払い日は 'yyyy/M/d'（20250701 → 2025/7/1）。2行目はTextSpan構成なのでリッチテキストで探す
+    expect(
+      find.textContaining('家賃 › 2025/7/1', findRichText: true),
+      findsOneWidget,
+    );
     // 支払い頻度ラベル（intervalNumber=1・intervalUnit=1 → 毎月）
     expect(find.text('毎月'), findsWidgets);
   });
@@ -174,7 +178,11 @@ void main() {
 
     expect(find.text('光熱費'), findsOneWidget);
     expect(find.text('電気代'), findsOneWidget);
-    expect(find.text('2025/7/5'), findsOneWidget);
+    // 2行目は「小カテゴリー › 日付」
+    expect(
+      find.textContaining('電気 › 2025/7/5', findRichText: true),
+      findsOneWidget,
+    );
     expect(find.text('未入力'), findsOneWidget);
     // 未確定タイルの金額下ラベルは「平均 <想定額> / <頻度>」
     expect(find.text('平均 ¥ 6,000 / 毎月'), findsOneWidget);

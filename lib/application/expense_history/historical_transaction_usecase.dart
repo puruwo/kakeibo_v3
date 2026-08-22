@@ -4,8 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:collection/collection.dart';
 import 'package:kakeibo/application/expense_history/bonus_expense_history_digest_usecase.dart';
 import 'package:kakeibo/application/expense_history/expense_history_service.dart';
-import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_usecase.dart';
-import 'package:kakeibo/application/fixed_cost_read/monthly_unconfirmed_fixed_cost_usecase.dart';
 import 'package:kakeibo/application/income_history/income_history_usecase.dart';
 import 'package:kakeibo/application/income_history/request_income_history_usecase.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
@@ -22,7 +20,8 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repos
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // 履歴ページ用の全トランザクションデータを取得するプロバイダ
-// 支出（ボーナス除く）、ボーナス支出、収入（月次）、ボーナス収入、固定費（確定/未確定）を取得
+// 支出（ボーナス除く。固定費行も含む）、ボーナス支出、収入（月次）、ボーナス収入を取得
+// v10で固定費の実績も expense に入るため、固定費専用のリストは持たない（仕様 §8.4）
 
 final historicalTransactionNotifierProvider =
     AsyncNotifierProvider.family<
@@ -64,24 +63,15 @@ class HistoricalTransactionUsecaseNotifier
       incomeHistoryNotifierProvider(bonusIncomeRequest).future,
     );
 
-    final confirmedFixedCosts = await ref.watch(
-      monthlyFixedCostNotifierProvider(selectedMonthPeriod).future,
-    );
-    final unconfirmedFixedCosts = await ref.watch(
-      monthlyUnconfirmedFixedCostNotifierProvider(selectedMonthPeriod).future,
-    );
-
     return HistoricalAllTransactionsValue(
       expenses: expenses,
       bonusExpenses: bonusExpenses,
       incomes: incomes,
       bonusIncomes: bonusIncomes,
-      confirmedFixedCosts: confirmedFixedCosts,
-      unconfirmedFixedCosts: unconfirmedFixedCosts,
     );
   }
 
-  // 通常支出（ボーナス除く）を取得して日付でグループ分け
+  // 支出（ボーナス除く。固定費行も含む）を取得して日付でグループ分け
   Future<List<ExpenseHistoryTileGroupValue>> _fetchExpenses(
     PeriodValue selectedMonthPeriod,
   ) async {
@@ -97,12 +87,9 @@ class HistoricalTransactionUsecaseNotifier
       selectedMonthPeriod,
     );
 
-    // 固定費行は confirmedFixedCosts / unconfirmedFixedCosts として別に取得するため、
-    // ここでは通常支出だけを残す（日次サマリの3本立てを維持する。仕様 §7.1）
-    final normalExpenses = entities.where((e) => e.fixedCostId == null).toList();
-
+    // 固定費行も同じタイルで表示するため、絞り込まずにそのまま扱う（仕様 §8.4）
     // 取得したタイルデータをDateTimeでグループ分けする
-    final grouped = normalExpenses.groupListsBy<DateTime>((e) => e.date);
+    final grouped = entities.groupListsBy<DateTime>((e) => e.date);
 
     // DateTimeで分けられたグループを、上から降順に並び替える
     SplayTreeMap<DateTime, List<ExpenseHistoryTileValue>> sortedGroup =
@@ -150,12 +137,6 @@ List<DailyTransactionGroup> groupTransactionsByDate(
   for (var item in transactionData.bonusIncomes) {
     dates.add(DateUtils.dateOnly(item.date));
   }
-  for (var item in transactionData.confirmedFixedCosts) {
-    dates.add(DateUtils.dateOnly(item.date));
-  }
-  for (var item in transactionData.unconfirmedFixedCosts) {
-    dates.add(DateUtils.dateOnly(item.date));
-  }
 
   final sortedDates = dates.toList()..sort((a, b) => b.compareTo(a));
 
@@ -178,22 +159,12 @@ List<DailyTransactionGroup> groupTransactionsByDate(
         .where((e) => DateUtils.isSameDay(e.date, date))
         .toList();
 
-    final confirmedFixedCosts = transactionData.confirmedFixedCosts
-        .where((e) => DateUtils.isSameDay(e.date, date))
-        .toList();
-
-    final unconfirmedFixedCosts = transactionData.unconfirmedFixedCosts
-        .where((e) => DateUtils.isSameDay(e.date, date))
-        .toList();
-
     return DailyTransactionGroup(
       date: date,
       expenses: expenses,
       bonusExpenses: bonusExpenses,
       incomes: incomes,
       bonusIncomes: bonusIncomes,
-      confirmedFixedCosts: confirmedFixedCosts,
-      unconfirmedFixedCosts: unconfirmedFixedCosts,
     );
   }).toList();
 
