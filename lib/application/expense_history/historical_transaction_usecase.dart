@@ -97,8 +97,12 @@ class HistoricalTransactionUsecaseNotifier
       selectedMonthPeriod,
     );
 
+    // 固定費行は confirmedFixedCosts / unconfirmedFixedCosts として別に取得するため、
+    // ここでは通常支出だけを残す（日次サマリの3本立てを維持する。仕様 §7.1）
+    final normalExpenses = entities.where((e) => e.fixedCostId == null).toList();
+
     // 取得したタイルデータをDateTimeでグループ分けする
-    final grouped = entities.groupListsBy<DateTime>((e) => e.date);
+    final grouped = normalExpenses.groupListsBy<DateTime>((e) => e.date);
 
     // DateTimeで分けられたグループを、上から降順に並び替える
     SplayTreeMap<DateTime, List<ExpenseHistoryTileValue>> sortedGroup =

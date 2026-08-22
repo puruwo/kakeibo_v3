@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/month_value/month_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/annual_balance_chart_value.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
@@ -26,7 +25,6 @@ class AnnualBalanceChartUsecaseNotifier
     extends FamilyAsyncNotifier<AnnualBalanceChartValue, DateScopeEntity> {
   late IncomeRepository _incomeRepository;
   late ExpenseRepository _expenseRepository;
-  late FixedCostExpenseRepository _fixedCostExpenseRepository;
   late MonthPeriodService _monthPeriodService;
   late AggregationRepresentativeMonthService _aRMService;
 
@@ -39,8 +37,6 @@ class AnnualBalanceChartUsecaseNotifier
     _incomeRepository = ref.read(incomeRepositoryProvider);
 
     _expenseRepository = ref.read(expenseRepositoryProvider);
-
-    _fixedCostExpenseRepository = ref.read(fixedCostExpenseRepositoryProvider);
 
     _monthPeriodService = ref.read(monthPeriodServiceProvider);
 
@@ -83,26 +79,14 @@ class AnnualBalanceChartUsecaseNotifier
             accountType: AccountTypeConstants.living,
           );
 
-      // 拠出元=生活収支の一般支出を取得（特別枠充当の支出を除く）
-      final regularExpense = await _expenseRepository
+      // 拠出元=生活収支の支出を取得（特別枠充当の支出を除く）
+      // 固定費実績もexpenseに入るため、後付けの合算はしない（仕様 §7.1）
+      final expense = await _expenseRepository
           .fetchTotalExpenseByPeriodWithBigCategory(
             incomeSourceBigCategory: AccountTypeConstants.living,
             fromDate: pueryPeriod.startDatetime,
             toDate: pueryPeriod.endDatetime,
           );
-
-      // 確定済み固定費支出を取得（生活収支に合算）
-      final fixedCostExpense = await _fixedCostExpenseRepository
-          .fetchTotalConfirmedFixedCostExpenseWithPeriod(period: pueryPeriod);
-
-      // 未確定固定費の推定額を取得（生活収支に合算）
-      final unconfirmedFixedCostExpense = await _fixedCostExpenseRepository
-          .fetchTotalUnconfirmedFixedCostEstimatedWithPeriod(
-            period: pueryPeriod,
-          );
-
-      final expense =
-          regularExpense + fixedCostExpense + unconfirmedFixedCostExpense;
 
       // ステータスを確認
       MonthlyBalanceType monthlyBalanceType;

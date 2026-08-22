@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/application/annual_balance_chart_usecase/annual_balance_chart_usecase.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/annual_balance_chart_value.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
@@ -26,22 +25,16 @@ void main() {
   ///
   /// 金額はいずれも「月度の開始日(yyyyMMdd) → 金額」のMapで指定する。
   /// 指定しなかった月度は0になる。
+  /// [expense] は固定費行を含む支出合計（v10でexpenseの単一集計になった。仕様 §7.1）。
   ProviderContainer createChartContainer({
     DateTime? systemDate,
     Map<String, int> income = const {},
-    Map<String, int> regularExpense = const {},
-    Map<String, int> confirmedFixedCost = const {},
-    Map<String, int> unconfirmedFixedCost = const {},
+    Map<String, int> expense = const {},
   }) {
     final incomeRepository = FakeIncomeRepository()
       ..sumWithAccountTypeAndPeriodResultByPeriodStart.addAll(income);
     final expenseRepository = FakeExpenseRepository()
-      ..totalExpenseByPeriodWithBigCategoryResultByPeriodStart.addAll(
-        regularExpense,
-      );
-    final fixedCostExpenseRepository = FakeFixedCostExpenseRepository()
-      ..confirmedTotalByPeriodStart.addAll(confirmedFixedCost)
-      ..unconfirmedEstimatedTotalByPeriodStart.addAll(unconfirmedFixedCost);
+      ..totalExpenseByPeriodWithBigCategoryResultByPeriodStart.addAll(expense);
 
     return createContainer(
       overrides: [
@@ -51,9 +44,6 @@ void main() {
         ),
         incomeRepositoryProvider.overrideWithValue(incomeRepository),
         expenseRepositoryProvider.overrideWithValue(expenseRepository),
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          fixedCostExpenseRepository,
-        ),
       ],
     );
   }
@@ -100,12 +90,12 @@ void main() {
       expect(result.monthIndex, dateScope.monthIndex);
     });
 
-    test('支出は一般支出＋確定固定費＋未確定固定費の推定額になる', () async {
+    test('支出はexpenseの単一テーブル集計をそのまま使う（後付け合算なし）', () async {
+      // 100000（通常）+ 80000（確定固定費）+ 6000（未確定固定費の予想額）が
+      // すでにSQL側で合算された値として返る
       final container = createChartContainer(
         income: const {aprilKey: 300000},
-        regularExpense: const {aprilKey: 100000},
-        confirmedFixedCost: const {aprilKey: 80000},
-        unconfirmedFixedCost: const {aprilKey: 6000},
+        expense: const {aprilKey: 186000},
       );
 
       final result = await fetchChart(container);
@@ -151,7 +141,7 @@ void main() {
 
     test('収入だけ0ならnoIncome', () async {
       final container = createChartContainer(
-        regularExpense: const {aprilKey: 100000},
+        expense: const {aprilKey: 100000},
       );
 
       final result = await fetchChart(container);
@@ -176,7 +166,7 @@ void main() {
     test('収入が支出を上回ればsurplus', () async {
       final container = createChartContainer(
         income: const {aprilKey: 300000},
-        regularExpense: const {aprilKey: 100000},
+        expense: const {aprilKey: 100000},
       );
 
       final result = await fetchChart(container);
@@ -191,11 +181,11 @@ void main() {
     test('収入が支出以下ならdeficit（収支差0もdeficit）', () async {
       final sameContainer = createChartContainer(
         income: const {aprilKey: 100000},
-        regularExpense: const {aprilKey: 100000},
+        expense: const {aprilKey: 100000},
       );
       final overContainer = createChartContainer(
         income: const {aprilKey: 100000},
-        regularExpense: const {aprilKey: 150000},
+        expense: const {aprilKey: 150000},
       );
 
       final same = await fetchChart(sameContainer);
@@ -295,7 +285,7 @@ void main() {
     test('グリッド間隔の下限は1万（少額でも1万を下回らない）', () async {
       final container = createChartContainer(
         income: const {aprilKey: 30000},
-        regularExpense: const {juneKey: 8000},
+        expense: const {juneKey: 8000},
       );
 
       final result = await fetchChart(container);

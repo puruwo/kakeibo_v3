@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
+import 'package:kakeibo/application/fixed_cost/fixed_cost_occurrence_service.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_data_source.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_layout_calculator.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_predictor.dart';
@@ -29,6 +29,9 @@ class PredictionGraphUsecase {
   );
   late final PredictionGraphPredictor _predictor = ref.read(
     predictionGraphPredictorProvider,
+  );
+  late final FixedCostOccurrenceService _fixedCostOccurrenceService = ref.read(
+    fixedCostOccurrenceServiceProvider,
   );
 
   /// 予測グラフのデータを取得
@@ -95,23 +98,21 @@ class PredictionGraphUsecase {
       month: dateScope.representativeMonth,
     );
 
-    // 今月の固定費支出を取得
-    final fixedCostExpenseTotal = await FixedCostService().getFixedCostTotal(
-      ref,
-      dateScope,
+    // 今月の固定費（実績行＋未生成の支払日ぶん）の合計をツールチップ用に取得する
+    // 予算への加算は廃止した（仕様 §7.3）ので、この値は表示にのみ使う
+    final fixedCostOccurrences = await _fixedCostOccurrenceService
+        .fetchOccurrences(period: dateScope.aggregationMonthPeriod);
+    final fixedCostExpenseTotal = fixedCostOccurrences.fold<int>(
+      0,
+      (sum, occurrence) => sum + occurrence.amount,
     );
-
-    // 予算と固定費を合算
-    final budgetIncludeFixedCost = budget == 0
-        ? 0
-        : budget + fixedCostExpenseTotal;
 
     // 支出なし・予算なし・収入なしの場合はグラフ表示不要
     // isEmpty ではなく実際の合計値で判定する（最終日に0エントリーが追加されるケースに対応）
     final hasActualExpense = cumulativePriceData.any(
       (e) => (e['sum_price_daily'] as int) > 0,
     );
-    if (!hasActualExpense && income == 0 && budgetIncludeFixedCost == 0) {
+    if (!hasActualExpense && income == 0 && budget == 0) {
       return PredictionGraphValue(
         predictionGraphLineType: PredictionGraphLineType.noData,
         fromDate: fromDate,
@@ -151,7 +152,7 @@ class PredictionGraphUsecase {
       latestPrice: predictionResult.lastPrice,
       predictionPrice: predictionResult.predictionPrice,
       income: income,
-      budget: budgetIncludeFixedCost,
+      budget: budget,
     );
     final displayMaxValue = maxValue * 1.2;
 
@@ -164,7 +165,7 @@ class PredictionGraphUsecase {
     // ラベル表示ロジック（重なりを考慮）
     final labelDisplayDecision = _layoutCalc.decideLabelDisplay(
       income: income,
-      budget: budgetIncludeFixedCost,
+      budget: budget,
       maxValue: maxValue,
       predictionGraphLineType: predictionGraphLineType,
     );
@@ -176,7 +177,7 @@ class PredictionGraphUsecase {
     final incomeLabelPosition = shouldShowIncomeLine
         ? _layoutCalc.calculateIncomeLabel(
             income: income,
-            budget: budgetIncludeFixedCost,
+            budget: budget,
             shouldShowBudgetLine: shouldShowBudgetLine,
           )
         : null;
@@ -185,7 +186,7 @@ class PredictionGraphUsecase {
     final budgetLabelPosition = shouldShowBudgetLine
         ? _layoutCalc.calculateBudgetLabel(
             income: income,
-            budget: budgetIncludeFixedCost,
+            budget: budget,
             shouldShowIncomeLine: shouldShowIncomeLine,
           )
         : null;
@@ -212,7 +213,7 @@ class PredictionGraphUsecase {
       expensePoints: predictionResult.expensePoints,
       predictionPoints: predictionResult.predictionPoints,
       income: income,
-      budget: budgetIncludeFixedCost,
+      budget: budget,
       maxValue: maxValue,
       displayMaxValue: displayMaxValue,
       latestPrice: predictionResult.lastPrice,

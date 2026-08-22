@@ -6,28 +6,54 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
 
 void main() {
-  // 固定費カテゴリー（1:住居 / 2:光熱費）
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
+  // 支出大カテゴリー（1:住居 / 2:光熱費）
+  // v10で固定費カテゴリーは支出カテゴリーへ移設され、
+  // 月間固定費ページのグルーピングも支出大カテゴリー基準になった（仕様 §8.3）
+  const expenseBigCategories = [
+    ExpenseBigCategoryEntity(
       id: 1,
-      categoryName: '住居',
       colorCode: 'FFAA00',
+      bigCategoryName: '住居',
       resourcePath: 'assets/images/icon_home.svg',
+      displayOrder: 1,
+      isDisplayed: 1,
     ),
-    FixedCostCategoryEntity(
+    ExpenseBigCategoryEntity(
       id: 2,
-      categoryName: '光熱費',
       colorCode: '00AAFF',
+      bigCategoryName: '光熱費',
       resourcePath: 'assets/images/icon_bolt.svg',
+      displayOrder: 2,
+      isDisplayed: 1,
+    ),
+  ];
+
+  // 支出小カテゴリー（11:家賃→大1 / 12:電気→大2）
+  const expenseSmallCategories = [
+    ExpenseSmallCategoryEntity(
+      id: 11,
+      smallCategoryOrderKey: 1,
+      bigCategoryKey: 1,
+      displayedOrderInBig: 1,
+      smallCategoryName: '家賃',
+      defaultDisplayed: 1,
+    ),
+    ExpenseSmallCategoryEntity(
+      id: 12,
+      smallCategoryOrderKey: 2,
+      bigCategoryKey: 2,
+      displayedOrderInBig: 1,
+      smallCategoryName: '電気',
+      defaultDisplayed: 1,
     ),
   ];
 
@@ -39,9 +65,11 @@ void main() {
       variable: 0,
       price: 80000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 11,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250801',
     ),
     FixedCostEntity(
       id: 30,
@@ -49,39 +77,15 @@ void main() {
       variable: 1,
       estimatedPrice: 6000,
       fixedCostCategoryId: 2,
+      expenseSmallCategoryId: 12,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250805',
     ),
   ];
 
-  // 集計期間6/25〜7/24内の固定費支出（確定80,000＋未確定＝想定6,000）
-  const fixedCostExpenses = [
-    FixedCostExpenseEntity(
-      id: 100,
-      fixedCostId: 10,
-      fixedCostCategoryId: 1,
-      date: '20250701',
-      price: 80000,
-      name: '家賃',
-      isConfirmed: 1,
-    ),
-    FixedCostExpenseEntity(
-      id: 200,
-      fixedCostId: 30,
-      fixedCostCategoryId: 2,
-      date: '20250705',
-      name: '電気代',
-      confirmedCostType: 1,
-      isConfirmed: 0,
-    ),
-  ];
-
-  /// 月間固定費ページ用のFake束を組み立てる
-  ///
-  /// [withRecords] をfalseにすると固定費支出が1件も無い状態（空状態）になる。
-  // 確定操作の書き込み先はexpenseの固定費行（v10）。
-  // 表示元は旧テーブルのままなので（T3で切替）、同じ内容を両方に積む
+  // 集計期間6/25〜7/24内の固定費行（確定80,000＋未確定の予想額6,000）
   const expenseFixedCostRows = [
     ExpenseEntity(
       id: 100,
@@ -90,10 +94,11 @@ void main() {
       paymentCategoryId: 11,
       memo: '家賃',
       fixedCostId: 10,
+      isConfirmed: 1,
     ),
     ExpenseEntity(
       id: 200,
-      date: '20250710',
+      date: '20250705',
       price: null,
       paymentCategoryId: 12,
       memo: '電気代',
@@ -103,15 +108,18 @@ void main() {
     ),
   ];
 
+  /// 月間固定費ページ用のFake束を組み立てる
+  ///
+  /// [withRecords] をfalseにすると固定費行が1件も無い状態（空状態）になる。
   TestFakes buildFakes({bool withRecords = true}) => TestFakes(
     fixedCost: FakeFixedCostRepository(
       initialRecords: withRecords ? fixedCosts : const [],
     ),
-    fixedCostCategory: FakeFixedCostCategoryRepository(
-      initialRecords: withRecords ? fixedCostCategories : const [],
+    expenseBigCategory: FakeExpenseBigCategoryRepository(
+      initialRecords: expenseBigCategories,
     ),
-    fixedCostExpense: FakeFixedCostExpenseRepository(
-      initialRecords: withRecords ? fixedCostExpenses : const [],
+    expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+      initialRecords: expenseSmallCategories,
     ),
     expense: FakeExpenseRepository(
       initialRecords: withRecords ? expenseFixedCostRows : const [],

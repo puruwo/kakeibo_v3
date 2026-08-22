@@ -6,12 +6,6 @@ import 'package:kakeibo/domain/core/category_accounting_entity/category_accounti
 import 'package:kakeibo/domain/db/budget/budget_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
@@ -92,31 +86,20 @@ void main() {
 
   /// カードのProviderをテストするコンテナを組み立てる
   ///
-  /// [normalExpense] は固定費を除いた通常カテゴリーの支出合計。
+  /// [totalExpense] は期間・拠出元で絞った支出合計。
+  /// v10で固定費実績もexpenseに入るため、固定費分もこの値に含まれる（仕様 §7.1）。
   /// [categories] を省略すると、その支出額を持つ「食費」1件だけになる。
   ProviderContainer createCardContainer({
-    int normalExpense = 0,
+    int totalExpense = 0,
     List<BudgetEntity> budgets = const [],
     List<IncomeEntity> incomes = const [],
     List<CategoryAccountingEntity>? categories,
-    List<FixedCostCategoryEntity> fixedCostCategories = const [],
-    List<FixedCostExpenseEntity> fixedCostExpenses = const [],
-    List<FixedCostEntity> fixedCosts = const [],
   }) {
     final fakeExpenseRepository = FakeExpenseRepository()
-      ..totalExpenseByPeriodWithBigCategoryResult = normalExpense;
+      ..totalExpenseByPeriodWithBigCategoryResult = totalExpense;
     return createContainer(
       overrides: [
         expenseRepositoryProvider.overrideWithValue(fakeExpenseRepository),
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          FakeFixedCostExpenseRepository(initialRecords: fixedCostExpenses),
-        ),
-        fixedCostRepositoryProvider.overrideWithValue(
-          FakeFixedCostRepository(initialRecords: fixedCosts),
-        ),
-        fixedCostCategoryRepositoryProvider.overrideWithValue(
-          FakeFixedCostCategoryRepository(initialRecords: fixedCostCategories),
-        ),
         budgetRepositoryProvider.overrideWithValue(
           FakeBudgetRepository(initialRecords: budgets),
         ),
@@ -138,7 +121,7 @@ void main() {
           FakeCategoryAccountingRepository(
             categories:
                 categories ??
-                [buildCategory(id: 1, name: '食費', totalExpense: normalExpense)],
+                [buildCategory(id: 1, name: '食費', totalExpense: totalExpense)],
           ),
         ),
       ],
@@ -159,86 +142,23 @@ void main() {
     );
   }
 
-  // 固定費カテゴリー（1:住居 / 2:光熱費）
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-    FixedCostCategoryEntity(
-      id: 2,
-      categoryName: '光熱費',
-      colorCode: '00AAFF',
-      resourcePath: 'assets/images/icon_utility.svg',
-    ),
-  ];
-
-  // 固定費マスタ（30は想定額6000の変動費）
-  const fixedCosts = [
-    FixedCostEntity(
-      id: 10,
-      name: '家賃',
-      variable: 0,
-      price: 80000,
-      fixedCostCategoryId: 1,
-      intervalNumber: 1,
-      intervalUnit: 1,
-      firstPaymentDate: '20250101',
-    ),
-    FixedCostEntity(
-      id: 30,
-      name: '電気代',
-      variable: 1,
-      estimatedPrice: 6000,
-      fixedCostCategoryId: 2,
-      intervalNumber: 1,
-      intervalUnit: 1,
-      firstPaymentDate: '20250101',
-    ),
-  ];
-
-  // 確定済みの家賃80000（住居）と未確定の電気代（光熱費・推定6000）
-  const confirmedRent = FixedCostExpenseEntity(
-    id: 100,
-    fixedCostId: 10,
-    fixedCostCategoryId: 1,
-    date: '20250701',
-    price: 80000,
-    name: '家賃',
-  );
-  const unconfirmedElectricity = FixedCostExpenseEntity(
-    id: 200,
-    fixedCostId: 30,
-    fixedCostCategoryId: 2,
-    date: '20250705',
-    name: '電気代',
-    confirmedCostType: 1,
-    isConfirmed: 0,
-  );
-
   group('MonthlyAllCategoryTileUsecaseNotifier の予算合計', () {
-    test('通常カテゴリーの予算が0なら固定費があっても予算合計は0', () async {
-      final container = createCardContainer(
-        normalExpense: 50000,
-        fixedCostCategories: fixedCostCategories,
-        fixedCosts: fixedCosts,
-        fixedCostExpenses: const [confirmedRent],
-      );
+    test('カテゴリー予算が0なら予算合計は0', () async {
+      // 支出130000のうち80000は固定費行だが、expenseの単一集計に含まれている
+      final container = createCardContainer(totalExpense: 130000);
 
       final result = await container.read(
         monthlyAllCategoryCardNotifierProvider(dateScope).future,
       );
 
       expect(result.allCategoryTotalBudget, 0);
-      expect(result.allFixedCostExpense, 80000);
       expect(result.allCategoryTotalExpense, 130000);
     });
 
-    test('通常カテゴリーの予算があれば予算合計は通常予算＋固定費', () async {
+    test('予算合計はカテゴリー予算の合計のみで固定費は加算されない', () async {
+      // 固定費の自動加算は廃止（仕様 §7.3）。加算が残っていると 30000+80000 になる
       final container = createCardContainer(
-        normalExpense: 50000,
+        totalExpense: 130000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -247,16 +167,53 @@ void main() {
             price: 30000,
           ),
         ],
-        fixedCostCategories: fixedCostCategories,
-        fixedCosts: fixedCosts,
-        fixedCostExpenses: const [confirmedRent],
       );
 
       final result = await container.read(
         monthlyAllCategoryCardNotifierProvider(dateScope).future,
       );
 
-      expect(result.allCategoryTotalBudget, 110000);
+      expect(result.allCategoryTotalBudget, 30000);
+    });
+
+    test('複数カテゴリーの予算はそのまま合算される', () async {
+      final container = createCardContainer(
+        totalExpense: 130000,
+        categories: [
+          buildCategory(id: 1, name: '食費', totalExpense: 50000),
+          buildCategory(id: 2, name: '住居', totalExpense: 80000),
+        ],
+        budgets: const [
+          BudgetEntity(
+            id: 1,
+            expenseBigCategoryId: 1,
+            month: '202506',
+            price: 30000,
+          ),
+          BudgetEntity(
+            id: 2,
+            expenseBigCategoryId: 2,
+            month: '202506',
+            price: 90000,
+          ),
+        ],
+      );
+
+      final result = await container.read(
+        monthlyAllCategoryCardNotifierProvider(dateScope).future,
+      );
+
+      expect(result.allCategoryTotalBudget, 120000);
+    });
+
+    test('固定費セグメント用のフィールドは常に0（除去はT5）', () async {
+      final container = createCardContainer(totalExpense: 130000);
+
+      final result = await container.read(
+        monthlyAllCategoryCardNotifierProvider(dateScope).future,
+      );
+
+      expect(result.allFixedCostExpense, 0);
     });
   });
 
@@ -273,7 +230,7 @@ void main() {
     });
 
     test('支出だけならhasOnlyExpenseで分母は支出', () async {
-      final container = createCardContainer(normalExpense: 50000);
+      final container = createCardContainer(totalExpense: 50000);
 
       final result = await container.read(
         monthlyAllCategoryCardNotifierProvider(dateScope).future,
@@ -285,7 +242,7 @@ void main() {
 
     test('収入だけで支出が収入以内ならhasOnlyIncomeで分母は収入', () async {
       final container = createCardContainer(
-        normalExpense: 50000,
+        totalExpense: 50000,
         incomes: [buildIncome(id: 1, categoryId: 1, price: 200000)],
       );
 
@@ -299,7 +256,7 @@ void main() {
 
     test('収入だけで支出が収入を超えていればhasIncomeAndOverで分母は支出', () async {
       final container = createCardContainer(
-        normalExpense: 250000,
+        totalExpense: 250000,
         incomes: [buildIncome(id: 1, categoryId: 1, price: 200000)],
       );
 
@@ -313,7 +270,7 @@ void main() {
 
     test('予算だけで支出が予算以内ならhasOnlyBudgetで分母は予算', () async {
       final container = createCardContainer(
-        normalExpense: 20000,
+        totalExpense: 20000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -334,7 +291,7 @@ void main() {
 
     test('予算だけで支出が予算を超えていればhasBudgetAndOverで分母は支出', () async {
       final container = createCardContainer(
-        normalExpense: 40000,
+        totalExpense: 40000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -355,7 +312,7 @@ void main() {
 
     test('予算<収入<支出ならhasBudgetIncomeExpenseOverで分母は支出', () async {
       final container = createCardContainer(
-        normalExpense: 300000,
+        totalExpense: 300000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -380,7 +337,7 @@ void main() {
 
     test('予算<支出<収入ならhasBudgetExpenseIncomeOverで分母は収入', () async {
       final container = createCardContainer(
-        normalExpense: 100000,
+        totalExpense: 100000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -405,7 +362,7 @@ void main() {
 
     test('収入<予算<支出ならhasIncomeBudgetExpenseOverで分母は支出', () async {
       final container = createCardContainer(
-        normalExpense: 150000,
+        totalExpense: 150000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -431,7 +388,7 @@ void main() {
     test('支出が予算も収入も超えていなければhasBudgetAndIncomeNotOverで分母は収入と予算の大きい方', () async {
       // 収入200000 > 予算100000 → 分母は収入
       final incomeIsLargerContainer = createCardContainer(
-        normalExpense: 50000,
+        totalExpense: 50000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -444,7 +401,7 @@ void main() {
       );
       // 予算100000 > 収入50000 → 分母は予算
       final budgetIsLargerContainer = createCardContainer(
-        normalExpense: 20000,
+        totalExpense: 20000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -479,7 +436,7 @@ void main() {
   group('MonthlyAllCategoryTileUsecaseNotifier の高収入スケール調整', () {
     test('予算があり支出が予算を超えていれば分母は支出になる', () async {
       final container = createCardContainer(
-        normalExpense: 200000,
+        totalExpense: 200000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -500,7 +457,7 @@ void main() {
 
     test('予算が無く収入が支出の4倍を超えていれば分母は支出の2倍になる', () async {
       final container = createCardContainer(
-        normalExpense: 50000,
+        totalExpense: 50000,
         incomes: [buildIncome(id: 1, categoryId: 1, price: 400000)],
       );
 
@@ -513,7 +470,7 @@ void main() {
 
     test('予算があり収入が予算の5/3を超えていれば分母は予算の5/3になる', () async {
       final container = createCardContainer(
-        normalExpense: 100000,
+        totalExpense: 100000,
         budgets: const [
           BudgetEntity(
             id: 1,
@@ -534,12 +491,15 @@ void main() {
   });
 
   group('MonthlyAllCategoryTileUsecaseNotifier の内訳', () {
-    test('固定費カテゴリー別の合計が支出内訳の末尾に追加される', () async {
+    test('支出内訳は支出カテゴリーの集計だけで構成される（固定費の後付け追加なし）', () async {
+      // 固定費行も同じ支出カテゴリーに集計されるため、内訳へ別枠で足さない（仕様 §7.1）
       final container = createCardContainer(
-        normalExpense: 50000,
-        fixedCostCategories: fixedCostCategories,
-        fixedCosts: fixedCosts,
-        fixedCostExpenses: const [confirmedRent, unconfirmedElectricity],
+        totalExpense: 136000,
+        categories: [
+          buildCategory(id: 1, name: '食費', totalExpense: 50000),
+          buildCategory(id: 2, name: '住居', totalExpense: 80000),
+          buildCategory(id: 3, name: '光熱費', totalExpense: 6000),
+        ],
       );
 
       final result = await container.read(
@@ -547,18 +507,17 @@ void main() {
       );
 
       expect(result.expenseCategoryNameList, ['食費', '住居', '光熱費']);
-      // 住居は確定80000、光熱費は未確定の推定額6000
       expect(result.expenseCategoryList, [50000, 80000, 6000]);
       expect(
         result.expenseCategoryIconPathList.last,
-        'assets/images/icon_utility.svg',
+        'assets/images/icon_3.svg',
       );
-      expect(result.allFixedCostExpense, 86000);
+      expect(result.allFixedCostExpense, 0);
     });
 
     test('収入内訳はボーナスと0円のカテゴリーを除外する', () async {
       final container = createCardContainer(
-        normalExpense: 50000,
+        totalExpense: 50000,
         incomes: [
           buildIncome(id: 1, categoryId: 1, price: 200000),
           // 会計種別=特別枠（ボーナス）は集計にも内訳にも含めない
@@ -581,7 +540,7 @@ void main() {
 
     test('予算内訳は金額が入っているカテゴリーだけになる', () async {
       final container = createCardContainer(
-        normalExpense: 50000,
+        totalExpense: 50000,
         categories: [
           buildCategory(id: 1, name: '食費', totalExpense: 30000),
           buildCategory(id: 2, name: '日用品', totalExpense: 20000),
@@ -601,27 +560,25 @@ void main() {
             price: 0,
           ),
         ],
-        fixedCostCategories: fixedCostCategories,
-        fixedCosts: fixedCosts,
-        fixedCostExpenses: const [confirmedRent],
       );
 
       final result = await container.read(
         monthlyAllCategoryCardNotifierProvider(dateScope).future,
       );
 
-      // 通常カテゴリーの予算に続けて、固定費カテゴリーの実績が予算として並ぶ
-      expect(result.budgetCategoryNameList, ['食費', '住居']);
-      expect(result.budgetCategoryList, [30000, 80000]);
+      // 固定費カテゴリーのセグメントは追加されない（仕様 §7.3）
+      expect(result.budgetCategoryNameList, ['食費']);
+      expect(result.budgetCategoryList, [30000]);
     });
 
     test('支出と収入の比率リストは分母で割った値になる', () async {
       final container = createCardContainer(
-        normalExpense: 50000,
+        totalExpense: 130000,
+        categories: [
+          buildCategory(id: 1, name: '食費', totalExpense: 50000),
+          buildCategory(id: 2, name: '住居', totalExpense: 80000),
+        ],
         incomes: [buildIncome(id: 1, categoryId: 1, price: 200000)],
-        fixedCostCategories: fixedCostCategories,
-        fixedCosts: fixedCosts,
-        fixedCostExpenses: const [confirmedRent],
       );
 
       final result = await container.read(
@@ -633,7 +590,6 @@ void main() {
       expect(result.expenseCategoryRatioList, [
         closeTo(50000 / 200000, 1e-9),
         closeTo(80000 / 200000, 1e-9),
-        closeTo(0.0, 1e-9),
       ]);
       expect(result.incomeCategoryRatioList, [closeTo(1.0, 1e-9)]);
       expect(result.realSavings, 70000);

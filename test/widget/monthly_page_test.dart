@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
@@ -71,23 +72,50 @@ void main() {
     ],
   };
 
-  // 固定費カテゴリー（1:住居 / 2:光熱費）
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
+  // 支出大カテゴリー（3:住居 / 4:光熱費）
+  // v10で固定費カテゴリーは支出カテゴリーへ移設された（仕様 §3）
+  const expenseBigCategories = [
+    ExpenseBigCategoryEntity(
+      id: 3,
       colorCode: 'FFAA00',
+      bigCategoryName: '住居',
       resourcePath: 'assets/images/icon_home.svg',
+      displayOrder: 3,
+      isDisplayed: 1,
     ),
-    FixedCostCategoryEntity(
-      id: 2,
-      categoryName: '光熱費',
+    ExpenseBigCategoryEntity(
+      id: 4,
       colorCode: '00AAFF',
+      bigCategoryName: '光熱費',
       resourcePath: 'assets/images/icon_bolt.svg',
+      displayOrder: 4,
+      isDisplayed: 1,
+    ),
+  ];
+
+  // 支出小カテゴリー（31:家賃→大3 / 41:電気→大4）
+  const expenseSmallCategories = [
+    ExpenseSmallCategoryEntity(
+      id: 31,
+      smallCategoryOrderKey: 1,
+      bigCategoryKey: 3,
+      displayedOrderInBig: 1,
+      smallCategoryName: '家賃',
+      defaultDisplayed: 1,
+    ),
+    ExpenseSmallCategoryEntity(
+      id: 41,
+      smallCategoryOrderKey: 2,
+      bigCategoryKey: 4,
+      displayedOrderInBig: 1,
+      smallCategoryName: '電気',
+      defaultDisplayed: 1,
     ),
   ];
 
   // 固定費マスタ（30は想定額6,000円の変動費）
+  // 次回支払日は集計期間（6/25〜7/24）より後にして、
+  // 予測グラフの未生成分として周期展開されないようにする
   const fixedCosts = [
     FixedCostEntity(
       id: 10,
@@ -95,9 +123,11 @@ void main() {
       variable: 0,
       price: 80000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 31,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250801',
     ),
     FixedCostEntity(
       id: 30,
@@ -105,31 +135,34 @@ void main() {
       variable: 1,
       estimatedPrice: 6000,
       fixedCostCategoryId: 2,
+      expenseSmallCategoryId: 41,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250805',
     ),
   ];
 
-  // 集計期間6/25〜7/24内の固定費支出（確定80,000＋未確定＝推定6,000）
-  const fixedCostExpenses = [
-    FixedCostExpenseEntity(
+  // 集計期間6/25〜7/24内の固定費行（確定80,000＋未確定の予想額6,000）
+  const fixedCostExpenseRows = [
+    ExpenseEntity(
       id: 100,
-      fixedCostId: 10,
-      fixedCostCategoryId: 1,
       date: '20250701',
       price: 80000,
-      name: '家賃',
+      paymentCategoryId: 31,
+      memo: '家賃',
+      fixedCostId: 10,
       isConfirmed: 1,
     ),
-    FixedCostExpenseEntity(
+    ExpenseEntity(
       id: 200,
-      fixedCostId: 30,
-      fixedCostCategoryId: 2,
       date: '20250705',
-      name: '電気代',
-      confirmedCostType: 1,
+      price: null,
+      paymentCategoryId: 41,
+      memo: '電気代',
+      fixedCostId: 30,
       isConfirmed: 0,
+      estimatedPrice: 6000,
     ),
   ];
 
@@ -154,11 +187,11 @@ void main() {
 
   /// 月間分析タブ用のFake束を組み立てる
   ///
-  /// [normalExpense] は固定費を除いた一般支出の合計。
+  /// [totalExpense] は固定費行を含む支出合計（v10でexpenseの単一集計。仕様 §7.1）。
   /// [budgets] は代表月202506の予算（カテゴリー別）。
   /// [income] は給与カテゴリーの月次収入。
   TestFakes buildFakes({
-    int normalExpense = 42000,
+    int totalExpense = 128000,
     List<BudgetEntity> budgets = const [
       BudgetEntity(
         id: 1,
@@ -178,11 +211,13 @@ void main() {
     List<CategoryAccountingEntity> categories = categoryAccountings,
     Map<int, List<SmallCategoryTileEntity>> tiles = smallCategoryTiles,
   }) {
-    final expenseRepository = FakeExpenseRepository()
-      ..totalExpenseByPeriodWithBigCategoryResult = normalExpense
+    final expenseRepository = FakeExpenseRepository(
+      initialRecords: withFixedCost ? fixedCostExpenseRows : const [],
+    )
+      ..totalExpenseByPeriodWithBigCategoryResult = totalExpense
       // 予測グラフの折れ線は日別合計を積み上げる（支出0のシナリオでは積まない）
       ..dailyExpenseTotalByDate.addAll(
-        normalExpense == 0
+        totalExpense == 0
             ? const <DateTime, int>{}
             : {DateTime(2025, 7, 1): 20000, DateTime(2025, 7, 5): 22000},
       );
@@ -212,11 +247,11 @@ void main() {
       fixedCost: FakeFixedCostRepository(
         initialRecords: withFixedCost ? fixedCosts : const [],
       ),
-      fixedCostCategory: FakeFixedCostCategoryRepository(
-        initialRecords: withFixedCost ? fixedCostCategories : const [],
+      expenseBigCategory: FakeExpenseBigCategoryRepository(
+        initialRecords: expenseBigCategories,
       ),
-      fixedCostExpense: FakeFixedCostExpenseRepository(
-        initialRecords: withFixedCost ? fixedCostExpenses : const [],
+      expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+        initialRecords: expenseSmallCategories,
       ),
     );
   }
@@ -239,16 +274,17 @@ void main() {
   });
 
   testWidgets('今月の収支カード：予算内なら収支がプラス表示になる', (tester) async {
-    // 一般支出42,000＋固定費86,000＝128,000／予算50,000+10,000＋固定費86,000＝146,000
-    // 収入300,000 → 支出は予算・収入どちらも超えない
+    // 支出128,000（一般42,000＋固定費86,000をexpenseで一括集計）
+    // 予算50,000+10,000＝60,000（固定費の自動加算は廃止。仕様 §7.3）
+    // 収入300,000 → 支出は予算を超えるが収入は超えない
     await pumpApp(tester, home: const MonthlyPage(), fakes: buildFakes());
     await pumpTimes(tester);
 
     expect(sectionTitle('今月の収支'), findsOneWidget);
     expect(find.text('¥ 128,000'), findsOneWidget); // 総支出
-    // 予算はRichText（「/予算 」＋金額）。50,000+10,000＋固定費86,000
+    // 予算はRichText（「/予算 」＋金額）。カテゴリー予算の合計のみ
     expect(
-      find.textContaining('/予算 ¥ 146,000', findRichText: true),
+      find.textContaining('/予算 ¥ 60,000', findRichText: true),
       findsOneWidget,
     );
     expect(find.text('¥ 300,000'), findsOneWidget); // 総収入
@@ -257,17 +293,17 @@ void main() {
   });
 
   testWidgets('今月の収支カード：予算・収入を超えると収支がマイナス表示になる', (tester) async {
-    // 一般支出300,000＋固定費86,000＝386,000 > 収入300,000 > 予算146,000
+    // 支出386,000 > 収入300,000 > 予算60,000
     await pumpApp(
       tester,
       home: const MonthlyPage(),
-      fakes: buildFakes(normalExpense: 300000),
+      fakes: buildFakes(totalExpense: 386000),
     );
     await pumpTimes(tester);
 
     expect(find.text('¥ 386,000'), findsOneWidget); // 総支出
     expect(
-      find.textContaining('/予算 ¥ 146,000', findRichText: true),
+      find.textContaining('/予算 ¥ 60,000', findRichText: true),
       findsOneWidget,
     );
     // 収支＝300,000－386,000のマイナス表示
@@ -387,7 +423,7 @@ void main() {
       tester,
       home: const MonthlyPage(),
       fakes: buildFakes(
-        normalExpense: 0,
+        totalExpense: 0,
         budgets: const [],
         income: 0,
         withFixedCost: false,

@@ -32,7 +32,7 @@ class ImplementsCategoryAccountingRepository
                     FROM (
                       SELECT 
                         y.${SqfExpenseSmallCategory.bigCategoryKey},
-                        COALESCE(SUM(z.${SqfExpense.price}),0) as price_sum 
+                        COALESCE(SUM(${SqfExpense.effectivePriceExprOf('z')}),0) as price_sum 
                       FROM ${SqfExpense.tableName} z
               	  		INNER JOIN ${SqfExpenseSmallCategory.tableName} y
                       ON z.${SqfExpense.expenseSmallCategoryId} = y.${SqfExpenseSmallCategory.id}
@@ -88,7 +88,7 @@ class ImplementsCategoryAccountingRepository
                     FROM (
                       SELECT
                         y.${SqfExpenseSmallCategory.bigCategoryKey},
-                        COALESCE(SUM(z.${SqfExpense.price}),0) as price_sum
+                        COALESCE(SUM(${SqfExpense.effectivePriceExprOf('z')}),0) as price_sum
                       FROM ${SqfExpense.tableName} z
                    INNER JOIN ${SqfExpenseSmallCategory.tableName} y
                       ON z.${SqfExpense.expenseSmallCategoryId} = y.${SqfExpenseSmallCategory.id}

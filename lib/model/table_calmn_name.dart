@@ -13,6 +13,16 @@ class SqfExpense {
   static const isConfirmed = 'is_confirmed';
   // 予想額。変動固定費の実績生成時に設定し、確定後も保持する。v10で追加
   static const estimatedPrice = 'estimated_price';
+
+  /// 集計で使う実効金額のSQL共通式（仕様 §7.1）
+  ///
+  /// 未確定の固定費行は実額(price)を持たないため予想額(estimated_price)で代替する。
+  /// 支出の集計SQLは必ずこの式を使い、COALESCEを各所に直書きしない。
+  static const effectivePriceExpr = 'COALESCE($price, $estimatedPrice)';
+
+  /// テーブル別名つきの実効金額式（JOINを含むSQL用）
+  static String effectivePriceExprOf(String alias) =>
+      'COALESCE($alias.$price, $alias.$estimatedPrice)';
 }
 
 class SqfIncome {

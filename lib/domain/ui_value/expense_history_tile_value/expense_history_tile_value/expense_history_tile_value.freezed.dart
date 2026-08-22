@@ -26,7 +26,12 @@ mixin _$ExpenseHistoryTileValue {
   String get bigCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get iconPath => throw _privateConstructorUsedError;
-  int get incomeSourceBigCategory => throw _privateConstructorUsedError;
+  int get incomeSourceBigCategory =>
+      throw _privateConstructorUsedError; // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  // 明細行に「固定費」チップを出すかの判定に使う（仕様 §7.2）
+  int? get fixedCostId =>
+      throw _privateConstructorUsedError; // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  int get isConfirmed => throw _privateConstructorUsedError;
 
   /// Create a copy of ExpenseHistoryTileValue
   /// with the given fields replaced by the non-null parameter values.
@@ -53,6 +58,8 @@ abstract class $ExpenseHistoryTileValueCopyWith<$Res> {
     String colorCode,
     String iconPath,
     int incomeSourceBigCategory,
+    int? fixedCostId,
+    int isConfirmed,
   });
 }
 
@@ -84,6 +91,8 @@ class _$ExpenseHistoryTileValueCopyWithImpl<
     Object? colorCode = null,
     Object? iconPath = null,
     Object? incomeSourceBigCategory = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
   }) {
     return _then(
       _value.copyWith(
@@ -127,6 +136,14 @@ class _$ExpenseHistoryTileValueCopyWithImpl<
                 ? _value.incomeSourceBigCategory
                 : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
                       as int,
+            fixedCostId: freezed == fixedCostId
+                ? _value.fixedCostId
+                : fixedCostId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            isConfirmed: null == isConfirmed
+                ? _value.isConfirmed
+                : isConfirmed // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -153,6 +170,8 @@ abstract class _$$ExpenseHistoryTileValueImplCopyWith<$Res>
     String colorCode,
     String iconPath,
     int incomeSourceBigCategory,
+    int? fixedCostId,
+    int isConfirmed,
   });
 }
 
@@ -184,6 +203,8 @@ class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
     Object? colorCode = null,
     Object? iconPath = null,
     Object? incomeSourceBigCategory = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
   }) {
     return _then(
       _$ExpenseHistoryTileValueImpl(
@@ -227,6 +248,14 @@ class __$$ExpenseHistoryTileValueImplCopyWithImpl<$Res>
             ? _value.incomeSourceBigCategory
             : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
                   as int,
+        fixedCostId: freezed == fixedCostId
+            ? _value.fixedCostId
+            : fixedCostId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        isConfirmed: null == isConfirmed
+            ? _value.isConfirmed
+            : isConfirmed // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -246,6 +275,8 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
     required this.colorCode,
     required this.iconPath,
     required this.incomeSourceBigCategory,
+    this.fixedCostId,
+    this.isConfirmed = 1,
   });
 
   @override
@@ -269,10 +300,18 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
   final String iconPath;
   @override
   final int incomeSourceBigCategory;
+  // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  // 明細行に「固定費」チップを出すかの判定に使う（仕様 §7.2）
+  @override
+  final int? fixedCostId;
+  // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  @override
+  @JsonKey()
+  final int isConfirmed;
 
   @override
   String toString() {
-    return 'ExpenseHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath, incomeSourceBigCategory: $incomeSourceBigCategory)';
+    return 'ExpenseHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath, incomeSourceBigCategory: $incomeSourceBigCategory, fixedCostId: $fixedCostId, isConfirmed: $isConfirmed)';
   }
 
   @override
@@ -298,7 +337,11 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
                   other.incomeSourceBigCategory,
                   incomeSourceBigCategory,
                 ) ||
-                other.incomeSourceBigCategory == incomeSourceBigCategory));
+                other.incomeSourceBigCategory == incomeSourceBigCategory) &&
+            (identical(other.fixedCostId, fixedCostId) ||
+                other.fixedCostId == fixedCostId) &&
+            (identical(other.isConfirmed, isConfirmed) ||
+                other.isConfirmed == isConfirmed));
   }
 
   @override
@@ -314,6 +357,8 @@ class _$ExpenseHistoryTileValueImpl implements _ExpenseHistoryTileValue {
     colorCode,
     iconPath,
     incomeSourceBigCategory,
+    fixedCostId,
+    isConfirmed,
   );
 
   /// Create a copy of ExpenseHistoryTileValue
@@ -340,6 +385,8 @@ abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
     required final String colorCode,
     required final String iconPath,
     required final int incomeSourceBigCategory,
+    final int? fixedCostId,
+    final int isConfirmed,
   }) = _$ExpenseHistoryTileValueImpl;
 
   @override
@@ -361,7 +408,12 @@ abstract class _ExpenseHistoryTileValue implements ExpenseHistoryTileValue {
   @override
   String get iconPath;
   @override
-  int get incomeSourceBigCategory;
+  int get incomeSourceBigCategory; // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  // 明細行に「固定費」チップを出すかの判定に使う（仕様 §7.2）
+  @override
+  int? get fixedCostId; // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  @override
+  int get isConfirmed;
 
   /// Create a copy of ExpenseHistoryTileValue
   /// with the given fields replaced by the non-null parameter values.

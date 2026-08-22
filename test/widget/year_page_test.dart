@@ -5,7 +5,8 @@
 // （UT）で担保済みなので、ここでは「Fakeに入れた値が画面に出る」までを確認する。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
@@ -30,14 +31,13 @@ void main() {
 
   /// 年間収支・ボーナス・生活収支チャートに値が入った状態のFake束を作る
   ///
-  /// [income] 年度の一般収入合計 / [expense] 年度の一般支出合計
+  /// [income] 年度の収入合計 / [expense] 年度の支出合計
+  /// （v10で固定費実績もexpenseに入るため、支出はこの1つの値に含まれる）
   /// [bonusIncome] [bonusExpense] 年度のボーナス収入・支出
   /// [fixedCostRecords] 固定費マスタ（有効件数の表示に使う）
   TestFakes buildFakes({
     int income = 3000000,
     int expense = 1000000,
-    int confirmedFixedCost = 0,
-    int unconfirmedFixedCost = 0,
     int bonusIncome = 400000,
     int bonusExpense = 150000,
     Map<String, int> monthlyIncome = const {},
@@ -57,23 +57,32 @@ void main() {
       ..totalExpenseByPeriodWithBigCategoryResultByPeriodStart.addAll(
         monthlyExpense,
       );
-    final fixedCostExpenseRepository = FakeFixedCostExpenseRepository()
-      ..confirmedTotalByPeriodStart[yearKey] = confirmedFixedCost
-      ..unconfirmedEstimatedTotalByPeriodStart[yearKey] = unconfirmedFixedCost;
-
     return TestFakes(
       income: incomeRepository,
       expense: expenseRepository,
-      fixedCostExpense: fixedCostExpenseRepository,
       fixedCost: FakeFixedCostRepository(initialRecords: fixedCostRecords),
-      // 固定費一覧はカテゴリーでグループ化するのでマスタが要る
-      fixedCostCategory: FakeFixedCostCategoryRepository(
+      // 固定費一覧は支出大カテゴリーでグループ化するのでマスタが要る（仕様 §8.4）
+      expenseBigCategory: FakeExpenseBigCategoryRepository(
         initialRecords: const [
-          FixedCostCategoryEntity(
+          ExpenseBigCategoryEntity(
             id: 1,
-            categoryName: '住居',
             colorCode: 'FFAA00',
+            bigCategoryName: '住居',
             resourcePath: 'assets/images/icon_home.svg',
+            displayOrder: 1,
+            isDisplayed: 1,
+          ),
+        ],
+      ),
+      expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+        initialRecords: const [
+          ExpenseSmallCategoryEntity(
+            id: 11,
+            smallCategoryOrderKey: 1,
+            bigCategoryKey: 1,
+            displayedOrderInBig: 1,
+            smallCategoryName: '家賃',
+            defaultDisplayed: 1,
           ),
         ],
       ),
@@ -87,6 +96,7 @@ void main() {
     variable: 0,
     price: 80000,
     fixedCostCategoryId: 1,
+    expenseSmallCategoryId: 11,
     intervalNumber: 1,
     intervalUnit: 1,
     firstPaymentDate: '20250625',
@@ -108,12 +118,9 @@ void main() {
     await pumpApp(
       tester,
       home: const YearPage(),
-      fakes: buildFakes(
-        income: 3000000,
-        expense: 1000000,
-        confirmedFixedCost: 900000,
-        unconfirmedFixedCost: 72000,
-      ),
+      // 支出1,972,000＝一般1,000,000＋確定固定費900,000＋未確定固定費72,000
+      // （v10ではSQL側で合算済みの1つの値として返る）
+      fakes: buildFakes(income: 3000000, expense: 1972000),
     );
     await pumpTimes(tester);
 
@@ -121,7 +128,6 @@ void main() {
     // 総収入・総支出はText.richで組まれている（末尾に「>」アイコンを埋めている）
     expect(find.textContaining('総収入', findRichText: true), findsOneWidget);
     expect(find.textContaining('総支出', findRichText: true), findsOneWidget);
-    // 支出＝一般支出1,000,000＋確定固定費900,000＋未確定固定費72,000
     expect(find.text('¥ 1,972,000'), findsOneWidget);
     expect(find.text('¥ 3,000,000'), findsOneWidget);
     // 残金＝収入3,000,000－支出1,972,000

@@ -807,6 +807,24 @@ class FakeExpenseRepository implements ExpenseRepository {
     return records.any((e) => e.fixedCostId == fixedCostId && e.date == date);
   }
 
+  /// 期間内の固定費行（確定・未確定を問わない）
+  ///
+  /// 本実装のSQLは `fixed_cost_id IS NOT NULL` で絞り、
+  /// ORDER BY date ASC, _id ASC で返す。Fakeも同じ条件・同じ順序にする。
+  @override
+  Future<List<ExpenseEntity>> fetchFixedCostExpenseByPeriod({
+    required PeriodValue period,
+  }) async {
+    final matched = records
+        .where((e) => _isDateInPeriod(e.date, period) && e.fixedCostId != null)
+        .toList();
+    matched.sort((a, b) {
+      final byDate = a.date.compareTo(b.date);
+      return byDate != 0 ? byDate : a.id.compareTo(b.id);
+    });
+    return matched;
+  }
+
   @override
   Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostExpenseByPeriod({
     required PeriodValue period,

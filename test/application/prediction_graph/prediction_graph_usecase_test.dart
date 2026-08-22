@@ -4,14 +4,12 @@ import 'package:kakeibo/application/prediction_graph/prediction_graph_usecase.da
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/budget/budget_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
 
@@ -23,6 +21,8 @@ void main() {
   const currentPeriodKey = '20250625';
 
   // 固定費マスタ（10:金額確定80,000円）
+  // 次回支払日は集計期間（6/25〜7/24）より後にして、未生成分として
+  // 周期展開されないようにする（実績行として与えたぶんだけを見る）
   const fixedCosts = [
     FixedCostEntity(
       id: 10,
@@ -30,20 +30,23 @@ void main() {
       variable: 0,
       price: 80000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 11,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250801',
     ),
   ];
 
-  // 7/1に支払われる確定済みの固定費（80,000円）
-  const confirmedRent = FixedCostExpenseEntity(
+  // 7/1に支払われる確定済みの固定費行（80,000円）
+  const confirmedRent = ExpenseEntity(
     id: 100,
-    fixedCostId: 10,
-    fixedCostCategoryId: 1,
     date: '20250701',
     price: 80000,
-    name: '家賃',
+    paymentCategoryId: 11,
+    memo: '家賃',
+    fixedCostId: 10,
+    isConfirmed: 1,
   );
 
   late FakeExpenseRepository fakeExpenseRepository;
@@ -57,9 +60,10 @@ void main() {
     Map<String, int> income = const {},
     List<BudgetEntity> budgets = const [],
     Map<DateTime, int> dailyExpenseTotals = const {},
-    List<FixedCostExpenseEntity> fixedCostExpenses = const [],
+    List<ExpenseEntity> expenses = const [],
   }) {
     fakeExpenseRepository = FakeExpenseRepository(
+      initialRecords: expenses,
       dailyExpenseTotalByDate: dailyExpenseTotals,
     );
     return createContainer(
@@ -73,9 +77,6 @@ void main() {
           FakeBudgetRepository(initialRecords: budgets),
         ),
         expenseRepositoryProvider.overrideWithValue(fakeExpenseRepository),
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          FakeFixedCostExpenseRepository(initialRecords: fixedCostExpenses),
-        ),
         fixedCostRepositoryProvider.overrideWithValue(
           FakeFixedCostRepository(initialRecords: fixedCosts),
         ),
@@ -85,9 +86,6 @@ void main() {
         ),
         expensebigCategoryRepositoryProvider.overrideWithValue(
           FakeExpenseBigCategoryRepository(),
-        ),
-        fixedCostCategoryRepositoryProvider.overrideWithValue(
-          FakeFixedCostCategoryRepository(),
         ),
       ],
     );
@@ -142,12 +140,12 @@ void main() {
   });
 
   group('PredictionGraphUsecase.fetchPredictionGraphData の予算線', () {
-    test('予算が0なら固定費を足さず0のままにする', () async {
+    test('予算が0なら予算線は0のまま', () async {
       final container = createUsecaseContainer(
         systemDate: DateTime(2025, 7, 6),
         // 収入があるためnoDataにはならない
         income: const {currentPeriodKey: 300000},
-        fixedCostExpenses: const [confirmedRent],
+        expenses: const [confirmedRent],
       );
       final usecase = container.read(predictionGraphUsecaseProvider);
 
@@ -158,7 +156,7 @@ void main() {
       expect(result.shouldShowBudgetLine, isFalse);
     });
 
-    test('予算があれば予算＋固定費の合算が予算線の値になる', () async {
+    test('予算線はカテゴリー予算の合計のみで固定費は加算されない', () async {
       final container = createUsecaseContainer(
         systemDate: DateTime(2025, 7, 6),
         income: const {currentPeriodKey: 300000},
@@ -170,14 +168,15 @@ void main() {
             price: 50000,
           ),
         ],
-        fixedCostExpenses: const [confirmedRent],
+        expenses: const [confirmedRent],
       );
       final usecase = container.read(predictionGraphUsecaseProvider);
 
       final result = await usecase.fetchPredictionGraphData(buildDateScope());
 
-      // 予算50,000円 ＋ 固定費80,000円
-      expect(result.budget, 130000);
+      // 固定費の自動加算は廃止（仕様 §7.3）。予算は50,000円のまま
+      expect(result.budget, 50000);
+      // 固定費合計はツールチップ表示用に保持する
       expect(result.totalFixedCostExpense, 80000);
       expect(result.shouldShowBudgetLine, isTrue);
     });

@@ -1,10 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
-import 'package:kakeibo/domain/core/date_scope_entity/date_scope_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 
@@ -68,29 +65,5 @@ class FixedCostService {
     await ref
         .read(expenseRepositoryProvider)
         .insertFixedCostExpense(expenseEntity);
-  }
-
-  /// 確定した固定費の合計と未確定の固定費の合計値をまとめて返却する
-  Future<int> getFixedCostTotal(Ref ref, DateScopeEntity dateScope) async {
-    // 支払いがある固定費の合計を取得
-    // 支払額未定の固定費は推定額を使用する
-    final confirmedFixedCostExpenseTotal = await ref
-        .read(fixedCostExpenseRepositoryProvider)
-        .fetchTotalConfirmedFixedCostExpenseWithPeriod(
-            period: dateScope.aggregationMonthPeriod);
-    final unconfirmedFixedCostList = await ref
-        .read(fixedCostExpenseRepositoryProvider)
-        .fetchUnconfirmedFixedCostExpenseWithPeriod(
-            period: dateScope.aggregationMonthPeriod);
-    final unconfirmedFixedCostEstimatedTotal = await Future.wait(
-        unconfirmedFixedCostList.map((element) async {
-      final estimatePrice = await ref
-          .read(fixedCostRepositoryProvider)
-          .fetchEstimatedPriceById(id: element.fixedCostId);
-      return estimatePrice;
-    })).then((values) => values.fold<int>(
-        0, (previousValue, estimatePrice) => previousValue + estimatePrice));
-
-    return confirmedFixedCostExpenseTotal + unconfirmedFixedCostEstimatedTotal;
   }
 }

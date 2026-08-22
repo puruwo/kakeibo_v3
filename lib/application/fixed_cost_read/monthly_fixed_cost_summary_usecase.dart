@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
+import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_tile_service.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_sammary_value.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // 月の固定費のサマリー情報を取得する
+// データ源は expense の固定費行。確定分はprice、未確定分はestimated_price（仕様 §7.1）
 
 final monthlyFixedCostSummaryNotifierProvider = AsyncNotifierProvider.family<
     MonthlyFixedCostSummaryNotifier, MonthlyFixedCostSummaryValue, PeriodValue>(
@@ -14,35 +14,25 @@ final monthlyFixedCostSummaryNotifierProvider = AsyncNotifierProvider.family<
 
 class MonthlyFixedCostSummaryNotifier
     extends FamilyAsyncNotifier<MonthlyFixedCostSummaryValue, PeriodValue> {
-  late FixedCostExpenseRepository _fixedCostExpenseRepo;
-  late FixedCostRepository _fixedCostRepo;
-
   @override
   Future<MonthlyFixedCostSummaryValue> build(
       PeriodValue selectedMonthPeriod) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
 
-    _fixedCostExpenseRepo = ref.read(fixedCostExpenseRepositoryProvider);
-    _fixedCostRepo = ref.read(fixedCostRepositoryProvider);
-
-    // fixed_cost_expenseから固定費の支出を取得する
-    final fixedCostExpenseList = await _fixedCostExpenseRepo.fetchByPeriod(
-      period: selectedMonthPeriod,
-    );
+    final entries = await ref
+        .read(monthlyFixedCostTileServiceProvider)
+        .fetchEntries(period: selectedMonthPeriod);
 
     // 確定分と未確定分を集計
     int fixedCostSum = 0;
     int unconfirmedFixedCostSum = 0;
 
-    for (var fixedCostExpense in fixedCostExpenseList) {
-      if (fixedCostExpense.isConfirmed == 1) {
-        // 確定済み
-        fixedCostSum += fixedCostExpense.price;
+    for (var entry in entries) {
+      if (entry.isConfirmed) {
+        fixedCostSum += entry.amount;
       } else {
-        // 未確定
-        unconfirmedFixedCostSum += await _fixedCostRepo.fetchEstimatedPriceById(
-            id: fixedCostExpense.fixedCostId);
+        unconfirmedFixedCostSum += entry.amount;
       }
     }
 
