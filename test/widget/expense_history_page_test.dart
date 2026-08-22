@@ -289,7 +289,8 @@ void main() {
     await pumpTimes(tester);
 
     // 未確定固定費ID=200が7,200円で確定される
-    expect(fakes.fixedCostExpense.confirmedExpenses, [(id: 200, price: 7200)]);
+    // 確定の書き込み先はexpenseの固定費行（v10）
+    expect(fakes.expense.confirmedExpenses, [(id: 200, price: 7200)]);
     expect(find.text('未確定固定費の金額を入力'), findsNothing);
   });
 

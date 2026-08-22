@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
@@ -10,12 +10,16 @@ final fixedCostExpenseUsecaseProvider = Provider<FixedCostExpenseUsecase>(
   FixedCostExpenseUsecase.new,
 );
 
+/// 固定費の実績行（expenseのうち fixed_cost_id を持つ行）を操作するユースケース
+///
+/// v10で実績の格納先が fixed_cost_expense から expense に変わったため、
+/// 確定・編集・削除はいずれも expense を対象にする（仕様 §6.4）。
 class FixedCostExpenseUsecase {
   FixedCostExpenseUsecase(this._ref);
   final Ref _ref;
 
-  FixedCostExpenseRepository get _fixedCostExpenseRepositoryProvider =>
-      _ref.read(fixedCostExpenseRepositoryProvider);
+  ExpenseRepository get _expenseRepositoryProvider =>
+      _ref.read(expenseRepositoryProvider);
 
   FixedCostUsecase get _fixedCostUsecaseRepositoryProvider =>
       _ref.read(fixedCostUsecaseProvider);
@@ -24,7 +28,9 @@ class FixedCostExpenseUsecase {
   UpdateDBCountNotifier get updateDBCountNotifier =>
       _ref.read(updateDBCountNotifierProvider.notifier);
 
-  /// 未確定の固定費支出を確定させる
+  /// 未確定の固定費実績を確定させる
+  ///
+  /// [tileValue] の id は実績行のid（T3で読み取り元がexpenseに切り替わる）。
   Future<void> confirmExpense({
     required MonthlyUnconfirmedFixedCostTileValue tileValue,
     required int confirmedPrice,
@@ -37,8 +43,8 @@ class FixedCostExpenseUsecase {
       throw const AppException('金額の入力値が大き過ぎます');
     }
 
-    // 未確定の固定費支出を確定させる
-    await _fixedCostExpenseRepositoryProvider.confirmExpense(
+    // 未確定の実績行を確定させる（price設定＋is_confirmed=1）
+    await _expenseRepositoryProvider.confirmFixedCostExpense(
       id: tileValue.id,
       price: confirmedPrice,
     );
@@ -53,26 +59,52 @@ class FixedCostExpenseUsecase {
     updateDBCountNotifier.incrementState();
   }
 
-  /// 固定費支出を削除する
+  /// 固定費の実績行を1行削除する
+  ///
+  /// 確定済みの行を削除すると推定額の平均の根拠が変わるため、
+  /// 削除後に推定額を再計算する（仕様 §6.5 の再計算トリガー）。
   Future<void> delete({required int id}) async {
-    await _fixedCostExpenseRepositoryProvider.delete(id);
+    // 再計算の要否判定に必要なので、削除前に対象行を読む
+    final target = await _expenseRepositoryProvider.fetchById(id: id);
+
+    _expenseRepositoryProvider.delete(id);
+
+    final fixedCostId = target?.fixedCostId;
+    if (fixedCostId != null && target!.isConfirmed == 1) {
+      await _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
+        fixedCostId: fixedCostId,
+      );
+    }
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
   }
 
-  /// 固定費支出を編集する
-  Future<void> edit({required FixedCostExpenseEntity entity}) async {
+  /// 固定費の実績行を編集する
+  ///
+  /// 未確定行への金額入力は常に確定操作として扱う（price設定＋is_confirmed=1）。
+  /// 未確定のままの手動金額変更は提供しない（仕様 §6.4）。
+  Future<void> edit({required ExpenseEntity entity}) async {
+    final price = entity.price;
+
     // エラーチェック
-    if (entity.price <= 0) {
+    if (price == null || price <= 0) {
       throw const AppException('0円以上で入力してください');
     }
-    if (entity.price >= 1888888) {
+    if (price >= 1888888) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
 
-    // 固定費支出を更新する
-    await _fixedCostExpenseRepositoryProvider.update(entity);
+    // 金額入力＝確定操作。予想額 estimatedPrice は消さずに残す（仕様 §3）
+    await _expenseRepositoryProvider.update(entity.copyWith(isConfirmed: 1));
+
+    // 確定済み行の金額が変わると平均の根拠が変わるため、推定額を再計算する
+    final fixedCostId = entity.fixedCostId;
+    if (fixedCostId != null) {
+      await _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
+        fixedCostId: fixedCostId,
+      );
+    }
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

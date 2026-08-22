@@ -144,12 +144,17 @@ Future<void> waitUntilRowCount(String table, int expected) async {
 ///
 /// [date] は 'yyyyMMdd' 形式の文字列（DB上の日付表現）。
 /// [incomeSourceBigCategory] は拠出元大カテゴリー（1=給与 / 2=ボーナス）。
+/// [fixedCostId] を渡すと固定費の実績行になる（NULL＝通常支出。v10で追加）。
+/// [price] は未確定の固定費行では null（実額なし）にできる。
 Future<int> insertExpenseRow({
   required String date,
-  required int price,
+  required int? price,
   int smallCategoryId = 1,
   String memo = '',
   int incomeSourceBigCategory = 1,
+  int? fixedCostId,
+  int isConfirmed = 1,
+  int? estimatedPrice,
   int? id,
 }) {
   return DatabaseHelper.instance.insert(SqfExpense.tableName, {
@@ -159,6 +164,9 @@ Future<int> insertExpenseRow({
     SqfExpense.price: price,
     SqfExpense.memo: memo,
     SqfExpense.incomeSourceBigCategory: incomeSourceBigCategory,
+    SqfExpense.fixedCostId: fixedCostId,
+    SqfExpense.isConfirmed: isConfirmed,
+    SqfExpense.estimatedPrice: estimatedPrice,
   });
 }
 
@@ -259,6 +267,7 @@ Future<int> insertBatchHistoryRow({
 Future<int> insertFixedCostRow({
   required String name,
   required int fixedCostCategoryId,
+  int expenseSmallCategoryId = 1,
   int variable = 0,
   int? price,
   int? estimatedPrice,
@@ -277,6 +286,7 @@ Future<int> insertFixedCostRow({
     SqfFixedCost.price: price,
     SqfFixedCost.estimatedPrice: estimatedPrice,
     SqfFixedCost.fixedCostCategoryId: fixedCostCategoryId,
+    SqfFixedCost.expenseSmallCategoryId: expenseSmallCategoryId,
     SqfFixedCost.intervalNumber: intervalNumber,
     SqfFixedCost.intervalUnit: intervalUnit,
     SqfFixedCost.firstPaymentDate: firstPaymentDate,

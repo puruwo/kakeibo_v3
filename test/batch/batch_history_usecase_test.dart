@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
 import 'package:kakeibo/domain/db/batch_history/batch_history_repository.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
@@ -14,6 +15,7 @@ void main() {
   // システム日時2025/7/6固定 → 今の集計期間は6/25〜7/24（終了日20250724）
   late FakeBatchHistoryRepository fakeBatchHistoryRepository;
   late FakeFixedCostRepository fakeFixedCostRepository;
+  late FakeExpenseRepository fakeExpenseRepository;
   late FakeFixedCostExpenseRepository fakeFixedCostExpenseRepository;
 
   ProviderContainer createBatchContainer({
@@ -23,9 +25,12 @@ void main() {
     fakeBatchHistoryRepository = FakeBatchHistoryRepository(
       initialLatestDate: latestBatchDate,
     );
+    fakeExpenseRepository = FakeExpenseRepository();
     fakeFixedCostRepository = FakeFixedCostRepository(
       initialRecords: fixedCostRecords,
+      expenseRepository: fakeExpenseRepository,
     );
+    // T6までは多重生成防止で旧テーブルも検査する
     fakeFixedCostExpenseRepository = FakeFixedCostExpenseRepository();
     return createContainer(
       overrides: [
@@ -34,6 +39,7 @@ void main() {
           fakeBatchHistoryRepository,
         ),
         fixedCostRepositoryProvider.overrideWithValue(fakeFixedCostRepository),
+        expenseRepositoryProvider.overrideWithValue(fakeExpenseRepository),
         fixedCostExpenseRepositoryProvider.overrideWithValue(
           fakeFixedCostExpenseRepository,
         ),
@@ -147,9 +153,9 @@ void main() {
 
       expect(result, isTrue);
       // 実績: 支払予定日どおりに1件生成
-      expect(fakeFixedCostExpenseRepository.insertedEntities, hasLength(1));
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(1));
       expect(
-        fakeFixedCostExpenseRepository.insertedEntities.first.date,
+        fakeExpenseRepository.insertedFixedCostExpenses.first.date,
         '20250701',
       );
       // マスタ: 次回支払日が1ヶ月進む
@@ -183,7 +189,7 @@ void main() {
 
       await usecase.grobalBatchProscessing();
 
-      expect(fakeFixedCostExpenseRepository.insertedEntities, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
       expect(fakeFixedCostRepository.updatedEntities, isEmpty);
       expect(fakeBatchHistoryRepository.insertedEntities, hasLength(1));
     });
@@ -211,13 +217,13 @@ void main() {
       await usecase.grobalBatchProscessing();
 
       // チャンク1（5/25〜6/24）で6/1分、チャンク2（6/25〜7/24）で7/1分
-      expect(fakeFixedCostExpenseRepository.insertedEntities, hasLength(2));
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(2));
       expect(
-        fakeFixedCostExpenseRepository.insertedEntities[0].date,
+        fakeExpenseRepository.insertedFixedCostExpenses[0].date,
         '20250601',
       );
       expect(
-        fakeFixedCostExpenseRepository.insertedEntities[1].date,
+        fakeExpenseRepository.insertedFixedCostExpenses[1].date,
         '20250701',
       );
       // マスタの支払予定日は最終的に8/1まで進む

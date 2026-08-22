@@ -9,6 +9,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
@@ -18,6 +20,7 @@ import '../../helper/test_container.dart';
 
 void main() {
   late FakeFixedCostRepository fakeFixedCostRepository;
+  late FakeExpenseRepository fakeExpenseRepository;
   late FakeFixedCostExpenseRepository fakeFixedCostExpenseRepository;
 
   /// 基準シナリオの集計期間（システム日時2025/7/6・開始日25日設定）
@@ -28,18 +31,25 @@ void main() {
 
   ProviderContainer createUsecaseContainer({
     List<FixedCostEntity>? initialRecords,
-    List<FixedCostExpenseEntity>? initialExpenses,
+    List<ExpenseEntity>? initialExpenses,
+    List<FixedCostExpenseEntity>? initialLegacyExpenses,
   }) {
+    fakeExpenseRepository = FakeExpenseRepository(
+      initialRecords: initialExpenses,
+    );
     fakeFixedCostRepository = FakeFixedCostRepository(
       initialRecords: initialRecords,
+      expenseRepository: fakeExpenseRepository,
     );
+    // T6までは多重生成防止で旧テーブルも検査する
     fakeFixedCostExpenseRepository = FakeFixedCostExpenseRepository(
-      initialRecords: initialExpenses,
+      initialRecords: initialLegacyExpenses,
     );
     return createContainer(
       overrides: [
         ...aggregationSettingOverrides(systemDate: DateTime(2025, 7, 6)),
         fixedCostRepositoryProvider.overrideWithValue(fakeFixedCostRepository),
+        expenseRepositoryProvider.overrideWithValue(fakeExpenseRepository),
         fixedCostExpenseRepositoryProvider.overrideWithValue(
           fakeFixedCostExpenseRepository,
         ),
@@ -59,14 +69,15 @@ void main() {
     variable: 0,
     price: price,
     fixedCostCategoryId: 1,
+    expenseSmallCategoryId: 11,
     intervalNumber: 1,
     intervalUnit: 1,
     firstPaymentDate: '20250101',
     nextPaymentDate: nextPaymentDate,
   );
 
-  List<String> insertedDates() => fakeFixedCostExpenseRepository
-      .insertedEntities
+  List<String> insertedDates() => fakeExpenseRepository
+      .insertedFixedCostExpenses
       .map((e) => e.date)
       .toList();
 
@@ -128,6 +139,7 @@ void main() {
             variable: 0,
             price: 10000,
             fixedCostCategoryId: 1,
+            expenseSmallCategoryId: 11,
             intervalNumber: 1,
             intervalUnit: 2,
             firstPaymentDate: '20220510',
@@ -153,7 +165,7 @@ void main() {
       await usecase.addExpenseForFixedCost(period);
 
       // 実績は5件生成されるが、マスタ更新は1回だけ
-      expect(fakeFixedCostExpenseRepository.insertedEntities, hasLength(5));
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(5));
       expect(fakeFixedCostRepository.updatedEntities, hasLength(1));
       expect(
         fakeFixedCostRepository.updatedEntities.first.nextPaymentDate,
@@ -170,7 +182,7 @@ void main() {
 
       await usecase.addExpenseForFixedCost(period);
 
-      expect(fakeFixedCostExpenseRepository.insertedEntities, hasLength(240));
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(240));
       // 打ち切られてもマスタは進んだところまで保存される（次回起動で続きから回収する）
       expect(fakeFixedCostRepository.updatedEntities, hasLength(1));
       expect(insertedDates().first, '19000101');
@@ -179,20 +191,18 @@ void main() {
   });
 
   group('addExpenseForFixedCost の重複スキップ', () {
-    test('既に実績がある周期はスキップされるが支払日は進む', () async {
+    test('既にexpenseに実績がある周期はスキップされるが支払日は進む', () async {
       // 5/1の実績だけ既に存在する取り残しマスタ。5/1は作り直さないが日付は進む
       final container = createUsecaseContainer(
         initialRecords: [monthly(id: 1, nextPaymentDate: '20250301')],
         initialExpenses: const [
-          FixedCostExpenseEntity(
+          ExpenseEntity(
             id: 100,
-            fixedCostId: 1,
-            fixedCostCategoryId: 1,
             date: '20250501',
             price: 1000,
-            name: 'サブスク',
-            confirmedCostType: 0,
-            isConfirmed: 1,
+            paymentCategoryId: 11,
+            fixedCostId: 1,
+            memo: 'サブスク',
           ),
         ],
       );
@@ -206,20 +216,65 @@ void main() {
       expect(fakeFixedCostRepository.records.first.nextPaymentDate, '20250801');
     });
 
+    test('旧テーブル（fixed_cost_expense）に生成済みの日付もスキップされる', () async {
+      // T2〜T5の中間状態では旧テーブルにも実績が残っている。
+      // 見落とすと旧集計が残るT3まで二重計上になるため両テーブルを検査する
+      final container = createUsecaseContainer(
+        initialRecords: [monthly(id: 1, nextPaymentDate: '20250301')],
+        initialLegacyExpenses: const [
+          FixedCostExpenseEntity(
+            id: 100,
+            fixedCostId: 1,
+            fixedCostCategoryId: 1,
+            date: '20250401',
+            price: 1000,
+            name: 'サブスク',
+            confirmedCostType: 0,
+            isConfirmed: 1,
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.addExpenseForFixedCost(period);
+
+      // 4/1だけが抜ける
+      expect(insertedDates(), ['20250301', '20250501', '20250601', '20250701']);
+      expect(fakeFixedCostRepository.records.first.nextPaymentDate, '20250801');
+    });
+
     test('別マスタの同じ日付の実績は重複とみなさない', () async {
       // 固定費ID違いなら別物なので生成される
       final container = createUsecaseContainer(
         initialRecords: [monthly(id: 1, nextPaymentDate: '20250701')],
         initialExpenses: const [
-          FixedCostExpenseEntity(
+          ExpenseEntity(
             id: 100,
-            fixedCostId: 2,
-            fixedCostCategoryId: 1,
             date: '20250701',
             price: 500,
-            name: '別の固定費',
-            confirmedCostType: 0,
-            isConfirmed: 1,
+            paymentCategoryId: 11,
+            fixedCostId: 2,
+            memo: '別の固定費',
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.addExpenseForFixedCost(period);
+
+      expect(insertedDates(), ['20250701']);
+    });
+
+    test('固定費と無関係な通常支出は重複とみなさない', () async {
+      // fixed_cost_id が NULL の行は判定対象外（仕様 §3）
+      final container = createUsecaseContainer(
+        initialRecords: [monthly(id: 1, nextPaymentDate: '20250701')],
+        initialExpenses: const [
+          ExpenseEntity(
+            id: 100,
+            date: '20250701',
+            price: 500,
+            paymentCategoryId: 11,
           ),
         ],
       );
@@ -242,7 +297,7 @@ void main() {
 
       await usecase.addExpenseForFixedCost(period);
 
-      expect(fakeFixedCostExpenseRepository.insertedEntities, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
       expect(fakeFixedCostRepository.updatedEntities, isEmpty);
     });
 
@@ -256,6 +311,7 @@ void main() {
             variable: 0,
             price: 1000,
             fixedCostCategoryId: 1,
+            expenseSmallCategoryId: 11,
             intervalNumber: 1,
             intervalUnit: 1,
             firstPaymentDate: '20250101',
@@ -266,7 +322,7 @@ void main() {
 
       await usecase.addExpenseForFixedCost(period);
 
-      expect(fakeFixedCostExpenseRepository.insertedEntities, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
       expect(fakeFixedCostRepository.updatedEntities, isEmpty);
     });
 
@@ -326,7 +382,7 @@ void main() {
 
       await usecase.addExpenseForFixedCost(period);
 
-      expect(fakeFixedCostExpenseRepository.insertedEntities, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
       expect(fakeFixedCostRepository.updatedEntities, isEmpty);
     });
   });

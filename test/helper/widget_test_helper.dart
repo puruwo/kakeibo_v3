@@ -89,7 +89,11 @@ class TestFakes {
            FakeBatchHistoryRepository(initialLatestDate: '20250724'),
        fixedCostExpense = fixedCostExpense ?? FakeFixedCostExpenseRepository(),
        fixedCostCategory =
-           fixedCostCategory ?? FakeFixedCostCategoryRepository();
+           fixedCostCategory ?? FakeFixedCostCategoryRepository() {
+    // 固定費マスタの削除・推定額の同期はexpenseの固定費行にも効く
+    // （本物は同一トランザクションで両テーブルを更新する。仕様 §6.4・§6.5）
+    this.fixedCost.expenseRepository ??= this.expense;
+  }
 
   final FakeCategoryAccountingRepository categoryAccounting;
   final FakeSmallCategoryTileRepository smallCategoryTile;

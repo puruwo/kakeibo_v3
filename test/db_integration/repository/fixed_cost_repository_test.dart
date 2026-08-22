@@ -120,6 +120,8 @@ void main() {
           price: 0,
           estimatedPrice: 0,
           fixedCostCategoryId: 2,
+          // insertFixedCostRow の既定値（v10で追加された支出小カテゴリー参照）
+          expenseSmallCategoryId: 1,
           intervalNumber: 3,
           intervalUnit: 2,
           firstPaymentDate: '20240401',
@@ -730,6 +732,165 @@ void main() {
         () => repository.fetchNextPeriodPayment(period: _period),
         throwsA(anything),
       );
+    });
+  });
+
+  // ---------------------------------------------------------------------
+  // v10で追加した、expenseの固定費行と連動する書き込み
+  // ---------------------------------------------------------------------
+
+  group('deleteWithUnpaidExpenses（expenseの固定費行）', () {
+    // 運用日付。この日を境に「支払日が到来済みか」を判定する
+    const today = '20250706';
+
+    /// マスタ10に紐づくexpenseの固定費行を、確定状態と支払日の組み合わせで用意する
+    ///
+    /// | id | 固定費 | 日付       | 確定 | 期待             |
+    /// |----|-------|------------|------|------------------|
+    /// | 1  | 10    | 2025-06-01 | 1    | 残る             |
+    /// | 2  | 10    | 2025-07-06 | 1    | 残る（当日・境界値） |
+    /// | 3  | 10    | 2025-07-07 | 1    | 消える（未到来）   |
+    /// | 4  | 10    | 2025-06-05 | 0    | 消える（未確定）   |
+    /// | 5  | 20    | 2025-07-20 | 1    | 残る（別マスタ）   |
+    Future<void> seedExpenseRows() async {
+      await insertExpenseRow(
+          id: 1, date: '20250601', price: 1000, fixedCostId: 10);
+      await insertExpenseRow(
+          id: 2, date: '20250706', price: 1000, fixedCostId: 10);
+      await insertExpenseRow(
+          id: 3, date: '20250707', price: 1000, fixedCostId: 10);
+      await insertExpenseRow(
+        id: 4,
+        date: '20250605',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 1000,
+      );
+      await insertExpenseRow(
+          id: 5, date: '20250720', price: 1000, fixedCostId: 20);
+      // 固定費に紐づかない通常支出（消えてはいけない）
+      await insertExpenseRow(id: 6, date: '20250707', price: 500);
+    }
+
+    Future<List<int>> remainingExpenseIds() async {
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfExpense.id} AS id FROM ${SqfExpense.tableName} ORDER BY ${SqfExpense.id}',
+      );
+      return rows.map((e) => e['id'] as int).toList();
+    }
+
+    test('未確定行と支払日未到来の確定行が消え、到来済みの確定行は残る', () async {
+      await insertFixedCostRow(
+          id: 10, name: 'サブスク', fixedCostCategoryId: 1, price: 1000);
+      await seedExpenseRows();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      expect(await remainingExpenseIds(), [1, 2, 5, 6]);
+    });
+
+    test('マスタは論理削除され、残った確定行のfixed_cost_idは保持される', () async {
+      await insertFixedCostRow(
+          id: 10, name: 'サブスク', fixedCostCategoryId: 1, price: 1000);
+      await seedExpenseRows();
+
+      await repository.deleteWithUnpaidExpenses(id: 10, today: today);
+
+      final master = (await repository.fetchAll()).single;
+      expect(master.deleteFlag, 1);
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfExpense.fixedCostId} AS fixedCostId FROM ${SqfExpense.tableName} WHERE ${SqfExpense.id} = 1',
+      );
+      expect(rows.single['fixedCostId'], 10);
+    });
+  });
+
+  group('recalculateEstimatedPriceWithSync', () {
+    test('確定行の平均でマスタと未確定行が同時に更新される', () async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '電気代',
+        fixedCostCategoryId: 2,
+        variable: 1,
+        estimatedPrice: 5000,
+      );
+      // 確定行 6000・8000（平均7000）と、同期対象の未確定行
+      await insertExpenseRow(
+          id: 1, date: '20250601', price: 6000, fixedCostId: 10);
+      await insertExpenseRow(
+          id: 2, date: '20250701', price: 8000, fixedCostId: 10);
+      await insertExpenseRow(
+        id: 3,
+        date: '20250710',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 5000,
+      );
+
+      await repository.recalculateEstimatedPriceWithSync(fixedCostId: 10);
+
+      expect((await repository.fetch(fixedCostId: 10)).estimatedPrice, 7000);
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfExpense.estimatedPrice} AS estimatedPrice, ${SqfExpense.price} AS price FROM ${SqfExpense.tableName} WHERE ${SqfExpense.id} = 3',
+      );
+      expect(rows.single['estimatedPrice'], 7000);
+      // 実額には書き込まない（仕様 §6.5）
+      expect(rows.single['price'], isNull);
+    });
+
+    test('確定行が0件なら推定額を更新しない（最後の値を保持する）', () async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '電気代',
+        fixedCostCategoryId: 2,
+        variable: 1,
+        estimatedPrice: 5000,
+      );
+      await insertExpenseRow(
+        id: 1,
+        date: '20250710',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 5000,
+      );
+
+      await repository.recalculateEstimatedPriceWithSync(fixedCostId: 10);
+
+      expect((await repository.fetch(fixedCostId: 10)).estimatedPrice, 5000);
+    });
+  });
+
+  group('updateWithUnconfirmedRowsSync', () {
+    test('マスタ更新と未確定行の予想額同期が同時に行われる', () async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '電気代',
+        fixedCostCategoryId: 2,
+        variable: 1,
+        estimatedPrice: 5000,
+      );
+      await insertExpenseRow(
+        id: 1,
+        date: '20250710',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 5000,
+      );
+
+      final master = await repository.fetch(fixedCostId: 10);
+      await repository.updateWithUnconfirmedRowsSync(
+        master.copyWith(estimatedPrice: 9000),
+      );
+
+      expect((await repository.fetch(fixedCostId: 10)).estimatedPrice, 9000);
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfExpense.estimatedPrice} AS estimatedPrice FROM ${SqfExpense.tableName} WHERE ${SqfExpense.id} = 1',
+      );
+      expect(rows.single['estimatedPrice'], 9000);
     });
   });
 }

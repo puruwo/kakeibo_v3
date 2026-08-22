@@ -60,7 +60,7 @@ class ExpenseUsecase {
     }
 
     // expenseテーブルにデータを更新する
-    _expenseRepositoryProvider.update(editEntity);
+    await _expenseRepositoryProvider.update(editEntity);
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

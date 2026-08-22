@@ -139,6 +139,9 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
                     price: variable == 0 ? enteredPrice : 0, // 変動費なら価格は0
                     variable: variable,
                     fixedCostCategoryId: selectedCategory.id,
+                    // カテゴリーの参照先は支出小カテゴリーに移行済み（仕様 §3）
+                    // 旧固定費タブのUI置き換えはT4で行うため、暫定で同じidを渡す
+                    expenseSmallCategoryId: selectedCategory.id,
                     intervalNumber: frequencyValue.intervalNumber,
                     intervalUnit:
                         frequencyValue.intervalUnit.inturvalUnitNumber,

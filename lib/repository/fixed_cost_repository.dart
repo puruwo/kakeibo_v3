@@ -5,11 +5,37 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/logger.dart';
+import 'package:kakeibo/repository/expense_repository.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
 class ImplementsFixedCostRepository implements FixedCostRepository {
+  /// 固定費実績（expense の固定費行）側のSQLを担当する
+  ///
+  /// マスタ更新と実績更新を同一トランザクションで行う必要があるため
+  /// （仕様 §6.5・§6.4）、実績側のSQLを二重に書かずに委譲する。
+  /// 同じ repository 層の実装同士の連携で、Transaction を引き渡して使う。
+  final ImplementsExpenseRepository _expenseRepository =
+      ImplementsExpenseRepository();
+
+  /// マスタ更新用の列マップ（update と同期付きupdateで共用する）
+  Map<String, dynamic> _toRow(FixedCostEntity fixedCostEntity) => {
+        SqfFixedCost.name: fixedCostEntity.name,
+        SqfFixedCost.variable: fixedCostEntity.variable,
+        SqfFixedCost.price: fixedCostEntity.price,
+        SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
+        SqfFixedCost.fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId,
+        SqfFixedCost.expenseSmallCategoryId:
+            fixedCostEntity.expenseSmallCategoryId,
+        SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
+        SqfFixedCost.intervalUnit: fixedCostEntity.intervalUnit,
+        SqfFixedCost.firstPaymentDate: fixedCostEntity.firstPaymentDate,
+        SqfFixedCost.recentPaymentDate: fixedCostEntity.recentPaymentDate ?? '',
+        SqfFixedCost.nextPaymentDate: fixedCostEntity.nextPaymentDate ?? '',
+        SqfFixedCost.deleteFlag: fixedCostEntity.deleteFlag,
+      };
+
   // 全ての固定費情報を取得する
   @override
   Future<List<FixedCostEntity>> fetchAll() async {
@@ -21,6 +47,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.price} AS price,
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
+        a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
         a.${SqfFixedCost.firstPaymentDate} AS firstPaymentDate,
@@ -54,6 +81,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.price} AS price,
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
+        a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
         a.${SqfFixedCost.firstPaymentDate} AS firstPaymentDate,
@@ -88,6 +116,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.price} AS price, 
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
+        a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
         a.${SqfFixedCost.firstPaymentDate} AS firstPaymentDate,
@@ -111,6 +140,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         variable: 0,
         price: 0,
         fixedCostCategoryId: 0,
+        expenseSmallCategoryId: 0,
         intervalNumber: 0,
         intervalUnit: 0,
         firstPaymentDate: '',
@@ -135,6 +165,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.price} AS price, 
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
         a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
+        a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
         a.${SqfFixedCost.firstPaymentDate} AS firstPaymentDate,
@@ -182,6 +213,8 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       SqfFixedCost.price: fixedCostEntity.price,
       SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
       SqfFixedCost.fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId,
+      SqfFixedCost.expenseSmallCategoryId:
+          fixedCostEntity.expenseSmallCategoryId,
       SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
       SqfFixedCost.intervalUnit: fixedCostEntity.intervalUnit,
       SqfFixedCost.firstPaymentDate: fixedCostEntity.firstPaymentDate,
@@ -195,22 +228,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
   @override
   Future<void> update(FixedCostEntity fixedCostEntity) async {
     await db.update(
-        SqfFixedCost.tableName,
-        {
-          SqfFixedCost.name: fixedCostEntity.name,
-          SqfFixedCost.variable: fixedCostEntity.variable,
-          SqfFixedCost.price: fixedCostEntity.price,
-          SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
-          SqfFixedCost.fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId,
-          SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
-          SqfFixedCost.intervalUnit: fixedCostEntity.intervalUnit,
-          SqfFixedCost.firstPaymentDate: fixedCostEntity.firstPaymentDate,
-          SqfFixedCost.recentPaymentDate:
-              fixedCostEntity.recentPaymentDate ?? '',
-          SqfFixedCost.nextPaymentDate: fixedCostEntity.nextPaymentDate ?? '',
-          SqfFixedCost.deleteFlag: fixedCostEntity.deleteFlag,
-        },
-        fixedCostEntity.id ?? -1);
+        SqfFixedCost.tableName, _toRow(fixedCostEntity), fixedCostEntity.id ?? -1);
   }
 
   // マスタの論理削除と未払い実績の削除を1トランザクションで行う
@@ -229,11 +247,75 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
 
       // 未払い実績（未確定 or 支払日が未到来）を削除する
       // 支払日が到来済みの記録は、実際に払った事実として履歴に残す
+      // 残った確定行の fixed_cost_id は保持する（通常支出化しない。仕様 §6.4）
+      await _expenseRepository.deleteUnpaidFixedCostExpenses(
+        fixedCostId: id,
+        today: today,
+        executor: txn,
+      );
+
+      // 旧テーブルの未払い実績も併せて削除する
+      // T2〜T5の中間状態では旧テーブルにも実績が残っているため、
+      // ここを外すと解約後も旧集計に幽霊レコードが出続ける（T6で削除する）
       await txn.delete(
         SqfFixedCostExpense.tableName,
         where:
             '${SqfFixedCostExpense.fixedCostId} = ? AND (${SqfFixedCostExpense.isConfirmed} = 0 OR ${SqfFixedCostExpense.date} > ?)',
         whereArgs: [id, today],
+      );
+    });
+  }
+
+  // 推定額の再計算・マスタ更新・未確定行の同期を1トランザクションで実行する
+  // 同期だけ失敗して行側が古い値で固定される状態を作らない（仕様 §6.5）
+  @override
+  Future<void> recalculateEstimatedPriceWithSync({
+    required int fixedCostId,
+  }) async {
+    await db.runInTransaction((txn) async {
+      // いま当該マスタに紐づく確定行のpriceの平均（現在状態主義）
+      final average = await _expenseRepository
+          .fetchConfirmedFixedCostPriceAverage(
+        fixedCostId: fixedCostId,
+        executor: txn,
+      );
+
+      // 確定行が0件のときは更新しない（最後の値を保持する）
+      if (average == null) return;
+
+      final estimatedPrice = average.toInt();
+
+      await txn.update(
+        SqfFixedCost.tableName,
+        {SqfFixedCost.estimatedPrice: estimatedPrice},
+        where: '${SqfFixedCost.id} = ?',
+        whereArgs: [fixedCostId],
+      );
+
+      await _expenseRepository.updateEstimatedPriceOfUnconfirmedRows(
+        fixedCostId: fixedCostId,
+        estimatedPrice: estimatedPrice,
+        executor: txn,
+      );
+    });
+  }
+
+  // マスタの更新と未確定行の予想額の同期を1トランザクションで実行する
+  @override
+  Future<void> updateWithUnconfirmedRowsSync(
+      FixedCostEntity fixedCostEntity) async {
+    await db.runInTransaction((txn) async {
+      await txn.update(
+        SqfFixedCost.tableName,
+        _toRow(fixedCostEntity),
+        where: '${SqfFixedCost.id} = ?',
+        whereArgs: [fixedCostEntity.id ?? -1],
+      );
+
+      await _expenseRepository.updateEstimatedPriceOfUnconfirmedRows(
+        fixedCostId: fixedCostEntity.id ?? -1,
+        estimatedPrice: fixedCostEntity.estimatedPrice,
+        executor: txn,
       );
     });
   }
