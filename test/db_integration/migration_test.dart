@@ -3,6 +3,7 @@
 // 旧形状のDBを実際に作ってから本物のマイグレーションを流し、
 // 「列構成がどう変わるか・データが引き継がれるか」を仕様として固定する。
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/sql_on_update.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
@@ -204,15 +205,24 @@ void main() {
         SqfExpenseBigCategory.tableName,
         orderBy: SqfExpenseBigCategory.id,
       );
-      expect(rows.map((row) => row[SqfExpenseBigCategory.colorCode]).toList(), [
-        CategoryPalette.expense1Hex,
-        CategoryPalette.expense2Hex,
-        CategoryPalette.expense3Hex,
-        CategoryPalette.expense4Hex,
-        CategoryPalette.expense5Hex,
-        CategoryPalette.expense6Hex,
-        CategoryPalette.expense7Hex,
-      ]);
+      // toV7 が色を更新するのは _id = 1〜7 のみ。
+      // v10 で onCreate に加わった固定費由来カテゴリー（_id = 8〜12）は対象外なので
+      // 先頭7件だけを比較する
+      expect(
+        rows
+            .take(7)
+            .map((row) => row[SqfExpenseBigCategory.colorCode])
+            .toList(),
+        [
+          CategoryPalette.expense1Hex,
+          CategoryPalette.expense2Hex,
+          CategoryPalette.expense3Hex,
+          CategoryPalette.expense4Hex,
+          CategoryPalette.expense5Hex,
+          CategoryPalette.expense6Hex,
+          CategoryPalette.expense7Hex,
+        ],
+      );
     });
 
     test('固定費カテゴリーの色は全件が固定費色に統一される', () async {
@@ -833,9 +843,421 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
+  // v9 → v10（固定費カテゴリー統合・第1段階）
+  // -------------------------------------------------------------------------
+  group('toV10: 固定費カテゴリー統合（第1段階）', () {
+    /// v9時点の形状のDBを作る
+    ///
+    /// 出典: v10適用前の lib/model/sql_on_create.dart（expense は price NOT NULL・
+    /// 新3列なし、fixed_cost は expense_small_category_id なし）。
+    /// 支出カテゴリーには固定費カテゴリーと同名の「通信費」を1件混ぜ、
+    /// 同名併存（マージしない）が検証できるようにしている。
+    Future<Database> createV9ShapeDatabase({
+      bool withUserAddedFixedCostCategory = true,
+    }) async {
+      final db = await databaseFactory.openDatabase(inMemoryDatabasePath);
+      addTearDown(db.close);
+
+      await db.execute('''
+        CREATE TABLE expense (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          expense_small_category_id INTEGER NOT NULL,
+          date TEXT NOT NULL,
+          price INTEGER NOT NULL,
+          memo TEXT,
+          income_source_big_category INTEGER NOT NULL
+        );
+      ''');
+      await db.execute('''
+        CREATE TABLE expense_big_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          color_code TEXT NOT NULL,
+          resource_path TEXT NOT NULL,
+          display_order INTEGER NOT NULL,
+          is_displayed INTEGER NOT NULL
+        );
+      ''');
+      // 「通信費」は固定費カテゴリーにも同名があるカテゴリー（併存の検証用）
+      await db.execute('''
+        INSERT INTO expense_big_category (name, color_code, resource_path, display_order, is_displayed)
+        VALUES('食費', 'FF7171', 'assets/images/icon_meal.svg', 0, 1),
+              ('日用品', 'FB5B01', 'assets/images/icon_commodity.svg', 1, 1),
+              ('通信費', '4BA6FF', 'assets/images/icon_transportation.svg', 2, 1);
+      ''');
+      await db.execute('''
+        CREATE TABLE expense_small_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          big_category_key INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          small_category_order_key INTEGER NOT NULL,
+          displayed_order_in_big INTEGER NOT NULL,
+          default_displayed INTEGER NOT NULL
+        );
+      ''');
+      await db.execute('''
+        INSERT INTO expense_small_category (big_category_key, name, small_category_order_key, displayed_order_in_big, default_displayed)
+        VALUES(1, '食費', 0, 0, 1),
+              (2, '消耗品', 1, 0, 1),
+              (3, '通信費', 2, 0, 1);
+      ''');
+      await db.execute(_createFixedCostFixed);
+      await db.execute('''
+        CREATE TABLE fixed_cost_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          category_name TEXT NOT NULL,
+          color_code TEXT NOT NULL,
+          resource_path TEXT NOT NULL,
+          display_order INTEGER NOT NULL,
+          is_displayed INTEGER NOT NULL
+        );
+      ''');
+      // 既定5件（出典: v10適用前の sql_on_create.dart）
+      await db.execute('''
+        INSERT INTO fixed_cost_category (category_name, color_code, resource_path, display_order, is_displayed)
+        VALUES ('住居費', '8E8E93', 'assets/images/icon_home.svg', 0, 1),
+               ('サブスク', '8E8E93', 'assets/images/icon_subscription.svg', 1, 1),
+               ('通信費', '8E8E93', 'assets/images/icon_cell_tower.svg', 2, 1),
+               ('光熱費', '8E8E93', 'assets/images/icon_water_drop.svg', 3, 1),
+               ('その他', '8E8E93', 'assets/images/icon_others.svg', 4, 0);
+      ''');
+      if (withUserAddedFixedCostCategory) {
+        // ユーザーが追加した6件目
+        await db.execute('''
+          INSERT INTO fixed_cost_category (category_name, color_code, resource_path, display_order, is_displayed)
+          VALUES ('保険', '8E8E93', 'assets/images/icon_others.svg', 5, 1);
+        ''');
+      }
+      return db;
+    }
+
+    /// 固定費マスタを1件入れる（fixed_cost_category_id を指定できる）
+    Future<void> insertFixedCostMaster(
+      Database db, {
+      required int id,
+      required String name,
+      required int fixedCostCategoryId,
+    }) async {
+      await db.execute('''
+        INSERT INTO fixed_cost
+          (_id, name, variable, price, estimated_price, fixed_cost_category_id, interval_number, interval_unit, first_payment_date, recent_payment_date, next_payment_date, delete_flag)
+        VALUES ($id, '$name', 0, 1000, NULL, $fixedCostCategoryId, 1, 1, '20250125', NULL, '20250225', 0);
+      ''');
+    }
+
+    test('expenseに3列が追加され、priceはNULL許容になる', () async {
+      final db = await createV9ShapeDatabase();
+
+      await DataBaseMigrate().toV10(db);
+
+      final columns = await db.rawQuery(
+        'PRAGMA table_info(${SqfExpense.tableName})',
+      );
+      final byName = {for (final c in columns) c['name'] as String: c};
+      expect(byName.containsKey(SqfExpense.fixedCostId), isTrue);
+      expect(byName.containsKey(SqfExpense.isConfirmed), isTrue);
+      expect(byName.containsKey(SqfExpense.estimatedPrice), isTrue);
+      // price の NOT NULL 制約が外れている（notnull=0）
+      expect(byName[SqfExpense.price]!['notnull'], 0);
+      expect(byName[SqfExpense.isConfirmed]!['notnull'], 1);
+    });
+
+    test('既存のexpense行は全列が保全され、通常支出として is_confirmed=1 になる', () async {
+      final db = await createV9ShapeDatabase();
+      await db.execute('''
+        INSERT INTO expense (_id, expense_small_category_id, date, price, memo, income_source_big_category)
+        VALUES (1, 2, '20250701', 1200, 'ラーメン', 1),
+               (2, 3, '20250702', 3400, NULL, 2);
+      ''');
+
+      await DataBaseMigrate().toV10(db);
+
+      final rows = await db.query(SqfExpense.tableName, orderBy: SqfExpense.id);
+      expect(rows, hasLength(2));
+      expect(rows[0][SqfExpense.id], 1);
+      expect(rows[0][SqfExpense.expenseSmallCategoryId], 2);
+      expect(rows[0][SqfExpense.date], '20250701');
+      expect(rows[0][SqfExpense.price], 1200);
+      expect(rows[0][SqfExpense.memo], 'ラーメン');
+      expect(rows[0][SqfExpense.incomeSourceBigCategory], 1);
+      expect(rows[0][SqfExpense.fixedCostId], isNull);
+      expect(rows[0][SqfExpense.isConfirmed], 1);
+      expect(rows[0][SqfExpense.estimatedPrice], isNull);
+      // NULL許容列のNULLも保持される
+      expect(rows[1][SqfExpense.memo], isNull);
+      expect(rows[1][SqfExpense.price], 3400);
+    });
+
+    test('固定費カテゴリー6件が大カテゴリーとして末尾に移設され、色とアイコンを引き継ぐ', () async {
+      final db = await createV9ShapeDatabase();
+
+      await DataBaseMigrate().toV10(db);
+
+      final rows = await db.query(
+        SqfExpenseBigCategory.tableName,
+        orderBy: SqfExpenseBigCategory.displayOrder,
+      );
+      // 既存3件＋固定費カテゴリー6件
+      expect(rows, hasLength(9));
+      final moved = rows.sublist(3);
+      expect(moved.map((row) => row[SqfExpenseBigCategory.name]).toList(), [
+        '住居費',
+        'サブスク',
+        '通信費',
+        '光熱費',
+        'その他',
+        '保険',
+      ]);
+      // 表示順は既存の最大値(2)の次から連番
+      expect(
+        moved.map((row) => row[SqfExpenseBigCategory.displayOrder]).toList(),
+        [3, 4, 5, 6, 7, 8],
+      );
+      // 色・アイコンは元の値を引き継ぐ
+      expect(moved.first[SqfExpenseBigCategory.colorCode], '8E8E93');
+      expect(
+        moved.first[SqfExpenseBigCategory.resourcePath],
+        'assets/images/icon_home.svg',
+      );
+      // is_displayed も引き継ぐ（「その他」は非表示で作ってある）
+      expect(moved[4][SqfExpenseBigCategory.isDisplayed], 0);
+    });
+
+    test('移設した各大カテゴリーの配下に同名の小カテゴリーが1件ずつ作られる', () async {
+      final db = await createV9ShapeDatabase();
+
+      await DataBaseMigrate().toV10(db);
+
+      final smalls = await db.query(
+        SqfExpenseSmallCategory.tableName,
+        orderBy: SqfExpenseSmallCategory.id,
+      );
+      // 既存3件＋固定費カテゴリー6件
+      expect(smalls, hasLength(9));
+      final added = smalls.sublist(3);
+      expect(added.map((row) => row[SqfExpenseSmallCategory.name]).toList(), [
+        '住居費',
+        'サブスク',
+        '通信費',
+        '光熱費',
+        'その他',
+        '保険',
+      ]);
+      // 通し順は既存の最大値(2)の次から連番、既定表示はON
+      expect(
+        added
+            .map((row) => row[SqfExpenseSmallCategory.smallCategoryOrderKey])
+            .toList(),
+        [3, 4, 5, 6, 7, 8],
+      );
+      for (final row in added) {
+        expect(row[SqfExpenseSmallCategory.defaultDisplayed], 1);
+        expect(row[SqfExpenseSmallCategory.displayedOrderInBig], 0);
+      }
+
+      // 小カテゴリーは移設で作った大カテゴリーに紐づく（既存の同名大カテゴリーではない）
+      final bigs = await db.query(
+        SqfExpenseBigCategory.tableName,
+        orderBy: SqfExpenseBigCategory.id,
+      );
+      for (var i = 0; i < added.length; i++) {
+        expect(
+          added[i][SqfExpenseSmallCategory.bigCategoryKey],
+          bigs[3 + i][SqfExpenseBigCategory.id],
+        );
+      }
+    });
+
+    test('同名の支出カテゴリーがあってもマージせず別レコードとして併存する', () async {
+      final db = await createV9ShapeDatabase();
+
+      await DataBaseMigrate().toV10(db);
+
+      final rows = await db.query(
+        SqfExpenseBigCategory.tableName,
+        where: '${SqfExpenseBigCategory.name} = ?',
+        whereArgs: ['通信費'],
+      );
+      // 既存の支出カテゴリーと固定費由来の2件が並ぶ
+      expect(rows, hasLength(2));
+      expect(rows[0][SqfExpenseBigCategory.colorCode], '4BA6FF');
+      expect(rows[1][SqfExpenseBigCategory.colorCode], '8E8E93');
+    });
+
+    test(
+      'fixed_costにexpense_small_category_idが追加され、全件が対応する小カテゴリーを指す',
+      () async {
+        final db = await createV9ShapeDatabase();
+        await insertFixedCostMaster(
+          db,
+          id: 1,
+          name: '家賃',
+          fixedCostCategoryId: 1, // 住居費
+        );
+        await insertFixedCostMaster(
+          db,
+          id: 2,
+          name: 'ネット回線',
+          fixedCostCategoryId: 3, // 通信費
+        );
+
+        await DataBaseMigrate().toV10(db);
+
+        // 旧列は残したまま新列が増える
+        final columns = await _columnNames(db, SqfFixedCost.tableName);
+        expect(columns.contains(SqfFixedCost.expenseSmallCategoryId), isTrue);
+        expect(columns.contains(SqfFixedCost.fixedCostCategoryId), isTrue);
+
+        final smallIdOf = <String, int>{};
+        for (final row in await db.query(
+          SqfExpenseSmallCategory.tableName,
+          orderBy: SqfExpenseSmallCategory.id,
+        )) {
+          smallIdOf[row[SqfExpenseSmallCategory.name] as String] =
+              row[SqfExpenseSmallCategory.id] as int;
+        }
+
+        final fixedCosts = await db.query(
+          SqfFixedCost.tableName,
+          orderBy: SqfFixedCost.id,
+        );
+        expect(
+          fixedCosts[0][SqfFixedCost.expenseSmallCategoryId],
+          smallIdOf['住居費'],
+        );
+        // 「通信費」は既存支出カテゴリーにも同名があるが、移設で作った方（id昇順で後）を指す
+        final movedCommunication = (await db.query(
+          SqfExpenseSmallCategory.tableName,
+          where: '${SqfExpenseSmallCategory.name} = ?',
+          whereArgs: ['通信費'],
+          orderBy: SqfExpenseSmallCategory.id,
+        )).last[SqfExpenseSmallCategory.id];
+        expect(
+          fixedCosts[1][SqfFixedCost.expenseSmallCategoryId],
+          movedCommunication,
+        );
+        // 参照が0（未解決）のまま残っている行は無い
+        expect(
+          fixedCosts.every(
+            (row) => (row[SqfFixedCost.expenseSmallCategoryId] as int) > 0,
+          ),
+          isTrue,
+        );
+      },
+    );
+
+    test('参照先の固定費カテゴリーが欠損している行は「その他」由来の小カテゴリーへ割り当てる', () async {
+      final db = await createV9ShapeDatabase();
+      await insertFixedCostMaster(
+        db,
+        id: 1,
+        name: '謎の固定費',
+        fixedCostCategoryId: 999, // 存在しないカテゴリー
+      );
+
+      await DataBaseMigrate().toV10(db);
+
+      final others = (await db.query(
+        SqfExpenseSmallCategory.tableName,
+        where: '${SqfExpenseSmallCategory.name} = ?',
+        whereArgs: [FixedCostCategoryConstants.fallbackCategoryName],
+      )).single[SqfExpenseSmallCategory.id];
+      final fixedCost = (await db.query(SqfFixedCost.tableName)).single;
+      expect(fixedCost[SqfFixedCost.expenseSmallCategoryId], others);
+    });
+
+    test('「その他」が存在しないDBでも救済先（固定費その他）が作られて割り当てられる', () async {
+      final db = await createV9ShapeDatabase();
+      // ユーザーが「その他」を削除している状況
+      await db.execute(
+        "DELETE FROM ${SqfFixedCostCategory.tableName} WHERE ${SqfFixedCostCategory.categoryName} = 'その他';",
+      );
+      await insertFixedCostMaster(
+        db,
+        id: 1,
+        name: '謎の固定費',
+        fixedCostCategoryId: 999,
+      );
+
+      await DataBaseMigrate().toV10(db);
+
+      final fallback = (await db.query(
+        SqfExpenseSmallCategory.tableName,
+        where: '${SqfExpenseSmallCategory.name} = ?',
+        whereArgs: [
+          FixedCostCategoryConstants.freshInstallFallbackCategoryName,
+        ],
+      )).single[SqfExpenseSmallCategory.id];
+      final fixedCost = (await db.query(SqfFixedCost.tableName)).single;
+      expect(fixedCost[SqfFixedCost.expenseSmallCategoryId], fallback);
+    });
+
+    test('2回連続で実行してもカテゴリーが二重に作られず、値も変わらない（冪等）', () async {
+      final db = await createV9ShapeDatabase();
+      await db.execute('''
+        INSERT INTO expense (_id, expense_small_category_id, date, price, memo, income_source_big_category)
+        VALUES (1, 2, '20250701', 1200, 'ラーメン', 1);
+      ''');
+      await insertFixedCostMaster(
+        db,
+        id: 1,
+        name: '家賃',
+        fixedCostCategoryId: 1,
+      );
+
+      await DataBaseMigrate().toV10(db);
+      final bigsAfterFirst = await db.query(
+        SqfExpenseBigCategory.tableName,
+        orderBy: SqfExpenseBigCategory.id,
+      );
+      final smallsAfterFirst = await db.query(
+        SqfExpenseSmallCategory.tableName,
+        orderBy: SqfExpenseSmallCategory.id,
+      );
+      final fixedCostAfterFirst = (await db.query(
+        SqfFixedCost.tableName,
+      )).single;
+      final expenseAfterFirst = (await db.query(SqfExpense.tableName)).single;
+
+      await DataBaseMigrate().toV10(db);
+
+      expect(
+        await db.query(
+          SqfExpenseBigCategory.tableName,
+          orderBy: SqfExpenseBigCategory.id,
+        ),
+        bigsAfterFirst,
+      );
+      expect(
+        await db.query(
+          SqfExpenseSmallCategory.tableName,
+          orderBy: SqfExpenseSmallCategory.id,
+        ),
+        smallsAfterFirst,
+      );
+      expect((await db.query(SqfFixedCost.tableName)).single, {
+        ...fixedCostAfterFirst,
+      });
+      expect((await db.query(SqfExpense.tableName)).single, {
+        ...expenseAfterFirst,
+      });
+    });
+
+    test('中断残骸（expense_v10_new）が残っていても成功する', () async {
+      final db = await createV9ShapeDatabase();
+      await db.execute('CREATE TABLE expense_v10_new (dummy INTEGER);');
+
+      await DataBaseMigrate().toV10(db);
+
+      final columns = await _columnNames(db, SqfExpense.tableName);
+      expect(columns.contains(SqfExpense.isConfirmed), isTrue);
+    });
+  });
+
+  // -------------------------------------------------------------------------
   // マイグレーションチェーン（本番のonUpgrade経路）
   // -------------------------------------------------------------------------
-  group('マイグレーションチェーン v6 → v9', () {
+  group('マイグレーションチェーン v6 → v10', () {
     /// v6形状のDBファイルを DatabaseHelper のパスに作って閉じる
     ///
     /// テーブル定義はv6時点のもの（fixed_costはタイポ列 /
@@ -893,6 +1315,28 @@ void main() {
                     ('衣服美容', 'FFC857', 'assets/images/icon_clothes.svg', 4, 1),
                     ('医療費', 'B118C8', 'assets/images/icon_medical.svg', 5, 1),
                     ('雑費', '3E2F5B', 'assets/images/icon_others.svg', 6, 1);
+            ''');
+            // v6当時から存在するテーブル（出典: 90ea5e2^ 時点の sql_on_create.dart）。
+            // v10のカテゴリー移設先になるためチェーン検証に必要
+            await db.execute('''
+              CREATE TABLE expense_small_category (
+                _id INTEGER PRIMARY KEY AUTOINCREMENT,
+                big_category_key INTEGER NOT NULL,
+                name TEXT NOT NULL,
+                small_category_order_key INTEGER NOT NULL,
+                displayed_order_in_big INTEGER NOT NULL,
+                default_displayed INTEGER NOT NULL
+              );
+            ''');
+            await db.execute('''
+              INSERT INTO expense_small_category (big_category_key, name, small_category_order_key, displayed_order_in_big, default_displayed)
+              VALUES(1, '食費', 0, 0, 1),
+                    (2, '消耗品', 1, 0, 1),
+                    (3, '遊び', 2, 0, 1),
+                    (4, '交通費', 3, 0, 1),
+                    (5, 'カット', 4, 0, 1),
+                    (6, '医療費', 5, 0, 1),
+                    (7, 'その他', 6, 0, 1);
             ''');
             await db.execute('''
               CREATE TABLE income_big_category (
@@ -952,7 +1396,7 @@ void main() {
       await db.close();
     }
 
-    test('v6形状のDBを開くとonUpgradeでv7・v8・v9が順に適用されuser_versionが9になる', () async {
+    test('v6形状のDBを開くとonUpgradeでv7〜v10が順に適用されuser_versionが10になる', () async {
       final path = await currentDatabasePath();
       await createV6DatabaseFile(path);
 
@@ -960,10 +1404,10 @@ void main() {
       final db = await openTestDatabase();
 
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 9);
+      expect(rows.first.values.first, 10);
     });
 
-    test('チェーン適用後はv7の色更新とv8の列追加・バックフィルが両方反映される', () async {
+    test('チェーン適用後はv7の色更新とv8の列追加・バックフィルとv10の統合が反映される', () async {
       final path = await currentDatabasePath();
       await createV6DatabaseFile(path);
 
@@ -1004,6 +1448,24 @@ void main() {
       );
       expect(incomeBigCategories[0][SqfIncomeBigCategory.accountType], 1);
       expect(incomeBigCategories[1][SqfIncomeBigCategory.accountType], 2);
+
+      // v10: expenseの列追加と、固定費カテゴリーの支出カテゴリーへの移設
+      final expenseColumns = await _columnNames(db, SqfExpense.tableName);
+      expect(expenseColumns.contains(SqfExpense.fixedCostId), isTrue);
+      expect(expenseColumns.contains(SqfExpense.isConfirmed), isTrue);
+      expect(expenseColumns.contains(SqfExpense.estimatedPrice), isTrue);
+
+      // v6フィクスチャの支出大カテゴリー7件＋固定費カテゴリー5件
+      expect(
+        await DatabaseHelper.instance.queryRowCount(
+          SqfExpenseBigCategory.tableName,
+        ),
+        12,
+      );
+      // fixed_cost（1件）が移設先の小カテゴリーを参照している
+      final fixedCosts = await db.query(SqfFixedCost.tableName);
+      expect(fixedCosts, hasLength(1));
+      expect(fixedCosts.first[SqfFixedCost.expenseSmallCategoryId], isNot(0));
     });
   });
 }

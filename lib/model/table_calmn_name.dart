@@ -7,6 +7,12 @@ class SqfExpense {
   static const price = 'price';
   static const memo = 'memo';
   static const incomeSourceBigCategory = 'income_source_big_category';
+  // 固定費マスタ(fixed_cost._id)への参照。NULL=通常支出。v10で追加
+  static const fixedCostId = 'fixed_cost_id';
+  // 0=未確定 / 1=確定。通常支出は常に1。v10で追加
+  static const isConfirmed = 'is_confirmed';
+  // 予想額。変動固定費の実績生成時に設定し、確定後も保持する。v10で追加
+  static const estimatedPrice = 'estimated_price';
 }
 
 class SqfIncome {
@@ -81,6 +87,9 @@ class SqfFixedCost {
   static const price = 'price';
   static const estimatedPrice = 'estimated_price';
   static const fixedCostCategoryId = 'fixed_cost_category_id';
+  // 支出小カテゴリー(expense_small_category._id)への参照。v10で追加。
+  // 旧 fixed_cost_category_id はT6で削除するまで併存する
+  static const expenseSmallCategoryId = 'expense_small_category_id';
   static const intervalNumber = 'interval_number';
   static const intervalUnit = 'interval_unit';
   static const firstPaymentDate = 'first_payment_date';

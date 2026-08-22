@@ -1,6 +1,7 @@
 // ImplementsExpenseBigCategoryRepository のDB結合テスト
 //
-// 支出大カテゴリーは onCreate で7件シードされる。並び順は _id ではなく display_order である点、
+// 支出大カテゴリーは onCreate で12件シードされる（v10で固定費由来の5件が末尾に加わった）。
+// 並び順は _id ではなく display_order である点、
 // 存在しないIDを引いたときに例外ではなく空の既定エンティティが返る点を固定する。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
@@ -10,7 +11,22 @@ import 'package:kakeibo/theme/category_palette.dart';
 import '../../helper/db_test_helper.dart';
 
 /// onCreate がシードする支出大カテゴリー名（表示順）
-const _seedNames = ['食費', '日用品', '遊び娯楽', '交通費', '衣服美容', '医療費', '雑費'];
+///
+/// 末尾5件は v10（固定費カテゴリー統合）で追加された固定費由来のカテゴリー。
+const _seedNames = [
+  '食費',
+  '日用品',
+  '遊び娯楽',
+  '交通費',
+  '衣服美容',
+  '医療費',
+  '雑費',
+  '住居費',
+  'サブスク',
+  '通信費',
+  '光熱費',
+  '固定費その他',
+];
 
 void main() {
   setUpDbTestEnvironment();
@@ -18,10 +34,10 @@ void main() {
   final repository = ImplementsExpenseBigCategoryRepository();
 
   group('fetchAll', () {
-    test('シードされた7件をdisplay_order昇順で返す', () async {
+    test('シードされた12件をdisplay_order昇順で返す', () async {
       final results = await repository.fetchAll();
 
-      expect(results.length, 7);
+      expect(results.length, 12);
       expect(results.map((e) => e.bigCategoryName).toList(), _seedNames);
       expect(results.map((e) => e.displayOrder).toList(), [
         0,
@@ -31,6 +47,11 @@ void main() {
         4,
         5,
         6,
+        7,
+        8,
+        9,
+        10,
+        11,
       ]);
     });
 
@@ -66,7 +87,20 @@ void main() {
 
       final results = await repository.fetchAll();
 
-      expect(results.map((e) => e.id).toList(), [2, 3, 4, 5, 6, 7, 1]);
+      expect(results.map((e) => e.id).toList(), [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        1,
+      ]);
     });
 
     test('is_displayed = 0 のカテゴリーも除外されない', () async {
@@ -85,7 +119,7 @@ void main() {
       final results = await repository.fetchAll();
 
       // 絞り込み条件が無いSQLなので非表示カテゴリーも返る
-      expect(results.length, 7);
+      expect(results.length, 12);
       expect(results.firstWhere((e) => e.id == 2).isDisplayed, 0);
     });
   });
@@ -139,7 +173,7 @@ void main() {
       expect(updated.isDisplayed, 0);
 
       // 他の行は変化しない
-      expect(results.length, 7);
+      expect(results.length, 12);
       expect(results.firstWhere((e) => e.id == 5).bigCategoryName, '衣服美容');
     });
 
@@ -157,7 +191,7 @@ void main() {
       await settleDbWrites();
 
       final results = await repository.fetchAll();
-      expect(results.length, 7);
+      expect(results.length, 12);
       expect(results.map((e) => e.bigCategoryName).toList(), _seedNames);
     });
   });
@@ -170,17 +204,17 @@ void main() {
           colorCode: CategoryPalette.expense8Hex,
           bigCategoryName: '教育費',
           resourcePath: 'assets/images/icon_others.svg',
-          displayOrder: 7,
+          displayOrder: 12,
           isDisplayed: 1,
         ),
       );
 
-      // シード7件の次
-      expect(id, 8);
+      // シード12件の次
+      expect(id, 13);
       final added = await repository.fetchByBigCategory(bigCategoryId: id);
       expect(added.bigCategoryName, '教育費');
       expect(added.colorCode, CategoryPalette.expense8Hex);
-      expect(added.displayOrder, 7);
+      expect(added.displayOrder, 12);
     });
 
     test('追加したカテゴリーは表示順の位置に並ぶ', () async {
@@ -198,7 +232,7 @@ void main() {
 
       final results = await repository.fetchAll();
 
-      expect(results.length, 8);
+      expect(results.length, 13);
       expect(results.first.bigCategoryName, '教育費');
     });
   });

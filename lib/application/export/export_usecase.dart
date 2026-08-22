@@ -74,7 +74,7 @@ class ExportUsecase {
       final expenseHistoryTileValue = ExportValue(
         id: expense.id,
         date: expense.date,
-        price: expense.price,
+        price: expense.effectivePrice,
         memo: expense.memo,
         bigCategoryName: expenseBigCategory.bigCategoryName,
         bigCategoryId: expenseBigCategory.id,

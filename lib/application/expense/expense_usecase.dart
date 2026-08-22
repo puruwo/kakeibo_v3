@@ -22,10 +22,10 @@ class ExpenseUsecase {
   // 登録処理
   Future<void> add({required ExpenseEntity expenseEntity}) async {
     //エラーチェック
-    if (expenseEntity.price <= 0) {
+    if (expenseEntity.effectivePrice <= 0) {
       throw const AppException('0円以上で入力してください');
     }
-    if (expenseEntity.price >= 1888888) {
+    if (expenseEntity.effectivePrice >= 1888888) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
     // 支出小カテゴリーが1件も無いと未選択（ID 0）のまま保存できてしまうため入口で弾く
@@ -49,10 +49,10 @@ class ExpenseUsecase {
       // 変更がない場合は何もしない
       throw const AppException('変更がありません');
     }
-    if (editEntity.price <= 0) {
+    if (editEntity.effectivePrice <= 0) {
       throw const AppException('0円以上で入力してください');
     }
-    if (editEntity.price >= 1888888) {
+    if (editEntity.effectivePrice >= 1888888) {
       throw const AppException('金額の入力値が大き過ぎます');
     }
     if (editEntity.paymentCategoryId <= 0) {

@@ -1,6 +1,6 @@
 // ImplementsExpenseSmallCategoryRepository のDB結合テスト
 //
-// 支出小カテゴリーは onCreate で15件シードされる。
+// 支出小カテゴリーは onCreate で20件シードされる（v10で固定費由来の5件が末尾に加わった）。
 // fetchAll は _id 昇順、fetchByBigCategory は displayed_order_in_big 昇順と
 // 並び順のキーが違うこと、getMaxSmallCategoryOrderKey が引数の大カテゴリーを
 // 無視して全体の最大値を返すことを固定する。
@@ -27,6 +27,12 @@ const _seedNames = [
   'カット',
   '医療費',
   'その他',
+  // 固定費由来（v10で追加。大カテゴリー8〜12と同名）
+  '住居費',
+  'サブスク',
+  '通信費',
+  '光熱費',
+  '固定費その他',
 ];
 
 void main() {
@@ -35,13 +41,13 @@ void main() {
   final repository = ImplementsExpenseSmallCategoryRepository();
 
   group('fetchAll', () {
-    test('シードされた15件をid昇順で返す', () async {
+    test('シードされた20件をid昇順で返す', () async {
       final results = await repository.fetchAll();
 
-      expect(results.length, 15);
+      expect(results.length, 20);
       expect(
         results.map((e) => e.id).toList(),
-        List.generate(15, (i) => i + 1),
+        List.generate(20, (i) => i + 1),
       );
       expect(results.map((e) => e.smallCategoryName).toList(), _seedNames);
     });
@@ -165,7 +171,7 @@ void main() {
 
       // 他の行は変化しない
       final all = await repository.fetchAll();
-      expect(all.length, 15);
+      expect(all.length, 20);
       expect(all.firstWhere((e) => e.id == 3).smallCategoryName, '外食');
     });
 
@@ -183,7 +189,7 @@ void main() {
       await settleDbWrites();
 
       final results = await repository.fetchAll();
-      expect(results.length, 15);
+      expect(results.length, 20);
       expect(results.map((e) => e.smallCategoryName).toList(), _seedNames);
     });
   });
@@ -193,7 +199,7 @@ void main() {
       final id = await repository.add(
         entity: const ExpenseSmallCategoryEntity(
           id: 0,
-          smallCategoryOrderKey: 15,
+          smallCategoryOrderKey: 20,
           bigCategoryKey: 1,
           displayedOrderInBig: 4,
           smallCategoryName: 'カフェ',
@@ -201,11 +207,11 @@ void main() {
         ),
       );
 
-      // シード15件の次
-      expect(id, 16);
+      // シード20件の次
+      expect(id, 21);
       final added = await repository.fetchBySmallCategory(smallCategoryId: id);
       expect(added.smallCategoryName, 'カフェ');
-      expect(added.smallCategoryOrderKey, 15);
+      expect(added.smallCategoryOrderKey, 20);
       expect(added.bigCategoryKey, 1);
       expect(added.displayedOrderInBig, 4);
     });
@@ -231,12 +237,12 @@ void main() {
   });
 
   group('getMaxSmallCategoryOrderKey', () {
-    test('シード直後は全カテゴリー通しの最大値14を返す', () async {
+    test('シード直後は全カテゴリー通しの最大値19を返す', () async {
       final maxOrderKey = await repository.getMaxSmallCategoryOrderKey(
         bigCategoryId: 1,
       );
 
-      expect(maxOrderKey, 14);
+      expect(maxOrderKey, 19);
     });
 
     test('引数の大カテゴリーで絞り込まない（どの大カテゴリーでも同じ値）', () async {
@@ -250,9 +256,9 @@ void main() {
         bigCategoryId: 999,
       );
 
-      expect(forBig1, 14);
-      expect(forBig6, 14);
-      expect(forUnknown, 14);
+      expect(forBig1, 19);
+      expect(forBig6, 19);
+      expect(forUnknown, 19);
     });
 
     test('より大きい通し順を追加するとその値を返す', () async {

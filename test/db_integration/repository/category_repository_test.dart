@@ -15,7 +15,22 @@ final _fromDate = DateTime(2025, 6, 25);
 final _toDate = DateTime(2025, 7, 24);
 
 /// onCreate がシードする支出大カテゴリー名（display_order 昇順）
-const _seedNames = ['食費', '日用品', '遊び娯楽', '交通費', '衣服美容', '医療費', '雑費'];
+///
+/// 末尾5件は v10（固定費カテゴリー統合）で追加された固定費由来のカテゴリー。
+const _seedNames = [
+  '食費',
+  '日用品',
+  '遊び娯楽',
+  '交通費',
+  '衣服美容',
+  '医療費',
+  '雑費',
+  '住居費',
+  'サブスク',
+  '通信費',
+  '光熱費',
+  '固定費その他',
+];
 
 void main() {
   setUpDbTestEnvironment();
@@ -75,21 +90,21 @@ void main() {
         toDate: _toDate,
       );
 
-      // シードの7カテゴリーが全て返る
-      expect(results.length, 7);
+      // シードの12カテゴリーが全て返る
+      expect(results.length, 12);
       expect(results.map((e) => e.bigCategoryName).toList(), _seedNames);
       // 実績の無いカテゴリーは0
       expect(results.firstWhere((e) => e.id == 6).totalExpenseByBigCategory, 0);
     });
 
-    test('支出が1件も無くてもシードの7カテゴリーを0円で返す', () async {
+    test('支出が1件も無くてもシードの12カテゴリーを0円で返す', () async {
       final results = await repository.fetchAll(
         incomeSourceBigCategoryId: 1,
         fromDate: _fromDate,
         toDate: _toDate,
       );
 
-      expect(results.length, 7);
+      expect(results.length, 12);
       expect(results.every((e) => e.totalExpenseByBigCategory == 0), isTrue);
     });
 
@@ -100,7 +115,20 @@ void main() {
         toDate: _toDate,
       );
 
-      expect(results.map((e) => e.id).toList(), [1, 2, 3, 4, 5, 6, 7]);
+      expect(results.map((e) => e.id).toList(), [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+      ]);
       expect(results.first.bigCategoryName, '食費');
       expect(results.first.categoryColor, 'FF7171');
       expect(results.first.categoryIconPath, 'assets/images/icon_meal.svg');
@@ -224,7 +252,7 @@ void main() {
         toDate: _toDate,
       );
 
-      expect(results.length, 6);
+      expect(results.length, 11);
       expect(results.map((e) => e.id), isNot(contains(6)));
     });
 
@@ -244,7 +272,7 @@ void main() {
         toDate: _toDate,
       );
 
-      expect(results.length, 7);
+      expect(results.length, 12);
       expect(
         results.firstWhere((e) => e.id == 6).totalExpenseByBigCategory,
         500,
@@ -304,7 +332,7 @@ void main() {
         toDate: _toDate,
       );
 
-      expect(results.length, 7);
+      expect(results.length, 12);
       expect(results.where((e) => e.id == 1).length, 1);
       expect(
         results.firstWhere((e) => e.id == 1).totalExpenseByBigCategory,

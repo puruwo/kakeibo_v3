@@ -46,7 +46,7 @@ class ExpenseHistoryService {
           id: expense.id,
           date: DateTime.parse(
               '${expense.date.substring(0, 4)}-${expense.date.substring(4, 6)}-${expense.date.substring(6, 8)}'),
-          price: expense.price,
+          price: expense.effectivePrice,
           paymentCategoryId: expense.paymentCategoryId,
           memo: expense.memo,
           smallCategoryName: small.smallCategoryName,

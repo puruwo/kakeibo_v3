@@ -16,6 +16,9 @@ class FixedCostEntity with _$FixedCostEntity {
     @Default(0) int price,
     @Default(0) int estimatedPrice,
     required int fixedCostCategoryId,
+    // 支出小カテゴリーへの参照（v10で追加）。
+    // 旧 fixedCostCategoryId はT6で削除するまで併存する
+    @Default(0) int expenseSmallCategoryId,
     required int intervalNumber,
     required int intervalUnit,
     required String firstPaymentDate,

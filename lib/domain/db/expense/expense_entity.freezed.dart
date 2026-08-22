@@ -22,11 +22,18 @@ ExpenseEntity _$ExpenseEntityFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$ExpenseEntity {
   int get id => throw _privateConstructorUsedError;
-  String get date => throw _privateConstructorUsedError;
-  int get price => throw _privateConstructorUsedError;
+  String get date =>
+      throw _privateConstructorUsedError; // 実額。未確定の固定費行の間は NULL（v10でNULL許容化）
+  int? get price => throw _privateConstructorUsedError;
   int get paymentCategoryId => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
-  int get incomeSourceBigCategory => throw _privateConstructorUsedError;
+  int get incomeSourceBigCategory =>
+      throw _privateConstructorUsedError; // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  int? get fixedCostId =>
+      throw _privateConstructorUsedError; // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  int get isConfirmed =>
+      throw _privateConstructorUsedError; // 予想額。変動固定費の実績生成時に設定し、確定後も保持する（v10で追加）
+  int? get estimatedPrice => throw _privateConstructorUsedError;
 
   /// Serializes this ExpenseEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -48,10 +55,13 @@ abstract class $ExpenseEntityCopyWith<$Res> {
   $Res call({
     int id,
     String date,
-    int price,
+    int? price,
     int paymentCategoryId,
     String memo,
     int incomeSourceBigCategory,
+    int? fixedCostId,
+    int isConfirmed,
+    int? estimatedPrice,
   });
 }
 
@@ -72,10 +82,13 @@ class _$ExpenseEntityCopyWithImpl<$Res, $Val extends ExpenseEntity>
   $Res call({
     Object? id = null,
     Object? date = null,
-    Object? price = null,
+    Object? price = freezed,
     Object? paymentCategoryId = null,
     Object? memo = null,
     Object? incomeSourceBigCategory = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
+    Object? estimatedPrice = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -87,10 +100,10 @@ class _$ExpenseEntityCopyWithImpl<$Res, $Val extends ExpenseEntity>
                 ? _value.date
                 : date // ignore: cast_nullable_to_non_nullable
                       as String,
-            price: null == price
+            price: freezed == price
                 ? _value.price
                 : price // ignore: cast_nullable_to_non_nullable
-                      as int,
+                      as int?,
             paymentCategoryId: null == paymentCategoryId
                 ? _value.paymentCategoryId
                 : paymentCategoryId // ignore: cast_nullable_to_non_nullable
@@ -103,6 +116,18 @@ class _$ExpenseEntityCopyWithImpl<$Res, $Val extends ExpenseEntity>
                 ? _value.incomeSourceBigCategory
                 : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
                       as int,
+            fixedCostId: freezed == fixedCostId
+                ? _value.fixedCostId
+                : fixedCostId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            isConfirmed: null == isConfirmed
+                ? _value.isConfirmed
+                : isConfirmed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            estimatedPrice: freezed == estimatedPrice
+                ? _value.estimatedPrice
+                : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -121,10 +146,13 @@ abstract class _$$ExpenseEntityImplCopyWith<$Res>
   $Res call({
     int id,
     String date,
-    int price,
+    int? price,
     int paymentCategoryId,
     String memo,
     int incomeSourceBigCategory,
+    int? fixedCostId,
+    int isConfirmed,
+    int? estimatedPrice,
   });
 }
 
@@ -144,10 +172,13 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
   $Res call({
     Object? id = null,
     Object? date = null,
-    Object? price = null,
+    Object? price = freezed,
     Object? paymentCategoryId = null,
     Object? memo = null,
     Object? incomeSourceBigCategory = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
+    Object? estimatedPrice = freezed,
   }) {
     return _then(
       _$ExpenseEntityImpl(
@@ -159,10 +190,10 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
             ? _value.date
             : date // ignore: cast_nullable_to_non_nullable
                   as String,
-        price: null == price
+        price: freezed == price
             ? _value.price
             : price // ignore: cast_nullable_to_non_nullable
-                  as int,
+                  as int?,
         paymentCategoryId: null == paymentCategoryId
             ? _value.paymentCategoryId
             : paymentCategoryId // ignore: cast_nullable_to_non_nullable
@@ -175,6 +206,18 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
             ? _value.incomeSourceBigCategory
             : incomeSourceBigCategory // ignore: cast_nullable_to_non_nullable
                   as int,
+        fixedCostId: freezed == fixedCostId
+            ? _value.fixedCostId
+            : fixedCostId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        isConfirmed: null == isConfirmed
+            ? _value.isConfirmed
+            : isConfirmed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        estimatedPrice: freezed == estimatedPrice
+            ? _value.estimatedPrice
+            : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -182,15 +225,18 @@ class __$$ExpenseEntityImplCopyWithImpl<$Res>
 
 /// @nodoc
 @JsonSerializable()
-class _$ExpenseEntityImpl implements _ExpenseEntity {
+class _$ExpenseEntityImpl extends _ExpenseEntity {
   const _$ExpenseEntityImpl({
     this.id = 1,
     required this.date,
-    this.price = 0,
+    this.price,
     this.paymentCategoryId = 0,
     this.memo = '',
     this.incomeSourceBigCategory = AccountTypeConstants.living,
-  });
+    this.fixedCostId,
+    this.isConfirmed = 1,
+    this.estimatedPrice,
+  }) : super._();
 
   factory _$ExpenseEntityImpl.fromJson(Map<String, dynamic> json) =>
       _$$ExpenseEntityImplFromJson(json);
@@ -200,9 +246,9 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
   final int id;
   @override
   final String date;
+  // 実額。未確定の固定費行の間は NULL（v10でNULL許容化）
   @override
-  @JsonKey()
-  final int price;
+  final int? price;
   @override
   @JsonKey()
   final int paymentCategoryId;
@@ -212,10 +258,20 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
   @override
   @JsonKey()
   final int incomeSourceBigCategory;
+  // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  @override
+  final int? fixedCostId;
+  // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  @override
+  @JsonKey()
+  final int isConfirmed;
+  // 予想額。変動固定費の実績生成時に設定し、確定後も保持する（v10で追加）
+  @override
+  final int? estimatedPrice;
 
   @override
   String toString() {
-    return 'ExpenseEntity(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, incomeSourceBigCategory: $incomeSourceBigCategory)';
+    return 'ExpenseEntity(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, incomeSourceBigCategory: $incomeSourceBigCategory, fixedCostId: $fixedCostId, isConfirmed: $isConfirmed, estimatedPrice: $estimatedPrice)';
   }
 
   @override
@@ -233,7 +289,13 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
                   other.incomeSourceBigCategory,
                   incomeSourceBigCategory,
                 ) ||
-                other.incomeSourceBigCategory == incomeSourceBigCategory));
+                other.incomeSourceBigCategory == incomeSourceBigCategory) &&
+            (identical(other.fixedCostId, fixedCostId) ||
+                other.fixedCostId == fixedCostId) &&
+            (identical(other.isConfirmed, isConfirmed) ||
+                other.isConfirmed == isConfirmed) &&
+            (identical(other.estimatedPrice, estimatedPrice) ||
+                other.estimatedPrice == estimatedPrice));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -246,6 +308,9 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
     paymentCategoryId,
     memo,
     incomeSourceBigCategory,
+    fixedCostId,
+    isConfirmed,
+    estimatedPrice,
   );
 
   /// Create a copy of ExpenseEntity
@@ -262,15 +327,19 @@ class _$ExpenseEntityImpl implements _ExpenseEntity {
   }
 }
 
-abstract class _ExpenseEntity implements ExpenseEntity {
+abstract class _ExpenseEntity extends ExpenseEntity {
   const factory _ExpenseEntity({
     final int id,
     required final String date,
-    final int price,
+    final int? price,
     final int paymentCategoryId,
     final String memo,
     final int incomeSourceBigCategory,
+    final int? fixedCostId,
+    final int isConfirmed,
+    final int? estimatedPrice,
   }) = _$ExpenseEntityImpl;
+  const _ExpenseEntity._() : super._();
 
   factory _ExpenseEntity.fromJson(Map<String, dynamic> json) =
       _$ExpenseEntityImpl.fromJson;
@@ -278,15 +347,21 @@ abstract class _ExpenseEntity implements ExpenseEntity {
   @override
   int get id;
   @override
-  String get date;
+  String get date; // 実額。未確定の固定費行の間は NULL（v10でNULL許容化）
   @override
-  int get price;
+  int? get price;
   @override
   int get paymentCategoryId;
   @override
   String get memo;
   @override
-  int get incomeSourceBigCategory;
+  int get incomeSourceBigCategory; // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  @override
+  int? get fixedCostId; // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  @override
+  int get isConfirmed; // 予想額。変動固定費の実績生成時に設定し、確定後も保持する（v10で追加）
+  @override
+  int? get estimatedPrice;
 
   /// Create a copy of ExpenseEntity
   /// with the given fields replaced by the non-null parameter values.
