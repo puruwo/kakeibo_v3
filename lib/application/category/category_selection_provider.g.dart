@@ -6,7 +6,7 @@ part of 'category_selection_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$categoryByModeHash() => r'24a8c968de28866722c88056082b7d62155c1eec';
+String _$categoryByModeHash() => r'38b761d51f2df323a601a25e48648df5221027ff';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -31,7 +31,7 @@ class _SystemHash {
 
 /// TransactionModeに応じたカテゴリーを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 /// [categoryId] カテゴリーID
 ///
 /// Copied from [categoryByMode].
@@ -40,14 +40,14 @@ const categoryByModeProvider = CategoryByModeFamily();
 
 /// TransactionModeに応じたカテゴリーを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 /// [categoryId] カテゴリーID
 ///
 /// Copied from [categoryByMode].
 class CategoryByModeFamily extends Family<AsyncValue<ICategoryEntity>> {
   /// TransactionModeに応じたカテゴリーを取得するProvider
   ///
-  /// [mode] トランザクションの種類（支出、固定費、収入）
+  /// [mode] トランザクションの種類（支出、収入）
   /// [categoryId] カテゴリーID
   ///
   /// Copied from [categoryByMode].
@@ -55,7 +55,7 @@ class CategoryByModeFamily extends Family<AsyncValue<ICategoryEntity>> {
 
   /// TransactionModeに応じたカテゴリーを取得するProvider
   ///
-  /// [mode] トランザクションの種類（支出、固定費、収入）
+  /// [mode] トランザクションの種類（支出、収入）
   /// [categoryId] カテゴリーID
   ///
   /// Copied from [categoryByMode].
@@ -90,7 +90,7 @@ class CategoryByModeFamily extends Family<AsyncValue<ICategoryEntity>> {
 
 /// TransactionModeに応じたカテゴリーを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 /// [categoryId] カテゴリーID
 ///
 /// Copied from [categoryByMode].
@@ -98,7 +98,7 @@ class CategoryByModeProvider
     extends AutoDisposeFutureProvider<ICategoryEntity> {
   /// TransactionModeに応じたカテゴリーを取得するProvider
   ///
-  /// [mode] トランザクションの種類（支出、固定費、収入）
+  /// [mode] トランザクションの種類（支出、収入）
   /// [categoryId] カテゴリーID
   ///
   /// Copied from [categoryByMode].
@@ -199,11 +199,11 @@ class _CategoryByModeProviderElement
   int get categoryId => (origin as CategoryByModeProvider).categoryId;
 }
 
-String _$categoriesByModeHash() => r'43918e7d150eca7e6aa735c3fc4749498cfd61ed';
+String _$categoriesByModeHash() => r'28889dc174076151a45c94c318efe356dc4ebd4b';
 
 /// TransactionModeに応じたカテゴリーリストを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 ///
 /// Copied from [categoriesByMode].
 @ProviderFor(categoriesByMode)
@@ -211,20 +211,20 @@ const categoriesByModeProvider = CategoriesByModeFamily();
 
 /// TransactionModeに応じたカテゴリーリストを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 ///
 /// Copied from [categoriesByMode].
 class CategoriesByModeFamily extends Family<AsyncValue<List<ICategoryEntity>>> {
   /// TransactionModeに応じたカテゴリーリストを取得するProvider
   ///
-  /// [mode] トランザクションの種類（支出、固定費、収入）
+  /// [mode] トランザクションの種類（支出、収入）
   ///
   /// Copied from [categoriesByMode].
   const CategoriesByModeFamily();
 
   /// TransactionModeに応じたカテゴリーリストを取得するProvider
   ///
-  /// [mode] トランザクションの種類（支出、固定費、収入）
+  /// [mode] トランザクションの種類（支出、収入）
   ///
   /// Copied from [categoriesByMode].
   CategoriesByModeProvider call(TransactionMode mode) {
@@ -255,14 +255,14 @@ class CategoriesByModeFamily extends Family<AsyncValue<List<ICategoryEntity>>> {
 
 /// TransactionModeに応じたカテゴリーリストを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 ///
 /// Copied from [categoriesByMode].
 class CategoriesByModeProvider
     extends AutoDisposeFutureProvider<List<ICategoryEntity>> {
   /// TransactionModeに応じたカテゴリーリストを取得するProvider
   ///
-  /// [mode] トランザクションの種類（支出、固定費、収入）
+  /// [mode] トランザクションの種類（支出、収入）
   ///
   /// Copied from [categoriesByMode].
   CategoriesByModeProvider(TransactionMode mode)

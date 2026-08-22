@@ -28,6 +28,7 @@ class MainButton extends StatelessWidget {
     this.disabledButtonColor,
     this.buttonType = ButtonColorType.main,
     this.icon,
+    this.textColor,
     required this.onPressed,
     required this.buttonText,
   });
@@ -39,11 +40,16 @@ class MainButton extends StatelessWidget {
   final Color? disabledButtonColor;
   final Widget? icon;
 
+  /// ラベルの文字色。secondary背景にdanger文字を載せる削除ボタン用（仕様 §6.7）
+  final Color? textColor;
+
   @override
   Widget build(BuildContext context) {
     final Color backgroundColor = buttonColor ?? buttonType.resolveColor(context);
     // ADR-017 #4: secondaryButtonTextはmainButtonTextと同値だったため統合（種別によらず同一スタイル）
-    final textStyle = AppTextStyles.mainButtonText;
+    final textStyle = textColor == null
+        ? AppTextStyles.mainButtonText
+        : AppTextStyles.mainButtonText.copyWith(color: textColor);
 
     return SizedBox(
       height: 40,

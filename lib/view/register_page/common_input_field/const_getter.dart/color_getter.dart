@@ -8,7 +8,6 @@ Color getPillColor(BuildContext context, TransactionMode mode) {
   return switch (mode) {
     TransactionMode.expense => context.colors.expense,
     TransactionMode.income => Colors.lightBlue,
-    TransactionMode.fixedCost => context.colors.expense,
   };
 }
 
@@ -16,6 +15,5 @@ Color getPillBackgroundColor(BuildContext context, TransactionMode mode) {
   return switch (mode) {
     TransactionMode.expense => context.colors.expense.withOpacity(0.1),
     TransactionMode.income => Colors.lightBlue.withOpacity(0.1),
-    TransactionMode.fixedCost => context.colors.expense.withOpacity(0.1),
   };
 }

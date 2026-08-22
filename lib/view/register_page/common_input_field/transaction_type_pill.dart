@@ -24,8 +24,7 @@ class TransactionTypePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final enabled = mode == RegisterScreenMode.add &&
-        currentMode != TransactionMode.fixedCost;
+    final enabled = mode == RegisterScreenMode.add;
     return AppPopupMenu<TransactionMode>(
       enabled: enabled,
       onSelected: onModeChanged,
@@ -92,7 +91,6 @@ class TransactionTypePill extends StatelessWidget {
     return switch (mode) {
       TransactionMode.expense => '支出',
       TransactionMode.income => '収入',
-      TransactionMode.fixedCost => '固定費',
     };
   }
 }

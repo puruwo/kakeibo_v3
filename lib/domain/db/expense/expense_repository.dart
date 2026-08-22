@@ -124,4 +124,13 @@ abstract interface class ExpenseRepository {
     required int fixedCostId,
     required int expenseSmallCategoryId,
   });
+
+  /// 指定マスタの固定費行を支払日の新しい順に取得する
+  ///
+  /// 固定費の設定画面の「支払い履歴」で使う（仕様 §6.7）。
+  /// [limit] で取得件数を絞る。
+  Future<List<ExpenseEntity>> fetchByFixedCostId({
+    required int fixedCostId,
+    required int limit,
+  });
 }

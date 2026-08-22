@@ -403,4 +403,64 @@ class AppTextStyles {
     color: AppColorsDark.textSecondary,
     fontWeight: FontWeight.w500,
   );
+
+  // ==========================================================================
+  // インセットグループ（AppInsetGroup / AppInsetRow）
+  // ==========================================================================
+
+  /// インセットグループの見出し（「固定費」「設定」など）
+  static final TextStyle insetGroupHeader = MyFontStyle.notoSans.copyWith(
+    fontSize: 13,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// インセットグループ内の行ラベル（「拠出元」「頻度」など）
+  static final TextStyle insetGroupLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 14,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// インセットグループ内の行の値（右寄せの選択値・入力値）
+  static final TextStyle insetGroupValue = MyFontStyle.notoSans.copyWith(
+    fontSize: 15,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// インセットグループ内の行の値のプレースホルダー（未入力時）
+  static final TextStyle insetGroupPlaceholder = MyFontStyle.notoSans.copyWith(
+    fontSize: 15,
+    color: AppColorsDark.textTertiary,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// インセットグループの下に添える補足文（操作の結果を説明する1〜2行）
+  static final TextStyle insetGroupNote = MyFontStyle.notoSans.copyWith(
+    fontSize: 11,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w300,
+  );
+
+  /// インセットグループ内の支払い履歴行の日付
+  static final TextStyle insetGroupHistoryDate = MyFontStyle.notoSans.copyWith(
+    fontSize: 13,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// インセットグループ内の支払い履歴行の金額
+  static final TextStyle insetGroupHistoryPrice = MyFontStyle.sfUi.copyWith(
+    fontSize: 15,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w500,
+  );
+
+  /// インセットグループ末尾のリンク行（「すべての支払いを見る」）
+  static final TextStyle insetGroupLinkRow = MyFontStyle.notoSans.copyWith(
+    fontSize: 12,
+    color: AppColorsDark.primary,
+    fontWeight: FontWeight.w500,
+  );
 }

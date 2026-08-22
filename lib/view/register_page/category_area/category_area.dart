@@ -17,7 +17,7 @@ import 'package:kakeibo/view_model/state/register_page/select_category_controlle
 
 /// カテゴリー選択エリアウィジェット
 ///
-/// 支出・固定費・収入登録画面でカテゴリーを選択するためのグリッド表示。
+/// 支出・収入登録画面でカテゴリーを選択するためのグリッド表示。
 /// 1ページに15個（5列 x 3行）のカテゴリーを表示し、
 /// カテゴリー数が15個以上の場合はページネーションで表示。
 class CategoryArea extends ConsumerStatefulWidget {
@@ -31,7 +31,7 @@ class CategoryArea extends ConsumerStatefulWidget {
   /// 初期選択されるカテゴリーID
   final int originalCategoryId;
 
-  /// トランザクションの種類（支出/固定費/収入）
+  /// トランザクションの種類（支出/収入）
   final TransactionMode transactionMode;
 
   /// アイコン並べ替えリンクを表示するか

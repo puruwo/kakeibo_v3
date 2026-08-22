@@ -18,10 +18,6 @@ class RegisterPageStyles {
   ///   - 詳細: 「メモを入力」などのプレースホルダーテキスト
   ///
   /// - ページ: register_page
-  ///   - エリア: price_type_switch_area.dart (価格タイプ切替エリア)
-  ///   - 詳細: 「金額を入力」などのプレースホルダー
-  ///
-  /// - ページ: register_page
   ///   - エリア: budget_row.dart (予算行)
   ///   - 詳細: 「予算」ラベル
   ///
@@ -30,25 +26,12 @@ class RegisterPageStyles {
   ///   - 詳細: 「支払い頻度」ラベル
   ///
   /// - ページ: register_page
-  ///   - エリア: initial_payment_date_input_field.dart
-  ///   - 詳細: 「初回支払い日」ラベル
+  ///   - エリア: payment_frequency_picker.dart
+  ///   - 詳細: ピッカー内のラベル
   static final TextStyle placeHolder = MyFontStyle.notoSans.copyWith(
     fontSize: 14,
     fontWeight: FontWeight.w500,
     color: AppColorsDark.textSecondary,
-  );
-
-  /// 支出金額入力スタイル（ダイアログ用）
-  ///
-  /// 【使用箇所】
-  /// - ページ: monthly_fixed_cost_page (月間固定費ページ)
-  ///   - エリア: price_input_dialog.dart (金額入力ダイアログ)
-  ///   - 詳細: 固定費の金額入力フィールド
-  static final TextStyle inputExpenseText = MyFontStyle.sfUi.copyWith(
-    fontSize: 25,
-    fontWeight: FontWeight.w500,
-    color: AppColorsDark.text,
-    height: 1.0,
   );
 
   /// 一般入力テキスト用スタイル
@@ -188,18 +171,6 @@ class RegisterPageStyles {
     fontSize: 20,
     color: AppColorsDark.text,
     fontWeight: FontWeight.bold,
-  );
-
-  /// 支払い額変動ありのラベル
-  ///
-  /// 【使用箇所】
-  /// - ページ: register_page
-  ///   - エリア: price_type_switch_area.dart (価格タイプ切替エリア)
-  ///   - 詳細: 「支払い額変動あり」ラベル
-  static final TextStyle priceTypeSwitchLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w400,
   );
 
   // ==========================================================================

@@ -6,7 +6,7 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirm
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
-import 'package:kakeibo/util/common_widget/price_input_dialog.dart';
+import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_expense_edit_sheet.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 
@@ -78,8 +78,8 @@ class DailyUnconfirmedFixedCostItemTile extends ConsumerWidget {
       subtitleLeading: '固定費(未確定)',
       priceLabel: priceLabel,
       isIncome: false,
-      onTap: () {
-        showPriceInputDialog(context, value);
+      onTap: () async {
+        await openFixedCostExpenseEditSheet(context, ref, expenseId: value.id);
       },
       onLongPress: () => _showMenuDialog(context, ref),
     );
@@ -92,8 +92,9 @@ class DailyUnconfirmedFixedCostItemTile extends ConsumerWidget {
         MenuDialogItem(
           label: '編集',
           icon: Icons.edit_outlined,
-          onPressed: () {
-            showPriceInputDialog(context, value);
+          onPressed: () async {
+            await openFixedCostExpenseEditSheet(context, ref,
+                expenseId: value.id);
           },
         ),
         MenuDialogItem(

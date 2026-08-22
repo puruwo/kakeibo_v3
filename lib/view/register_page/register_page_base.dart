@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
-import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
-import 'package:kakeibo/view/register_page/fixed_cost_tab/register_fixed_cost_page.dart';
+import 'package:kakeibo/view/register_page/expense_tab/edit_fixed_cost_expense_page.dart';
 import 'package:kakeibo/view/register_page/income_tab/register_income_page.dart';
 import 'package:kakeibo/view/register_page/expense_tab/register_expense_page.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/fixed_cost_input_controller/fixed_cost_input_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
@@ -27,7 +27,12 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
 
   final ExpenseEntity? expenseEntity;
   final IncomeEntity? incomeEntity;
-  final FixedCostEntity? fixedCostEntity;
+
+  /// 固定費トグルをONにした状態で開くか（固定費の直接登録導線。仕様 §6.3）
+  final bool initialFixedCostToggle;
+
+  /// 固定費の実績行（expenseのうち fixed_cost_id を持つ行）の編集シートか（仕様 §6.6）
+  final bool isFixedCostExpenseEdit;
 
   /// 支出追加
   const RegisaterPageBase.addExpense({
@@ -35,7 +40,8 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.registerMode = RegisterScreenMode.add,
     this.expenseEntity,
     this.incomeEntity,
-    this.fixedCostEntity,
+    this.initialFixedCostToggle = false,
+    this.isFixedCostExpenseEdit = false,
     super.key,
   });
 
@@ -45,7 +51,8 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.registerMode = RegisterScreenMode.edit,
     required this.expenseEntity,
     this.incomeEntity,
-    this.fixedCostEntity,
+    this.initialFixedCostToggle = false,
+    this.isFixedCostExpenseEdit = false,
     super.key,
   });
 
@@ -55,7 +62,8 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.registerMode = RegisterScreenMode.add,
     this.expenseEntity,
     this.incomeEntity,
-    this.fixedCostEntity,
+    this.initialFixedCostToggle = false,
+    this.isFixedCostExpenseEdit = false,
     super.key,
   });
 
@@ -65,27 +73,30 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.registerMode = RegisterScreenMode.edit,
     this.expenseEntity,
     required this.incomeEntity,
-    this.fixedCostEntity,
+    this.initialFixedCostToggle = false,
+    this.isFixedCostExpenseEdit = false,
     super.key,
   });
 
-  /// 固定費追加
+  /// 固定費追加（支出タブの固定費トグルをONにした状態で開く。仕様 §6.3）
   const RegisaterPageBase.addFixedCost({
-    this.transactionMode = TransactionMode.fixedCost,
+    this.transactionMode = TransactionMode.expense,
     this.registerMode = RegisterScreenMode.add,
     this.expenseEntity,
     this.incomeEntity,
-    this.fixedCostEntity,
+    this.initialFixedCostToggle = true,
+    this.isFixedCostExpenseEdit = false,
     super.key,
   });
 
-  /// 固定費編集
-  const RegisaterPageBase.editFixedCost({
-    this.transactionMode = TransactionMode.fixedCost,
+  /// 固定費の実績行の編集（編集できるのは金額・拠出元・メモのみ。仕様 §6.6）
+  const RegisaterPageBase.editFixedCostExpense({
+    this.transactionMode = TransactionMode.expense,
     this.registerMode = RegisterScreenMode.edit,
-    this.expenseEntity,
+    required this.expenseEntity,
     this.incomeEntity,
-    required this.fixedCostEntity,
+    this.initialFixedCostToggle = false,
+    this.isFixedCostExpenseEdit = true,
     super.key,
   });
 
@@ -119,6 +130,8 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
     ref.watch(enteredPriceControllerProvider);
     ref.watch(enteredMemoControllerProvider);
     ref.watch(inputDateControllerNotifierProvider);
+    // 固定費の名称も行の表示/非表示で破棄されないよう親で監視する
+    ref.watch(enteredFixedCostNameControllerProvider);
     // 初期化フラグも監視して維持する（autoDisposeのため）
     ref.watch(inputInitializedControllerProvider);
 
@@ -178,17 +191,20 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
   /// モードに応じたページを返す
   /// AnimatedSwitcherが正しく動作するようにKeyを設定
   Widget _buildPageByMode(TransactionMode mode) {
+    // 固定費の実績行の編集は種別の切り替えを持たない専用シート
+    if (widget.isFixedCostExpenseEdit) {
+      return EditFixedCostExpensePage(
+        key: const ValueKey('fixedCostExpense'),
+        expenseEntity: widget.expenseEntity!,
+      );
+    }
+
     return switch (mode) {
       TransactionMode.expense => RegisterExpensePage(
         key: const ValueKey('expense'),
         mode: widget.registerMode,
         expenseEntity: widget.expenseEntity,
-      ),
-      TransactionMode.fixedCost => RegisterFixedCostPage(
-        key: const ValueKey('fixedCost'),
-        mode: widget.registerMode,
-        fixedCostEntity: widget.fixedCostEntity,
-        isAppBarVisible: false,
+        initialFixedCostToggle: widget.initialFixedCostToggle,
       ),
       TransactionMode.income => RegisterIncomePage(
         key: const ValueKey('income'),
@@ -201,17 +217,6 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
 
   /// 削除確認ダイアログを表示
   void _showDeleteConfirmDialog(BuildContext context) async {
-    // 固定費マスタの削除は未確定分の支払い予定も連動削除されるため、専用文言で告知する
-    if (widget.transactionMode == TransactionMode.fixedCost) {
-      await showFixedCostDeleteConfirmationDialog(
-        context,
-        onConfirm: () {
-          _executeDelete();
-        },
-      );
-      return;
-    }
-
     await showDeleteConfirmationDialog(
       context,
       onConfirm: () {
@@ -223,29 +228,28 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
   /// 削除処理を実行
   Future<void> _executeDelete() async {
     try {
-      switch (widget.transactionMode) {
-        case TransactionMode.expense:
-          if (widget.expenseEntity != null) {
-            await ref
-                .read(expenseUsecaseProvider)
-                .delete(id: widget.expenseEntity!.id);
-          }
-          break;
-        case TransactionMode.income:
-          if (widget.incomeEntity != null) {
-            await ref
-                .read(incomeUsecaseProvider)
-                .delete(id: widget.incomeEntity!.id);
-          }
-          break;
-        case TransactionMode.fixedCost:
-          if (widget.fixedCostEntity != null &&
-              widget.fixedCostEntity!.id != null) {
-            await ref
-                .read(fixedCostUsecaseProvider)
-                .delete(id: widget.fixedCostEntity!.id!);
-          }
-          break;
+      // 固定費の実績行の削除はこの1行のみ（マスタは消さない。仕様 §6.6）
+      if (widget.isFixedCostExpenseEdit) {
+        await ref
+            .read(fixedCostExpenseUsecaseProvider)
+            .delete(id: widget.expenseEntity!.id);
+      } else {
+        switch (widget.transactionMode) {
+          case TransactionMode.expense:
+            if (widget.expenseEntity != null) {
+              await ref
+                  .read(expenseUsecaseProvider)
+                  .delete(id: widget.expenseEntity!.id);
+            }
+            break;
+          case TransactionMode.income:
+            if (widget.incomeEntity != null) {
+              await ref
+                  .read(incomeUsecaseProvider)
+                  .delete(id: widget.incomeEntity!.id);
+            }
+            break;
+        }
       }
       // 削除成功後、入力状態をクリアして画面を閉じる
       if (mounted) {
@@ -270,5 +274,8 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
     ref.invalidate(enteredMemoControllerProvider);
     ref.invalidate(inputDateControllerNotifierProvider);
     ref.invalidate(inputInitializedControllerProvider);
+    ref.invalidate(enteredFixedCostNameControllerProvider);
+    ref.invalidate(fixedCostRegisterToggleControllerNotifierProvider);
+    ref.invalidate(fixedCostVariableSwitchControllerNotifierProvider);
   }
 }

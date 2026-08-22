@@ -2,8 +2,6 @@ import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
-import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
-import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
@@ -13,7 +11,7 @@ part 'category_selection_provider.g.dart';
 
 /// TransactionModeに応じたカテゴリーを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 /// [categoryId] カテゴリーID
 @riverpod
 Future<ICategoryEntity> categoryByMode(
@@ -36,9 +34,6 @@ Future<ICategoryEntity> categoryByMode(
   return switch (mode) {
     TransactionMode.expense =>
       await ref.watch(categoryUsecaseProvider).fetchBySmallId(categoryId),
-    TransactionMode.fixedCost => await ref
-        .watch(fixedCostCategoryUsecaseProvider)
-        .fetchCategoryById(categoryId),
     TransactionMode.income => await ref
         .watch(incomeCategoryUsecaseProvider)
         .fetchCategoryBySmallId(categoryId),
@@ -64,7 +59,7 @@ const ICategoryEntity _unselectedCategory = ExpenseCategoryEntity(
 
 /// TransactionModeに応じたカテゴリーリストを取得するProvider
 ///
-/// [mode] トランザクションの種類（支出、固定費、収入）
+/// [mode] トランザクションの種類（支出、収入）
 @riverpod
 Future<List<ICategoryEntity>> categoriesByMode(
   CategoriesByModeRef ref,
@@ -72,8 +67,6 @@ Future<List<ICategoryEntity>> categoriesByMode(
 ) async {
   return switch (mode) {
     TransactionMode.expense => await ref.watch(allCategoriesProvider.future),
-    TransactionMode.fixedCost =>
-      await ref.watch(allFixedCostCategoriesProvider.future),
     TransactionMode.income =>
       await ref.watch(allIncomeCategoriesProvider.future),
   };

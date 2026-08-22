@@ -7,8 +7,6 @@ import 'package:kakeibo/application/category/category_selection_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
-import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_provider.dart';
-import 'package:kakeibo/application/fixed_cost_category/fixed_cost_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
@@ -178,12 +176,6 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
               .read(categoryUsecaseProvider)
               .updateDisplayOrders(newOrders);
           ref.invalidate(allCategoriesProvider);
-          break;
-        case TransactionMode.fixedCost:
-          await ref
-              .read(fixedCostCategoryUsecaseProvider)
-              .updateDisplayOrders(newOrders);
-          ref.invalidate(allFixedCostCategoriesProvider);
           break;
         case TransactionMode.income:
           await ref

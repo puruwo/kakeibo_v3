@@ -290,7 +290,7 @@ void main() {
     expect(find.text('記録がまだありません'), findsOneWidget);
   });
 
-  testWidgets('未確定固定費タイルのタップで金額確定ダイアログが開く', (tester) async {
+  testWidgets('未確定固定費タイルのタップで固定費行の編集シートが開く', (tester) async {
     await pumpApp(
       tester,
       home: const ExpenseHistoryPage(),
@@ -301,12 +301,14 @@ void main() {
     await tester.tap(find.text('電気代').first);
     await pumpTimes(tester);
 
-    expect(find.text('未確定固定費の金額を入力'), findsOneWidget);
-    expect(find.text('OK'), findsOneWidget);
-    expect(find.text('キャンセル'), findsOneWidget);
+    // v10で未確定の確定操作は編集シートに一本化した（仕様 §6.6）
+    expect(find.byType(RegisaterPageBase), findsOneWidget);
+    expect(find.text('金額を確定'), findsOneWidget);
+
+    await unmountRegisterPage(tester);
   });
 
-  testWidgets('金額を入力してOKすると確定がリポジトリに記録される', (tester) async {
+  testWidgets('金額を入力して確定すると実績行の更新がリポジトリに記録される', (tester) async {
     final fakes = buildFakes();
     await pumpApp(tester, home: const ExpenseHistoryPage(), fakes: fakes);
     await pumpTimes(tester);
@@ -314,16 +316,18 @@ void main() {
     await tester.tap(find.text('電気代').first);
     await pumpTimes(tester);
 
-    // ダイアログの金額欄（ダイアログ内の唯一のTextFormField）
-    await tester.enterText(find.byType(TextFormField), '7200');
+    // シート上の最初のTextFormFieldが金額欄
+    await tester.enterText(find.byType(TextFormField).first, '7200');
     await tester.pump();
-    await tester.tap(find.text('OK'));
+    await tester.tap(find.text('金額を確定'));
     await pumpTimes(tester);
 
     // 未確定固定費ID=200が7,200円で確定される
     // 確定の書き込み先はexpenseの固定費行（v10）
-    expect(fakes.expense.confirmedExpenses, [(id: 200, price: 7200)]);
-    expect(find.text('未確定固定費の金額を入力'), findsNothing);
+    expect(fakes.expense.updatedEntities, hasLength(1));
+    expect(fakes.expense.updatedEntities.single.id, 200);
+    expect(fakes.expense.updatedEntities.single.price, 7200);
+    expect(fakes.expense.updatedEntities.single.isConfirmed, 1);
   });
 
   testWidgets('支出タイルのタップで編集モーダルが開く', (tester) async {

@@ -21,10 +21,16 @@ class LargePriceDisplay extends ConsumerStatefulWidget {
     super.key,
     required this.originalPrice,
     this.status = PriceInputFieldStatus.normal,
+    this.showEmptyWhenZero = false,
   });
 
   final int originalPrice;
   final PriceInputFieldStatus? status;
+
+  /// 初期値が0のとき入力欄を空にするか
+  ///
+  /// 未確定の固定費行は実額を持たないため「¥0」ではなく空欄から入力させる（仕様 §6.6）。
+  final bool showEmptyWhenZero;
 
   @override
   ConsumerState<LargePriceDisplay> createState() => _LargePriceDisplayState();
@@ -43,8 +49,9 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
       if (mode == RegisterScreenMode.add && isInitialized) {
         return;
       }
-      _controller.text =
-          NumberTextInputFormatter.formatInitialValue(widget.originalPrice);
+      _controller.text = widget.showEmptyWhenZero && widget.originalPrice == 0
+          ? ''
+          : NumberTextInputFormatter.formatInitialValue(widget.originalPrice);
     });
   }
 
