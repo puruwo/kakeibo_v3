@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost/fixed_cost_conversion_usecase.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/application/income/income_usecase.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
@@ -16,9 +17,9 @@ import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_price_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/fixed_cost_input_controller/fixed_cost_input_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
-import 'package:kakeibo/view_model/state/register_page/price_type_switch_controller/price_type_switch_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
@@ -46,6 +47,9 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
     final incomeUsecase = ref.read(incomeUsecaseProvider);
     // fixedCostEntityを扱うusecase
     final fixedCostUsecase = ref.read(fixedCostUsecaseProvider);
+    // 既存の支出レコードを固定費化するusecase
+    final fixedCostConversionUsecase =
+        ref.read(fixedCostConversionUsecaseProvider);
 
     // 新規か編集か
     final screenMode = ref.watch(registerScreenModeNotifierProvider);
@@ -85,6 +89,26 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
 
               switch (transactionMode) {
                 case TransactionMode.expense:
+                  // 固定費として登録するかどうか（仕様 §6.1・§6.6）
+                  final isFixedCost = ref
+                      .read(fixedCostRegisterToggleControllerNotifierProvider);
+
+                  if (isFixedCost) {
+                    await _submitFixedCost(
+                      ref,
+                      screenMode: screenMode,
+                      enteredPrice: enteredPrice,
+                      enteredMemo: enteredMemo,
+                      enteredIncomeSource: enteredIncomeSource,
+                      inputDate: inputDate,
+                      selectedCategoryId: selectedCategory.id,
+                      fixedCostUsecase: fixedCostUsecase,
+                      expenseUsecase: expenseUsecase,
+                      fixedCostConversionUsecase: fixedCostConversionUsecase,
+                    );
+                    break;
+                  }
+
                   final entity = ExpenseEntity(
                     id: originalExpenseEntity!.id,
                     date: DateFormat('yyyyMMdd').format(inputDate),
@@ -121,43 +145,6 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
                           editEntity: entity);
                       break;
                   }
-                case TransactionMode.fixedCost:
-                  // 変動費か固定費かを取得
-                  final variable =
-                      ref.read(priceTypeSwitchControllerNotifierProvider) ==
-                              true
-                          ? 1
-                          : 0;
-                  // 支払い頻度を取得
-                  final frequencyValue =
-                      ref.read(paymentFrequencyControllerNotifierProvider);
-
-                  // 固定費のエンティティを作成
-                  final entity = FixedCostEntity(
-                    id: originalFixedCostEntity!.id,
-                    name: enteredMemo,
-                    price: variable == 0 ? enteredPrice : 0, // 変動費なら価格は0
-                    variable: variable,
-                    fixedCostCategoryId: selectedCategory.id,
-                    // カテゴリーの参照先は支出小カテゴリーに移行済み（仕様 §3）
-                    // 旧固定費タブのUI置き換えはT4で行うため、暫定で同じidを渡す
-                    expenseSmallCategoryId: selectedCategory.id,
-                    intervalNumber: frequencyValue.intervalNumber,
-                    intervalUnit:
-                        frequencyValue.intervalUnit.inturvalUnitNumber,
-                    firstPaymentDate: DateFormat('yyyyMMdd').format(inputDate),
-                  );
-                  switch (screenMode) {
-                    case RegisterScreenMode.add:
-                      await fixedCostUsecase.add(fixedCostEntity: entity);
-                      break;
-                    case RegisterScreenMode.edit:
-                      await fixedCostUsecase.edit(
-                          originalEntity: originalFixedCostEntity!,
-                          editEntity: entity);
-                      break;
-                  }
-                  break;
               }
             },
 
@@ -171,6 +158,11 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
               ref.invalidate(enteredMemoControllerProvider);
               ref.invalidate(inputDateControllerNotifierProvider);
               ref.invalidate(inputInitializedControllerProvider);
+              ref.invalidate(enteredFixedCostNameControllerProvider);
+              ref.invalidate(
+                  fixedCostRegisterToggleControllerNotifierProvider);
+              ref.invalidate(
+                  fixedCostVariableSwitchControllerNotifierProvider);
 
               // 画面を閉じる
               Navigator.of(context, rootNavigator: true).pop();
@@ -188,5 +180,76 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
         },
       ),
     );
+  }
+
+  /// 固定費トグルONのときの保存処理
+  ///
+  /// 追加は固定費マスタの新規作成（実績生成は既存の起動時バッチ経路に委ねる）、
+  /// 編集は「既存支出の固定費化」。過去分の遡及生成は行わない（仕様 §6.2・§6.6）。
+  Future<void> _submitFixedCost(
+    WidgetRef ref, {
+    required RegisterScreenMode screenMode,
+    required int enteredPrice,
+    required String enteredMemo,
+    required int enteredIncomeSource,
+    required DateTime inputDate,
+    required int selectedCategoryId,
+    required FixedCostUsecase fixedCostUsecase,
+    required ExpenseUsecase expenseUsecase,
+    required FixedCostConversionUsecase fixedCostConversionUsecase,
+  }) async {
+    // 変動費か固定費かを取得
+    final variable =
+        ref.read(fixedCostVariableSwitchControllerNotifierProvider) ? 1 : 0;
+    // 支払い頻度を取得
+    final frequencyValue =
+        ref.read(paymentFrequencyControllerNotifierProvider);
+    // 固定費の名称を取得
+    final enteredName = ref.read(enteredFixedCostNameControllerProvider).text;
+
+    switch (screenMode) {
+      case RegisterScreenMode.add:
+        // 固定費マスタを新規作成する。カテゴリーは支出小カテゴリーID（仕様 §3）
+        // 旧列 fixedCostCategoryId はT6で削除するまで0を入れておく
+        final entity = FixedCostEntity(
+          name: enteredName,
+          price: variable == 0 ? enteredPrice : 0, // 変動費なら価格は0
+          variable: variable,
+          fixedCostCategoryId: 0,
+          expenseSmallCategoryId: selectedCategoryId,
+          intervalNumber: frequencyValue.intervalNumber,
+          intervalUnit: frequencyValue.intervalUnit.inturvalUnitNumber,
+          firstPaymentDate: DateFormat('yyyyMMdd').format(inputDate),
+        );
+        await fixedCostUsecase.add(fixedCostEntity: entity);
+        break;
+
+      case RegisterScreenMode.edit:
+        // 既存支出の固定費化。初回支払日の変更は当該行の日付に同期する（仕様 §6.6）
+        final original = originalExpenseEntity!;
+        final editEntity = original.copyWith(
+          date: DateFormat('yyyyMMdd').format(inputDate),
+          price: enteredPrice,
+          paymentCategoryId: selectedCategoryId,
+          memo: enteredMemo,
+          incomeSourceBigCategory: enteredIncomeSource,
+        );
+        // 支出側に変更が無いときは edit が「変更がありません」で弾くため、
+        // 差分があるときだけ更新する
+        if (editEntity != original) {
+          await expenseUsecase.edit(
+            originalEntity: original,
+            editEntity: editEntity,
+          );
+        }
+        await fixedCostConversionUsecase.convertToFixedCost(
+          expenseEntity: editEntity,
+          name: enteredName,
+          variable: variable,
+          intervalNumber: frequencyValue.intervalNumber,
+          intervalUnit: frequencyValue.intervalUnit.inturvalUnitNumber,
+        );
+        break;
+    }
   }
 }

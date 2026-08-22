@@ -40,8 +40,15 @@ lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.popupMenuItemLabel
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.textButtonTextStyle,ボタン,noto_sans,12,w500,AppColorsDark.primary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.bottomNavSelectedLabel,タブ,noto_sans,11,w600,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.bottomNavUnselectedLabel,タブ,noto_sans,11,w500,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupHeader,見出し,noto_sans,13,w500,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupLabel,ラベル,noto_sans,14,w500,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupValue,本文,noto_sans,15,w500,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupPlaceholder,本文,noto_sans,15,w500,AppColorsDark.textTertiary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupNote,ラベル,noto_sans,11,w300,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupHistoryDate,ラベル,noto_sans,13,w400,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupHistoryPrice,金額,sf_ui,15,w500,AppColorsDark.text,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
+lib/constant/styles/app_text_styles.dart,共通,AppTextStyles.insetGroupLinkRow,ボタン,noto_sans,12,w500,AppColorsDark.primary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.placeHolder,ラベル,noto_sans,14,w500,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.inputExpenseText,本文,sf_ui,25,w500,AppColorsDark.text,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.inputText,本文,noto_sans,15,w500,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.priceInput,金額,sf_ui,42,bold,AppColorsDark.text,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.priceUnconfirmed,金額,sf_ui,42,bold,AppColorsDark.textSecondary,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
@@ -51,7 +58,6 @@ lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.rearrangeLink,ボタン,noto_sans,16,w600,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.pickerLargeNumber,本文,sf_ui,24,bold,AppColorsDark.text,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.pickerMediumText,本文,noto_sans,20,bold,AppColorsDark.text,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
-lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.priceTypeSwitchLabel,ラベル,noto_sans,14,w400,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/register_page_styles.dart,登録ページ,RegisterPageStyles.iconRearrangeDescription,ラベル,noto_sans,14,w500,AppColorsDark.textSecondary,MyFontStyle.notoSans.copyWith(),使用(notoSans),共通化済み
 lib/constant/styles/calendar_styles.dart,カレンダー,CalendarStyles.calendarDateBoxLarge,金額,sf_ui,11.5,w500,AppColorsDark.text,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み
 lib/constant/styles/calendar_styles.dart,カレンダー,CalendarStyles.calendarDateBoxSmall,金額,sf_ui,11,w500,AppColorsDark.text,MyFontStyle.sfUi.copyWith(),使用(sfUi),共通化済み

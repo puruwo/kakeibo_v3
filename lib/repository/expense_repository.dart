@@ -353,6 +353,31 @@ $_selectColumns
     }
   }
 
+  // 指定マスタの固定費行を支払日の新しい順に取得する
+  // 固定費の設定画面の「支払い履歴」で使う（仕様 §6.7）
+  @override
+  Future<List<ExpenseEntity>> fetchByFixedCostId({
+    required int fixedCostId,
+    required int limit,
+  }) async {
+    final sql = '''
+      SELECT
+$_selectColumns
+      FROM ${SqfExpense.tableName}
+      WHERE ${SqfExpense.fixedCostId} = $fixedCostId
+      ORDER BY ${SqfExpense.date} DESC, ${SqfExpense.id} DESC
+      LIMIT $limit;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      return jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
+  }
+
   // 固定費実績の行を1件挿入する
   // 挿入の失敗を呼び出し元（バッチ）が検知できるよう、完了を待てるFutureを返す
   @override

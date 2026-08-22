@@ -567,4 +567,199 @@ void main() {
       await unmountRegisterPage(tester);
     });
   });
+
+  group('固定費として登録（支出タブのトグル）', () {
+    testWidgets('トグルOFFでは固定費の入力行が出ない', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      // 基本グループは拠出元・日付・メモの3行
+      expect(find.text('拠出元'), findsOneWidget);
+      expect(find.text('日付'), findsOneWidget);
+      expect(find.text('メモ'), findsOneWidget);
+      // 固定費グループはトグルの1行だけ
+      expect(find.text('固定費として登録'), findsOneWidget);
+      expect(find.text('名称'), findsNothing);
+      expect(find.text('初回支払日'), findsNothing);
+      expect(find.text('頻度'), findsNothing);
+      expect(find.text('支払い額が毎回変わる'), findsNothing);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('トグルONで基本グループが縮み、メモと日付が固定費側へ引き継がれる', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      await tester.enterText(memoField(), '電気代');
+      await tester.pump();
+
+      // 固定費グループのトグル（OFF時の画面で唯一のSwitch）
+      await tester.tap(find.byType(Switch));
+      await pumpTimes(tester);
+
+      // 基本グループは拠出元のみに縮む（仕様 §6.1）
+      expect(find.text('拠出元'), findsOneWidget);
+      expect(find.text('日付'), findsNothing);
+      expect(find.text('メモ'), findsNothing);
+      // 固定費グループの4行が展開する
+      expect(find.text('名称'), findsOneWidget);
+      expect(find.text('初回支払日'), findsOneWidget);
+      expect(find.text('頻度'), findsOneWidget);
+      expect(find.text('支払い額が毎回変わる'), findsOneWidget);
+      // メモは名称へ、日付（システム日時2025/7/6）は初回支払日へ引き継がれる
+      expect(find.text('電気代'), findsOneWidget);
+      expect(find.text('7/6'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('変動ONにすると金額表示が---になる', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addFixedCost(),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      // 追加導線からはトグルON状態で開く（仕様 §6.3）
+      expect(find.text('名称'), findsOneWidget);
+      expect(find.text('---'), findsNothing);
+
+      // 「支払い額が毎回変わる」はトグルON時の2つ目のSwitch
+      await tester.tap(find.byType(Switch).last);
+      await pumpTimes(tester);
+
+      expect(find.text('---'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('トグルONで追加すると固定費マスタが小カテゴリーIDで登録される', (tester) async {
+      final fakes = buildFakes();
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: fakes,
+      );
+      await pumpTimes(tester);
+
+      await tester.enterText(priceField(), '8000');
+      await tester.enterText(memoField(), '電気代');
+      await tester.tap(find.text('日用品')); // 小カテゴリーID=11
+      await tester.pump();
+
+      await tester.tap(find.byType(Switch));
+      await pumpTimes(tester);
+
+      await tester.tap(find.text('追加'));
+      await pumpTimes(tester);
+
+      expect(fakes.fixedCost.insertedEntities, hasLength(1));
+      final inserted = fakes.fixedCost.insertedEntities.single;
+      expect(inserted.name, '電気代');
+      expect(inserted.price, 8000);
+      expect(inserted.variable, 0);
+      // カテゴリーは支出小カテゴリーID（仕様 §3）
+      expect(inserted.expenseSmallCategoryId, 11);
+      expect(inserted.firstPaymentDate, '20250706');
+
+      // 初回支払いが当月内なので実績行も同時に生成される（既存のadd経路のまま）
+      expect(fakes.expense.insertedEntities, hasLength(1));
+      expect(fakes.expense.insertedEntities.single.fixedCostId, isNotNull);
+
+      await waitForSnackBarDismissed(tester);
+      await unmountRegisterPage(tester);
+    });
+  });
+
+  group('既存支出の固定費化', () {
+    // 集計期間6/25〜7/24内の通常支出を固定費化の対象にする
+    const conversionTarget = ExpenseEntity(
+      id: 42,
+      date: '20250701',
+      price: 3400,
+      paymentCategoryId: 11,
+      memo: 'Netflix',
+    );
+
+    testWidgets('編集シートの固定費トグルONで固定費化の入力行が出る', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.editExpense(
+          expenseEntity: conversionTarget,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      // トグルOFFのときは固定費化の説明文を添える
+      expect(
+        find.text('ONにすると、この支出を初回の支払いとして固定費を作成します（頻度・名称を続けて入力）'),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.byType(Switch));
+      await pumpTimes(tester);
+
+      expect(find.text('名称'), findsOneWidget);
+      // 名称はメモ、初回支払日は当該行の日付を引き継ぐ（仕様 §6.6）
+      expect(find.text('Netflix'), findsOneWidget);
+      expect(find.text('7/1'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('固定費トグルONで更新すると固定費マスタが作られ当該行に紐づく', (tester) async {
+      final fakes = buildFakes();
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.editExpense(
+          expenseEntity: conversionTarget,
+        ),
+        fakes: fakes,
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(find.byType(Switch));
+      await pumpTimes(tester);
+
+      await tester.tap(find.text('更新'));
+      await pumpTimes(tester);
+
+      // 固定費マスタが当該レコードの値で作られる
+      expect(fakes.fixedCost.insertedEntities, hasLength(1));
+      final master = fakes.fixedCost.insertedEntities.single;
+      expect(master.name, 'Netflix');
+      expect(master.price, 3400);
+      expect(master.expenseSmallCategoryId, 11);
+      expect(master.firstPaymentDate, '20250701');
+      // 推定額は当該レコードの金額で初期化される（仕様 §6.5）
+      expect(master.estimatedPrice, 3400);
+
+      // 当該行に fixed_cost_id が付与される（遡及生成はしない）
+      expect(fakes.expense.updatedEntities, hasLength(1));
+      final updated = fakes.expense.updatedEntities.single;
+      expect(updated.id, 42);
+      expect(updated.fixedCostId, isNotNull);
+      expect(updated.isConfirmed, 1);
+
+      await waitForSnackBarDismissed(tester);
+      await unmountRegisterPage(tester);
+    });
+  });
 }

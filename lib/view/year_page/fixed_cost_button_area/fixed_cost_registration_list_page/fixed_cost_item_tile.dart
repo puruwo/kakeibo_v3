@@ -7,9 +7,8 @@ import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
-import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
-import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_setting_page.dart';
 
 class FixedCostItemTile extends ConsumerWidget {
   const FixedCostItemTile({
@@ -53,18 +52,14 @@ class FixedCostItemTile extends ConsumerWidget {
       isIncome: false,
       customWidget: isVariable ? const UnconfirmedFixedCostChipLabel() : null,
       customUnderPriceLabel: frequencyValue.dateLabel,
-      onTap: () {},
+      // タイルタップで固定費の設定画面へ（仕様 §6.7）
+      onTap: () => _openSettingPage(context),
       onLongPress: () async {
         return await showMenuDialog(context, items: [
           MenuDialogItem(
               label: '編集',
               icon: Icons.edit_outlined,
-              onPressed: () async {
-                showAppModalBottomSheet(
-                  context,
-                  child: RegisaterPageBase.editFixedCost(fixedCostEntity: item),
-                );
-              }),
+              onPressed: () => _openSettingPage(context)),
           MenuDialogItem(
               label: '削除',
               icon: Icons.delete_outline,
@@ -79,6 +74,15 @@ class FixedCostItemTile extends ConsumerWidget {
               }),
         ]);
       },
+    );
+  }
+
+  /// 固定費の設定画面（マスタ編集）へ遷移する
+  void _openSettingPage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => FixedCostSettingPage(fixedCostEntity: item),
+      ),
     );
   }
 }

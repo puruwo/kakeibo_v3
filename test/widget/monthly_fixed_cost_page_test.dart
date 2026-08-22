@@ -1,7 +1,8 @@
 // 月間固定費ページ（lib/view/monthly_page/monthly_fixed_cost/）のWidget結合テスト
 //
 // 確定済み／未確定の固定費が正しく振り分けて表示されるか、
-// 未確定タイルから金額を確定させたときにリポジトリへ正しいIDが渡るかを見る。
+// 未確定タイルから編集シートを開いて金額を確定させたときに
+// リポジトリへ正しいIDが渡るかを見る。
 // 金額の集計ロジックそのものは monthly_fixed_cost_summary_usecase_test（UT）で担保済み。
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,6 +11,7 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -178,7 +180,7 @@ void main() {
     expect(find.text('平均 ¥ 6,000 / 毎月'), findsOneWidget);
   });
 
-  testWidgets('未確定タイルをタップすると金額確定ダイアログが開く', (tester) async {
+  testWidgets('未確定タイルをタップすると固定費行の編集シートが開く', (tester) async {
     await pumpApp(
       tester,
       home: const MonthlyFixedCostPage(),
@@ -189,12 +191,20 @@ void main() {
     await tester.tap(find.text('電気代'));
     await pumpTimes(tester);
 
-    expect(find.text('未確定固定費の金額を入力'), findsOneWidget);
-    expect(find.text('キャンセル'), findsOneWidget);
-    expect(find.text('OK'), findsOneWidget);
+    // v10で未確定の確定操作は編集シートに一本化した（旧・金額入力ダイアログは廃止。仕様 §6.6）
+    expect(find.byType(RegisaterPageBase), findsOneWidget);
+    expect(find.text('編集'), findsOneWidget);
+    // 固定費グループは表示のみ。マスタ属性は「固定費」行から設定画面で変える
+    expect(find.text('固定費'), findsWidgets);
+    expect(find.text('支払日'), findsOneWidget);
+    expect(find.text('予想額（過去平均）'), findsOneWidget);
+    // 未確定行のボタン文言
+    expect(find.text('金額を確定'), findsOneWidget);
+
+    await unmountRegisterPage(tester);
   });
 
-  testWidgets('金額を入れてOKすると固定費支出IDでconfirmExpenseが呼ばれる', (tester) async {
+  testWidgets('金額を入れて確定すると固定費支出IDで実績行が更新される', (tester) async {
     final fakes = buildFakes();
     await pumpApp(tester, home: const MonthlyFixedCostPage(), fakes: fakes);
     await pumpTimes(tester);
@@ -202,51 +212,65 @@ void main() {
     await tester.tap(find.text('電気代'));
     await pumpTimes(tester);
 
-    await tester.enterText(find.byType(TextFormField), '7200');
+    // シート上の最初のTextFormFieldが金額欄
+    await tester.enterText(find.byType(TextFormField).first, '7200');
     await tester.pump();
-    await tester.tap(find.text('OK'));
+    await tester.tap(find.text('金額を確定'));
     await pumpTimes(tester);
 
-    // 渡すのは固定費マスタID(30)ではなく実績行のID(200)
+    // 更新するのは固定費マスタID(30)ではなく実績行のID(200)
     // （確定操作のID取り違えを起こした本番バグの回帰検知）
-    expect(fakes.expense.confirmedExpenses, hasLength(1));
-    expect(fakes.expense.confirmedExpenses.single.id, 200);
-    expect(fakes.expense.confirmedExpenses.single.price, 7200);
+    expect(fakes.expense.updatedEntities, hasLength(1));
+    expect(fakes.expense.updatedEntities.single.id, 200);
+    expect(fakes.expense.updatedEntities.single.price, 7200);
+    // 金額入力＝確定操作（仕様 §6.4）
+    expect(fakes.expense.updatedEntities.single.isConfirmed, 1);
 
     // 確定後は変動費の想定額更新まで走る（対象は固定費マスタID=30）
     expect(fakes.fixedCost.updatedEntities, hasLength(1));
     expect(fakes.fixedCost.updatedEntities.single.id, 30);
   });
 
-  testWidgets('金額未入力のままOKするとエラー文言が出て確定されない', (tester) async {
+  testWidgets('金額未入力のまま確定するとエラー文言が出て確定されない', (tester) async {
     final fakes = buildFakes();
     await pumpApp(tester, home: const MonthlyFixedCostPage(), fakes: fakes);
     await pumpTimes(tester);
 
     await tester.tap(find.text('電気代'));
     await pumpTimes(tester);
-    await tester.tap(find.text('OK'));
+    await tester.tap(find.text('金額を確定'));
     await pumpTimes(tester);
 
-    expect(find.text('金額を入力してください'), findsOneWidget);
-    expect(fakes.expense.confirmedExpenses, isEmpty);
+    expect(find.textContaining('0円以上で入力してください'), findsOneWidget);
+    expect(fakes.expense.updatedEntities, isEmpty);
 
     await waitForSnackBarDismissed(tester);
+    await unmountRegisterPage(tester);
   });
 
-  testWidgets('ダイアログをキャンセルすると確定されずダイアログが閉じる', (tester) async {
-    final fakes = buildFakes();
-    await pumpApp(tester, home: const MonthlyFixedCostPage(), fakes: fakes);
+  testWidgets('確定済みタイルをタップすると更新ボタンの編集シートが開く', (tester) async {
+    await pumpApp(
+      tester,
+      home: const MonthlyFixedCostPage(),
+      fakes: buildFakes(),
+    );
     await pumpTimes(tester);
 
-    await tester.tap(find.text('電気代'));
-    await pumpTimes(tester);
-    await tester.enterText(find.byType(TextFormField), '7200');
-    await tester.tap(find.text('キャンセル'));
+    await tester.tap(find.text('家賃').first);
     await pumpTimes(tester);
 
-    expect(find.text('未確定固定費の金額を入力'), findsNothing);
-    expect(fakes.expense.confirmedExpenses, isEmpty);
+    expect(find.byType(RegisaterPageBase), findsOneWidget);
+    // 確定済み行のボタン文言は「更新」（仕様 §6.6）
+    expect(find.text('更新'), findsOneWidget);
+    expect(find.text('金額を確定'), findsNothing);
+    // 編集できるのは金額・拠出元・メモのみ。日付行は出さない
+    expect(find.text('拠出元'), findsOneWidget);
+    expect(find.text('メモ'), findsOneWidget);
+    expect(find.text('日付'), findsNothing);
+    // カテゴリーグリッドは選択状態の表示のみ（タップ不可）
+    expect(find.byType(IgnorePointer), findsWidgets);
+
+    await unmountRegisterPage(tester);
   });
 
   testWidgets('固定費支出が1件も無いときは記録なしメッセージになる', (tester) async {

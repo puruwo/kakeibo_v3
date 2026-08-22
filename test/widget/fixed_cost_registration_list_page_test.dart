@@ -188,7 +188,7 @@ void main() {
     expect(find.textContaining('次回：'), findsOneWidget);
   });
 
-  testWidgets('FAB「固定費を追加」で固定費の記録モーダルが開く', (tester) async {
+  testWidgets('FAB「固定費を追加」で固定費トグルON状態の記録モーダルが開く', (tester) async {
     await pumpApp(
       tester,
       home: const FixedCostRegistrationListPage(),
@@ -201,15 +201,20 @@ void main() {
 
     // 記録モーダル（追加モード）のヘッダー
     expect(find.text('記録'), findsOneWidget);
-    // 固定費タブの追加モードは初回支払い日・支払い頻度のピルが並ぶ
-    expect(find.text('初回'), findsOneWidget);
+    // v10で固定費タブは廃止。支出タブのトグルON状態で開く（仕様 §6.3）
+    expect(find.text('固定費として登録'), findsOneWidget);
+    expect(find.text('名称'), findsOneWidget);
+    expect(find.text('初回支払日'), findsOneWidget);
     expect(find.text('頻度'), findsOneWidget);
-    expect(find.text('支払い額変あり'), findsOneWidget);
+    expect(find.text('支払い額が毎回変わる'), findsOneWidget);
+    // トグルON時は基本グループが拠出元のみに縮む
+    expect(find.text('拠出元'), findsOneWidget);
+    expect(find.text('メモ'), findsNothing);
 
     await unmountRegisterPage(tester);
   });
 
-  testWidgets('タイル長押しのメニューから編集で固定費の編集モーダルが開く', (tester) async {
+  testWidgets('タイル長押しのメニューから編集で固定費の設定画面へ遷移する', (tester) async {
     await pumpApp(
       tester,
       home: const FixedCostRegistrationListPage(),
@@ -217,8 +222,7 @@ void main() {
     );
     await pumpTimes(tester);
 
-    // 【発見事項】タイルのonTapは空実装（`onTap: () {}`）で、
-    // 編集導線は長押しメニュー経由のみ。仕様どおり長押しから検証する。
+    // タイルタップ・長押しメニューの編集どちらも固定費の設定画面へ遷移する（仕様 §6.7）
     await tester.longPress(find.text('家賃'));
     await pumpTimes(tester);
 
@@ -228,10 +232,9 @@ void main() {
     await tester.tap(find.text('編集'));
     await pumpTimes(tester);
 
-    // 編集モーダルには対象固定費の値が初期表示される
+    // 設定画面には対象固定費の値が初期表示される
+    expect(find.text('固定費の設定'), findsOneWidget);
     expect(find.text('80,000'), findsOneWidget);
-
-    await unmountRegisterPage(tester);
   });
 
   testWidgets('固定費が1件も登録されていないときは登録誘導カードになる', (tester) async {

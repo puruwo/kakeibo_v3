@@ -15,15 +15,16 @@ enum ButtonStatus {
 }
 
 /// トランザクションの種類
+///
+/// v10で固定費は支出タブのトグルに吸収したため fixedCost(1) を廃止した（仕様 §8.2）。
+/// modeNumber はDB・SharedPreferencesのいずれにも永続化されていない
+/// （リポジトリ全体で参照箇所が無いことを確認済み）ため、income の番号は 2→1 に詰めた。
 enum TransactionMode {
   /// 支出
   expense(0),
 
-  /// 固定費
-  fixedCost(1),
-
   /// 収入
-  income(2);
+  income(1);
 
   final int modeNumber;
   const TransactionMode(this.modeNumber);

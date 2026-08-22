@@ -934,6 +934,25 @@ class FakeExpenseRepository implements ExpenseRepository {
     }
   }
 
+  /// 指定マスタの固定費行を支払日の新しい順に取得する
+  ///
+  /// 本物のSQL（expense_repository.dart fetchByFixedCostId）と同じく
+  /// date DESC → id DESC で並べ、LIMITで打ち切る。
+  @override
+  Future<List<ExpenseEntity>> fetchByFixedCostId({
+    required int fixedCostId,
+    required int limit,
+  }) async {
+    final matched =
+        records.where((record) => record.fixedCostId == fixedCostId).toList();
+    matched.sort((a, b) {
+      final byDate = b.date.compareTo(a.date);
+      if (byDate != 0) return byDate;
+      return b.id.compareTo(a.id);
+    });
+    return matched.take(limit).toList();
+  }
+
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

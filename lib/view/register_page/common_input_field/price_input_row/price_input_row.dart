@@ -12,11 +12,15 @@ class PriceInputRow extends ConsumerWidget {
     required this.originalPrice,
     required this.mode,
     this.status = PriceInputFieldStatus.normal,
+    this.showEmptyWhenZero = false,
   });
 
   final int originalPrice;
   final RegisterScreenMode mode;
   final PriceInputFieldStatus status;
+
+  /// 初期値が0のとき入力欄を空にするか（未確定の固定費行の編集で使う）
+  final bool showEmptyWhenZero;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -43,6 +47,7 @@ class PriceInputRow extends ConsumerWidget {
           child: LargePriceDisplay(
             originalPrice: originalPrice,
             status: status,
+            showEmptyWhenZero: showEmptyWhenZero,
           ),
         ),
       ],

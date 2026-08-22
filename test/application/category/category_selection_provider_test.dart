@@ -256,9 +256,6 @@ void main() {
       final expense = await container.read(
         categoriesByModeProvider(TransactionMode.expense).future,
       );
-      final fixedCost = await container.read(
-        categoriesByModeProvider(TransactionMode.fixedCost).future,
-      );
       final income = await container.read(
         categoriesByModeProvider(TransactionMode.income).future,
       );
@@ -266,7 +263,6 @@ void main() {
       // 支出は smallCategoryOrderKey の昇順に並ぶ
       expect(expense.map((e) => e.categoryName), ['日用品', '食費', '交通費']);
       expect(expense.map((e) => e.sortKey), [0, 1, 2]);
-      expect(fixedCost.map((e) => e.categoryName), ['住居']);
       expect(income.map((e) => e.categoryName), ['給与']);
     });
   });

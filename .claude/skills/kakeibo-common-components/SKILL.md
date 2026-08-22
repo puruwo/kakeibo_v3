@@ -27,6 +27,7 @@ Containerに `BoxDecoration` を直接書く前に、必ずこのドキュメン
 | `CheckBox` | 円形チェックボックス | shape: circle / 状態で色切替 | `lib/view/component/check_box.dart` |
 | `showAppYearMonthPicker` | AppBar下ドロップダウン年月度・年度ピッカー | Overlay式。月度モード（年＋月ドラム）と年度モード（年ドラム）の2種 | `lib/view/component/app_year_month_picker.dart` |
 | `AppEmptyState` | 次アクションがある空状態の共通カード（ADR-022） | CardContainer + アイコン32px + 見出し + 説明1行 + Primaryボタン | `lib/view/component/app_empty_state.dart` |
+| `AppInsetGroup` / `AppInsetRow` | 設定アプリ風のインセットグループリスト | 背景: `fillQuaternary` / 1px `surfaceBorder` / 角丸14px / 行高46 / 行間0.5px `separator` | `lib/view/component/app_inset_group.dart` |
 
 ---
 
@@ -268,6 +269,72 @@ AppEmptyState(
 
 ---
 
+### 9. AppInsetGroup / AppInsetRow
+
+登録シート・編集シート・固定費の設定画面で共用する、iOS設定アプリ風のグループ化リスト。
+`CardContainer`（角丸18・カード）とは用途が違い、**行を並べて属性を編集させる面**で使う。
+
+```dart
+import 'package:kakeibo/view/component/app_inset_group.dart';
+
+AppInsetGroup(
+  header: '設定',        // 任意のグループ見出し
+  note: '補足文',         // 任意。グループの下に添える説明
+  children: [
+    AppInsetRow.navigation(
+      icon: Icons.repeat_rounded,
+      label: '頻度',
+      value: '毎月',
+      onTap: () {},
+    ),
+    AppInsetRow.switchRow(
+      icon: Icons.trending_up_rounded,
+      label: '支払い額が毎回変わる',
+      switchValue: isVariable,
+      onSwitchChanged: (v) {},
+    ),
+    AppInsetRow.textField(
+      icon: Icons.drive_file_rename_outline_rounded,
+      label: '名称',
+      controller: nameController,
+      hintText: '未入力',
+      maxLength: 20,
+    ),
+    AppInsetRow.display(
+      icon: Icons.calendar_today_outlined,
+      label: '支払日',
+      value: '8/25',
+    ),
+  ],
+)
+```
+
+**行の型（4種）**
+
+| 型 | 右端 | 用途 |
+|---|---|---|
+| `AppInsetRow.navigation` | 値＋右矢印 | 別画面・シート・ピッカーを開く |
+| `AppInsetRow.switchRow` | スイッチ | ON/OFFの切り替え |
+| `AppInsetRow.textField` | インライン入力欄 | その場でテキスト・金額を入力 |
+| `AppInsetRow.display` | 値のみ | 表示専用（編集させない属性） |
+
+**寸法・仕様**
+
+- 行高 `kAppInsetRowHeight` = 46px、先頭アイコン `kAppInsetRowIconSize` = 18px
+- 行の左インデント `kAppInsetRowIndent` = 16px（行間の区切り線もこの位置から）
+- `icon` を省略してもアイコン枠は確保され、ラベル位置が揃う
+- SVGのカテゴリーアイコンなど任意のウィジェットを置きたい場合は `leading` を使う（`icon` より優先）
+- 使うTextStyleは `AppTextStyles.insetGroup*`（見出し／ラベル／値／プレースホルダー／補足文）
+
+**AppListCard との使い分け**
+
+| 用途 | 使うもの |
+|---|---|
+| 取引・固定費などの**レコードの一覧**（アイコン＋タイトル＋金額） | `AppListCard` |
+| **属性の編集面**（ラベルと値が1対1で並ぶ設定リスト） | `AppInsetGroup` + `AppInsetRow` |
+
+---
+
 ## 実装ルール
 
 ### 必ず守ること
@@ -302,6 +369,7 @@ AppEmptyState(
 |---|---|---|
 | 18px | 汎用カード | `CardContainer` |
 | 50px | ピル形状 | `AppPillContainer` |
+| 14px | インセットグループ（設定リスト） | `AppInsetGroup` |
 | circle | 円形（アイコン背景・チェックボックス） | `AppIconCircleContainer`, `CheckBox` |
 | 8px | セカンダリーボックス（設定画面など） | （共通widget未作成・必要なら新規追加） |
 | 6px | カレンダータイル | （共通widget未作成・必要なら新規追加） |

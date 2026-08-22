@@ -7,7 +7,7 @@ import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
-import 'package:kakeibo/util/common_widget/price_input_dialog.dart';
+import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_expense_edit_sheet.dart';
 
 class UnconfirmedFixedCostTile extends ConsumerWidget {
   const UnconfirmedFixedCostTile({
@@ -32,7 +32,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
       customUnderPriceLabel:
           '平均 ${yenmarkFormattedPriceGetter(value.estimatedPrice)} / ${value.frequencyLabel}',
       onTap: () async {
-        showPriceInputDialog(context, value);
+        await openFixedCostExpenseEditSheet(context, ref, expenseId: value.id);
       },
       onLongPress: () async {
         return await showMenuDialog(context, items: [
@@ -40,7 +40,8 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
               label: '編集',
               icon: Icons.edit_outlined,
               onPressed: () async {
-                showPriceInputDialog(context, value);
+                await openFixedCostExpenseEditSheet(context, ref,
+                    expenseId: value.id);
               }),
           MenuDialogItem(
               label: '削除',

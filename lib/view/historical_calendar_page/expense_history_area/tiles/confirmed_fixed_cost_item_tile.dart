@@ -9,6 +9,8 @@ import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_confirm
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_expense_edit_sheet.dart';
 
 class ConfirmedFixedCostItemTile extends ConsumerWidget {
   const ConfirmedFixedCostItemTile({
@@ -41,7 +43,13 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
     // 値段ラベル
     final priceLabel = yenmarkFormattedPriceGetter(value.price);
 
-    return Dismissible(
+    // 確定済みの固定費行もタップで編集シートを開く（金額・拠出元・メモの編集。仕様 §6.6）
+    return AppInkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: () async {
+        await openFixedCostExpenseEditSheet(context, ref, expenseId: value.id);
+      },
+      child: Dismissible(
       direction: DismissDirection.endToStart,
       key: Key(value.id.toString()),
       dragStartBehavior: DragStartBehavior.start,
@@ -143,6 +151,7 @@ class ConfirmedFixedCostItemTile extends ConsumerWidget {
             color: context.colors.separator,
           ),
         ],
+      ),
       ),
     );
   }
