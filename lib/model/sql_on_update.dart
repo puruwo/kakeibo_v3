@@ -1,5 +1,7 @@
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -353,5 +355,287 @@ class DataBaseMigrate {
     }
 
     logger.i('=== v9マイグレーション完了 ===');
+  }
+
+  // 固定費カテゴリー統合のマイグレーション (v9 → v10) 第1段階
+  //
+  // 仕様書 §4・§5（固定費カテゴリー統合_仕様書.html）の手順1・2までを実施する。
+  // 手順3（fixed_cost_expense → expense の実績移行）と手順4（旧2テーブルDROP）は
+  // T6 で本関数に追記する。そのため fixed_cost_category_id 列・旧2テーブルは残す。
+  //
+  // 注意: onUpgrade は既にトランザクション内で呼ばれるため、
+  // ここでは db.transaction() や DatabaseHelper 経由のリポジトリを使わず、
+  // 引数の db に対する raw SQL のみで書く（既存 toV6〜toV9 と同じ作法）。
+  Future<void> toV10(Database db) async {
+    logger.i('=== v10マイグレーション開始: 固定費カテゴリー統合（第1段階） ===');
+
+    await _migrateExpenseTableToV10(db);
+    await _moveFixedCostCategoryToExpenseCategory(db);
+
+    logger.i('=== v10マイグレーション完了（第1段階） ===');
+  }
+
+  /// v10-1: expense をテーブル再作成方式で新定義へ移行する
+  ///
+  /// - price を NULL 許容化（実額のみを格納。未確定固定費の間は NULL）
+  /// - fixed_cost_id / is_confirmed / estimated_price を追加
+  /// - 既存行は全列コピーし、通常支出として is_confirmed=1 を立てる
+  Future<void> _migrateExpenseTableToV10(Database db) async {
+    logger.i('1. ${SqfExpense.tableName}の列構成を検査中...');
+    final expenseColumns = await db.rawQuery(
+      'PRAGMA table_info(${SqfExpense.tableName})',
+    );
+    final expenseColumnNames = expenseColumns
+        .map((column) => column['name'] as String)
+        .toSet();
+    // 3列すべてが揃っていれば移行済みとみなす（2回実行しても壊れないようにする）
+    final alreadyMigrated =
+        expenseColumnNames.contains(SqfExpense.fixedCostId) &&
+        expenseColumnNames.contains(SqfExpense.isConfirmed) &&
+        expenseColumnNames.contains(SqfExpense.estimatedPrice);
+
+    if (alreadyMigrated) {
+      logger.i('1-1. ${SqfExpense.tableName}は移行済みのためスキップ');
+      return;
+    }
+
+    logger.i('1-1. ${SqfExpense.tableName}を再作成します');
+    // 過去の中断で残骸テーブルがあっても再実行に耐えるよう先にDROPする
+    await db.execute('DROP TABLE IF EXISTS expense_v10_new;');
+    await db.execute('''
+          CREATE TABLE expense_v10_new (
+            ${SqfExpense.id} INTEGER PRIMARY KEY AUTOINCREMENT,
+            ${SqfExpense.expenseSmallCategoryId} INTEGER NOT NULL,
+            ${SqfExpense.date} TEXT NOT NULL,
+            ${SqfExpense.price} INTEGER,
+            ${SqfExpense.memo} TEXT,
+            ${SqfExpense.incomeSourceBigCategory} INTEGER NOT NULL,
+            ${SqfExpense.fixedCostId} INTEGER,
+            ${SqfExpense.isConfirmed} INTEGER NOT NULL DEFAULT 1,
+            ${SqfExpense.estimatedPrice} INTEGER
+          );
+          ''');
+
+    // 既存行は全て通常支出なので fixed_cost_id=NULL・is_confirmed=1・
+    // estimated_price=NULL を明示して引き継ぐ
+    await db.execute('''
+          INSERT INTO expense_v10_new (
+            ${SqfExpense.id},
+            ${SqfExpense.expenseSmallCategoryId},
+            ${SqfExpense.date},
+            ${SqfExpense.price},
+            ${SqfExpense.memo},
+            ${SqfExpense.incomeSourceBigCategory},
+            ${SqfExpense.fixedCostId},
+            ${SqfExpense.isConfirmed},
+            ${SqfExpense.estimatedPrice}
+          )
+          SELECT
+            ${SqfExpense.id},
+            ${SqfExpense.expenseSmallCategoryId},
+            ${SqfExpense.date},
+            ${SqfExpense.price},
+            ${SqfExpense.memo},
+            ${SqfExpense.incomeSourceBigCategory},
+            NULL,
+            1,
+            NULL
+          FROM ${SqfExpense.tableName};
+          ''');
+
+    await db.execute('DROP TABLE ${SqfExpense.tableName};');
+    await db.execute(
+      'ALTER TABLE expense_v10_new RENAME TO ${SqfExpense.tableName};',
+    );
+  }
+
+  /// v10-2: 固定費カテゴリーを支出カテゴリーへ移設し、fixed_cost の参照を付け替える
+  ///
+  /// 仕様 §5 手順1・手順2。手順1で作った小カテゴリーへ手順2で付け替えるため、
+  /// 2手順を1メソッドにまとめている。
+  /// 冪等性は `fixed_cost.expense_small_category_id` 列の有無で判定する
+  /// （onUpgrade は1トランザクションのため、途中失敗時は手順1ごとロールバックされ、
+  ///   列が存在する＝手順1・2とも完了済み、が成り立つ）。
+  Future<void> _moveFixedCostCategoryToExpenseCategory(Database db) async {
+    logger.i('2. ${SqfFixedCost.tableName}のexpense_small_category_id列を検査中...');
+    final fixedCostColumns = await db.rawQuery(
+      'PRAGMA table_info(${SqfFixedCost.tableName})',
+    );
+    final hasExpenseSmallCategoryId = fixedCostColumns.any(
+      (column) => column['name'] == SqfFixedCost.expenseSmallCategoryId,
+    );
+
+    if (hasExpenseSmallCategoryId) {
+      logger.i('2-1. カテゴリー移設は実施済みのためスキップ');
+      return;
+    }
+
+    // --- 手順1: fixed_cost_category を expense_big_category ＋ 同名の小カテゴリーへ移設 ---
+    logger.i('2-1. 固定費カテゴリーを支出カテゴリーへ移設します');
+    final fixedCostCategories = await db.rawQuery('''
+          SELECT
+            ${SqfFixedCostCategory.id},
+            ${SqfFixedCostCategory.categoryName},
+            ${SqfFixedCostCategory.colorCode},
+            ${SqfFixedCostCategory.resourcePath},
+            ${SqfFixedCostCategory.isDisplayed}
+          FROM ${SqfFixedCostCategory.tableName}
+          ORDER BY ${SqfFixedCostCategory.displayOrder} ASC, ${SqfFixedCostCategory.id} ASC;
+          ''');
+
+    // 表示順は既存の支出カテゴリーの末尾に連番で追加する
+    var nextDisplayOrder =
+        (Sqflite.firstIntValue(
+              await db.rawQuery(
+                'SELECT IFNULL(MAX(${SqfExpenseBigCategory.displayOrder}), -1) FROM ${SqfExpenseBigCategory.tableName}',
+              ),
+            ) ??
+            -1) +
+        1;
+    var nextSmallCategoryOrderKey =
+        (Sqflite.firstIntValue(
+              await db.rawQuery(
+                'SELECT IFNULL(MAX(${SqfExpenseSmallCategory.smallCategoryOrderKey}), -1) FROM ${SqfExpenseSmallCategory.tableName}',
+              ),
+            ) ??
+            -1) +
+        1;
+
+    // 旧固定費カテゴリーID → 移設先の小カテゴリーID
+    final smallCategoryIdByFixedCostCategoryId = <int, int>{};
+    // 参照欠損の救済先（「その他」由来の小カテゴリー）
+    int? fallbackSmallCategoryId;
+
+    for (final category in fixedCostCategories) {
+      final fixedCostCategoryId = category[SqfFixedCostCategory.id] as int;
+      final name = category[SqfFixedCostCategory.categoryName] as String;
+
+      // 既存支出カテゴリーに同名があってもマージせず、別レコードとして併存させる
+      final bigCategoryId = await db.rawInsert(
+        '''
+            INSERT INTO ${SqfExpenseBigCategory.tableName} (
+              ${SqfExpenseBigCategory.name},
+              ${SqfExpenseBigCategory.colorCode},
+              ${SqfExpenseBigCategory.resourcePath},
+              ${SqfExpenseBigCategory.displayOrder},
+              ${SqfExpenseBigCategory.isDisplayed}
+            ) VALUES (?, ?, ?, ?, ?);
+            ''',
+        [
+          name,
+          category[SqfFixedCostCategory.colorCode],
+          category[SqfFixedCostCategory.resourcePath],
+          nextDisplayOrder,
+          category[SqfFixedCostCategory.isDisplayed],
+        ],
+      );
+      nextDisplayOrder++;
+
+      // 各大カテゴリー配下に同名の小カテゴリーを1件だけ作る（固定費の移行先）
+      final smallCategoryId = await db.rawInsert(
+        '''
+            INSERT INTO ${SqfExpenseSmallCategory.tableName} (
+              ${SqfExpenseSmallCategory.bigCategoryKey},
+              ${SqfExpenseSmallCategory.name},
+              ${SqfExpenseSmallCategory.smallCategoryOrderKey},
+              ${SqfExpenseSmallCategory.displayedOrderInBig},
+              ${SqfExpenseSmallCategory.defaultDisplayed}
+            ) VALUES (?, ?, ?, 0, 1);
+            ''',
+        [bigCategoryId, name, nextSmallCategoryOrderKey],
+      );
+      nextSmallCategoryOrderKey++;
+
+      smallCategoryIdByFixedCostCategoryId[fixedCostCategoryId] =
+          smallCategoryId;
+      if (name == FixedCostCategoryConstants.fallbackCategoryName) {
+        fallbackSmallCategoryId = smallCategoryId;
+      }
+    }
+    logger.i('2-2. 移設した固定費カテゴリー: ${fixedCostCategories.length}件');
+
+    // --- 手順2: fixed_cost の参照付替 ---
+    // 列は ADD COLUMN で追加する（fixed_cost_category_id はT6まで残す）。
+    // NOT NULL のため DEFAULT 0 を置き、この後のUPDATEで実IDを埋める。
+    await db.execute(
+      'ALTER TABLE ${SqfFixedCost.tableName} ADD COLUMN ${SqfFixedCost.expenseSmallCategoryId} INTEGER NOT NULL DEFAULT 0;',
+    );
+
+    for (final entry in smallCategoryIdByFixedCostCategoryId.entries) {
+      await db.rawUpdate(
+        '''
+            UPDATE ${SqfFixedCost.tableName}
+            SET ${SqfFixedCost.expenseSmallCategoryId} = ?
+            WHERE ${SqfFixedCost.fixedCostCategoryId} = ?;
+            ''',
+        [entry.value, entry.key],
+      );
+    }
+
+    // 参照先の fixed_cost_category が欠損している行の救済
+    final unresolved =
+        Sqflite.firstIntValue(
+          await db.rawQuery(
+            'SELECT COUNT(*) FROM ${SqfFixedCost.tableName} WHERE ${SqfFixedCost.expenseSmallCategoryId} = 0',
+          ),
+        ) ??
+        0;
+    if (unresolved > 0) {
+      // 「その他」が無いDB（ユーザーが削除した等）でも救済先を必ず用意する
+      fallbackSmallCategoryId ??= await _createFallbackExpenseCategory(
+        db,
+        displayOrder: nextDisplayOrder,
+        smallCategoryOrderKey: nextSmallCategoryOrderKey,
+      );
+      await db.rawUpdate(
+        '''
+            UPDATE ${SqfFixedCost.tableName}
+            SET ${SqfFixedCost.expenseSmallCategoryId} = ?
+            WHERE ${SqfFixedCost.expenseSmallCategoryId} = 0;
+            ''',
+        [fallbackSmallCategoryId],
+      );
+      logger.i('2-3. 参照欠損のため「その他」由来カテゴリーへ割当: $unresolved件');
+    }
+  }
+
+  /// 参照欠損の救済先が無い場合に作る「固定費その他」カテゴリー（大＋同名の小）
+  ///
+  /// 戻り値は作成した小カテゴリーのID。
+  Future<int> _createFallbackExpenseCategory(
+    Database db, {
+    required int displayOrder,
+    required int smallCategoryOrderKey,
+  }) async {
+    const name = FixedCostCategoryConstants.freshInstallFallbackCategoryName;
+    final bigCategoryId = await db.rawInsert(
+      '''
+          INSERT INTO ${SqfExpenseBigCategory.tableName} (
+            ${SqfExpenseBigCategory.name},
+            ${SqfExpenseBigCategory.colorCode},
+            ${SqfExpenseBigCategory.resourcePath},
+            ${SqfExpenseBigCategory.displayOrder},
+            ${SqfExpenseBigCategory.isDisplayed}
+          ) VALUES (?, ?, ?, ?, 1);
+          ''',
+      [
+        name,
+        CategoryPalette.fixedCostHex,
+        'assets/images/icon_others.svg',
+        displayOrder,
+      ],
+    );
+    return db.rawInsert(
+      '''
+          INSERT INTO ${SqfExpenseSmallCategory.tableName} (
+            ${SqfExpenseSmallCategory.bigCategoryKey},
+            ${SqfExpenseSmallCategory.name},
+            ${SqfExpenseSmallCategory.smallCategoryOrderKey},
+            ${SqfExpenseSmallCategory.displayedOrderInBig},
+            ${SqfExpenseSmallCategory.defaultDisplayed}
+          ) VALUES (?, ?, ?, 0, 1);
+          ''',
+      [bigCategoryId, name, smallCategoryOrderKey],
+    );
   }
 }

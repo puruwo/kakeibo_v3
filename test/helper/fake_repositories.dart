@@ -643,7 +643,7 @@ class FakeExpenseRepository implements ExpenseRepository {
               e.incomeSourceBigCategory == incomeSourceBigCategory &&
               e.paymentCategoryId == smallCategoryId,
         )
-        .fold<int>(0, (sum, e) => sum + e.price);
+        .fold<int>(0, (sum, e) => sum + e.effectivePrice);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/model/debug_seeder.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
@@ -13,9 +14,12 @@ class DataBaseHelperHandling {
             ${SqfExpense.id} INTEGER PRIMARY KEY AUTOINCREMENT,
             ${SqfExpense.expenseSmallCategoryId} INTEGER NOT NULL,
             ${SqfExpense.date} TEXT NOT NULL,
-            ${SqfExpense.price} INTEGER NOT NULL,
+            ${SqfExpense.price} INTEGER,
             ${SqfExpense.memo} TEXT,
-            ${SqfExpense.incomeSourceBigCategory} INTEGER NOT NULL
+            ${SqfExpense.incomeSourceBigCategory} INTEGER NOT NULL,
+            ${SqfExpense.fixedCostId} INTEGER,
+            ${SqfExpense.isConfirmed} INTEGER NOT NULL DEFAULT 1,
+            ${SqfExpense.estimatedPrice} INTEGER
             )
           ;
           ''');
@@ -72,7 +76,13 @@ class DataBaseHelperHandling {
                   (4, '帰省', 11, 1, 1),
                   (5, 'カット', 12, 0, 1),
                   (6, '医療費', 13, 0, 1),
-                  (7, 'その他', 14, 0, 1);
+                  (7, 'その他', 14, 0, 1),
+                  -- 固定費由来のカテゴリー（大カテゴリー8〜12と同名の小カテゴリーを1件ずつ）
+                  (8, '住居費', 15, 0, 1),
+                  (9, 'サブスク', 16, 0, 1),
+                  (10, '通信費', 17, 0, 1),
+                  (11, '光熱費', 18, 0, 1),
+                  (12, '${FixedCostCategoryConstants.freshInstallFallbackCategoryName}', 19, 0, 1);
           ''');
 
     await db.execute('''
@@ -99,7 +109,16 @@ class DataBaseHelperHandling {
                 ('交通費', '${CategoryPalette.expense4Hex}', 'assets/images/icon_transportation.svg', 3, 1),
                 ('衣服美容', '${CategoryPalette.expense5Hex}', 'assets/images/icon_clothes.svg', 4, 1),
                 ('医療費', '${CategoryPalette.expense6Hex}', 'assets/images/icon_medical.svg', 5, 1),
-                ('雑費', '${CategoryPalette.expense7Hex}', 'assets/images/icon_others.svg', 6, 1);
+                ('雑費', '${CategoryPalette.expense7Hex}', 'assets/images/icon_others.svg', 6, 1),
+                -- 固定費由来のカテゴリー（v10で fixed_cost_category から移設する5件と同じ構成）。
+                -- 新規インストールと移行後の端末で形を揃えるため onCreate にも含める。
+                -- ただし「その他」は既存の「雑費」と用途が重複し紛らわしいため、
+                -- 新規インストールに限り「固定費その他」の名前で作る（移行時は元名のまま併存）。
+                ('住居費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_home.svg', 7, 1),
+                ('サブスク', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_subscription.svg', 8, 1),
+                ('通信費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_cell_tower.svg', 9, 1),
+                ('光熱費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_water_drop.svg', 10, 1),
+                ('${FixedCostCategoryConstants.freshInstallFallbackCategoryName}', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_others.svg', 11, 1);
           ''');
 
     await db.execute('''
@@ -155,6 +174,7 @@ class DataBaseHelperHandling {
           ${SqfFixedCost.price} INTEGER,
           ${SqfFixedCost.estimatedPrice} INTEGER,
           ${SqfFixedCost.fixedCostCategoryId} INTEGER NOT NULL,
+          ${SqfFixedCost.expenseSmallCategoryId} INTEGER NOT NULL DEFAULT 0,
           ${SqfFixedCost.intervalNumber} INTEGER NOT NULL,
           ${SqfFixedCost.intervalUnit} INTEGER NOT NULL,
           ${SqfFixedCost.firstPaymentDate} TEXT NOT NULL,

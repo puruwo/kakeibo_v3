@@ -89,13 +89,13 @@ void main() {
         await DatabaseHelper.instance.queryRowCount(
           SqfExpenseBigCategory.tableName,
         ),
-        7,
+        12,
       );
       expect(
         await DatabaseHelper.instance.queryRowCount(
           SqfExpenseSmallCategory.tableName,
         ),
-        15,
+        20,
       );
       expect(
         await DatabaseHelper.instance.queryRowCount(

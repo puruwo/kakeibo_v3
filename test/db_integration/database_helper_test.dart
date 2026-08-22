@@ -3,6 +3,7 @@
 // 本物のDDL（sql_on_create.dart）を sqflite_common_ffi 上で実行し、
 // 「新規インストール直後のDBがどうなっているか」を仕様として固定する。
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/theme/category_palette.dart';
@@ -38,11 +39,11 @@ void main() {
       );
     });
 
-    test('新規作成直後のスキーマバージョンは9になる', () async {
+    test('新規作成直後のスキーマバージョンは10になる', () async {
       final db = await openTestDatabase();
       // DatabaseHelper._databaseVersion と一致していること
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 9);
+      expect(rows.first.values.first, 10);
     });
 
     test('income_big_categoryは会計種別を持ち、月次収入=1・ボーナス=2で作成される', () async {
@@ -71,13 +72,14 @@ void main() {
   });
 
   group('onCreate: カテゴリーマスタのシード', () {
-    test('支出大カテゴリーは7件で、名前・色・表示順がパレット定義どおりになる', () async {
+    test('支出大カテゴリーは12件で、名前・色・表示順がパレット定義どおりになる', () async {
       final rows = await DatabaseHelper.instance.query(
         'SELECT * FROM ${SqfExpenseBigCategory.tableName} '
         'ORDER BY ${SqfExpenseBigCategory.id} ASC',
       );
 
-      expect(rows.length, 7);
+      // v10（固定費カテゴリー統合）で固定費由来の5件が末尾に加わり12件になった
+      expect(rows.length, 12);
 
       // 色は CategoryPalette の6桁HEX定数と照合する（DB側はalpha無しの6桁）
       final expected = <List<Object>>[
@@ -88,6 +90,16 @@ void main() {
         ['衣服美容', CategoryPalette.expense5Hex, 4],
         ['医療費', CategoryPalette.expense6Hex, 5],
         ['雑費', CategoryPalette.expense7Hex, 6],
+        // 固定費由来（色は固定費色で統一。「その他」だけ名前が「固定費その他」）
+        ['住居費', CategoryPalette.fixedCostHex, 7],
+        ['サブスク', CategoryPalette.fixedCostHex, 8],
+        ['通信費', CategoryPalette.fixedCostHex, 9],
+        ['光熱費', CategoryPalette.fixedCostHex, 10],
+        [
+          FixedCostCategoryConstants.freshInstallFallbackCategoryName,
+          CategoryPalette.fixedCostHex,
+          11,
+        ],
       ];
       for (var i = 0; i < expected.length; i++) {
         expect(rows[i][SqfExpenseBigCategory.id], i + 1);
@@ -98,16 +110,21 @@ void main() {
       }
     });
 
-    test('支出小カテゴリーは15件で、それぞれ想定の大カテゴリーに紐付く', () async {
+    test('支出小カテゴリーは20件で、それぞれ想定の大カテゴリーに紐付く', () async {
       final rows = await DatabaseHelper.instance.query(
         'SELECT * FROM ${SqfExpenseSmallCategory.tableName} '
         'ORDER BY ${SqfExpenseSmallCategory.id} ASC',
       );
 
-      expect(rows.length, 15);
+      // v10（固定費カテゴリー統合）で固定費由来の5件が末尾に加わり20件になった
+      expect(rows.length, 20);
 
-      // 大カテゴリーキー（1:食費 2:日用品 3:遊び娯楽 4:交通費 5:衣服美容 6:医療費 7:雑費）
-      const expectedBigKeys = [1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 6, 7];
+      // 大カテゴリーキー（1:食費 2:日用品 3:遊び娯楽 4:交通費 5:衣服美容 6:医療費 7:雑費
+      //                 8:住居費 9:サブスク 10:通信費 11:光熱費 12:固定費その他）
+      const expectedBigKeys = [
+        1, 1, 1, 1, 2, 2, 3, 3, 3, 3, 4, 4, 5, 6, 7, //
+        8, 9, 10, 11, 12,
+      ];
       const expectedNames = [
         '食費',
         'コンビニ',
@@ -124,6 +141,12 @@ void main() {
         'カット',
         '医療費',
         'その他',
+        // 固定費由来（大カテゴリーと同名の小カテゴリーを1件ずつ）
+        '住居費',
+        'サブスク',
+        '通信費',
+        '光熱費',
+        FixedCostCategoryConstants.freshInstallFallbackCategoryName,
       ];
       for (var i = 0; i < rows.length; i++) {
         expect(rows[i][SqfExpenseSmallCategory.id], i + 1);
@@ -274,7 +297,7 @@ void main() {
         await DatabaseHelper.instance.queryRowCount(
           SqfExpenseBigCategory.tableName,
         ),
-        7,
+        12,
       );
     });
   });

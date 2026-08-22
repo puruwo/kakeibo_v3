@@ -22,7 +22,10 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price, 
         a.${SqfExpense.memo} AS memo,
-        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed,
+        a.${SqfExpense.estimatedPrice} AS estimatedPrice
       FROM ${SqfExpense.tableName} a
       ORDER BY a.${SqfExpense.id} ASC;
     ''';
@@ -57,7 +60,10 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price,
         a.${SqfExpense.memo} AS memo,
-        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed,
+        a.${SqfExpense.estimatedPrice} AS estimatedPrice
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       AND a.${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
@@ -95,7 +101,10 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price,
         a.${SqfExpense.memo} AS memo,
-        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed,
+        a.${SqfExpense.estimatedPrice} AS estimatedPrice
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)} AND a.${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
       AND a.${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigId
@@ -235,7 +244,10 @@ class ImplementsExpenseRepository implements ExpenseRepository {
         a.${SqfExpense.date} AS date,
         a.${SqfExpense.price} AS price,
         a.${SqfExpense.memo} AS memo,
-        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory
+        a.${SqfExpense.incomeSourceBigCategory} AS incomeSourceBigCategory,
+        a.${SqfExpense.fixedCostId} AS fixedCostId,
+        a.${SqfExpense.isConfirmed} AS isConfirmed,
+        a.${SqfExpense.estimatedPrice} AS estimatedPrice
       FROM ${SqfExpense.tableName} a
       WHERE a.${SqfExpense.date} = ${DateFormat('yyyyMMdd').format(date)}
       AND a.${SqfExpense.incomeSourceBigCategory} = ${AccountTypeConstants.living}
@@ -262,6 +274,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       SqfExpense.price: expenseEntity.price,
       SqfExpense.memo: expenseEntity.memo,
       SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory,
+      SqfExpense.fixedCostId: expenseEntity.fixedCostId,
+      SqfExpense.isConfirmed: expenseEntity.isConfirmed,
+      SqfExpense.estimatedPrice: expenseEntity.estimatedPrice,
     });
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseRepository insert(ExpenseEntity expenseEntity)\n${SqfExpense.tableName}でinsert\n  expenseEntity: \n$expenseEntity');
@@ -275,6 +290,9 @@ class ImplementsExpenseRepository implements ExpenseRepository {
       SqfExpense.price: expenseEntity.price,
       SqfExpense.memo: expenseEntity.memo,
       SqfExpense.incomeSourceBigCategory: expenseEntity.incomeSourceBigCategory,
+      SqfExpense.fixedCostId: expenseEntity.fixedCostId,
+      SqfExpense.isConfirmed: expenseEntity.isConfirmed,
+      SqfExpense.estimatedPrice: expenseEntity.estimatedPrice,
     }, expenseEntity.id);
     // logger.i(
     //     '====SQLが実行されました====\n ImplementsExpenseRepository update(ExpenseEntity expenseEntity)\n ${SqfExpense.tableName}でupdate\n expenseEntity: \n$expenseEntity');

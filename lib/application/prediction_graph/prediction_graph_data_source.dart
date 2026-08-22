@@ -219,7 +219,7 @@ class PredictionGraphDataSource {
         final smallCategoryId = expense.paymentCategoryId;
         final bigCategoryId = smallToBigMap[smallCategoryId] ?? 0;
         categoryTotals[bigCategoryId] =
-            (categoryTotals[bigCategoryId] ?? 0) + expense.price;
+            (categoryTotals[bigCategoryId] ?? 0) + expense.effectivePrice;
       }
 
       // その日の固定費合計（fixed_cost_expense.date が一致するレコードの合計）
