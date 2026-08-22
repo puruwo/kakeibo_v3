@@ -8,7 +8,6 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/daily_expense_summary_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -28,6 +27,14 @@ void main() {
       displayOrder: 1,
       isDisplayed: 1,
     ),
+    ExpenseBigCategoryEntity(
+      id: 2,
+      colorCode: 'FFAA00',
+      bigCategoryName: '住居',
+      resourcePath: 'assets/images/icon_home.svg',
+      displayOrder: 2,
+      isDisplayed: 1,
+    ),
   ];
 
   const expenseSmallCategories = [
@@ -37,6 +44,15 @@ void main() {
       bigCategoryKey: 1,
       displayedOrderInBig: 1,
       smallCategoryName: '外食',
+      defaultDisplayed: 1,
+    ),
+    // 固定費行の支出カテゴリー（v10で固定費カテゴリーから移設）
+    ExpenseSmallCategoryEntity(
+      id: 21,
+      smallCategoryOrderKey: 2,
+      bigCategoryKey: 2,
+      displayedOrderInBig: 1,
+      smallCategoryName: '家賃',
       defaultDisplayed: 1,
     ),
   ];
@@ -57,9 +73,11 @@ void main() {
       variable: 0,
       price: 80000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 21,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250806',
     ),
   ];
 
@@ -87,16 +105,14 @@ void main() {
       paymentCategoryId: 10,
       memo: 'ディナー',
     ),
-  ];
-
-  const fixedCostExpenses = [
-    FixedCostExpenseEntity(
+    // 確定済みの固定費行（v10でexpenseに入る）
+    ExpenseEntity(
       id: 100,
-      fixedCostId: 10,
-      fixedCostCategoryId: 1,
       date: '20250706',
       price: 80000,
-      name: '家賃',
+      paymentCategoryId: 21,
+      memo: '家賃',
+      fixedCostId: 10,
       isConfirmed: 1,
     ),
   ];
@@ -117,9 +133,6 @@ void main() {
     fixedCost: FakeFixedCostRepository(initialRecords: fixedCosts),
     fixedCostCategory: FakeFixedCostCategoryRepository(
       initialRecords: fixedCostCategories,
-    ),
-    fixedCostExpense: FakeFixedCostExpenseRepository(
-      initialRecords: withRecords ? fixedCostExpenses : const [],
     ),
   );
 

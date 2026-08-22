@@ -78,6 +78,13 @@ abstract interface class ExpenseRepository {
     required String date,
   });
 
+  /// 期間内の固定費行（確定・未確定を問わない）を取得する
+  ///
+  /// 月次固定費ビュー・見込み算出・予測グラフの共通のデータ源。
+  Future<List<ExpenseEntity>> fetchFixedCostExpenseByPeriod({
+    required PeriodValue period,
+  });
+
   /// 期間内の未確定の固定費行を取得する
   Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostExpenseByPeriod({
     required PeriodValue period,

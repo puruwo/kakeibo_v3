@@ -1,8 +1,9 @@
 // ImplementsDailyExpenseRepository のDB結合テスト
 //
-// カレンダーの日別サマリー。expense / fixed_cost_expense / income を UNION ALL して
+// カレンダーの日別サマリー。expense / income を UNION ALL して
 // 期間内を GROUP BY date で日毎に畳む（B-03のレンジクエリ化で1日1クエリ→期間1クエリ）。
-// 固定費は「確定なら実績price・未確定なら固定費マスタのestimated_price」を使い分ける。
+// 固定費実績もexpenseに入るため（v10）、金額は実効金額の共通式
+// COALESCE(price, estimated_price) で確定・未確定を1本の集計に畳む。
 // SQLにORDER BYは無いため、複数日の検証は日付ソートしてから比較する。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/daily_expense_entity/daily_expense_entity.dart';
@@ -30,13 +31,13 @@ void main() {
       );
       await insertExpenseRow(id: 1, date: '20250701', price: 100);
       await insertExpenseRow(id: 2, date: '20250701', price: 200);
-      await insertFixedCostExpenseRow(
-        id: 1,
-        fixedCostId: 10,
-        fixedCostCategoryId: 1,
+      // 固定費の実績行もexpenseに入る（v10）
+      await insertExpenseRow(
+        id: 3,
         date: '20250701',
         price: 80000,
-        name: '家賃',
+        memo: '家賃',
+        fixedCostId: 10,
         isConfirmed: 1,
       );
       await insertIncomeRow(id: 1, date: '20250701', price: 300000);
@@ -115,7 +116,7 @@ void main() {
       ]);
     });
 
-    test('未確定の固定費は実績priceではなく固定費マスタのestimated_priceで集計する', () async {
+    test('未確定の固定費は実額priceではなく行のestimated_priceで集計する', () async {
       await insertFixedCostRow(
         id: 30,
         name: '電気代',
@@ -123,15 +124,15 @@ void main() {
         variable: 1,
         estimatedPrice: 7800,
       );
-      await insertFixedCostExpenseRow(
+      // 未確定行は実額priceを持たない（NULL）。予想額は行のestimated_priceにある
+      await insertExpenseRow(
         id: 1,
-        fixedCostId: 30,
-        fixedCostCategoryId: 4,
         date: '20250701',
-        price: 999999, // 未確定行のpriceは使われないことを示す極端な値
-        name: '電気代',
-        confirmedCostType: 1,
+        price: null,
+        memo: '電気代',
+        fixedCostId: 30,
         isConfirmed: 0,
+        estimatedPrice: 7800,
       );
 
       final result = await repository.fetchDailyTotalsByPeriod(
@@ -142,7 +143,7 @@ void main() {
       expect(result.single.totalExpense, 7800);
     });
 
-    test('確定済みの固定費は実績priceで集計する', () async {
+    test('確定済みの固定費は実額priceで集計する（予想額は無視される）', () async {
       await insertFixedCostRow(
         id: 30,
         name: '電気代',
@@ -150,15 +151,15 @@ void main() {
         variable: 1,
         estimatedPrice: 7800,
       );
-      await insertFixedCostExpenseRow(
+      // 確定後も予想額は残る（予実乖離の記録。仕様 §3）が、集計は実額を使う
+      await insertExpenseRow(
         id: 1,
-        fixedCostId: 30,
-        fixedCostCategoryId: 4,
         date: '20250701',
         price: 9200,
-        name: '電気代',
-        confirmedCostType: 1,
+        memo: '電気代',
+        fixedCostId: 30,
         isConfirmed: 1,
+        estimatedPrice: 7800,
       );
 
       final result = await repository.fetchDailyTotalsByPeriod(
@@ -194,16 +195,16 @@ void main() {
       expect(result.single.totalExpense, 400);
     });
 
-    test('紐づく固定費マスタが無い未確定行はNULL扱いで合計されない', () async {
-      // マスタを投入しないまま未確定の固定費支出だけを作る（LEFT JOINでNULLになる）
-      await insertFixedCostExpenseRow(
+    test('実額も予想額も持たない未確定行はNULL扱いで合計されない', () async {
+      // COALESCE が両方NULLならNULLを返すため、SUM対象から外れる
+      await insertExpenseRow(
         id: 1,
-        fixedCostId: 999,
-        fixedCostCategoryId: 1,
         date: '20250701',
-        price: 5000,
-        name: '孤立レコード',
+        price: null,
+        memo: '孤立レコード',
+        fixedCostId: 999,
         isConfirmed: 0,
+        estimatedPrice: null,
       );
 
       final result = await repository.fetchDailyTotalsByPeriod(

@@ -1,11 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
@@ -25,9 +21,6 @@ final monthlyAllCategoryCardNotifierProvider =
 class MonthlyAllCategoryTileUsecaseNotifier
     extends FamilyAsyncNotifier<MonthPlanCardModel, DateScopeEntity> {
   late ExpenseRepository _expenseRepositoryProvider;
-  late FixedCostExpenseRepository _fixedCostExpenseRepositoryProvider;
-  late FixedCostRepository _fixedCostRepositoryProvider;
-  late FixedCostCategoryRepository _fixedCostCategoryRepositoryProvider;
   late BudgetRepository _budgetRepositoryProvider;
   late IncomeRepository _incomeRepositoryProvider;
   late IncomeBigCategoryRepository _incomeBigCategoryRepositoryProvider;
@@ -41,13 +34,6 @@ class MonthlyAllCategoryTileUsecaseNotifier
     ref.watch(updateDBCountNotifierProvider);
 
     _expenseRepositoryProvider = ref.read(expenseRepositoryProvider);
-    _fixedCostExpenseRepositoryProvider = ref.read(
-      fixedCostExpenseRepositoryProvider,
-    );
-    _fixedCostRepositoryProvider = ref.read(fixedCostRepositoryProvider);
-    _fixedCostCategoryRepositoryProvider = ref.read(
-      fixedCostCategoryRepositoryProvider,
-    );
     _budgetRepositoryProvider = ref.read(budgetRepositoryProvider);
     _incomeRepositoryProvider = ref.read(incomeRepositoryProvider);
     _incomeBigCategoryRepositoryProvider = ref.read(
@@ -69,13 +55,6 @@ class MonthlyAllCategoryTileUsecaseNotifier
     DateTime fromDate = dateScope.aggregationMonthPeriod.startDatetime;
     DateTime toDate = dateScope.aggregationMonthPeriod.endDatetime;
 
-    // 支払いがある固定費の合計を取得
-    // 支払額未定の固定費は推定額を使用する
-    final fixedCostTotal = await FixedCostService().getFixedCostTotal(
-      ref,
-      dateScope,
-    );
-
     // 全カテゴリーの支出を取得
     // 拠出元=生活収支を指定して、特別枠充当を除くカテゴリーの支出を取得する
     final allCategoryExpense = await _expenseRepositoryProvider
@@ -89,11 +68,9 @@ class MonthlyAllCategoryTileUsecaseNotifier
     final allNormalCategoryBudget = await _budgetRepositoryProvider
         .fetchMonthlyAll(month: dateScope.representativeMonth);
 
-    final totalBudgetIncudeFixedCost = allNormalCategoryBudget + fixedCostTotal;
-
-    final allBudget = allNormalCategoryBudget != 0
-        ? totalBudgetIncudeFixedCost
-        : 0;
+    // 予算合計＝カテゴリー予算の合計のみ（固定費の自動加算は廃止。仕様 §7.3）
+    // 移設カテゴリーに予算を設定できるようになったため、加算すると二重計上になる
+    final allBudget = allNormalCategoryBudget;
 
     // ============================================
     // カテゴリータイルのリストを取得する
@@ -118,62 +95,6 @@ class MonthlyAllCategoryTileUsecaseNotifier
         .map((e) => e.categoryColor)
         .toList();
 
-    // 固定費のカテゴリーリストを取得する
-    final fixedCostCategoryList = await _fixedCostCategoryRepositoryProvider
-        .fetchAll();
-    // 固定費カテゴリーの予算用データ
-    List<String> fixedCostBudgetNameList = [];
-    List<int> fixedCostBudgetAmountList = [];
-    List<String> fixedCostBudgetIconPathList = [];
-    List<String> fixedCostBudgetColorList = [];
-    // 各カテゴリーの固定費を取得する
-    for (var e in fixedCostCategoryList) {
-      // 各カテゴリーの確定分固定費を取得する
-      final confirmedFixedCostExpense =
-          await _fixedCostExpenseRepositoryProvider
-              .fetchTotalConfirmedFixedCostExpenseWithPeriodAndCategory(
-                period: dateScope.aggregationMonthPeriod,
-                fixedCostCategoryId: e.id,
-              );
-
-      // 各カテゴリーの未確定固定費を取得する
-      final unconfirmedFixedCostList = await _fixedCostExpenseRepositoryProvider
-          .fetchUnconfirmedFixedCostExpenseWithPeriodAndCategory(
-            period: dateScope.aggregationMonthPeriod,
-            fixedCostCategoryId: e.id,
-          );
-      // 未確定支出に対して推定支出を取得する
-      final unconfirmedFixedCostEstimated =
-          await Future.wait(
-            unconfirmedFixedCostList.map((element) async {
-              final estimatePrice = await _fixedCostRepositoryProvider
-                  .fetchEstimatedPriceById(id: element.fixedCostId);
-              return estimatePrice;
-            }),
-          ).then(
-            (values) => values.fold<int>(
-              0,
-              (previousValue, estimatePrice) => previousValue + estimatePrice,
-            ),
-          );
-
-      final fixedCostCategoryTotal =
-          confirmedFixedCostExpense + unconfirmedFixedCostEstimated;
-
-      categoryNameList.add(e.categoryName);
-      categoryExpenseList.add(fixedCostCategoryTotal);
-      categoryIconPathList.add(e.resourcePath);
-      categoryColorList.add(e.colorCode);
-
-      // 予算カテゴリー用にも保持
-      if (fixedCostCategoryTotal > 0) {
-        fixedCostBudgetNameList.add(e.categoryName);
-        fixedCostBudgetAmountList.add(fixedCostCategoryTotal);
-        fixedCostBudgetIconPathList.add(e.resourcePath);
-        fixedCostBudgetColorList.add(e.colorCode);
-      }
-    }
-
     // ============================================
 
     // 収入を取得
@@ -184,8 +105,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
           accountType: AccountTypeConstants.living,
         );
 
-    // 固定費も一般支出も全て足した支出
-    final allCategoryTotalExpense = allCategoryExpense + fixedCostTotal;
+    // 支出合計は expense の単一テーブル集計で完結する（固定費行も同じテーブル。仕様 §7.1）
+    final allCategoryTotalExpense = allCategoryExpense;
 
     // ============================================
     // 棒グラフのタイプの最大値を決める
@@ -353,12 +274,6 @@ class MonthlyAllCategoryTileUsecaseNotifier
       }
     }
 
-    // 固定費カテゴリーの予算（固定費の実際/推定コストが予算に相当）
-    budgetCategoryNameList.addAll(fixedCostBudgetNameList);
-    budgetCategoryAmountList.addAll(fixedCostBudgetAmountList);
-    budgetCategoryIconPathList.addAll(fixedCostBudgetIconPathList);
-    budgetCategoryColorList.addAll(fixedCostBudgetColorList);
-
     // ============================================
     // 棒グラフの長さを決める
     // ============================================
@@ -385,7 +300,8 @@ class MonthlyAllCategoryTileUsecaseNotifier
       allCategoryTotalExpense: allCategoryTotalExpense,
       allCategoryTotalBudget: allBudget,
       allCategoryTotalIncome: allCategoryIncome,
-      allFixedCostExpense: fixedCostTotal,
+      // 固定費セグメントは廃止したため常に0（フィールド自体の除去はT5）
+      allFixedCostExpense: 0,
       realSavings: allCategoryIncome - allCategoryTotalExpense,
       denominator: denominator,
       totalBadgetRatio: totalBadgetRatio,

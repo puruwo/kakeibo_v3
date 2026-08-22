@@ -1,15 +1,13 @@
 import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:kakeibo/application/fixed_cost/fixed_cost_occurrence_service.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_constants.dart';
 import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/util/extension/datetime_extension.dart';
 
@@ -53,16 +51,12 @@ class PredictionGraphDataSource {
 
   late final ExpenseRepository _expenseRepo =
       _ref.read(expenseRepositoryProvider);
-  late final FixedCostExpenseRepository _fixedCostExpenseRepo =
-      _ref.read(fixedCostExpenseRepositoryProvider);
-  late final FixedCostRepository _fixedCostRepo =
-      _ref.read(fixedCostRepositoryProvider);
   late final ExpenseSmallCategoryRepository _smallCategoryRepo =
       _ref.read(expenseSmallCategoryRepositoryProvider);
   late final ExpenseBigCategoryRepository _bigCategoryRepo =
       _ref.read(expensebigCategoryRepositoryProvider);
-  late final FixedCostCategoryRepository _fixedCostCategoryRepo =
-      _ref.read(fixedCostCategoryRepositoryProvider);
+  late final FixedCostOccurrenceService _fixedCostOccurrenceService =
+      _ref.read(fixedCostOccurrenceServiceProvider);
 
   /// 折れ線用：日付ごとの累積支出データを取得する
   ///
@@ -85,35 +79,26 @@ class PredictionGraphDataSource {
   }
 
   /// 日毎の支出データリストを取得
-  /// 固定費は各レコードの日付ごとに分散加算する
-  /// （確定→fixed_cost_expense.price / 未確定→fixed_cost.estimated_price）
+  ///
+  /// 固定費実績もexpenseに入るため、日次集計（実効金額の共通式）が
+  /// そのまま固定費を含む。加えて、期間内にまだ実績行が生成されていない
+  /// 支払日ぶんを周期展開して積む（仕様 §7.4）。
   Future<List<Map<String, dynamic>>> _fetchDailyDataList(
       DateTime fromDate, DateTime toDate) async {
     // 日付をキーとしたマップに変換してマージ
     final Map<DateTime, int> dailyExpenseSumMap = {};
 
-    // 期間内の固定費を取得し、各レコードの日付ごとに実価格を加算
-    final period = PeriodValue(startDatetime: fromDate, endDatetime: toDate);
-    final fixedCostExpenses =
-        await _fixedCostExpenseRepo.fetchByPeriod(period: period);
-    for (final expense in fixedCostExpenses) {
-      final int price;
-      if (expense.isConfirmed == 1) {
-        price = expense.price;
-      } else {
-        price = await _fixedCostRepo.fetchEstimatedPriceById(
-            id: expense.fixedCostId);
-      }
-      final expenseDate = DateTime(
-        int.parse(expense.date.substring(0, 4)),
-        int.parse(expense.date.substring(4, 6)),
-        int.parse(expense.date.substring(6, 8)),
-      );
-      dailyExpenseSumMap[expenseDate] =
-          (dailyExpenseSumMap[expenseDate] ?? 0) + price;
+    // 実績行が未生成の固定費（未来の支払日など）を日付ごとに積む
+    final occurrences = await _fixedCostOccurrenceService.fetchOccurrences(
+      period: PeriodValue(startDatetime: fromDate, endDatetime: toDate),
+    );
+    for (final occurrence in occurrences) {
+      if (occurrence.isGenerated) continue;
+      dailyExpenseSumMap[occurrence.date] =
+          (dailyExpenseSumMap[occurrence.date] ?? 0) + occurrence.amount;
     }
 
-    // 一般支出を日毎に取得してマップに追加（固定費はすでに上で日付別に加算済み）
+    // 支出を日毎に取得してマップに追加（生成済みの固定費行はここに含まれる）
     var loopSelectedDate = fromDate;
     while (loopSelectedDate.isBefore(toDate) ||
         loopSelectedDate.isSameDate(toDate)) {
@@ -170,34 +155,18 @@ class PredictionGraphDataSource {
       smallToBigMap[cat.id] = cat.bigCategoryKey;
     }
 
-    // 固定費カテゴリー情報を取得してキャッシュ
-    final fixedCostCategories = await _fixedCostCategoryRepo.fetchAll();
-    final fixedCostCategoryMap = <int, _BigCategoryInfo>{};
-    for (final cat in fixedCostCategories) {
-      fixedCostCategoryMap[cat.id] = _BigCategoryInfo(
-        colorCode: cat.colorCode,
-        iconPath: cat.resourcePath,
-        name: cat.categoryName,
-      );
-    }
-
-    // 期間内の固定費支出を取得
+    // 期間内に発生する固定費を「日付別の合計」に集計する
+    // 生成済みの実績行は日次リストからも取れるが、未生成の支払日ぶん（仕様 §7.4）を
+    // 同じ経路で扱うためここでまとめて日付別に集計する
     final period = PeriodValue(startDatetime: fromDate, endDatetime: toDate);
-    final fixedCostExpenses =
-        await _fixedCostExpenseRepo.fetchByPeriod(period: period);
-
-    // 期間内の固定費を「日付別の合計」に集計（確定→price / 未確定→fixed_cost.estimated_price）
+    final occurrences = await _fixedCostOccurrenceService.fetchOccurrences(
+      period: period,
+    );
     final fixedCostTotalByDate = <String, int>{};
-    for (final expense in fixedCostExpenses) {
-      final int price;
-      if (expense.isConfirmed == 1) {
-        price = expense.price;
-      } else {
-        price = await _fixedCostRepo.fetchEstimatedPriceById(
-            id: expense.fixedCostId);
-      }
-      fixedCostTotalByDate[expense.date] =
-          (fixedCostTotalByDate[expense.date] ?? 0) + price;
+    for (final occurrence in occurrences) {
+      final dateKey = DateFormat('yyyyMMdd').format(occurrence.date);
+      fixedCostTotalByDate[dateKey] =
+          (fixedCostTotalByDate[dateKey] ?? 0) + occurrence.amount;
     }
 
     final dailyBarDataList = <DailyBarData>[];
@@ -214,15 +183,16 @@ class PredictionGraphDataSource {
       // 大カテゴリー別に集計（一般支出）
       final categoryTotals = <int, int>{};
 
-      // 一般支出を集計
+      // 一般支出を集計（固定費行は下でまとめて1本の棒にするため除外する）
       for (final expense in expenses) {
+        if (expense.fixedCostId != null) continue;
         final smallCategoryId = expense.paymentCategoryId;
         final bigCategoryId = smallToBigMap[smallCategoryId] ?? 0;
         categoryTotals[bigCategoryId] =
             (categoryTotals[bigCategoryId] ?? 0) + expense.effectivePrice;
       }
 
-      // その日の固定費合計（fixed_cost_expense.date が一致するレコードの合計）
+      // その日の固定費合計（実績行＋未生成の支払日ぶん）
       final dateKey = DateFormat('yyyyMMdd').format(currentDate);
       final fixedCostForDay = fixedCostTotalByDate[dateKey] ?? 0;
 

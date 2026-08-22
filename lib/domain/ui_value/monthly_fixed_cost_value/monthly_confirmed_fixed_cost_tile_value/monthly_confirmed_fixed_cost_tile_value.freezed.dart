@@ -26,8 +26,10 @@ mixin _$MonthlyConfirmedFixedCostTileValue {
   int get intervalNumber => throw _privateConstructorUsedError;
   int get intervalUnit => throw _privateConstructorUsedError;
   String? get nextPaymentDate =>
-      throw _privateConstructorUsedError; // fixed cost category
+      throw _privateConstructorUsedError; // 支出カテゴリー（v10で固定費カテゴリーから移行）
+  // categoryName は大カテゴリー名、smallCategoryName は小カテゴリー名
   String get categoryName => throw _privateConstructorUsedError;
+  String get smallCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get resourcePath => throw _privateConstructorUsedError;
   String get frequencyLabel => throw _privateConstructorUsedError;
@@ -62,6 +64,7 @@ abstract class $MonthlyConfirmedFixedCostTileValueCopyWith<$Res> {
     int intervalUnit,
     String? nextPaymentDate,
     String categoryName,
+    String smallCategoryName,
     String colorCode,
     String resourcePath,
     String frequencyLabel,
@@ -95,6 +98,7 @@ class _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<
     Object? intervalUnit = null,
     Object? nextPaymentDate = freezed,
     Object? categoryName = null,
+    Object? smallCategoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
     Object? frequencyLabel = null,
@@ -137,6 +141,10 @@ class _$MonthlyConfirmedFixedCostTileValueCopyWithImpl<
                 ? _value.categoryName
                 : categoryName // ignore: cast_nullable_to_non_nullable
                       as String,
+            smallCategoryName: null == smallCategoryName
+                ? _value.smallCategoryName
+                : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                      as String,
             colorCode: null == colorCode
                 ? _value.colorCode
                 : colorCode // ignore: cast_nullable_to_non_nullable
@@ -174,6 +182,7 @@ abstract class _$$MonthlyConfirmedFixedCostTileValueImplCopyWith<$Res>
     int intervalUnit,
     String? nextPaymentDate,
     String categoryName,
+    String smallCategoryName,
     String colorCode,
     String resourcePath,
     String frequencyLabel,
@@ -207,6 +216,7 @@ class __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<$Res>
     Object? intervalUnit = null,
     Object? nextPaymentDate = freezed,
     Object? categoryName = null,
+    Object? smallCategoryName = null,
     Object? colorCode = null,
     Object? resourcePath = null,
     Object? frequencyLabel = null,
@@ -249,6 +259,10 @@ class __$$MonthlyConfirmedFixedCostTileValueImplCopyWithImpl<$Res>
             ? _value.categoryName
             : categoryName // ignore: cast_nullable_to_non_nullable
                   as String,
+        smallCategoryName: null == smallCategoryName
+            ? _value.smallCategoryName
+            : smallCategoryName // ignore: cast_nullable_to_non_nullable
+                  as String,
         colorCode: null == colorCode
             ? _value.colorCode
             : colorCode // ignore: cast_nullable_to_non_nullable
@@ -280,6 +294,7 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
     required this.intervalUnit,
     this.nextPaymentDate,
     required this.categoryName,
+    this.smallCategoryName = '',
     required this.colorCode,
     required this.resourcePath,
     required this.frequencyLabel,
@@ -304,9 +319,13 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
   final int intervalUnit;
   @override
   final String? nextPaymentDate;
-  // fixed cost category
+  // 支出カテゴリー（v10で固定費カテゴリーから移行）
+  // categoryName は大カテゴリー名、smallCategoryName は小カテゴリー名
   @override
   final String categoryName;
+  @override
+  @JsonKey()
+  final String smallCategoryName;
   @override
   final String colorCode;
   @override
@@ -316,7 +335,7 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
 
   @override
   String toString() {
-    return 'MonthlyConfirmedFixedCostTileValue(id: $id, date: $date, price: $price, name: $name, variable: $variable, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, nextPaymentDate: $nextPaymentDate, categoryName: $categoryName, colorCode: $colorCode, resourcePath: $resourcePath, frequencyLabel: $frequencyLabel)';
+    return 'MonthlyConfirmedFixedCostTileValue(id: $id, date: $date, price: $price, name: $name, variable: $variable, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, nextPaymentDate: $nextPaymentDate, categoryName: $categoryName, smallCategoryName: $smallCategoryName, colorCode: $colorCode, resourcePath: $resourcePath, frequencyLabel: $frequencyLabel)';
   }
 
   @override
@@ -338,6 +357,8 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
                 other.nextPaymentDate == nextPaymentDate) &&
             (identical(other.categoryName, categoryName) ||
                 other.categoryName == categoryName) &&
+            (identical(other.smallCategoryName, smallCategoryName) ||
+                other.smallCategoryName == smallCategoryName) &&
             (identical(other.colorCode, colorCode) ||
                 other.colorCode == colorCode) &&
             (identical(other.resourcePath, resourcePath) ||
@@ -358,6 +379,7 @@ class _$MonthlyConfirmedFixedCostTileValueImpl
     intervalUnit,
     nextPaymentDate,
     categoryName,
+    smallCategoryName,
     colorCode,
     resourcePath,
     frequencyLabel,
@@ -389,6 +411,7 @@ abstract class _MonthlyConfirmedFixedCostTileValue
     required final int intervalUnit,
     final String? nextPaymentDate,
     required final String categoryName,
+    final String smallCategoryName,
     required final String colorCode,
     required final String resourcePath,
     required final String frequencyLabel,
@@ -410,9 +433,12 @@ abstract class _MonthlyConfirmedFixedCostTileValue
   @override
   int get intervalUnit;
   @override
-  String? get nextPaymentDate; // fixed cost category
+  String? get nextPaymentDate; // 支出カテゴリー（v10で固定費カテゴリーから移行）
+  // categoryName は大カテゴリー名、smallCategoryName は小カテゴリー名
   @override
   String get categoryName;
+  @override
+  String get smallCategoryName;
   @override
   String get colorCode;
   @override

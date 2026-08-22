@@ -13,8 +13,10 @@ abstract class IMonthlyFixedTileValue {
     int  get intervalUnit;
     String? get  nextPaymentDate;
 
-    // fixed cost category
+    // 支出カテゴリー（v10で固定費カテゴリーから移行）
+    // categoryName は大カテゴリー名、smallCategoryName は小カテゴリー名
     String get categoryName;
+    String get smallCategoryName;
     String get colorCode;
     String get resourcePath;  
 

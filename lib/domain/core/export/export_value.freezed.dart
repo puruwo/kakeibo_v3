@@ -28,7 +28,13 @@ mixin _$ExportValue {
   String get colorCode => throw _privateConstructorUsedError;
   String get iconName => throw _privateConstructorUsedError;
   String get incomeSourceBigCategoryName => throw _privateConstructorUsedError;
-  int get incomeSourceBigCategoryId => throw _privateConstructorUsedError;
+  int get incomeSourceBigCategoryId =>
+      throw _privateConstructorUsedError; // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  int? get fixedCostId =>
+      throw _privateConstructorUsedError; // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  int get isConfirmed =>
+      throw _privateConstructorUsedError; // 予想額。未確定の固定費行のみ値を持つ（v10で追加）
+  int? get estimatedPrice => throw _privateConstructorUsedError;
 
   /// Create a copy of ExportValue
   /// with the given fields replaced by the non-null parameter values.
@@ -57,6 +63,9 @@ abstract class $ExportValueCopyWith<$Res> {
     String iconName,
     String incomeSourceBigCategoryName,
     int incomeSourceBigCategoryId,
+    int? fixedCostId,
+    int isConfirmed,
+    int? estimatedPrice,
   });
 }
 
@@ -87,6 +96,9 @@ class _$ExportValueCopyWithImpl<$Res, $Val extends ExportValue>
     Object? iconName = null,
     Object? incomeSourceBigCategoryName = null,
     Object? incomeSourceBigCategoryId = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
+    Object? estimatedPrice = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -138,6 +150,18 @@ class _$ExportValueCopyWithImpl<$Res, $Val extends ExportValue>
                 ? _value.incomeSourceBigCategoryId
                 : incomeSourceBigCategoryId // ignore: cast_nullable_to_non_nullable
                       as int,
+            fixedCostId: freezed == fixedCostId
+                ? _value.fixedCostId
+                : fixedCostId // ignore: cast_nullable_to_non_nullable
+                      as int?,
+            isConfirmed: null == isConfirmed
+                ? _value.isConfirmed
+                : isConfirmed // ignore: cast_nullable_to_non_nullable
+                      as int,
+            estimatedPrice: freezed == estimatedPrice
+                ? _value.estimatedPrice
+                : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                      as int?,
           )
           as $Val,
     );
@@ -166,6 +190,9 @@ abstract class _$$ExportValueImplCopyWith<$Res>
     String iconName,
     String incomeSourceBigCategoryName,
     int incomeSourceBigCategoryId,
+    int? fixedCostId,
+    int isConfirmed,
+    int? estimatedPrice,
   });
 }
 
@@ -195,6 +222,9 @@ class __$$ExportValueImplCopyWithImpl<$Res>
     Object? iconName = null,
     Object? incomeSourceBigCategoryName = null,
     Object? incomeSourceBigCategoryId = null,
+    Object? fixedCostId = freezed,
+    Object? isConfirmed = null,
+    Object? estimatedPrice = freezed,
   }) {
     return _then(
       _$ExportValueImpl(
@@ -246,6 +276,18 @@ class __$$ExportValueImplCopyWithImpl<$Res>
             ? _value.incomeSourceBigCategoryId
             : incomeSourceBigCategoryId // ignore: cast_nullable_to_non_nullable
                   as int,
+        fixedCostId: freezed == fixedCostId
+            ? _value.fixedCostId
+            : fixedCostId // ignore: cast_nullable_to_non_nullable
+                  as int?,
+        isConfirmed: null == isConfirmed
+            ? _value.isConfirmed
+            : isConfirmed // ignore: cast_nullable_to_non_nullable
+                  as int,
+        estimatedPrice: freezed == estimatedPrice
+            ? _value.estimatedPrice
+            : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                  as int?,
       ),
     );
   }
@@ -267,6 +309,9 @@ class _$ExportValueImpl implements _ExportValue {
     required this.iconName,
     required this.incomeSourceBigCategoryName,
     required this.incomeSourceBigCategoryId,
+    this.fixedCostId,
+    this.isConfirmed = 1,
+    this.estimatedPrice,
   });
 
   @override
@@ -294,10 +339,20 @@ class _$ExportValueImpl implements _ExportValue {
   final String incomeSourceBigCategoryName;
   @override
   final int incomeSourceBigCategoryId;
+  // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  @override
+  final int? fixedCostId;
+  // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  @override
+  @JsonKey()
+  final int isConfirmed;
+  // 予想額。未確定の固定費行のみ値を持つ（v10で追加）
+  @override
+  final int? estimatedPrice;
 
   @override
   String toString() {
-    return 'ExportValue(id: $id, date: $date, price: $price, memo: $memo, bigCategoryName: $bigCategoryName, bigCategoryId: $bigCategoryId, smallCategoryName: $smallCategoryName, smallCategoryId: $smallCategoryId, colorCode: $colorCode, iconName: $iconName, incomeSourceBigCategoryName: $incomeSourceBigCategoryName, incomeSourceBigCategoryId: $incomeSourceBigCategoryId)';
+    return 'ExportValue(id: $id, date: $date, price: $price, memo: $memo, bigCategoryName: $bigCategoryName, bigCategoryId: $bigCategoryId, smallCategoryName: $smallCategoryName, smallCategoryId: $smallCategoryId, colorCode: $colorCode, iconName: $iconName, incomeSourceBigCategoryName: $incomeSourceBigCategoryName, incomeSourceBigCategoryId: $incomeSourceBigCategoryId, fixedCostId: $fixedCostId, isConfirmed: $isConfirmed, estimatedPrice: $estimatedPrice)';
   }
 
   @override
@@ -331,7 +386,13 @@ class _$ExportValueImpl implements _ExportValue {
                   other.incomeSourceBigCategoryId,
                   incomeSourceBigCategoryId,
                 ) ||
-                other.incomeSourceBigCategoryId == incomeSourceBigCategoryId));
+                other.incomeSourceBigCategoryId == incomeSourceBigCategoryId) &&
+            (identical(other.fixedCostId, fixedCostId) ||
+                other.fixedCostId == fixedCostId) &&
+            (identical(other.isConfirmed, isConfirmed) ||
+                other.isConfirmed == isConfirmed) &&
+            (identical(other.estimatedPrice, estimatedPrice) ||
+                other.estimatedPrice == estimatedPrice));
   }
 
   @override
@@ -349,6 +410,9 @@ class _$ExportValueImpl implements _ExportValue {
     iconName,
     incomeSourceBigCategoryName,
     incomeSourceBigCategoryId,
+    fixedCostId,
+    isConfirmed,
+    estimatedPrice,
   );
 
   /// Create a copy of ExportValue
@@ -374,6 +438,9 @@ abstract class _ExportValue implements ExportValue {
     required final String iconName,
     required final String incomeSourceBigCategoryName,
     required final int incomeSourceBigCategoryId,
+    final int? fixedCostId,
+    final int isConfirmed,
+    final int? estimatedPrice,
   }) = _$ExportValueImpl;
 
   @override
@@ -399,7 +466,13 @@ abstract class _ExportValue implements ExportValue {
   @override
   String get incomeSourceBigCategoryName;
   @override
-  int get incomeSourceBigCategoryId;
+  int get incomeSourceBigCategoryId; // 固定費マスタへの参照。NULL＝通常支出（v10で追加）
+  @override
+  int? get fixedCostId; // 0=未確定 / 1=確定。通常支出は常に1（v10で追加）
+  @override
+  int get isConfirmed; // 予想額。未確定の固定費行のみ値を持つ（v10で追加）
+  @override
+  int? get estimatedPrice;
 
   /// Create a copy of ExportValue
   /// with the given fields replaced by the non-null parameter values.

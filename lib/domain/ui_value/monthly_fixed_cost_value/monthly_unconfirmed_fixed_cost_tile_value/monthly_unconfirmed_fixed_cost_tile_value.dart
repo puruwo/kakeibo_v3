@@ -22,8 +22,10 @@ class MonthlyUnconfirmedFixedCostTileValue with _$MonthlyUnconfirmedFixedCostTil
     required int estimatedPrice, 
     String? nextPaymentDate,
 
-    // fixed cost category
+    // 支出カテゴリー（v10で固定費カテゴリーから移行）
+    // categoryName は大カテゴリー名、smallCategoryName は小カテゴリー名
     required String categoryName,
+    @Default('') String smallCategoryName,
     required String colorCode,
     required String resourcePath,
 

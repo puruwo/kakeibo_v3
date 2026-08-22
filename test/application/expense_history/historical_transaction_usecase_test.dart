@@ -10,10 +10,6 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
@@ -202,22 +198,6 @@ void main() {
 
   const smallCategoryToBigCategory = {1: 1, 2: 2};
 
-  // 固定費カテゴリー（1:住居 / 2:光熱費）
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-    FixedCostCategoryEntity(
-      id: 2,
-      categoryName: '光熱費',
-      colorCode: '00AAFF',
-      resourcePath: 'assets/images/icon_utility.svg',
-    ),
-  ];
-
   // 固定費マスタ（10:家賃 / 30:変動する電気代）
   const fixedCosts = [
     FixedCostEntity(
@@ -226,9 +206,12 @@ void main() {
       variable: 0,
       price: 80000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 10,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      // 期間（6/25〜7/24）より後にして未生成分として展開されないようにする
+      nextPaymentDate: '20250801',
     ),
     FixedCostEntity(
       id: 30,
@@ -236,16 +219,17 @@ void main() {
       variable: 1,
       estimatedPrice: 6000,
       fixedCostCategoryId: 2,
+      expenseSmallCategoryId: 12,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250805',
     ),
   ];
 
   ProviderContainer createTransactionContainer({
     List<ExpenseEntity> expenses = const [],
     List<IncomeEntity> incomes = const [],
-    List<FixedCostExpenseEntity> fixedCostExpenses = const [],
   }) {
     return createContainer(
       overrides: [
@@ -275,12 +259,6 @@ void main() {
         ),
         incomeBigCategoryRepositoryProvider.overrideWithValue(
           FakeIncomeBigCategoryRepository(initialRecords: incomeBigCategories),
-        ),
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          FakeFixedCostExpenseRepository(initialRecords: fixedCostExpenses),
-        ),
-        fixedCostCategoryRepositoryProvider.overrideWithValue(
-          FakeFixedCostCategoryRepository(initialRecords: fixedCostCategories),
         ),
         fixedCostRepositoryProvider.overrideWithValue(
           FakeFixedCostRepository(initialRecords: fixedCosts),
@@ -521,6 +499,27 @@ void main() {
             paymentCategoryId: 12,
             incomeSourceBigCategory: 2,
           ),
+          // 確定固定費（v10でexpenseの固定費行になった）
+          ExpenseEntity(
+            id: 100,
+            date: '20250701',
+            price: 80000,
+            paymentCategoryId: 10,
+            memo: '家賃',
+            fixedCostId: 10,
+            isConfirmed: 1,
+          ),
+          // 未確定固定費
+          ExpenseEntity(
+            id: 200,
+            date: '20250705',
+            price: null,
+            paymentCategoryId: 12,
+            memo: '電気代',
+            fixedCostId: 30,
+            isConfirmed: 0,
+            estimatedPrice: 6000,
+          ),
         ],
         incomes: const [
           // 月次収入（大カテゴリー1）
@@ -528,33 +527,14 @@ void main() {
           // ボーナス収入（大カテゴリー2）
           IncomeEntity(id: 2, categoryId: 2, date: '20250710', price: 500000),
         ],
-        fixedCostExpenses: const [
-          // 確定固定費
-          FixedCostExpenseEntity(
-            id: 100,
-            fixedCostId: 10,
-            fixedCostCategoryId: 1,
-            date: '20250701',
-            price: 80000,
-            name: '家賃',
-          ),
-          // 未確定固定費
-          FixedCostExpenseEntity(
-            id: 200,
-            fixedCostId: 30,
-            fixedCostCategoryId: 2,
-            date: '20250705',
-            name: '電気代',
-            confirmedCostType: 1,
-            isConfirmed: 0,
-          ),
-        ],
       );
 
       final result = await container.read(
         historicalTransactionNotifierProvider(period).future,
       );
 
+      // 固定費行は confirmedFixedCosts / unconfirmedFixedCosts へ回るため、
+      // 通常支出のリストには入らない（日次サマリの3本立てを維持する）
       expect(
         result.expenses.single.expenseHistoryTileValueList.map((e) => e.id),
         [1],

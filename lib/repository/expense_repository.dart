@@ -136,7 +136,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   }) async {
     final sql =
         '''
-      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName} 
+      SELECT COALESCE(SUM(${SqfExpense.effectivePriceExpr}),0) as totalExpense FROM ${SqfExpense.tableName} 
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)};
       ''';
 
@@ -161,7 +161,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   }) async {
     final sql =
         '''
-      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName}
+      SELECT COALESCE(SUM(${SqfExpense.effectivePriceExpr}),0) as totalExpense FROM ${SqfExpense.tableName}
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
       AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory;
       ''';
@@ -188,7 +188,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   }) async {
     final sql =
         '''
-      SELECT COALESCE(SUM(price),0) as totalExpense FROM ${SqfExpense.tableName}
+      SELECT COALESCE(SUM(${SqfExpense.effectivePriceExpr}),0) as totalExpense FROM ${SqfExpense.tableName}
       WHERE date >= ${DateFormat('yyyyMMdd').format(fromDate)} AND date <= ${DateFormat('yyyyMMdd').format(toDate)}
       AND ${SqfExpense.incomeSourceBigCategory} = $incomeSourceBigCategory
       AND ${SqfExpense.expenseSmallCategoryId} = $smallCategoryId;
@@ -212,7 +212,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
     final sql =
         '''
       SELECT
-        SUM(${SqfExpense.price}) AS sum_price_daily
+        SUM(${SqfExpense.effectivePriceExpr}) AS sum_price_daily
       FROM ${SqfExpense.tableName}
       WHERE ${SqfExpense.date} = ${DateFormat('yyyyMMdd').format(date)}
       AND ${SqfExpense.incomeSourceBigCategory} = ${AccountTypeConstants.living}
@@ -384,6 +384,31 @@ $_selectColumns
     ''';
     final count = await db.queryFirstIntValue(sql);
     return (count ?? 0) > 0;
+  }
+
+  // 期間内の固定費行をまとめて取得する（確定・未確定を問わない）
+  // 月次固定費ビュー・見込み算出・予測グラフが共通で使うデータ源
+  @override
+  Future<List<ExpenseEntity>> fetchFixedCostExpenseByPeriod({
+    required PeriodValue period,
+  }) async {
+    final sql = '''
+      SELECT
+$_selectColumns
+      FROM ${SqfExpense.tableName}
+      WHERE ${SqfExpense.date} >= ${DateFormat('yyyyMMdd').format(period.startDatetime)}
+      AND ${SqfExpense.date} <= ${DateFormat('yyyyMMdd').format(period.endDatetime)}
+      AND ${SqfExpense.fixedCostId} IS NOT NULL
+      ORDER BY ${SqfExpense.date} ASC, ${SqfExpense.id} ASC;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      return jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
   }
 
   @override

@@ -13,8 +13,6 @@ import 'package:kakeibo/domain/core/export/export_income_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/logger.dart';
 
 final exportUsecaseProvider = Provider<ExportUsecase>(ExportUsecase.new);
@@ -41,13 +39,10 @@ class ExportUsecase {
   IncomeSmallCategoryRepository get _incomeSmallCategoryRepository =>
       _ref.read(incomeSmallCategoryRepositoryProvider);
 
-  FixedCostExpenseRepository get _fixedCostExpenseRepository =>
-      _ref.read(fixedCostExpenseRepositoryProvider);
-
-  FixedCostCategoryRepository get _fixedCostCategoryRepository =>
-      _ref.read(fixedCostCategoryRepositoryProvider);
-
-  /// [exportAll] メソッドは、支出・収入・固定費の情報を同一CSVファイルの別テーブルとして出力する
+  /// [exportAll] メソッドは、支出・収入の情報を同一CSVファイルの別テーブルとして出力する
+  ///
+  /// 固定費実績もexpenseに入るため（v10）、固定費専用シートは廃止し、
+  /// 支出シートに fixed_cost_id / is_confirmed / estimated_price 列を追加した（仕様 §10）。
   Future<void> exportAll() async {
     // ===== 支出データのエクスポート =====
     List<List> expenseExportList = [];
@@ -84,6 +79,9 @@ class ExportUsecase {
         iconName: iconName,
         incomeSourceBigCategoryName: incomeBigCategory.name,
         incomeSourceBigCategoryId: incomeBigCategory.id,
+        fixedCostId: expense.fixedCostId,
+        isConfirmed: expense.isConfirmed,
+        estimatedPrice: expense.estimatedPrice,
       );
 
       final list = toList(expenseHistoryTileValue);
@@ -121,41 +119,10 @@ class ExportUsecase {
       incomeExportList.add(list);
     }
 
-    // ===== 固定費支出データのエクスポート =====
-    List<List> fixedCostExportList = [];
-
-    // 全ての固定費支出データを取得
-    final fixedCostExpenseList = await _fixedCostExpenseRepository.fetchAll();
-    for (var fixedCostExpense in fixedCostExpenseList) {
-      // 固定費カテゴリーの情報を取得する
-      final fixedCostCategory = await _fixedCostCategoryRepository.fetch(
-        id: fixedCostExpense.fixedCostCategoryId,
-      );
-
-      // iconPathを加工
-      final iconName = extractIconName(fixedCostCategory.resourcePath);
-
-      fixedCostExportList.add([
-        fixedCostExpense.id,
-        fixedCostExpense.date,
-        fixedCostExpense.price,
-        fixedCostExpense.name,
-        fixedCostCategory.categoryName,
-        fixedCostCategory.id,
-        fixedCostCategory.colorCode,
-        iconName,
-        fixedCostExpense.confirmedCostType == 0 ? '確定' : '未確定',
-        fixedCostExpense.confirmedCostType,
-        fixedCostExpense.isConfirmed == 1 ? '確定済み' : '未確定',
-        fixedCostExpense.isConfirmed,
-      ]);
-    }
-
     // ===== CSVを構築 =====
     final csvString = buildExportCsvString(
       expenseRows: expenseExportList,
       incomeRows: incomeExportList,
-      fixedCostRows: fixedCostExportList,
     );
 
     // CSVファイルを作成
@@ -166,14 +133,14 @@ class ExportUsecase {
   }
 }
 
-/// 支出・収入・固定費の各行リストからエクスポート用のCSV文字列を構築する
+/// 支出・収入の各行リストからエクスポート用のCSV文字列を構築する
 ///
-/// ヘッダー定義と「【支出データ】→行→空行→【収入データ】→行→空行→【固定費データ】→行」の
+/// ヘッダー定義と「【支出データ】→行→空行→【収入データ】→行」の
 /// 連結・CSV変換までを担当する（ファイルI/O・共有シートの表示は含まない）。
+/// 固定費専用シートはv10で廃止し、支出シートの固定費3列に統合した。
 String buildExportCsvString({
   required List<List> expenseRows,
   required List<List> incomeRows,
-  required List<List> fixedCostRows,
 }) {
   // 支出セクション
   const expenseHeader = [
@@ -189,6 +156,9 @@ String buildExportCsvString({
     'アイコン情報',
     '拠出元',
     '拠出元ID',
+    '固定費ID',
+    '確定状態ID',
+    '予想額',
   ];
 
   // 収入セクション
@@ -203,23 +173,7 @@ String buildExportCsvString({
     'カテゴリーID',
   ];
 
-  // 固定費セクション
-  const fixedCostHeader = [
-    'ID',
-    '日付',
-    '金額',
-    '名称',
-    'カテゴリー名',
-    'カテゴリーID',
-    '色コード',
-    'アイコン情報',
-    '金額タイプ',
-    '金額タイプID',
-    '確定状態',
-    '確定状態ID',
-  ];
-
-  // 全体をCSV形式に変換（支出テーブル → 空行 → 収入テーブル → 空行 → 固定費テーブル）
+  // 全体をCSV形式に変換（支出テーブル → 空行 → 収入テーブル）
   final allData = [
     ['【支出データ】'],
     expenseHeader,
@@ -228,10 +182,6 @@ String buildExportCsvString({
     ['【収入データ】'],
     incomeHeader,
     ...incomeRows,
-    [], // 空行でセクションを区切る
-    ['【固定費データ】'],
-    fixedCostHeader,
-    ...fixedCostRows,
   ];
 
   return const ListToCsvConverter().convert(allData);

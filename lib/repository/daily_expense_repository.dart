@@ -24,28 +24,14 @@ class ImplementsDailyExpenseRepository implements DailyExpenseRepository {
         SUM(price) AS totalExpense,
         SUM(incomePrice) AS totalIncome
       FROM (
-        -- 通常の支出（ボーナス含む）
+        -- 支出（ボーナス・固定費行を含む）
+        -- 固定費実績もexpenseに入るため（v10）、実効金額の共通式で一本化する
         SELECT
           ${SqfExpense.date} as date,
-          ${SqfExpense.price} as price,
+          ${SqfExpense.effectivePriceExpr} as price,
           0 AS incomePrice
         FROM ${SqfExpense.tableName}
         WHERE ${SqfExpense.date} >= $fromArgs AND ${SqfExpense.date} <= $toArgs
-
-        UNION ALL
-
-        -- 固定費支出（確定分はprice、未確定分はestimatedPrice）
-        SELECT
-          ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} as date,
-          CASE 
-            WHEN ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.isConfirmed} = 1 THEN ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.price}
-            ELSE ${SqfFixedCost.tableName}.${SqfFixedCost.estimatedPrice}
-          END as price,
-          0 AS incomePrice
-        FROM ${SqfFixedCostExpense.tableName}
-        LEFT JOIN ${SqfFixedCost.tableName} 
-          ON ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.fixedCostId} = ${SqfFixedCost.tableName}.${SqfFixedCost.id}
-        WHERE ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} >= $fromArgs AND ${SqfFixedCostExpense.tableName}.${SqfFixedCostExpense.date} <= $toArgs
 
         UNION ALL
 

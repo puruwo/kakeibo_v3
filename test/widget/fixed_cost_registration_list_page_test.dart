@@ -17,8 +17,106 @@ import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
 
 void main() {
-  // 固定費カテゴリー（1:住居 / 2:光熱費）
-  const fixedCostCategories = [
+  // 固定費マスタ（10は固定額・次回支払日あり / 30は想定額6,000円の変動費）
+  const fixedCosts = [
+    FixedCostEntity(
+      id: 10,
+      name: '家賃',
+      variable: 0,
+      price: 80000,
+      fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 11,
+      intervalNumber: 1,
+      intervalUnit: 1,
+      firstPaymentDate: '20250101',
+      nextPaymentDate: '20250801',
+    ),
+    FixedCostEntity(
+      id: 30,
+      name: '電気代',
+      variable: 1,
+      estimatedPrice: 6000,
+      fixedCostCategoryId: 2,
+      expenseSmallCategoryId: 21,
+      intervalNumber: 1,
+      intervalUnit: 1,
+      firstPaymentDate: '20250101',
+    ),
+    // 年1回払い（頻度ラベルの分岐確認用・削除済みなので一覧には出ない）
+    FixedCostEntity(
+      id: 40,
+      name: '自動車税',
+      variable: 0,
+      price: 39500,
+      fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 11,
+      intervalNumber: 1,
+      intervalUnit: 2,
+      firstPaymentDate: '20250501',
+      deleteFlag: 1,
+    ),
+  ];
+
+  // 支出カテゴリーマスタ
+  // v10で固定費のグルーピングは支出大カテゴリー基準になった（仕様 §8.4）。
+  // 記録モーダルは開いた瞬間に支出モードのカテゴリーも解決するため、
+  // 空のマスタだと落ちる点も兼ねてここで積んでおく。
+  const expenseSmallCategories = [
+    ExpenseSmallCategoryEntity(
+      id: 10,
+      smallCategoryOrderKey: 1,
+      bigCategoryKey: 1,
+      displayedOrderInBig: 1,
+      smallCategoryName: '食費',
+      defaultDisplayed: 1,
+    ),
+    ExpenseSmallCategoryEntity(
+      id: 11,
+      smallCategoryOrderKey: 2,
+      bigCategoryKey: 2,
+      displayedOrderInBig: 1,
+      smallCategoryName: '家賃',
+      defaultDisplayed: 1,
+    ),
+    ExpenseSmallCategoryEntity(
+      id: 21,
+      smallCategoryOrderKey: 3,
+      bigCategoryKey: 3,
+      displayedOrderInBig: 1,
+      smallCategoryName: '電気',
+      defaultDisplayed: 1,
+    ),
+  ];
+  const expenseBigCategories = [
+    ExpenseBigCategoryEntity(
+      id: 1,
+      colorCode: 'FFAA00',
+      bigCategoryName: '生活費',
+      resourcePath: 'assets/images/icon_meal.svg',
+      displayOrder: 1,
+      isDisplayed: 1,
+    ),
+    ExpenseBigCategoryEntity(
+      id: 2,
+      colorCode: 'FFAA00',
+      bigCategoryName: '住居',
+      resourcePath: 'assets/images/icon_home.svg',
+      displayOrder: 2,
+      isDisplayed: 1,
+    ),
+    ExpenseBigCategoryEntity(
+      id: 3,
+      colorCode: '00AAFF',
+      bigCategoryName: '光熱費',
+      resourcePath: 'assets/images/icon_bolt.svg',
+      displayOrder: 3,
+      isDisplayed: 1,
+    ),
+  ];
+
+  // 固定費の編集モーダルは旧固定費カテゴリーの選択UIを開く（置き換えはT4）
+  // マスタが無いと fetch が例外を投げるため、モーダルを開くテスト用に積んでおく
+  const legacyFixedCostCategories = [
     FixedCostCategoryEntity(
       id: 1,
       categoryName: '住居',
@@ -33,66 +131,6 @@ void main() {
     ),
   ];
 
-  // 固定費マスタ（10は固定額・次回支払日あり / 30は想定額6,000円の変動費）
-  const fixedCosts = [
-    FixedCostEntity(
-      id: 10,
-      name: '家賃',
-      variable: 0,
-      price: 80000,
-      fixedCostCategoryId: 1,
-      intervalNumber: 1,
-      intervalUnit: 1,
-      firstPaymentDate: '20250101',
-      nextPaymentDate: '20250801',
-    ),
-    FixedCostEntity(
-      id: 30,
-      name: '電気代',
-      variable: 1,
-      estimatedPrice: 6000,
-      fixedCostCategoryId: 2,
-      intervalNumber: 1,
-      intervalUnit: 1,
-      firstPaymentDate: '20250101',
-    ),
-    // 年1回払い（頻度ラベルの分岐確認用・削除済みなので一覧には出ない）
-    FixedCostEntity(
-      id: 40,
-      name: '自動車税',
-      variable: 0,
-      price: 39500,
-      fixedCostCategoryId: 1,
-      intervalNumber: 1,
-      intervalUnit: 2,
-      firstPaymentDate: '20250501',
-      deleteFlag: 1,
-    ),
-  ];
-
-  // 記録モーダルは開いた瞬間に支出モードのカテゴリーも解決するため、
-  // 空のマスタだと落ちる。モーダルを開くテスト用に最小限のマスタを積んでおく。
-  const expenseSmallCategories = [
-    ExpenseSmallCategoryEntity(
-      id: 10,
-      smallCategoryOrderKey: 1,
-      bigCategoryKey: 1,
-      displayedOrderInBig: 1,
-      smallCategoryName: '食費',
-      defaultDisplayed: 1,
-    ),
-  ];
-  const expenseBigCategories = [
-    ExpenseBigCategoryEntity(
-      id: 1,
-      colorCode: 'FFAA00',
-      bigCategoryName: '生活費',
-      resourcePath: 'assets/images/icon_meal.svg',
-      displayOrder: 1,
-      isDisplayed: 1,
-    ),
-  ];
-
   /// 固定費マスタ一覧用のFake束を組み立てる
   ///
   /// [withRecords] をfalseにすると固定費が1件も登録されていない状態になる。
@@ -101,7 +139,7 @@ void main() {
       initialRecords: withRecords ? fixedCosts : const [],
     ),
     fixedCostCategory: FakeFixedCostCategoryRepository(
-      initialRecords: fixedCostCategories,
+      initialRecords: legacyFixedCostCategories,
     ),
     expenseSmallCategory: FakeExpenseSmallCategoryRepository(
       initialRecords: expenseSmallCategories,

@@ -161,10 +161,11 @@ class FixedCostUsecase {
         // 同じ支払い日の実績が既にある場合は生成しない（多重生成の防止）
         // ただしスキップした場合も次の支払い日は進める
         //
-        // T6までは expense と fixed_cost_expense の両方を検査する。
-        // T2〜T5の中間状態では「新規実績はexpense・既存実績は旧テーブル」に
-        // 分かれており、旧テーブルに生成済みの支払日を見落とすと、
-        // 旧集計（getFixedCostTotal）が残るT3まで二重計上になるため。
+        // T6（旧テーブルの実績をexpenseへ移行）までは
+        // expense と fixed_cost_expense の両方を検査する。
+        // 中間状態では「新規実績はexpense・既存実績は旧テーブル」に分かれており、
+        // 旧テーブルに生成済みの支払日を見落とすと、T6の移行後に
+        // 同じ支払日の実績が2件並んで二重計上になるため。
         final alreadyExists =
             await _expenseRepositoryProvider.existsByFixedCostIdAndDate(
                   fixedCostId: currentEntity.id!,

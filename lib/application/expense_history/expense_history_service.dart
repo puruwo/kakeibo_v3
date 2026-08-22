@@ -54,6 +54,8 @@ class ExpenseHistoryService {
           colorCode: big.colorCode,
           iconPath: big.resourcePath,
           incomeSourceBigCategory: expense.incomeSourceBigCategory,
+          fixedCostId: expense.fixedCostId,
+          isConfirmed: expense.isConfirmed,
         ),
       );
     }

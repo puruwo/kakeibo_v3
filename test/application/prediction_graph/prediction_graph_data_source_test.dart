@@ -11,10 +11,6 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/theme/category_palette.dart';
 
 import '../../helper/fake_repositories.dart';
@@ -69,17 +65,10 @@ void main() {
     ),
   ];
 
-  // 固定費カテゴリーマスタ
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: '0000FF',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-  ];
-
-  // 固定費マスタ（10:金額確定 / 30:金額未確定・推定額6000）
+  // 固定費マスタ
+  // 10: 金額確定型（80,000円）。実績生成済みの回を表すのに使う
+  // 30: 変動型（予想額6,000円）。実績生成済みの回を表すのに使う
+  // 50: 変動型（予想額9,000円）。next_payment_date=7/4 で未生成の回を表す
   const fixedCosts = [
     FixedCostEntity(
       id: 10,
@@ -87,9 +76,12 @@ void main() {
       variable: 0,
       price: 80000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 11,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      // 期間（7/1〜7/5）より後に設定し、未生成分として展開されないようにする
+      nextPaymentDate: '20250802',
     ),
     FixedCostEntity(
       id: 30,
@@ -97,64 +89,79 @@ void main() {
       variable: 1,
       estimatedPrice: 6000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 11,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250804',
     ),
   ];
 
-  // 7/2に支払われる確定済みの固定費（80,000円）
-  const confirmedRent = FixedCostExpenseEntity(
-    id: 100,
-    fixedCostId: 10,
+  /// 実績未生成の固定費マスタ（次回支払日7/4・予想額9,000円）
+  const ungeneratedGas = FixedCostEntity(
+    id: 50,
+    name: 'ガス代',
+    variable: 1,
+    estimatedPrice: 9000,
     fixedCostCategoryId: 1,
-    date: '20250702',
-    price: 80000,
-    name: '家賃',
+    expenseSmallCategoryId: 11,
+    intervalNumber: 1,
+    intervalUnit: 1,
+    firstPaymentDate: '20250104',
+    nextPaymentDate: '20250704',
   );
 
-  // 7/4に支払われる未確定の固定費（マスタの推定額6,000円が使われる）
-  const unconfirmedElectricity = FixedCostExpenseEntity(
+  // 7/2に支払われる確定済みの固定費行（80,000円）
+  const confirmedRent = ExpenseEntity(
+    id: 100,
+    date: '20250702',
+    price: 80000,
+    paymentCategoryId: 11,
+    memo: '家賃',
+    fixedCostId: 10,
+    isConfirmed: 1,
+  );
+
+  // 7/4に支払われる未確定の固定費行（予想額6,000円）
+  const unconfirmedElectricity = ExpenseEntity(
     id: 200,
-    fixedCostId: 30,
-    fixedCostCategoryId: 1,
     date: '20250704',
-    name: '電気代',
-    confirmedCostType: 1,
+    price: null,
+    paymentCategoryId: 11,
+    memo: '電気代',
+    fixedCostId: 30,
     isConfirmed: 0,
+    estimatedPrice: 6000,
   );
 
   /// 予測グラフのデータソースを組み立てる
   ///
-  /// 一般支出は「日付→合計」「日付→支出リスト」のMapで、
-  /// 固定費は fixed_cost_expense のレコードで与える。
+  /// [dailyExpenseTotals] / [dailyExpenseLists] は expense の日次集計・日次リスト。
+  /// v10では固定費行もexpenseに入るため、生成済みの固定費はこの2つに含まれる。
+  /// [expenses] には固定費行そのものを渡す（未生成分の判定に使う）。
   PredictionGraphDataSource buildDataSource({
     Map<DateTime, int> dailyExpenseTotals = const {},
     Map<DateTime, List<ExpenseEntity>> dailyExpenseLists = const {},
-    List<FixedCostExpenseEntity> fixedCostExpenses = const [],
+    List<ExpenseEntity> expenses = const [],
+    List<FixedCostEntity> masters = fixedCosts,
   }) {
     final container = createContainer(
       overrides: [
         expenseRepositoryProvider.overrideWithValue(
           FakeExpenseRepository(
+            initialRecords: expenses,
             dailyExpenseTotalByDate: dailyExpenseTotals,
             dailyExpenseListByDate: dailyExpenseLists,
           ),
         ),
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          FakeFixedCostExpenseRepository(initialRecords: fixedCostExpenses),
-        ),
         fixedCostRepositoryProvider.overrideWithValue(
-          FakeFixedCostRepository(initialRecords: fixedCosts),
+          FakeFixedCostRepository(initialRecords: masters),
         ),
         expenseSmallCategoryRepositoryProvider.overrideWithValue(
           FakeExpenseSmallCategoryRepository(initialRecords: smallCategories),
         ),
         expensebigCategoryRepositoryProvider.overrideWithValue(
           FakeExpenseBigCategoryRepository(initialRecords: bigCategories),
-        ),
-        fixedCostCategoryRepositoryProvider.overrideWithValue(
-          FakeFixedCostCategoryRepository(initialRecords: fixedCostCategories),
         ),
       ],
     );
@@ -195,9 +202,14 @@ void main() {
       expect(sumsOf(result), [1000, 3000, 3500]);
     });
 
-    test('固定費は支払日ごとに分散加算される（確定→price / 未確定→マスタの推定額）', () async {
+    test('生成済みの固定費行は日次集計に含まれる（後付けの加算はしない）', () async {
+      // 7/2の確定80,000円・7/4の未確定6,000円は expense の日次集計に入っている
       final dataSource = buildDataSource(
-        fixedCostExpenses: const [confirmedRent, unconfirmedElectricity],
+        dailyExpenseTotals: {
+          DateTime(2025, 7, 2): 80000,
+          DateTime(2025, 7, 4): 6000,
+        },
+        expenses: const [confirmedRent, unconfirmedElectricity],
       );
 
       final result = await dataSource.fetchCumulativeByDate(
@@ -205,19 +217,66 @@ void main() {
         toDate: toDate,
       );
 
-      // 7/2に確定80,000円、7/4に未確定の推定額6,000円が積み上がる
       expect(datesOf(result), [
         DateTime(2025, 7, 2),
         DateTime(2025, 7, 4),
         DateTime(2025, 7, 5),
       ]);
+      // 二重計上されず 80000 → 86000 で累積する
       expect(sumsOf(result), [80000, 86000, 86000]);
+    });
+
+    test('実績未生成の固定費は次回支払日から周期展開してスパイクになる', () async {
+      // ガス代（次回支払日7/4・予想額9,000円）はまだ実績行が無い
+      final dataSource = buildDataSource(
+        dailyExpenseTotals: {DateTime(2025, 7, 2): 1000},
+        masters: const [...fixedCosts, ungeneratedGas],
+      );
+
+      final result = await dataSource.fetchCumulativeByDate(
+        fromDate: fromDate,
+        toDate: toDate,
+      );
+
+      expect(datesOf(result), [
+        DateTime(2025, 7, 2),
+        DateTime(2025, 7, 4),
+        DateTime(2025, 7, 5),
+      ]);
+      expect(sumsOf(result), [1000, 10000, 10000]);
+    });
+
+    test('同じ支払日に実績行があれば周期展開ぶんは二重に積まれない', () async {
+      // 7/4のガス代は既に実績生成済み（予想額9,000円が日次集計に入っている）
+      final dataSource = buildDataSource(
+        dailyExpenseTotals: {DateTime(2025, 7, 4): 9000},
+        expenses: const [
+          ExpenseEntity(
+            id: 300,
+            date: '20250704',
+            price: null,
+            paymentCategoryId: 11,
+            memo: 'ガス代',
+            fixedCostId: 50,
+            isConfirmed: 0,
+            estimatedPrice: 9000,
+          ),
+        ],
+        masters: const [...fixedCosts, ungeneratedGas],
+      );
+
+      final result = await dataSource.fetchCumulativeByDate(
+        fromDate: fromDate,
+        toDate: toDate,
+      );
+
+      expect(sumsOf(result), [9000, 9000]);
     });
 
     test('一般支出と固定費が同じ日にあれば合算される', () async {
       final dataSource = buildDataSource(
-        dailyExpenseTotals: {DateTime(2025, 7, 2): 1500},
-        fixedCostExpenses: const [confirmedRent],
+        dailyExpenseTotals: {DateTime(2025, 7, 2): 81500},
+        expenses: const [confirmedRent],
       );
 
       final result = await dataSource.fetchCumulativeByDate(
@@ -258,14 +317,14 @@ void main() {
       expect(sumsOf(withLastDayExpense), [1000, 1500]);
     });
 
-    test('固定費を先に取り込んでも結果は日付昇順になる', () async {
-      // 固定費は日付降順で返るため、マップへの登録順は 7/4 → 7/2 になる
+    test('未生成分を先に取り込んでも結果は日付昇順になる', () async {
+      // 周期展開ぶん（7/4）を先にマップへ入れてから日次ループで7/1・7/3を足す
       final dataSource = buildDataSource(
         dailyExpenseTotals: {
           DateTime(2025, 7, 1): 100,
           DateTime(2025, 7, 3): 200,
         },
-        fixedCostExpenses: const [confirmedRent, unconfirmedElectricity],
+        masters: const [...fixedCosts, ungeneratedGas],
       );
 
       final result = await dataSource.fetchCumulativeByDate(
@@ -276,13 +335,12 @@ void main() {
       final dates = datesOf(result);
       expect(dates, [
         DateTime(2025, 7, 1),
-        DateTime(2025, 7, 2),
         DateTime(2025, 7, 3),
         DateTime(2025, 7, 4),
         DateTime(2025, 7, 5),
       ]);
       // 累積値なので単調増加になる
-      expect(sumsOf(result), [100, 80100, 80300, 86300, 86300]);
+      expect(sumsOf(result), [100, 300, 9300, 9300]);
     });
   });
 
@@ -334,6 +392,26 @@ void main() {
     });
 
     test('固定費は同じ日に複数あっても先頭の1本にまとまる', () async {
+      const rentOnJul2 = ExpenseEntity(
+        id: 100,
+        date: '20250702',
+        price: 80000,
+        paymentCategoryId: 11,
+        memo: '家賃',
+        fixedCostId: 10,
+        isConfirmed: 1,
+      );
+      // 7/2に未確定の固定費（予想額6,000円）も支払いがある状態にする
+      const electricityOnJul2 = ExpenseEntity(
+        id: 201,
+        date: '20250702',
+        price: null,
+        paymentCategoryId: 11,
+        memo: '電気代',
+        fixedCostId: 30,
+        isConfirmed: 0,
+        estimatedPrice: 6000,
+      );
       final dataSource = buildDataSource(
         dailyExpenseLists: {
           DateTime(2025, 7, 2): const [
@@ -343,21 +421,12 @@ void main() {
               price: 1000,
               paymentCategoryId: 11,
             ),
+            // 固定費行も日次リストに含まれる（v10）。カテゴリー棒には積まれない
+            rentOnJul2,
+            electricityOnJul2,
           ],
         },
-        fixedCostExpenses: const [
-          confirmedRent,
-          // 7/2に未確定の固定費（推定額6,000円）も支払いがある状態にする
-          FixedCostExpenseEntity(
-            id: 201,
-            fixedCostId: 30,
-            fixedCostCategoryId: 1,
-            date: '20250702',
-            name: '電気代',
-            confirmedCostType: 1,
-            isConfirmed: 0,
-          ),
-        ],
+        expenses: const [rentOnJul2, electricityOnJul2],
       );
 
       final result = await dataSource.fetchDailyBarData(
@@ -377,8 +446,26 @@ void main() {
       expect(categoryExpenses.first.categoryName, '固定費');
       expect(categoryExpenses.first.colorCode, CategoryPalette.fixedCostHex);
       expect(categoryExpenses.first.iconPath, '');
+      // 固定費行はカテゴリー別の棒には二重計上されない
       expect(categoryExpenses[1].bigCategoryId, 1);
       expect(categoryExpenses[1].price, 1000);
+    });
+
+    test('実績未生成の固定費も未来のスパイクとして棒に積まれる', () async {
+      final dataSource = buildDataSource(
+        masters: const [...fixedCosts, ungeneratedGas],
+      );
+
+      final result = await dataSource.fetchDailyBarData(
+        fromDate: DateTime(2025, 7, 1),
+        toDate: DateTime(2025, 7, 5),
+        today: DateTime(2025, 7, 2),
+      );
+
+      // 7/4だけが棒として現れる（未来日）
+      expect(result.dailyBarDataList.map((e) => e.date), [DateTime(2025, 7, 4)]);
+      expect(result.dailyBarDataList.single.isFutureDate, isTrue);
+      expect(result.dailyBarDataList.single.categoryExpenses.single.price, 9000);
     });
 
     test('barMaxValueは日別最大合計としきい値20,000円の大きい方になる', () async {

@@ -12,7 +12,6 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
@@ -34,6 +33,23 @@ void main() {
       smallCategoryName: '外食',
       defaultDisplayed: 1,
     ),
+    // 固定費行の支出カテゴリー（v10で固定費カテゴリーから移設）
+    ExpenseSmallCategoryEntity(
+      id: 21,
+      smallCategoryOrderKey: 2,
+      bigCategoryKey: 2,
+      displayedOrderInBig: 1,
+      smallCategoryName: '家賃',
+      defaultDisplayed: 1,
+    ),
+    ExpenseSmallCategoryEntity(
+      id: 31,
+      smallCategoryOrderKey: 3,
+      bigCategoryKey: 3,
+      displayedOrderInBig: 1,
+      smallCategoryName: '電気',
+      defaultDisplayed: 1,
+    ),
   ];
 
   const expenseBigCategories = [
@@ -43,6 +59,22 @@ void main() {
       bigCategoryName: '食費',
       resourcePath: 'assets/images/icon_meal.svg',
       displayOrder: 1,
+      isDisplayed: 1,
+    ),
+    ExpenseBigCategoryEntity(
+      id: 2,
+      colorCode: 'FFAA00',
+      bigCategoryName: '住居',
+      resourcePath: 'assets/images/icon_home.svg',
+      displayOrder: 2,
+      isDisplayed: 1,
+    ),
+    ExpenseBigCategoryEntity(
+      id: 3,
+      colorCode: '00AAFF',
+      bigCategoryName: '光熱費',
+      resourcePath: 'assets/images/icon_bolt.svg',
+      displayOrder: 3,
       isDisplayed: 1,
     ),
   ];
@@ -90,9 +122,12 @@ void main() {
       variable: 0,
       price: 80000,
       fixedCostCategoryId: 1,
+      expenseSmallCategoryId: 21,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      // 期間内に未生成分として周期展開されないよう次回支払日を先にする
+      nextPaymentDate: '20250802',
     ),
     FixedCostEntity(
       id: 30,
@@ -100,35 +135,16 @@ void main() {
       variable: 1,
       estimatedPrice: 6000,
       fixedCostCategoryId: 2,
+      expenseSmallCategoryId: 31,
       intervalNumber: 1,
       intervalUnit: 1,
       firstPaymentDate: '20250101',
+      nextPaymentDate: '20250803',
     ),
   ];
 
-  // 7/2に確定済みの家賃、7/3に未確定の電気代
-  const fixedCostExpenses = [
-    FixedCostExpenseEntity(
-      id: 100,
-      fixedCostId: 10,
-      fixedCostCategoryId: 1,
-      date: '20250702',
-      price: 80000,
-      name: '家賃',
-      isConfirmed: 1,
-    ),
-    FixedCostExpenseEntity(
-      id: 200,
-      fixedCostId: 30,
-      fixedCostCategoryId: 2,
-      date: '20250703',
-      name: '電気代',
-      confirmedCostType: 1,
-      isConfirmed: 0,
-    ),
-  ];
-
-  // 7/1の支出3,000円（外食）と7/5の収入250,000円（給与）
+  // 7/1の支出3,000円（外食）と、7/2に確定済みの家賃・7/3に未確定の電気代
+  // v10で固定費実績もexpenseの固定費行になった（仕様 §3）
   const expenses = [
     ExpenseEntity(
       id: 1,
@@ -136,6 +152,25 @@ void main() {
       price: 3000,
       paymentCategoryId: 10,
       memo: 'ランチ',
+    ),
+    ExpenseEntity(
+      id: 100,
+      date: '20250702',
+      price: 80000,
+      paymentCategoryId: 21,
+      memo: '家賃',
+      fixedCostId: 10,
+      isConfirmed: 1,
+    ),
+    ExpenseEntity(
+      id: 200,
+      date: '20250703',
+      price: null,
+      paymentCategoryId: 31,
+      memo: '電気代',
+      fixedCostId: 30,
+      isConfirmed: 0,
+      estimatedPrice: 6000,
     ),
   ];
 
@@ -185,9 +220,6 @@ void main() {
       fixedCost: FakeFixedCostRepository(initialRecords: fixedCosts),
       fixedCostCategory: FakeFixedCostCategoryRepository(
         initialRecords: fixedCostCategories,
-      ),
-      fixedCostExpense: FakeFixedCostExpenseRepository(
-        initialRecords: withRecords ? fixedCostExpenses : const [],
       ),
     );
   }
