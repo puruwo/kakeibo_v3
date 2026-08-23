@@ -210,12 +210,10 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
     switch (screenMode) {
       case RegisterScreenMode.add:
         // 固定費マスタを新規作成する。カテゴリーは支出小カテゴリーID（仕様 §3）
-        // 旧列 fixedCostCategoryId はT6で削除するまで0を入れておく
         final entity = FixedCostEntity(
           name: enteredName,
           price: variable == 0 ? enteredPrice : 0, // 変動費なら価格は0
           variable: variable,
-          fixedCostCategoryId: 0,
           expenseSmallCategoryId: selectedCategoryId,
           intervalNumber: frequencyValue.intervalNumber,
           intervalUnit: frequencyValue.intervalUnit.inturvalUnitNumber,

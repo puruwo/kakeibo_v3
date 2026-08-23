@@ -96,9 +96,7 @@ class SqfFixedCost {
   static const variable = 'variable';
   static const price = 'price';
   static const estimatedPrice = 'estimated_price';
-  static const fixedCostCategoryId = 'fixed_cost_category_id';
-  // 支出小カテゴリー(expense_small_category._id)への参照。v10で追加。
-  // 旧 fixed_cost_category_id はT6で削除するまで併存する
+  // 支出小カテゴリー(expense_small_category._id)への参照。v10で追加
   static const expenseSmallCategoryId = 'expense_small_category_id';
   static const intervalNumber = 'interval_number';
   static const intervalUnit = 'interval_unit';
@@ -117,26 +115,3 @@ class SqfBatchHistory {
   static const status = 'status';
 }
 
-class SqfFixedCostExpense {
-  static const tableName = 'fixed_cost_expense';
-
-  static const id = '_id';
-  static const fixedCostId = 'fixed_cost_id';
-  static const fixedCostCategoryId = 'fixed_cost_category_id';
-  static const date = 'date';
-  static const price = 'price';
-  static const name = 'name';
-  static const confirmedCostType = 'confirmed_cost_type';
-  static const isConfirmed = 'is_confirmed';
-}
-
-class SqfFixedCostCategory {
-  static const tableName = 'fixed_cost_category';
-
-  static const id = '_id';
-  static const categoryName = 'category_name';
-  static const colorCode = 'color_code';
-  static const resourcePath = 'resource_path';
-  static const displayOrder = 'display_order';
-  static const isDisplayed = 'is_displayed';
-}

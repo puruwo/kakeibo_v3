@@ -8,18 +8,18 @@ part 'fixed_cost_registration_list_entity.freezed.dart';
 @freezed
 class FixedCostRegistrationListValue with _$FixedCostRegistrationListValue {
   const factory FixedCostRegistrationListValue({
-    required List<FixedCostCategoryGroup> categoryGroups,
+    required List<ExpenseBigCategoryGroup> categoryGroups,
   }) = _FixedCostRegistrationListValue;
 }
 
 // カテゴリーごとの固定費グループ
 @freezed
-class FixedCostCategoryGroup with _$FixedCostCategoryGroup {
-  const factory FixedCostCategoryGroup({
+class ExpenseBigCategoryGroup with _$ExpenseBigCategoryGroup {
+  const factory ExpenseBigCategoryGroup({
     required int categoryId,
     required String categoryName,
     required String categoryIconPath,
     required String categoryColorCode,
     required List<FixedCostEntity> items,
-  }) = _FixedCostCategoryGroup;
+  }) = _ExpenseBigCategoryGroup;
 }

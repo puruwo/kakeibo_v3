@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/confirmed_fixed_cost_tile.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/unconfirmed_fixed_cost_tile.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/fixed_cost_category_header.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/expense_big_category_header.dart';
 
 /// Local imports
 import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_by_category_usecase.dart';
@@ -69,7 +69,7 @@ class _FixedCostByCategoryListAreaState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // カテゴリーヘッダー
-                      FixedCostCategoryHeader(
+                      ExpenseBigCategoryHeader(
                         categoryName: group.categoryName,
                         colorCode: group.colorCode,
                         resourcePath: group.resourcePath,

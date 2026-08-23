@@ -82,7 +82,7 @@ class DataBaseHelperHandling {
                   (9, 'サブスク', 16, 0, 1),
                   (10, '通信費', 17, 0, 1),
                   (11, '光熱費', 18, 0, 1),
-                  (12, '${FixedCostCategoryConstants.freshInstallFallbackCategoryName}', 19, 0, 1);
+                  (12, '${FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName}', 19, 0, 1);
           ''');
 
     await db.execute('''
@@ -110,7 +110,7 @@ class DataBaseHelperHandling {
                 ('衣服美容', '${CategoryPalette.expense5Hex}', 'assets/images/icon_clothes.svg', 4, 1),
                 ('医療費', '${CategoryPalette.expense6Hex}', 'assets/images/icon_medical.svg', 5, 1),
                 ('雑費', '${CategoryPalette.expense7Hex}', 'assets/images/icon_others.svg', 6, 1),
-                -- 固定費由来のカテゴリー（v10で fixed_cost_category から移設する5件と同じ構成）。
+                -- 固定費由来のカテゴリー（v10で旧固定費カテゴリーから移設する5件と同じ構成）。
                 -- 新規インストールと移行後の端末で形を揃えるため onCreate にも含める。
                 -- ただし「その他」は既存の「雑費」と用途が重複し紛らわしいため、
                 -- 新規インストールに限り「固定費その他」の名前で作る（移行時は元名のまま併存）。
@@ -118,7 +118,7 @@ class DataBaseHelperHandling {
                 ('サブスク', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_subscription.svg', 8, 1),
                 ('通信費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_cell_tower.svg', 9, 1),
                 ('光熱費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_water_drop.svg', 10, 1),
-                ('${FixedCostCategoryConstants.freshInstallFallbackCategoryName}', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_others.svg', 11, 1);
+                ('${FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName}', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_others.svg', 11, 1);
           ''');
 
     await db.execute('''
@@ -173,8 +173,7 @@ class DataBaseHelperHandling {
           ${SqfFixedCost.variable} INTEGER NOT NULL,
           ${SqfFixedCost.price} INTEGER,
           ${SqfFixedCost.estimatedPrice} INTEGER,
-          ${SqfFixedCost.fixedCostCategoryId} INTEGER NOT NULL,
-          ${SqfFixedCost.expenseSmallCategoryId} INTEGER NOT NULL DEFAULT 0,
+          ${SqfFixedCost.expenseSmallCategoryId} INTEGER NOT NULL,
           ${SqfFixedCost.intervalNumber} INTEGER NOT NULL,
           ${SqfFixedCost.intervalUnit} INTEGER NOT NULL,
           ${SqfFixedCost.firstPaymentDate} TEXT NOT NULL,
@@ -210,43 +209,6 @@ class DataBaseHelperHandling {
           ${SqfBatchHistory.status})
           VALUES
           ('$initialBatchProcessedDate', '$initialBatchProcessedDate', 1);
-          ''');
-
-    await db.execute('''CREATE TABLE ${SqfFixedCostExpense.tableName} (
-          ${SqfFixedCostExpense.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-          ${SqfFixedCostExpense.fixedCostId} INTEGER NOT NULL,
-          ${SqfFixedCostExpense.fixedCostCategoryId} INTEGER NOT NULL,
-          ${SqfFixedCostExpense.date} TEXT NOT NULL,
-          ${SqfFixedCostExpense.price} INTEGER NOT NULL,
-          ${SqfFixedCostExpense.name} TEXT NOT NULL,
-          ${SqfFixedCostExpense.confirmedCostType} INTEGER NOT NULL,
-          ${SqfFixedCostExpense.isConfirmed} INTEGER NOT NULL
-          );
-          ''');
-
-    await db.execute('''CREATE TABLE ${SqfFixedCostCategory.tableName} (
-          ${SqfFixedCostCategory.id} INTEGER PRIMARY KEY AUTOINCREMENT,
-          ${SqfFixedCostCategory.categoryName} TEXT NOT NULL,
-          ${SqfFixedCostCategory.colorCode} TEXT NOT NULL,
-          ${SqfFixedCostCategory.resourcePath} TEXT NOT NULL,
-          ${SqfFixedCostCategory.displayOrder} INTEGER NOT NULL,
-          ${SqfFixedCostCategory.isDisplayed} INTEGER NOT NULL
-          );
-          ''');
-
-    await db.execute('''
-          INSERT INTO ${SqfFixedCostCategory.tableName} (
-          ${SqfFixedCostCategory.categoryName},
-          ${SqfFixedCostCategory.colorCode},
-          ${SqfFixedCostCategory.resourcePath},
-          ${SqfFixedCostCategory.displayOrder},
-          ${SqfFixedCostCategory.isDisplayed})
-          VALUES
-          ('住居費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_home.svg', 0, 1),
-          ('サブスク', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_subscription.svg', 1, 1),
-          ('通信費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_cell_tower.svg', 2, 1),
-          ('光熱費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_water_drop.svg', 3, 1),
-          ('その他', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_others.svg', 4, 1);
           ''');
 
     // 開発用モックデータ（デバッグビルド限定）

@@ -307,7 +307,7 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   }
 
   // -------------------------------------------------------------------------
-  // 固定費系のクエリ（v10で fixed_cost_expense から移管）
+  // 固定費系のクエリ（v10で廃止した旧固定費実績テーブルから移管）
   //
   // 推定額の再計算・マスタ更新・未確定行の同期は同一トランザクションで
   // 実行する必要があるため（仕様 §6.5）、書き込み系は呼び出し元から
@@ -381,7 +381,7 @@ $_selectColumns
   // 固定費実績の行を1件挿入する
   // 挿入の失敗を呼び出し元（バッチ）が検知できるよう、完了を待てるFutureを返す
   @override
-  Future<int> insertFixedCostExpense(ExpenseEntity expenseEntity) async {
+  Future<int> insertFixedCostRecord(ExpenseEntity expenseEntity) async {
     return await db.insert(SqfExpense.tableName, {
       SqfExpense.expenseSmallCategoryId: expenseEntity.paymentCategoryId,
       SqfExpense.date: expenseEntity.date,
@@ -414,7 +414,7 @@ $_selectColumns
   // 期間内の固定費行をまとめて取得する（確定・未確定を問わない）
   // 月次固定費ビュー・見込み算出・予測グラフが共通で使うデータ源
   @override
-  Future<List<ExpenseEntity>> fetchFixedCostExpenseByPeriod({
+  Future<List<ExpenseEntity>> fetchFixedCostRecordByPeriod({
     required PeriodValue period,
   }) async {
     final sql = '''
@@ -437,7 +437,7 @@ $_selectColumns
   }
 
   @override
-  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostExpenseByPeriod({
+  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostRecordByPeriod({
     required PeriodValue period,
   }) async {
     final sql = '''
@@ -463,7 +463,7 @@ $_selectColumns
   // 未確定行に実額を設定して確定させる
   // 予想額 estimated_price は上書きしない（予実の乖離を行に残す。仕様 §3）
   @override
-  Future<void> confirmFixedCostExpense({
+  Future<void> confirmFixedCostRecord({
     required int id,
     required int price,
   }) async {
@@ -518,7 +518,7 @@ $_selectColumns
   // 未払い実績（未確定 or 支払日が未到来）を削除する
   // 支払日が到来済みの確定行は、実際に払った事実として履歴に残す（→ ADR-007）
   @override
-  Future<void> deleteUnpaidFixedCostExpenses({
+  Future<void> deleteUnpaidFixedCostRecords({
     required int fixedCostId,
     required String today,
     DatabaseExecutor? executor,

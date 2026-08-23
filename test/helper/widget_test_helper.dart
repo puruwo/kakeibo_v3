@@ -18,8 +18,6 @@ import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
@@ -63,8 +61,6 @@ class TestFakes {
     FakeIncomeRepository? income,
     FakeFixedCostRepository? fixedCost,
     FakeBatchHistoryRepository? batchHistory,
-    FakeFixedCostExpenseRepository? fixedCostExpense,
-    FakeFixedCostCategoryRepository? fixedCostCategory,
   }) : categoryAccounting =
            categoryAccounting ?? FakeCategoryAccountingRepository(),
        smallCategoryTile =
@@ -86,12 +82,9 @@ class TestFakes {
        // 集計期間終了日（20250724）にして「実行済み」の状態から始める
        batchHistory =
            batchHistory ??
-           FakeBatchHistoryRepository(initialLatestDate: '20250724'),
-       fixedCostExpense = fixedCostExpense ?? FakeFixedCostExpenseRepository(),
-       fixedCostCategory =
-           fixedCostCategory ?? FakeFixedCostCategoryRepository() {
+           FakeBatchHistoryRepository(initialLatestDate: '20250724') {
     // 固定費マスタの削除・推定額の同期はexpenseの固定費行にも効く
-    // （本物は同一トランザクションで両テーブルを更新する。仕様 §6.4・§6.5）
+    // （本物は同一トランザクションでマスタと実績行を更新する。仕様 §6.4・§6.5）
     this.fixedCost.expenseRepository ??= this.expense;
   }
 
@@ -107,8 +100,6 @@ class TestFakes {
   final FakeIncomeRepository income;
   final FakeFixedCostRepository fixedCost;
   final FakeBatchHistoryRepository batchHistory;
-  final FakeFixedCostExpenseRepository fixedCostExpense;
-  final FakeFixedCostCategoryRepository fixedCostCategory;
 
   /// main.dart の ProviderScope.overrides と同じ並びのoverride列
   List<Override> get overrides => [
@@ -128,8 +119,6 @@ class TestFakes {
     incomeRepositoryProvider.overrideWithValue(income),
     fixedCostRepositoryProvider.overrideWithValue(fixedCost),
     batchHistoryRepositoryProvider.overrideWithValue(batchHistory),
-    fixedCostExpenseRepositoryProvider.overrideWithValue(fixedCostExpense),
-    fixedCostCategoryRepositoryProvider.overrideWithValue(fixedCostCategory),
   ];
 }
 

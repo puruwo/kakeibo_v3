@@ -21,7 +21,7 @@ description: >
 | Widget | `lib/view/year_page/annual_balance_chart/annual_balance_chart.dart` | 外枠・スクロール・タップ/ホールドハンドラ・ツールチップ Positioned 配置 |
 | Painter | `lib/view/year_page/annual_balance_chart/parts/annual_balance_chart_painter.dart` | 3 段描画の CustomPainter、レイアウト定数、Dimensions、固定ラベル用 Painter |
 | Tooltip | `lib/view/year_page/annual_balance_chart/parts/annual_balance_tooltip.dart` | 月/収入/支出/収支を表示する Widget。本体タップで分析タブへ遷移 |
-| Usecase | `lib/application/annual_balance_chart_usecase/annual_balance_chart_usecase.dart` | 12ヶ月分の収支取得、Y軸スケール計算、`representativeDate` 埋め込み。expense は `expense（一般支出）` + `fixed_cost_expense` の確定済み分 + `fixed_cost_expense` の未確定分（`fixed_cost.estimated_price` を JOIN で集計）の合算 |
+| Usecase | `lib/application/annual_balance_chart_usecase/annual_balance_chart_usecase.dart` | 12ヶ月分の収支取得、Y軸スケール計算、`representativeDate` 埋め込み。expense は `expense` テーブル1本の集計（v10で固定費実績も同テーブルに統合。未確定行は `COALESCE(price, estimated_price)` の実効金額で乗る） |
 | ValueObject | `lib/domain/ui_value/annual_balance_chart_value/annual_balance_chart_value.dart` | `monthIndex` / `monthlyBalanceValues` / `hasNoRecord` / `yAxisScale` |
 | ValueObject | `lib/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart` | 各月のデータ。`monthlyBalanceType` と `representativeDate` を持つ |
 | ValueObject | `lib/domain/ui_value/annual_balance_chart_value/y_axis_scale.dart` | Y軸の `minValue` / `maxValue` / `interval` / `gridValues` |
@@ -33,7 +33,7 @@ description: >
 
 ```
 AnnualBalanceChartUsecaseNotifier.fetch
-  ├─ 12ヶ月分の income / (一般支出 expense + 確定済み fixed_cost_expense + 未確定 fixed_cost_expense の estimated_price 合計) を取得し MonthlyBalanceValue にマッピング
+  ├─ 12ヶ月分の income / expense（実効金額 COALESCE(price, estimated_price)。固定費実績も含む）を取得し MonthlyBalanceValue にマッピング
   ├─ 未来月は MonthlyBalanceType.future で除外
   └─ _calculateYAxisScale で YAxisScale を同梱
        ↓
@@ -240,3 +240,4 @@ CardContainer
 - KAN-99: 生活収支セクション全体を `hasNoRecord == true` のとき非表示化（`year_page.dart` 側の `Consumer` で制御）
 - KAN-100: 月次 expense 集計に `fixed_cost_expense` の確定済み分を加算。あわせて `else if (income == 0)` 重複条件タイポを `else if (expense == 0)` に修正し `MonthlyBalanceType.noExpense` ブランチを到達可能化
 - KAN-103: 月次 expense 集計に `fixed_cost_expense` の未確定分の推定額（`fixed_cost.estimated_price` を JOIN で集計）も加算。家計全体の総支出を表示する画面間で集計範囲を揃える方針（Confluence「各画面の支出集計仕様」に準拠）
+- KAN-136: 固定費カテゴリー統合（スキーマv10）で `fixed_cost_expense` を廃止。集計は `expense` 単一テーブルの実効金額（`COALESCE(price, estimated_price)`）に一本化

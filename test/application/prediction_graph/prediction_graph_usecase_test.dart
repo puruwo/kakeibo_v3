@@ -29,7 +29,6 @@ void main() {
       name: '家賃',
       variable: 0,
       price: 80000,
-      fixedCostCategoryId: 1,
       expenseSmallCategoryId: 11,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -152,7 +151,7 @@ void main() {
       final result = await usecase.fetchPredictionGraphData(buildDateScope());
 
       expect(result.budget, 0);
-      expect(result.totalFixedCostExpense, 80000);
+      expect(result.totalFixedCostAmount, 80000);
       expect(result.shouldShowBudgetLine, isFalse);
     });
 
@@ -177,7 +176,7 @@ void main() {
       // 固定費の自動加算は廃止（仕様 §7.3）。予算は50,000円のまま
       expect(result.budget, 50000);
       // 固定費合計はツールチップ表示用に保持する
-      expect(result.totalFixedCostExpense, 80000);
+      expect(result.totalFixedCostAmount, 80000);
       expect(result.shouldShowBudgetLine, isTrue);
     });
   });

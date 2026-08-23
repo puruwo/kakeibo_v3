@@ -71,6 +71,6 @@ class PredictionGraphValue with _$PredictionGraphValue {
     List<DailyBarData>? dailyBarDataList,
     int? barMaxValue,
     // 固定費合計（確定+未確定推測値）※ツールチップ表示用
-    int? totalFixedCostExpense,
+    int? totalFixedCostAmount,
   }) = _PredictionGraphValue;
 }

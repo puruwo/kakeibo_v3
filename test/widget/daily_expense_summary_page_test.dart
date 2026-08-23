@@ -8,7 +8,6 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/daily_expense_summary_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
@@ -58,14 +57,6 @@ void main() {
     ),
   ];
 
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-  ];
 
   const fixedCosts = [
     FixedCostEntity(
@@ -73,7 +64,6 @@ void main() {
       name: '家賃',
       variable: 0,
       price: 80000,
-      fixedCostCategoryId: 1,
       expenseSmallCategoryId: 21,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -132,9 +122,6 @@ void main() {
       initialRecords: expenseSmallCategories,
     ),
     fixedCost: FakeFixedCostRepository(initialRecords: fixedCosts),
-    fixedCostCategory: FakeFixedCostCategoryRepository(
-      initialRecords: fixedCostCategories,
-    ),
   );
 
   testWidgets('総支出とカテゴリー別の内訳が出る', (tester) async {

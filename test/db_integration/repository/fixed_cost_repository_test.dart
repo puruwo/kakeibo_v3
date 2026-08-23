@@ -33,28 +33,24 @@ Future<void> _seedStandardFixedCosts() async {
   await insertFixedCostRow(
     id: 1,
     name: '期間前',
-    fixedCostCategoryId: 1,
     price: 1000,
     nextPaymentDate: '20250624',
   );
   await insertFixedCostRow(
     id: 2,
     name: '開始日ちょうど',
-    fixedCostCategoryId: 1,
     price: 2000,
     nextPaymentDate: '20250625',
   );
   await insertFixedCostRow(
     id: 3,
     name: '期間中',
-    fixedCostCategoryId: 2,
     price: 3000,
     nextPaymentDate: '20250701',
   );
   await insertFixedCostRow(
     id: 4,
     name: '削除済み',
-    fixedCostCategoryId: 2,
     price: 4000,
     nextPaymentDate: '20250701',
     deleteFlag: 1,
@@ -62,14 +58,12 @@ Future<void> _seedStandardFixedCosts() async {
   await insertFixedCostRow(
     id: 5,
     name: '終了日ちょうど',
-    fixedCostCategoryId: 3,
     price: 5000,
     nextPaymentDate: '20250724',
   );
   await insertFixedCostRow(
     id: 6,
     name: '期間後',
-    fixedCostCategoryId: 3,
     price: 6000,
     nextPaymentDate: '20250725',
   );
@@ -101,7 +95,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: 'サブスクA',
-        fixedCostCategoryId: 2,
         variable: 1,
         intervalNumber: 3,
         intervalUnit: 2,
@@ -119,7 +112,6 @@ void main() {
           variable: 1,
           price: 0,
           estimatedPrice: 0,
-          fixedCostCategoryId: 2,
           // insertFixedCostRow の既定値（v10で追加された支出小カテゴリー参照）
           expenseSmallCategoryId: 1,
           intervalNumber: 3,
@@ -147,7 +139,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '削除済み',
-        fixedCostCategoryId: 1,
         deleteFlag: 1,
       );
 
@@ -239,7 +230,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '3ヶ月取り残し',
-        fixedCostCategoryId: 1,
         nextPaymentDate: '20250401',
       );
 
@@ -262,7 +252,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '削除済み',
-        fixedCostCategoryId: 1,
         nextPaymentDate: '20250701',
         deleteFlag: 1,
       );
@@ -276,31 +265,26 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '期間前',
-        fixedCostCategoryId: 1,
         nextPaymentDate: '20241224',
       );
       await insertFixedCostRow(
         id: 2,
         name: '開始日',
-        fixedCostCategoryId: 1,
         nextPaymentDate: '20241225',
       );
       await insertFixedCostRow(
         id: 3,
         name: '年明け',
-        fixedCostCategoryId: 1,
         nextPaymentDate: '20250101',
       );
       await insertFixedCostRow(
         id: 4,
         name: '終了日',
-        fixedCostCategoryId: 1,
         nextPaymentDate: '20250124',
       );
       await insertFixedCostRow(
         id: 5,
         name: '期間後',
-        fixedCostCategoryId: 1,
         nextPaymentDate: '20250125',
       );
 
@@ -334,7 +318,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '電気代',
-        fixedCostCategoryId: 4,
         variable: 1,
         estimatedPrice: 7800,
       );
@@ -345,7 +328,7 @@ void main() {
     });
 
     test('estimated_priceがNULLなら0を返す', () async {
-      await insertFixedCostRow(id: 1, name: '家賃', fixedCostCategoryId: 1);
+      await insertFixedCostRow(id: 1, name: '家賃');
 
       final result = await repository.fetchEstimatedPriceById(id: 1);
 
@@ -356,7 +339,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '電気代',
-        fixedCostCategoryId: 4,
         estimatedPrice: 7800,
       );
 
@@ -369,7 +351,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '削除済み',
-        fixedCostCategoryId: 4,
         estimatedPrice: 5000,
         deleteFlag: 1,
       );
@@ -388,7 +369,6 @@ void main() {
           variable: 0,
           price: 1490,
           estimatedPrice: 1490,
-          fixedCostCategoryId: 2,
           intervalNumber: 1,
           intervalUnit: 1,
           firstPaymentDate: '20250601',
@@ -407,7 +387,6 @@ void main() {
           variable: 0,
           price: 1490,
           estimatedPrice: 1490,
-          fixedCostCategoryId: 2,
           intervalNumber: 1,
           intervalUnit: 1,
           firstPaymentDate: '20250601',
@@ -420,14 +399,13 @@ void main() {
 
     test('idはエンティティの値ではなくAUTOINCREMENTで採番される', () async {
       // 既存の最大idの次が採番される
-      await insertFixedCostRow(id: 50, name: '既存', fixedCostCategoryId: 1);
+      await insertFixedCostRow(id: 50, name: '既存');
 
       final id = await repository.insert(
         const FixedCostEntity(
           id: 1,
           name: '新規',
           variable: 0,
-          fixedCostCategoryId: 1,
           intervalNumber: 1,
           intervalUnit: 1,
           firstPaymentDate: '20250601',
@@ -450,7 +428,7 @@ void main() {
           variable: 1,
           price: 9999,
           estimatedPrice: 8888,
-          fixedCostCategoryId: 5,
+          expenseSmallCategoryId: 5,
           intervalNumber: 2,
           intervalUnit: 2,
           firstPaymentDate: '20240101',
@@ -465,7 +443,7 @@ void main() {
       expect(updated.name, '変更後');
       expect(updated.price, 9999);
       expect(updated.estimatedPrice, 8888);
-      expect(updated.fixedCostCategoryId, 5);
+      expect(updated.expenseSmallCategoryId, 5);
       expect(updated.nextPaymentDate, '20250801');
 
       // 他の行は変化しない
@@ -477,7 +455,6 @@ void main() {
       await insertFixedCostRow(
         id: 1,
         name: '家賃',
-        fixedCostCategoryId: 1,
         recentPaymentDate: '20250601',
         nextPaymentDate: '20250701',
       );
@@ -487,7 +464,6 @@ void main() {
           id: 1,
           name: '家賃',
           variable: 0,
-          fixedCostCategoryId: 1,
           intervalNumber: 1,
           intervalUnit: 1,
           firstPaymentDate: '20250101',
@@ -511,7 +487,6 @@ void main() {
           name: '変更後',
           variable: 0,
           price: 9999,
-          fixedCostCategoryId: 1,
           intervalNumber: 1,
           intervalUnit: 1,
           firstPaymentDate: '20250101',
@@ -545,49 +520,45 @@ void main() {
     /// | 4  | 10    | 2025-06-05 | 到来済み       | 0    | 消える   |
     /// | 5  | 20    | 2025-07-20 | 未到来         | 1    | 残る（別マスタ） |
     Future<void> seedExpenses() async {
-      await insertFixedCostExpenseRow(
+      await insertExpenseRow(
         id: 1,
         fixedCostId: 10,
-        fixedCostCategoryId: 1,
         date: '20250601',
         price: 1000,
-        name: '支払済み',
+        memo: '支払済み',
         isConfirmed: 1,
       );
-      await insertFixedCostExpenseRow(
+      await insertExpenseRow(
         id: 2,
         fixedCostId: 10,
-        fixedCostCategoryId: 1,
         date: '20250706',
         price: 1000,
-        name: '当日',
+        memo: '当日',
         isConfirmed: 1,
       );
-      await insertFixedCostExpenseRow(
+      await insertExpenseRow(
         id: 3,
         fixedCostId: 10,
-        fixedCostCategoryId: 1,
         date: '20250707',
         price: 1000,
-        name: '未到来だが確定扱い',
+        memo: '未到来だが確定扱い',
         isConfirmed: 1,
       );
-      await insertFixedCostExpenseRow(
+      await insertExpenseRow(
         id: 4,
         fixedCostId: 10,
-        fixedCostCategoryId: 1,
         date: '20250605',
-        price: 0,
-        name: '未確定',
+        price: null,
+        estimatedPrice: 1000,
+        memo: '未確定',
         isConfirmed: 0,
       );
-      await insertFixedCostExpenseRow(
+      await insertExpenseRow(
         id: 5,
         fixedCostId: 20,
-        fixedCostCategoryId: 1,
         date: '20250720',
         price: 3000,
-        name: '別マスタ',
+        memo: '別マスタ',
         isConfirmed: 1,
       );
     }
@@ -595,9 +566,10 @@ void main() {
     /// 残っている実績のidを昇順で返す
     Future<List<int>> remainingExpenseIds() async {
       final rows = await DatabaseHelper.instance.query(
-        'SELECT ${SqfFixedCostExpense.id} as id '
-        'FROM ${SqfFixedCostExpense.tableName} '
-        'ORDER BY ${SqfFixedCostExpense.id} ASC',
+        'SELECT ${SqfExpense.id} as id '
+        'FROM ${SqfExpense.tableName} '
+        'WHERE ${SqfExpense.fixedCostId} IS NOT NULL '
+        'ORDER BY ${SqfExpense.id} ASC',
       );
       return rows.map((e) => e['id'] as int).toList();
     }
@@ -606,13 +578,11 @@ void main() {
       await insertFixedCostRow(
         id: 10,
         name: '解約するサブスク',
-        fixedCostCategoryId: 1,
         price: 1000,
       );
       await insertFixedCostRow(
         id: 20,
         name: '継続するサブスク',
-        fixedCostCategoryId: 1,
         price: 3000,
       );
     }
@@ -782,7 +752,7 @@ void main() {
 
     test('未確定行と支払日未到来の確定行が消え、到来済みの確定行は残る', () async {
       await insertFixedCostRow(
-          id: 10, name: 'サブスク', fixedCostCategoryId: 1, price: 1000);
+          id: 10, name: 'サブスク', price: 1000);
       await seedExpenseRows();
 
       await repository.deleteWithUnpaidExpenses(id: 10, today: today);
@@ -792,7 +762,7 @@ void main() {
 
     test('マスタは論理削除され、残った確定行のfixed_cost_idは保持される', () async {
       await insertFixedCostRow(
-          id: 10, name: 'サブスク', fixedCostCategoryId: 1, price: 1000);
+          id: 10, name: 'サブスク', price: 1000);
       await seedExpenseRows();
 
       await repository.deleteWithUnpaidExpenses(id: 10, today: today);
@@ -811,7 +781,6 @@ void main() {
       await insertFixedCostRow(
         id: 10,
         name: '電気代',
-        fixedCostCategoryId: 2,
         variable: 1,
         estimatedPrice: 5000,
       );
@@ -844,7 +813,6 @@ void main() {
       await insertFixedCostRow(
         id: 10,
         name: '電気代',
-        fixedCostCategoryId: 2,
         variable: 1,
         estimatedPrice: 5000,
       );
@@ -868,7 +836,6 @@ void main() {
       await insertFixedCostRow(
         id: 10,
         name: '電気代',
-        fixedCostCategoryId: 2,
         variable: 1,
         estimatedPrice: 5000,
       );

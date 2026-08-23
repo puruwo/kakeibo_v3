@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'monthly_fixed_cost_category_summary_value.dart';
+part of 'monthly_fixed_cost_big_category_summary_value.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -16,7 +16,7 @@ final _privateConstructorUsedError = UnsupportedError(
 );
 
 /// @nodoc
-mixin _$MonthlyFixedCostCategorySummaryValue {
+mixin _$MonthlyFixedCostBigCategorySummaryValue {
   /// 支出大カテゴリーid（v10で固定費カテゴリーから移行）
   int get expenseBigCategoryId => throw _privateConstructorUsedError;
   String get categoryName => throw _privateConstructorUsedError;
@@ -29,24 +29,24 @@ mixin _$MonthlyFixedCostCategorySummaryValue {
   /// カテゴリー内の確定済み固定費の合計
   int get totalAmount => throw _privateConstructorUsedError;
 
-  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// Create a copy of MonthlyFixedCostBigCategorySummaryValue
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $MonthlyFixedCostCategorySummaryValueCopyWith<
-    MonthlyFixedCostCategorySummaryValue
+  $MonthlyFixedCostBigCategorySummaryValueCopyWith<
+    MonthlyFixedCostBigCategorySummaryValue
   >
   get copyWith => throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $MonthlyFixedCostCategorySummaryValueCopyWith<$Res> {
-  factory $MonthlyFixedCostCategorySummaryValueCopyWith(
-    MonthlyFixedCostCategorySummaryValue value,
-    $Res Function(MonthlyFixedCostCategorySummaryValue) then,
+abstract class $MonthlyFixedCostBigCategorySummaryValueCopyWith<$Res> {
+  factory $MonthlyFixedCostBigCategorySummaryValueCopyWith(
+    MonthlyFixedCostBigCategorySummaryValue value,
+    $Res Function(MonthlyFixedCostBigCategorySummaryValue) then,
   ) =
-      _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<
+      _$MonthlyFixedCostBigCategorySummaryValueCopyWithImpl<
         $Res,
-        MonthlyFixedCostCategorySummaryValue
+        MonthlyFixedCostBigCategorySummaryValue
       >;
   @useResult
   $Res call({
@@ -60,19 +60,22 @@ abstract class $MonthlyFixedCostCategorySummaryValueCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<
+class _$MonthlyFixedCostBigCategorySummaryValueCopyWithImpl<
   $Res,
-  $Val extends MonthlyFixedCostCategorySummaryValue
+  $Val extends MonthlyFixedCostBigCategorySummaryValue
 >
-    implements $MonthlyFixedCostCategorySummaryValueCopyWith<$Res> {
-  _$MonthlyFixedCostCategorySummaryValueCopyWithImpl(this._value, this._then);
+    implements $MonthlyFixedCostBigCategorySummaryValueCopyWith<$Res> {
+  _$MonthlyFixedCostBigCategorySummaryValueCopyWithImpl(
+    this._value,
+    this._then,
+  );
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// Create a copy of MonthlyFixedCostBigCategorySummaryValue
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -117,12 +120,12 @@ class _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<$Res>
-    implements $MonthlyFixedCostCategorySummaryValueCopyWith<$Res> {
-  factory _$$MonthlyFixedCostCategorySummaryValueImplCopyWith(
-    _$MonthlyFixedCostCategorySummaryValueImpl value,
-    $Res Function(_$MonthlyFixedCostCategorySummaryValueImpl) then,
-  ) = __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>;
+abstract class _$$MonthlyFixedCostBigCategorySummaryValueImplCopyWith<$Res>
+    implements $MonthlyFixedCostBigCategorySummaryValueCopyWith<$Res> {
+  factory _$$MonthlyFixedCostBigCategorySummaryValueImplCopyWith(
+    _$MonthlyFixedCostBigCategorySummaryValueImpl value,
+    $Res Function(_$MonthlyFixedCostBigCategorySummaryValueImpl) then,
+  ) = __$$MonthlyFixedCostBigCategorySummaryValueImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -136,19 +139,19 @@ abstract class _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>
+class __$$MonthlyFixedCostBigCategorySummaryValueImplCopyWithImpl<$Res>
     extends
-        _$MonthlyFixedCostCategorySummaryValueCopyWithImpl<
+        _$MonthlyFixedCostBigCategorySummaryValueCopyWithImpl<
           $Res,
-          _$MonthlyFixedCostCategorySummaryValueImpl
+          _$MonthlyFixedCostBigCategorySummaryValueImpl
         >
-    implements _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<$Res> {
-  __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl(
-    _$MonthlyFixedCostCategorySummaryValueImpl _value,
-    $Res Function(_$MonthlyFixedCostCategorySummaryValueImpl) _then,
+    implements _$$MonthlyFixedCostBigCategorySummaryValueImplCopyWith<$Res> {
+  __$$MonthlyFixedCostBigCategorySummaryValueImplCopyWithImpl(
+    _$MonthlyFixedCostBigCategorySummaryValueImpl _value,
+    $Res Function(_$MonthlyFixedCostBigCategorySummaryValueImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// Create a copy of MonthlyFixedCostBigCategorySummaryValue
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -161,7 +164,7 @@ class __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>
     Object? totalAmount = null,
   }) {
     return _then(
-      _$MonthlyFixedCostCategorySummaryValueImpl(
+      _$MonthlyFixedCostBigCategorySummaryValueImpl(
         expenseBigCategoryId: null == expenseBigCategoryId
             ? _value.expenseBigCategoryId
             : expenseBigCategoryId // ignore: cast_nullable_to_non_nullable
@@ -193,9 +196,9 @@ class __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$MonthlyFixedCostCategorySummaryValueImpl
-    implements _MonthlyFixedCostCategorySummaryValue {
-  const _$MonthlyFixedCostCategorySummaryValueImpl({
+class _$MonthlyFixedCostBigCategorySummaryValueImpl
+    implements _MonthlyFixedCostBigCategorySummaryValue {
+  const _$MonthlyFixedCostBigCategorySummaryValueImpl({
     required this.expenseBigCategoryId,
     required this.categoryName,
     required this.colorCode,
@@ -224,14 +227,14 @@ class _$MonthlyFixedCostCategorySummaryValueImpl
 
   @override
   String toString() {
-    return 'MonthlyFixedCostCategorySummaryValue(expenseBigCategoryId: $expenseBigCategoryId, categoryName: $categoryName, colorCode: $colorCode, resourcePath: $resourcePath, isAllConfirmed: $isAllConfirmed, totalAmount: $totalAmount)';
+    return 'MonthlyFixedCostBigCategorySummaryValue(expenseBigCategoryId: $expenseBigCategoryId, categoryName: $categoryName, colorCode: $colorCode, resourcePath: $resourcePath, isAllConfirmed: $isAllConfirmed, totalAmount: $totalAmount)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$MonthlyFixedCostCategorySummaryValueImpl &&
+            other is _$MonthlyFixedCostBigCategorySummaryValueImpl &&
             (identical(other.expenseBigCategoryId, expenseBigCategoryId) ||
                 other.expenseBigCategoryId == expenseBigCategoryId) &&
             (identical(other.categoryName, categoryName) ||
@@ -257,30 +260,30 @@ class _$MonthlyFixedCostCategorySummaryValueImpl
     totalAmount,
   );
 
-  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// Create a copy of MonthlyFixedCostBigCategorySummaryValue
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<
-    _$MonthlyFixedCostCategorySummaryValueImpl
+  _$$MonthlyFixedCostBigCategorySummaryValueImplCopyWith<
+    _$MonthlyFixedCostBigCategorySummaryValueImpl
   >
   get copyWith =>
-      __$$MonthlyFixedCostCategorySummaryValueImplCopyWithImpl<
-        _$MonthlyFixedCostCategorySummaryValueImpl
+      __$$MonthlyFixedCostBigCategorySummaryValueImplCopyWithImpl<
+        _$MonthlyFixedCostBigCategorySummaryValueImpl
       >(this, _$identity);
 }
 
-abstract class _MonthlyFixedCostCategorySummaryValue
-    implements MonthlyFixedCostCategorySummaryValue {
-  const factory _MonthlyFixedCostCategorySummaryValue({
+abstract class _MonthlyFixedCostBigCategorySummaryValue
+    implements MonthlyFixedCostBigCategorySummaryValue {
+  const factory _MonthlyFixedCostBigCategorySummaryValue({
     required final int expenseBigCategoryId,
     required final String categoryName,
     required final String colorCode,
     required final String resourcePath,
     required final bool isAllConfirmed,
     required final int totalAmount,
-  }) = _$MonthlyFixedCostCategorySummaryValueImpl;
+  }) = _$MonthlyFixedCostBigCategorySummaryValueImpl;
 
   /// 支出大カテゴリーid（v10で固定費カテゴリーから移行）
   @override
@@ -300,12 +303,12 @@ abstract class _MonthlyFixedCostCategorySummaryValue
   @override
   int get totalAmount;
 
-  /// Create a copy of MonthlyFixedCostCategorySummaryValue
+  /// Create a copy of MonthlyFixedCostBigCategorySummaryValue
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$MonthlyFixedCostCategorySummaryValueImplCopyWith<
-    _$MonthlyFixedCostCategorySummaryValueImpl
+  _$$MonthlyFixedCostBigCategorySummaryValueImplCopyWith<
+    _$MonthlyFixedCostBigCategorySummaryValueImpl
   >
   get copyWith => throw _privateConstructorUsedError;
 }

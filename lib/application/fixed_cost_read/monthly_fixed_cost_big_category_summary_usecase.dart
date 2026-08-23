@@ -1,22 +1,22 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_tile_service.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_category_summary_value/monthly_fixed_cost_category_summary_value.dart';
+import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_big_category_summary_value/monthly_fixed_cost_big_category_summary_value.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 // カテゴリー別の固定費サマリー情報を取得するユースケース
 // グルーピングの単位は支出大カテゴリー（v10で固定費カテゴリーから変更。仕様 §8.3）
 
-final monthlyFixedCostCategorySummaryNotifierProvider = AsyncNotifierProvider
-    .family<MonthlyFixedCostCategorySummaryNotifier,
-        List<MonthlyFixedCostCategorySummaryValue>, PeriodValue>(
-  MonthlyFixedCostCategorySummaryNotifier.new,
+final monthlyFixedCostBigCategorySummaryNotifierProvider = AsyncNotifierProvider
+    .family<MonthlyFixedCostBigCategorySummaryNotifier,
+        List<MonthlyFixedCostBigCategorySummaryValue>, PeriodValue>(
+  MonthlyFixedCostBigCategorySummaryNotifier.new,
 );
 
-class MonthlyFixedCostCategorySummaryNotifier extends FamilyAsyncNotifier<
-    List<MonthlyFixedCostCategorySummaryValue>, PeriodValue> {
+class MonthlyFixedCostBigCategorySummaryNotifier extends FamilyAsyncNotifier<
+    List<MonthlyFixedCostBigCategorySummaryValue>, PeriodValue> {
   @override
-  Future<List<MonthlyFixedCostCategorySummaryValue>> build(
+  Future<List<MonthlyFixedCostBigCategorySummaryValue>> build(
       PeriodValue selectedMonthPeriod) async {
     // DBが更新された場合にbuildメソッドを再実行する
     ref.watch(updateDBCountNotifierProvider);
@@ -32,7 +32,7 @@ class MonthlyFixedCostCategorySummaryNotifier extends FamilyAsyncNotifier<
     }
 
     // カテゴリーごとにサマリーを作成
-    final List<MonthlyFixedCostCategorySummaryValue> result = [];
+    final List<MonthlyFixedCostBigCategorySummaryValue> result = [];
 
     for (var mapEntry in categoryMap.entries) {
       final items = mapEntry.value;
@@ -50,7 +50,7 @@ class MonthlyFixedCostCategorySummaryNotifier extends FamilyAsyncNotifier<
       }
 
       result.add(
-        MonthlyFixedCostCategorySummaryValue(
+        MonthlyFixedCostBigCategorySummaryValue(
           expenseBigCategoryId: mapEntry.key,
           categoryName: items.first.bigCategoryName,
           colorCode: items.first.colorCode,

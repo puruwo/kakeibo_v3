@@ -3,7 +3,7 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/expense/expense_usecase.dart';
-import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_record/fixed_cost_record_usecase.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -13,7 +13,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/component/fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/component/modal.dart';
-import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_expense_edit_sheet.dart';
+import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class DailyExpenseItemTile extends ConsumerWidget {
@@ -56,7 +56,7 @@ class DailyExpenseItemTile extends ConsumerWidget {
   /// 編集シートを開く（固定費行は編集範囲が違う専用シート。仕様 §6.6）
   Future<void> _openEditSheet(BuildContext context, WidgetRef ref) async {
     if (value.fixedCostId != null) {
-      await openFixedCostExpenseEditSheet(context, ref, expenseId: value.id);
+      await openFixedCostRecordEditSheet(context, ref, expenseId: value.id);
       return;
     }
     _showEditSheet(context);
@@ -84,7 +84,7 @@ class DailyExpenseItemTile extends ConsumerWidget {
                 // 固定費行の削除は推定額の再計算を伴うため専用ユースケースを使う（仕様 §6.5）
                 if (value.fixedCostId != null) {
                   ref
-                      .read(fixedCostExpenseUsecaseProvider)
+                      .read(fixedCostRecordUsecaseProvider)
                       .delete(id: value.id);
                 } else {
                   ref.read(expenseUsecaseProvider).delete(id: value.id);

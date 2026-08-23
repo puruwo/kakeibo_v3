@@ -60,7 +60,6 @@ void main() {
     name: '家賃',
     variable: 0,
     price: 80000,
-    fixedCostCategoryId: 1,
     expenseSmallCategoryId: 11,
     intervalNumber: 1,
     intervalUnit: 1,

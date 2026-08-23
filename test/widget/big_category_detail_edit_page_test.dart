@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -50,14 +49,6 @@ void main() {
     ),
   ];
 
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-  ];
 
   const incomeBigCategories = [
     IncomeBigCategoryEntity(
@@ -85,9 +76,6 @@ void main() {
     ),
     expenseSmallCategory: FakeExpenseSmallCategoryRepository(
       initialRecords: expenseSmallCategories,
-    ),
-    fixedCostCategory: FakeFixedCostCategoryRepository(
-      initialRecords: fixedCostCategories,
     ),
     incomeBigCategory: FakeIncomeBigCategoryRepository(
       initialRecords: incomeBigCategories,

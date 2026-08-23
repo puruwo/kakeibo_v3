@@ -266,7 +266,6 @@ Future<int> insertBatchHistoryRow({
 /// 固定費マスタを1件投入する
 Future<int> insertFixedCostRow({
   required String name,
-  required int fixedCostCategoryId,
   int expenseSmallCategoryId = 1,
   int variable = 0,
   int? price,
@@ -285,7 +284,6 @@ Future<int> insertFixedCostRow({
     SqfFixedCost.variable: variable,
     SqfFixedCost.price: price,
     SqfFixedCost.estimatedPrice: estimatedPrice,
-    SqfFixedCost.fixedCostCategoryId: fixedCostCategoryId,
     SqfFixedCost.expenseSmallCategoryId: expenseSmallCategoryId,
     SqfFixedCost.intervalNumber: intervalNumber,
     SqfFixedCost.intervalUnit: intervalUnit,
@@ -319,27 +317,4 @@ Future<int> updateExpenseSmallCategoryDefaultDisplayed({
   return DatabaseHelper.instance.update(SqfExpenseSmallCategory.tableName, {
     SqfExpenseSmallCategory.defaultDisplayed: defaultDisplayed,
   }, id);
-}
-
-/// 固定費支出（支払実績）を1件投入する
-Future<int> insertFixedCostExpenseRow({
-  required int fixedCostId,
-  required int fixedCostCategoryId,
-  required String date,
-  required int price,
-  required String name,
-  int confirmedCostType = 0,
-  int isConfirmed = 0,
-  int? id,
-}) {
-  return DatabaseHelper.instance.insert(SqfFixedCostExpense.tableName, {
-    SqfFixedCostExpense.id: ?id,
-    SqfFixedCostExpense.fixedCostId: fixedCostId,
-    SqfFixedCostExpense.fixedCostCategoryId: fixedCostCategoryId,
-    SqfFixedCostExpense.date: date,
-    SqfFixedCostExpense.price: price,
-    SqfFixedCostExpense.name: name,
-    SqfFixedCostExpense.confirmedCostType: confirmedCostType,
-    SqfFixedCostExpense.isConfirmed: isConfirmed,
-  });
 }

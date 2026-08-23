@@ -28,16 +28,14 @@ Future<void> _seedTransactions() async {
   await insertFixedCostRow(
     id: 1,
     name: '家賃',
-    fixedCostCategoryId: 1,
     price: 80000,
   );
-  await insertFixedCostExpenseRow(
-    id: 1,
+  await insertExpenseRow(
+    id: 100,
     fixedCostId: 1,
-    fixedCostCategoryId: 1,
     date: '20250701',
     price: 80000,
-    name: '家賃',
+    memo: '家賃',
     isConfirmed: 1,
   );
 }
@@ -68,12 +66,6 @@ void main() {
       );
       expect(
         await DatabaseHelper.instance.queryRowCount(SqfFixedCost.tableName),
-        0,
-      );
-      expect(
-        await DatabaseHelper.instance.queryRowCount(
-          SqfFixedCostExpense.tableName,
-        ),
         0,
       );
     });
@@ -108,12 +100,6 @@ void main() {
           SqfIncomeSmallCategory.tableName,
         ),
         4,
-      );
-      expect(
-        await DatabaseHelper.instance.queryRowCount(
-          SqfFixedCostCategory.tableName,
-        ),
-        5,
       );
       // バッチ実行履歴の初期レコードも入り直す
       expect(

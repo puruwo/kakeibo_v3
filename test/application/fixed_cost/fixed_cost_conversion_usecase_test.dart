@@ -153,8 +153,6 @@ void main() {
       expect(master.name, '電気代');
       // カテゴリーは当該行の支出小カテゴリーを引き継ぐ
       expect(master.expenseSmallCategoryId, 12);
-      // 旧列はT6で削除するまで0を入れておく
-      expect(master.fixedCostCategoryId, 0);
       expect(master.price, 5000);
       // 推定額は当該行の金額で初期化する（仕様 §6.5）
       expect(master.estimatedPrice, 5000);
@@ -187,7 +185,7 @@ void main() {
         '20250801',
       );
       // 過去分の実績は生成されない
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostRecords, isEmpty);
     });
 
     test('支払日が今日ちょうどでも次の周期へ進める', () async {

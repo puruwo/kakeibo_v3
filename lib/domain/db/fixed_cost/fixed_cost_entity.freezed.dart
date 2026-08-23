@@ -25,10 +25,8 @@ mixin _$FixedCostEntity {
   String get name => throw _privateConstructorUsedError;
   int get variable => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
-  int get estimatedPrice => throw _privateConstructorUsedError;
-  int get fixedCostCategoryId =>
-      throw _privateConstructorUsedError; // 支出小カテゴリーへの参照（v10で追加）。
-  // 旧 fixedCostCategoryId はT6で削除するまで併存する
+  int get estimatedPrice =>
+      throw _privateConstructorUsedError; // 支出小カテゴリーへの参照（v10で追加）
   int get expenseSmallCategoryId => throw _privateConstructorUsedError;
   int get intervalNumber => throw _privateConstructorUsedError;
   int get intervalUnit => throw _privateConstructorUsedError;
@@ -60,7 +58,6 @@ abstract class $FixedCostEntityCopyWith<$Res> {
     int variable,
     int price,
     int estimatedPrice,
-    int fixedCostCategoryId,
     int expenseSmallCategoryId,
     int intervalNumber,
     int intervalUnit,
@@ -91,7 +88,6 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
     Object? variable = null,
     Object? price = null,
     Object? estimatedPrice = null,
-    Object? fixedCostCategoryId = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -121,10 +117,6 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
             estimatedPrice: null == estimatedPrice
                 ? _value.estimatedPrice
                 : estimatedPrice // ignore: cast_nullable_to_non_nullable
-                      as int,
-            fixedCostCategoryId: null == fixedCostCategoryId
-                ? _value.fixedCostCategoryId
-                : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
                       as int,
             expenseSmallCategoryId: null == expenseSmallCategoryId
                 ? _value.expenseSmallCategoryId
@@ -175,7 +167,6 @@ abstract class _$$FixedCostEntityImplCopyWith<$Res>
     int variable,
     int price,
     int estimatedPrice,
-    int fixedCostCategoryId,
     int expenseSmallCategoryId,
     int intervalNumber,
     int intervalUnit,
@@ -205,7 +196,6 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
     Object? variable = null,
     Object? price = null,
     Object? estimatedPrice = null,
-    Object? fixedCostCategoryId = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -235,10 +225,6 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
         estimatedPrice: null == estimatedPrice
             ? _value.estimatedPrice
             : estimatedPrice // ignore: cast_nullable_to_non_nullable
-                  as int,
-        fixedCostCategoryId: null == fixedCostCategoryId
-            ? _value.fixedCostCategoryId
-            : fixedCostCategoryId // ignore: cast_nullable_to_non_nullable
                   as int,
         expenseSmallCategoryId: null == expenseSmallCategoryId
             ? _value.expenseSmallCategoryId
@@ -282,7 +268,6 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
     required this.variable,
     this.price = 0,
     this.estimatedPrice = 0,
-    required this.fixedCostCategoryId,
     this.expenseSmallCategoryId = 0,
     required this.intervalNumber,
     required this.intervalUnit,
@@ -308,10 +293,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
   @override
   @JsonKey()
   final int estimatedPrice;
-  @override
-  final int fixedCostCategoryId;
-  // 支出小カテゴリーへの参照（v10で追加）。
-  // 旧 fixedCostCategoryId はT6で削除するまで併存する
+  // 支出小カテゴリーへの参照（v10で追加）
   @override
   @JsonKey()
   final int expenseSmallCategoryId;
@@ -331,7 +313,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
 
   @override
   String toString() {
-    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, estimatedPrice: $estimatedPrice, fixedCostCategoryId: $fixedCostCategoryId, expenseSmallCategoryId: $expenseSmallCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
+    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, estimatedPrice: $estimatedPrice, expenseSmallCategoryId: $expenseSmallCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
   }
 
   @override
@@ -346,8 +328,6 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.estimatedPrice, estimatedPrice) ||
                 other.estimatedPrice == estimatedPrice) &&
-            (identical(other.fixedCostCategoryId, fixedCostCategoryId) ||
-                other.fixedCostCategoryId == fixedCostCategoryId) &&
             (identical(other.expenseSmallCategoryId, expenseSmallCategoryId) ||
                 other.expenseSmallCategoryId == expenseSmallCategoryId) &&
             (identical(other.intervalNumber, intervalNumber) ||
@@ -373,7 +353,6 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
     variable,
     price,
     estimatedPrice,
-    fixedCostCategoryId,
     expenseSmallCategoryId,
     intervalNumber,
     intervalUnit,
@@ -407,7 +386,6 @@ abstract class _FixedCostEntity implements FixedCostEntity {
     required final int variable,
     final int price,
     final int estimatedPrice,
-    required final int fixedCostCategoryId,
     final int expenseSmallCategoryId,
     required final int intervalNumber,
     required final int intervalUnit,
@@ -429,10 +407,7 @@ abstract class _FixedCostEntity implements FixedCostEntity {
   @override
   int get price;
   @override
-  int get estimatedPrice;
-  @override
-  int get fixedCostCategoryId; // 支出小カテゴリーへの参照（v10で追加）。
-  // 旧 fixedCostCategoryId はT6で削除するまで併存する
+  int get estimatedPrice; // 支出小カテゴリーへの参照（v10で追加）
   @override
   int get expenseSmallCategoryId;
   @override

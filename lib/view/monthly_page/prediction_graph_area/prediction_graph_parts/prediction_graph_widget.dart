@@ -191,7 +191,7 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
       child: GraphTooltip(
         date: selectedDate,
         cumulativeExpense: cumulativeExpense,
-        totalFixedCostExpense: widget.data.totalFixedCostExpense ?? 0,
+        totalFixedCostAmount: widget.data.totalFixedCostAmount ?? 0,
         categoryExpenses: dailyBarData?.categoryExpenses ?? [],
         onTapTooltip: () {
           // ツールチップを閉じてからフルモーダル表示

@@ -3,12 +3,12 @@ import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final fixedCostExpenseServiceProvider = Provider<FixedCostExpenseService>(
-  FixedCostExpenseService.new,
+final fixedCostRecordServiceProvider = Provider<FixedCostRecordService>(
+  FixedCostRecordService.new,
 );
 
-class FixedCostExpenseService {
-  FixedCostExpenseService(this._ref);
+class FixedCostRecordService {
+  FixedCostRecordService(this._ref);
   final Ref _ref;
 
   ExpenseRepository get _expenseRepositoryProvider =>

@@ -17,7 +17,7 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$FixedCostRegistrationListValue {
-  List<FixedCostCategoryGroup> get categoryGroups =>
+  List<ExpenseBigCategoryGroup> get categoryGroups =>
       throw _privateConstructorUsedError;
 
   /// Create a copy of FixedCostRegistrationListValue
@@ -38,7 +38,7 @@ abstract class $FixedCostRegistrationListValueCopyWith<$Res> {
         FixedCostRegistrationListValue
       >;
   @useResult
-  $Res call({List<FixedCostCategoryGroup> categoryGroups});
+  $Res call({List<ExpenseBigCategoryGroup> categoryGroups});
 }
 
 /// @nodoc
@@ -64,7 +64,7 @@ class _$FixedCostRegistrationListValueCopyWithImpl<
             categoryGroups: null == categoryGroups
                 ? _value.categoryGroups
                 : categoryGroups // ignore: cast_nullable_to_non_nullable
-                      as List<FixedCostCategoryGroup>,
+                      as List<ExpenseBigCategoryGroup>,
           )
           as $Val,
     );
@@ -80,7 +80,7 @@ abstract class _$$FixedCostRegistrationListValueImplCopyWith<$Res>
   ) = __$$FixedCostRegistrationListValueImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({List<FixedCostCategoryGroup> categoryGroups});
+  $Res call({List<ExpenseBigCategoryGroup> categoryGroups});
 }
 
 /// @nodoc
@@ -106,7 +106,7 @@ class __$$FixedCostRegistrationListValueImplCopyWithImpl<$Res>
         categoryGroups: null == categoryGroups
             ? _value._categoryGroups
             : categoryGroups // ignore: cast_nullable_to_non_nullable
-                  as List<FixedCostCategoryGroup>,
+                  as List<ExpenseBigCategoryGroup>,
       ),
     );
   }
@@ -117,12 +117,12 @@ class __$$FixedCostRegistrationListValueImplCopyWithImpl<$Res>
 class _$FixedCostRegistrationListValueImpl
     implements _FixedCostRegistrationListValue {
   const _$FixedCostRegistrationListValueImpl({
-    required final List<FixedCostCategoryGroup> categoryGroups,
+    required final List<ExpenseBigCategoryGroup> categoryGroups,
   }) : _categoryGroups = categoryGroups;
 
-  final List<FixedCostCategoryGroup> _categoryGroups;
+  final List<ExpenseBigCategoryGroup> _categoryGroups;
   @override
-  List<FixedCostCategoryGroup> get categoryGroups {
+  List<ExpenseBigCategoryGroup> get categoryGroups {
     if (_categoryGroups is EqualUnmodifiableListView) return _categoryGroups;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_categoryGroups);
@@ -167,11 +167,11 @@ class _$FixedCostRegistrationListValueImpl
 abstract class _FixedCostRegistrationListValue
     implements FixedCostRegistrationListValue {
   const factory _FixedCostRegistrationListValue({
-    required final List<FixedCostCategoryGroup> categoryGroups,
+    required final List<ExpenseBigCategoryGroup> categoryGroups,
   }) = _$FixedCostRegistrationListValueImpl;
 
   @override
-  List<FixedCostCategoryGroup> get categoryGroups;
+  List<ExpenseBigCategoryGroup> get categoryGroups;
 
   /// Create a copy of FixedCostRegistrationListValue
   /// with the given fields replaced by the non-null parameter values.
@@ -184,26 +184,26 @@ abstract class _FixedCostRegistrationListValue
 }
 
 /// @nodoc
-mixin _$FixedCostCategoryGroup {
+mixin _$ExpenseBigCategoryGroup {
   int get categoryId => throw _privateConstructorUsedError;
   String get categoryName => throw _privateConstructorUsedError;
   String get categoryIconPath => throw _privateConstructorUsedError;
   String get categoryColorCode => throw _privateConstructorUsedError;
   List<FixedCostEntity> get items => throw _privateConstructorUsedError;
 
-  /// Create a copy of FixedCostCategoryGroup
+  /// Create a copy of ExpenseBigCategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $FixedCostCategoryGroupCopyWith<FixedCostCategoryGroup> get copyWith =>
+  $ExpenseBigCategoryGroupCopyWith<ExpenseBigCategoryGroup> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $FixedCostCategoryGroupCopyWith<$Res> {
-  factory $FixedCostCategoryGroupCopyWith(
-    FixedCostCategoryGroup value,
-    $Res Function(FixedCostCategoryGroup) then,
-  ) = _$FixedCostCategoryGroupCopyWithImpl<$Res, FixedCostCategoryGroup>;
+abstract class $ExpenseBigCategoryGroupCopyWith<$Res> {
+  factory $ExpenseBigCategoryGroupCopyWith(
+    ExpenseBigCategoryGroup value,
+    $Res Function(ExpenseBigCategoryGroup) then,
+  ) = _$ExpenseBigCategoryGroupCopyWithImpl<$Res, ExpenseBigCategoryGroup>;
   @useResult
   $Res call({
     int categoryId,
@@ -215,19 +215,19 @@ abstract class $FixedCostCategoryGroupCopyWith<$Res> {
 }
 
 /// @nodoc
-class _$FixedCostCategoryGroupCopyWithImpl<
+class _$ExpenseBigCategoryGroupCopyWithImpl<
   $Res,
-  $Val extends FixedCostCategoryGroup
+  $Val extends ExpenseBigCategoryGroup
 >
-    implements $FixedCostCategoryGroupCopyWith<$Res> {
-  _$FixedCostCategoryGroupCopyWithImpl(this._value, this._then);
+    implements $ExpenseBigCategoryGroupCopyWith<$Res> {
+  _$ExpenseBigCategoryGroupCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of FixedCostCategoryGroup
+  /// Create a copy of ExpenseBigCategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -267,12 +267,12 @@ class _$FixedCostCategoryGroupCopyWithImpl<
 }
 
 /// @nodoc
-abstract class _$$FixedCostCategoryGroupImplCopyWith<$Res>
-    implements $FixedCostCategoryGroupCopyWith<$Res> {
-  factory _$$FixedCostCategoryGroupImplCopyWith(
-    _$FixedCostCategoryGroupImpl value,
-    $Res Function(_$FixedCostCategoryGroupImpl) then,
-  ) = __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>;
+abstract class _$$ExpenseBigCategoryGroupImplCopyWith<$Res>
+    implements $ExpenseBigCategoryGroupCopyWith<$Res> {
+  factory _$$ExpenseBigCategoryGroupImplCopyWith(
+    _$ExpenseBigCategoryGroupImpl value,
+    $Res Function(_$ExpenseBigCategoryGroupImpl) then,
+  ) = __$$ExpenseBigCategoryGroupImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call({
@@ -285,16 +285,19 @@ abstract class _$$FixedCostCategoryGroupImplCopyWith<$Res>
 }
 
 /// @nodoc
-class __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>
+class __$$ExpenseBigCategoryGroupImplCopyWithImpl<$Res>
     extends
-        _$FixedCostCategoryGroupCopyWithImpl<$Res, _$FixedCostCategoryGroupImpl>
-    implements _$$FixedCostCategoryGroupImplCopyWith<$Res> {
-  __$$FixedCostCategoryGroupImplCopyWithImpl(
-    _$FixedCostCategoryGroupImpl _value,
-    $Res Function(_$FixedCostCategoryGroupImpl) _then,
+        _$ExpenseBigCategoryGroupCopyWithImpl<
+          $Res,
+          _$ExpenseBigCategoryGroupImpl
+        >
+    implements _$$ExpenseBigCategoryGroupImplCopyWith<$Res> {
+  __$$ExpenseBigCategoryGroupImplCopyWithImpl(
+    _$ExpenseBigCategoryGroupImpl _value,
+    $Res Function(_$ExpenseBigCategoryGroupImpl) _then,
   ) : super(_value, _then);
 
-  /// Create a copy of FixedCostCategoryGroup
+  /// Create a copy of ExpenseBigCategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -306,7 +309,7 @@ class __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>
     Object? items = null,
   }) {
     return _then(
-      _$FixedCostCategoryGroupImpl(
+      _$ExpenseBigCategoryGroupImpl(
         categoryId: null == categoryId
             ? _value.categoryId
             : categoryId // ignore: cast_nullable_to_non_nullable
@@ -334,8 +337,8 @@ class __$$FixedCostCategoryGroupImplCopyWithImpl<$Res>
 
 /// @nodoc
 
-class _$FixedCostCategoryGroupImpl implements _FixedCostCategoryGroup {
-  const _$FixedCostCategoryGroupImpl({
+class _$ExpenseBigCategoryGroupImpl implements _ExpenseBigCategoryGroup {
+  const _$ExpenseBigCategoryGroupImpl({
     required this.categoryId,
     required this.categoryName,
     required this.categoryIconPath,
@@ -361,14 +364,14 @@ class _$FixedCostCategoryGroupImpl implements _FixedCostCategoryGroup {
 
   @override
   String toString() {
-    return 'FixedCostCategoryGroup(categoryId: $categoryId, categoryName: $categoryName, categoryIconPath: $categoryIconPath, categoryColorCode: $categoryColorCode, items: $items)';
+    return 'ExpenseBigCategoryGroup(categoryId: $categoryId, categoryName: $categoryName, categoryIconPath: $categoryIconPath, categoryColorCode: $categoryColorCode, items: $items)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$FixedCostCategoryGroupImpl &&
+            other is _$ExpenseBigCategoryGroupImpl &&
             (identical(other.categoryId, categoryId) ||
                 other.categoryId == categoryId) &&
             (identical(other.categoryName, categoryName) ||
@@ -390,27 +393,26 @@ class _$FixedCostCategoryGroupImpl implements _FixedCostCategoryGroup {
     const DeepCollectionEquality().hash(_items),
   );
 
-  /// Create a copy of FixedCostCategoryGroup
+  /// Create a copy of ExpenseBigCategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$FixedCostCategoryGroupImplCopyWith<_$FixedCostCategoryGroupImpl>
+  _$$ExpenseBigCategoryGroupImplCopyWith<_$ExpenseBigCategoryGroupImpl>
   get copyWith =>
-      __$$FixedCostCategoryGroupImplCopyWithImpl<_$FixedCostCategoryGroupImpl>(
-        this,
-        _$identity,
-      );
+      __$$ExpenseBigCategoryGroupImplCopyWithImpl<
+        _$ExpenseBigCategoryGroupImpl
+      >(this, _$identity);
 }
 
-abstract class _FixedCostCategoryGroup implements FixedCostCategoryGroup {
-  const factory _FixedCostCategoryGroup({
+abstract class _ExpenseBigCategoryGroup implements ExpenseBigCategoryGroup {
+  const factory _ExpenseBigCategoryGroup({
     required final int categoryId,
     required final String categoryName,
     required final String categoryIconPath,
     required final String categoryColorCode,
     required final List<FixedCostEntity> items,
-  }) = _$FixedCostCategoryGroupImpl;
+  }) = _$ExpenseBigCategoryGroupImpl;
 
   @override
   int get categoryId;
@@ -423,10 +425,10 @@ abstract class _FixedCostCategoryGroup implements FixedCostCategoryGroup {
   @override
   List<FixedCostEntity> get items;
 
-  /// Create a copy of FixedCostCategoryGroup
+  /// Create a copy of ExpenseBigCategoryGroup
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$FixedCostCategoryGroupImplCopyWith<_$FixedCostCategoryGroupImpl>
+  _$$ExpenseBigCategoryGroupImplCopyWith<_$ExpenseBigCategoryGroupImpl>
   get copyWith => throw _privateConstructorUsedError;
 }

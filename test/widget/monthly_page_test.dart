@@ -122,7 +122,6 @@ void main() {
       name: '家賃',
       variable: 0,
       price: 80000,
-      fixedCostCategoryId: 1,
       expenseSmallCategoryId: 31,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -134,7 +133,6 @@ void main() {
       name: '電気代',
       variable: 1,
       estimatedPrice: 6000,
-      fixedCostCategoryId: 2,
       expenseSmallCategoryId: 41,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -144,7 +142,7 @@ void main() {
   ];
 
   // 集計期間6/25〜7/24内の固定費行（確定80,000＋未確定の予想額6,000）
-  const fixedCostExpenseRows = [
+  const fixedCostRecordRows = [
     ExpenseEntity(
       id: 100,
       date: '20250701',
@@ -212,7 +210,7 @@ void main() {
     Map<int, List<SmallCategoryTileEntity>> tiles = smallCategoryTiles,
   }) {
     final expenseRepository = FakeExpenseRepository(
-      initialRecords: withFixedCost ? fixedCostExpenseRows : const [],
+      initialRecords: withFixedCost ? fixedCostRecordRows : const [],
     )
       ..totalExpenseByPeriodWithBigCategoryResult = totalExpense
       // 予測グラフの折れ線は日別合計を積み上げる（支出0のシナリオでは積まない）

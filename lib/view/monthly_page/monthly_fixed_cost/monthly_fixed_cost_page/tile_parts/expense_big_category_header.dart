@@ -4,8 +4,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 
-class FixedCostCategoryHeader extends StatelessWidget {
-  const FixedCostCategoryHeader({
+class ExpenseBigCategoryHeader extends StatelessWidget {
+  const ExpenseBigCategoryHeader({
     super.key,
     required this.categoryName,
     required this.colorCode,

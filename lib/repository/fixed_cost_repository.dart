@@ -25,7 +25,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         SqfFixedCost.variable: fixedCostEntity.variable,
         SqfFixedCost.price: fixedCostEntity.price,
         SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
-        SqfFixedCost.fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId,
         SqfFixedCost.expenseSmallCategoryId:
             fixedCostEntity.expenseSmallCategoryId,
         SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
@@ -46,7 +45,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price,
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
-        a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -80,7 +78,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price,
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
-        a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -115,7 +112,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price, 
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
-        a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -139,7 +135,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         name: '',
         variable: 0,
         price: 0,
-        fixedCostCategoryId: 0,
         expenseSmallCategoryId: 0,
         intervalNumber: 0,
         intervalUnit: 0,
@@ -164,7 +159,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price, 
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
-        a.${SqfFixedCost.fixedCostCategoryId} AS fixedCostCategoryId,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -212,7 +206,6 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       SqfFixedCost.variable: fixedCostEntity.variable,
       SqfFixedCost.price: fixedCostEntity.price,
       SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
-      SqfFixedCost.fixedCostCategoryId: fixedCostEntity.fixedCostCategoryId,
       SqfFixedCost.expenseSmallCategoryId:
           fixedCostEntity.expenseSmallCategoryId,
       SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
@@ -248,20 +241,10 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       // 未払い実績（未確定 or 支払日が未到来）を削除する
       // 支払日が到来済みの記録は、実際に払った事実として履歴に残す
       // 残った確定行の fixed_cost_id は保持する（通常支出化しない。仕様 §6.4）
-      await _expenseRepository.deleteUnpaidFixedCostExpenses(
+      await _expenseRepository.deleteUnpaidFixedCostRecords(
         fixedCostId: id,
         today: today,
         executor: txn,
-      );
-
-      // 旧テーブルの未払い実績も併せて削除する
-      // T2〜T5の中間状態では旧テーブルにも実績が残っているため、
-      // ここを外すと解約後も旧集計に幽霊レコードが出続ける（T6で削除する）
-      await txn.delete(
-        SqfFixedCostExpense.tableName,
-        where:
-            '${SqfFixedCostExpense.fixedCostId} = ? AND (${SqfFixedCostExpense.isConfirmed} = 0 OR ${SqfFixedCostExpense.date} > ?)',
-        whereArgs: [id, today],
       );
     });
   }

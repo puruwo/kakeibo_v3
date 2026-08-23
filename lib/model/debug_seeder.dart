@@ -34,14 +34,13 @@ class DebugSeeder {
 
     // 固定費マスタ
     // expense_small_category_id は onCreate の固定費由来カテゴリー（v10で追加）を指す。
-    // 17=サブスク（旧固定費カテゴリー2） / 18=通信費（旧固定費カテゴリー3）
+    // 17=サブスク / 18=通信費
     await db.execute('''
           INSERT INTO ${SqfFixedCost.tableName} (
           ${SqfFixedCost.name},
           ${SqfFixedCost.variable},
           ${SqfFixedCost.price},
           ${SqfFixedCost.estimatedPrice},
-          ${SqfFixedCost.fixedCostCategoryId},
           ${SqfFixedCost.expenseSmallCategoryId},
           ${SqfFixedCost.intervalNumber},
           ${SqfFixedCost.intervalUnit},
@@ -50,15 +49,15 @@ class DebugSeeder {
           ${SqfFixedCost.nextPaymentDate},
           ${SqfFixedCost.deleteFlag})
           VALUES
-          ('appleMusic', 0, 1200, NULL, 2, 17, 1, 1, '20241225', NULL, '20241225', 0),
-          ('アマプラ', 0, 600, NULL, 2, 17, 1, 1, '20241225', NULL, '20241225', 0),
-          ('chatGPT', 1, NULL, 2500, 2, 17, 1, 1, '20241225', NULL, '20241225', 0),
-          ('ネット回線', 0, 4400, NULL, 3, 18, 1, 1, '20241225', NULL, '20241225', 0),
-          ('アニメタイムズ', 0, 437, NULL, 2, 17, 1, 1, '20250310', NULL, '20250310', 0),
-          ('UNext', 0, 2189, NULL, 2, 17, 1, 1, '20250625', NULL, '20250625', 0),
-          ('githubCopilot', 1, NULL, 1200, 2, 17, 1, 1, '20250625', NULL, '20250625', 0),
-          ('携帯電話', 0, 2974, NULL, 3, 18, 1, 1, '20241225', NULL, '20241225', 0),
-          ('claude', 1, NULL, 2000, 2, 17, 1, 1, '20251025', NULL, '20251025', 0);
+          ('appleMusic', 0, 1200, NULL, 17, 1, 1, '20241225', NULL, '20241225', 0),
+          ('アマプラ', 0, 600, NULL, 17, 1, 1, '20241225', NULL, '20241225', 0),
+          ('chatGPT', 1, NULL, 2500, 17, 1, 1, '20241225', NULL, '20241225', 0),
+          ('ネット回線', 0, 4400, NULL, 18, 1, 1, '20241225', NULL, '20241225', 0),
+          ('アニメタイムズ', 0, 437, NULL, 17, 1, 1, '20250310', NULL, '20250310', 0),
+          ('UNext', 0, 2189, NULL, 17, 1, 1, '20250625', NULL, '20250625', 0),
+          ('githubCopilot', 1, NULL, 1200, 17, 1, 1, '20250625', NULL, '20250625', 0),
+          ('携帯電話', 0, 2974, NULL, 18, 1, 1, '20241225', NULL, '20241225', 0),
+          ('claude', 1, NULL, 2000, 17, 1, 1, '20251025', NULL, '20251025', 0);
           ''');
 
     // バッチ実行履歴

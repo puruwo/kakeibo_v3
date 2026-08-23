@@ -33,13 +33,13 @@ class FixedCostService {
     return result;
   }
 
-  /// 固定費の実績行を作成し、expenseに挿入する（v10で fixed_cost_expense から移管）
+  /// 固定費の実績行を作成し、expenseに挿入する（v10で fixed_cost_record から移管）
   ///
   /// 確定型（variable=0）: price=マスタの金額 / is_confirmed=1 / estimated_price=NULL
   /// 変動型（variable=1）: price=NULL / estimated_price=マスタの推定額 / is_confirmed=0
   /// 実額と予想額は別列に分離して保持する（仕様 §3）。
   /// 挿入の失敗を呼び出し元が検知できるよう、完了を待てるFutureを返す
-  Future<void> insertToFixedCostExpense(
+  Future<void> insertToFixedCostRecord(
     Ref ref,
     FixedCostEntity fixedCostEntity,
     String paymentDate,
@@ -64,6 +64,6 @@ class FixedCostService {
     // 挿入
     await ref
         .read(expenseRepositoryProvider)
-        .insertFixedCostExpense(expenseEntity);
+        .insertFixedCostRecord(expenseEntity);
   }
 }
