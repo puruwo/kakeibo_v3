@@ -15,6 +15,8 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
+import 'package:kakeibo/view/register_page/expense_tab/expense_basic_group.dart';
+import 'package:kakeibo/view/register_page/expense_tab/fixed_cost_register_group.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 import '../helper/fake_repositories.dart';
@@ -622,6 +624,52 @@ void main() {
       // メモは名称へ、日付（システム日時2025/7/6）は初回支払日へ引き継がれる
       expect(find.text('電気代'), findsOneWidget);
       expect(find.text('7/6'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('トグルの展開・収縮はアニメーションする', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      // 高さの変化はAnimatedSizeで補間する（レイアウトジャンプ防止。仕様 §6.8）
+      expect(
+        find.descendant(
+          of: find.byType(FixedCostRegisterGroup),
+          matching: find.byType(AnimatedSize),
+        ),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(
+          of: find.byType(ExpenseBasicGroup),
+          matching: find.byType(AnimatedSize),
+        ),
+        findsOneWidget,
+      );
+
+      final collapsedHeight =
+          tester.getSize(find.byType(FixedCostRegisterGroup)).height;
+
+      await tester.tap(find.byType(Switch));
+      // 1フレーム目はまだ展開前の高さのまま（一気に伸びない）
+      await tester.pump();
+      expect(
+        tester.getSize(find.byType(FixedCostRegisterGroup)).height,
+        collapsedHeight,
+      );
+
+      await tester.pumpAndSettle();
+      expect(
+        tester.getSize(find.byType(FixedCostRegisterGroup)).height,
+        greaterThan(collapsedHeight),
+      );
 
       await unmountRegisterPage(tester);
     });

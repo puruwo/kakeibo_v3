@@ -27,67 +27,73 @@ class FixedCostRegisterGroup extends ConsumerWidget {
     final paymentFrequency =
         ref.watch(paymentFrequencyControllerNotifierProvider);
 
-    return AppInsetGroup(
-      note: isFixedCost ? null : note,
-      children: [
-        // 固定費として登録
-        AppInsetRow.switchRow(
-          icon: Icons.autorenew_rounded,
-          label: '固定費として登録',
-          switchValue: isFixedCost,
-          onSwitchChanged: (value) => _onToggleChanged(ref, value),
-        ),
-
-        if (isFixedCost) ...[
-          // 名称（メモの値を引き継ぐ）
-          AppInsetRow.textField(
-            icon: Icons.drive_file_rename_outline_rounded,
-            label: '名称',
-            controller: ref.watch(enteredFixedCostNameControllerProvider),
-            hintText: '未入力',
-            maxLength: 20,
-          ),
-
-          // 初回支払日（日付の値を引き継ぐ）
-          AppInsetRow.navigation(
-            icon: Icons.calendar_today_outlined,
-            label: '初回支払日',
-            value: '${enteredDate.month}/${enteredDate.day}',
-            onTap: () => _showDatePicker(context, ref, enteredDate),
-          ),
-
-          // 支払い頻度
-          AppInsetRow.navigation(
-            icon: Icons.repeat_rounded,
-            label: '頻度',
-            value: paymentFrequency.dateLabel,
-            onTap: () async {
-              await showDialog(
-                context: context,
-                builder: (context) {
-                  return PaymentFrequencyPicker(
-                    originalPaymentFrequency: paymentFrequency,
-                  );
-                },
-              );
-            },
-          ),
-
-          // 支払い額が毎回変わる（変動型）
+    // トグルの展開・収縮でグループの高さが変わるためアニメーションにする（仕様 §6.8）
+    return AnimatedSize(
+      duration: kAppInsetGroupResizeDuration,
+      curve: Curves.easeOutCubic,
+      alignment: Alignment.topCenter,
+      child: AppInsetGroup(
+        note: isFixedCost ? null : note,
+        children: [
+          // 固定費として登録
           AppInsetRow.switchRow(
-            icon: Icons.trending_up_rounded,
-            label: '支払い額が毎回変わる',
-            switchValue: isVariable,
-            onSwitchChanged: (value) {
-              ref
-                  .read(
-                    fixedCostVariableSwitchControllerNotifierProvider.notifier,
-                  )
-                  .setData(value);
-            },
+            icon: Icons.autorenew_rounded,
+            label: '固定費として登録',
+            switchValue: isFixedCost,
+            onSwitchChanged: (value) => _onToggleChanged(ref, value),
           ),
+
+          if (isFixedCost) ...[
+            // 名称（メモの値を引き継ぐ）
+            AppInsetRow.textField(
+              icon: Icons.drive_file_rename_outline_rounded,
+              label: '名称',
+              controller: ref.watch(enteredFixedCostNameControllerProvider),
+              hintText: '未入力',
+              maxLength: 20,
+            ),
+
+            // 初回支払日（日付の値を引き継ぐ）
+            AppInsetRow.navigation(
+              icon: Icons.calendar_today_outlined,
+              label: '初回支払日',
+              value: '${enteredDate.month}/${enteredDate.day}',
+              onTap: () => _showDatePicker(context, ref, enteredDate),
+            ),
+
+            // 支払い頻度
+            AppInsetRow.navigation(
+              icon: Icons.repeat_rounded,
+              label: '頻度',
+              value: paymentFrequency.dateLabel,
+              onTap: () async {
+                await showDialog(
+                  context: context,
+                  builder: (context) {
+                    return PaymentFrequencyPicker(
+                      originalPaymentFrequency: paymentFrequency,
+                    );
+                  },
+                );
+              },
+            ),
+
+            // 支払い額が毎回変わる（変動型）
+            AppInsetRow.switchRow(
+              icon: Icons.trending_up_rounded,
+              label: '支払い額が毎回変わる',
+              switchValue: isVariable,
+              onSwitchChanged: (value) {
+                ref
+                    .read(
+                      fixedCostVariableSwitchControllerNotifierProvider.notifier,
+                    )
+                    .setData(value);
+              },
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 

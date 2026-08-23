@@ -135,7 +135,91 @@ void main() {
     // 変動型は実額を持たないため入力させない（仕様 §6.7）
     expect(find.text('金額'), findsNothing);
     expect(find.text('予想額'), findsOneWidget);
-    expect(find.text('¥ 0（自動）'), findsOneWidget);
+    // 確定行（80,000円）の平均を予想額に出す。0円にしない（仕様 §6.8）
+    expect(find.text('¥ 80,000（自動）'), findsOneWidget);
+  });
+
+  testWidgets('確定行が無いときの変動スイッチONはマスタの金額を予想額に出す', (tester) async {
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: buildFakes(rows: const []),
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.byType(Switch));
+    await pumpTimes(tester);
+
+    expect(find.text('¥ 80,000（自動）'), findsOneWidget);
+  });
+
+  testWidgets('変動スイッチONで保存すると予想額がマスタに反映される', (tester) async {
+    final fakes = buildFakes();
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: fakes,
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.byType(Switch));
+    await pumpTimes(tester);
+    await tester.tap(find.text('保存'));
+    await pumpTimes(tester);
+
+    final updated = fakes.fixedCost.updatedEntities.last;
+    expect(updated.variable, 1);
+    expect(updated.estimatedPrice, 80000);
+
+    await waitForSnackBarDismissed(tester);
+  });
+
+  testWidgets('「すべての支払いを見る」で支払い履歴ページ（準備中）へ遷移する', (tester) async {
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('すべての支払いを見る'));
+    await pumpTimes(tester, times: 5);
+
+    // 本実装は本案件クローズ後。いまは仮ページ（仕様 §6.8）
+    // 遷移元の「支払い履歴」グループ見出しもツリーに残るためAppBarで特定する
+    expect(find.widgetWithText(AppBar, '支払い履歴'), findsOneWidget);
+    expect(find.text('この画面は準備中です'), findsOneWidget);
+  });
+
+  testWidgets('カテゴリー選択シートは大カテゴリー→小カテゴリーの2段で選ぶ', (tester) async {
+    final fakes = buildFakes();
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: fakes,
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('住居 › 家賃'));
+    await pumpTimes(tester, times: 5);
+
+    // 1段目は大カテゴリーの一覧（小カテゴリー名は出さない）
+    expect(find.text('カテゴリーを選ぶ'), findsOneWidget);
+    expect(find.text('住居'), findsOneWidget);
+    expect(find.text('光熱費'), findsOneWidget);
+    expect(find.text('電気'), findsNothing);
+
+    // 2段目へ。上部にどの大カテゴリーかを出す
+    await tester.tap(find.text('光熱費'));
+    await pumpTimes(tester, times: 5);
+    expect(find.text('光熱費'), findsOneWidget);
+    expect(find.text('電気'), findsOneWidget);
+    expect(find.text('住居'), findsNothing);
+
+    // 小カテゴリーを選ぶとシートが閉じ、カテゴリー行に反映される
+    await tester.tap(find.text('電気'));
+    await pumpTimes(tester, times: 5);
+    expect(find.text('光熱費 › 電気'), findsOneWidget);
   });
 
   testWidgets('支払い履歴が0件のときは案内文が出る', (tester) async {

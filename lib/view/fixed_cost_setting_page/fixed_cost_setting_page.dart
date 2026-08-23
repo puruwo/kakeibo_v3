@@ -19,7 +19,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_payment_history_page.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view/register_page/common_input_field/payment_frequency_picker.dart';
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
@@ -53,6 +53,9 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
   /// 編集中の次回支払日（yyyyMMdd）
   late String _nextPaymentDate;
 
+  /// 表示・保存に使う予想額（変動型のときのみ意味を持つ）
+  late int _estimatedPrice;
+
   @override
   void initState() {
     super.initState();
@@ -64,6 +67,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
     _smallCategoryId = entity.expenseSmallCategoryId;
     _isVariable = entity.variable == 1;
     _nextPaymentDate = entity.nextPaymentDate ?? entity.firstPaymentDate;
+    _estimatedPrice = entity.estimatedPrice;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 頻度ピッカーは共通のコントローラー経由で値を受け取る
@@ -222,8 +226,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
           AppInsetRow.display(
             icon: Icons.payments_outlined,
             label: '予想額',
-            value:
-                '${yenmarkFormattedPriceGetter(widget.fixedCostEntity.estimatedPrice)}（自動）',
+            value: '${yenmarkFormattedPriceGetter(_estimatedPrice)}（自動）',
           )
         else
           AppInsetRow.textField(
@@ -261,10 +264,35 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
           icon: Icons.trending_up_rounded,
           label: '支払い額が毎回変わる',
           switchValue: _isVariable,
-          onSwitchChanged: (value) => setState(() => _isVariable = value),
+          onSwitchChanged: (value) async => await _onVariableChanged(value),
         ),
       ],
     );
+  }
+
+  /// 変動スイッチの切り替え
+  ///
+  /// 確定型→変動型にした直後は、当該マスタの確定行の平均を予想額に出す
+  /// （0円表示にしない。仕様 §6.5・§6.8）。確定行が無ければマスタの値を使う。
+  Future<void> _onVariableChanged(bool value) async {
+    setState(() => _isVariable = value);
+
+    if (!value) return;
+
+    final fixedCostId = widget.fixedCostEntity.id;
+    if (fixedCostId == null) return;
+
+    final average = await ref
+        .read(confirmedFixedCostPriceAverageProvider(fixedCostId).future);
+
+    if (!mounted) return;
+    setState(() {
+      // 確定行が0件のときは、マスタの推定額→金額の順にフォールバックする
+      _estimatedPrice = average ??
+          (widget.fixedCostEntity.estimatedPrice != 0
+              ? widget.fixedCostEntity.estimatedPrice
+              : widget.fixedCostEntity.price);
+    });
   }
 
   /// 「支払い履歴」グループ（直近5件＋すべての支払いを見る）
@@ -279,10 +307,13 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
                 ...history.map(_buildHistoryRow),
               AppInkWell(
                 borderRadius: BorderRadius.zero,
+                // 当該固定費の支払い履歴ページへ遷移する（仕様 §6.8）
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(
-                      builder: (context) => const MonthlyFixedCostPage(),
+                      builder: (context) => FixedCostPaymentHistoryPage(
+                        fixedCostId: fixedCostId,
+                      ),
                     ),
                   );
                 },
@@ -366,6 +397,10 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
         final editEntity = widget.fixedCostEntity.copyWith(
           name: _nameController.text,
           price: _isVariable ? 0 : enteredPrice,
+          // 変動型のときは画面に出している予想額をそのまま保存する（仕様 §6.8）
+          estimatedPrice: _isVariable
+              ? _estimatedPrice
+              : widget.fixedCostEntity.estimatedPrice,
           variable: _isVariable ? 1 : 0,
           expenseSmallCategoryId: _smallCategoryId,
           intervalNumber: frequency.intervalNumber,
