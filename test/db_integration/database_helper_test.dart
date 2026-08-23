@@ -37,11 +37,11 @@ void main() {
       );
     });
 
-    test('新規作成直後のスキーマバージョンは11になる', () async {
+    test('新規作成直後のスキーマバージョンは12になる', () async {
       final db = await openTestDatabase();
       // DatabaseHelper._databaseVersion と一致していること
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 11);
+      expect(rows.first.values.first, 12);
     });
 
     test('income_big_categoryは会計種別を持ち、月次収入=1・ボーナス=2で作成される', () async {

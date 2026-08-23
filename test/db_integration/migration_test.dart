@@ -1707,6 +1707,121 @@ void main() {
       expect(columns.contains(_legacyFixedCostCategoryIdColumn), isFalse);
       expect((await db.query(SqfFixedCost.tableName)).single[SqfFixedCost.name], '家賃');
     });
+
+  group('toV12: 変動固定費の0円確定行の修復', () {
+    /// v11 適用済みの状態を作り、変動型マスタ(id=1)と実績行を入れる
+    Future<Database> createV11Database() async {
+      final db = await createV9ShapeDatabase();
+      await db.execute('''
+        INSERT INTO fixed_cost
+          (_id, name, variable, price, estimated_price, fixed_cost_category_id, interval_number, interval_unit, first_payment_date, recent_payment_date, next_payment_date, delete_flag)
+        VALUES (1, '電気代', 1, 0, 55, 1, 1, 1, '20250125', NULL, '20250225', 0);
+      ''');
+      await DataBaseMigrate().toV10(db);
+      await DataBaseMigrate().toV11(db);
+      return db;
+    }
+
+    Future<void> insertRow(
+      Database db, {
+      required int id,
+      required String date,
+      required int? price,
+      required int isConfirmed,
+      int? estimatedPrice,
+      int fixedCostId = 1,
+    }) async {
+      await db.insert(SqfExpense.tableName, {
+        SqfExpense.id: id,
+        SqfExpense.expenseSmallCategoryId: 1,
+        SqfExpense.date: date,
+        SqfExpense.price: price,
+        SqfExpense.memo: '電気代',
+        SqfExpense.incomeSourceBigCategory: 1,
+        SqfExpense.fixedCostId: fixedCostId,
+        SqfExpense.isConfirmed: isConfirmed,
+        SqfExpense.estimatedPrice: estimatedPrice,
+      });
+    }
+
+    test('変動型の「確定扱い・0円」行は未確定に戻り、予想額は確定行(price>0)の平均で引き直される', () async {
+      final db = await createV11Database();
+      // 0円の確定扱い行（旧データ由来）×3、本当の確定行 2,200 ×1
+      await insertRow(db, id: 101, date: '20250210', price: 0, isConfirmed: 1);
+      await insertRow(db, id: 102, date: '20250310', price: 0, isConfirmed: 1);
+      await insertRow(db, id: 103, date: '20250410', price: 0, isConfirmed: 1);
+      await insertRow(db, id: 104, date: '20250510', price: 2200, isConfirmed: 1);
+      // もともと未確定の行（破損した 55 が同期されている）
+      await insertRow(db, id: 105, date: '20250610', price: null, isConfirmed: 0, estimatedPrice: 55);
+
+      await DataBaseMigrate().toV12(db);
+
+      final rows = await db.query(SqfExpense.tableName, orderBy: SqfExpense.id);
+      final byId = {for (final r in rows) r[SqfExpense.id] as int: r};
+      for (final id in [101, 102, 103]) {
+        expect(byId[id]![SqfExpense.isConfirmed], 0, reason: '$id は未確定に戻る');
+        expect(byId[id]![SqfExpense.price], isNull);
+        expect(byId[id]![SqfExpense.estimatedPrice], 2200, reason: '$id の予想額は引き直し後の値');
+      }
+      // 本当の確定行は触らない
+      expect(byId[104]![SqfExpense.isConfirmed], 1);
+      expect(byId[104]![SqfExpense.price], 2200);
+      // 未確定行の予想額も同期される
+      expect(byId[105]![SqfExpense.estimatedPrice], 2200);
+      // マスタの予想額は 55 → 2200
+      final master = (await db.query(SqfFixedCost.tableName)).single;
+      expect(master[SqfFixedCost.estimatedPrice], 2200);
+    });
+
+    test('確定行(price>0)が無いマスタは予想額の現在値を保持する', () async {
+      final db = await createV11Database();
+      await insertRow(db, id: 101, date: '20250210', price: 0, isConfirmed: 1);
+
+      await DataBaseMigrate().toV12(db);
+
+      final master = (await db.query(SqfFixedCost.tableName)).single;
+      expect(master[SqfFixedCost.estimatedPrice], 55);
+      final row = (await db.query(SqfExpense.tableName)).single;
+      expect(row[SqfExpense.isConfirmed], 0);
+      expect(row[SqfExpense.estimatedPrice], 55);
+    });
+
+    test('手動設定のマスタは予想額を引き直さない', () async {
+      final db = await createV11Database();
+      await db.update(SqfFixedCost.tableName, {SqfFixedCost.estimatedPriceIsManual: 1});
+      await insertRow(db, id: 104, date: '20250510', price: 2200, isConfirmed: 1);
+
+      await DataBaseMigrate().toV12(db);
+
+      final master = (await db.query(SqfFixedCost.tableName)).single;
+      expect(master[SqfFixedCost.estimatedPrice], 55);
+    });
+
+    test('確定型マスタの0円確定行は対象外', () async {
+      final db = await createV11Database();
+      await db.update(SqfFixedCost.tableName, {SqfFixedCost.variable: 0});
+      await insertRow(db, id: 101, date: '20250210', price: 0, isConfirmed: 1);
+
+      await DataBaseMigrate().toV12(db);
+
+      final row = (await db.query(SqfExpense.tableName)).single;
+      expect(row[SqfExpense.isConfirmed], 1);
+    });
+
+    test('2回実行しても結果が変わらない（冪等）', () async {
+      final db = await createV11Database();
+      await insertRow(db, id: 101, date: '20250210', price: 0, isConfirmed: 1);
+      await insertRow(db, id: 104, date: '20250510', price: 2200, isConfirmed: 1);
+
+      await DataBaseMigrate().toV12(db);
+      final first = await db.query(SqfExpense.tableName, orderBy: SqfExpense.id);
+      final firstMaster = await db.query(SqfFixedCost.tableName);
+      await DataBaseMigrate().toV12(db);
+
+      expect(await db.query(SqfExpense.tableName, orderBy: SqfExpense.id), first);
+      expect(await db.query(SqfFixedCost.tableName), firstMaster);
+    });
+  });
   });
 
   // -------------------------------------------------------------------------
@@ -1851,7 +1966,7 @@ void main() {
       await db.close();
     }
 
-    test('v6形状のDBを開くとonUpgradeでv7〜v11が順に適用されuser_versionが11になる', () async {
+    test('v6形状のDBを開くとonUpgradeでv7〜v12が順に適用されuser_versionが12になる', () async {
       final path = await currentDatabasePath();
       await createV6DatabaseFile(path);
 
@@ -1859,7 +1974,7 @@ void main() {
       final db = await openTestDatabase();
 
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 11);
+      expect(rows.first.values.first, 12);
       // v11 の列追加まで到達していること
       final columns = await _columnNames(db, SqfFixedCost.tableName);
       expect(columns.contains(SqfFixedCost.estimatedPriceIsManual), isTrue);
