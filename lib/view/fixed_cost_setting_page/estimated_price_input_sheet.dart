@@ -141,9 +141,14 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
               _buildPriceField(context),
               const SizedBox(height: 14),
               Text(
-                '自動で算出 ＝ 過去の確定額の平均'
-                '（現在 ${yenmarkFormattedPriceGetter(_autoPrice)}）。'
-                '自分で設定した額は、支払いを確定しても上書きされません',
+                // 確定した支払いが無い間は平均が無いので、現在の予想額を使う旨を示す
+                widget.autoAveragePrice == null
+                    ? '自動で算出 ＝ 過去の確定額の平均（確定した支払いがまだないため、'
+                        '現在の予想額 ${yenmarkFormattedPriceGetter(_autoPrice)} を使います）。'
+                        '自分で設定した額は、支払いを確定しても上書きされません'
+                    : '自動で算出 ＝ 過去の確定額の平均'
+                        '（現在 ${yenmarkFormattedPriceGetter(_autoPrice)}）。'
+                        '自分で設定した額は、支払いを確定しても上書きされません',
                 style: AppTextStyles.insetGroupNote,
               ),
               const SizedBox(height: 14),
