@@ -16,6 +16,11 @@ const double kAppInsetRowIndent = 16;
 /// 行の先頭アイコンのサイズ
 const double kAppInsetRowIconSize = 18;
 
+/// 行の増減でグループの高さが変わるときのアニメーション時間
+///
+/// 固定費トグルの展開・収縮で使う（レイアウトジャンプを防ぐ。仕様 §6.8）。
+const Duration kAppInsetGroupResizeDuration = Duration(milliseconds: 200);
+
 /// 設定アプリ風のインセットグループ
 ///
 /// 背景: `fillQuaternary` ／ 枠線: 1px `surfaceBorder` ／ 角丸: 14px。

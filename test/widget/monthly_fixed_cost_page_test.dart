@@ -11,6 +11,7 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
+import 'package:kakeibo/view/register_page/category_area/category_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 import '../helper/fake_repositories.dart';
@@ -200,10 +201,16 @@ void main() {
     // v10で未確定の確定操作は編集シートに一本化した（旧・金額入力ダイアログは廃止。仕様 §6.6）
     expect(find.byType(RegisaterPageBase), findsOneWidget);
     expect(find.text('編集'), findsOneWidget);
-    // 固定費グループは表示のみ。マスタ属性は「固定費」行から設定画面で変える
-    expect(find.text('固定費'), findsWidgets);
+    // 上部グループは変更不可の項目のみ（名称が最上段。仕様 §6.8）
+    expect(find.text('名称'), findsOneWidget);
+    expect(find.text('カテゴリー'), findsOneWidget);
+    expect(find.text('光熱費 › 電気'), findsOneWidget);
+    expect(find.text('頻度'), findsOneWidget);
     expect(find.text('支払日'), findsOneWidget);
-    expect(find.text('予想額（過去平均）'), findsOneWidget);
+    // 変動型なので予想額の行が出る
+    expect(find.text('予想額'), findsOneWidget);
+    // マスタ属性の変更は設定画面へ誘導する
+    expect(find.text('固定費の設定を開く ›'), findsOneWidget);
     // 未確定行のボタン文言
     expect(find.text('金額を確定'), findsOneWidget);
 
@@ -269,12 +276,14 @@ void main() {
     // 確定済み行のボタン文言は「更新」（仕様 §6.6）
     expect(find.text('更新'), findsOneWidget);
     expect(find.text('金額を確定'), findsNothing);
-    // 編集できるのは金額・拠出元・メモのみ。日付行は出さない
+    // 下部グループで編集できるのは拠出元のみ。日付・メモ行は出さない（仕様 §6.8）
     expect(find.text('拠出元'), findsOneWidget);
-    expect(find.text('メモ'), findsOneWidget);
+    expect(find.text('メモ'), findsNothing);
     expect(find.text('日付'), findsNothing);
-    // カテゴリーグリッドは選択状態の表示のみ（タップ不可）
-    expect(find.byType(IgnorePointer), findsWidgets);
+    // 確定型のマスタなので予想額の行は出さない
+    expect(find.text('予想額'), findsNothing);
+    // カテゴリーグリッドは表示しない
+    expect(find.byType(CategoryArea), findsNothing);
 
     await unmountRegisterPage(tester);
   });

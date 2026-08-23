@@ -11,12 +11,13 @@ import 'package:kakeibo/view_model/state/register_page/input_date_controller/inp
 /// 登録・編集シートの「基本」グループ（拠出元／日付／メモ）
 ///
 /// 固定費トグルON時は拠出元のみに縮む（日付は初回支払日、メモは名称へ引き継ぐ。仕様 §6.1）。
-/// 固定費行の編集では日付を出さない（マスタの支払日が正のため。仕様 §6.6）。
+/// 固定費行の編集では日付・メモを出さない（マスタの支払日が正のため。仕様 §6.6・§6.8）。
 class ExpenseBasicGroup extends ConsumerWidget {
   const ExpenseBasicGroup({
     super.key,
     this.showDate = true,
     this.showMemo = true,
+    this.showIncomeSourceChevron = false,
   });
 
   /// 日付行を表示するか
@@ -24,6 +25,11 @@ class ExpenseBasicGroup extends ConsumerWidget {
 
   /// メモ行を表示するか
   final bool showMemo;
+
+  /// 拠出元行に右矢印を付けるか
+  ///
+  /// 固定費行の編集シートでは編集可能な項目だと分かるように付ける（仕様 §6.8）。
+  final bool showIncomeSourceChevron;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,51 +41,65 @@ class ExpenseBasicGroup extends ConsumerWidget {
     );
     final enteredDate = ref.watch(inputDateControllerNotifierProvider);
 
-    return AppInsetGroup(
-      children: [
-        // 拠出元（会計種別）
-        AppPopupMenu<IncomeSourceBigCategory>(
-          onSelected: (selected) {
-            ref
-                .read(enteredIncomeSourceControllerNotifierProvider.notifier)
-                .setData(selected.value);
-          },
-          itemBuilder: (context) => IncomeSourceBigCategory.values
-              .map(
-                (category) => buildCheckableMenuItem(
-                  value: category,
-                  label: category.label,
-                  isSelected: selectedEnum == category,
-                  selectedColor: context.colors.primary,
-                ),
-              )
-              .toList(),
-          child: AppInsetRow.display(
-            icon: Icons.account_balance_wallet_outlined,
-            label: '拠出元',
-            value: selectedEnum.label,
+    // 固定費トグルで日付・メモ行が増減するため、高さの変化をアニメーションにする
+    return AnimatedSize(
+      duration: kAppInsetGroupResizeDuration,
+      curve: Curves.easeOutCubic,
+      alignment: Alignment.topCenter,
+      child: AppInsetGroup(
+        children: [
+          // 拠出元（会計種別）
+          AppPopupMenu<IncomeSourceBigCategory>(
+            onSelected: (selected) {
+              ref
+                  .read(enteredIncomeSourceControllerNotifierProvider.notifier)
+                  .setData(selected.value);
+            },
+            itemBuilder: (context) => IncomeSourceBigCategory.values
+                .map(
+                  (category) => buildCheckableMenuItem(
+                    value: category,
+                    label: category.label,
+                    isSelected: selectedEnum == category,
+                    selectedColor: context.colors.primary,
+                  ),
+                )
+                .toList(),
+            // タップはAppPopupMenu側で受けるため、行自体にonTapは持たせない
+            child: showIncomeSourceChevron
+                ? AppInsetRow.navigation(
+                    icon: Icons.account_balance_wallet_outlined,
+                    label: '拠出元',
+                    value: selectedEnum.label,
+                    onTap: null,
+                  )
+                : AppInsetRow.display(
+                    icon: Icons.account_balance_wallet_outlined,
+                    label: '拠出元',
+                    value: selectedEnum.label,
+                  ),
           ),
-        ),
 
-        // 日付
-        if (showDate)
-          AppInsetRow.navigation(
-            icon: Icons.calendar_today_outlined,
-            label: '日付',
-            value: '${enteredDate.month}/${enteredDate.day}',
-            onTap: () => _showDatePicker(context, ref, enteredDate),
-          ),
+          // 日付
+          if (showDate)
+            AppInsetRow.navigation(
+              icon: Icons.calendar_today_outlined,
+              label: '日付',
+              value: '${enteredDate.month}/${enteredDate.day}',
+              onTap: () => _showDatePicker(context, ref, enteredDate),
+            ),
 
-        // メモ
-        if (showMemo)
-          AppInsetRow.textField(
-            icon: Icons.notes_rounded,
-            label: 'メモ',
-            controller: ref.watch(enteredMemoControllerProvider),
-            hintText: '未入力',
-            maxLength: 20,
-          ),
-      ],
+          // メモ
+          if (showMemo)
+            AppInsetRow.textField(
+              icon: Icons.notes_rounded,
+              label: 'メモ',
+              controller: ref.watch(enteredMemoControllerProvider),
+              hintText: '未入力',
+              maxLength: 20,
+            ),
+        ],
+      ),
     );
   }
 
