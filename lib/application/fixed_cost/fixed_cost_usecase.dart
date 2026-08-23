@@ -230,11 +230,28 @@ class FixedCostUsecase {
       price: editEntity.price,
       variable: editEntity.variable,
       estimatedPrice: editEntity.estimatedPrice,
+      estimatedPriceIsManual: editEntity.estimatedPriceIsManual,
       expenseSmallCategoryId: editEntity.expenseSmallCategoryId,
+      // 固定費の設定画面で変更できる周期・次回支払日も反映する
+      // （以前は name/price/variable/estimatedPrice/カテゴリーしか引き継がれず保存されなかった）
+      intervalNumber: editEntity.intervalNumber,
+      intervalUnit: editEntity.intervalUnit,
+      nextPaymentDate: editEntity.nextPaymentDate,
     );
-    // マスタの金額・推定額を手動編集した場合に備え、
-    // 未確定行の予想額の同期まで同一トランザクションで実行する（仕様 §6.5）
-    await _fixedCostRepositoryProvider.updateWithUnconfirmedRowsSync(newEntity);
+
+    // 手動設定→自動算出へ戻したときは、確定行の平均で再計算し直す（仕様 §6.9）
+    // フラグ更新・再計算・行同期を同一トランザクションで実行する
+    final backToAuto = originalEntity.estimatedPriceIsManual == 1 &&
+        newEntity.estimatedPriceIsManual == 0;
+    if (backToAuto) {
+      await _fixedCostRepositoryProvider
+          .updateWithAutoEstimatedPriceSync(newEntity);
+    } else {
+      // マスタの金額・推定額を手動編集した場合に備え、
+      // 未確定行の予想額の同期まで同一トランザクションで実行する（仕様 §6.5）
+      await _fixedCostRepositoryProvider
+          .updateWithUnconfirmedRowsSync(newEntity);
+    }
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();

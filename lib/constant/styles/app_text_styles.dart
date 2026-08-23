@@ -478,4 +478,49 @@ class AppTextStyles {
     color: AppColorsDark.primary,
     fontWeight: FontWeight.w500,
   );
+
+  // ==========================================================================
+  // ボトムシート（予想額の入力シートなど）
+  // ==========================================================================
+
+  /// ボトムシートの見出し（「予想額」など）
+  static final TextStyle sheetTitle = MyFontStyle.notoSans.copyWith(
+    fontSize: 16,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// ボトムシートの金額入力（大きい数値）
+  static final TextStyle sheetPriceInput = MyFontStyle.sfUi.copyWith(
+    fontSize: 40,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w700,
+    height: 1.0,
+  );
+
+  /// ボトムシートの金額入力に添える円記号
+  static final TextStyle sheetPriceYenSymbol = MyFontStyle.sfUi.copyWith(
+    fontSize: 28,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w700,
+    height: 1.0,
+  );
+
+  // ==========================================================================
+  // セグメンテッドコントロール（AppSegmentedControl）
+  // ==========================================================================
+
+  /// 未選択セグメントのラベル
+  static final TextStyle segmentedLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 14,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w400,
+  );
+
+  /// 選択中セグメントのラベル
+  static final TextStyle segmentedSelectedLabel = MyFontStyle.notoSans.copyWith(
+    fontSize: 14,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w600,
+  );
 }

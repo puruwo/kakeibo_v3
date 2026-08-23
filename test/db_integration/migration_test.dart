@@ -1650,6 +1650,38 @@ void main() {
       );
     });
 
+    test('fixed_costにestimated_price_is_manualが追加され、既定値は0になる', () async {
+      final db = await createV9ShapeDatabase();
+      await insertFixedCostMaster(db, id: 1, name: '家賃', fixedCostCategoryId: 1);
+
+      await DataBaseMigrate().toV10(db);
+
+      final columns = await _columnNames(db, SqfFixedCost.tableName);
+      expect(columns.contains(SqfFixedCost.estimatedPriceIsManual), isTrue);
+      // 既存マスタは全て自動算出（0）として扱う（仕様 §6.9）
+      final master = (await db.query(SqfFixedCost.tableName)).single;
+      expect(master[SqfFixedCost.estimatedPriceIsManual], 0);
+    });
+
+    test('estimated_price_is_manualの追加は2回実行しても壊れない（冪等）', () async {
+      final db = await createV9ShapeDatabase();
+      await insertFixedCostMaster(db, id: 1, name: '家賃', fixedCostCategoryId: 1);
+
+      await DataBaseMigrate().toV10(db);
+      // 手動設定を入れてから再実行し、値が保たれることまで見る
+      await db.update(
+        SqfFixedCost.tableName,
+        {SqfFixedCost.estimatedPriceIsManual: 1},
+        where: '${SqfFixedCost.id} = ?',
+        whereArgs: [1],
+      );
+
+      await DataBaseMigrate().toV10(db);
+
+      final master = (await db.query(SqfFixedCost.tableName)).single;
+      expect(master[SqfFixedCost.estimatedPriceIsManual], 1);
+    });
+
     test('中断残骸（fixed_cost_v10_new）が残っていても成功する', () async {
       final db = await createV9ShapeDatabase();
       await insertFixedCostMaster(db, id: 1, name: '家賃', fixedCostCategoryId: 1);

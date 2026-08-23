@@ -18,6 +18,7 @@ import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/estimated_price_input_sheet.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_payment_history_page.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
@@ -56,6 +57,9 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
   /// 表示・保存に使う予想額（変動型のときのみ意味を持つ）
   late int _estimatedPrice;
 
+  /// 予想額を手動で設定しているか（仕様 §6.9）
+  late bool _estimatedPriceIsManual;
+
   @override
   void initState() {
     super.initState();
@@ -68,6 +72,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
     _isVariable = entity.variable == 1;
     _nextPaymentDate = entity.nextPaymentDate ?? entity.firstPaymentDate;
     _estimatedPrice = entity.estimatedPrice;
+    _estimatedPriceIsManual = entity.estimatedPriceIsManual == 1;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       // 頻度ピッカーは共通のコントローラー経由で値を受け取る
@@ -221,12 +226,14 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
     return AppInsetGroup(
       header: '設定',
       children: [
-        // 変動型は実額を持たないため、推定額の表示に切り替える（仕様 §6.7）
+        // 変動型は実額を持たないため、予想額の行に切り替える（仕様 §6.7）
+        // タップで自動算出／手動設定を選ぶ入力シートを開く（仕様 §6.9）
         if (_isVariable)
-          AppInsetRow.display(
+          AppInsetRow.navigation(
             icon: Icons.payments_outlined,
             label: '予想額',
-            value: '${yenmarkFormattedPriceGetter(_estimatedPrice)}（自動）',
+            value: yenmarkFormattedPriceGetter(_estimatedPrice),
+            onTap: _openEstimatedPriceSheet,
           )
         else
           AppInsetRow.textField(
@@ -270,20 +277,47 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
     );
   }
 
+  /// 予想額の入力シートを開く（仕様 §6.9）
+  ///
+  /// 決めた値は画面の状態に反映するだけで、永続化は画面の「保存」で行う。
+  Future<void> _openEstimatedPriceSheet() async {
+    final average = await _fetchConfirmedPriceAverage();
+    if (!mounted) return;
+
+    final result = await showEstimatedPriceInputSheet(
+      context,
+      isManual: _estimatedPriceIsManual,
+      estimatedPrice: _estimatedPrice,
+      autoAveragePrice: average,
+    );
+    if (result == null) return;
+
+    setState(() {
+      _estimatedPriceIsManual = result.isManual;
+      _estimatedPrice = result.estimatedPrice;
+    });
+  }
+
+  /// 当該マスタの確定行の平均を取得する（確定行が0件なら null）
+  Future<int?> _fetchConfirmedPriceAverage() async {
+    final fixedCostId = widget.fixedCostEntity.id;
+    if (fixedCostId == null) return null;
+
+    return await ref
+        .read(confirmedFixedCostPriceAverageProvider(fixedCostId).future);
+  }
+
   /// 変動スイッチの切り替え
   ///
   /// 確定型→変動型にした直後は、当該マスタの確定行の平均を予想額に出す
   /// （0円表示にしない。仕様 §6.5・§6.8）。確定行が無ければマスタの値を使う。
+  /// 手動設定中は自動算出の値で上書きしない（仕様 §6.9）。
   Future<void> _onVariableChanged(bool value) async {
     setState(() => _isVariable = value);
 
-    if (!value) return;
+    if (!value || _estimatedPriceIsManual) return;
 
-    final fixedCostId = widget.fixedCostEntity.id;
-    if (fixedCostId == null) return;
-
-    final average = await ref
-        .read(confirmedFixedCostPriceAverageProvider(fixedCostId).future);
+    final average = await _fetchConfirmedPriceAverage();
 
     if (!mounted) return;
     setState(() {
@@ -401,6 +435,9 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
           estimatedPrice: _isVariable
               ? _estimatedPrice
               : widget.fixedCostEntity.estimatedPrice,
+          // 手動設定フラグも保存する。変動型でなければ自動（0）に戻す（仕様 §6.9）
+          estimatedPriceIsManual:
+              _isVariable && _estimatedPriceIsManual ? 1 : 0,
           variable: _isVariable ? 1 : 0,
           expenseSmallCategoryId: _smallCategoryId,
           intervalNumber: frequency.intervalNumber,

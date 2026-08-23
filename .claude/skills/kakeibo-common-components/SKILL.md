@@ -29,6 +29,7 @@ Containerに `BoxDecoration` を直接書く前に、必ずこのドキュメン
 | `showAppYearMonthPicker` | AppBar下ドロップダウン年月度・年度ピッカー | Overlay式。月度モード（年＋月ドラム）と年度モード（年ドラム）の2種 | `lib/view/component/app_year_month_picker.dart` |
 | `AppEmptyState` | 次アクションがある空状態の共通カード（ADR-022） | CardContainer + アイコン32px + 見出し + 説明1行 + Primaryボタン | `lib/view/component/app_empty_state.dart` |
 | `AppInsetGroup` / `AppInsetRow` | 設定アプリ風のインセットグループリスト | 背景: `fillQuaternary` / 1px `surfaceBorder` / 角丸14px / 行高46 / 行間0.5px `separator` | `lib/view/component/app_inset_group.dart` |
+| `AppSegmentedControl` | iOS風セグメンテッドコントロール（2件以上の排他選択） | 背景: `fillQuaternary` / 1px `surfaceBorder` / 角丸10px / 選択中は `surfaceElevated2` の角丸8px・高さ34 | `lib/view/component/app_segmented_control.dart` |
 
 ---
 
@@ -342,6 +343,25 @@ AppInsetGroup(
 |---|---|
 | 取引・固定費などの**レコードの一覧**（アイコン＋タイトル＋金額） | `AppListCard` |
 | **属性の編集面**（ラベルと値が1対1で並ぶ設定リスト） | `AppInsetGroup` + `AppInsetRow` |
+
+---
+
+### 10. AppSegmentedControl
+
+排他選択の切り替え。予想額の入力シートの「自動で算出｜自分で設定」（仕様 §6.9）で使う。
+
+```dart
+import 'package:kakeibo/view/component/app_segmented_control.dart';
+
+AppSegmentedControl(
+  labels: const ['自動で算出', '自分で設定'],
+  selectedIndex: isManual ? 1 : 0,
+  onChanged: (index) => setState(() => isManual = index == 1),
+)
+```
+
+ラベルのTextStyleは `AppTextStyles.segmentedLabel` / `segmentedSelectedLabel`。
+ON/OFFの2値なら `AppInsetRow.switchRow`、選択肢に名前を出したいときはこちらを使う。
 
 ---
 

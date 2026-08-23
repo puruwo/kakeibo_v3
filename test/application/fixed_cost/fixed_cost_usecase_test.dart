@@ -342,6 +342,35 @@ void main() {
       );
     });
 
+    test('予想額が手動設定なら確定行があっても再計算しない（仕様 §6.9）', () async {
+      final container = createUsecaseContainer(
+        initialRecords: const [
+          FixedCostEntity(
+            id: 5,
+            name: '電気代',
+            variable: 1,
+            price: 0,
+            estimatedPrice: 5000,
+            estimatedPriceIsManual: 1,
+            expenseSmallCategoryId: 12,
+            intervalNumber: 1,
+            intervalUnit: 1,
+            firstPaymentDate: '20250101',
+          ),
+        ],
+        initialExpenses: [
+          confirmedRow(id: 100, price: 6000),
+          confirmedRow(id: 101, price: 8000, date: '20250701'),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.updateEstimatedPrice(fixedCostId: 5);
+
+      // 手動値（5000）のまま。確定行の平均（7000）で上書きされない
+      expect(fakeFixedCostRepository.records.single.estimatedPrice, 5000);
+    });
+
     test('再計算後は未確定行の予想額も同期される', () async {
       final container = createUsecaseContainer(
         initialRecords: const [variableMaster],
@@ -518,6 +547,27 @@ void main() {
       expect(fakeExpenseRepository.changedCategoryArgs, isEmpty);
     });
 
+    test('周期と次回支払日の変更もマスタに反映される（固定費の設定画面の保存）', () async {
+      final container = createUsecaseContainer(
+        initialRecords: const [originalEntity],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: originalEntity,
+        editEntity: originalEntity.copyWith(
+          intervalNumber: 2,
+          intervalUnit: 1,
+          nextPaymentDate: '20261001',
+        ),
+      );
+
+      final updated = fakeFixedCostRepository.updatedEntities.single;
+      expect(updated.intervalNumber, 2);
+      expect(updated.intervalUnit, 1);
+      expect(updated.nextPaymentDate, '20261001');
+    });
+
     test('カテゴリー変更ありの編集は過去実績のカテゴリーも一括変更する', () async {
       final container = createUsecaseContainer(
         initialRecords: const [originalEntity],
@@ -604,6 +654,127 @@ void main() {
         fakeExpenseRepository.records.single.estimatedPrice,
         9000,
       );
+    });
+
+    // 変動型の予想額を手動設定にしたマスタ（仕様 §6.9）
+    const variableEntity = FixedCostEntity(
+      id: 7,
+      name: '電気代',
+      variable: 1,
+      price: 0,
+      estimatedPrice: 9000,
+      estimatedPriceIsManual: 1,
+      expenseSmallCategoryId: 11,
+      intervalNumber: 1,
+      intervalUnit: 1,
+      firstPaymentDate: '20250101',
+    );
+
+    test('手動設定のまま編集しても確定行の平均で再計算されない', () async {
+      final container = createUsecaseContainer(
+        initialRecords: const [variableEntity],
+        initialExpenses: const [
+          // 確定行6000（自動なら予想額が6000に上書きされる組み合わせ）
+          ExpenseEntity(
+            id: 100,
+            date: '20250601',
+            price: 6000,
+            paymentCategoryId: 11,
+            fixedCostId: 7,
+            isConfirmed: 1,
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: variableEntity,
+        editEntity: variableEntity.copyWith(name: '電気代（新居）'),
+      );
+
+      final updated = fakeFixedCostRepository.updatedEntities.single;
+      expect(updated.estimatedPriceIsManual, 1);
+      expect(updated.estimatedPrice, 9000);
+    });
+
+    test('自動に戻すとフラグが0になり確定行の平均で再計算・同期される', () async {
+      final container = createUsecaseContainer(
+        initialRecords: const [variableEntity],
+        initialExpenses: const [
+          // 確定行 6000・8000（平均7000）
+          ExpenseEntity(
+            id: 100,
+            date: '20250601',
+            price: 6000,
+            paymentCategoryId: 11,
+            fixedCostId: 7,
+            isConfirmed: 1,
+          ),
+          ExpenseEntity(
+            id: 101,
+            date: '20250701',
+            price: 8000,
+            paymentCategoryId: 11,
+            fixedCostId: 7,
+            isConfirmed: 1,
+          ),
+          // 同期対象の未確定行
+          ExpenseEntity(
+            id: 102,
+            date: '20250801',
+            price: null,
+            paymentCategoryId: 11,
+            fixedCostId: 7,
+            isConfirmed: 0,
+            estimatedPrice: 9000,
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: variableEntity,
+        editEntity: variableEntity.copyWith(estimatedPriceIsManual: 0),
+      );
+
+      final master = fakeFixedCostRepository.records.single;
+      expect(master.estimatedPriceIsManual, 0);
+      expect(master.estimatedPrice, 7000);
+      expect(
+        fakeExpenseRepository.records
+            .firstWhere((e) => e.id == 102)
+            .estimatedPrice,
+        7000,
+      );
+    });
+
+    test('自動に戻したとき確定行が0件なら現在値を保持する', () async {
+      final container = createUsecaseContainer(
+        initialRecords: const [variableEntity],
+        initialExpenses: const [
+          ExpenseEntity(
+            id: 102,
+            date: '20250801',
+            price: null,
+            paymentCategoryId: 11,
+            fixedCostId: 7,
+            isConfirmed: 0,
+            estimatedPrice: 3000,
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: variableEntity,
+        editEntity: variableEntity.copyWith(estimatedPriceIsManual: 0),
+      );
+
+      final master = fakeFixedCostRepository.records.single;
+      expect(master.estimatedPriceIsManual, 0);
+      expect(master.estimatedPrice, 9000);
+      // 未確定行も現在値へ同期される
+      expect(fakeExpenseRepository.records.single.estimatedPrice, 9000);
     });
   });
 

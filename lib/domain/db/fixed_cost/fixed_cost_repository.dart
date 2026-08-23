@@ -44,10 +44,18 @@ abstract interface class FixedCostRepository {
   /// 1トランザクションで実行する。同期だけ失敗して行側が古い値で
   /// 固定される状態を作らないため。
   /// 確定行が0件のときは何も更新しない（最後の値を保持する）。
+  /// 予想額が手動設定（`estimated_price_is_manual = 1`）のマスタは対象外（仕様 §6.9）。
   Future<void> recalculateEstimatedPriceWithSync({required int fixedCostId});
 
   /// マスタの更新と、未確定行の予想額の同期を1トランザクションで行う（仕様 §6.5）
   ///
   /// マスタの金額・推定額をユーザーが手動編集したときに使う。
   Future<void> updateWithUnconfirmedRowsSync(FixedCostEntity entity);
+
+  /// 予想額を自動算出に戻すマスタ更新（仕様 §6.9）
+  ///
+  /// 「フラグ0への更新 → 確定行の平均での再計算 → 未確定行への同期」を
+  /// 1トランザクションで実行する。
+  /// 確定行が0件のときは [entity] の予想額（＝現在値）を保持する。
+  Future<void> updateWithAutoEstimatedPriceSync(FixedCostEntity entity);
 }

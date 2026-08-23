@@ -8,6 +8,8 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
+import 'package:kakeibo/view/component/app_inset_group.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_setting_page.dart';
 
 import '../helper/fake_repositories.dart';
@@ -136,7 +138,18 @@ void main() {
     expect(find.text('金額'), findsNothing);
     expect(find.text('予想額'), findsOneWidget);
     // 確定行（80,000円）の平均を予想額に出す。0円にしない（仕様 §6.8）
-    expect(find.text('¥ 80,000（自動）'), findsOneWidget);
+    // 表示は金額＋シェブロンのみ（「（自動）」は廃止。仕様 §6.9）
+    // 支払い履歴にも同額が出るため、予想額の行に絞って確認する
+    expect(
+      find.descendant(
+        of: find.ancestor(
+          of: find.text('予想額'),
+          matching: find.byType(AppInsetRow),
+        ),
+        matching: find.text('¥ 80,000'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('確定行が無いときの変動スイッチONはマスタの金額を予想額に出す', (tester) async {
@@ -150,7 +163,7 @@ void main() {
     await tester.tap(find.byType(Switch));
     await pumpTimes(tester);
 
-    expect(find.text('¥ 80,000（自動）'), findsOneWidget);
+    expect(find.text('¥ 80,000'), findsOneWidget);
   });
 
   testWidgets('変動スイッチONで保存すると予想額がマスタに反映される', (tester) async {
@@ -174,6 +187,83 @@ void main() {
     await waitForSnackBarDismissed(tester);
   });
 
+  testWidgets('予想額の行タップで入力シートが開き、自動選択では平均が入力不可で出る', (tester) async {
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.byType(Switch));
+    await pumpTimes(tester);
+    await tester.tap(find.text('予想額'));
+    await pumpTimes(tester, times: 5);
+
+    // シートの構成（セグメント／注記／決定）
+    expect(find.text('自動で算出'), findsOneWidget);
+    expect(find.text('自分で設定'), findsOneWidget);
+    expect(find.text('決定'), findsOneWidget);
+    expect(
+      find.textContaining('自分で設定した額は、支払いを確定しても上書きされません'),
+      findsOneWidget,
+    );
+    // 自動選択中は入力欄を出さず、過去の確定額の平均を表示する
+    expect(find.byKey(const Key('estimatedPriceSheetAutoValue')), findsOneWidget);
+    expect(find.byKey(const Key('estimatedPriceSheetField')), findsNothing);
+    expect(find.text('80,000'), findsOneWidget);
+  });
+
+  testWidgets('「自分で設定」で入力した額が決定で画面に反映され、保存でマスタに書かれる', (tester) async {
+    final fakes = buildFakes();
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: fakes,
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.byType(Switch));
+    await pumpTimes(tester);
+    await tester.tap(find.text('予想額'));
+    await pumpTimes(tester, times: 5);
+
+    // セグメントを手動に切り替えると入力できるようになる
+    await tester.tap(find.text('自分で設定'));
+    await pumpTimes(tester, times: 5);
+    expect(find.byKey(const Key('estimatedPriceSheetField')), findsOneWidget);
+
+    await tester.enterText(
+      find.byKey(const Key('estimatedPriceSheetField')),
+      '12000',
+    );
+    await pumpTimes(tester);
+    await tester.tap(find.text('決定'));
+    await pumpTimes(tester, times: 5);
+
+    // 決定は画面の状態に反映するだけ。永続化は「保存」で行う（仕様 §6.9）
+    expect(fakes.fixedCost.updatedEntities, isEmpty);
+    expect(
+      find.descendant(
+        of: find.ancestor(
+          of: find.text('予想額'),
+          matching: find.byType(AppInsetRow),
+        ),
+        matching: find.text('¥ 12,000'),
+      ),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('保存'));
+    await pumpTimes(tester);
+
+    final updated = fakes.fixedCost.updatedEntities.last;
+    expect(updated.estimatedPrice, 12000);
+    expect(updated.estimatedPriceIsManual, 1);
+
+    await waitForSnackBarDismissed(tester);
+  });
+
   testWidgets('「すべての支払いを見る」で支払い履歴ページ（準備中）へ遷移する', (tester) async {
     await pumpApp(
       tester,
@@ -191,7 +281,7 @@ void main() {
     expect(find.text('この画面は準備中です'), findsOneWidget);
   });
 
-  testWidgets('カテゴリー選択シートは大カテゴリー→小カテゴリーの2段で選ぶ', (tester) async {
+  testWidgets('カテゴリー選択は大→小をpushで遷移し、ヘッダーの戻るで大へ戻る', (tester) async {
     final fakes = buildFakes();
     await pumpApp(
       tester,
@@ -209,14 +299,26 @@ void main() {
     expect(find.text('光熱費'), findsOneWidget);
     expect(find.text('電気'), findsNothing);
 
-    // 2段目へ。上部にどの大カテゴリーかを出す
+    // 2段目は同一Navigatorへのpush（仕様 §6.9）
+    // Overlayは遷移元のルートもWidgetツリーに残すため、大カテゴリー名は
+    // 「1段目の行」＋「2段目の見出し」で2件になる
     await tester.tap(find.text('光熱費'));
     await pumpTimes(tester, times: 5);
-    expect(find.text('光熱費'), findsOneWidget);
     expect(find.text('電気'), findsOneWidget);
-    expect(find.text('住居'), findsNothing);
+    expect(find.text('光熱費'), findsNWidgets(2));
+    // 戻る導線はヘッダーの戻るボタンのみ（大カテゴリー名の横の戻るは廃止）
+    expect(find.byKey(kSmallCategoryBackButtonKey), findsOneWidget);
 
-    // 小カテゴリーを選ぶとシートが閉じ、カテゴリー行に反映される
+    // ヘッダーの戻るで大カテゴリー一覧へ戻る
+    await tester.tap(find.byKey(kSmallCategoryBackButtonKey));
+    await pumpTimes(tester);
+    expect(find.byKey(kSmallCategoryBackButtonKey), findsNothing);
+    expect(find.text('電気'), findsNothing);
+    expect(find.text('光熱費'), findsOneWidget);
+
+    // 小カテゴリーを選ぶと両ページが閉じ、カテゴリー行に反映される
+    await tester.tap(find.text('光熱費'));
+    await pumpTimes(tester, times: 5);
     await tester.tap(find.text('電気'));
     await pumpTimes(tester, times: 5);
     expect(find.text('光熱費 › 電気'), findsOneWidget);

@@ -6,6 +6,7 @@ import 'package:kakeibo/model/database_helper.dart';
 import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/logger.dart';
 import 'package:kakeibo/repository/expense_repository.dart';
+import 'package:sqflite/sqflite.dart';
 
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
@@ -25,6 +26,8 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         SqfFixedCost.variable: fixedCostEntity.variable,
         SqfFixedCost.price: fixedCostEntity.price,
         SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
+        SqfFixedCost.estimatedPriceIsManual:
+            fixedCostEntity.estimatedPriceIsManual,
         SqfFixedCost.expenseSmallCategoryId:
             fixedCostEntity.expenseSmallCategoryId,
         SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
@@ -45,6 +48,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price,
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
+        a.${SqfFixedCost.estimatedPriceIsManual} AS estimatedPriceIsManual,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -78,6 +82,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price,
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
+        a.${SqfFixedCost.estimatedPriceIsManual} AS estimatedPriceIsManual,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -112,6 +117,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price, 
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
+        a.${SqfFixedCost.estimatedPriceIsManual} AS estimatedPriceIsManual,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -159,6 +165,7 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         a.${SqfFixedCost.variable} AS variable,
         a.${SqfFixedCost.price} AS price, 
         a.${SqfFixedCost.estimatedPrice} AS estimatedPrice,
+        a.${SqfFixedCost.estimatedPriceIsManual} AS estimatedPriceIsManual,
         a.${SqfFixedCost.expenseSmallCategoryId} AS expenseSmallCategoryId,
         a.${SqfFixedCost.intervalNumber} AS intervalNumber,
         a.${SqfFixedCost.intervalUnit} AS intervalUnit,
@@ -206,6 +213,8 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
       SqfFixedCost.variable: fixedCostEntity.variable,
       SqfFixedCost.price: fixedCostEntity.price,
       SqfFixedCost.estimatedPrice: fixedCostEntity.estimatedPrice,
+      SqfFixedCost.estimatedPriceIsManual:
+          fixedCostEntity.estimatedPriceIsManual,
       SqfFixedCost.expenseSmallCategoryId:
           fixedCostEntity.expenseSmallCategoryId,
       SqfFixedCost.intervalNumber: fixedCostEntity.intervalNumber,
@@ -256,6 +265,17 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
     required int fixedCostId,
   }) async {
     await db.runInTransaction((txn) async {
+      // 予想額が手動設定のマスタは再計算の対象外（仕様 §6.9）
+      // ユーザーが決めた額を支払いの確定で上書きしない
+      final isManual = Sqflite.firstIntValue(
+        await txn.rawQuery(
+          'SELECT ${SqfFixedCost.estimatedPriceIsManual} '
+          'FROM ${SqfFixedCost.tableName} WHERE ${SqfFixedCost.id} = ?',
+          [fixedCostId],
+        ),
+      );
+      if (isManual == 1) return;
+
       // いま当該マスタに紐づく確定行のpriceの平均（現在状態主義）
       final average = await _expenseRepository
           .fetchConfirmedFixedCostPriceAverage(
@@ -274,6 +294,52 @@ class ImplementsFixedCostRepository implements FixedCostRepository {
         where: '${SqfFixedCost.id} = ?',
         whereArgs: [fixedCostId],
       );
+
+      await _expenseRepository.updateEstimatedPriceOfUnconfirmedRows(
+        fixedCostId: fixedCostId,
+        estimatedPrice: estimatedPrice,
+        executor: txn,
+      );
+    });
+  }
+
+  // 予想額を自動算出に戻すときのマスタ更新（仕様 §6.9）
+  //
+  // 「フラグ0への更新」「確定行の平均での再計算」「未確定行への同期」を
+  // 1トランザクションで実行する。確定行が0件のときは平均を求められないため、
+  // 渡されたエンティティの予想額（＝現在値）をそのまま保持する。
+  @override
+  Future<void> updateWithAutoEstimatedPriceSync(
+      FixedCostEntity fixedCostEntity) async {
+    final fixedCostId = fixedCostEntity.id ?? -1;
+
+    await db.runInTransaction((txn) async {
+      await txn.update(
+        SqfFixedCost.tableName,
+        _toRow(fixedCostEntity),
+        where: '${SqfFixedCost.id} = ?',
+        whereArgs: [fixedCostId],
+      );
+
+      // いま当該マスタに紐づく確定行のpriceの平均（現在状態主義）
+      final average = await _expenseRepository
+          .fetchConfirmedFixedCostPriceAverage(
+        fixedCostId: fixedCostId,
+        executor: txn,
+      );
+
+      // 確定行が0件のときは現在値を保持する
+      final estimatedPrice =
+          average?.toInt() ?? fixedCostEntity.estimatedPrice;
+
+      if (average != null) {
+        await txn.update(
+          SqfFixedCost.tableName,
+          {SqfFixedCost.estimatedPrice: estimatedPrice},
+          where: '${SqfFixedCost.id} = ?',
+          whereArgs: [fixedCostId],
+        );
+      }
 
       await _expenseRepository.updateEstimatedPriceOfUnconfirmedRows(
         fixedCostId: fixedCostId,

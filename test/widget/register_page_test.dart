@@ -14,6 +14,7 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
+import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
 import 'package:kakeibo/view/register_page/expense_tab/expense_basic_group.dart';
 import 'package:kakeibo/view/register_page/expense_tab/fixed_cost_register_group.dart';
@@ -413,6 +414,26 @@ void main() {
       // 収入モードでは拠出元行が消え、収入カテゴリーが並ぶ
       expect(find.text('拠出元'), findsNothing);
       expect(find.text('給与'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('日付・メモは支出と同じインセットグループで表示される', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addIncome(),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      // 支出タブと同じ行構成（日付＝ナビ行／メモ＝テキストフィールド行。仕様 §6.9）
+      expect(find.byType(AppInsetGroup), findsOneWidget);
+      expect(find.text('日付'), findsOneWidget);
+      expect(find.text('メモ'), findsOneWidget);
+      // 収入に拠出元は無い
+      expect(find.text('拠出元'), findsNothing);
+      // 日付の初期値はシステム日時（基準シナリオ2025/7/6）
+      expect(find.text('7/6'), findsOneWidget);
 
       await unmountRegisterPage(tester);
     });

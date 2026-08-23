@@ -286,10 +286,15 @@ class FakeFixedCostRepository implements FixedCostRepository {
   ///
   /// 確定行の平均は [expenseRepository] から取得する。
   /// 確定行が0件（＝平均がnull）のときは何も更新しない（仕様 §6.5）。
+  /// 予想額が手動設定（estimatedPriceIsManual=1）のマスタは対象外（仕様 §6.9）。
   @override
   Future<void> recalculateEstimatedPriceWithSync({
     required int fixedCostId,
   }) async {
+    // 本実装は先にマスタのフラグを読み、手動なら何もせず抜ける
+    final target = records.where((e) => e.id == fixedCostId).toList();
+    if (target.isNotEmpty && target.first.estimatedPriceIsManual == 1) return;
+
     final average = await expenseRepository?.fetchConfirmedFixedCostPriceAverage(
       fixedCostId: fixedCostId,
     );
@@ -315,6 +320,34 @@ class FakeFixedCostRepository implements FixedCostRepository {
     await expenseRepository?.updateEstimatedPriceOfUnconfirmedRows(
       fixedCostId: entity.id ?? -1,
       estimatedPrice: entity.estimatedPrice,
+    );
+  }
+
+  /// 予想額を自動算出に戻すマスタ更新（本実装は1トランザクション。仕様 §6.9）
+  ///
+  /// マスタ更新 → 確定行の平均で再計算 → 未確定行へ同期、の順。
+  /// 確定行が0件（＝平均がnull）のときは [entity] の予想額をそのまま保持する。
+  @override
+  Future<void> updateWithAutoEstimatedPriceSync(FixedCostEntity entity) async {
+    await update(entity);
+
+    final average = await expenseRepository?.fetchConfirmedFixedCostPriceAverage(
+      fixedCostId: entity.id ?? -1,
+    );
+    final estimatedPrice = average?.toInt() ?? entity.estimatedPrice;
+
+    if (average != null) {
+      final index = records.indexWhere((e) => e.id == entity.id);
+      if (index >= 0) {
+        final updated = records[index].copyWith(estimatedPrice: estimatedPrice);
+        records[index] = updated;
+        updatedEntities.add(updated);
+      }
+    }
+
+    await expenseRepository?.updateEstimatedPriceOfUnconfirmedRows(
+      fixedCostId: entity.id ?? -1,
+      estimatedPrice: estimatedPrice,
     );
   }
 

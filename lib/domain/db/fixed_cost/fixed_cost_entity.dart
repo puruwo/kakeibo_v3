@@ -15,6 +15,8 @@ class FixedCostEntity with _$FixedCostEntity {
     required int variable,
     @Default(0) int price,
     @Default(0) int estimatedPrice,
+    // 予想額を手動で設定したか（0=自動算出／1=手動）。v10で追加。仕様 §6.9
+    @Default(0) int estimatedPriceIsManual,
     // 支出小カテゴリーへの参照（v10で追加）
     @Default(0) int expenseSmallCategoryId,
     required int intervalNumber,
