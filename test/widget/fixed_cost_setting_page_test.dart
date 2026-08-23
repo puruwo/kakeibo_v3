@@ -290,7 +290,7 @@ void main() {
     expect(find.text('7/1'), findsWidgets);
   });
 
-  testWidgets('履歴0件なら「すべての支払いを見る」は無効表示で遷移しない', (tester) async {
+  testWidgets('履歴0件なら「すべての支払いを見る」を表示しない', (tester) async {
     await pumpApp(
       tester,
       home: const FixedCostSettingPage(fixedCostEntity: target),
@@ -299,13 +299,8 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('まだ支払いの記録がありません'), findsOneWidget);
-
-    await tester.tap(find.text('すべての支払いを見る'));
-    await pumpTimes(tester, times: 5);
-
-    // 遷移しない（支払い履歴ページのAppBarが出ない）
-    expect(find.widgetWithText(AppBar, '支払い履歴'), findsNothing);
-    expect(find.widgetWithText(AppBar, '固定費の設定'), findsOneWidget);
+    // 遷移先に意味がないためリンク行ごと出さない
+    expect(find.text('すべての支払いを見る'), findsNothing);
   });
 
   testWidgets('カテゴリー選択は大→小をpushで遷移し、ヘッダーの戻るで大へ戻る', (tester) async {

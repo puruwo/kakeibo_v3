@@ -339,33 +339,30 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
                 AppInsetRow.display(label: 'まだ支払いの記録がありません')
               else
                 ...history.map(_buildHistoryRow),
-              AppInkWell(
-                borderRadius: BorderRadius.zero,
-                // 当該固定費の支払い履歴ページへ遷移する（仕様 §6.8）。
-                // 履歴が無いときは遷移先に意味がないため無効表示にする
-                onTap: history.isEmpty
-                    ? null
-                    : () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => FixedCostPaymentHistoryPage(
-                              fixedCostId: fixedCostId,
-                            ),
-                          ),
-                        );
-                      },
-                child: SizedBox(
-                  height: 40,
-                  child: Center(
-                    child: Text(
-                      'すべての支払いを見る',
-                      style: history.isEmpty
-                          ? AppTextStyles.insetGroupLinkRowDisabled
-                          : AppTextStyles.insetGroupLinkRow,
+              // 当該固定費の支払い履歴ページへ遷移する（仕様 §6.8）。
+              // 履歴が無いときは遷移先に意味がないためリンク行ごと出さない
+              if (history.isNotEmpty)
+                AppInkWell(
+                  borderRadius: BorderRadius.zero,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => FixedCostPaymentHistoryPage(
+                          fixedCostId: fixedCostId,
+                        ),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    height: 40,
+                    child: Center(
+                      child: Text(
+                        'すべての支払いを見る',
+                        style: AppTextStyles.insetGroupLinkRow,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
           orElse: () => const SizedBox.shrink(),
