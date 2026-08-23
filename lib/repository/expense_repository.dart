@@ -490,10 +490,7 @@ $_selectColumns
       WHERE ${SqfExpense.fixedCostId} = $fixedCostId
       AND ${SqfExpense.isConfirmed} = 1
       AND ${SqfExpense.price} IS NOT NULL
-      AND ${SqfExpense.price} > 0
     ''';
-    // 0円の確定行は旧データ（変動型の未入力行が確定扱いで残ったもの）を含むため
-    // 平均の根拠から外す。含めると予想額が実態より大きく下がる
     final target = await _resolveExecutor(executor);
     final result = await target.rawQuery(sql);
     if (result.isEmpty || result.first['avg_price'] == null) {

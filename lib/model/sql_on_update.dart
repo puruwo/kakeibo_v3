@@ -942,73 +942,13 @@ class DataBaseMigrate {
   ///
   /// 予想額を自動算出（0）と手動設定（1）で切り替えるためのフラグ。
   /// v10は未配信のため新バージョンを切らず、toV10の中に追記している。
-  // 変動固定費の「確定扱い・0円」行の修復 (v11 → v12)
+  // v12 (v11 → v12)
   //
-  // 旧データには、変動型固定費の未入力行が is_confirmed=1・price=0 のまま残っているものがある。
-  // これが確定行の平均の分母に入り、予想額が実態より大きく下がった値（例: 55円）で
-  // マスタと未確定行に保存されてしまった。仕様「推定額は確定した支払いの平均」（§6.5）に従い、
-  // 0円の確定扱い行を未確定に戻し、確定行の平均で予想額を引き直す。
+  // 当初「変動固定費の確定扱い・0円行の修復」を入れてビルド160で配信したが、
+  // 実機DBの検査でそのような行は存在せず、55円は確定行の実額（仕様どおりの平均）と判明した。
+  // 配信済みのためバージョン番号は維持し、処理は行わない（2026/08/23）。
   Future<void> toV12(Database db) async {
-    logger.i('=== v12マイグレーション開始: 変動固定費の0円確定行の修復 ===');
-
-    // 1. 変動型マスタに紐づく「確定扱い・0円（またはNULL）」の行を未確定に戻す
-    //    予想額はマスタの現在値を入れておき、後段の再計算で引き直す
-    final repaired = await db.rawUpdate('''
-          UPDATE ${SqfExpense.tableName}
-          SET ${SqfExpense.isConfirmed} = 0,
-              ${SqfExpense.price} = NULL,
-              ${SqfExpense.estimatedPrice} = (
-                SELECT fc.${SqfFixedCost.estimatedPrice}
-                FROM ${SqfFixedCost.tableName} fc
-                WHERE fc.${SqfFixedCost.id} = ${SqfExpense.tableName}.${SqfExpense.fixedCostId}
-              )
-          WHERE ${SqfExpense.fixedCostId} IS NOT NULL
-            AND ${SqfExpense.isConfirmed} = 1
-            AND IFNULL(${SqfExpense.price}, 0) = 0
-            AND EXISTS (
-              SELECT 1 FROM ${SqfFixedCost.tableName} fc
-              WHERE fc.${SqfFixedCost.id} = ${SqfExpense.tableName}.${SqfExpense.fixedCostId}
-                AND fc.${SqfFixedCost.variable} = 1
-            );
-          ''');
-    logger.i('12-1. 未確定に戻した0円の確定扱い行: $repaired件');
-
-    // 2. 自動算出の変動型マスタについて、確定行（price > 0）の平均で予想額を引き直し、
-    //    未確定行にも同期する。確定行が無いマスタは現在値を保持する
-    final masters = await db.rawQuery('''
-          SELECT fc.${SqfFixedCost.id} AS id,
-                 (
-                   SELECT AVG(e.${SqfExpense.price})
-                   FROM ${SqfExpense.tableName} e
-                   WHERE e.${SqfExpense.fixedCostId} = fc.${SqfFixedCost.id}
-                     AND e.${SqfExpense.isConfirmed} = 1
-                     AND e.${SqfExpense.price} > 0
-                 ) AS avg_price
-          FROM ${SqfFixedCost.tableName} fc
-          WHERE fc.${SqfFixedCost.variable} = 1
-            AND fc.${SqfFixedCost.estimatedPriceIsManual} = 0;
-          ''');
-    var recalculated = 0;
-    for (final master in masters) {
-      final average = master['avg_price'];
-      if (average == null) continue;
-      final id = master['id'] as int;
-      final estimatedPrice = (average as num).toInt();
-      await db.rawUpdate(
-        'UPDATE ${SqfFixedCost.tableName} SET ${SqfFixedCost.estimatedPrice} = ? '
-        'WHERE ${SqfFixedCost.id} = ?',
-        [estimatedPrice, id],
-      );
-      await db.rawUpdate(
-        'UPDATE ${SqfExpense.tableName} SET ${SqfExpense.estimatedPrice} = ? '
-        'WHERE ${SqfExpense.fixedCostId} = ? AND ${SqfExpense.isConfirmed} = 0',
-        [estimatedPrice, id],
-      );
-      recalculated++;
-    }
-    logger.i('12-2. 予想額を引き直したマスタ: $recalculated件');
-
-    logger.i('=== v12マイグレーション完了 ===');
+    logger.i('=== v12マイグレーション: 変更なし（予約済みバージョン） ===');
   }
 
   /// v11: fixed_cost に estimated_price_is_manual を追加する。
