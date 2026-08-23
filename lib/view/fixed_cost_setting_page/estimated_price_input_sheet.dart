@@ -191,11 +191,16 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
         Text('¥', style: AppTextStyles.sheetPriceYenSymbol),
         const SizedBox(width: AppSpacing.sm),
         Flexible(
-          child: _isManual
-              ? TextField(
-                  key: const Key('estimatedPriceSheetField'),
+          // 自動／手動で同じ TextField を使い、金額の表示位置を揃える
+          // （自動選択時は読み取り専用。別Widgetにすると右端の位置がずれる）
+          child: TextField(
+                  key: Key(_isManual
+                      ? 'estimatedPriceSheetField'
+                      : 'estimatedPriceSheetAutoValue'),
                   controller: _priceController,
-                  autofocus: true,
+                  readOnly: !_isManual,
+                  showCursor: _isManual,
+                  autofocus: _isManual,
                   textAlign: TextAlign.right,
                   keyboardType: TextInputType.number,
                   inputFormatters: [NumberTextInputFormatter()],
@@ -218,12 +223,6 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
                     border: InputBorder.none,
                   ),
                   onTapOutside: (_) => FocusScope.of(context).unfocus(),
-                )
-              : Text(
-                  NumberTextInputFormatter.formatInitialValue(_autoPrice),
-                  key: const Key('estimatedPriceSheetAutoValue'),
-                  textAlign: TextAlign.right,
-                  style: AppTextStyles.sheetPriceInput,
                 ),
         ),
       ],

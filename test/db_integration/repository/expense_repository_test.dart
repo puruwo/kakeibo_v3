@@ -812,6 +812,23 @@ void main() {
       );
     });
 
+    test('0円の確定行は平均の根拠から除外する', () async {
+      await seedFixedCostRows();
+      // 旧データ由来の「確定扱いだが0円」の行。含めると平均が実態より大きく下がる
+      await insertExpenseRow(
+        id: 30,
+        date: '20250510',
+        price: 0,
+        fixedCostId: 10,
+      );
+
+      // 6000と8000の平均のまま（0円は数えない）
+      expect(
+        await repository.fetchConfirmedFixedCostPriceAverage(fixedCostId: 10),
+        7000,
+      );
+    });
+
     test('確定行が0件ならnullを返す', () async {
       // 未確定行しか無いマスタ20。nullは「更新しない」の判定に使う（仕様 §6.5）
       await seedFixedCostRows();

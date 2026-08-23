@@ -317,6 +317,11 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
 
     if (!value || _estimatedPriceIsManual) return;
 
+    // もともと変動型で予想額を持っているマスタは、トグルを往復させても
+    // 予想額を作り直さない（元の値を保持する）。再計算するのは
+    // 確定型から変動型に変えた場合と、予想額が未設定（0）の場合だけ
+    if (widget.fixedCostEntity.variable == 1 && _estimatedPrice != 0) return;
+
     final average = await _fetchConfirmedPriceAverage();
 
     if (!mounted) return;
