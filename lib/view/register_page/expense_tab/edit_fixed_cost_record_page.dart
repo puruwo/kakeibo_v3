@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_detail_provider.dart';
-import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_record/fixed_cost_record_usecase.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
@@ -33,8 +33,8 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 ///
 /// 編集できるのは金額・拠出元・メモのみ。固定費グループ（名称・頻度／支払日／予想額）は
 /// 表示のみで、変更は「固定費」行から固定費の設定画面で行う（仕様 §6.6）。
-class EditFixedCostExpensePage extends ConsumerStatefulWidget {
-  const EditFixedCostExpensePage({
+class EditFixedCostRecordPage extends ConsumerStatefulWidget {
+  const EditFixedCostRecordPage({
     super.key,
     required this.expenseEntity,
   });
@@ -43,11 +43,11 @@ class EditFixedCostExpensePage extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _EditFixedCostExpensePageState();
+      _EditFixedCostRecordPageState();
 }
 
-class _EditFixedCostExpensePageState
-    extends ConsumerState<EditFixedCostExpensePage> with PresentationMixin {
+class _EditFixedCostRecordPageState
+    extends ConsumerState<EditFixedCostRecordPage> with PresentationMixin {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -239,7 +239,7 @@ class _EditFixedCostExpensePageState
         );
 
         // 未確定行への金額入力は常に確定操作として扱う（仕様 §6.4）
-        await ref.read(fixedCostExpenseUsecaseProvider).edit(entity: entity);
+        await ref.read(fixedCostRecordUsecaseProvider).edit(entity: entity);
       },
       succesAction: () async {
         ref.read(updateDBCountNotifierProvider.notifier).incrementState();

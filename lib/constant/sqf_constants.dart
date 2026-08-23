@@ -48,16 +48,12 @@ class IncomeSmallCategoryConstants {
   static const int bonus = 2;
 }
 
-/// 固定費カテゴリー統合（v10）で使う定数
+/// 固定費由来の支出カテゴリー（v10で移設したカテゴリー）で使う定数
 ///
-/// v10 で `fixed_cost_category` を支出カテゴリー（大＋同名の小）へ移設する。
-/// 移設先の特定・参照欠損の救済に使う名称をここに集約する。
-class FixedCostCategoryConstants {
-  /// 既定の固定費カテゴリー「その他」の名称。
-  /// 参照先の `fixed_cost_category` が欠損している `fixed_cost` は
-  /// このカテゴリー由来の小カテゴリーへ割り当てて救済する（仕様 §5 手順2）。
-  static const String fallbackCategoryName = 'その他';
-
+/// v10 で旧固定費カテゴリーは支出カテゴリー（大＋同名の小）へ移設された。
+/// 移行SQL専用の名称は `sql_on_update.dart` に閉じ、
+/// ここには onCreate と共用するものだけを置く。
+class FixedCostDerivedCategoryConstants {
   /// 新規インストール時に作る固定費由来カテゴリーのうち「その他」の名称。
   ///
   /// 既存の支出大カテゴリー「雑費」と用途が重複し、名前も紛らわしいため

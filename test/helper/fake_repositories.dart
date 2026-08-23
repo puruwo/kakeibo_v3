@@ -28,10 +28,6 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
@@ -233,7 +229,6 @@ class FakeFixedCostRepository implements FixedCostRepository {
         name: '',
         variable: 0,
         price: 0,
-        fixedCostCategoryId: 0,
         intervalNumber: 0,
         intervalUnit: 0,
         firstPaymentDate: '',
@@ -281,7 +276,7 @@ class FakeFixedCostRepository implements FixedCostRepository {
     if (index >= 0) {
       records[index] = records[index].copyWith(deleteFlag: 1);
     }
-    await expenseRepository?.deleteUnpaidFixedCostExpenses(
+    await expenseRepository?.deleteUnpaidFixedCostRecords(
       fixedCostId: id,
       today: today,
     );
@@ -328,204 +323,6 @@ class FakeFixedCostRepository implements FixedCostRepository {
 }
 
 /// 固定費支出（支払い実績）のFake
-class FakeFixedCostExpenseRepository implements FixedCostExpenseRepository {
-  FakeFixedCostExpenseRepository({List<FixedCostExpenseEntity>? initialRecords})
-    : records = List.of(initialRecords ?? []);
-
-  /// 取得系メソッドが参照する現在のレコード状態（insert/update/deleteで変化する）
-  final List<FixedCostExpenseEntity> records;
-
-  /// insert / update で渡された内容の記録（検証用）
-  ///
-  /// [records] と違い「呼び出し時に何を渡されたか」をそのまま保持する
-  /// （insertのid採番前の値が入る）。
-  final List<FixedCostExpenseEntity> insertedEntities = [];
-  final List<FixedCostExpenseEntity> updatedEntities = [];
-
-  /// 次に採番するid（本物のAUTOINCREMENT相当）
-  ///
-  /// 事前データ [records] の最大id+1から始め、deleteされても払い出し済みidは再利用しない。
-  late int _nextId =
-      records.fold<int>(0, (max, e) => e.id > max ? e.id : max) + 1;
-
-  /// fetchFixedCostEstimatedPriceById が返す過去支払いの平均額（テストで設定する）
-  double estimatedPriceResult = 0;
-
-  /// confirmExpense で渡された内容の記録（検証用）
-  final List<({int id, int price})> confirmedExpenses = [];
-
-  /// delete で渡されたidの記録（検証用）
-  final List<int> deletedIds = [];
-
-  /// 期間別の確定固定費合計（キーは期間開始日のyyyyMMdd）
-  ///
-  /// キーが無い期間は、これまで通りメモリ内レコードからの集計になる。
-  final Map<String, int> confirmedTotalByPeriodStart = {};
-
-  /// 未確定固定費の推定額合計（既定は0）
-  ///
-  /// 本物は fixed_cost.estimated_price をJOINして合算するが、
-  /// Fakeは固定費マスタを持たないため合計額そのものを設定する方式にしている。
-  int unconfirmedEstimatedTotalResult = 0;
-
-  /// 期間別の未確定固定費推定額合計（キーは期間開始日のyyyyMMdd）
-  ///
-  /// キーが無い期間は [unconfirmedEstimatedTotalResult] を返す。
-  final Map<String, int> unconfirmedEstimatedTotalByPeriodStart = {};
-
-  /// 合計取得メソッドに渡された期間の記録（検証用）
-  final List<PeriodValue> confirmedTotalPeriods = [];
-  final List<PeriodValue> unconfirmedEstimatedTotalPeriods = [];
-
-  @override
-  Future<void> delete(int id) async {
-    deletedIds.add(id);
-    records.removeWhere((e) => e.id == id);
-  }
-
-  /// 実績を1件挿入する
-  ///
-  /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映して
-  /// 以後の取得系メソッドから見えるようにする。idはAUTOINCREMENT相当で採番し、
-  /// 戻り値は採番されたid（本実装と同じ）。
-  @override
-  Future<int> insert(FixedCostExpenseEntity entity) async {
-    insertedEntities.add(entity);
-    final id = _nextId++;
-    records.add(entity.copyWith(id: id));
-    return id;
-  }
-
-  @override
-  Future<List<FixedCostExpenseEntity>> fetchByPeriod({
-    required PeriodValue period,
-  }) async {
-    final matched = records
-        .where((e) => _isDateInPeriod(e.date, period))
-        .toList();
-    // 本実装のSQLの ORDER BY date DESC に合わせる（同日はid昇順で安定させる）
-    matched.sort((a, b) {
-      final byDate = b.date.compareTo(a.date);
-      return byDate != 0 ? byDate : a.id.compareTo(b.id);
-    });
-    return matched;
-  }
-
-  @override
-  Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriod({
-    required PeriodValue period,
-  }) async {
-    confirmedTotalPeriods.add(period);
-    final byPeriod =
-        confirmedTotalByPeriodStart[periodKeyOf(period.startDatetime)];
-    if (byPeriod != null) return byPeriod;
-    return records
-        .where((e) => _isDateInPeriod(e.date, period) && e.isConfirmed == 1)
-        .fold<int>(0, (sum, e) => sum + e.price);
-  }
-
-  @override
-  Future<int> fetchTotalUnconfirmedFixedCostEstimatedWithPeriod({
-    required PeriodValue period,
-  }) async {
-    unconfirmedEstimatedTotalPeriods.add(period);
-    return unconfirmedEstimatedTotalByPeriodStart[periodKeyOf(
-          period.startDatetime,
-        )] ??
-        unconfirmedEstimatedTotalResult;
-  }
-
-  @override
-  Future<int> fetchTotalConfirmedFixedCostExpenseWithPeriodAndCategory({
-    required PeriodValue period,
-    required int fixedCostCategoryId,
-  }) async {
-    return records
-        .where(
-          (e) =>
-              _isDateInPeriod(e.date, period) &&
-              e.isConfirmed == 1 &&
-              e.fixedCostCategoryId == fixedCostCategoryId,
-        )
-        .fold<int>(0, (sum, e) => sum + e.price);
-  }
-
-  @override
-  Future<List<FixedCostExpenseEntity>>
-  fetchUnconfirmedFixedCostExpenseWithPeriod({
-    required PeriodValue period,
-  }) async {
-    return records
-        .where((e) => _isDateInPeriod(e.date, period) && e.isConfirmed == 0)
-        .toList();
-  }
-
-  @override
-  Future<List<FixedCostExpenseEntity>>
-  fetchUnconfirmedFixedCostExpenseWithPeriodAndCategory({
-    required PeriodValue period,
-    required int fixedCostCategoryId,
-  }) async {
-    return records
-        .where(
-          (e) =>
-              _isDateInPeriod(e.date, period) &&
-              e.isConfirmed == 0 &&
-              e.fixedCostCategoryId == fixedCostCategoryId,
-        )
-        .toList();
-  }
-
-  @override
-  Future<void> confirmExpense({required int id, required int price}) async {
-    confirmedExpenses.add((id: id, price: price));
-    final index = records.indexWhere((e) => e.id == id);
-    if (index >= 0) {
-      records[index] = records[index].copyWith(price: price, isConfirmed: 1);
-    }
-  }
-
-  @override
-  Future<double> fetchFixedCostEstimatedPriceById({
-    required int fixedCostId,
-  }) async {
-    return estimatedPriceResult;
-  }
-
-  @override
-  Future<List<FixedCostExpenseEntity>> fetchFixedCostExpenseWithCostId({
-    required int fixedCostId,
-  }) async {
-    return records.where((e) => e.fixedCostId == fixedCostId).toList();
-  }
-
-  /// 固定費IDと支払い日が一致する実績が既にあるか
-  ///
-  /// 本実装は fixed_cost_expense を COUNT(*) するだけなので、
-  /// 現在のレコード状態 [records] に一致行があるかで判定する
-  /// （insert済みのものも [records] に入っているため既存として数えられる）。
-  @override
-  Future<bool> existsByFixedCostIdAndDate({
-    required int fixedCostId,
-    required String date,
-  }) async {
-    return records.any((e) => e.fixedCostId == fixedCostId && e.date == date);
-  }
-
-  @override
-  Future<void> update(FixedCostExpenseEntity entity) async {
-    updatedEntities.add(entity);
-    final index = records.indexWhere((e) => e.id == entity.id);
-    if (index >= 0) {
-      records[index] = entity;
-    }
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-/// 支出のFake（書き込み系の呼び出し記録＋集計系の返却値設定）
 class FakeExpenseRepository implements ExpenseRepository {
   FakeExpenseRepository({
     List<ExpenseEntity>? initialRecords,
@@ -750,24 +547,24 @@ class FakeExpenseRepository implements ExpenseRepository {
   }
 
   // -------------------------------------------------------------------------
-  // 固定費系のクエリ（v10で fixed_cost_expense から移管）
+  // 固定費系のクエリ（v10で廃止した旧固定費実績テーブルから移管）
   //
   // 固定費行の判定は fixedCostId != null の1条件（本実装の
   // fixed_cost_id IS NOT NULL と同じ）。書き込みは本物と同様 [records] に
   // 反映し、以後の取得系から見えるようにする。
   // -------------------------------------------------------------------------
 
-  /// insertFixedCostExpense で渡された内容の記録（検証用）
-  final List<ExpenseEntity> insertedFixedCostExpenses = [];
+  /// insertFixedCostRecord で渡された内容の記録（検証用）
+  final List<ExpenseEntity> insertedFixedCostRecords = [];
 
-  /// confirmFixedCostExpense で渡された内容の記録（検証用）
+  /// confirmFixedCostRecord で渡された内容の記録（検証用）
   final List<({int id, int price})> confirmedExpenses = [];
 
   /// updateEstimatedPriceOfUnconfirmedRows で渡された内容の記録（検証用）
   final List<({int fixedCostId, int estimatedPrice})> syncedEstimatedPrices =
       [];
 
-  /// deleteUnpaidFixedCostExpenses で渡された内容の記録（検証用）
+  /// deleteUnpaidFixedCostRecords で渡された内容の記録（検証用）
   final List<({int fixedCostId, String today})> deletedUnpaidArgs = [];
 
   /// updateSmallCategoryByFixedCostId で渡された内容の記録（検証用）
@@ -787,8 +584,8 @@ class FakeExpenseRepository implements ExpenseRepository {
   /// 本物はINSERT直後からSELECTの対象になるため [records] にも反映する。
   /// 戻り値は採番されたid（本実装と同じ）。
   @override
-  Future<int> insertFixedCostExpense(ExpenseEntity expenseEntity) async {
-    insertedFixedCostExpenses.add(expenseEntity);
+  Future<int> insertFixedCostRecord(ExpenseEntity expenseEntity) async {
+    insertedFixedCostRecords.add(expenseEntity);
     insertedEntities.add(expenseEntity);
     final id = _nextId++;
     records.add(expenseEntity.copyWith(id: id));
@@ -812,7 +609,7 @@ class FakeExpenseRepository implements ExpenseRepository {
   /// 本実装のSQLは `fixed_cost_id IS NOT NULL` で絞り、
   /// ORDER BY date ASC, _id ASC で返す。Fakeも同じ条件・同じ順序にする。
   @override
-  Future<List<ExpenseEntity>> fetchFixedCostExpenseByPeriod({
+  Future<List<ExpenseEntity>> fetchFixedCostRecordByPeriod({
     required PeriodValue period,
   }) async {
     final matched = records
@@ -826,7 +623,7 @@ class FakeExpenseRepository implements ExpenseRepository {
   }
 
   @override
-  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostExpenseByPeriod({
+  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostRecordByPeriod({
     required PeriodValue period,
   }) async {
     final matched = records
@@ -849,7 +646,7 @@ class FakeExpenseRepository implements ExpenseRepository {
   ///
   /// 本実装は estimated_price を触らないため、Fakeも据え置く（仕様 §3）。
   @override
-  Future<void> confirmFixedCostExpense({
+  Future<void> confirmFixedCostRecord({
     required int id,
     required int price,
   }) async {
@@ -903,7 +700,7 @@ class FakeExpenseRepository implements ExpenseRepository {
   /// 本実装の条件 `fixed_cost_id = ? AND (is_confirmed = 0 OR date > ?)` を模す。
   /// 日付は同形式のyyyyMMdd文字列なので辞書順比較で大小判定できる。
   @override
-  Future<void> deleteUnpaidFixedCostExpenses({
+  Future<void> deleteUnpaidFixedCostRecords({
     required int fixedCostId,
     required String today,
   }) async {
@@ -1258,73 +1055,6 @@ class FakeBudgetRepository implements BudgetRepository {
 ///
 /// [records] の並び順がそのまま fetchAll の順序になる
 /// （本実装は ORDER BY id ASC のため、id昇順で積んでおく）。
-class FakeFixedCostCategoryRepository implements FixedCostCategoryRepository {
-  FakeFixedCostCategoryRepository({
-    List<FixedCostCategoryEntity>? initialRecords,
-  }) : records = List.of(initialRecords ?? []);
-
-  /// 現在のカテゴリーマスタ（insert/update/deleteで変化する）
-  final List<FixedCostCategoryEntity> records;
-
-  /// insert / update / delete で渡された内容の記録（検証用）
-  final List<FixedCostCategoryEntity> insertedEntities = [];
-  final List<FixedCostCategoryEntity> updatedEntities = [];
-  final List<int> deletedIds = [];
-
-  int _nextId = 1000;
-
-  @override
-  Future<List<FixedCostCategoryEntity>> fetchAll() async => List.of(records);
-
-  @override
-  Future<FixedCostCategoryEntity> fetch({required int id}) async {
-    // 本実装は該当レコードが無いと例外を投げるため、それに合わせる
-    return records.firstWhere(
-      (e) => e.id == id,
-      orElse: () => throw Exception('FixedCostCategory not found with id: $id'),
-    );
-  }
-
-  @override
-  Future<int> getMaxDisplayOrder() async {
-    // 本実装は1件も無いとき0を返す
-    return records.fold<int>(
-      0,
-      (max, e) => e.displayOrder > max ? e.displayOrder : max,
-    );
-  }
-
-  @override
-  Future<int> insert(FixedCostCategoryEntity entity) async {
-    final id = _nextId++;
-    records.add(entity.copyWith(id: id));
-    insertedEntities.add(entity);
-    return id;
-  }
-
-  @override
-  Future<void> update(FixedCostCategoryEntity entity) async {
-    updatedEntities.add(entity);
-    final index = records.indexWhere((e) => e.id == entity.id);
-    if (index >= 0) {
-      records[index] = entity;
-    }
-  }
-
-  @override
-  Future<void> delete(int id) async {
-    deletedIds.add(id);
-    records.removeWhere((e) => e.id == id);
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
-}
-
-/// 大カテゴリー別の月次集計（支出カード用）のFake
-///
-/// 本物はSQLで支出テーブルを集計してエンティティを組み立てるため、
-/// Fakeでは組み立て済みのエンティティを直接持たせる。
 class FakeCategoryAccountingRepository implements CategoryAccountingRepository {
   FakeCategoryAccountingRepository({List<CategoryAccountingEntity>? categories})
     : categories = List.of(categories ?? []);

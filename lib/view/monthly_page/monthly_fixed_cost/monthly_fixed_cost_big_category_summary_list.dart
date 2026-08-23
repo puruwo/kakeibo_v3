@@ -8,12 +8,12 @@ import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
 
-class MonthlyFixedCostCategorySummaryList extends ConsumerWidget {
-  const MonthlyFixedCostCategorySummaryList({super.key});
+class MonthlyFixedCostBigCategorySummaryList extends ConsumerWidget {
+  const MonthlyFixedCostBigCategorySummaryList({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(resolvedFixedCostCategorySummaryValueProvider).when(
+    return ref.watch(resolvedFixedCostBigCategorySummaryValueProvider).when(
           data: (categorySummaries) {
             if (categorySummaries.isEmpty) {
               return const SizedBox.shrink();

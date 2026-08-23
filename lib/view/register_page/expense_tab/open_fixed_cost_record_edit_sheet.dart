@@ -8,7 +8,7 @@ import 'package:kakeibo/view/register_page/register_page_base.dart';
 ///
 /// 未確定行の確定操作はこのシートに一本化した（旧・金額入力ダイアログは廃止。仕様 §6.6）。
 /// タイルは実績行のid（expenseのid）しか持たないため、ここで1件読み直して渡す。
-Future<void> openFixedCostExpenseEditSheet(
+Future<void> openFixedCostRecordEditSheet(
   BuildContext context,
   WidgetRef ref, {
   required int expenseId,
@@ -19,6 +19,6 @@ Future<void> openFixedCostExpenseEditSheet(
 
   await showAppModalBottomSheet(
     context,
-    child: RegisaterPageBase.editFixedCostExpense(expenseEntity: entity),
+    child: RegisaterPageBase.editFixedCostRecord(expenseEntity: entity),
   );
 }

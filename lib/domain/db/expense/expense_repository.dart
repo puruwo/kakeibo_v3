@@ -56,7 +56,7 @@ abstract interface class ExpenseRepository {
   void delete(int id);
 
   // ---------------------------------------------------------------------
-  // 固定費系のクエリ（v10で fixed_cost_expense から移管）
+  // 固定費系のクエリ（v10で廃止した旧固定費実績テーブルから移管）
   // 固定費行の判定は fixed_cost_id IS NOT NULL の1条件に集約する（仕様 §3）
   // ---------------------------------------------------------------------
 
@@ -68,7 +68,7 @@ abstract interface class ExpenseRepository {
   /// 通常の [insert] と違い完了を待てるFutureを返す。
   /// バッチが挿入の失敗を検知できないと、生成されていない月を
   /// 「処理済み」と記録してしまうため。
-  Future<int> insertFixedCostExpense(ExpenseEntity expenseEntity);
+  Future<int> insertFixedCostRecord(ExpenseEntity expenseEntity);
 
   /// 固定費IDと支払い日が一致する行が既にあるか（多重生成の防止）
   ///
@@ -81,19 +81,19 @@ abstract interface class ExpenseRepository {
   /// 期間内の固定費行（確定・未確定を問わない）を取得する
   ///
   /// 月次固定費ビュー・見込み算出・予測グラフの共通のデータ源。
-  Future<List<ExpenseEntity>> fetchFixedCostExpenseByPeriod({
+  Future<List<ExpenseEntity>> fetchFixedCostRecordByPeriod({
     required PeriodValue period,
   });
 
   /// 期間内の未確定の固定費行を取得する
-  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostExpenseByPeriod({
+  Future<List<ExpenseEntity>> fetchUnconfirmedFixedCostRecordByPeriod({
     required PeriodValue period,
   });
 
   /// 未確定の固定費行を確定させる（実額priceを設定し is_confirmed=1 にする）
   ///
   /// 予想額 estimated_price は残す（予実の乖離を行単位で保持する。仕様 §3）。
-  Future<void> confirmFixedCostExpense({required int id, required int price});
+  Future<void> confirmFixedCostRecord({required int id, required int price});
 
   /// 固定費マスタ別に、確定済み固定費行の実額priceの平均を返す
   ///
@@ -114,7 +114,7 @@ abstract interface class ExpenseRepository {
   ///
   /// 未払い = 未確定（`is_confirmed = 0`）または支払日が [today] より後のもの。
   /// 支払日が到来済みの確定行は履歴として残す（→ ADR-007）。
-  Future<void> deleteUnpaidFixedCostExpenses({
+  Future<void> deleteUnpaidFixedCostRecords({
     required int fixedCostId,
     required String today,
   });

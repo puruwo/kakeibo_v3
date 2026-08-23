@@ -24,7 +24,7 @@ void main() {
     null, // 予想額（通常支出はNULL）
   ];
   // 未確定の固定費行（実額なし・予想額あり）
-  const unconfirmedFixedCostExpenseRow = [
+  const unconfirmedFixedCostRecordRow = [
     2,
     '20250710',
     3000,
@@ -49,7 +49,7 @@ void main() {
   group('buildExportCsvString', () {
     test('支出・収入の2セクションが空行区切りで並ぶ（固定費シートは廃止）', () {
       final csv = buildExportCsvString(
-        expenseRows: const [normalExpenseRow, unconfirmedFixedCostExpenseRow],
+        expenseRows: const [normalExpenseRow, unconfirmedFixedCostRecordRow],
         incomeRows: const [incomeRow],
       );
 
@@ -108,7 +108,7 @@ void main() {
 
     test('固定費行は固定費ID・確定状態ID・予想額が支出シートに出る', () {
       final csv = buildExportCsvString(
-        expenseRows: const [unconfirmedFixedCostExpenseRow],
+        expenseRows: const [unconfirmedFixedCostRecordRow],
         incomeRows: const [],
       );
 

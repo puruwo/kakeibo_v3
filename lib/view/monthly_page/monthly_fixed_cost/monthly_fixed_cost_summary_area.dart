@@ -5,7 +5,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
-import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_category_summary_list.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_big_category_summary_list.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
 
 class MonthlyFixedCostSummaryArea extends ConsumerWidget {
@@ -88,7 +88,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                     ),
 
                     // カテゴリー別サマリー
-                    const MonthlyFixedCostCategorySummaryList(),
+                    const MonthlyFixedCostBigCategorySummaryList(),
                   ],
                 ),
               ),

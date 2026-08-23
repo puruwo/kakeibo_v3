@@ -68,13 +68,11 @@ class FixedCostConversionUsecase {
     // マスタを作成する
     // カテゴリーは当該レコードの支出小カテゴリーを引き継ぐ
     // 推定額は当該レコードの金額で初期化する（仕様 §6.5）
-    // 旧列 fixedCostCategoryId はT6で削除するまで0を入れておく
     final baseEntity = FixedCostEntity(
       name: name,
       variable: variable,
       price: price,
       estimatedPrice: price,
-      fixedCostCategoryId: 0,
       expenseSmallCategoryId: expenseEntity.paymentCategoryId,
       intervalNumber: intervalNumber,
       intervalUnit: intervalUnit,
@@ -117,7 +115,6 @@ class FixedCostConversionUsecase {
     // 日付は同形式のyyyyMMdd文字列なので辞書順比較で大小判定できる
     var entity = FixedCostEntity(
       variable: 0,
-      fixedCostCategoryId: 0,
       intervalNumber: intervalNumber,
       intervalUnit: intervalUnit,
       firstPaymentDate: paymentDate,

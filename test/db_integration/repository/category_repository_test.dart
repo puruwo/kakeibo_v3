@@ -207,41 +207,6 @@ void main() {
       );
     });
 
-    test('固定費支出は合計に含めない（expenseテーブルのみを集計する）', () async {
-      await insertExpenseRow(
-        id: 1,
-        date: '20250701',
-        price: 100,
-        smallCategoryId: 1,
-      );
-      await insertFixedCostRow(id: 10, name: '家賃', fixedCostCategoryId: 1);
-      await insertFixedCostExpenseRow(
-        id: 1,
-        fixedCostId: 10,
-        fixedCostCategoryId: 1,
-        date: '20250701',
-        price: 80000,
-        name: '家賃',
-        isConfirmed: 1,
-      );
-
-      final results = await repository.fetchAll(
-        incomeSourceBigCategoryId: 1,
-        fromDate: _fromDate,
-        toDate: _toDate,
-      );
-
-      // 固定費の80000は乗らない
-      expect(
-        results.firstWhere((e) => e.id == 1).totalExpenseByBigCategory,
-        100,
-      );
-      expect(
-        results.fold<int>(0, (sum, e) => sum + e.totalExpenseByBigCategory),
-        100,
-      );
-    });
-
     test('非表示(is_displayed = 0)かつ実績が無い大カテゴリーは返さない', () async {
       // id=6（医療費）を非表示にする
       await updateExpenseBigCategoryIsDisplayed(id: 6, isDisplayed: 0);

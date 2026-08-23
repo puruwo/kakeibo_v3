@@ -5,7 +5,6 @@ import 'package:kakeibo/domain/db/batch_history/batch_history_repository.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 import '../helper/fake_repositories.dart';
@@ -16,7 +15,6 @@ void main() {
   late FakeBatchHistoryRepository fakeBatchHistoryRepository;
   late FakeFixedCostRepository fakeFixedCostRepository;
   late FakeExpenseRepository fakeExpenseRepository;
-  late FakeFixedCostExpenseRepository fakeFixedCostExpenseRepository;
 
   ProviderContainer createBatchContainer({
     required String latestBatchDate,
@@ -31,7 +29,6 @@ void main() {
       expenseRepository: fakeExpenseRepository,
     );
     // T6までは多重生成防止で旧テーブルも検査する
-    fakeFixedCostExpenseRepository = FakeFixedCostExpenseRepository();
     return createContainer(
       overrides: [
         ...aggregationSettingOverrides(systemDate: DateTime(2025, 7, 6)),
@@ -40,9 +37,6 @@ void main() {
         ),
         fixedCostRepositoryProvider.overrideWithValue(fakeFixedCostRepository),
         expenseRepositoryProvider.overrideWithValue(fakeExpenseRepository),
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          fakeFixedCostExpenseRepository,
-        ),
       ],
     );
   }
@@ -139,7 +133,6 @@ void main() {
             name: '家賃',
             variable: 0,
             price: 80000,
-            fixedCostCategoryId: 1,
             intervalNumber: 1,
             intervalUnit: 1,
             firstPaymentDate: '20250101',
@@ -153,9 +146,9 @@ void main() {
 
       expect(result, isTrue);
       // 実績: 支払予定日どおりに1件生成
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(1));
+      expect(fakeExpenseRepository.insertedFixedCostRecords, hasLength(1));
       expect(
-        fakeExpenseRepository.insertedFixedCostExpenses.first.date,
+        fakeExpenseRepository.insertedFixedCostRecords.first.date,
         '20250701',
       );
       // マスタ: 次回支払日が1ヶ月進む
@@ -177,7 +170,6 @@ void main() {
             name: '年会費',
             variable: 0,
             price: 10000,
-            fixedCostCategoryId: 1,
             intervalNumber: 1,
             intervalUnit: 2,
             firstPaymentDate: '20250101',
@@ -189,7 +181,7 @@ void main() {
 
       await usecase.grobalBatchProscessing();
 
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostRecords, isEmpty);
       expect(fakeFixedCostRepository.updatedEntities, isEmpty);
       expect(fakeBatchHistoryRepository.insertedEntities, hasLength(1));
     });
@@ -204,7 +196,6 @@ void main() {
             name: 'サブスク',
             variable: 0,
             price: 1000,
-            fixedCostCategoryId: 1,
             intervalNumber: 1,
             intervalUnit: 1,
             firstPaymentDate: '20250101',
@@ -217,13 +208,13 @@ void main() {
       await usecase.grobalBatchProscessing();
 
       // チャンク1（5/25〜6/24）で6/1分、チャンク2（6/25〜7/24）で7/1分
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(2));
+      expect(fakeExpenseRepository.insertedFixedCostRecords, hasLength(2));
       expect(
-        fakeExpenseRepository.insertedFixedCostExpenses[0].date,
+        fakeExpenseRepository.insertedFixedCostRecords[0].date,
         '20250601',
       );
       expect(
-        fakeExpenseRepository.insertedFixedCostExpenses[1].date,
+        fakeExpenseRepository.insertedFixedCostRecords[1].date,
         '20250701',
       );
       // マスタの支払予定日は最終的に8/1まで進む

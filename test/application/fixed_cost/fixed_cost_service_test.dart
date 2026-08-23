@@ -7,16 +7,16 @@ import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import '../../helper/fake_repositories.dart';
 import '../../helper/test_container.dart';
 
-/// insertToFixedCostExpense をProviderのbuild内で実行するためのProvider
+/// insertToFixedCostRecord をProviderのbuild内で実行するためのProvider
 ///
 /// Refはbuildスコープの外へ持ち出さず、テストからはこのProviderをreadすることで
 /// 実行をトリガーする。
-final _insertToFixedCostExpenseProvider =
+final _insertToFixedCostRecordProvider =
     Provider.family<void, ({FixedCostEntity entity, String paymentDate})>((
       ref,
       arg,
     ) {
-      FixedCostService().insertToFixedCostExpense(
+      FixedCostService().insertToFixedCostRecord(
         ref,
         arg.entity,
         arg.paymentDate,
@@ -31,7 +31,6 @@ void main() {
       name: '家賃',
       variable: 0,
       price: 80000,
-      fixedCostCategoryId: 1,
       intervalNumber: 1,
       intervalUnit: 1, // 月単位
       firstPaymentDate: '20250601',
@@ -104,7 +103,7 @@ void main() {
     });
   });
 
-  group('FixedCostService.insertToFixedCostExpense', () {
+  group('FixedCostService.insertToFixedCostRecord', () {
     test('固定額（variable=0）はマスタの金額で確定済みの支出行として挿入する', () {
       final fakeRepository = FakeExpenseRepository();
       final container = createContainer(
@@ -118,7 +117,6 @@ void main() {
         name: '家賃',
         variable: 0,
         price: 80000,
-        fixedCostCategoryId: 2,
         // カテゴリーの参照先は支出小カテゴリー（仕様 §3）
         expenseSmallCategoryId: 21,
         intervalNumber: 1,
@@ -127,14 +125,14 @@ void main() {
       );
 
       container.read(
-        _insertToFixedCostExpenseProvider((
+        _insertToFixedCostRecordProvider((
           entity: entity,
           paymentDate: '20250701',
         )),
       );
 
-      expect(fakeRepository.insertedFixedCostExpenses, hasLength(1));
-      final inserted = fakeRepository.insertedFixedCostExpenses.first;
+      expect(fakeRepository.insertedFixedCostRecords, hasLength(1));
+      final inserted = fakeRepository.insertedFixedCostRecords.first;
       expect(inserted.fixedCostId, 10);
       expect(inserted.paymentCategoryId, 21);
       expect(inserted.date, '20250701');
@@ -161,7 +159,6 @@ void main() {
         variable: 1,
         price: 5000,
         estimatedPrice: 6200,
-        fixedCostCategoryId: 3,
         expenseSmallCategoryId: 22,
         intervalNumber: 1,
         intervalUnit: 1,
@@ -169,14 +166,14 @@ void main() {
       );
 
       container.read(
-        _insertToFixedCostExpenseProvider((
+        _insertToFixedCostRecordProvider((
           entity: entity,
           paymentDate: '20250710',
         )),
       );
 
-      expect(fakeRepository.insertedFixedCostExpenses, hasLength(1));
-      final inserted = fakeRepository.insertedFixedCostExpenses.first;
+      expect(fakeRepository.insertedFixedCostRecords, hasLength(1));
+      final inserted = fakeRepository.insertedFixedCostRecords.first;
       // 実額は未確定なのでNULL。予想額はマスタの推定額を転記する
       expect(inserted.price, isNull);
       expect(inserted.estimatedPrice, 6200);
@@ -198,7 +195,6 @@ void main() {
         name: 'サブスク',
         variable: 0,
         price: 1000,
-        fixedCostCategoryId: 1,
         expenseSmallCategoryId: 23,
         intervalNumber: 1,
         intervalUnit: 1,
@@ -206,7 +202,7 @@ void main() {
       );
 
       container.read(
-        _insertToFixedCostExpenseProvider((
+        _insertToFixedCostRecordProvider((
           entity: entity,
           paymentDate: '20250701',
         )),

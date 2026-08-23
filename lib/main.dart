@@ -9,8 +9,6 @@ import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
@@ -25,8 +23,6 @@ import 'package:kakeibo/repository/budget_repository.dart';
 import 'package:kakeibo/repository/daily_expense_repository.dart';
 import 'package:kakeibo/repository/expense_repository.dart';
 import 'package:kakeibo/repository/fixed_cost_repository.dart';
-import 'package:kakeibo/repository/fixed_cost_expense_repository.dart';
-import 'package:kakeibo/repository/fixed_cost_category_repository.dart';
 import 'package:kakeibo/repository/income_big_category_repository.dart';
 import 'package:kakeibo/repository/income_repository.dart';
 import 'package:kakeibo/repository/income_small_category_repository.dart';
@@ -92,12 +88,6 @@ void main() {
         ),
         batchHistoryRepositoryProvider.overrideWithValue(
           ImplementsBatchHistoryRepository(),
-        ),
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          ImplementsFixedCostExpenseRepository(),
-        ),
-        fixedCostCategoryRepositoryProvider.overrideWithValue(
-          ImplementsFixedCostCategoryRepository(),
         ),
       ],
       observers: const [ProviderLogger()],

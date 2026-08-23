@@ -2,20 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_usecase.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
-import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_value/monthly_unconfirmed_fixed_cost_tile_value/monthly_unconfirmed_fixed_cost_tile_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-final fixedCostExpenseUsecaseProvider = Provider<FixedCostExpenseUsecase>(
-  FixedCostExpenseUsecase.new,
+final fixedCostRecordUsecaseProvider = Provider<FixedCostRecordUsecase>(
+  FixedCostRecordUsecase.new,
 );
 
 /// 固定費の実績行（expenseのうち fixed_cost_id を持つ行）を操作するユースケース
 ///
-/// v10で実績の格納先が fixed_cost_expense から expense に変わったため、
+/// v10で実績の格納先が fixed_cost_record から expense に変わったため、
 /// 確定・編集・削除はいずれも expense を対象にする（仕様 §6.4）。
-class FixedCostExpenseUsecase {
-  FixedCostExpenseUsecase(this._ref);
+class FixedCostRecordUsecase {
+  FixedCostRecordUsecase(this._ref);
   final Ref _ref;
 
   ExpenseRepository get _expenseRepositoryProvider =>
@@ -27,37 +26,6 @@ class FixedCostExpenseUsecase {
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get updateDBCountNotifier =>
       _ref.read(updateDBCountNotifierProvider.notifier);
-
-  /// 未確定の固定費実績を確定させる
-  ///
-  /// [tileValue] の id は実績行のid（T3で読み取り元がexpenseに切り替わる）。
-  Future<void> confirmExpense({
-    required MonthlyUnconfirmedFixedCostTileValue tileValue,
-    required int confirmedPrice,
-  }) async {
-    // エラーチェック
-    if (confirmedPrice <= 0) {
-      throw const AppException('0円以上で入力してください');
-    }
-    if (confirmedPrice >= 1888888) {
-      throw const AppException('金額の入力値が大き過ぎます');
-    }
-
-    // 未確定の実績行を確定させる（price設定＋is_confirmed=1）
-    await _expenseRepositoryProvider.confirmFixedCostExpense(
-      id: tileValue.id,
-      price: confirmedPrice,
-    );
-
-    // 想定額の更新が終わってからDBの更新回数を進めるため、完了まで待つ
-    // awaitしないと失敗を検知できず、確定直後の画面が古い想定額のままになる
-    await _fixedCostUsecaseRepositoryProvider.updateEstimatedPrice(
-      fixedCostId: tileValue.fixedCostId,
-    );
-
-    // DBの更新回数をインクリメント
-    updateDBCountNotifier.incrementState();
-  }
 
   /// 固定費の実績行を1行削除する
   ///

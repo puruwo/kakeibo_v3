@@ -8,8 +8,6 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
@@ -94,16 +92,6 @@ void main() {
     ),
   ];
 
-  // 固定費カテゴリー
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-  ];
-
   // 収入カテゴリー（小1:給与→大1）
   const incomeSmallCategories = [
     IncomeSmallCategoryEntity(
@@ -136,9 +124,6 @@ void main() {
           FakeExpenseBigCategoryRepository(
             initialRecords: expenseBigCategories,
           ),
-        ),
-        fixedCostCategoryRepositoryProvider.overrideWithValue(
-          FakeFixedCostCategoryRepository(initialRecords: fixedCostCategories),
         ),
         incomeSmallCategoryRepositoryProvider.overrideWithValue(
           FakeIncomeSmallCategoryRepository(

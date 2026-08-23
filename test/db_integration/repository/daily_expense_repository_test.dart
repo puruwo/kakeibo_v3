@@ -25,7 +25,6 @@ void main() {
       await insertFixedCostRow(
         id: 10,
         name: '家賃',
-        fixedCostCategoryId: 1,
         price: 80000,
         estimatedPrice: 80000,
       );
@@ -120,7 +119,6 @@ void main() {
       await insertFixedCostRow(
         id: 30,
         name: '電気代',
-        fixedCostCategoryId: 4,
         variable: 1,
         estimatedPrice: 7800,
       );
@@ -147,7 +145,6 @@ void main() {
       await insertFixedCostRow(
         id: 30,
         name: '電気代',
-        fixedCostCategoryId: 4,
         variable: 1,
         estimatedPrice: 7800,
       );

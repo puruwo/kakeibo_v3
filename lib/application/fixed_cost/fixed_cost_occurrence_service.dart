@@ -81,7 +81,7 @@ class FixedCostOccurrenceService {
     final result = <FixedCostOccurrence>[];
 
     // ---- 1段目: 生成済みの実績行 ----
-    final generatedRows = await _expenseRepository.fetchFixedCostExpenseByPeriod(
+    final generatedRows = await _expenseRepository.fetchFixedCostRecordByPeriod(
       period: period,
     );
 

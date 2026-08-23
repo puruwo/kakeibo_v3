@@ -21,7 +21,6 @@ void main() {
     name: '家賃',
     variable: 0,
     price: 80000,
-    fixedCostCategoryId: 1,
     intervalNumber: 1,
     intervalUnit: 0,
     firstPaymentDate: '20250625',
@@ -110,7 +109,7 @@ void main() {
     test('挿入した固定費行は直後の重複判定・期間取得から見える', () async {
       final repository = FakeExpenseRepository();
 
-      final id = await repository.insertFixedCostExpense(fixedCostRow);
+      final id = await repository.insertFixedCostRecord(fixedCostRow);
 
       expect(id, isPositive);
       expect(
@@ -121,7 +120,7 @@ void main() {
         isTrue,
       );
       final unconfirmed = await repository
-          .fetchUnconfirmedFixedCostExpenseByPeriod(
+          .fetchUnconfirmedFixedCostRecordByPeriod(
             period: PeriodValue(
               startDatetime: DateTime(2025, 6, 25),
               endDatetime: DateTime(2025, 7, 24),
@@ -135,10 +134,10 @@ void main() {
         initialRecords: const [fixedCostRow],
       );
 
-      await repository.confirmFixedCostExpense(id: 1, price: 6000);
+      await repository.confirmFixedCostRecord(id: 1, price: 6000);
 
       final unconfirmed = await repository
-          .fetchUnconfirmedFixedCostExpenseByPeriod(
+          .fetchUnconfirmedFixedCostRecordByPeriod(
             period: PeriodValue(
               startDatetime: DateTime(2025, 6, 25),
               endDatetime: DateTime(2025, 7, 24),

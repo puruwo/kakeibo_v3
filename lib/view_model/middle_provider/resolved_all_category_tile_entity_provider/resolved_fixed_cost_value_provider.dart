@@ -1,9 +1,9 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_forecast_usecase.dart';
-import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_category_summary_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_big_category_summary_usecase.dart';
 import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_summary_usecase.dart';
 import 'package:kakeibo/domain/ui_value/fixed_cost_forecast_value/fixed_cost_forecast_value.dart';
-import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_category_summary_value/monthly_fixed_cost_category_summary_value.dart';
+import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_big_category_summary_value/monthly_fixed_cost_big_category_summary_value.dart';
 import 'package:kakeibo/domain/ui_value/monthly_fixed_cost_sammary_value/monthly_fixed_cost_sammary_value.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 
@@ -20,14 +20,14 @@ final resolvedFixedCostSammaryValueProvider =
 });
 
 // 選択期間を取得し、固定費のカテゴリー別サマリーValuesを取得する中間プロバイダ
-final resolvedFixedCostCategorySummaryValueProvider =
-    FutureProvider<List<MonthlyFixedCostCategorySummaryValue>>((ref) async {
+final resolvedFixedCostBigCategorySummaryValueProvider =
+    FutureProvider<List<MonthlyFixedCostBigCategorySummaryValue>>((ref) async {
 
   // 選択された日付から集計期間を取得する
   final monthPeriod = await ref.watch(analyzePageDateScopeEntityProvider.selectAsync((data) => data.aggregationMonthPeriod));
 
   // 選択された集計期間を元に、Valuesを取得する
-  final values = ref.watch(monthlyFixedCostCategorySummaryNotifierProvider(monthPeriod).future);
+  final values = ref.watch(monthlyFixedCostBigCategorySummaryNotifierProvider(monthPeriod).future);
   return values;
 });
 

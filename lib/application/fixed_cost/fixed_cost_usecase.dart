@@ -1,10 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
-import 'package:kakeibo/application/fixed_cost_expense/fixed_cost_expense_service.dart';
+import 'package:kakeibo/application/fixed_cost_record/fixed_cost_record_service.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain_service/system_datetime/date_scope.dart';
@@ -27,12 +26,8 @@ class FixedCostUsecase {
   ExpenseRepository get _expenseRepositoryProvider =>
       _ref.read(expenseRepositoryProvider);
 
-  // 多重生成防止の旧テーブル検査用（T6で削除する）
-  FixedCostExpenseRepository get _fixedCostExpenseRepositoryProvider =>
-      _ref.read(fixedCostExpenseRepositoryProvider);
-
-  FixedCostExpenseService get _fixedCostExpenseServiceProvider =>
-      _ref.read(fixedCostExpenseServiceProvider);
+  FixedCostRecordService get _fixedCostRecordServiceProvider =>
+      _ref.read(fixedCostRecordServiceProvider);
 
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get updateDBCountNotifier =>
@@ -66,7 +61,6 @@ class FixedCostUsecase {
       throw const AppException('金額の入力値が大き過ぎます');
     }
     // カテゴリーの参照先は支出小カテゴリー（仕様 §3）
-    // 旧列 fixedCostCategoryId はT6で削除するまで併存するだけで、判定には使わない
     if (fixedCostEntity.expenseSmallCategoryId <= 0) {
       throw const AppException('カテゴリーを選択してください');
     }
@@ -91,8 +85,8 @@ class FixedCostUsecase {
 
       final insertedFixedCostRecord = insertRecord.copyWith(id: id);
 
-      // fixedCostExpenseEntityを作成し、DBに挿入する
-      await FixedCostService().insertToFixedCostExpense(
+      // fixedCostRecordEntityを作成し、DBに挿入する
+      await FixedCostService().insertToFixedCostRecord(
         _ref,
         insertedFixedCostRecord,
         insertRecord.firstPaymentDate,
@@ -160,25 +154,14 @@ class FixedCostUsecase {
 
         // 同じ支払い日の実績が既にある場合は生成しない（多重生成の防止）
         // ただしスキップした場合も次の支払い日は進める
-        //
-        // T6（旧テーブルの実績をexpenseへ移行）までは
-        // expense と fixed_cost_expense の両方を検査する。
-        // 中間状態では「新規実績はexpense・既存実績は旧テーブル」に分かれており、
-        // 旧テーブルに生成済みの支払日を見落とすと、T6の移行後に
-        // 同じ支払日の実績が2件並んで二重計上になるため。
-        final alreadyExists =
-            await _expenseRepositoryProvider.existsByFixedCostIdAndDate(
-                  fixedCostId: currentEntity.id!,
-                  date: paymentDate,
-                ) ||
-                await _fixedCostExpenseRepositoryProvider
-                    .existsByFixedCostIdAndDate(
-                  fixedCostId: currentEntity.id!,
-                  date: paymentDate,
-                );
+        final alreadyExists = await _expenseRepositoryProvider
+            .existsByFixedCostIdAndDate(
+          fixedCostId: currentEntity.id!,
+          date: paymentDate,
+        );
         if (!alreadyExists) {
-          // fixedCostExpenseEntityを作成し、DBに挿入する
-          await FixedCostService().insertToFixedCostExpense(
+          // fixedCostRecordEntityを作成し、DBに挿入する
+          await FixedCostService().insertToFixedCostRecord(
             _ref,
             currentEntity,
             paymentDate,
@@ -236,7 +219,7 @@ class FixedCostUsecase {
     if (originalEntity.expenseSmallCategoryId !=
         editEntity.expenseSmallCategoryId) {
       // 過去の実績（expenseの固定費行）のカテゴリーを一括変更する
-      await _fixedCostExpenseServiceProvider.changeCategoryOfExistingRecord(
+      await _fixedCostRecordServiceProvider.changeCategoryOfExistingRecord(
           originalEntity: originalEntity,
           expenseSmallCategoryId: editEntity.expenseSmallCategoryId);
     }
@@ -247,7 +230,6 @@ class FixedCostUsecase {
       price: editEntity.price,
       variable: editEntity.variable,
       estimatedPrice: editEntity.estimatedPrice,
-      fixedCostCategoryId: editEntity.fixedCostCategoryId,
       expenseSmallCategoryId: editEntity.expenseSmallCategoryId,
     );
     // マスタの金額・推定額を手動編集した場合に備え、

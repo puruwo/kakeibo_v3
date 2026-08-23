@@ -90,7 +90,6 @@ void main() {
       name: '家賃',
       variable: 0,
       price: 30000,
-      fixedCostCategoryId: 1,
       expenseSmallCategoryId: 10,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -99,7 +98,7 @@ void main() {
     ),
   ];
 
-  const fixedCostExpense = ExpenseEntity(
+  const fixedCostRecord = ExpenseEntity(
     id: 100,
     date: '20250701',
     price: 30000,
@@ -148,7 +147,7 @@ void main() {
     expense: FakeExpenseRepository(
       initialRecords: [
         ...lastPeriodExpenses,
-        if (withFixedCost) fixedCostExpense,
+        if (withFixedCost) fixedCostRecord,
       ],
     ),
     fixedCost: FakeFixedCostRepository(

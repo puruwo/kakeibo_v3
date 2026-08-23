@@ -5,7 +5,6 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/domain/db/fixed_cost_expense/fixed_cost_expense_repository.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 
@@ -16,7 +15,6 @@ void main() {
   // システム日時2025/7/6固定 → 今の集計期間は6/25〜7/24
   late FakeFixedCostRepository fakeFixedCostRepository;
   late FakeExpenseRepository fakeExpenseRepository;
-  late FakeFixedCostExpenseRepository fakeFixedCostExpenseRepository;
 
   ProviderContainer createUsecaseContainer({
     List<FixedCostEntity>? initialRecords,
@@ -29,16 +27,12 @@ void main() {
       initialRecords: initialRecords,
       expenseRepository: fakeExpenseRepository,
     );
-    fakeFixedCostExpenseRepository = FakeFixedCostExpenseRepository();
     return createContainer(
       overrides: [
         ...aggregationSettingOverrides(systemDate: DateTime(2025, 7, 6)),
         fixedCostRepositoryProvider.overrideWithValue(fakeFixedCostRepository),
         expenseRepositoryProvider.overrideWithValue(fakeExpenseRepository),
         // T6までは多重生成防止で旧テーブルも検査するため、Fakeを積んでおく
-        fixedCostExpenseRepositoryProvider.overrideWithValue(
-          fakeFixedCostExpenseRepository,
-        ),
       ],
     );
   }
@@ -49,7 +43,6 @@ void main() {
     name: 'サブスク',
     variable: 0,
     price: 1000,
-    fixedCostCategoryId: 1,
     expenseSmallCategoryId: 11,
     intervalNumber: 1,
     intervalUnit: 1,
@@ -125,7 +118,6 @@ void main() {
     });
 
     test('支出小カテゴリー未選択ならエラー', () async {
-      // 旧列 fixedCostCategoryId が入っていても、判定に使うのは小カテゴリーID
       final container = createUsecaseContainer();
       final usecase = container.read(fixedCostUsecaseProvider);
 
@@ -169,15 +161,13 @@ void main() {
       expect(master.nextPaymentDate, '20250810');
 
       // 実績: 初回支払日でexpenseに1件生成される
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(1));
-      final expense = fakeExpenseRepository.insertedFixedCostExpenses.first;
+      expect(fakeExpenseRepository.insertedFixedCostRecords, hasLength(1));
+      final expense = fakeExpenseRepository.insertedFixedCostRecords.first;
       expect(expense.date, '20250710');
       expect(expense.price, 1000);
       expect(expense.paymentCategoryId, 11);
       expect(expense.isConfirmed, 1);
 
-      // 旧テーブルへの書き込みは停止している
-      expect(fakeFixedCostExpenseRepository.insertedEntities, isEmpty);
     });
 
     test('初回支払いが来月以降なら実績は作らず初回日を次回支払日に設定する', () async {
@@ -194,7 +184,7 @@ void main() {
       expect(master.recentPaymentDate, isNull);
 
       // 今月の支払いはないので実績は生成されない
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostRecords, isEmpty);
     });
   });
 
@@ -213,7 +203,6 @@ void main() {
             name: '家賃',
             variable: 0,
             price: 80000,
-            fixedCostCategoryId: 1,
             expenseSmallCategoryId: 11,
             intervalNumber: 1,
             intervalUnit: 1,
@@ -226,7 +215,6 @@ void main() {
             name: '保険',
             variable: 0,
             price: 5000,
-            fixedCostCategoryId: 1,
             expenseSmallCategoryId: 11,
             intervalNumber: 1,
             intervalUnit: 1,
@@ -239,7 +227,6 @@ void main() {
             name: '解約済みサブスク',
             variable: 0,
             price: 500,
-            fixedCostCategoryId: 1,
             expenseSmallCategoryId: 11,
             intervalNumber: 1,
             intervalUnit: 1,
@@ -254,8 +241,8 @@ void main() {
       await usecase.addExpenseForFixedCost(period);
 
       // 実績は期間内の1件だけ生成される
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(1));
-      final expense = fakeExpenseRepository.insertedFixedCostExpenses.first;
+      expect(fakeExpenseRepository.insertedFixedCostRecords, hasLength(1));
+      final expense = fakeExpenseRepository.insertedFixedCostRecords.first;
       expect(expense.fixedCostId, 1);
       expect(expense.date, '20250701');
       expect(expense.price, 80000);
@@ -277,7 +264,6 @@ void main() {
             variable: 1,
             price: 0,
             estimatedPrice: 6000,
-            fixedCostCategoryId: 2,
             expenseSmallCategoryId: 12,
             intervalNumber: 1,
             intervalUnit: 1,
@@ -290,8 +276,8 @@ void main() {
 
       await usecase.addExpenseForFixedCost(period);
 
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, hasLength(1));
-      final expense = fakeExpenseRepository.insertedFixedCostExpenses.first;
+      expect(fakeExpenseRepository.insertedFixedCostRecords, hasLength(1));
+      final expense = fakeExpenseRepository.insertedFixedCostRecords.first;
       expect(expense.price, isNull);
       expect(expense.estimatedPrice, 6000);
       expect(expense.isConfirmed, 0);
@@ -303,7 +289,7 @@ void main() {
 
       await usecase.addExpenseForFixedCost(period);
 
-      expect(fakeExpenseRepository.insertedFixedCostExpenses, isEmpty);
+      expect(fakeExpenseRepository.insertedFixedCostRecords, isEmpty);
       expect(fakeFixedCostRepository.updatedEntities, isEmpty);
     });
   });
@@ -316,7 +302,6 @@ void main() {
       variable: 1,
       price: 0,
       estimatedPrice: 5000,
-      fixedCostCategoryId: 2,
       expenseSmallCategoryId: 12,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -415,7 +400,6 @@ void main() {
             name: '家賃',
             variable: 0,
             price: 80000,
-            fixedCostCategoryId: 1,
             expenseSmallCategoryId: 11,
             intervalNumber: 1,
             intervalUnit: 1,
@@ -496,7 +480,6 @@ void main() {
       name: 'ジム',
       variable: 0,
       price: 10000,
-      fixedCostCategoryId: 1,
       expenseSmallCategoryId: 11,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -646,7 +629,6 @@ void main() {
             id: 42,
             name: 'サブスク',
             variable: 1,
-            fixedCostCategoryId: 1,
             expenseSmallCategoryId: 11,
             intervalNumber: 1,
             intervalUnit: 1,

@@ -500,7 +500,7 @@ mixin _$PredictionGraphValue {
       throw _privateConstructorUsedError;
   int? get barMaxValue =>
       throw _privateConstructorUsedError; // 固定費合計（確定+未確定推測値）※ツールチップ表示用
-  int? get totalFixedCostExpense => throw _privateConstructorUsedError;
+  int? get totalFixedCostAmount => throw _privateConstructorUsedError;
 
   /// Create a copy of PredictionGraphValue
   /// with the given fields replaced by the non-null parameter values.
@@ -540,7 +540,7 @@ abstract class $PredictionGraphValueCopyWith<$Res> {
     LabelPosition? expenseLabelPosition,
     List<DailyBarData>? dailyBarDataList,
     int? barMaxValue,
-    int? totalFixedCostExpense,
+    int? totalFixedCostAmount,
   });
 
   $LabelPositionCopyWith<$Res>? get incomeLabelPosition;
@@ -589,7 +589,7 @@ class _$PredictionGraphValueCopyWithImpl<
     Object? expenseLabelPosition = freezed,
     Object? dailyBarDataList = freezed,
     Object? barMaxValue = freezed,
-    Object? totalFixedCostExpense = freezed,
+    Object? totalFixedCostAmount = freezed,
   }) {
     return _then(
       _value.copyWith(
@@ -685,9 +685,9 @@ class _$PredictionGraphValueCopyWithImpl<
                 ? _value.barMaxValue
                 : barMaxValue // ignore: cast_nullable_to_non_nullable
                       as int?,
-            totalFixedCostExpense: freezed == totalFixedCostExpense
-                ? _value.totalFixedCostExpense
-                : totalFixedCostExpense // ignore: cast_nullable_to_non_nullable
+            totalFixedCostAmount: freezed == totalFixedCostAmount
+                ? _value.totalFixedCostAmount
+                : totalFixedCostAmount // ignore: cast_nullable_to_non_nullable
                       as int?,
           )
           as $Val,
@@ -770,7 +770,7 @@ abstract class _$$PredictionGraphValueImplCopyWith<$Res>
     LabelPosition? expenseLabelPosition,
     List<DailyBarData>? dailyBarDataList,
     int? barMaxValue,
-    int? totalFixedCostExpense,
+    int? totalFixedCostAmount,
   });
 
   @override
@@ -818,7 +818,7 @@ class __$$PredictionGraphValueImplCopyWithImpl<$Res>
     Object? expenseLabelPosition = freezed,
     Object? dailyBarDataList = freezed,
     Object? barMaxValue = freezed,
-    Object? totalFixedCostExpense = freezed,
+    Object? totalFixedCostAmount = freezed,
   }) {
     return _then(
       _$PredictionGraphValueImpl(
@@ -914,9 +914,9 @@ class __$$PredictionGraphValueImplCopyWithImpl<$Res>
             ? _value.barMaxValue
             : barMaxValue // ignore: cast_nullable_to_non_nullable
                   as int?,
-        totalFixedCostExpense: freezed == totalFixedCostExpense
-            ? _value.totalFixedCostExpense
-            : totalFixedCostExpense // ignore: cast_nullable_to_non_nullable
+        totalFixedCostAmount: freezed == totalFixedCostAmount
+            ? _value.totalFixedCostAmount
+            : totalFixedCostAmount // ignore: cast_nullable_to_non_nullable
                   as int?,
       ),
     );
@@ -950,7 +950,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
     required this.expenseLabelPosition,
     final List<DailyBarData>? dailyBarDataList,
     this.barMaxValue,
-    this.totalFixedCostExpense,
+    this.totalFixedCostAmount,
   }) : _expensePoints = expensePoints,
        _predictionPoints = predictionPoints,
        _xAxisLabels = xAxisLabels,
@@ -1041,11 +1041,11 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
   final int? barMaxValue;
   // 固定費合計（確定+未確定推測値）※ツールチップ表示用
   @override
-  final int? totalFixedCostExpense;
+  final int? totalFixedCostAmount;
 
   @override
   String toString() {
-    return 'PredictionGraphValue(predictionGraphLineType: $predictionGraphLineType, fromDate: $fromDate, toDate: $toDate, today: $today, expensePoints: $expensePoints, predictionPoints: $predictionPoints, income: $income, budget: $budget, maxValue: $maxValue, displayMaxValue: $displayMaxValue, latestPrice: $latestPrice, predictionPrice: $predictionPrice, xAxisLabels: $xAxisLabels, incomeLabelPosition: $incomeLabelPosition, budgetLabelPosition: $budgetLabelPosition, predictionLabel: $predictionLabel, shouldShowPredictionLine: $shouldShowPredictionLine, shouldShowBudgetLine: $shouldShowBudgetLine, shouldShowIncomeLine: $shouldShowIncomeLine, shouldShowExpenseLabel: $shouldShowExpenseLabel, expenseLabelPosition: $expenseLabelPosition, dailyBarDataList: $dailyBarDataList, barMaxValue: $barMaxValue, totalFixedCostExpense: $totalFixedCostExpense)';
+    return 'PredictionGraphValue(predictionGraphLineType: $predictionGraphLineType, fromDate: $fromDate, toDate: $toDate, today: $today, expensePoints: $expensePoints, predictionPoints: $predictionPoints, income: $income, budget: $budget, maxValue: $maxValue, displayMaxValue: $displayMaxValue, latestPrice: $latestPrice, predictionPrice: $predictionPrice, xAxisLabels: $xAxisLabels, incomeLabelPosition: $incomeLabelPosition, budgetLabelPosition: $budgetLabelPosition, predictionLabel: $predictionLabel, shouldShowPredictionLine: $shouldShowPredictionLine, shouldShowBudgetLine: $shouldShowBudgetLine, shouldShowIncomeLine: $shouldShowIncomeLine, shouldShowExpenseLabel: $shouldShowExpenseLabel, expenseLabelPosition: $expenseLabelPosition, dailyBarDataList: $dailyBarDataList, barMaxValue: $barMaxValue, totalFixedCostAmount: $totalFixedCostAmount)';
   }
 
   @override
@@ -1109,8 +1109,8 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
             ) &&
             (identical(other.barMaxValue, barMaxValue) ||
                 other.barMaxValue == barMaxValue) &&
-            (identical(other.totalFixedCostExpense, totalFixedCostExpense) ||
-                other.totalFixedCostExpense == totalFixedCostExpense));
+            (identical(other.totalFixedCostAmount, totalFixedCostAmount) ||
+                other.totalFixedCostAmount == totalFixedCostAmount));
   }
 
   @override
@@ -1139,7 +1139,7 @@ class _$PredictionGraphValueImpl implements _PredictionGraphValue {
     expenseLabelPosition,
     const DeepCollectionEquality().hash(_dailyBarDataList),
     barMaxValue,
-    totalFixedCostExpense,
+    totalFixedCostAmount,
   ]);
 
   /// Create a copy of PredictionGraphValue
@@ -1180,7 +1180,7 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
     required final LabelPosition? expenseLabelPosition,
     final List<DailyBarData>? dailyBarDataList,
     final int? barMaxValue,
-    final int? totalFixedCostExpense,
+    final int? totalFixedCostAmount,
   }) = _$PredictionGraphValueImpl;
 
   @override
@@ -1230,7 +1230,7 @@ abstract class _PredictionGraphValue implements PredictionGraphValue {
   @override
   int? get barMaxValue; // 固定費合計（確定+未確定推測値）※ツールチップ表示用
   @override
-  int? get totalFixedCostExpense;
+  int? get totalFixedCostAmount;
 
   /// Create a copy of PredictionGraphValue
   /// with the given fields replaced by the non-null parameter values.

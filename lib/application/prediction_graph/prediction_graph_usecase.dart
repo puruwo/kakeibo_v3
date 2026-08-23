@@ -102,7 +102,7 @@ class PredictionGraphUsecase {
     // 予算への加算は廃止した（仕様 §7.3）ので、この値は表示にのみ使う
     final fixedCostOccurrences = await _fixedCostOccurrenceService
         .fetchOccurrences(period: dateScope.aggregationMonthPeriod);
-    final fixedCostExpenseTotal = fixedCostOccurrences.fold<int>(
+    final fixedCostRecordTotal = fixedCostOccurrences.fold<int>(
       0,
       (sum, occurrence) => sum + occurrence.amount,
     );
@@ -229,7 +229,7 @@ class PredictionGraphUsecase {
       expenseLabelPosition: expenseLabelPosition,
       dailyBarDataList: dailyBarDataList,
       barMaxValue: barMaxValue,
-      totalFixedCostExpense: fixedCostExpenseTotal,
+      totalFixedCostAmount: fixedCostRecordTotal,
     );
   }
 }

@@ -10,7 +10,7 @@ import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_call_to_action_button.dart';
-import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_category_cards_area.dart';
+import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/expense_big_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 class FixedCostRegistrationListPage extends ConsumerWidget {
@@ -80,7 +80,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
               ),
               itemCount: fixedCostList.categoryGroups.length,
               itemBuilder: (context, index) {
-                return FixedCostCategoryCardsArea(
+                return ExpenseBigCategoryCardsArea(
                   group: fixedCostList.categoryGroups[index],
                 );
               },

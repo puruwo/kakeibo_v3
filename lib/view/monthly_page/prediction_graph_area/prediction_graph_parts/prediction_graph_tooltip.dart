@@ -11,14 +11,14 @@ class GraphTooltip extends StatelessWidget {
     super.key,
     required this.date,
     required this.cumulativeExpense,
-    required this.totalFixedCostExpense,
+    required this.totalFixedCostAmount,
     required this.categoryExpenses,
     required this.onTapTooltip,
   });
 
   final DateTime date;
   final int cumulativeExpense;
-  final int totalFixedCostExpense;
+  final int totalFixedCostAmount;
   final List<CategoryExpense> categoryExpenses;
 
   /// ツールチップ本体をタップした時のコールバック（ページ遷移用）

@@ -52,14 +52,14 @@ class FixedCostRegistrationListUsecaseNotifier
 
     // カテゴリーごとにグループ化したリストを作成（大カテゴリーの表示順に並べる）
     final allCategories = await _bigCategoryRepo.fetchAll();
-    final List<FixedCostCategoryGroup> categoryGroups = [];
+    final List<ExpenseBigCategoryGroup> categoryGroups = [];
 
     for (var category in allCategories) {
       // このカテゴリーに属する固定費があれば追加
       final items = categoryMap[category.id] ?? [];
       if (items.isNotEmpty) {
         categoryGroups.add(
-          FixedCostCategoryGroup(
+          ExpenseBigCategoryGroup(
             categoryId: category.id,
             categoryName: category.bigCategoryName,
             categoryIconPath: category.resourcePath,

@@ -11,7 +11,6 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
-import 'package:kakeibo/domain/db/fixed_cost_category/fixed_cost_category_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
@@ -99,20 +98,6 @@ void main() {
     ),
   ];
 
-  const fixedCostCategories = [
-    FixedCostCategoryEntity(
-      id: 1,
-      categoryName: '住居',
-      colorCode: 'FFAA00',
-      resourcePath: 'assets/images/icon_home.svg',
-    ),
-    FixedCostCategoryEntity(
-      id: 2,
-      categoryName: '光熱費',
-      colorCode: '00AAFF',
-      resourcePath: 'assets/images/icon_bolt.svg',
-    ),
-  ];
 
   // 固定費マスタ（30は想定額6,000円の変動費）
   const fixedCosts = [
@@ -121,7 +106,6 @@ void main() {
       name: '家賃',
       variable: 0,
       price: 80000,
-      fixedCostCategoryId: 1,
       expenseSmallCategoryId: 21,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -134,7 +118,6 @@ void main() {
       name: '電気代',
       variable: 1,
       estimatedPrice: 6000,
-      fixedCostCategoryId: 2,
       expenseSmallCategoryId: 31,
       intervalNumber: 1,
       intervalUnit: 1,
@@ -218,9 +201,6 @@ void main() {
         initialRecords: incomeBigCategories,
       ),
       fixedCost: FakeFixedCostRepository(initialRecords: fixedCosts),
-      fixedCostCategory: FakeFixedCostCategoryRepository(
-        initialRecords: fixedCostCategories,
-      ),
     );
   }
 

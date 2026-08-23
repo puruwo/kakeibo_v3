@@ -32,8 +32,6 @@ void main() {
           SqfIncomeBigCategory.tableName,
           SqfIncomeSmallCategory.tableName,
           SqfFixedCost.tableName,
-          SqfFixedCostExpense.tableName,
-          SqfFixedCostCategory.tableName,
           SqfBatchHistory.tableName,
         ]),
       );
@@ -56,18 +54,6 @@ void main() {
       expect(rows, hasLength(2));
       expect(rows[0][SqfIncomeBigCategory.accountType], 1);
       expect(rows[1][SqfIncomeBigCategory.accountType], 2);
-    });
-
-    test('fixed_cost_expenseはfixed_cost_id列を持って作成される', () async {
-      // v6経由の端末はこの列が無く、toV8で補完される（→ migration_test.dart）。
-      // 新規インストールは最初から持っていることを固定する。
-      final db = await openTestDatabase();
-      final columns = await db.rawQuery(
-        'PRAGMA table_info(${SqfFixedCostExpense.tableName})',
-      );
-      final columnNames = columns.map((c) => c['name'] as String).toSet();
-
-      expect(columnNames.contains(SqfFixedCostExpense.fixedCostId), isTrue);
     });
   });
 
@@ -96,7 +82,7 @@ void main() {
         ['通信費', CategoryPalette.fixedCostHex, 9],
         ['光熱費', CategoryPalette.fixedCostHex, 10],
         [
-          FixedCostCategoryConstants.freshInstallFallbackCategoryName,
+          FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName,
           CategoryPalette.fixedCostHex,
           11,
         ],
@@ -146,7 +132,7 @@ void main() {
         'サブスク',
         '通信費',
         '光熱費',
-        FixedCostCategoryConstants.freshInstallFallbackCategoryName,
+        FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName,
       ];
       for (var i = 0; i < rows.length; i++) {
         expect(rows[i][SqfExpenseSmallCategory.id], i + 1);
@@ -198,25 +184,6 @@ void main() {
       expect(rows[3][SqfIncomeSmallCategory.bigCategoryKey], 1);
     });
 
-    test('固定費カテゴリーは5件で、色は全て固定費色に統一される', () async {
-      final rows = await DatabaseHelper.instance.query(
-        'SELECT * FROM ${SqfFixedCostCategory.tableName} '
-        'ORDER BY ${SqfFixedCostCategory.id} ASC',
-      );
-
-      // 住居費・サブスク・通信費・光熱費・その他 の5件
-      expect(rows.length, 5);
-      const expectedNames = ['住居費', 'サブスク', '通信費', '光熱費', 'その他'];
-      for (var i = 0; i < rows.length; i++) {
-        expect(rows[i][SqfFixedCostCategory.categoryName], expectedNames[i]);
-        expect(
-          rows[i][SqfFixedCostCategory.colorCode],
-          CategoryPalette.fixedCostHex,
-        );
-        expect(rows[i][SqfFixedCostCategory.displayOrder], i);
-        expect(rows[i][SqfFixedCostCategory.isDisplayed], 1);
-      }
-    });
 
     test('batch_historyの初期レコードは「インストール日を含む集計期間の開始日前日」1件になる', () async {
       final rows = await DatabaseHelper.instance.query(
@@ -255,12 +222,6 @@ void main() {
       );
       expect(
         await DatabaseHelper.instance.queryRowCount(SqfIncome.tableName),
-        0,
-      );
-      expect(
-        await DatabaseHelper.instance.queryRowCount(
-          SqfFixedCostExpense.tableName,
-        ),
         0,
       );
     });

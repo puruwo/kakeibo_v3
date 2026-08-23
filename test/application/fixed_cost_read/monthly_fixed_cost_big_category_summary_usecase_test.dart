@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_category_summary_usecase.dart';
+import 'package:kakeibo/application/fixed_cost_read/monthly_fixed_cost_big_category_summary_usecase.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 
@@ -24,7 +24,7 @@ void main() {
     estimatedPrice: 6000,
   );
 
-  group('MonthlyFixedCostCategorySummaryNotifier', () {
+  group('MonthlyFixedCostBigCategorySummaryNotifier', () {
     test('支出大カテゴリーごとにグループ化される', () async {
       final container = createFixedCostReadContainer(
         expenses: const [
@@ -35,7 +35,7 @@ void main() {
       );
 
       final result = await container.read(
-        monthlyFixedCostCategorySummaryNotifierProvider(period).future,
+        monthlyFixedCostBigCategorySummaryNotifierProvider(period).future,
       );
 
       expect(result, hasLength(2));
@@ -57,7 +57,7 @@ void main() {
       );
 
       final result = await container.read(
-        monthlyFixedCostCategorySummaryNotifierProvider(period).future,
+        monthlyFixedCostBigCategorySummaryNotifierProvider(period).future,
       );
 
       expect(
@@ -80,7 +80,7 @@ void main() {
       );
 
       final result = await container.read(
-        monthlyFixedCostCategorySummaryNotifierProvider(period).future,
+        monthlyFixedCostBigCategorySummaryNotifierProvider(period).future,
       );
 
       expect(
@@ -101,7 +101,7 @@ void main() {
       );
 
       final result = await container.read(
-        monthlyFixedCostCategorySummaryNotifierProvider(period).future,
+        monthlyFixedCostBigCategorySummaryNotifierProvider(period).future,
       );
 
       expect(result, hasLength(1));
@@ -113,7 +113,7 @@ void main() {
       final container = createFixedCostReadContainer();
 
       final result = await container.read(
-        monthlyFixedCostCategorySummaryNotifierProvider(period).future,
+        monthlyFixedCostBigCategorySummaryNotifierProvider(period).future,
       );
 
       expect(result, isEmpty);

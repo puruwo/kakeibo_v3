@@ -47,7 +47,7 @@ final monthlyFixedCostTileServiceProvider =
 
 /// expenseの固定費行から月次固定費ビュー用のタイルValueを組み立てるサービス
 ///
-/// v10でデータ源が fixed_cost_expense から expense に移り、
+/// v10でデータ源が fixed_cost_record から expense に移り、
 /// グルーピングも固定費カテゴリーから支出カテゴリー（大→小）基準になった。
 /// 6つの read ユースケースが同じ組み立てを使うため、ここに集約する。
 class MonthlyFixedCostTileService {
@@ -71,7 +71,7 @@ class MonthlyFixedCostTileService {
     required PeriodValue period,
   }) async {
     // 固定費行（fixed_cost_id IS NOT NULL）を期間で取得する
-    final rows = await _expenseRepo.fetchFixedCostExpenseByPeriod(
+    final rows = await _expenseRepo.fetchFixedCostRecordByPeriod(
       period: period,
     );
     if (rows.isEmpty) return [];

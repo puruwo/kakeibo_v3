@@ -632,7 +632,7 @@ void main() {
   });
 
   // ---------------------------------------------------------------------
-  // 固定費系のクエリ（v10で fixed_cost_expense から移管）
+  // 固定費系のクエリ（v10で fixed_cost_record から移管）
   // ---------------------------------------------------------------------
 
   /// 固定費マスタ10・20に紐づく実績と通常支出を混在させた標準フィクスチャ
@@ -697,9 +697,9 @@ void main() {
     });
   });
 
-  group('insertFixedCostExpense', () {
+  group('insertFixedCostRecord', () {
     test('固定費列つきで挿入され、採番されたidが返る', () async {
-      final id = await repository.insertFixedCostExpense(
+      final id = await repository.insertFixedCostRecord(
         const ExpenseEntity(
           date: '20250710',
           price: null,
@@ -759,12 +759,12 @@ void main() {
     });
   });
 
-  group('fetchUnconfirmedFixedCostExpenseByPeriod', () {
+  group('fetchUnconfirmedFixedCostRecordByPeriod', () {
     test('期間内の未確定の固定費行だけを返す', () async {
       await seedFixedCostRows();
 
       final results = await repository
-          .fetchUnconfirmedFixedCostExpenseByPeriod(period: _period);
+          .fetchUnconfirmedFixedCostRecordByPeriod(period: _period);
 
       // 確定行(10,11)・通常支出(14)は含まれない
       expect(results.map((e) => e.id).toList()..sort(), [12, 13]);
@@ -781,17 +781,17 @@ void main() {
       );
 
       final results = await repository
-          .fetchUnconfirmedFixedCostExpenseByPeriod(period: _period);
+          .fetchUnconfirmedFixedCostRecordByPeriod(period: _period);
 
       expect(results, isEmpty);
     });
   });
 
-  group('confirmFixedCostExpense', () {
+  group('confirmFixedCostRecord', () {
     test('実額が入りis_confirmedが1になる（予想額は残る）', () async {
       await seedFixedCostRows();
 
-      await repository.confirmFixedCostExpense(id: 12, price: 7200);
+      await repository.confirmFixedCostRecord(id: 12, price: 7200);
 
       final row = await repository.fetchById(id: 12);
       expect(row?.price, 7200);
@@ -861,7 +861,7 @@ void main() {
     });
   });
 
-  group('deleteUnpaidFixedCostExpenses', () {
+  group('deleteUnpaidFixedCostRecords', () {
     // 運用日付。この日を境に「支払日が到来済みか」を判定する
     const today = '20250706';
 
@@ -882,7 +882,7 @@ void main() {
         fixedCostId: 10,
       );
 
-      await repository.deleteUnpaidFixedCostExpenses(
+      await repository.deleteUnpaidFixedCostRecords(
         fixedCostId: 10,
         today: today,
       );
@@ -896,7 +896,7 @@ void main() {
       // 通常支出化しない（マスタは論理削除のため参照は切れない。仕様 §6.4）
       await seedFixedCostRows();
 
-      await repository.deleteUnpaidFixedCostExpenses(
+      await repository.deleteUnpaidFixedCostRecords(
         fixedCostId: 10,
         today: today,
       );
@@ -920,6 +920,63 @@ void main() {
         // id順 10,11,12（変更）／13,14（据え置き＝フィクスチャ既定の1）
         [7, 7, 7, 1, 1],
       );
+    });
+  });
+
+  group('fetchByFixedCostId', () {
+    test('指定マスタの行だけを日付降順（同日はid降順）で返す', () async {
+      await seedFixedCostRows();
+      // 10と同じ日付の行を足して、同日の並び（id降順）を確定させる
+      await insertExpenseRow(
+        id: 15,
+        date: '20250710',
+        price: 7000,
+        fixedCostId: 10,
+      );
+
+      final results = await repository.fetchByFixedCostId(
+        fixedCostId: 10,
+        limit: 10,
+      );
+
+      // 固定費20の行(13)と通常支出(14)は含まない
+      expect(results.map((e) => e.id).toList(), [15, 12, 11, 10]);
+    });
+
+    test('limitで件数が絞られる（新しい順に切り取られる）', () async {
+      await seedFixedCostRows();
+
+      final results = await repository.fetchByFixedCostId(
+        fixedCostId: 10,
+        limit: 2,
+      );
+
+      expect(results.map((e) => e.id).toList(), [12, 11]);
+    });
+
+    test('未確定行はpriceがNULLのまま返り、予想額を保持する', () async {
+      await seedFixedCostRows();
+
+      final results = await repository.fetchByFixedCostId(
+        fixedCostId: 10,
+        limit: 10,
+      );
+
+      final unconfirmed = results.firstWhere((e) => e.id == 12);
+      expect(unconfirmed.price, isNull);
+      expect(unconfirmed.isConfirmed, 0);
+      expect(unconfirmed.estimatedPrice, 5000);
+    });
+
+    test('該当する実績が無ければ空リストを返す', () async {
+      await seedFixedCostRows();
+
+      final results = await repository.fetchByFixedCostId(
+        fixedCostId: 999,
+        limit: 10,
+      );
+
+      expect(results, isEmpty);
     });
   });
 }

@@ -1,6 +1,6 @@
 // fixed_cost_read 系ユースケースの共通フィクスチャ
 //
-// v10でデータ源が fixed_cost_expense から expense に移り、グルーピングも
+// v10でデータ源が fixed_cost_record から expense に移り、グルーピングも
 // 支出カテゴリー（大→小）基準になった（仕様 §8.3）。6本のテストが同じ
 // カテゴリーマスタ・固定費マスタを使うため、ここに集約する。
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -71,7 +71,6 @@ const fixtureFixedCosts = [
     name: '家賃',
     variable: 0,
     price: 80000,
-    fixedCostCategoryId: 1,
     expenseSmallCategoryId: 11,
     intervalNumber: 1,
     intervalUnit: 1,
@@ -83,7 +82,6 @@ const fixtureFixedCosts = [
     name: '保険',
     variable: 0,
     price: 30000,
-    fixedCostCategoryId: 1,
     expenseSmallCategoryId: 12,
     intervalNumber: 1,
     intervalUnit: 2,
@@ -95,7 +93,6 @@ const fixtureFixedCosts = [
     name: '電気代',
     variable: 1,
     estimatedPrice: 6000,
-    fixedCostCategoryId: 2,
     expenseSmallCategoryId: 21,
     intervalNumber: 1,
     intervalUnit: 1,
