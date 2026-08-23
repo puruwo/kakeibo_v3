@@ -65,16 +65,29 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
           final topPadding =
               MediaQuery.of(context).padding.top + kToolbarHeight;
 
+          // extendBody:true のボトムナビ背後までリストが広がるため、
+          // MediaQuery では取得できない下部セーフエリアを View から直接取得し、
+          // ボトムナビ高さとあわせて末尾余白に加算する（最後の行が隠れないように）
+          final view = View.of(context);
+          final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
+          final bottomInset =
+              kBottomNavigationBarHeight + bottomSafeArea + AppSpacing.xl;
+
           return ListView(
             padding: EdgeInsets.fromLTRB(
               AppSpacing.lg,
               topPadding + AppSpacing.md,
               AppSpacing.lg,
-              AppSpacing.xxl,
+              bottomInset,
             ),
             children: [
-              _buildSubtitle(fixedCost, summary),
-              const SizedBox(height: AppSpacing.md),
+              // 対象の固定費名（取得前は空のまま高さだけ確保する）
+              Text(
+                fixedCost?.name ?? '',
+                textAlign: TextAlign.center,
+                style: AppTextStyles.pageSubjectTitle,
+              ),
+              const SizedBox(height: AppSpacing.lg),
               _SummaryCard(summary: summary, fixedCost: fixedCost),
               const SizedBox(height: AppSpacing.xl),
               for (final group in summary.yearGroups) ...[
@@ -85,23 +98,6 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
           );
         },
       ),
-    );
-  }
-
-  /// 副題「名称 ・ yyyy/M から」
-  Widget _buildSubtitle(
-    FixedCostEntity? fixedCost,
-    FixedCostPaymentHistorySummary summary,
-  ) {
-    final parts = <String>[
-      if (fixedCost != null) fixedCost.name,
-      if (summary.firstPaymentDate != null)
-        '${_formatYearMonth(summary.firstPaymentDate!)} から',
-    ];
-    return Text(
-      parts.join(' ・ '),
-      textAlign: TextAlign.center,
-      style: AppTextStyles.pageHeaderSubText,
     );
   }
 

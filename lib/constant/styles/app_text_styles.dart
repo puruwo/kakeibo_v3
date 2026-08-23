@@ -25,6 +25,13 @@ class AppTextStyles {
     fontWeight: FontWeight.w300,
   );
 
+  /// ページ本文先頭に置く対象名（支払い履歴ページの固定費名など）
+  static final TextStyle pageSubjectTitle = MyFontStyle.notoSans.copyWith(
+    color: AppColorsDark.text,
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+  );
+
   // ==========================================================================
   // ダイアログ
   // ==========================================================================

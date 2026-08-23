@@ -277,8 +277,8 @@ void main() {
 
     // 遷移元の「支払い履歴」グループ見出しもツリーに残るためAppBarで特定する
     expect(find.widgetWithText(AppBar, '支払い履歴'), findsOneWidget);
-    // 副題は「名称 ・ 初回支払年月 から」
-    expect(find.text('家賃 ・ 2025/7 から'), findsOneWidget);
+    // 本文先頭に固定費名（遷移元の「名称」行の値もツリーに残るため複数件を許容）
+    expect(find.text('家賃'), findsWidgets);
     // サマリー: 確定済み1件分。確定型なので3列目は「初回支払日」（仕様 §6.8）
     expect(find.text('支払い合計'), findsOneWidget);
     expect(find.text('支払い回数'), findsOneWidget);
