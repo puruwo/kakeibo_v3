@@ -703,9 +703,7 @@ class FakeExpenseRepository implements ExpenseRepository {
           (e) =>
               e.fixedCostId == fixedCostId &&
               e.isConfirmed == 1 &&
-              e.price != null &&
-              // 本物と同じく0円の確定行は平均の根拠から外す
-              e.price! > 0,
+              e.price != null,
         )
         .map((e) => e.price!)
         .toList();

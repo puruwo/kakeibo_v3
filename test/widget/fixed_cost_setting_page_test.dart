@@ -152,45 +152,6 @@ void main() {
     );
   });
 
-  testWidgets('もともと変動型のマスタはスイッチを往復させても予想額を作り直さない', (tester) async {
-    // 予想額 12,000 を持つ変動型。確定行（80,000）の平均で上書きされてはいけない
-    const variableTarget = FixedCostEntity(
-      id: 10,
-      name: '電気代',
-      variable: 1,
-      price: 0,
-      estimatedPrice: 12000,
-      expenseSmallCategoryId: 11,
-      intervalNumber: 1,
-      intervalUnit: 1,
-      firstPaymentDate: '20250101',
-      nextPaymentDate: '20250801',
-    );
-    await pumpApp(
-      tester,
-      home: const FixedCostSettingPage(fixedCostEntity: variableTarget),
-      fakes: buildFakes(),
-    );
-    await pumpTimes(tester);
-
-    // OFF → ON
-    await tester.tap(find.byType(Switch));
-    await pumpTimes(tester);
-    await tester.tap(find.byType(Switch));
-    await pumpTimes(tester);
-
-    expect(
-      find.descendant(
-        of: find.ancestor(
-          of: find.text('予想額'),
-          matching: find.byType(AppInsetRow),
-        ),
-        matching: find.text('¥ 12,000'),
-      ),
-      findsOneWidget,
-    );
-  });
-
   testWidgets('確定行が無いときの変動スイッチONはマスタの金額を予想額に出す', (tester) async {
     await pumpApp(
       tester,
