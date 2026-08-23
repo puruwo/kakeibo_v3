@@ -378,6 +378,28 @@ $_selectColumns
     }
   }
 
+  // 指定マスタの固定費行を全件取得する（支払い履歴ページ。LIMITなし版）
+  @override
+  Future<List<ExpenseEntity>> fetchAllByFixedCostId({
+    required int fixedCostId,
+  }) async {
+    final sql = '''
+      SELECT
+$_selectColumns
+      FROM ${SqfExpense.tableName}
+      WHERE ${SqfExpense.fixedCostId} = $fixedCostId
+      ORDER BY ${SqfExpense.date} DESC, ${SqfExpense.id} DESC;
+    ''';
+
+    try {
+      final jsonList = await db.query(sql);
+      return jsonList.map((json) => ExpenseEntity.fromJson(json)).toList();
+    } catch (e) {
+      logger.e('[FAIL]: $e');
+      return [];
+    }
+  }
+
   // 固定費実績の行を1件挿入する
   // 挿入の失敗を呼び出し元（バッチ）が検知できるよう、完了を待てるFutureを返す
   @override

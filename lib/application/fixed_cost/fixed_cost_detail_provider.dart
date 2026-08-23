@@ -46,3 +46,14 @@ final fixedCostPaymentHistoryProvider = FutureProvider.autoDispose
         limit: kFixedCostPaymentHistoryLimit,
       );
 });
+
+/// 指定マスタの支払い履歴を全件取得する（支払い履歴ページ。仕様 §6.8）
+final fixedCostAllPaymentHistoryProvider = FutureProvider.autoDispose
+    .family<List<ExpenseEntity>, int>((ref, fixedCostId) async {
+  // DBが更新された場合に再取得する
+  ref.watch(updateDBCountNotifierProvider);
+
+  return await ref
+      .read(expenseRepositoryProvider)
+      .fetchAllByFixedCostId(fixedCostId: fixedCostId);
+});

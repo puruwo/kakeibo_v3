@@ -783,6 +783,14 @@ class FakeExpenseRepository implements ExpenseRepository {
     return matched.take(limit).toList();
   }
 
+  /// 指定マスタの固定費行を全件取得する（LIMITなし。支払い履歴ページ用）
+  @override
+  Future<List<ExpenseEntity>> fetchAllByFixedCostId({
+    required int fixedCostId,
+  }) async {
+    return fetchByFixedCostId(fixedCostId: fixedCostId, limit: records.length);
+  }
+
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

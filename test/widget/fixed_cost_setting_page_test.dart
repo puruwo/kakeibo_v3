@@ -264,7 +264,7 @@ void main() {
     await waitForSnackBarDismissed(tester);
   });
 
-  testWidgets('「すべての支払いを見る」で支払い履歴ページ（準備中）へ遷移する', (tester) async {
+  testWidgets('「すべての支払いを見る」で支払い履歴ページへ遷移し、サマリーと年グループが出る', (tester) async {
     await pumpApp(
       tester,
       home: const FixedCostSettingPage(fixedCostEntity: target),
@@ -275,10 +275,36 @@ void main() {
     await tester.tap(find.text('すべての支払いを見る'));
     await pumpTimes(tester, times: 5);
 
-    // 本実装は本案件クローズ後。いまは仮ページ（仕様 §6.8）
     // 遷移元の「支払い履歴」グループ見出しもツリーに残るためAppBarで特定する
     expect(find.widgetWithText(AppBar, '支払い履歴'), findsOneWidget);
-    expect(find.text('この画面は準備中です'), findsOneWidget);
+    // 副題は「名称 ・ 初回支払年月 から」
+    expect(find.text('家賃 ・ 2025/7 から'), findsOneWidget);
+    // サマリー: 確定済み1件分。確定型なので3列目は「初回支払日」（仕様 §6.8）
+    expect(find.text('支払い合計'), findsOneWidget);
+    expect(find.text('支払い回数'), findsOneWidget);
+    expect(find.text('1回'), findsOneWidget);
+    expect(find.text('初回支払日'), findsOneWidget);
+    expect(find.text('平均（確定分）'), findsNothing);
+    // 年グループ見出しと行
+    expect(find.text('2025年'), findsOneWidget);
+    expect(find.text('7/1'), findsWidgets);
+  });
+
+  testWidgets('支払い履歴ページは履歴0件なら空状態を出す', (tester) async {
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: buildFakes(rows: const []),
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('すべての支払いを見る'));
+    await pumpTimes(tester, times: 5);
+
+    // 設定画面側の空表示とは文言を分けず同じ案内を出す
+    expect(find.widgetWithText(AppBar, '支払い履歴'), findsOneWidget);
+    expect(find.text('支払い合計'), findsNothing);
+    expect(find.text('まだ支払いの記録がありません'), findsWidgets);
   });
 
   testWidgets('カテゴリー選択は大→小をpushで遷移し、ヘッダーの戻るで大へ戻る', (tester) async {

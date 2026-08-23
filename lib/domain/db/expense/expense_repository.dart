@@ -133,4 +133,9 @@ abstract interface class ExpenseRepository {
     required int fixedCostId,
     required int limit,
   });
+
+  /// 指定マスタの固定費行を支払日の新しい順に全件取得する（支払い履歴ページ用）
+  Future<List<ExpenseEntity>> fetchAllByFixedCostId({
+    required int fixedCostId,
+  });
 }

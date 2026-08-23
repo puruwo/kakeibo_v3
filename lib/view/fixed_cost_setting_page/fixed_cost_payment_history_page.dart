@@ -1,15 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_detail_provider.dart';
+import 'package:kakeibo/application/fixed_cost/fixed_cost_payment_history_summary.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/app_empty_state.dart';
+import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
+import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 
-/// 固定費の支払い履歴ページ（準備中）
+/// 固定費の支払い履歴ページ
 ///
 /// 固定費の設定画面の「すべての支払いを見る」からの遷移先（仕様 §6.8）。
-/// 本実装は本案件クローズ後に別途対応するため、現状はプレースホルダー。
+/// 先頭にサマリー（合計・回数・平均）、その下に年ごとのインセットグループで全件を並べる。
+/// 行タップで固定費行の編集シートを開く。
 class FixedCostPaymentHistoryPage extends ConsumerWidget {
   const FixedCostPaymentHistoryPage({super.key, required this.fixedCostId});
 
@@ -18,11 +28,8 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 名称はマスタから引く。取得前・失敗時は名称なしで案内だけ出す
-    final name = ref.watch(fixedCostByIdProvider(fixedCostId)).maybeWhen(
-          data: (fixedCost) => fixedCost.name,
-          orElse: () => null,
-        );
+    final fixedCost = ref.watch(fixedCostByIdProvider(fixedCostId)).valueOrNull;
+    final historyAsync = ref.watch(fixedCostAllPaymentHistoryProvider(fixedCostId));
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -40,18 +47,235 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
           ),
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (name != null) ...[
-              Text(name, style: AppTextStyles.insetGroupLabel),
-              const SizedBox(height: AppSpacing.sm),
+      body: historyAsync.when(
+        loading: () => const SizedBox.shrink(),
+        error: (_, __) => const SizedBox.shrink(),
+        data: (history) {
+          if (history.isEmpty) {
+            return const Center(
+              child: AppEmptyState(
+                icon: Icons.receipt_long_rounded,
+                title: 'まだ支払いの記録がありません',
+                description: '支払日が来ると自動で記録され、ここに並びます',
+              ),
+            );
+          }
+
+          final summary = FixedCostPaymentHistorySummary.fromHistory(history);
+          final topPadding =
+              MediaQuery.of(context).padding.top + kToolbarHeight;
+
+          return ListView(
+            padding: EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              topPadding + AppSpacing.md,
+              AppSpacing.lg,
+              AppSpacing.xxl,
+            ),
+            children: [
+              _buildSubtitle(fixedCost, summary),
+              const SizedBox(height: AppSpacing.md),
+              _SummaryCard(summary: summary, fixedCost: fixedCost),
+              const SizedBox(height: AppSpacing.xl),
+              for (final group in summary.yearGroups) ...[
+                _buildYearGroup(context, ref, group),
+                const SizedBox(height: AppSpacing.xl),
+              ],
             ],
-            Text('この画面は準備中です', style: AppTextStyles.listEmptyMessage),
+          );
+        },
+      ),
+    );
+  }
+
+  /// 副題「名称 ・ yyyy/M から」
+  Widget _buildSubtitle(
+    FixedCostEntity? fixedCost,
+    FixedCostPaymentHistorySummary summary,
+  ) {
+    final parts = <String>[
+      if (fixedCost != null) fixedCost.name,
+      if (summary.firstPaymentDate != null)
+        '${_formatYearMonth(summary.firstPaymentDate!)} から',
+    ];
+    return Text(
+      parts.join(' ・ '),
+      textAlign: TextAlign.center,
+      style: AppTextStyles.pageHeaderSubText,
+    );
+  }
+
+  /// 年ごとのインセットグループ（見出し右に確定済みの年合計）
+  Widget _buildYearGroup(
+    BuildContext context,
+    WidgetRef ref,
+    PaymentHistoryYearGroup group,
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
+          child: Row(
+            children: [
+              Text('${group.year}年', style: AppTextStyles.insetGroupHeader),
+              const Spacer(),
+              Text(
+                yenmarkFormattedPriceGetter(group.confirmedTotal),
+                style: AppTextStyles.insetGroupHeader,
+              ),
+            ],
+          ),
+        ),
+        AppInsetGroup(
+          children: [
+            for (final expense in group.records)
+              _HistoryRow(
+                expense: expense,
+                // 行タップで固定費行の編集シートを開く（未確定行の確定もここから）
+                onTap: () => openFixedCostRecordEditSheet(
+                  context,
+                  ref,
+                  expenseId: expense.id,
+                ),
+              ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+/// サマリーカード（合計・回数・平均）
+///
+/// 確定型（金額が固定）では平均が自明なので、3列目を初回支払日に差し替える。
+class _SummaryCard extends StatelessWidget {
+  const _SummaryCard({required this.summary, required this.fixedCost});
+
+  final FixedCostPaymentHistorySummary summary;
+  final FixedCostEntity? fixedCost;
+
+  @override
+  Widget build(BuildContext context) {
+    final isVariable = fixedCost?.variable == 1;
+    final cells = <(String, String)>[
+      ('支払い合計', yenmarkFormattedPriceGetter(summary.totalPrice)),
+      ('支払い回数', '${summary.confirmedCount}回'),
+      if (isVariable)
+        (
+          '平均（確定分）',
+          summary.averagePrice == null
+              ? '—'
+              : yenmarkFormattedPriceGetter(summary.averagePrice!),
+        )
+      else
+        (
+          '初回支払日',
+          summary.firstPaymentDate == null
+              ? '—'
+              : _formatYearMonth(summary.firstPaymentDate!),
+        ),
+    ];
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: context.colors.fillQuaternary,
+        border: Border.all(color: context.colors.surfaceBorder),
+        borderRadius: appInsetGroupRadius,
+      ),
+      child: IntrinsicHeight(
+        child: Row(
+          children: [
+            for (var i = 0; i < cells.length; i++) ...[
+              if (i > 0)
+                VerticalDivider(
+                  width: 0.5,
+                  thickness: 0.5,
+                  color: context.colors.separator,
+                ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: AppSpacing.md,
+                    horizontal: AppSpacing.sm,
+                  ),
+                  child: Column(
+                    children: [
+                      Text(cells[i].$1, style: AppTextStyles.insetGroupNote),
+                      const SizedBox(height: 2),
+                      Text(
+                        cells[i].$2,
+                        style: AppTextStyles.insetGroupHistoryPrice.copyWith(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
+}
+
+/// 支払い履歴の1行（日付／未確定チップ／金額／シェブロン）
+class _HistoryRow extends StatelessWidget {
+  const _HistoryRow({required this.expense, required this.onTap});
+
+  final ExpenseEntity expense;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final date = expense.date;
+    final isUnconfirmed = expense.isConfirmed == 0;
+
+    return AppInkWell(
+      borderRadius: BorderRadius.zero,
+      onTap: onTap,
+      child: SizedBox(
+        height: kAppInsetRowHeight,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(kAppInsetRowIndent, 0, 12, 0),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 64,
+                child: Text(
+                  '${int.parse(date.substring(4, 6))}/'
+                  '${int.parse(date.substring(6, 8))}',
+                  style: AppTextStyles.insetGroupHistoryDate,
+                ),
+              ),
+              if (isUnconfirmed) const UnconfirmedFixedCostChipLabel(),
+              const Spacer(),
+              Text(
+                yenmarkFormattedPriceGetter(expense.effectivePrice),
+                // 未確定行は予想額なので控えめな色で示す
+                style: isUnconfirmed
+                    ? AppTextStyles.insetGroupHistoryPrice
+                        .copyWith(color: context.colors.textSecondary)
+                    : AppTextStyles.insetGroupHistoryPrice,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+              Icon(
+                Icons.chevron_right_rounded,
+                size: kAppInsetRowIconSize,
+                color: context.colors.textTertiary,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// yyyyMMdd → yyyy/M
+String _formatYearMonth(String yyyyMMdd) {
+  return '${yyyyMMdd.substring(0, 4)}/${int.parse(yyyyMMdd.substring(4, 6))}';
 }
