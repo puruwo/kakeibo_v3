@@ -173,6 +173,7 @@ class DataBaseHelperHandling {
           ${SqfFixedCost.variable} INTEGER NOT NULL,
           ${SqfFixedCost.price} INTEGER,
           ${SqfFixedCost.estimatedPrice} INTEGER,
+          ${SqfFixedCost.estimatedPriceIsManual} INTEGER NOT NULL DEFAULT 0,
           ${SqfFixedCost.expenseSmallCategoryId} INTEGER NOT NULL,
           ${SqfFixedCost.intervalNumber} INTEGER NOT NULL,
           ${SqfFixedCost.intervalUnit} INTEGER NOT NULL,

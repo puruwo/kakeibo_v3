@@ -120,6 +120,8 @@ class AppInsetRow extends StatelessWidget {
     required this.onTap,
     this.iconColor,
     this.leading,
+    // 選択して閉じる行など、遷移ではない行では右矢印を出さない
+    this.showChevron = true,
   })  : _type = _AppInsetRowType.navigation,
         switchValue = null,
         onSwitchChanged = null,
@@ -140,6 +142,7 @@ class AppInsetRow extends StatelessWidget {
     this.iconColor,
     this.leading,
   })  : _type = _AppInsetRowType.switchRow,
+        showChevron = false,
         value = null,
         valueColor = null,
         onTap = null,
@@ -163,6 +166,7 @@ class AppInsetRow extends StatelessWidget {
     this.iconColor,
     this.leading,
   })  : _type = _AppInsetRowType.textField,
+        showChevron = false,
         value = null,
         valueColor = null,
         onTap = null,
@@ -180,6 +184,7 @@ class AppInsetRow extends StatelessWidget {
     this.iconColor,
     this.leading,
   })  : _type = _AppInsetRowType.display,
+        showChevron = false,
         onTap = null,
         switchValue = null,
         onSwitchChanged = null,
@@ -202,6 +207,9 @@ class AppInsetRow extends StatelessWidget {
   ///
   /// 指定すると [icon] より優先する。
   final Widget? leading;
+
+  /// 遷移行で右矢印を表示するか
+  final bool showChevron;
 
   /// 行のラベル
   final String label;
@@ -269,12 +277,14 @@ class AppInsetRow extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             Flexible(child: _buildValueText(context)),
-            const SizedBox(width: 2),
-            Icon(
-              Icons.arrow_forward_ios_rounded,
-              size: 14,
-              color: context.colors.textTertiary,
-            ),
+            if (showChevron) ...[
+              const SizedBox(width: 2),
+              Icon(
+                Icons.arrow_forward_ios_rounded,
+                size: 14,
+                color: context.colors.textTertiary,
+              ),
+            ],
           ],
         );
       case _AppInsetRowType.display:

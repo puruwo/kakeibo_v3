@@ -96,6 +96,8 @@ class SqfFixedCost {
   static const variable = 'variable';
   static const price = 'price';
   static const estimatedPrice = 'estimated_price';
+  // 予想額を手動で設定したか（0=自動算出／1=手動）。v10で追加。仕様 §6.9
+  static const estimatedPriceIsManual = 'estimated_price_is_manual';
   // 支出小カテゴリー(expense_small_category._id)への参照。v10で追加
   static const expenseSmallCategoryId = 'expense_small_category_id';
   static const intervalNumber = 'interval_number';

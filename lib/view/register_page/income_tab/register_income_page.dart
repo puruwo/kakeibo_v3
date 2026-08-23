@@ -7,9 +7,12 @@ import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/register_page/category_area/category_area.dart';
-import 'package:kakeibo/view/register_page/common_input_field/date_memo_row.dart';
 import 'package:kakeibo/view/register_page/common_input_field/price_input_row/price_input_row.dart';
+import 'package:kakeibo/view/register_page/income_tab/income_basic_group.dart';
 import 'package:kakeibo/view/register_page/submit_button.dart';
+import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
+import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 
 class RegisterIncomePage extends ConsumerStatefulWidget {
@@ -46,9 +49,29 @@ class _RegisterIncomePageState extends ConsumerState<RegisterIncomePage> {
       ref
           .read(registerScreenModeNotifierProvider.notifier)
           .setData(widget.mode);
+      _initializeInputs();
     });
 
     super.initState();
+  }
+
+  /// 日付・メモの初期値をセットする
+  ///
+  /// 日付・メモをインセットグループ化して行Widget側の初期化が無くなったため、
+  /// 支出タブと同じくページ側で1回だけ流し込む（仕様 §6.9）。
+  void _initializeInputs() {
+    // 追加モードで既に初期化済みの場合は、ピル切り替え時に入力値を保持するためスキップ
+    final isInitialized = ref.read(inputInitializedControllerProvider);
+    if (widget.mode == RegisterScreenMode.add && isInitialized) {
+      return;
+    }
+
+    ref.read(enteredMemoControllerProvider).text = initialIncomeData.memo;
+    ref.read(inputDateControllerNotifierProvider.notifier).setData(
+          DateTime.parse(
+            '${initialIncomeData.date.substring(0, 4)}-${initialIncomeData.date.substring(4, 6)}-${initialIncomeData.date.substring(6, 8)}',
+          ),
+        );
   }
 
   @override
@@ -76,11 +99,8 @@ class _RegisterIncomePageState extends ConsumerState<RegisterIncomePage> {
 
                 const SizedBox(height: 32),
 
-                // 日付+メモ行
-                DateMemoRow(
-                  originalDate: initialIncomeData.date,
-                  originalMemo: initialIncomeData.memo,
-                ),
+                // 基本グループ（日付／メモ）
+                const IncomeBasicGroup(),
 
                 const SizedBox(height: 24),
 

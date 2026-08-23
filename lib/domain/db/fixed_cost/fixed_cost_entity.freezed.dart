@@ -26,6 +26,8 @@ mixin _$FixedCostEntity {
   int get variable => throw _privateConstructorUsedError;
   int get price => throw _privateConstructorUsedError;
   int get estimatedPrice =>
+      throw _privateConstructorUsedError; // 予想額を手動で設定したか（0=自動算出／1=手動）。v10で追加。仕様 §6.9
+  int get estimatedPriceIsManual =>
       throw _privateConstructorUsedError; // 支出小カテゴリーへの参照（v10で追加）
   int get expenseSmallCategoryId => throw _privateConstructorUsedError;
   int get intervalNumber => throw _privateConstructorUsedError;
@@ -58,6 +60,7 @@ abstract class $FixedCostEntityCopyWith<$Res> {
     int variable,
     int price,
     int estimatedPrice,
+    int estimatedPriceIsManual,
     int expenseSmallCategoryId,
     int intervalNumber,
     int intervalUnit,
@@ -88,6 +91,7 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
     Object? variable = null,
     Object? price = null,
     Object? estimatedPrice = null,
+    Object? estimatedPriceIsManual = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -117,6 +121,10 @@ class _$FixedCostEntityCopyWithImpl<$Res, $Val extends FixedCostEntity>
             estimatedPrice: null == estimatedPrice
                 ? _value.estimatedPrice
                 : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                      as int,
+            estimatedPriceIsManual: null == estimatedPriceIsManual
+                ? _value.estimatedPriceIsManual
+                : estimatedPriceIsManual // ignore: cast_nullable_to_non_nullable
                       as int,
             expenseSmallCategoryId: null == expenseSmallCategoryId
                 ? _value.expenseSmallCategoryId
@@ -167,6 +175,7 @@ abstract class _$$FixedCostEntityImplCopyWith<$Res>
     int variable,
     int price,
     int estimatedPrice,
+    int estimatedPriceIsManual,
     int expenseSmallCategoryId,
     int intervalNumber,
     int intervalUnit,
@@ -196,6 +205,7 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
     Object? variable = null,
     Object? price = null,
     Object? estimatedPrice = null,
+    Object? estimatedPriceIsManual = null,
     Object? expenseSmallCategoryId = null,
     Object? intervalNumber = null,
     Object? intervalUnit = null,
@@ -225,6 +235,10 @@ class __$$FixedCostEntityImplCopyWithImpl<$Res>
         estimatedPrice: null == estimatedPrice
             ? _value.estimatedPrice
             : estimatedPrice // ignore: cast_nullable_to_non_nullable
+                  as int,
+        estimatedPriceIsManual: null == estimatedPriceIsManual
+            ? _value.estimatedPriceIsManual
+            : estimatedPriceIsManual // ignore: cast_nullable_to_non_nullable
                   as int,
         expenseSmallCategoryId: null == expenseSmallCategoryId
             ? _value.expenseSmallCategoryId
@@ -268,6 +282,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
     required this.variable,
     this.price = 0,
     this.estimatedPrice = 0,
+    this.estimatedPriceIsManual = 0,
     this.expenseSmallCategoryId = 0,
     required this.intervalNumber,
     required this.intervalUnit,
@@ -293,6 +308,10 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
   @override
   @JsonKey()
   final int estimatedPrice;
+  // 予想額を手動で設定したか（0=自動算出／1=手動）。v10で追加。仕様 §6.9
+  @override
+  @JsonKey()
+  final int estimatedPriceIsManual;
   // 支出小カテゴリーへの参照（v10で追加）
   @override
   @JsonKey()
@@ -313,7 +332,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
 
   @override
   String toString() {
-    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, estimatedPrice: $estimatedPrice, expenseSmallCategoryId: $expenseSmallCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
+    return 'FixedCostEntity(id: $id, name: $name, variable: $variable, price: $price, estimatedPrice: $estimatedPrice, estimatedPriceIsManual: $estimatedPriceIsManual, expenseSmallCategoryId: $expenseSmallCategoryId, intervalNumber: $intervalNumber, intervalUnit: $intervalUnit, firstPaymentDate: $firstPaymentDate, recentPaymentDate: $recentPaymentDate, nextPaymentDate: $nextPaymentDate, deleteFlag: $deleteFlag)';
   }
 
   @override
@@ -328,6 +347,8 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
             (identical(other.price, price) || other.price == price) &&
             (identical(other.estimatedPrice, estimatedPrice) ||
                 other.estimatedPrice == estimatedPrice) &&
+            (identical(other.estimatedPriceIsManual, estimatedPriceIsManual) ||
+                other.estimatedPriceIsManual == estimatedPriceIsManual) &&
             (identical(other.expenseSmallCategoryId, expenseSmallCategoryId) ||
                 other.expenseSmallCategoryId == expenseSmallCategoryId) &&
             (identical(other.intervalNumber, intervalNumber) ||
@@ -353,6 +374,7 @@ class _$FixedCostEntityImpl implements _FixedCostEntity {
     variable,
     price,
     estimatedPrice,
+    estimatedPriceIsManual,
     expenseSmallCategoryId,
     intervalNumber,
     intervalUnit,
@@ -386,6 +408,7 @@ abstract class _FixedCostEntity implements FixedCostEntity {
     required final int variable,
     final int price,
     final int estimatedPrice,
+    final int estimatedPriceIsManual,
     final int expenseSmallCategoryId,
     required final int intervalNumber,
     required final int intervalUnit,
@@ -407,7 +430,9 @@ abstract class _FixedCostEntity implements FixedCostEntity {
   @override
   int get price;
   @override
-  int get estimatedPrice; // 支出小カテゴリーへの参照（v10で追加）
+  int get estimatedPrice; // 予想額を手動で設定したか（0=自動算出／1=手動）。v10で追加。仕様 §6.9
+  @override
+  int get estimatedPriceIsManual; // 支出小カテゴリーへの参照（v10で追加）
   @override
   int get expenseSmallCategoryId;
   @override

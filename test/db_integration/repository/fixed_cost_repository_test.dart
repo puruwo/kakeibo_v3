@@ -829,6 +829,38 @@ void main() {
 
       expect((await repository.fetch(fixedCostId: 10)).estimatedPrice, 5000);
     });
+
+    test('予想額が手動設定なら確定行があっても再計算しない（仕様 §6.9）', () async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '電気代',
+        variable: 1,
+        estimatedPrice: 5000,
+        estimatedPriceIsManual: 1,
+      );
+      // 確定行 6000・8000（自動なら平均7000になる組み合わせ）
+      await insertExpenseRow(
+          id: 1, date: '20250601', price: 6000, fixedCostId: 10);
+      await insertExpenseRow(
+          id: 2, date: '20250701', price: 8000, fixedCostId: 10);
+      await insertExpenseRow(
+        id: 3,
+        date: '20250710',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 5000,
+      );
+
+      await repository.recalculateEstimatedPriceWithSync(fixedCostId: 10);
+
+      // マスタも未確定行も手動値のまま
+      expect((await repository.fetch(fixedCostId: 10)).estimatedPrice, 5000);
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfExpense.estimatedPrice} AS estimatedPrice FROM ${SqfExpense.tableName} WHERE ${SqfExpense.id} = 3',
+      );
+      expect(rows.single['estimatedPrice'], 5000);
+    });
   });
 
   group('updateWithUnconfirmedRowsSync', () {
@@ -854,6 +886,98 @@ void main() {
       );
 
       expect((await repository.fetch(fixedCostId: 10)).estimatedPrice, 9000);
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfExpense.estimatedPrice} AS estimatedPrice FROM ${SqfExpense.tableName} WHERE ${SqfExpense.id} = 1',
+      );
+      expect(rows.single['estimatedPrice'], 9000);
+    });
+
+    test('手動設定フラグも保存され、以後の再計算がスキップされる（仕様 §6.9）', () async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '電気代',
+        variable: 1,
+        estimatedPrice: 5000,
+      );
+      await insertExpenseRow(
+          id: 1, date: '20250601', price: 6000, fixedCostId: 10);
+
+      final master = await repository.fetch(fixedCostId: 10);
+      await repository.updateWithUnconfirmedRowsSync(
+        master.copyWith(estimatedPrice: 9000, estimatedPriceIsManual: 1),
+      );
+      await repository.recalculateEstimatedPriceWithSync(fixedCostId: 10);
+
+      final updated = await repository.fetch(fixedCostId: 10);
+      expect(updated.estimatedPriceIsManual, 1);
+      // 確定行（6000）の平均で上書きされない
+      expect(updated.estimatedPrice, 9000);
+    });
+  });
+
+  group('updateWithAutoEstimatedPriceSync', () {
+    test('自動に戻すとフラグが0になり確定行の平均で再計算・同期される', () async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '電気代',
+        variable: 1,
+        estimatedPrice: 9000,
+        estimatedPriceIsManual: 1,
+      );
+      // 確定行 6000・8000（平均7000）
+      await insertExpenseRow(
+          id: 1, date: '20250601', price: 6000, fixedCostId: 10);
+      await insertExpenseRow(
+          id: 2, date: '20250701', price: 8000, fixedCostId: 10);
+      await insertExpenseRow(
+        id: 3,
+        date: '20250710',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 9000,
+      );
+
+      final master = await repository.fetch(fixedCostId: 10);
+      await repository.updateWithAutoEstimatedPriceSync(
+        master.copyWith(estimatedPriceIsManual: 0),
+      );
+
+      final updated = await repository.fetch(fixedCostId: 10);
+      expect(updated.estimatedPriceIsManual, 0);
+      expect(updated.estimatedPrice, 7000);
+      final rows = await DatabaseHelper.instance.query(
+        'SELECT ${SqfExpense.estimatedPrice} AS estimatedPrice FROM ${SqfExpense.tableName} WHERE ${SqfExpense.id} = 3',
+      );
+      expect(rows.single['estimatedPrice'], 7000);
+    });
+
+    test('確定行が0件なら現在値を保持したまま未確定行へ同期する', () async {
+      await insertFixedCostRow(
+        id: 10,
+        name: '電気代',
+        variable: 1,
+        estimatedPrice: 9000,
+        estimatedPriceIsManual: 1,
+      );
+      await insertExpenseRow(
+        id: 1,
+        date: '20250710',
+        price: null,
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 3000,
+      );
+
+      final master = await repository.fetch(fixedCostId: 10);
+      await repository.updateWithAutoEstimatedPriceSync(
+        master.copyWith(estimatedPriceIsManual: 0),
+      );
+
+      final updated = await repository.fetch(fixedCostId: 10);
+      expect(updated.estimatedPriceIsManual, 0);
+      // 平均を求められないので現在値（9000）を保持する
+      expect(updated.estimatedPrice, 9000);
       final rows = await DatabaseHelper.instance.query(
         'SELECT ${SqfExpense.estimatedPrice} AS estimatedPrice FROM ${SqfExpense.tableName} WHERE ${SqfExpense.id} = 1',
       );

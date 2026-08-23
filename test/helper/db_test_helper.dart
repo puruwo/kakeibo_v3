@@ -270,6 +270,8 @@ Future<int> insertFixedCostRow({
   int variable = 0,
   int? price,
   int? estimatedPrice,
+  // 予想額の手動設定フラグ（0=自動／1=手動。仕様 §6.9）
+  int estimatedPriceIsManual = 0,
   int intervalNumber = 1,
   int intervalUnit = 1,
   String firstPaymentDate = '20250101',
@@ -284,6 +286,7 @@ Future<int> insertFixedCostRow({
     SqfFixedCost.variable: variable,
     SqfFixedCost.price: price,
     SqfFixedCost.estimatedPrice: estimatedPrice,
+    SqfFixedCost.estimatedPriceIsManual: estimatedPriceIsManual,
     SqfFixedCost.expenseSmallCategoryId: expenseSmallCategoryId,
     SqfFixedCost.intervalNumber: intervalNumber,
     SqfFixedCost.intervalUnit: intervalUnit,

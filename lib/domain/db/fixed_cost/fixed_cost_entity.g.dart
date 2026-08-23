@@ -14,6 +14,8 @@ _$FixedCostEntityImpl _$$FixedCostEntityImplFromJson(
   variable: (json['variable'] as num).toInt(),
   price: (json['price'] as num?)?.toInt() ?? 0,
   estimatedPrice: (json['estimatedPrice'] as num?)?.toInt() ?? 0,
+  estimatedPriceIsManual:
+      (json['estimatedPriceIsManual'] as num?)?.toInt() ?? 0,
   expenseSmallCategoryId:
       (json['expenseSmallCategoryId'] as num?)?.toInt() ?? 0,
   intervalNumber: (json['intervalNumber'] as num).toInt(),
@@ -32,6 +34,7 @@ Map<String, dynamic> _$$FixedCostEntityImplToJson(
   'variable': instance.variable,
   'price': instance.price,
   'estimatedPrice': instance.estimatedPrice,
+  'estimatedPriceIsManual': instance.estimatedPriceIsManual,
   'expenseSmallCategoryId': instance.expenseSmallCategoryId,
   'intervalNumber': instance.intervalNumber,
   'intervalUnit': instance.intervalUnit,
