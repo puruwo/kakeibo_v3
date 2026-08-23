@@ -1650,11 +1650,24 @@ void main() {
       );
     });
 
-    test('fixed_costにestimated_price_is_manualが追加され、既定値は0になる', () async {
+    test('toV10単体ではestimated_price_is_manualは追加されない（列追加はv11の責務）', () async {
       final db = await createV9ShapeDatabase();
       await insertFixedCostMaster(db, id: 1, name: '家賃', fixedCostCategoryId: 1);
 
       await DataBaseMigrate().toV10(db);
+
+      final columns = await _columnNames(db, SqfFixedCost.tableName);
+      expect(columns.contains(SqfFixedCost.estimatedPriceIsManual), isFalse);
+    });
+
+    // v10 は先行の TestFlight で配信済みだったため、列追加は v11 として切り直した。
+    // v10 適用済み（列なし）の端末で toV11 が列を足せることがこのテストの主眼。
+    test('v10適用済みDBにtoV11でestimated_price_is_manualが追加され、既定値は0になる', () async {
+      final db = await createV9ShapeDatabase();
+      await insertFixedCostMaster(db, id: 1, name: '家賃', fixedCostCategoryId: 1);
+
+      await DataBaseMigrate().toV10(db);
+      await DataBaseMigrate().toV11(db);
 
       final columns = await _columnNames(db, SqfFixedCost.tableName);
       expect(columns.contains(SqfFixedCost.estimatedPriceIsManual), isTrue);
@@ -1663,11 +1676,12 @@ void main() {
       expect(master[SqfFixedCost.estimatedPriceIsManual], 0);
     });
 
-    test('estimated_price_is_manualの追加は2回実行しても壊れない（冪等）', () async {
+    test('toV11は2回実行しても壊れない（冪等）', () async {
       final db = await createV9ShapeDatabase();
       await insertFixedCostMaster(db, id: 1, name: '家賃', fixedCostCategoryId: 1);
 
       await DataBaseMigrate().toV10(db);
+      await DataBaseMigrate().toV11(db);
       // 手動設定を入れてから再実行し、値が保たれることまで見る
       await db.update(
         SqfFixedCost.tableName,
@@ -1676,7 +1690,7 @@ void main() {
         whereArgs: [1],
       );
 
-      await DataBaseMigrate().toV10(db);
+      await DataBaseMigrate().toV11(db);
 
       final master = (await db.query(SqfFixedCost.tableName)).single;
       expect(master[SqfFixedCost.estimatedPriceIsManual], 1);
@@ -1837,7 +1851,7 @@ void main() {
       await db.close();
     }
 
-    test('v6形状のDBを開くとonUpgradeでv7〜v10が順に適用されuser_versionが10になる', () async {
+    test('v6形状のDBを開くとonUpgradeでv7〜v11が順に適用されuser_versionが11になる', () async {
       final path = await currentDatabasePath();
       await createV6DatabaseFile(path);
 
@@ -1845,7 +1859,10 @@ void main() {
       final db = await openTestDatabase();
 
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 10);
+      expect(rows.first.values.first, 11);
+      // v11 の列追加まで到達していること
+      final columns = await _columnNames(db, SqfFixedCost.tableName);
+      expect(columns.contains(SqfFixedCost.estimatedPriceIsManual), isTrue);
     });
 
     test('チェーン適用後はv7の色更新とv8の列追加・バックフィルとv10の統合が反映される', () async {

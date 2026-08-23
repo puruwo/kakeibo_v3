@@ -411,10 +411,20 @@ class DataBaseMigrate {
     await _moveFixedCostCategoryToExpenseCategory(db);
     await _migrateFixedCostExpenseToExpense(db);
     await _dropFixedCostCategoryIdColumn(db);
-    await _addEstimatedPriceIsManualColumn(db);
     await _dropLegacyFixedCostTables(db);
 
     logger.i('=== v10マイグレーション完了 ===');
+  }
+
+  // 予想額の手動設定フラグの追加 (v10 → v11)
+  //
+  // 当初は toV10 内に追記していたが、v10 は先行の TestFlight で配信済みだったため
+  // v10 適用済みの端末では列が追加されず fixed_cost の全クエリが失敗した。
+  // 独立したバージョンとして切り直す（仕様 §6.9）。
+  Future<void> toV11(Database db) async {
+    logger.i('=== v11マイグレーション開始: 予想額の手動設定フラグ ===');
+    await _addEstimatedPriceIsManualColumn(db);
+    logger.i('=== v11マイグレーション完了 ===');
   }
 
   /// v10-1: expense をテーブル再作成方式で新定義へ移行する
@@ -932,8 +942,8 @@ class DataBaseMigrate {
   ///
   /// 予想額を自動算出（0）と手動設定（1）で切り替えるためのフラグ。
   /// v10は未配信のため新バージョンを切らず、toV10の中に追記している。
-  /// 手順4で fixed_cost を再作成するため、この追加は必ずその後に行う。
-  /// 列が既にあれば何もしない（冪等性）。
+  /// v11: fixed_cost に estimated_price_is_manual を追加する。
+  /// 列が既にあれば何もしない（冪等性。新規インストールは onCreate で既に持つ）。
   Future<void> _addEstimatedPriceIsManualColumn(Database db) async {
     final columns = await db.rawQuery(
       'PRAGMA table_info(${SqfFixedCost.tableName})',
@@ -942,11 +952,11 @@ class DataBaseMigrate {
       (column) => column['name'] == SqfFixedCost.estimatedPriceIsManual,
     );
     if (hasColumn) {
-      logger.i('4-2. ${SqfFixedCost.estimatedPriceIsManual}は追加済みのためスキップ');
+      logger.i('11-1. ${SqfFixedCost.estimatedPriceIsManual}は追加済みのためスキップ');
       return;
     }
 
-    logger.i('4-2. ${SqfFixedCost.tableName}に${SqfFixedCost.estimatedPriceIsManual}を追加します');
+    logger.i('11-1. ${SqfFixedCost.tableName}に${SqfFixedCost.estimatedPriceIsManual}を追加します');
     // 既存マスタは全て自動算出（0）として扱う
     await db.execute(
       'ALTER TABLE ${SqfFixedCost.tableName} '
