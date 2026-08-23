@@ -486,6 +486,11 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  /// リンク行の無効状態（履歴が無く遷移先に意味がないとき）
+  static final TextStyle insetGroupLinkRowDisabled = insetGroupLinkRow.copyWith(
+    color: AppColorsDark.textTertiary,
+  );
+
   // ==========================================================================
   // ボトムシート（予想額の入力シートなど）
   // ==========================================================================

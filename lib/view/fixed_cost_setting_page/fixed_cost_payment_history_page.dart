@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_detail_provider.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_payment_history_summary.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
@@ -13,6 +14,7 @@ import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 
 /// 固定費の支払い履歴ページ
@@ -53,10 +55,13 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
         data: (history) {
           if (history.isEmpty) {
             return const Center(
-              child: AppEmptyState(
-                icon: Icons.receipt_long_rounded,
-                title: 'まだ支払いの記録がありません',
-                description: '支払日が来ると自動で記録され、ここに並びます',
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                child: AppEmptyState(
+                  icon: Icons.receipt_long_rounded,
+                  title: 'まだ支払いの記録がありません',
+                  description: '支払日が来ると自動で記録され、ここに並びます',
+                ),
               ),
             );
           }
@@ -81,12 +86,8 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
               bottomInset,
             ),
             children: [
-              // 対象の固定費名（取得前は空のまま高さだけ確保する）
-              Text(
-                fixedCost?.name ?? '',
-                textAlign: TextAlign.center,
-                style: AppTextStyles.pageSubjectTitle,
-              ),
+              // 対象の固定費（カテゴリーアイコン＋名称）
+              _TitleRow(fixedCost: fixedCost),
               const SizedBox(height: AppSpacing.lg),
               _SummaryCard(summary: summary, fixedCost: fixedCost),
               const SizedBox(height: AppSpacing.xl),
@@ -138,6 +139,53 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
           ],
         ),
       ],
+    );
+  }
+}
+
+/// 見出し行（カテゴリーアイコン＋固定費名。中央揃え）
+///
+/// アイコンは固定費の設定画面のカテゴリー行と同じ部品（大カテゴリーの色・図柄）。
+class _TitleRow extends ConsumerWidget {
+  const _TitleRow({required this.fixedCost});
+
+  final FixedCostEntity? fixedCost;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final fixedCost = this.fixedCost;
+    // マスタ取得前は高さだけ確保する
+    if (fixedCost == null) {
+      return Text('', style: AppTextStyles.pageSubjectTitle);
+    }
+
+    return FutureBuilder(
+      future: ref
+          .read(categoryUsecaseProvider)
+          .fetchBySmallId(fixedCost.expenseSmallCategoryId),
+      builder: (context, snapshot) {
+        final category = snapshot.data;
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (category != null) ...[
+              ExpenseCategoryIcon(
+                resourcePath: category.resourcePath,
+                colorCode: category.colorCode,
+                size: 24,
+              ),
+              const SizedBox(width: AppSpacing.sm),
+            ],
+            Flexible(
+              child: Text(
+                fixedCost.name,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.pageSubjectTitle,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 }

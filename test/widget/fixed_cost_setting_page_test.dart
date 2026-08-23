@@ -290,7 +290,7 @@ void main() {
     expect(find.text('7/1'), findsWidgets);
   });
 
-  testWidgets('支払い履歴ページは履歴0件なら空状態を出す', (tester) async {
+  testWidgets('履歴0件なら「すべての支払いを見る」は無効表示で遷移しない', (tester) async {
     await pumpApp(
       tester,
       home: const FixedCostSettingPage(fixedCostEntity: target),
@@ -298,13 +298,14 @@ void main() {
     );
     await pumpTimes(tester);
 
+    expect(find.text('まだ支払いの記録がありません'), findsOneWidget);
+
     await tester.tap(find.text('すべての支払いを見る'));
     await pumpTimes(tester, times: 5);
 
-    // 設定画面側の空表示とは文言を分けず同じ案内を出す
-    expect(find.widgetWithText(AppBar, '支払い履歴'), findsOneWidget);
-    expect(find.text('支払い合計'), findsNothing);
-    expect(find.text('まだ支払いの記録がありません'), findsWidgets);
+    // 遷移しない（支払い履歴ページのAppBarが出ない）
+    expect(find.widgetWithText(AppBar, '支払い履歴'), findsNothing);
+    expect(find.widgetWithText(AppBar, '固定費の設定'), findsOneWidget);
   });
 
   testWidgets('カテゴリー選択は大→小をpushで遷移し、ヘッダーの戻るで大へ戻る', (tester) async {
