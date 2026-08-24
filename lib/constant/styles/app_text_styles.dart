@@ -267,6 +267,9 @@ class AppTextStyles {
     fontSize: 10,
     color: AppColorsDark.textSecondary,
     fontWeight: FontWeight.w400,
+    // チップの塗り内で文字を垂直中央に置く（フォント既定の行高だと下寄りに見える）
+    height: 1.0,
+    leadingDistribution: TextLeadingDistribution.even,
   );
 
   /// チップの強調ラベル（固定費一覧の「変動」チップ）
@@ -274,6 +277,9 @@ class AppTextStyles {
     fontSize: 10,
     color: AppColorsDark.primary,
     fontWeight: FontWeight.w500,
+    // チップの塗り内で文字を垂直中央に置く（フォント既定の行高だと下寄りに見える）
+    height: 1.0,
+    leadingDistribution: TextLeadingDistribution.even,
   );
 
   static final TextStyle listCardSecondaryTitle = MyFontStyle.notoSans.copyWith(
