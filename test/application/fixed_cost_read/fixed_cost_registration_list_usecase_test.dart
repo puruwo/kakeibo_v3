@@ -159,6 +159,34 @@ void main() {
       expect(result.categoryGroups.single.items, hasLength(1));
     });
 
+    test('小カテゴリー参照が解決できない固定費は「カテゴリー未設定」の末尾グループに出る', () async {
+      // 存在しない小カテゴリー（id: 999）を参照するマスタ
+      const orphan = FixedCostEntity(
+        id: 50,
+        name: '謎の固定費',
+        variable: 0,
+        price: 1000,
+        expenseSmallCategoryId: 999,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250101',
+      );
+      final container = createUsecaseContainer(
+        fixedCosts: const [rent, orphan],
+      );
+
+      final result = await container.read(
+        fixedCostRegistrationListNotifierProvider.future,
+      );
+
+      // 除外せず末尾のフォールバックグループとして提示する
+      // （除外すると登録済みなのにトップで空状態と誤判定されるため）
+      expect(result.categoryGroups.map((e) => e.categoryId), [1, -1]);
+      final fallback = result.categoryGroups.last;
+      expect(fallback.categoryName, 'カテゴリー未設定');
+      expect(fallback.items.single.id, 50);
+    });
+
     test('固定費もカテゴリーも無ければ空のValueを返す', () async {
       final container = createUsecaseContainer(
         expenseBigCategories: const [],

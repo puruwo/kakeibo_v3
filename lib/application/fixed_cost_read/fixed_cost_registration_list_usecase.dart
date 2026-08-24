@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
@@ -10,10 +12,10 @@ import 'package:kakeibo/view_model/state/update_DB_count.dart';
 // グルーピングの単位は支出大カテゴリー（v10で固定費カテゴリーから変更。仕様 §8.4）
 
 final fixedCostRegistrationListNotifierProvider =
-    AsyncNotifierProvider<FixedCostRegistrationListUsecaseNotifier,
-        FixedCostRegistrationListValue>(
-  FixedCostRegistrationListUsecaseNotifier.new,
-);
+    AsyncNotifierProvider<
+      FixedCostRegistrationListUsecaseNotifier,
+      FixedCostRegistrationListValue
+    >(FixedCostRegistrationListUsecaseNotifier.new);
 
 class FixedCostRegistrationListUsecaseNotifier
     extends AsyncNotifier<FixedCostRegistrationListValue> {
@@ -30,28 +32,39 @@ class FixedCostRegistrationListUsecaseNotifier
     _smallCategoryRepo = ref.read(expenseSmallCategoryRepositoryProvider);
     _bigCategoryRepo = ref.read(expensebigCategoryRepositoryProvider);
 
-    // 削除されていない固定費のみを取得
-    final allFixedCosts = await _fixedCostRepo.fetchAllActive();
+    // 3クエリは互いに依存しないため並行取得する（トップのローディング時間短縮）
+    final results = await Future.wait([
+      // 削除されていない固定費のみを取得
+      _fixedCostRepo.fetchAllActive(),
+      _smallCategoryRepo.fetchAll(),
+      _bigCategoryRepo.fetchAll(),
+    ]);
+    final allFixedCosts = results[0] as List<FixedCostEntity>;
+    final smallCategories = results[1] as List<ExpenseSmallCategoryEntity>;
+    final allCategories = results[2] as List<ExpenseBigCategoryEntity>;
 
     // 小カテゴリー → 大カテゴリー の対応表を作る
-    final smallCategories = await _smallCategoryRepo.fetchAll();
     final smallToBig = <int, int>{
       for (final small in smallCategories) small.id: small.bigCategoryKey,
     };
 
     // 支出大カテゴリーidごとにグループ化するためのマップ
     final Map<int, List<FixedCostEntity>> categoryMap = {};
+    // 参照先の小カテゴリーが解決できないマスタ（削除・移行漏れ等）の受け皿
+    final List<FixedCostEntity> unresolvedItems = [];
 
     for (var fixedCost in allFixedCosts) {
       final bigCategoryId = smallToBig[fixedCost.expenseSmallCategoryId];
-      // 参照先が解決できないマスタは一覧に出せないため除外する
-      if (bigCategoryId == null) continue;
+      if (bigCategoryId == null) {
+        // 除外すると登録済みなのに空状態と誤判定されるため、末尾グループに出す
+        unresolvedItems.add(fixedCost);
+        continue;
+      }
 
       categoryMap.putIfAbsent(bigCategoryId, () => []).add(fixedCost);
     }
 
     // カテゴリーごとにグループ化したリストを作成（大カテゴリーの表示順に並べる）
-    final allCategories = await _bigCategoryRepo.fetchAll();
     final List<ExpenseBigCategoryGroup> categoryGroups = [];
 
     for (var category in allCategories) {
@@ -70,8 +83,19 @@ class FixedCostRegistrationListUsecaseNotifier
       }
     }
 
-    return FixedCostRegistrationListValue(
-      categoryGroups: categoryGroups,
-    );
+    // カテゴリー未解決のマスタは「その他」相当の末尾グループとして提示する
+    if (unresolvedItems.isNotEmpty) {
+      categoryGroups.add(
+        ExpenseBigCategoryGroup(
+          categoryId: -1,
+          categoryName: 'カテゴリー未設定',
+          categoryIconPath: 'assets/images/icon_others.svg',
+          categoryColorCode: '8E8E93',
+          items: unresolvedItems,
+        ),
+      );
+    }
+
+    return FixedCostRegistrationListValue(categoryGroups: categoryGroups);
   }
 }

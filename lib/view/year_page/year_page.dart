@@ -8,7 +8,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
-import 'package:kakeibo/application/fixed_cost/active_fixed_cost_count_provider.dart';
+import 'package:kakeibo/application/fixed_cost_read/fixed_cost_registration_list_usecase.dart';
 import 'package:kakeibo/view/component/page_loading_indicator.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_page.dart';
@@ -58,7 +58,9 @@ class _YearPageState extends ConsumerState<YearPage> {
     final annualBalanceAsync = ref.watch(
       resolvedAnnualBalanceChartValueProvider,
     );
-    final activeFixedCostCountAsync = ref.watch(activeFixedCostCountProvider);
+    // 固定費セクション（FixedCostButtonArea）と同じ情報源を見る（二重フェッチ防止）
+    final fixedCostListAsync =
+        ref.watch(fixedCostRegistrationListNotifierProvider);
 
     // いずれかがloading中ならフルローディング
     // _isYearSwitching は updateState 後 provider 再評価開始までの数フレームを埋める
@@ -69,7 +71,7 @@ class _YearPageState extends ConsumerState<YearPage> {
         bonusDisplayAsync.isLoading ||
         bonusPlanAsync.isLoading ||
         annualBalanceAsync.isLoading ||
-        activeFixedCostCountAsync.isLoading;
+        fixedCostListAsync.isLoading;
 
     // provider 側が loading に切り替わったら、強制フラグを解除する
     // 以降は provider 側の isLoading でローディング表示が引き継がれる

@@ -10,6 +10,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/year_page/annual_balance_chart/annual_balance_chart.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/view/year_page/year_page.dart';
 
 import '../helper/fake_repositories.dart';
@@ -159,10 +160,12 @@ void main() {
     expect(find.text('固定費を登録しましょう'), findsOneWidget);
     // ADR-022: 誘導カードは共通コンポーネント AppEmptyState で表示される
     expect(find.byType(AppEmptyState), findsOneWidget);
-    expect(find.text('固定費一覧'), findsNothing);
+    // 案件 UIデザイン改修 §5: 0件時は見出し・一覧リンクも出さない
+    expect(find.textContaining('一覧（'), findsNothing);
   });
 
-  testWidgets('固定費一覧行をタップすると固定費登録リストへ遷移する', (tester) async {
+  testWidgets('固定費セクションのミニカードと一覧リンクが出て、リンクで固定費登録リストへ遷移する',
+      (tester) async {
     await pumpApp(
       tester,
       home: const YearPage(),
@@ -170,15 +173,18 @@ void main() {
     );
     await pumpTimes(tester);
 
-    expect(find.text('固定費一覧'), findsOneWidget);
-    expect(find.text('1件'), findsOneWidget); // 有効な固定費の件数
+    // 案件 UIデザイン改修 §5: 見出し「固定費」+「一覧（N件）」リンク+ミニカード
+    expect(sectionTitle('固定費'), findsOneWidget);
+    expect(find.text('一覧（1件）'), findsOneWidget);
+    expect(find.text('家賃'), findsOneWidget); // ミニカードの固定費名
+    expect(find.text('¥ 80,000'), findsOneWidget); // ミニカードの金額
 
-    await tester.tap(find.text('固定費一覧'));
+    await tester.tap(find.text('一覧（1件）'));
     await pumpTimes(tester);
 
-    // 遷移先（固定費登録リスト）のヘッダーと登録済み固定費が出る
-    expect(find.text('固定費'), findsOneWidget);
-    expect(find.text('家賃'), findsOneWidget);
+    // 遷移先（固定費登録リスト）が開いている
+    expect(find.byType(FixedCostRegistrationListPage), findsOneWidget);
+    expect(find.text('家賃'), findsWidgets);
   });
 
   testWidgets('ボーナスエリアに収入・利用額・残額が出る', (tester) async {
