@@ -13,8 +13,8 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 
 /// 固定費の支払い履歴ページ
@@ -266,7 +266,7 @@ class _SummaryCard extends StatelessWidget {
   }
 }
 
-/// 支払い履歴の1行（日付／未確定チップ／金額／シェブロン）
+/// 支払い履歴の1行（日付／金額／シェブロン）
 class _HistoryRow extends StatelessWidget {
   const _HistoryRow({required this.expense, required this.onTap});
 
@@ -276,7 +276,6 @@ class _HistoryRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final date = expense.date;
-    final isUnconfirmed = expense.isConfirmed == 0;
 
     return AppInkWell(
       borderRadius: BorderRadius.zero,
@@ -295,16 +294,8 @@ class _HistoryRow extends StatelessWidget {
                   style: AppTextStyles.insetGroupHistoryDate,
                 ),
               ),
-              if (isUnconfirmed) const UnconfirmedFixedCostChipLabel(),
               const Spacer(),
-              Text(
-                yenmarkFormattedPriceGetter(expense.effectivePrice),
-                // 未確定行は予想額なので控えめな色で示す
-                style: isUnconfirmed
-                    ? AppTextStyles.insetGroupHistoryPrice
-                        .copyWith(color: context.colors.textSecondary)
-                    : AppTextStyles.insetGroupHistoryPrice,
-              ),
+              FixedCostHistoryPriceLabel(expense: expense),
               const SizedBox(width: AppSpacing.sm),
               Icon(
                 Icons.chevron_right_rounded,

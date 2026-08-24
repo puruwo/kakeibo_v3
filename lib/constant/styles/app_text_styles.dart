@@ -269,6 +269,13 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
   );
 
+  /// チップの強調ラベル（固定費一覧の「変動」チップ）
+  static final TextStyle chipLabelAccent = MyFontStyle.notoSans.copyWith(
+    fontSize: 10,
+    color: AppColorsDark.primary,
+    fontWeight: FontWeight.w500,
+  );
+
   static final TextStyle listCardSecondaryTitle = MyFontStyle.notoSans.copyWith(
     fontSize: 12,
     color: AppColorsDark.textSecondary,

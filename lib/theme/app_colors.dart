@@ -15,6 +15,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.primary,
     required this.onPrimary,
     required this.primarySubtle,
+    required this.primaryTint,
     required this.surface,
     required this.surfaceElevated,
     required this.surfaceElevated2,
@@ -42,6 +43,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color primary;
   final Color onPrimary;
   final Color primarySubtle;
+  final Color primaryTint;
   final Color surface;
   final Color surfaceElevated;
   final Color surfaceElevated2;
@@ -69,6 +71,7 @@ class AppColors extends ThemeExtension<AppColors> {
     primary: Color(0xFF0BB283),
     onPrimary: Color(0xFFFFFFFF),
     primarySubtle: Color(0xFFD7FFF4),
+    primaryTint: Color(0x290BB283),
     surface: Color(0xFFFFFFFF),
     surfaceElevated: Color(0xFFF2F2F7),
     surfaceElevated2: Color(0xFFFFFFFF),
@@ -97,6 +100,7 @@ class AppColors extends ThemeExtension<AppColors> {
     primary: Color(0xFF0BB283),
     onPrimary: Color(0xFFFFFFFF),
     primarySubtle: Color(0xFFD7FFF4),
+    primaryTint: Color(0x290BB283),
     surface: Color(0xFF0A0A0D),
     surfaceElevated: Color(0xFF1C1C1E),
     surfaceElevated2: Color(0xFF2C2C2E),
@@ -126,6 +130,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? primary,
     Color? onPrimary,
     Color? primarySubtle,
+    Color? primaryTint,
     Color? surface,
     Color? surfaceElevated,
     Color? surfaceElevated2,
@@ -153,6 +158,7 @@ class AppColors extends ThemeExtension<AppColors> {
       primary: primary ?? this.primary,
       onPrimary: onPrimary ?? this.onPrimary,
       primarySubtle: primarySubtle ?? this.primarySubtle,
+      primaryTint: primaryTint ?? this.primaryTint,
       surface: surface ?? this.surface,
       surfaceElevated: surfaceElevated ?? this.surfaceElevated,
       surfaceElevated2: surfaceElevated2 ?? this.surfaceElevated2,
@@ -185,6 +191,7 @@ class AppColors extends ThemeExtension<AppColors> {
       primary: Color.lerp(primary, other.primary, t)!,
       onPrimary: Color.lerp(onPrimary, other.onPrimary, t)!,
       primarySubtle: Color.lerp(primarySubtle, other.primarySubtle, t)!,
+      primaryTint: Color.lerp(primaryTint, other.primaryTint, t)!,
       surface: Color.lerp(surface, other.surface, t)!,
       surfaceElevated: Color.lerp(surfaceElevated, other.surfaceElevated, t)!,
       surfaceElevated2: Color.lerp(surfaceElevated2, other.surfaceElevated2, t)!,
@@ -226,6 +233,7 @@ class AppColorsLight {
   static const Color primary = Color(0xFF0BB283);
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color primarySubtle = Color(0xFFD7FFF4);
+  static const Color primaryTint = Color(0x290BB283);
   static const Color surface = Color(0xFFFFFFFF);
   static const Color surfaceElevated = Color(0xFFF2F2F7);
   static const Color surfaceElevated2 = Color(0xFFFFFFFF);
@@ -257,6 +265,7 @@ class AppColorsDark {
   static const Color primary = Color(0xFF0BB283);
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color primarySubtle = Color(0xFFD7FFF4);
+  static const Color primaryTint = Color(0x290BB283);
   static const Color surface = Color(0xFF0A0A0D);
   static const Color surfaceElevated = Color(0xFF1C1C1E);
   static const Color surfaceElevated2 = Color(0xFF2C2C2E);

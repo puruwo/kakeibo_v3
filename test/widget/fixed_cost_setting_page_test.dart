@@ -10,6 +10,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_setting_page.dart';
 
 import '../helper/fake_repositories.dart';
@@ -344,6 +345,41 @@ void main() {
     await tester.tap(find.text('電気'));
     await pumpTimes(tester, times: 5);
     expect(find.text('光熱費 › 電気'), findsOneWidget);
+  });
+
+  testWidgets('未確定の支払い行は金額ではなく「未入力」を出す', (tester) async {
+    // 確定1件＋未確定1件（未確定は実額NULL・予想額のみ。v10仕様）
+    const rows = [
+      ...expenseRows,
+      ExpenseEntity(
+        id: 101,
+        date: '20250901',
+        paymentCategoryId: 11,
+        memo: '家賃',
+        fixedCostId: 10,
+        isConfirmed: 0,
+        estimatedPrice: 80000,
+      ),
+    ];
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: buildFakes(rows: rows),
+    );
+    await pumpTimes(tester);
+
+    // 未確定行は推定額を出さず「未入力」（案件: 固定費バッジデザイン調整 決定C-1）
+    // 名称・金額入力欄の hintText「未入力」と区別するため金額ラベルWidgetに絞る
+    expect(
+      find.descendant(
+        of: find.byType(FixedCostHistoryPriceLabel),
+        matching: find.text('未入力'),
+      ),
+      findsOneWidget,
+    );
+    expect(find.text('9/1'), findsOneWidget);
+    // 確定行は実額のまま
+    expect(find.text('¥ 80,000'), findsOneWidget);
   });
 
   testWidgets('支払い履歴が0件のときは案内文が出る', (tester) async {

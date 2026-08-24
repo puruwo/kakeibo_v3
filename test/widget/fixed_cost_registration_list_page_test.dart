@@ -149,7 +149,7 @@ void main() {
     expect(find.text('自動車税'), findsNothing);
   });
 
-  testWidgets('変動費は「平均」ラベルと変動ありチップ付きで想定額が出る', (tester) async {
+  testWidgets('変動費は「平均」ラベルと「変動」チップ付きで想定額が出る', (tester) async {
     await pumpApp(
       tester,
       home: const FixedCostRegistrationListPage(),
@@ -160,7 +160,7 @@ void main() {
     expect(find.text('電気代'), findsOneWidget);
     expect(find.text('平均'), findsOneWidget);
     expect(find.text('¥ 6,000'), findsOneWidget); // 想定額
-    expect(find.text('変動あり'), findsOneWidget);
+    expect(find.text('変動'), findsOneWidget);
     // 次回支払日が未設定なら「次回：」行そのものが出ない
     expect(find.textContaining('次回：'), findsOneWidget);
   });

@@ -17,9 +17,9 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/component/unconfirmed_fixed_cost_chip_label.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/estimated_price_input_sheet.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
+import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_payment_history_page.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view/register_page/common_input_field/payment_frequency_picker.dart';
@@ -369,10 +369,9 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
         );
   }
 
-  /// 支払い履歴の1行（日付／未確定チップ／金額）
+  /// 支払い履歴の1行（日付／金額）
   Widget _buildHistoryRow(ExpenseEntity expense) {
     final date = expense.date;
-    final isUnconfirmed = expense.isConfirmed == 0;
 
     return SizedBox(
       height: 44,
@@ -388,12 +387,8 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
                 style: AppTextStyles.insetGroupHistoryDate,
               ),
             ),
-            if (isUnconfirmed) const UnconfirmedFixedCostChipLabel(),
             const Spacer(),
-            Text(
-              yenmarkFormattedPriceGetter(expense.effectivePrice),
-              style: AppTextStyles.insetGroupHistoryPrice,
-            ),
+            FixedCostHistoryPriceLabel(expense: expense),
           ],
         ),
       ),
