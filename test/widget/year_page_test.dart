@@ -191,10 +191,11 @@ void main() {
 
     expect(sectionTitle('特別枠の利用状況'), findsOneWidget);
     expect(find.byType(BonusPlanArea), findsOneWidget);
-    expect(find.text('¥ 400,000'), findsOneWidget); // ボーナス収入
-    expect(find.text('¥ 150,000'), findsOneWidget); // 利用額
+    // 案件 UIデザイン改修 §4: トップ用カードは残額主役+「利用/収入」の1行
     expect(find.text('残額'), findsOneWidget);
     expect(find.text('¥ 250,000'), findsOneWidget);
+    expect(find.text('利用 ¥ 150,000'), findsOneWidget);
+    expect(find.text('収入 ¥ 400,000'), findsOneWidget);
   });
 
   testWidgets('記録はあるがボーナスが未登録なら登録誘導カード（AppEmptyState）になる', (tester) async {

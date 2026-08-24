@@ -11,9 +11,15 @@ import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_list_area.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_home_footer.dart';
 import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_income_list_area/bonus_income_list_area.dart';
-import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_area.dart';
+import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_plan_detail_summary.dart';
 import 'package:kakeibo/view_model/state/bonus_home_page/selected_tab_controller/selected_tab_controller.dart';
 
+/// 特別枠の利用状況ページ（案件 UIデザイン改修 §4）
+///
+/// ハーフモーダル風（DraggableScrollableSheet）を廃止した通常のフルページ。
+/// 上部にページ用サマリー（BonusPlanDetailSummary）を置き、
+/// リストをスクロールするとサマリーが1行のコンパクトバー
+/// （BonusPlanCollapsedBar）に折りたたまれる。
 class BonusHomePage extends ConsumerStatefulWidget {
   const BonusHomePage({super.key, this.initialTab = 0});
 
@@ -26,6 +32,14 @@ class BonusHomePage extends ConsumerStatefulWidget {
 class _BonusHomePage extends ConsumerState<BonusHomePage>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+
+  /// サマリーを1行バーへ折りたたんでいるか
+  bool _isSummaryCollapsed = false;
+
+  /// 折りたたむスクロール量のしきい値。
+  /// 折りたたみ⇄展開が同じ境界で往復してチラつかないようヒステリシスを持たせる
+  static const double _collapseThreshold = 32;
+  static const double _expandThreshold = 8;
 
   @override
   void initState() {
@@ -63,6 +77,24 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
     super.dispose();
   }
 
+  /// タブ内リストのスクロールを監視してサマリーの折りたたみを切り替える
+  bool _onScrollNotification(ScrollNotification notification) {
+    // TabBarView自身（横方向のPageView）の通知は対象外
+    if (notification.metrics.axis != Axis.vertical) return false;
+
+    final pixels = notification.metrics.pixels;
+    // バウンス（末尾側のオーバースクロール）中は無視する。
+    // 内容が短いリストを引っ張っただけで折りたたみが往復しないように
+    if (pixels > notification.metrics.maxScrollExtent) return false;
+
+    if (!_isSummaryCollapsed && pixels > _collapseThreshold) {
+      setState(() => _isSummaryCollapsed = true);
+    } else if (_isSummaryCollapsed && pixels < _expandThreshold) {
+      setState(() => _isSummaryCollapsed = false);
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
@@ -77,126 +109,64 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
         ),
 
         // 本体
-        body: Stack(
+        body: Column(
           children: [
-            // 上部（ここに通常の内容など追加）
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-              child: BonusPlanArea(),
+            // サマリー（スクロールで1行バーへ折りたたみ）
+            AnimatedSize(
+              duration: _kSummaryCollapseDuration,
+              curve: Curves.easeOutCubic,
+              alignment: Alignment.topCenter,
+              child: _isSummaryCollapsed
+                  ? const BonusPlanCollapsedBar()
+                  : const Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        AppSpacing.lg,
+                        AppSpacing.md,
+                        AppSpacing.lg,
+                        AppSpacing.xs,
+                      ),
+                      child: BonusPlanDetailSummary(),
+                    ),
             ),
-            DraggableScrollableSheet(
-              // 初期の表示割合
-              initialChildSize: 0.7,
-              // 最小の表示割合
-              minChildSize: 0.7,
-              // 最大の表示割合
-              maxChildSize: 1.0,
-              // ドラッグを離した時に一番近いsnapSizeになるか
-              snap: true,
-              // snapで止める時の割合
-              snapSizes: const [0.7, 1.0],
-              builder: (context, scrollController) {
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    // ハンドルバー
-                    // SingleChildScrollViewの範囲がドラッグできる範囲
-                    // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
-                    SingleChildScrollView(
-                      controller: scrollController,
-                      physics: const ClampingScrollPhysics(),
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                          top: 0,
-                          bottom: AppSpacing.xs,
-                        ),
-                        child: Center(
-                          child: Container(
-                            width: 40,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              color: context.colors.handle,
-                              borderRadius: BorderRadius.circular(2),
-                            ),
-                          ),
-                        ),
-                      ),
+
+            // タブ
+            AppTab(
+              tabController: _tabController,
+              tabs: const [
+                Tab(text: '特別枠支出'),
+                Tab(text: '特別枠収入'),
+              ],
+            ),
+            const Divider(height: 1),
+
+            // リスト
+            Expanded(
+              child: NotificationListener<ScrollNotification>(
+                onNotification: _onScrollNotification,
+                child: TabBarView(
+                  controller: _tabController,
+                  children: const [
+                    // ボーナス支出のエリア
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+                      child: BonusExpenseListArea(),
                     ),
-                    Expanded(
-                      child: Container(
-                        // 背景色 & 角丸
-                        decoration: BoxDecoration(
-                          color: context.colors.fillOpaque,
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(24),
-                          ),
-                          boxShadow: [
-                            // 少し上からの影をつけると見栄えが良い
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 8,
-                              spreadRadius: 2,
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            // SingleChildScrollViewの範囲がドラッグできる範囲
-                            // スクロールするにはscrollControllerを渡す必要があり、そのウィジェットに囲まれた領域だけがスクロール可能になる
-                            SingleChildScrollView(
-                              controller: scrollController,
-                              physics: const ClampingScrollPhysics(),
-                              child: Column(
-                                children: [
-                                  // タブ
-                                  AppTab(
-                                    tabController: _tabController,
-                                    tabs: const [
-                                      Tab(text: '特別枠支出'),
-                                      Tab(text: '特別枠収入'),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
 
-                            const Divider(height: 1),
-
-                            Expanded(
-                              child: TabBarView(
-                                controller: _tabController,
-                                children: const [
-                                  // ボーナス支出のエリア
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: AppSpacing.lg,
-                                    ),
-                                    child: BonusExpenseListArea(),
-                                  ),
-
-                                  // ボーナス収入のエリア
-                                  BonusIncomeListArea(),
-                                ],
-                              ),
-                            ),
-
-                            const Divider(height: 1),
-
-                            // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
-                            const SafeArea(
-                              top: false,
-                              child: Padding(
-                                padding: EdgeInsets.all(AppSpacing.lg),
-                                child: BonusHomeFooter(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    // ボーナス収入のエリア
+                    BonusIncomeListArea(),
                   ],
-                );
-              },
+                ),
+              ),
+            ),
+
+            // フッターボタンエリア（仕様 §1: 区切り線は置かない。
+            // グロナビに隠れないようSafeAreaを適用）
+            const SafeArea(
+              top: false,
+              child: Padding(
+                padding: EdgeInsets.all(AppSpacing.lg),
+                child: BonusHomeFooter(),
+              ),
             ),
           ],
         ),
@@ -204,3 +174,6 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
     );
   }
 }
+
+/// サマリーの折りたたみアニメーション時間
+const Duration _kSummaryCollapseDuration = Duration(milliseconds: 200);
