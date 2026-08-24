@@ -117,6 +117,7 @@ class AppInsetRow extends StatelessWidget {
     required this.label,
     this.value,
     this.valueColor,
+    this.valueWidget,
     required this.onTap,
     this.iconColor,
     this.leading,
@@ -130,6 +131,7 @@ class AppInsetRow extends StatelessWidget {
         keyboardType = null,
         inputFormatters = null,
         maxLength = null,
+        onChanged = null,
         textAlign = TextAlign.right;
 
   /// スイッチ行
@@ -145,12 +147,14 @@ class AppInsetRow extends StatelessWidget {
         showChevron = false,
         value = null,
         valueColor = null,
+        valueWidget = null,
         onTap = null,
         controller = null,
         hintText = null,
         keyboardType = null,
         inputFormatters = null,
         maxLength = null,
+        onChanged = null,
         textAlign = TextAlign.right;
 
   /// テキストフィールド行
@@ -163,12 +167,14 @@ class AppInsetRow extends StatelessWidget {
     this.keyboardType,
     this.inputFormatters,
     this.maxLength,
+    this.onChanged,
     this.iconColor,
     this.leading,
   })  : _type = _AppInsetRowType.textField,
         showChevron = false,
         value = null,
         valueColor = null,
+        valueWidget = null,
         onTap = null,
         switchValue = null,
         onSwitchChanged = null,
@@ -181,6 +187,7 @@ class AppInsetRow extends StatelessWidget {
     required this.label,
     this.value,
     this.valueColor,
+    this.valueWidget,
     this.iconColor,
     this.leading,
   })  : _type = _AppInsetRowType.display,
@@ -193,6 +200,7 @@ class AppInsetRow extends StatelessWidget {
         keyboardType = null,
         inputFormatters = null,
         maxLength = null,
+        onChanged = null,
         textAlign = TextAlign.right;
 
   final _AppInsetRowType _type;
@@ -219,6 +227,14 @@ class AppInsetRow extends StatelessWidget {
 
   /// 値の文字色（省略時は text。未設定の値を薄く見せたいときに使う）
   final Color? valueColor;
+
+  /// 値の位置に置く任意のウィジェット（色スウォッチ・アイコンプレビュー等）
+  ///
+  /// navigation / display 行で指定でき、[value] より優先する。
+  final Widget? valueWidget;
+
+  /// テキストフィールド行の変更通知
+  final ValueChanged<String>? onChanged;
 
   final VoidCallback? onTap;
   final bool? switchValue;
@@ -276,7 +292,7 @@ class AppInsetRow extends StatelessWidget {
         return Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Flexible(child: _buildValueText(context)),
+            Flexible(child: valueWidget ?? _buildValueText(context)),
             if (showChevron) ...[
               const SizedBox(width: 2),
               Icon(
@@ -290,7 +306,7 @@ class AppInsetRow extends StatelessWidget {
       case _AppInsetRowType.display:
         return Align(
           alignment: Alignment.centerRight,
-          child: _buildValueText(context),
+          child: valueWidget ?? _buildValueText(context),
         );
       case _AppInsetRowType.switchRow:
         return Align(
@@ -349,6 +365,7 @@ class AppInsetRow extends StatelessWidget {
             hintText: hintText,
             hintStyle: AppTextStyles.insetGroupPlaceholder,
           ),
+          onChanged: onChanged,
           onTapOutside: (event) {
             FocusScope.of(context).unfocus();
           },

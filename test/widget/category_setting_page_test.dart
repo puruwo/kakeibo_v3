@@ -173,7 +173,7 @@ void main() {
     // 選択した大カテゴリーの小カテゴリーが編集対象として並ぶ
     expect(find.text('食費'), findsOneWidget);
     expect(find.text('日用品'), findsOneWidget);
-    expect(find.text('+ 新しい項目を追加'), findsOneWidget);
+    expect(find.text('小カテゴリーを追加'), findsOneWidget);
   });
 
   testWidgets('「+ 新しいカテゴリーを追加」で新規作成モードの詳細編集へ遷移する', (tester) async {

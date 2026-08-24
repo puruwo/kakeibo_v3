@@ -120,11 +120,10 @@ void main() {
       expect(find.text('生活費'), findsOneWidget); // 名前入力欄の初期値
       expect(find.text('カテゴリーカラー'), findsOneWidget);
       // 小カテゴリーの一覧（凡例＋2件＋追加行）
-      expect(find.text('表示'), findsOneWidget);
-      expect(find.text('並べ替え'), findsOneWidget);
+      expect(find.text('小カテゴリー'), findsOneWidget);
       expect(find.text('食費'), findsOneWidget);
       expect(find.text('日用品'), findsOneWidget);
-      expect(find.text('+ 新しい項目を追加'), findsOneWidget);
+      expect(find.text('小カテゴリーを追加'), findsOneWidget);
     });
 
     testWidgets('名前を変えて完了すると大カテゴリーがupdateされる', (tester) async {
@@ -210,10 +209,10 @@ void main() {
       await waitForSnackBarDismissed(tester);
     });
 
-    testWidgets('「+ 新しい項目を追加」で入力した項目が一覧に増え保存でaddされる', (tester) async {
+    testWidgets('「小カテゴリーを追加」で入力した項目が一覧に増え保存でaddされる', (tester) async {
       final fakes = await pumpEditPage(tester);
 
-      await tester.tap(find.text('+ 新しい項目を追加'));
+      await tester.tap(find.text('小カテゴリーを追加'));
       await pumpTimes(tester);
 
       expect(find.text('新しい項目名を入力'), findsOneWidget);
@@ -286,7 +285,7 @@ void main() {
 
       expect(find.text('月次収入'), findsOneWidget); // 名前入力欄の初期値
       expect(find.text('給与'), findsOneWidget);
-      expect(find.text('+ 新しい項目を追加'), findsOneWidget);
+      expect(find.text('小カテゴリーを追加'), findsOneWidget);
     });
 
     testWidgets('名前を変えて完了すると収入大カテゴリーがupdateされる', (tester) async {

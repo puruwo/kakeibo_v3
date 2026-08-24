@@ -43,19 +43,18 @@ class _NewSmallCategoryInputNameDialog
 
   @override
   Widget build(BuildContext context) {
+    // 案件 UIデザイン改修 §2: ダイアログの語彙を統一（fillOpaque地・角丸24・40pxボタン）
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: Container(
-        alignment: Alignment.center,
-        height: 150,
+      backgroundColor: context.colors.fillOpaque,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            const Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Text('新しい項目名を入力'),
-            ),
+            Text('新しい項目名を入力', style: AppTextStyles.dialogTitle),
+            const SizedBox(height: 16),
             TextFormField(
               controller: _textContoroller,
               // オートフォーカスさせるか
@@ -91,15 +90,18 @@ class _NewSmallCategoryInputNameDialog
                 // trueにするとテキストフィールド全体の密度が下がる
                 isDense: true,
 
-                // 背景の塗りつぶし
-                filled: false,
+                // 背景の塗りつぶし（入力欄の範囲がわかるように塗る）
+                filled: true,
+                fillColor: context.colors.fillSecondary,
+
+                // ヒントテキスト
+                hintText: '小カテゴリー名',
+                hintStyle: AppTextStyles.listTileTextFieldHint,
 
                 // テキストの余白
-                contentPadding: const EdgeInsets.only(
-                  top: 10,
-                  bottom: 10,
-                  left: 0,
-                  right: 0,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 12,
+                  horizontal: 12,
                 ),
 
                 // 境界線を設定しないとアンダーラインが表示されるので透明でもいいから境界線を設定
@@ -128,99 +130,101 @@ class _NewSmallCategoryInputNameDialog
                 FocusScope.of(context).unfocus();
               },
             ),
-            OverflowBar(
-              alignment: MainAxisAlignment.end,
+            const SizedBox(height: 16),
+            Row(
               children: [
-                TextButton(
-                  onPressed: () {
-                    // キャンセルボタンを押した時の処理
-                    Navigator.of(context).pop();
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: context.colors.fill,
-                  ),
-                  child: Text(
-                    'キャンセル',
-                    style: AppTextStyles.mainButtonText,
+                Expanded(
+                  child: MainButton(
+                    buttonType: ButtonColorType.secondary,
+                    buttonText: 'キャンセル',
+                    onPressed: () {
+                      // キャンセルボタンを押した時の処理
+                      Navigator.of(context).pop();
+                    },
                   ),
                 ),
-                MainButton(
-                  buttonType: ButtonColorType.main,
-                  buttonText: 'OK',
-                  onPressed: () {
-                    // 入力が空の場合は何もしない
-                    if (_textContoroller.text.isEmpty) {
-                      // スナックバーを表示する
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: const Text('項目名を入力してください'),
-                          behavior: SnackBarBehavior.floating,
-                          duration: const Duration(seconds: 2),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8.0),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: MainButton(
+                    buttonType: ButtonColorType.main,
+                    buttonText: 'OK',
+                    onPressed: () {
+                      // 入力が空の場合は何もしない
+                      if (_textContoroller.text.isEmpty) {
+                        // スナックバーを表示する
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: const Text('項目名を入力してください'),
+                            behavior: SnackBarBehavior.floating,
+                            duration: const Duration(seconds: 2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
                           ),
-                        ),
-                      );
-                      return;
-                    }
+                        );
+                        return;
+                      }
 
-                    if (widget.categoryType == CategoryType.income) {
-                      // 収入小カテゴリー用entity
-                      final entity = EditIncomeSmallCategoryValue(
-                        id: -1,
-                        bigCategoryKey: widget.bigCategoryId,
-                        name: _textContoroller.text,
-                        smallCategoryOrderKey: 0,
-                        displayOrderInBig: widget.displayedOrderInBig,
-                        defaultDisplayed: 1,
-                        editedStateDisplayOrder: widget.displayedOrderInBig,
-                        etitedStateIsChecked: true,
-                      );
+                      if (widget.categoryType == CategoryType.income) {
+                        // 収入小カテゴリー用entity
+                        final entity = EditIncomeSmallCategoryValue(
+                          id: -1,
+                          bigCategoryKey: widget.bigCategoryId,
+                          name: _textContoroller.text,
+                          smallCategoryOrderKey: 0,
+                          displayOrderInBig: widget.displayedOrderInBig,
+                          defaultDisplayed: 1,
+                          editedStateDisplayOrder: widget.displayedOrderInBig,
+                          etitedStateIsChecked: true,
+                        );
 
-                      ref
-                          .read(
-                            edittingIncomeSmallCategoryListNotifierProvider
-                                .notifier,
-                          )
-                          .addSmallCategory(entity);
+                        ref
+                            .read(
+                              edittingIncomeSmallCategoryListNotifierProvider
+                                  .notifier,
+                            )
+                            .addSmallCategory(entity);
 
-                      ref
-                          .read(
-                            isIncomeSmallCategoryListEditedNotifierProvider
-                                .notifier,
-                          )
-                          .updateState(true);
-                    } else {
-                      // 入力された名前を使って新しい小カテゴリーのentityを作成
-                      final entity = EditExpenseSmallCategoryValue(
-                        id: -1, // 新規作成なのでIDは-1
-                        bigCategoryKey: widget.bigCategoryId,
-                        name: _textContoroller.text,
-                        smallCategoryOrderKey: 0, // 新規作成なので0
-                        displayOrderInBig: widget.displayedOrderInBig,
-                        defaultDisplayed: 1,
-                        editedStateDisplayOrder: widget.displayedOrderInBig,
-                        etitedStateIsChecked: true,
-                      );
+                        ref
+                            .read(
+                              isIncomeSmallCategoryListEditedNotifierProvider
+                                  .notifier,
+                            )
+                            .updateState(true);
+                      } else {
+                        // 入力された名前を使って新しい小カテゴリーのentityを作成
+                        final entity = EditExpenseSmallCategoryValue(
+                          id: -1, // 新規作成なのでIDは-1
+                          bigCategoryKey: widget.bigCategoryId,
+                          name: _textContoroller.text,
+                          smallCategoryOrderKey: 0, // 新規作成なので0
+                          displayOrderInBig: widget.displayedOrderInBig,
+                          defaultDisplayed: 1,
+                          editedStateDisplayOrder: widget.displayedOrderInBig,
+                          etitedStateIsChecked: true,
+                        );
 
-                      // 追加する処理をここに書く
-                      ref
-                          .read(
-                            edittingSmallCategoryListNotifierProvider.notifier,
-                          )
-                          .addSmallCategory(entity);
+                        // 追加する処理をここに書く
+                        ref
+                            .read(
+                              edittingSmallCategoryListNotifierProvider
+                                  .notifier,
+                            )
+                            .addSmallCategory(entity);
 
-                      // 変更を加えたことを管理する状態管理する
-                      ref
-                          .read(
-                            isSmallCategoryListEditedNotifierProvider.notifier,
-                          )
-                          .updateState(true);
-                    }
+                        // 変更を加えたことを管理する状態管理する
+                        ref
+                            .read(
+                              isSmallCategoryListEditedNotifierProvider
+                                  .notifier,
+                            )
+                            .updateState(true);
+                      }
 
-                    // OKボタンを押した時の処理
-                    Navigator.of(context).pop();
-                  },
+                      // OKボタンを押した時の処理
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
               ],
             ),
