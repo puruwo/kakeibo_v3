@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
@@ -9,6 +8,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
+import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/modal.dart';
 
@@ -262,36 +262,4 @@ class _BigCategoryGroup {
   final String colorCode;
   final String resourcePath;
   final List<ExpenseCategoryEntity> smallCategories;
-}
-
-/// カテゴリーアイコン（SVG）を色付きで表示する
-///
-/// 固定費の設定画面のカテゴリー行で使う。
-class ExpenseCategoryIcon extends StatelessWidget {
-  const ExpenseCategoryIcon({
-    super.key,
-    required this.resourcePath,
-    required this.colorCode,
-    this.size = kAppInsetRowIconSize,
-  });
-
-  final String resourcePath;
-  final String colorCode;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    if (resourcePath.isEmpty) {
-      return SizedBox(width: size, height: size);
-    }
-    return SvgPicture.asset(
-      resourcePath,
-      width: size,
-      height: size,
-      colorFilter: ColorFilter.mode(
-        ColorCode.toColor(colorCode),
-        BlendMode.srcIn,
-      ),
-    );
-  }
 }

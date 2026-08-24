@@ -17,7 +17,7 @@ import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
-import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
+import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_setting_page.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';

@@ -19,6 +19,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/estimated_price_input_sheet.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
+import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_payment_history_page.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';

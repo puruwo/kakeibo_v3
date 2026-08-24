@@ -11,7 +11,7 @@ import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/modal.dart';
-import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
+import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_setting_page.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_call_to_action_button.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';

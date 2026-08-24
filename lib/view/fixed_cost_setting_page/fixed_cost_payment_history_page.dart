@@ -13,7 +13,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
-import 'package:kakeibo/view/fixed_cost_setting_page/expense_category_select_sheet.dart';
+import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 

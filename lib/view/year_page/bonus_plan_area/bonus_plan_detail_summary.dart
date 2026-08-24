@@ -223,6 +223,8 @@ class BonusPlanCollapsedBar extends ConsumerWidget {
                             Container(color: context.colors.fillSecondary),
                             FractionallySizedBox(
                               widthFactor: (usagePercent / 100).clamp(0.0, 1.0),
+                              // heightFactor未指定だと子の高さが0になり塗りが見えない
+                              heightFactor: 1,
                               child: Container(color: context.colors.primary),
                             ),
                           ],

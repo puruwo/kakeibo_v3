@@ -148,10 +148,14 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                           AppInkWell(
                             borderRadius: BorderRadius.circular(8),
                             onTap: () {
+                              final dateScope = ref
+                                  .read(homeDateScopeEntityProvider)
+                                  .value!;
                               Navigator.of(context).push(
                                 MaterialPageRoute(
-                                  builder: (context) =>
-                                      const YearlyExpenseListPage(),
+                                  builder: (context) => YearlyExpenseListPage(
+                                    period: dateScope.yearPeriod,
+                                  ),
                                 ),
                               );
                             },

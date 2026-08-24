@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
-import 'package:kakeibo/view/year_page/bonus_plan_area/bonus_home_page/bonus_expense_list_area/bonus_expense_history_tile.dart';
+import 'package:kakeibo/view/component/expense_history_list_tile.dart';
 
 /// Local imports
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_bonus_expense_history_value_provider.dart';
@@ -42,7 +42,7 @@ class _BonusExpenseListArea extends ConsumerState<BonusExpenseListArea> {
                 physics: const BouncingScrollPhysics(), // デフォルトで「必要なときだけスクロール」
                 itemCount: valueList.length,
                 itemBuilder: (context, index) {
-                  return BonusExpenseHistoryTile(value: valueList[index]);
+                  return ExpenseHistoryListTile(value: valueList[index]);
                 },
               );
             } else {
