@@ -140,7 +140,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
               ),
             ),
           ),
-          const Divider(height: 1),
+          // 仕様 §1: フッターの区切り線は置かない（背景と地続きの控えめなフッター）
           // フッター（削除｜保存）。月次固定費ページのフッター2ボタンと同じ作法
           SafeArea(
             top: false,

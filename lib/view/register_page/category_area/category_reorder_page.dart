@@ -273,7 +273,6 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                         onPressed: reorderingState.hasChanges
                             ? _saveOrder
                             : null,
-                        disabledButtonColor: Colors.blue,
                         buttonText: '保存',
                       ),
                     ),

@@ -47,7 +47,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
               ),
             ),
           ),
-          const Divider(height: 1),
+          // 仕様 §1: フッターの区切り線は置かない（背景と地続きの控えめなフッター）
           // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
           SafeArea(
             top: false,

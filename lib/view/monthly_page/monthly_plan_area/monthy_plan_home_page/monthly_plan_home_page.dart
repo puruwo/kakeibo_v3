@@ -28,8 +28,7 @@ class MonthlyPlanHomePage extends ConsumerWidget {
             // 予算カテゴリーリスト
             const Expanded(child: BudgetCategoryArea()),
 
-            const Divider(height: 1),
-
+            // 仕様 §1: フッターの区切り線は置かない（背景と地続きの控えめなフッター）
             // フッターボタンエリア（グロナビに隠れないようSafeAreaを適用）
             const SafeArea(
               top: false,

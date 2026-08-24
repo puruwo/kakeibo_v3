@@ -131,10 +131,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
               // 編集時
               : BigCategoryEditArea(categoryType: categoryType),
         ),
-        // 収入タブはフッターがないためDividerも非表示
-        if (categoryType != CategoryType.income)
-          const Divider(height: 1),
-
+        // 仕様 §1: フッターの区切り線は置かない（背景と地続きの控えめなフッター）
         // フッターボタンエリア（収入タブは非表示）
         if (categoryType != CategoryType.income)
           Padding(

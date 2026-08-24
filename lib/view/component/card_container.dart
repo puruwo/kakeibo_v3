@@ -62,13 +62,7 @@ class CardContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final baseColor = context.colors.fillQuaternary;
-    // ADR-017 #1（実機フィードバックにより調整）: ハイライトは控えめに、
-    // 縦ではなく斜め（左上→右下）に乗せる。stopsはカード全体（0.0〜1.0）に
-    // 引き伸ばし、背の高いカードでも途中に遷移の境界線が見えないようにする。
-    final highlightColor = Color.alphaBlend(
-      context.colors.surfaceBorder.withValues(alpha: 0.035),
-      baseColor,
-    );
+    final highlightColor = resolveSurfaceHighlight(context, baseColor);
 
     return Container(
       alignment: alignment,
@@ -97,3 +91,14 @@ class CardContainer extends StatelessWidget {
 }
 
 BorderRadius get appCardRadius => BorderRadius.circular(18);
+
+/// ADR-017 #1（実機フィードバックにより調整）: 面のグラデハイライトの開始色。
+/// ハイライトは控えめに、縦ではなく斜め（左上→右下）に乗せる。stopsは面全体
+/// （0.0〜1.0）に引き伸ばし、背の高いカードでも途中に遷移の境界線が見えないようにする。
+/// カード（[CardContainer]）とボタン（button_util.dart）で同じ質感を共有するための単一定義。
+Color resolveSurfaceHighlight(BuildContext context, Color base) {
+  return Color.alphaBlend(
+    context.colors.surfaceBorder.withValues(alpha: 0.035),
+    base,
+  );
+}

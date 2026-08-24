@@ -301,8 +301,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                       },
                                       icon: SvgPicture.asset(
                                         'assets/images/ui_icon_edit.svg',
+                                        // 仕様 §1: mainボタンの文字色がprimaryになったためアイコンも揃える
                                         colorFilter: ColorFilter.mode(
-                                          context.colors.text,
+                                          context.colors.primary,
                                           BlendMode.srcIn,
                                         ),
                                         width: 15,
