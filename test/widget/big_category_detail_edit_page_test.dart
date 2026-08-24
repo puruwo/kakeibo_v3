@@ -11,6 +11,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
@@ -156,10 +157,11 @@ void main() {
       expect(find.text('カテゴリーカラーを選択'), findsOneWidget);
 
       // パレット2色目（CategoryPalette.expense2 = FB5B01）を選ぶ
+      // （案件 UIデザイン改修 §8: 選択UIはダイアログからボトムシートに変更）
       await tester.tap(
         find
             .descendant(
-              of: find.byType(Dialog),
+              of: find.byType(ColorSelectDialog),
               matching: find.byType(AppInkWell),
             )
             .at(1),

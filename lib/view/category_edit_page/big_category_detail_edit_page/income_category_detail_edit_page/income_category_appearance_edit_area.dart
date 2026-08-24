@@ -89,13 +89,9 @@ class _IncomeCategoryAppearanceEditAreaState
                 // アイコン部分
                 GestureDetector(
                   onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const IconSelectDialog(
-                          categoryType: CategoryType.income,
-                        );
-                      },
+                    showIconSelectSheet(
+                      context,
+                      categoryType: CategoryType.income,
                     );
                   },
                   child: Row(
@@ -225,13 +221,9 @@ class _IncomeCategoryAppearanceEditAreaState
         // カラー選択
         GestureDetector(
           onTap: () async {
-            await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const ColorSelectDialog(
-                  categoryType: CategoryType.income,
-                );
-              },
+            await showColorSelectSheet(
+              context,
+              categoryType: CategoryType.income,
             );
           },
           child: CategorySettingRow(

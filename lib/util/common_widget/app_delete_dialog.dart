@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
-import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/util/common_widget/app_dialog.dart';
 
-/// 汎用確認ダイアログを表示する
+/// 汎用確認ダイアログ（アクションシート型）を表示する
+///
+/// 案件 UIデザイン改修 §9: 中央のDialogをやめ、長押しメニュー（showMenuDialog）と
+/// 同語彙のiOS ActionSheet風ボトムシートに統一する。
+/// タイトル＋メッセージのヘッダーセル → 確認アクション1行 → 別枠のキャンセル。
 ///
 /// [title] - ダイアログのタイトル
 /// [message] - ダイアログのメッセージ
@@ -11,8 +15,8 @@ import 'package:kakeibo/view/component/button_util.dart';
 /// [cancelLabel] - キャンセルボタンのラベル（デフォルト: "キャンセル"）
 /// [onConfirm] - 確認ボタンを押したときのコールバック
 /// [onCancel] - キャンセルボタンを押したときのコールバック（オプション）
-/// [barrierDismissible] - 外側タップで閉じるか（デフォルト: false）
-/// [isDestructive] - ADR-018: 削除等の不可逆操作の確認ならtrue。確認ボタンがdanger色になる
+/// [barrierDismissible] - 外側タップ・スワイプで閉じるか（デフォルト: false）
+/// [isDestructive] - ADR-018: 削除等の不可逆操作の確認ならtrue。確認アクションがdanger色になる
 Future<bool> showConfirmationDialog(
   BuildContext context, {
   required String title,
@@ -24,113 +28,100 @@ Future<bool> showConfirmationDialog(
   bool barrierDismissible = false,
   bool isDestructive = false,
 }) async {
-  return await showDialog(
-        barrierDismissible: barrierDismissible,
-        context: context,
-        builder: (BuildContext context) {
-          return Dialog(
-            backgroundColor: context.colors.fillOpaque,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(24),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+  final result = await showModalBottomSheet<bool>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    useRootNavigator: true, // グローバルナビゲーションにも被せる
+    isDismissible: barrierDismissible,
+    enableDrag: barrierDismissible,
+    builder: (context) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // ヘッダー（タイトル+メッセージ）と確認アクションの枠
+            ActionSheetBlock(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  // タイトル
-                  Text(
-                    title,
-                    style: AppTextStyles.dialogTitle,
-                    textAlign: TextAlign.center,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+                    child: Column(
+                      children: [
+                        Text(
+                          title,
+                          style: AppTextStyles.dialogLabel
+                              .copyWith(fontWeight: FontWeight.w600),
+                          textAlign: TextAlign.center,
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          message,
+                          style: AppTextStyles.dialogLabel
+                              .copyWith(color: context.colors.textSecondary),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
                   ),
-
-                  const SizedBox(height: 16),
-
-                  // メッセージ
-                  Text(
-                    message,
-                    style: AppTextStyles.dialogLabel,
-                    textAlign: TextAlign.center,
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: context.colors.separator,
                   ),
-
-                  const SizedBox(height: 24),
-
-                  // ボタンエリア
-                  Row(
-                    children: [
-                      // キャンセルボタン
-                      Expanded(
-                        child: SubButton(
-                          buttonType: ButtonColorType.secondary,
-                          buttonText: "キャンセル",
-                          onPressed: () {
-                            onCancel?.call();
-                            Navigator.of(context).pop(false);
-                          },
+                  // 確認アクション
+                  Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(12),
+                        bottomRight: Radius.circular(12),
+                      ),
+                      onTap: () => Navigator.of(context).pop(true),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        child: Center(
+                          child: Text(
+                            confirmLabel,
+                            style: AppTextStyles.dialogList.copyWith(
+                              color: isDestructive
+                                  ? context.colors.danger
+                                  : context.colors.primary,
+                            ),
+                          ),
                         ),
                       ),
-
-                      const SizedBox(width: 12),
-
-                      // 確認ボタン
-                      Expanded(
-                        child: SubButton(
-                          buttonType: isDestructive
-                              ? ButtonColorType.danger
-                              : ButtonColorType.main,
-                          buttonText: confirmLabel,
-                          onPressed: () {
-                            onConfirm?.call();
-                            Navigator.of(context).pop(true);
-                          },
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ],
               ),
             ),
-          );
-        },
-      ) ??
-      false;
-}
 
-/// ダイアログ内のボタン
-class _DialogButton extends StatelessWidget {
-  final String label;
-  final bool isPrimary;
-  final VoidCallback onPressed;
+            const SizedBox(height: 16),
 
-  const _DialogButton({
-    required this.label,
-    required this.isPrimary,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: isPrimary ? context.colors.primary : context.colors.disabled,
-      borderRadius: BorderRadius.circular(8),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(8),
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14),
-          child: Center(
-            child: Text(
-              label,
-              style: AppTextStyles.mainButtonText.copyWith(
-                color: isPrimary ? context.colors.onPrimary : context.colors.onPrimary,
-              ),
+            // キャンセル（固定・別枠）
+            ActionSheetCancelButton(
+              label: cancelLabel,
+              onTap: () => Navigator.of(context).pop(false),
             ),
-          ),
+            const SizedBox(height: 32),
+          ],
         ),
-      ),
-    );
+      );
+    },
+  );
+
+  if (result == true) {
+    onConfirm?.call();
+    return true;
   }
+  // 明示的なキャンセル時のみコールバックを呼ぶ（スワイプ等で閉じた場合はfalseのみ）
+  if (result == false) {
+    onCancel?.call();
+  }
+  return false;
 }
 
 /// 削除確認ダイアログを表示する（showConfirmationDialogのラッパー）
@@ -144,7 +135,7 @@ Future<bool> showDeleteConfirmationDialog(
     context,
     title: "登録履歴の削除",
     message: "削除したデータは戻せません。\n本当に削除しますか？",
-    confirmLabel: "OK",
+    confirmLabel: "削除する",
     cancelLabel: "キャンセル",
     onConfirm: onConfirm,
     isDestructive: true,
@@ -165,7 +156,7 @@ Future<bool> showFixedCostDeleteConfirmationDialog(
     context,
     title: "固定費を削除",
     message: "支払日が過ぎた記録は残りますが、\n未確定分と今後の予定は削除されます。\n本当に削除しますか？",
-    confirmLabel: "OK",
+    confirmLabel: "削除する",
     cancelLabel: "キャンセル",
     onConfirm: onConfirm,
     isDestructive: true,

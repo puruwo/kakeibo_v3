@@ -50,11 +50,7 @@ Future<void> showMenuDialog(
           mainAxisSize: MainAxisSize.min,
           children: [
             // メニュー項目リスト
-            Container(
-              decoration: BoxDecoration(
-                color: context.colors.surfaceElevated2,
-                borderRadius: BorderRadius.circular(12),
-              ),
+            ActionSheetBlock(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -78,30 +74,9 @@ Future<void> showMenuDialog(
             const SizedBox(height: 16),
 
             // キャンセルボタン（固定・別枠）
-            Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: context.colors.surfaceElevated2,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => Navigator.of(context).pop(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    child: Center(
-                      child: Text(
-                        cancelLabel,
-                        style: AppTextStyles.dialogList.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+            ActionSheetCancelButton(
+              label: cancelLabel,
+              onTap: () => Navigator.of(context).pop(),
             ),
             const SizedBox(height: 32),
           ],
@@ -178,6 +153,63 @@ class _MenuItemTile extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// アクションシートの角丸ブロック（surfaceElevated2・角丸12）。
+/// showMenuDialog と showConfirmationDialog（app_delete_dialog.dart）で
+/// 外枠の見た目を共有するための部品。
+class ActionSheetBlock extends StatelessWidget {
+  const ActionSheetBlock({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: context.colors.surfaceElevated2,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
+}
+
+/// アクションシート下部の「キャンセル」別枠ボタン（共有部品）
+class ActionSheetCancelButton extends StatelessWidget {
+  const ActionSheetCancelButton({
+    super.key,
+    required this.label,
+    required this.onTap,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ActionSheetBlock(
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            child: Center(
+              child: Text(
+                label,
+                style: AppTextStyles.dialogList.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
           ),
         ),
       ),

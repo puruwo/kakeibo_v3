@@ -152,23 +152,11 @@ class RegisterPageStyles {
   /// ドロップダウンの大きいテキスト（数字）
   ///
   /// 【使用箇所】
-  /// - ページ: register_page
-  ///   - エリア: payment_frequency_picker.dart (支払い頻度ピッカー)
-  ///   - 詳細: 「1」「2」...などの間隔数字表示
+  /// - ページ: config
+  ///   - エリア: aggregation_setting_dialog.dart (集計設定ダイアログ)
+  ///   - 詳細: 開始日ドロップダウンの数字表示
   static final TextStyle pickerLargeNumber = MyFontStyle.sfUi.copyWith(
     fontSize: 24,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.bold,
-  );
-
-  /// ドロップダウンの中サイズテキスト（単位）
-  ///
-  /// 【使用箇所】
-  /// - ページ: register_page
-  ///   - エリア: payment_frequency_picker.dart (支払い頻度ピッカー)
-  ///   - 詳細: 「ヶ月」「年」などの単位表示
-  static final TextStyle pickerMediumText = MyFontStyle.notoSans.copyWith(
-    fontSize: 20,
     color: AppColorsDark.text,
     fontWeight: FontWeight.bold,
   );

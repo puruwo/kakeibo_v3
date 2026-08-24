@@ -6,157 +6,162 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
-import 'package:kakeibo/view/component/button_util.dart';
 
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
 
-// 支出登録画面の拠出元選択画面
-// 拠出元表示部分をタップしたら出現する
-
-class PaymentFrequencyPicker extends ConsumerStatefulWidget {
+/// 支払い頻度の選択ダイアログ（案件 UIデザイン改修 §7）
+///
+/// プリセット5種（毎月／隔月／3ヶ月毎／半年毎／毎年）のフラットなリストから
+/// タップ即決定する。旧実装のDropdownMenu×2＋OK/キャンセルは廃止。
+/// 現在値がプリセット外（例: 4ヶ月毎）の場合のみ、その値の行を末尾に追加表示して
+/// 既存データの選択状態を壊さない。
+class PaymentFrequencyPicker extends ConsumerWidget {
   const PaymentFrequencyPicker(
       {super.key, required this.originalPaymentFrequency});
 
   final PaymentFrequencyValue originalPaymentFrequency;
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _IncomeSourcePickerState();
-}
-
-class _IncomeSourcePickerState extends ConsumerState<PaymentFrequencyPicker> {
-  late int selectedFrequencyNumber;
-  late PaymentFrequencyIntervalUnit selectedIntervalUnit;
-
-  final List<PaymentFrequencyIntervalUnit> items = [
-    PaymentFrequencyIntervalUnit.month,
-    PaymentFrequencyIntervalUnit.year,
+  /// プリセット（intervalNumber, intervalUnit）
+  static const List<(int, PaymentFrequencyIntervalUnit)> _presets = [
+    (1, PaymentFrequencyIntervalUnit.month),
+    (2, PaymentFrequencyIntervalUnit.month),
+    (3, PaymentFrequencyIntervalUnit.month),
+    (6, PaymentFrequencyIntervalUnit.month),
+    (1, PaymentFrequencyIntervalUnit.year),
   ];
 
   @override
-  void initState() {
-    super.initState();
-    selectedFrequencyNumber = widget.originalPaymentFrequency.intervalNumber;
-    selectedIntervalUnit = widget.originalPaymentFrequency.intervalUnit;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final current = (
+      originalPaymentFrequency.intervalNumber,
+      originalPaymentFrequency.intervalUnit,
+    );
+    final options = [
+      ..._presets,
+      // プリセット外の既存値は末尾に追加表示する
+      if (!_presets.contains(current)) current,
+    ];
+
+    return Dialog(
+      backgroundColor: context.colors.fillOpaque,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      // 選択肢リストをダイアログの縁までフラットに敷くため、角丸でクリップする
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // タイトル行（右上に閉じるボタン）
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 20, 16, 14),
+            child: Row(
+              children: [
+                Text('支払い頻度', style: AppTextStyles.dialogTitle),
+                const Spacer(),
+                _CloseButton(onTap: () => Navigator.of(context).pop()),
+              ],
+            ),
+          ),
+          Container(height: 0.5, color: context.colors.separator),
+          for (int i = 0; i < options.length; i++) ...[
+            if (i != 0)
+              Container(
+                height: 0.5,
+                margin: const EdgeInsets.only(left: 24),
+                color: context.colors.separator,
+              ),
+            Builder(builder: (context) {
+              // 表示ラベルと保存値がずれないよう、同じ値オブジェクトを共有する
+              final value = PaymentFrequencyValue.fromDB(
+                intervalNumber: options[i].$1,
+                intervalUnitNumber: options[i].$2.inturvalUnitNumber,
+              );
+              return _FrequencyRow(
+                value: value,
+                isSelected: options[i] == current,
+                onTap: () {
+                  ref
+                      .read(
+                          paymentFrequencyControllerNotifierProvider.notifier)
+                      .setData(value);
+                  Navigator.of(context).pop();
+                },
+              );
+            }),
+          ],
+        ],
+      ),
+    );
   }
+}
+
+/// 選択肢の1行。高さ48・タップ即決定。選択中はprimaryのチェックのみで示す
+class _FrequencyRow extends StatelessWidget {
+  const _FrequencyRow({
+    required this.value,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  final PaymentFrequencyValue value;
+  final bool isSelected;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(20),
+    return InkWell(
+      onTap: onTap,
+      child: SizedBox(
+        height: 48,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: Row(
+            children: [
+              Text(
+                value.dateLabel,
+                style: isSelected
+                    ? AppTextStyles.dialogList
+                        .copyWith(fontWeight: FontWeight.w600)
+                    : AppTextStyles.dialogList
+                        .copyWith(color: context.colors.textSecondary),
+              ),
+              const Spacer(),
+              if (isSelected)
+                Icon(
+                  Icons.done_rounded,
+                  size: 18,
+                  color: context.colors.primary,
+                ),
+            ],
+          ),
+        ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // タイトル
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Text(
-              '支払い頻度を設定',
-              style: AppTextStyles.dialogTitle,
-              textAlign: TextAlign.center,
-            ),
-          ),
+    );
+  }
+}
 
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // 支払い頻度の間隔
-              DropdownMenu<int>(
-                inputDecorationTheme: const InputDecorationTheme(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                ),
-                textStyle: RegisterPageStyles.pickerLargeNumber,
-                trailingIcon: Icon(
-                  Icons.arrow_drop_down_rounded,
-                  color: context.colors.textSecondary,
-                ),
-                width: 70,
-                initialSelection: selectedFrequencyNumber,
-                onSelected: (value) {
-                  if (value != null) {
-                    setState(() {
-                      selectedFrequencyNumber = value;
-                    });
-                  }
-                },
-                dropdownMenuEntries: List.generate(
-                    11,
-                    (i) => DropdownMenuEntry(
-                        value: i + 1, label: (i + 1).toString())),
-              ),
+/// 右上の閉じるボタン（円28px・fillSecondary地）
+class _CloseButton extends StatelessWidget {
+  const _CloseButton({required this.onTap});
 
-              // 支払い頻度の単位
-              DropdownMenu<PaymentFrequencyIntervalUnit>(
-                inputDecorationTheme: const InputDecorationTheme(
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                ),
-                textStyle: RegisterPageStyles.pickerMediumText,
-                trailingIcon: Icon(
-                  Icons.arrow_drop_down_rounded,
-                  color: context.colors.textSecondary,
-                ),
-                width: 80,
-                initialSelection: selectedIntervalUnit,
-                onSelected: (value) {
-                  if (value != null) {
-                    setState(() {
-                      selectedIntervalUnit = value;
-                    });
-                  }
-                },
-                dropdownMenuEntries: items
-                    .map((item) => DropdownMenuEntry(
-                        value: item, label: item.japaneseName))
-                    .toList(),
-              ),
-              const Text("に1回"),
-            ],
-          ),
+  final VoidCallback onTap;
 
-          ButtonBar(
-            alignment: MainAxisAlignment.end,
-            children: [
-              // キャンセルボタン
-              TextButton(
-                // キャンセルボタンを押した時の処理
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: context.colors.fill,
-                ),
-                child: Text(
-                  'キャンセル',
-                  style: AppTextStyles.mainButtonText,
-                ),
-              ),
-
-              // OKボタン
-              MainButton(
-                buttonType: ButtonColorType.main,
-                buttonText: 'OK',
-                // OKボタンを押した時の処理
-                onPressed: () {
-                  ref
-                      .read(paymentFrequencyControllerNotifierProvider.notifier)
-                      .setData(PaymentFrequencyValue.fromDB(
-                        intervalNumber: selectedFrequencyNumber,
-                        intervalUnitNumber:
-                            selectedIntervalUnit.inturvalUnitNumber,
-                      ));
-
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        ],
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      customBorder: const CircleBorder(),
+      onTap: onTap,
+      child: Container(
+        width: 28,
+        height: 28,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: context.colors.fillSecondary,
+        ),
+        child: Icon(
+          Icons.close_rounded,
+          size: 16,
+          color: context.colors.textSecondary,
+        ),
       ),
     );
   }

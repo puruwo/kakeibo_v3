@@ -562,7 +562,8 @@ void main() {
       expect(find.text('登録履歴の削除'), findsOneWidget);
       expect(find.text('削除したデータは戻せません。\n本当に削除しますか？'), findsOneWidget);
 
-      await tester.tap(find.text('OK'));
+      // 案件 UIデザイン改修 §9: 確認アクションのラベルは「削除する」
+      await tester.tap(find.text('削除する'));
       await pumpTimes(tester, times: 10);
 
       expect(fakes.expense.deletedIds, [42]);

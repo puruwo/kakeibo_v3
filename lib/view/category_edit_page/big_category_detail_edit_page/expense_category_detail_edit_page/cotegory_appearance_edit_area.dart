@@ -81,12 +81,7 @@ class _BigCategoryAppearanceEditAreaState
                 // アイコン部分
                 GestureDetector(
                   onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return const IconSelectDialog();
-                      },
-                    );
+                    showIconSelectSheet(context);
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -253,12 +248,7 @@ class _BigCategoryAppearanceEditAreaState
         // カラー選択
         GestureDetector(
           onTap: () async {
-            await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const ColorSelectDialog();
-              },
-            );
+            await showColorSelectSheet(context);
           },
           child: CategorySettingRow(
             label: 'カテゴリーカラー',

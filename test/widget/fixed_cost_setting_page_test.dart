@@ -439,7 +439,8 @@ void main() {
       findsOneWidget,
     );
 
-    await tester.tap(find.text('OK'));
+    // 案件 UIデザイン改修 §9: 確認アクションのラベルは「削除する」
+    await tester.tap(find.text('削除する'));
     await pumpTimes(tester, times: 10);
 
     expect(fakes.fixedCost.deletedWithUnpaidExpensesArgs, hasLength(1));

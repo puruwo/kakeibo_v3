@@ -59,6 +59,9 @@ String _makeDateLabel(int intervalNumber, PaymentFrequencyIntervalUnit intervalU
       return '毎月';
     } else if (intervalNumber == 2) {
       return '隔月';
+    } else if (intervalNumber == 6) {
+      // 頻度ピッカーのプリセット表記（案件 UIデザイン改修 §7）と揃える
+      return '半年毎';
     } else {
       return '$intervalNumberヶ月毎';
     }
