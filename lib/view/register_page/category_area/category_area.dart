@@ -13,6 +13,7 @@ import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_
 import 'package:kakeibo/view/register_page/category_area/category_reorder_page.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 
 /// カテゴリー選択エリアウィジェット
@@ -79,6 +80,15 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
         ).future,
       );
 
+      // 取得完了時点で自分が既に破棄されている・アクティブなモードでない場合は反映しない。
+      // 登録シートは初期フレームを支出タブで描画してから指定モードへ切り替えるため、
+      // ガード無しだと旧タブ側の非同期初期化が後着で選択を上書きする
+      // （例: 特別枠の「新しい収入を追加」でボーナス初期選択が給与に化ける）
+      if (!mounted) return;
+      if (ref.read(inputModeControllerProvider) != widget.transactionMode) {
+        return;
+      }
+
       ref
           .read(selectCategoryControllerNotifierProvider.notifier)
           .setData(categoryEntity);
@@ -88,15 +98,18 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
   @override
   Widget build(BuildContext context) {
     // 選択中のカテゴリーを監視
-    final ICategoryEntity selectedCategory =
-        ref.watch(selectCategoryControllerNotifierProvider);
+    final ICategoryEntity selectedCategory = ref.watch(
+      selectCategoryControllerNotifierProvider,
+    );
 
     // 画面サイズの倍率
     final screenHorizontalMagnification = context.screenHorizontalMagnification;
     final screenVerticalMagnification = context.screenVerticalMagnification;
 
     // TransactionModeに応じたカテゴリーリストを取得
-    return ref.watch(categoriesByModeProvider(widget.transactionMode)).when(
+    return ref
+        .watch(categoriesByModeProvider(widget.transactionMode))
+        .when(
           data: (categories) {
             // ページネーション情報を取得
             final pagination = ref.watch(
@@ -147,9 +160,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                 ),
 
                 // アイコンを並べ替えるリンク
-                if (widget.showRearrangeLink) ...[
-                  _buildRearrangeLink(context),
-                ],
+                if (widget.showRearrangeLink) ...[_buildRearrangeLink(context)],
               ],
             );
           },
@@ -188,9 +199,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
       onTap: () {
         showAppModalBottomSheet(
           context,
-          child: CategoryReorderPage(
-            transactionMode: widget.transactionMode,
-          ),
+          child: CategoryReorderPage(transactionMode: widget.transactionMode),
         );
       },
       child: Padding(
@@ -204,10 +213,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               color: context.colors.textSecondary,
             ),
             const SizedBox(width: 6),
-            Text(
-              'アイコンを並べ替える',
-              style: RegisterPageStyles.rearrangeLink,
-            ),
+            Text('アイコンを並べ替える', style: RegisterPageStyles.rearrangeLink),
           ],
         ),
       ),
@@ -252,30 +258,27 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
           padding: _getPaddingForRow(rowIndex, isLast: rowIndex == rows - 1),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: List.generate(
-              columns,
-              (columnIndex) {
-                final buttonNumber =
-                    pageIndex * itemsPerPage + rowIndex * columns + columnIndex;
+            children: List.generate(columns, (columnIndex) {
+              final buttonNumber =
+                  pageIndex * itemsPerPage + rowIndex * columns + columnIndex;
 
-                // ボタン状態を判定
-                final buttonStatus = getButtonStatus(
+              // ボタン状態を判定
+              final buttonStatus = getButtonStatus(
+                buttonNumber: buttonNumber,
+                categoryCount: categories.length,
+                selectedCategoryId: selectedCategory.id,
+                categories: categories,
+              );
+
+              return Padding(
+                padding: _getPaddingForColumn(columnIndex),
+                child: _buildCategoryButton(
+                  buttonStatus: buttonStatus,
                   buttonNumber: buttonNumber,
-                  categoryCount: categories.length,
-                  selectedCategoryId: selectedCategory.id,
                   categories: categories,
-                );
-
-                return Padding(
-                  padding: _getPaddingForColumn(columnIndex),
-                  child: _buildCategoryButton(
-                    buttonStatus: buttonStatus,
-                    buttonNumber: buttonNumber,
-                    categories: categories,
-                  ),
-                );
-              },
-            ),
+                ),
+              );
+            }),
           ),
         ),
       ),
@@ -308,11 +311,11 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
   }) {
     return switch (buttonStatus) {
       ButtonStatus.selected => SelectedIconButton(
-          categoryEntity: categories[buttonNumber],
-        ),
+        categoryEntity: categories[buttonNumber],
+      ),
       ButtonStatus.normal => NormalIconButton(
-          categoryEntity: categories[buttonNumber],
-        ),
+        categoryEntity: categories[buttonNumber],
+      ),
       ButtonStatus.none => const NoneIconBox(),
     };
   }
