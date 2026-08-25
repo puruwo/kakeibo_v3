@@ -6,6 +6,7 @@ import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
@@ -25,17 +26,28 @@ import 'package:kakeibo/view/register_page/register_page_base.dart';
 /// - 末尾に破線枠の追加カード
 /// - 見出し右の「一覧（N件）」リンクを常設（横スクロールの見落とし補完）
 /// - 0件時は従来どおり登録誘導カード（AppEmptyState）
+///
+/// カード列を画面端までスクロール対象にするため、親（year_page）の横paddingの
+/// 外に置かれる前提。見出し・カード列の初期左余白はこのウィジェット内で確保する。
 class FixedCostButtonArea extends ConsumerWidget {
   const FixedCostButtonArea({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final listAsync = ref.watch(fixedCostRegistrationListNotifierProvider);
+    final sidePadding = context.leftsidePadding;
+
+    // カード列（横スクロール）以外の要素は他セクションと同じ横余白に揃える。
+    // 分岐を追加するときは必ずこのラッパーを通すこと（ベゼル張り付き防止）
+    Widget padded(Widget child) => Padding(
+      padding: EdgeInsets.symmetric(horizontal: sidePadding),
+      child: child,
+    );
 
     return listAsync.when(
       loading: () => const SizedBox.shrink(),
       // エラー時に追加導線ごと無言で消さない（一覧ページと同じエラー表示）
-      error: (_, __) => const AppErrorState(),
+      error: (_, __) => padded(const AppErrorState()),
       data: (value) {
         // カテゴリーグループをフラット化し、カード表示に必要な情報を集める
         final cards = <_FixedCostCardValue>[
@@ -49,33 +61,38 @@ class FixedCostButtonArea extends ConsumerWidget {
         ]..sort(_compareByNextPaymentDate);
 
         if (cards.isEmpty) {
-          return const FixedCostRegistrationCallToActionButton();
+          return padded(const FixedCostRegistrationCallToActionButton());
         }
 
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppContentsHeader(
-              type: AppContentsHeaderType.appCardSectionTitle,
-              title: '固定費',
-              subLabel: '一覧（${cards.length}件）',
-              isLinkable: true,
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: ((context) =>
-                        const FixedCostRegistrationListPage()),
-                  ),
-                );
-              },
+            padded(
+              AppContentsHeader(
+                type: AppContentsHeaderType.appCardSectionTitle,
+                title: '固定費',
+                subLabel: '一覧（${cards.length}件）',
+                isLinkable: true,
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: ((context) =>
+                          const FixedCostRegistrationListPage()),
+                    ),
+                  );
+                },
+              ),
             ),
             SizedBox(
               height: 90,
               // 固定高カードのため、文字サイズ拡大時のはみ出しを防ぐ
               child: MediaQuery.withClampedTextScaling(
                 maxScaleFactor: 1.2,
+                // 画面端（ベゼル際）までスクロール対象にしつつ、
+                // 初期表示の左端は他セクションと同じ余白位置に揃える
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
+                  padding: EdgeInsets.symmetric(horizontal: sidePadding),
                   itemCount: cards.length + 1, // 末尾は追加カード
                   separatorBuilder: (_, __) =>
                       const SizedBox(width: AppSpacing.sm),

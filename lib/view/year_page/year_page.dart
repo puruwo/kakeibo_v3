@@ -59,8 +59,9 @@ class _YearPageState extends ConsumerState<YearPage> {
       resolvedAnnualBalanceChartValueProvider,
     );
     // 固定費セクション（FixedCostButtonArea）と同じ情報源を見る（二重フェッチ防止）
-    final fixedCostListAsync =
-        ref.watch(fixedCostRegistrationListNotifierProvider);
+    final fixedCostListAsync = ref.watch(
+      fixedCostRegistrationListNotifierProvider,
+    );
 
     // いずれかがloading中ならフルローディング
     // _isYearSwitching は updateState 後 provider 再評価開始までの数フレームを埋める
@@ -184,116 +185,135 @@ class _YearPageState extends ConsumerState<YearPage> {
             ? const PageLoadingIndicator(key: ValueKey('loading'))
             : SingleChildScrollView(
                 key: const ValueKey('content'),
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: context.leftsidePadding,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      // AppBarのぶんだけスペースをあける
-                      SizedBox(
-                        height:
-                            MediaQuery.of(context).padding.top + kToolbarHeight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    // AppBarのぶんだけスペースをあける
+                    SizedBox(
+                      height:
+                          MediaQuery.of(context).padding.top + kToolbarHeight,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.leftsidePadding,
                       ),
-
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final asyncValue = ref.watch(
-                            resolvedYearlyBalanceValueProvider,
-                          );
-                          // 記録が一切ないときはセクションヘッダーを非表示
-                          final shouldHide = asyncValue.maybeWhen(
-                            data: (value) =>
-                                value.yearlyBalanceType ==
-                                YearlyBalanceType.noRecorod,
-                            orElse: () => false,
-                          );
-                          if (shouldHide) {
-                            return const SizedBox.shrink();
-                          }
-                          return const AppContentsHeader(
-                            type: AppContentsHeaderType.appCardSectionTitle,
-                            title: '年間収支',
-                          );
-                        },
-                      ),
-                      const YearlyBalanceArea(),
-                      const SizedBox(height: AppSpacing.sm),
-                      const FixedCostButtonArea(),
-                      const SizedBox(height: AppSpacing.lg),
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final displayAsync = ref.watch(
-                            resolvedBonusSectionDisplayProvider,
-                          );
-                          return displayAsync.maybeWhen(
-                            data: (type) {
-                              switch (type) {
-                                case BonusSectionDisplayType.normal:
-                                  return Column(
-                                    children: [
-                                      AppContentsHeader(
-                                        type: AppContentsHeaderType
-                                            .appCardSectionTitle,
-                                        title: '特別枠の利用状況',
-                                        subLabel: 'さらに表示する',
-                                        isLinkable: true,
-                                        onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const BonusHomePage(),
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                      const BonusPlanArea(),
-                                      const SizedBox(height: AppSpacing.lg),
-                                    ],
-                                  );
-                                case BonusSectionDisplayType.registerPrompt:
-                                  return Column(
-                                    children: const [
-                                      BonusRegisterPromptArea(),
-                                      SizedBox(height: AppSpacing.lg),
-                                    ],
-                                  );
-                                case BonusSectionDisplayType.hidden:
-                                  return const SizedBox.shrink();
+                      child: Column(
+                        children: [
+                          Consumer(
+                            builder: (context, ref, _) {
+                              final asyncValue = ref.watch(
+                                resolvedYearlyBalanceValueProvider,
+                              );
+                              // 記録が一切ないときはセクションヘッダーを非表示
+                              final shouldHide = asyncValue.maybeWhen(
+                                data: (value) =>
+                                    value.yearlyBalanceType ==
+                                    YearlyBalanceType.noRecorod,
+                                orElse: () => false,
+                              );
+                              if (shouldHide) {
+                                return const SizedBox.shrink();
                               }
-                            },
-                            orElse: () => const SizedBox.shrink(),
-                          );
-                        },
-                      ),
-                      Consumer(
-                        builder: (context, ref, _) {
-                          final asyncValue = ref.watch(
-                            resolvedAnnualBalanceChartValueProvider,
-                          );
-                          // データなし時はセクションごと非表示
-                          final shouldHide = asyncValue.maybeWhen(
-                            data: (value) => value.hasNoRecord,
-                            orElse: () => false,
-                          );
-                          if (shouldHide) {
-                            return const SizedBox.shrink();
-                          }
-                          return Column(
-                            children: const [
-                              AppContentsHeader(
+                              return const AppContentsHeader(
                                 type: AppContentsHeaderType.appCardSectionTitle,
-                                title: '生活収支',
-                              ),
-                              AnnualBalanceChart(),
-                            ],
-                          );
-                        },
+                                title: '年間収支',
+                              );
+                            },
+                          ),
+                          const YearlyBalanceArea(),
+                          const SizedBox(height: AppSpacing.sm),
+                        ],
                       ),
-                      const SizedBox(height: 128),
-                    ],
-                  ),
+                    ),
+                    // カルーセルを画面端まで届かせるため、横paddingの外に置く
+                    // （ヘッダー・カード列の初期左余白はウィジェット内部で確保する）
+                    const FixedCostButtonArea(),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: context.leftsidePadding,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: AppSpacing.lg),
+                          Consumer(
+                            builder: (context, ref, _) {
+                              final displayAsync = ref.watch(
+                                resolvedBonusSectionDisplayProvider,
+                              );
+                              return displayAsync.maybeWhen(
+                                data: (type) {
+                                  switch (type) {
+                                    case BonusSectionDisplayType.normal:
+                                      return Column(
+                                        children: [
+                                          AppContentsHeader(
+                                            type: AppContentsHeaderType
+                                                .appCardSectionTitle,
+                                            title: '特別枠の利用状況',
+                                            subLabel: 'さらに表示する',
+                                            isLinkable: true,
+                                            onTap: () {
+                                              Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      const BonusHomePage(),
+                                                ),
+                                              );
+                                            },
+                                          ),
+                                          const BonusPlanArea(),
+                                          const SizedBox(height: AppSpacing.lg),
+                                        ],
+                                      );
+                                    case BonusSectionDisplayType.registerPrompt:
+                                      return Column(
+                                        children: const [
+                                          BonusRegisterPromptArea(),
+                                          SizedBox(height: AppSpacing.lg),
+                                        ],
+                                      );
+                                    case BonusSectionDisplayType.hidden:
+                                      return const SizedBox.shrink();
+                                  }
+                                },
+                                orElse: () => const SizedBox.shrink(),
+                              );
+                            },
+                          ),
+                          Consumer(
+                            builder: (context, ref, _) {
+                              final asyncValue = ref.watch(
+                                resolvedAnnualBalanceChartValueProvider,
+                              );
+                              // データなし時はセクションごと非表示
+                              final shouldHide = asyncValue.maybeWhen(
+                                data: (value) => value.hasNoRecord,
+                                orElse: () => false,
+                              );
+                              if (shouldHide) {
+                                return const SizedBox.shrink();
+                              }
+                              return Column(
+                                children: const [
+                                  AppContentsHeader(
+                                    type: AppContentsHeaderType
+                                        .appCardSectionTitle,
+                                    title: '生活収支',
+                                  ),
+                                  AnnualBalanceChart(),
+                                ],
+                              );
+                            },
+                          ),
+                          // グロナビに最後のカードが隠れないよう正準ヘルパーで余白確保
+                          SizedBox(
+                            height: context.bottomNavClearance + AppSpacing.xxl,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               ),
       ),
