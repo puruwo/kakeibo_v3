@@ -7,9 +7,9 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
-import 'package:kakeibo/view/component/app_segmented_control.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/expense_category_icon.dart';
@@ -19,28 +19,17 @@ import 'package:kakeibo/view/yearly_expense_list_page/yearly_category_expense_li
 /// 支出一覧画面（案件 UIデザイン改修 §6・本実装）
 ///
 /// トップ「年間収支」カードの総支出から遷移する、年度の支出を俯瞰する画面。
-/// 初期表示はカテゴリー別集計（使い道の俯瞰）。セグメントで月別の明細にも切り替えられる。
-/// カテゴリー行のタップで月毎グルーピングの明細（YearlyCategoryExpenseListPage）へ。
-class YearlyExpenseListPage extends ConsumerStatefulWidget {
+/// カテゴリー別集計（使い道の俯瞰）のみを表示する。
+/// カテゴリー行のタップで月毎アコーディオンの明細（YearlyCategoryExpenseListPage）へ。
+class YearlyExpenseListPage extends ConsumerWidget {
   const YearlyExpenseListPage({super.key, required this.period});
 
   final PeriodValue period;
 
   @override
-  ConsumerState<YearlyExpenseListPage> createState() =>
-      _YearlyExpenseListPageState();
-}
-
-class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
-  /// 0=カテゴリー別 / 1=月別
-  int _segmentIndex = 0;
-
-  /// 期間の月数（月平均の分母）
-  int get _monthCount => expensePeriodMonthCount(widget.period);
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final topInset = MediaQuery.of(context).padding.top + kToolbarHeight;
+    final monthCount = expensePeriodMonthCount(period);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -54,7 +43,7 @@ class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
         title: Text('支出一覧', style: AppTextStyles.pageHeaderText),
       ),
       body: ref
-          .watch(yearlyExpenseListNotifierProvider(widget.period))
+          .watch(yearlyExpenseListNotifierProvider(period))
           .when(
             data: (value) {
               if (value.allRows.isEmpty) {
@@ -66,70 +55,32 @@ class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
                 );
               }
 
-              return CustomScrollView(
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.fromLTRB(
-                        AppSpacing.lg,
-                        topInset + AppSpacing.lg,
-                        AppSpacing.lg,
-                        0,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _TotalCard(
-                            totalExpense: value.totalExpense,
-                            monthCount: _monthCount,
-                          ),
-                          const SizedBox(height: AppSpacing.md),
-                          AppSegmentedControl(
-                            labels: const ['カテゴリー別', '月別'],
-                            selectedIndex: _segmentIndex,
-                            onChanged: (index) =>
-                                setState(() => _segmentIndex = index),
-                          ),
-                          const SizedBox(height: AppSpacing.lg),
-                        ],
-                      ),
-                    ),
+              return SingleChildScrollView(
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    topInset + AppSpacing.lg,
+                    AppSpacing.lg,
+                    // グロナビに隠れないよう、末尾はグロナビ分の余白を必ず確保する
+                    context.bottomNavClearance + AppSpacing.xl,
                   ),
-                  if (_segmentIndex == 0)
-                    SliverToBoxAdapter(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: AppSpacing.lg,
-                        ),
-                        child: _CategoryBreakdownCard(
-                          value: value,
-                          period: widget.period,
-                        ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _TotalCard(
+                        totalExpense: value.totalExpense,
+                        monthCount: monthCount,
                       ),
-                    )
-                  else
-                    ..._buildMonthlySlivers(value),
-                  const SliverToBoxAdapter(
-                    child: SizedBox(height: AppSpacing.xxl),
+                      const SizedBox(height: AppSpacing.lg),
+                      _CategoryBreakdownCard(value: value, period: period),
+                    ],
                   ),
-                ],
+                ),
               );
             },
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (e, _) => const Center(child: AppErrorState()),
           ),
-    );
-  }
-
-  /// 月別タブ: 月見出し（右端に月計）＋共通の支出履歴タイル
-  List<Widget> _buildMonthlySlivers(YearlyExpenseListValue value) {
-    final groups = ExpenseMonthGroup.groupByMonth(
-      value.allRows,
-      periodStartYear: widget.period.startDatetime.year,
-    );
-    return buildExpenseMonthSlivers(
-      groups,
-      monthHeaderBuilder: (group) => ExpenseMonthHeader(group: group),
     );
   }
 }
@@ -322,28 +273,6 @@ class ExpenseRatioBar extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-}
-
-/// 月見出し（左: 月ラベル / 右: 月計）。カテゴリー明細でも使う
-class ExpenseMonthHeader extends StatelessWidget {
-  const ExpenseMonthHeader({super.key, required this.group});
-
-  final ExpenseMonthGroup group;
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(group.label, style: AppTextStyles.listCardSectionTitle),
-        ),
-        Text(
-          yenmarkFormattedPriceGetter(group.total),
-          style: AppTextStyles.listCardSectionTitle,
-        ),
-      ],
     );
   }
 }

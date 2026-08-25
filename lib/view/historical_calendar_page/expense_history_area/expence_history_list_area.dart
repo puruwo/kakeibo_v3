@@ -29,8 +29,9 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
   @override
   Widget build(BuildContext context) {
     // 画面の倍率を計算
-    final screenHorizontalMagnification =
-        screenHorizontalMagnificationGetter(context.screenWidth);
+    final screenHorizontalMagnification = screenHorizontalMagnificationGetter(
+      context.screenWidth,
+    );
 
     // リスト内テキストボックスの倍率を計算
     final listSmallcategoryMemoOffset = context.listSmallcategoryMemoOffset;
@@ -41,12 +42,8 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
     // DateTimeの日本語対応
     initializeDateFormatting();
 
-    // extendBody:true のボトムナビ背後までリストが広がるため、
-    // MediaQuery では取得できない下部セーフエリアを View から直接取得し、
-    // ボトムナビ高さとあわせて末尾余白に加算する（最後の項目が隠れないように）
-    final view = View.of(context);
-    final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
-    final bottomInset = kBottomNavigationBarHeight + bottomSafeArea + 20;
+    // グロナビに最後の項目が隠れないよう、末尾余白は正準ヘルパーで確保する
+    final bottomInset = context.bottomNavClearance + 20;
 
     // selectedDatetimeが更新されたら動く
     ref.listen(historicalSelectedDatetimeNotifierProvider, (previous, next) {
@@ -54,7 +51,10 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
       // 日が変わったタイミングだけでスクロールする
       if (previous?.day != updatedSelectedDateTime.day) {
         _scrollToItem(
-            updatedSelectedDateTime, itemKeys, widget._scrollController);
+          updatedSelectedDateTime,
+          itemKeys,
+          widget._scrollController,
+        );
       }
     });
 
@@ -71,102 +71,109 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
             ],
           );
         },
-        child: ref.watch(resolvedTransactionHistoryValueProvider).when(
-            data: (tileGroupList) {
-          if (tileGroupList.isNotEmpty) {
-            return ListView.builder(
-              key: const ValueKey('data'),
-              controller: widget._scrollController,
-              itemCount: tileGroupList.length + 1,
-              itemBuilder: (BuildContext context, int index) {
-                // リスト末尾のスペーサー
-                if (index == tileGroupList.length) {
-                  return SizedBox(height: bottomInset);
-                }
+        child: ref
+            .watch(resolvedTransactionHistoryValueProvider)
+            .when(
+              data: (tileGroupList) {
+                if (tileGroupList.isNotEmpty) {
+                  return ListView.builder(
+                    key: const ValueKey('data'),
+                    controller: widget._scrollController,
+                    itemCount: tileGroupList.length + 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      // リスト末尾のスペーサー
+                      if (index == tileGroupList.length) {
+                        return SizedBox(height: bottomInset);
+                      }
 
-                itemKeys = tileGroupList.map((e) => e.date).toList();
+                      itemKeys = tileGroupList.map((e) => e.date).toList();
 
-                return AutoScrollTag(
-                  key: ValueKey(index),
-                  index: index,
-                  controller: widget._scrollController,
-                  child: Column(
+                      return AutoScrollTag(
+                        key: ValueKey(index),
+                        index: index,
+                        controller: widget._scrollController,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            // 日付ヘッダーの上スペース
+                            const SizedBox(height: 13),
+                            //日付ラベル
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: leftsidePadding,
+                                  ),
+                                  child: Text(
+                                    DateFormat(
+                                      'yyyy年M月d日(E)',
+                                      'ja_JP',
+                                    ).format(tileGroupList[index].date),
+                                    style: AppTextStyles.listTileSectionTitle,
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            //区切り線
+                            Divider(
+                              thickness: 0.25,
+                              height: 0.25,
+                              indent: leftsidePadding,
+                              endIndent: leftsidePadding,
+                              color: context.colors.separator,
+                            ),
+
+                            //タイル
+                            TransactionHistoryGroupTile(
+                              group: tileGroupList[index],
+                              leftsidePadding: leftsidePadding,
+                              listSmallcategoryMemoOffset:
+                                  listSmallcategoryMemoOffset,
+                              screenHorizontalMagnification:
+                                  screenHorizontalMagnification,
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return Column(
+                    key: const ValueKey('empty'),
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // 日付ヘッダーの上スペース
-                      const SizedBox(
-                        height: 13,
-                      ),
-                      //日付ラベル
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: leftsidePadding),
-                            child: Text(
-                                DateFormat('yyyy年M月d日(E)', 'ja_JP')
-                                    .format(tileGroupList[index].date),
-                                style: AppTextStyles.listTileSectionTitle),
-                          ),
-                        ],
-                      ),
-
-                      //区切り線
-                      Divider(
-                        thickness: 0.25,
-                        height: 0.25,
-                        indent: leftsidePadding,
-                        endIndent: leftsidePadding,
-                        color: context.colors.separator,
-                      ),
-
-                      //タイル
-                      TransactionHistoryGroupTile(
-                        group: tileGroupList[index],
-                        leftsidePadding: leftsidePadding,
-                        listSmallcategoryMemoOffset:
-                            listSmallcategoryMemoOffset,
-                        screenHorizontalMagnification:
-                            screenHorizontalMagnification,
+                      const SizedBox(height: 20),
+                      Center(
+                        child: Text(
+                          '記録がまだありません',
+                          style: AppTextStyles.listEmptyMessage,
+                        ),
                       ),
                     ],
-                  ),
+                  );
+                }
+              },
+              error: (error, stackTrace) {
+                return const Center(
+                  key: ValueKey('error'),
+                  child: Text('データの取得に失敗しました'),
                 );
               },
-            );
-          } else {
-            return Column(
-              key: const ValueKey('empty'),
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                Center(
-                  child: Text(
-                    '記録がまだありません',
-                    style: AppTextStyles.listEmptyMessage,
-                  ),
-                ),
-              ],
-            );
-          }
-        }, error: (error, stackTrace) {
-          return const Center(
-            key: ValueKey('error'),
-            child: Text('データの取得に失敗しました'),
-          );
-        }, loading: () {
-          return const HistoryListSkeleton(
-            key: ValueKey('loading'),
-          );
-        }),
+              loading: () {
+                return const HistoryListSkeleton(key: ValueKey('loading'));
+              },
+            ),
       ),
     );
   }
 
   void _scrollToItem(
-      DateTime dt, List keysList, AutoScrollController controller) async {
+    DateTime dt,
+    List keysList,
+    AutoScrollController controller,
+  ) async {
     final index = keysList.indexOf(dt);
     await controller.scrollToIndex(
       index,

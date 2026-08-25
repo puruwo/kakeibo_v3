@@ -19,7 +19,7 @@ extension MediaQueryExtension on BuildContext {
     }
   }
 
-  double get screenVerticalMagnification{
+  double get screenVerticalMagnification {
     if (screenHorizontalMagnification >= 1.0) {
       // y=x^0.8
       return pow(screenHorizontalMagnification, 0.8) as double;
@@ -38,5 +38,16 @@ extension MediaQueryExtension on BuildContext {
   // カレンダーサイズから左の空白の大きさを計算
   double get leftsidePadding {
     return 14.5 * screenHorizontalMagnification;
+  }
+
+  /// グロナビ（自作BottomNavigationBar）＋下部セーフエリアの高さ。
+  /// タブシェル内でpushされたページのスクロール末尾には、
+  /// 必ずこの値以上の下部余白を確保すること（コンテンツがグロナビに隠れる事故の防止）。
+  /// extendBody時はMediaQueryのpaddingが当てにならないため、Viewから直接取得する。
+  /// バーの高さは foundation.dart と共有の appBottomNavBarHeight を参照する。
+  double get bottomNavClearance {
+    final view = View.of(this);
+    final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
+    return appBottomNavBarHeight + bottomSafeArea;
   }
 }

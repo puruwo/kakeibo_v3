@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
-import 'package:kakeibo/view/component/expense_history_list_tile.dart';
 
 /// 支出明細の月ごとのまとまり（案件 UIデザイン改修 §6）
 ///
-/// 支出一覧の「月別」タブとカテゴリー明細で共用する。
+/// カテゴリー明細の月別アコーディオンで使う。
 /// 年度期間は暦年をまたぐため、期間開始年と異なる年の月は「yyyy年M月」で示す。
 class ExpenseMonthGroup {
   const ExpenseMonthGroup({
@@ -76,37 +73,4 @@ int expensePeriodMonthCount(PeriodValue period) {
       (end.month - start.month) +
       (end.day >= start.day ? 1 : 0);
   return months <= 0 ? 1 : months;
-}
-
-/// 月見出し＋明細タイルのsliver列を組み立てる（支出一覧の月別タブ・カテゴリー明細で共用）
-///
-/// [monthHeaderBuilder] には月見出しWidget（ExpenseMonthHeader）を渡す。
-List<Widget> buildExpenseMonthSlivers(
-  List<ExpenseMonthGroup> groups, {
-  required Widget Function(ExpenseMonthGroup group) monthHeaderBuilder,
-}) {
-  return [
-    for (final group in groups) ...[
-      SliverToBoxAdapter(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(
-            AppSpacing.lg,
-            0,
-            AppSpacing.lg,
-            AppSpacing.sm,
-          ),
-          child: monthHeaderBuilder(group),
-        ),
-      ),
-      SliverPadding(
-        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-        sliver: SliverList.builder(
-          itemCount: group.rows.length,
-          itemBuilder: (context, index) =>
-              ExpenseHistoryListTile(value: group.rows[index]),
-        ),
-      ),
-      const SliverToBoxAdapter(child: SizedBox(height: AppSpacing.sm)),
-    ],
-  ];
 }

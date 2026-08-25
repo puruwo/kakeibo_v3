@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
+import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
@@ -54,9 +55,10 @@ class _FoundationState extends ConsumerState<Foundation>
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _fadeController, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
     _fadeController.value = 1.0; // 初期状態では完全に表示
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onBuildComplete(context, ref);
@@ -141,14 +143,39 @@ class _FoundationState extends ConsumerState<Foundation>
               child: SafeArea(
                 top: false,
                 child: SizedBox(
-                  height: 56,
+                  // 高さの正本は appBottomNavBarHeight（クリアランス計算と共有）
+                  height: appBottomNavBarHeight,
                   child: Row(
                     children: [
-                      _buildNavItem(Icons.home_rounded, Icons.home_rounded, '全体', 0, navigationBarState),
-                      _buildNavItem(Icons.bar_chart_rounded, Icons.bar_chart_rounded, '月間分析', 1, navigationBarState),
+                      _buildNavItem(
+                        Icons.home_rounded,
+                        Icons.home_rounded,
+                        '全体',
+                        0,
+                        navigationBarState,
+                      ),
+                      _buildNavItem(
+                        Icons.bar_chart_rounded,
+                        Icons.bar_chart_rounded,
+                        '月間分析',
+                        1,
+                        navigationBarState,
+                      ),
                       _buildAddButton(),
-                      _buildNavItem(Icons.people_rounded, Icons.people_rounded, '家族', 3, navigationBarState),
-                      _buildNavItem(Icons.calendar_month_rounded, Icons.calendar_month_rounded, '履歴', 4, navigationBarState),
+                      _buildNavItem(
+                        Icons.people_rounded,
+                        Icons.people_rounded,
+                        '家族',
+                        3,
+                        navigationBarState,
+                      ),
+                      _buildNavItem(
+                        Icons.calendar_month_rounded,
+                        Icons.calendar_month_rounded,
+                        '履歴',
+                        4,
+                        navigationBarState,
+                      ),
                     ],
                   ),
                 ),
@@ -177,7 +204,9 @@ class _FoundationState extends ConsumerState<Foundation>
           children: [
             Icon(
               isSelected ? activeIcon : icon,
-              color: isSelected ? context.colors.text : context.colors.textSecondary,
+              color: isSelected
+                  ? context.colors.text
+                  : context.colors.textSecondary,
               size: 24,
             ),
             const SizedBox(height: 2),

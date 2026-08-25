@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/app_floating_action_button.dart';
 
 /// FAB下端のオフセット値を計算するユーティリティ。
-/// extendBody:true 時に View から直接 bottom safe area を取得する。
+/// グロナビ回避分は bottomNavClearance（正準ヘルパー）に集約する。
 double fabBottomOf(BuildContext context) {
-  final view = View.of(context);
-  final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
-  return kBottomNavigationBarHeight + bottomSafeArea + kFloatingActionButtonMargin;
+  return context.bottomNavClearance + kFloatingActionButtonMargin;
 }
 
 /// [child] の右下に pill 形 FAB を重ねる Stack ラッパー。

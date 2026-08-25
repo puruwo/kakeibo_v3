@@ -16,6 +16,7 @@ import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
+import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// 固定費の支払い履歴ページ
 ///
@@ -31,7 +32,9 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final fixedCost = ref.watch(fixedCostByIdProvider(fixedCostId)).valueOrNull;
-    final historyAsync = ref.watch(fixedCostAllPaymentHistoryProvider(fixedCostId));
+    final historyAsync = ref.watch(
+      fixedCostAllPaymentHistoryProvider(fixedCostId),
+    );
 
     return Scaffold(
       backgroundColor: context.colors.surface,
@@ -70,13 +73,8 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
           final topPadding =
               MediaQuery.of(context).padding.top + kToolbarHeight;
 
-          // extendBody:true のボトムナビ背後までリストが広がるため、
-          // MediaQuery では取得できない下部セーフエリアを View から直接取得し、
-          // ボトムナビ高さとあわせて末尾余白に加算する（最後の行が隠れないように）
-          final view = View.of(context);
-          final bottomSafeArea = view.padding.bottom / view.devicePixelRatio;
-          final bottomInset =
-              kBottomNavigationBarHeight + bottomSafeArea + AppSpacing.xl;
+          // グロナビに最後の行が隠れないよう、末尾余白は正準ヘルパーで確保する
+          final bottomInset = context.bottomNavClearance + AppSpacing.xl;
 
           return ListView(
             padding: EdgeInsets.fromLTRB(

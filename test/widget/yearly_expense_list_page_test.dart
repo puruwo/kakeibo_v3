@@ -1,7 +1,7 @@
 // 支出一覧画面（lib/view/yearly_expense_list_page/）のWidget結合テスト
 //
 // 案件 UIデザイン改修 §6 の本実装。総支出カード・カテゴリー別内訳・
-// 月別タブへの切り替え・カテゴリー明細（月毎グルーピング）への遷移を見る。
+// カテゴリー明細（月毎アコーディオン）への遷移と開閉を見る。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
@@ -92,14 +92,14 @@ void main() {
   ];
 
   TestFakes buildFakes({List<ExpenseEntity> records = expenses}) => TestFakes(
-        expense: FakeExpenseRepository(initialRecords: records),
-        expenseBigCategory: FakeExpenseBigCategoryRepository(
-          initialRecords: expenseBigCategories,
-        ),
-        expenseSmallCategory: FakeExpenseSmallCategoryRepository(
-          initialRecords: expenseSmallCategories,
-        ),
-      );
+    expense: FakeExpenseRepository(initialRecords: records),
+    expenseBigCategory: FakeExpenseBigCategoryRepository(
+      initialRecords: expenseBigCategories,
+    ),
+    expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+      initialRecords: expenseSmallCategories,
+    ),
+  );
 
   testWidgets('総支出カードとカテゴリー別内訳（金額降順・構成比つき）が出る', (tester) async {
     await pumpApp(
@@ -113,7 +113,7 @@ void main() {
     expect(find.text('総支出'), findsOneWidget);
     expect(find.text('¥ 100,000'), findsOneWidget);
 
-    // カテゴリー別（初期表示）: 金額降順で 食費60,000 → 交通費40,000
+    // カテゴリー別: 金額降順で 食費60,000 → 交通費40,000
     expect(find.text('食費'), findsOneWidget);
     expect(find.text('¥ 60,000'), findsOneWidget);
     expect(find.text('60.0%'), findsOneWidget);
@@ -122,29 +122,7 @@ void main() {
     expect(find.text('40.0%'), findsOneWidget);
   });
 
-  testWidgets('月別タブに切り替えると月見出し（月計つき）と明細タイルが出る', (tester) async {
-    await pumpApp(
-      tester,
-      home: YearlyExpenseListPage(period: period),
-      fakes: buildFakes(),
-    );
-    await pumpTimes(tester);
-
-    await tester.tap(find.text('月別'));
-    await pumpTimes(tester);
-
-    // 新しい月が上（8月→7月）。月見出しの右端に月計
-    expect(find.text('8月'), findsOneWidget);
-    // 8月は1件のみのため月計とタイル金額が同額で2つ並ぶ
-    expect(find.text('¥ 20,000'), findsNWidgets(2));
-    expect(find.text('7月'), findsOneWidget);
-    expect(find.text('¥ 80,000'), findsOneWidget);
-    // 明細タイル（メモ）が出る
-    expect(find.text('寿司'), findsOneWidget);
-    expect(find.text('定期券'), findsOneWidget);
-  });
-
-  testWidgets('カテゴリー行のタップで明細画面へ遷移し、月毎グルーピングで出る', (tester) async {
+  testWidgets('カテゴリー行のタップで明細画面へ遷移し、月毎アコーディオン（初期は最新月のみ展開）で出る', (tester) async {
     await pumpApp(
       tester,
       home: YearlyExpenseListPage(period: period),
@@ -160,15 +138,44 @@ void main() {
     expect(find.text('合計'), findsOneWidget);
     expect(find.text('¥ 60,000'), findsOneWidget);
     expect(find.text('総支出の 60.0%'), findsOneWidget);
-    // 月毎グルーピング（8月¥20,000 → 7月¥40,000）と明細
+
+    // 月ヘッダー（新しい月が上）: 8月1件・7月2件
     expect(find.text('8月'), findsOneWidget);
-    // 8月は1件のみのため月計とタイル金額が同額で2つ並ぶ
-    expect(find.text('¥ 20,000'), findsNWidgets(2));
+    expect(find.text('1件'), findsOneWidget);
     expect(find.text('7月'), findsOneWidget);
-    expect(find.text('¥ 40,000'), findsOneWidget);
-    expect(find.text('焼肉'), findsOneWidget);
+    expect(find.text('2件'), findsOneWidget);
+    expect(find.text('¥ 40,000'), findsOneWidget); // 7月の月計
+
+    // 初期展開は最新月（8月）のみ: ヘッダー月計とタイル金額が同額で2つ並ぶ
+    expect(find.text('¥ 20,000'), findsNWidgets(2));
+    expect(find.text('寿司'), findsOneWidget);
+    // 7月は折りたたまれている
+    expect(find.text('焼肉'), findsNothing);
     // 交通費の明細は出ない
     expect(find.text('定期券'), findsNothing);
+  });
+
+  testWidgets('月ヘッダーのタップでアコーディオンが開閉する', (tester) async {
+    await pumpApp(
+      tester,
+      home: YearlyCategoryExpenseListPage(
+        period: period,
+        bigCategoryName: '食費',
+      ),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    // 7月を開く → 明細が出る
+    await tester.tap(find.text('7月'));
+    await pumpTimes(tester);
+    expect(find.text('焼肉'), findsOneWidget);
+    expect(find.text('ランチ'), findsOneWidget);
+
+    // 8月（初期展開）を閉じる → 明細が消える
+    await tester.tap(find.text('8月'));
+    await pumpTimes(tester);
+    expect(find.text('寿司'), findsNothing);
   });
 
   testWidgets('記録が無ければ空メッセージが出る', (tester) async {

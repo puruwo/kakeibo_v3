@@ -80,6 +80,31 @@ style: AppTextStyles.pickerSelectedLabel
 
 ---
 
+## レイアウト共通ルール
+
+### スクロール末尾の下部余白（グロナビ回避）【頻発事故・必須確認】
+
+タブシェル内でpushされたページ（`Navigator.of(context).push` で開く一覧・明細ページ等）は、
+グロナビ（BottomNavigationBar）が画面下に残る。
+**スクロールコンテンツの末尾に十分な下部余白を確保しないと、最下部の要素がグロナビに隠れる。**
+この実装ミスが繰り返し発生しているため、スクロールするページを新設・修正したら必ず確認すること。
+
+- 余白は `context.bottomNavClearance`（`lib/util/extension/media_query_extension.dart`）を基準にする
+  - グロナビ高さ＋下部セーフエリアを返す。`+ AppSpacing.xl` 程度を足して使う
+  - `MediaQuery.of(context).padding.bottom` は extendBody 時に当てにならないため使わない
+- FABがあるページは既存の `fabBottomOf(context)`（`app_fab_stack.dart`）パターンに従う
+- 検証フェーズのシミュレータ確認では、**必ず一番下までスクロールして最終要素が全て見えること**を確認する
+
+```dart
+// ✅ 正しい（スクロールコンテンツの末尾）
+padding: EdgeInsets.only(bottom: context.bottomNavClearance + AppSpacing.xl)
+
+// ❌ 禁止（固定値のみ。端末によってグロナビに隠れる）
+padding: const EdgeInsets.only(bottom: AppSpacing.xxl)
+```
+
+---
+
 ## ファイルパス
 
 | 定義ファイル | クラス名 | 用途 |
