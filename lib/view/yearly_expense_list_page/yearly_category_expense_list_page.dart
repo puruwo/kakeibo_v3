@@ -19,8 +19,8 @@ import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.d
 /// カテゴリー別の支出明細画面（案件 UIデザイン改修 §6）
 ///
 /// 支出一覧のカテゴリー行タップで開く。ヘッダーにカテゴリーアイコン＋名称、
-/// 上部にそのカテゴリーの合計カード、明細は月毎のアコーディオン
-/// （月ラベル・件数・月計のヘッダー行をタップで開閉）で表示する。
+/// 上部にそのカテゴリーの合計サマリー、明細は月毎のアコーディオン
+/// （月ラベル・件数・月計のヘッダー行をタップで開閉。初期は全月閉じた状態）で表示する。
 class YearlyCategoryExpenseListPage extends ConsumerStatefulWidget {
   const YearlyCategoryExpenseListPage({
     super.key,
@@ -38,8 +38,8 @@ class YearlyCategoryExpenseListPage extends ConsumerStatefulWidget {
 
 class _YearlyCategoryExpenseListPageState
     extends ConsumerState<YearlyCategoryExpenseListPage> {
-  /// 開いている月のラベル集合。初期表示は最新月のみ開く
-  Set<String>? _expandedLabels;
+  /// 開いている月のラベル集合。初期表示は全月閉じた状態
+  final Set<String> _expandedLabels = {};
 
   @override
   Widget build(BuildContext context) {
@@ -90,18 +90,9 @@ class _YearlyCategoryExpenseListPageState
             category.rows,
             periodStartYear: widget.period.startDatetime.year,
           );
-          // 初期表示は最新月（先頭グループ）だけ開いた状態にする。
-          // 編集・削除の再集計で展開中の月が消えた場合も、存在しないラベルを
-          // 掃除した上で最新月を開き直す（全月閉じた画面に化けるのを防ぐ）。
-          // ユーザーが自分で全月を閉じた状態（空集合）はそのまま尊重する
+          // 編集・削除の再集計で消えた月のラベルを掃除する
           final labels = {for (final g in groups) g.label};
-          final expanded = _expandedLabels;
-          if (expanded == null ||
-              (expanded.isNotEmpty && expanded.intersection(labels).isEmpty)) {
-            _expandedLabels = {groups.first.label};
-          } else {
-            expanded.removeWhere((label) => !labels.contains(label));
-          }
+          _expandedLabels.removeWhere((label) => !labels.contains(label));
 
           final monthCount = expensePeriodMonthCount(widget.period);
           final monthlyAverage = (category.sum / monthCount).round();
@@ -119,7 +110,7 @@ class _YearlyCategoryExpenseListPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _CategorySummaryCard(
+                  _CategorySummaryHeader(
                     category: category,
                     monthlyAverage: monthlyAverage,
                     ratio: ratio,
@@ -128,11 +119,11 @@ class _YearlyCategoryExpenseListPageState
                   for (final group in groups)
                     _MonthAccordionSection(
                       group: group,
-                      isExpanded: _expandedLabels!.contains(group.label),
+                      isExpanded: _expandedLabels.contains(group.label),
                       onToggle: () {
                         setState(() {
-                          if (!_expandedLabels!.remove(group.label)) {
-                            _expandedLabels!.add(group.label);
+                          if (!_expandedLabels.remove(group.label)) {
+                            _expandedLabels.add(group.label);
                           }
                         });
                       },
@@ -149,9 +140,12 @@ class _YearlyCategoryExpenseListPageState
   }
 }
 
-/// カテゴリーの合計カード（合計・総支出比・月平均・構成比バー）
-class _CategorySummaryCard extends StatelessWidget {
-  const _CategorySummaryCard({
+/// カテゴリーの合計サマリー（合計・総支出比・月平均・構成比バー）
+///
+/// カード面にすると展開後の明細タイルと区別がつかないため、
+/// 面を持たないヘッダーとして地の上に直接置く（レビュー指摘 2026-08-25）
+class _CategorySummaryHeader extends StatelessWidget {
+  const _CategorySummaryHeader({
     required this.category,
     required this.monthlyAverage,
     required this.ratio,
@@ -163,9 +157,8 @@ class _CategorySummaryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CardContainer(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
       child: Column(
         children: [
           Row(

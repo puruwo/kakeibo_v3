@@ -122,7 +122,7 @@ void main() {
     expect(find.text('40.0%'), findsOneWidget);
   });
 
-  testWidgets('カテゴリー行のタップで明細画面へ遷移し、月毎アコーディオン（初期は最新月のみ展開）で出る', (tester) async {
+  testWidgets('カテゴリー行のタップで明細画面へ遷移し、月毎アコーディオン（初期は全月閉じた状態）で出る', (tester) async {
     await pumpApp(
       tester,
       home: YearlyExpenseListPage(period: period),
@@ -134,7 +134,7 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.byType(YearlyCategoryExpenseListPage), findsOneWidget);
-    // 合計カード: 食費60,000・総支出の60%
+    // 合計サマリー: 食費60,000・総支出の60%
     expect(find.text('合計'), findsOneWidget);
     expect(find.text('¥ 60,000'), findsOneWidget);
     expect(find.text('総支出の 60.0%'), findsOneWidget);
@@ -145,11 +145,10 @@ void main() {
     expect(find.text('7月'), findsOneWidget);
     expect(find.text('2件'), findsOneWidget);
     expect(find.text('¥ 40,000'), findsOneWidget); // 7月の月計
+    expect(find.text('¥ 20,000'), findsOneWidget); // 8月の月計
 
-    // 初期展開は最新月（8月）のみ: ヘッダー月計とタイル金額が同額で2つ並ぶ
-    expect(find.text('¥ 20,000'), findsNWidgets(2));
-    expect(find.text('寿司'), findsOneWidget);
-    // 7月は折りたたまれている
+    // 初期は全月閉じた状態: 明細タイルは1件も出ない
+    expect(find.text('寿司'), findsNothing);
     expect(find.text('焼肉'), findsNothing);
     // 交通費の明細は出ない
     expect(find.text('定期券'), findsNothing);
@@ -166,16 +165,20 @@ void main() {
     );
     await pumpTimes(tester);
 
+    // 初期は全月閉じている
+    expect(find.text('焼肉'), findsNothing);
+    expect(find.text('寿司'), findsNothing);
+
     // 7月を開く → 明細が出る
     await tester.tap(find.text('7月'));
     await pumpTimes(tester);
     expect(find.text('焼肉'), findsOneWidget);
     expect(find.text('ランチ'), findsOneWidget);
 
-    // 8月（初期展開）を閉じる → 明細が消える
-    await tester.tap(find.text('8月'));
+    // 7月を閉じる → 明細が消える
+    await tester.tap(find.text('7月'));
     await pumpTimes(tester);
-    expect(find.text('寿司'), findsNothing);
+    expect(find.text('焼肉'), findsNothing);
   });
 
   testWidgets('記録が無ければ空メッセージが出る', (tester) async {
