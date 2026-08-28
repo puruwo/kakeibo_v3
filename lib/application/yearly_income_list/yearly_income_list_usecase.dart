@@ -48,8 +48,9 @@ class YearlyIncomeListUsecaseNotifier
       final day = dateStr.substring(6, 8);
       final date = DateTime(int.parse(year), int.parse(month), int.parse(day));
 
-      // 月のキー (例: "2023年 12月")
-      final monthKey = '${date.year}年 ${date.month}月';
+      // 月のキー (yyyyMM。辞書順ソートでそのまま年月順になる)
+      final monthKey =
+          '${date.year}${date.month.toString().padLeft(2, '0')}';
 
       // カテゴリー情報を取得
       final category = await _incomeSmallCategoryRepo.fetchBySmallCategory(
@@ -82,28 +83,25 @@ class YearlyIncomeListUsecaseNotifier
     // 月ごとのグループを作成（新しい順にソート）
     final monthlyGroups = <MonthlyIncomeGroup>[];
     final sortedKeys = monthlyMap.keys.toList()
-      ..sort((a, b) {
-        // "2023年 12月" のような文字列から年月を抽出して比較
-        final aYear = int.parse(a.split('年')[0]);
-        final aMonth = int.parse(a.split('年 ')[1].split('月')[0]);
-        final bYear = int.parse(b.split('年')[0]);
-        final bMonth = int.parse(b.split('年 ')[1].split('月')[0]);
-
-        // 新しい順（降順）
-        if (aYear != bYear) {
-          return bYear.compareTo(aYear);
-        }
-        return bMonth.compareTo(aMonth);
-      });
+      // yyyyMM文字列の辞書順比較で新しい順（降順）
+      ..sort((a, b) => b.compareTo(a));
 
     for (var monthKey in sortedKeys) {
       final incomes = monthlyMap[monthKey]!;
       // 各月内では日付の新しい順にソート
       incomes.sort((a, b) => b.date.compareTo(a.date));
 
+      // 月見出しは支出カテゴリー明細（ExpenseMonthGroup）と同じ規則:
+      // 期間開始年と同じ年は「M月」、異なる年は「yyyy年M月」
+      final groupYear = int.parse(monthKey.substring(0, 4));
+      final groupMonth = int.parse(monthKey.substring(4, 6));
+      final label = groupYear == arg.startDatetime.year
+          ? '$groupMonth月'
+          : '$groupYear年$groupMonth月';
+
       monthlyGroups.add(
         MonthlyIncomeGroup(
-          monthLabel: monthKey,
+          monthLabel: label,
           incomes: incomes,
         ),
       );

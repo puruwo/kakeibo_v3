@@ -1,7 +1,7 @@
 // 収入一覧ページ（lib/view/yearly_income_list_page/）のWidget結合テスト
 //
-// 指定期間の収入が月別にグループ化されて並ぶか、合計が出るか、
-// タイル・FABから記録モーダルへ入れるかを見る。
+// 指定期間の収入が月別アコーディオン（初期は全月閉じた状態）で並ぶか、
+// 合計が出るか、タイル・FABから記録モーダルへ入れるかを見る。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
@@ -105,7 +105,7 @@ void main() {
     ),
   );
 
-  testWidgets('月別にグループ化された収入と総収入が出る', (tester) async {
+  testWidgets('月別アコーディオン（初期は全月閉じた状態）と総収入が出る', (tester) async {
     await pumpApp(
       tester,
       home: YearlyIncomeListPage(period: yearPeriod),
@@ -114,21 +114,44 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('収入一覧'), findsOneWidget); // AppBar
-    // 月ヘッダーは新しい順（7月 → 6月）
-    expect(find.text('2025年 7月'), findsOneWidget);
-    expect(find.text('2025年 6月'), findsOneWidget);
+    // 月ヘッダーは新しい順（7月 → 6月）。期間開始年（2025年）は省略される
+    expect(find.text('7月'), findsOneWidget);
+    expect(find.text('6月'), findsOneWidget);
+    expect(find.text('1件'), findsNWidgets(2));
+    expect(find.text('¥ 260,000'), findsOneWidget); // 7月の月計
+    expect(find.text('¥ 250,000'), findsOneWidget); // 6月の月計
 
     // グラフエリアの総収入（250,000＋260,000）
     expect(find.text('総収入'), findsOneWidget);
     // グラフエリアの合計とカテゴリー別内訳（給与のみ）で同じ金額が2箇所に出る
     expect(find.text('¥ 510,000'), findsNWidgets(2));
 
-    // 各タイル（小カテゴリー名・日付・メモ・金額）
-    expect(find.text('給与'), findsWidgets);
+    // 初期は全月閉じた状態: 明細タイルは1件も出ない
+    expect(find.text('7月5日'), findsNothing);
+    expect(find.text('6月25日'), findsNothing);
+  });
+
+  testWidgets('月ヘッダーのタップでアコーディオンが開閉する', (tester) async {
+    await pumpApp(
+      tester,
+      home: YearlyIncomeListPage(period: yearPeriod),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    // 7月を開く → 明細が出る（金額は月計と合わせて2箇所になる）
+    await tester.tap(find.text('7月'));
+    await pumpTimes(tester);
     expect(find.text('7月5日'), findsOneWidget);
-    expect(find.text('6月25日'), findsOneWidget);
-    expect(find.text('¥ 260,000'), findsOneWidget);
-    expect(find.text('¥ 250,000'), findsOneWidget);
+    expect(find.text('7月分'), findsOneWidget);
+    expect(find.text('¥ 260,000'), findsNWidgets(2));
+    // 6月は閉じたまま
+    expect(find.text('6月25日'), findsNothing);
+
+    // 7月を閉じる → 明細が消える
+    await tester.tap(find.text('7月'));
+    await pumpTimes(tester);
+    expect(find.text('7月5日'), findsNothing);
   });
 
   testWidgets('収入タイルのタップで編集モーダルが開く', (tester) async {
@@ -137,6 +160,10 @@ void main() {
       home: YearlyIncomeListPage(period: yearPeriod),
       fakes: buildFakes(),
     );
+    await pumpTimes(tester);
+
+    // 明細は月ヘッダーを開いてから触る
+    await tester.tap(find.text('7月'));
     await pumpTimes(tester);
 
     await tester.tap(find.text('7月分'));

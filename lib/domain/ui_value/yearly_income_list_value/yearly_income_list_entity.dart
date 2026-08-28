@@ -19,7 +19,8 @@ class YearlyIncomeListValue with _$YearlyIncomeListValue {
 @freezed
 class MonthlyIncomeGroup with _$MonthlyIncomeGroup {
   const factory MonthlyIncomeGroup({
-    required String monthLabel, // 例: "2023年 12月"
+    // 例: "8月"（期間開始年） / "2027年1月"（年跨ぎ）。支出カテゴリー明細と同じ規則
+    required String monthLabel,
     required List<IncomeHistoryTileValue> incomes,
   }) = _MonthlyIncomeGroup;
 }

@@ -94,14 +94,14 @@ void main() {
   }
 
   group('YearlyIncomeListUsecaseNotifier の月グループ', () {
-    test('「YYYY年 M月」のラベルで月ごとにまとめられる', () async {
+    test('月ごとにまとめられる（期間開始年は「M月」・年跨ぎは「yyyy年M月」）', () async {
       final result = await fetchIncomeList();
 
       expect(result.monthlyGroups.map((g) => g.monthLabel), [
-        '2026年 1月',
-        '2025年 12月',
-        '2025年 7月',
-        '2025年 6月',
+        '2026年1月',
+        '12月',
+        '7月',
+        '6月',
       ]);
       // 6月は2件（給与と副業）
       expect(result.monthlyGroups.last.incomes, hasLength(2));
@@ -112,14 +112,14 @@ void main() {
 
       // 2026年1月が2025年12月より前に来る
       final labels = result.monthlyGroups.map((g) => g.monthLabel).toList();
-      expect(labels.indexOf('2026年 1月'), lessThan(labels.indexOf('2025年 12月')));
+      expect(labels.indexOf('2026年1月'), lessThan(labels.indexOf('12月')));
     });
 
     test('月グループ内は日付の新しい順に並ぶ', () async {
       final result = await fetchIncomeList();
 
       final june = result.monthlyGroups.firstWhere(
-        (g) => g.monthLabel == '2025年 6月',
+        (g) => g.monthLabel == '6月',
       );
       expect(june.incomes.map((e) => e.date), [
         DateTime(2025, 6, 25),

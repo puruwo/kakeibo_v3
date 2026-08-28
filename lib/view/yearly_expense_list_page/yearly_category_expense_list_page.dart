@@ -5,14 +5,13 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/theme/app_colors.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
-import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/component/expense_history_list_tile.dart';
+import 'package:kakeibo/view/component/month_accordion_section.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/expense_month_group.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
 
@@ -117,8 +116,10 @@ class _YearlyCategoryExpenseListPageState
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   for (final group in groups)
-                    _MonthAccordionSection(
-                      group: group,
+                    MonthAccordionSection(
+                      label: group.label,
+                      itemCount: group.rows.length,
+                      totalLabel: yenmarkFormattedPriceGetter(group.total),
                       isExpanded: _expandedLabels.contains(group.label),
                       onToggle: () {
                         setState(() {
@@ -127,6 +128,10 @@ class _YearlyCategoryExpenseListPageState
                           }
                         });
                       },
+                      children: [
+                        for (final row in group.rows)
+                          ExpenseHistoryListTile(value: row),
+                      ],
                     ),
                 ],
               ),
@@ -195,85 +200,3 @@ class _CategorySummaryHeader extends StatelessWidget {
   }
 }
 
-/// 月ごとのアコーディオンセクション
-///
-/// ヘッダー行に月ラベル・件数・月計を表示し、タップで明細タイルを開閉する。
-class _MonthAccordionSection extends StatelessWidget {
-  const _MonthAccordionSection({
-    required this.group,
-    required this.isExpanded,
-    required this.onToggle,
-  });
-
-  final ExpenseMonthGroup group;
-  final bool isExpanded;
-  final VoidCallback onToggle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
-      child: Column(
-        children: [
-          // 月ヘッダー行（タイルと同じ面の語彙で、タップで開閉）
-          AppInkWell(
-            borderRadius: appCardRadius,
-            color: context.colors.fillQuaternary,
-            border: Border.all(color: context.colors.surfaceBorder, width: 1),
-            onTap: onToggle,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.md,
-              ),
-              child: Row(
-                children: [
-                  Text(group.label, style: AppTextStyles.listTilePrimaryTitle),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      '${group.rows.length}件',
-                      style: AppTextStyles.listCardSecondaryTitle,
-                    ),
-                  ),
-                  Text(
-                    yenmarkFormattedPriceGetter(group.total),
-                    style: AppTextStyles.appCardSecondaryPriceLabel,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  AnimatedRotation(
-                    turns: isExpanded ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Icon(
-                      Icons.expand_more_rounded,
-                      size: 20,
-                      color: context.colors.textSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          // 明細タイル（開閉アニメーション付き）
-          AnimatedSize(
-            duration: const Duration(milliseconds: 200),
-            curve: Curves.easeOutCubic,
-            alignment: Alignment.topCenter,
-            child: isExpanded
-                ? Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.sm),
-                    child: Column(
-                      children: [
-                        for (final row in group.rows)
-                          ExpenseHistoryListTile(value: row),
-                      ],
-                    ),
-                  )
-                : const SizedBox(width: double.infinity),
-          ),
-        ],
-      ),
-    );
-  }
-}
