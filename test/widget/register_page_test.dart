@@ -752,7 +752,18 @@ void main() {
       expect(fakes.expense.insertedEntities, hasLength(1));
       expect(fakes.expense.insertedEntities.single.fixedCostId, isNotNull);
 
-      await waitForSnackBarDismissed(tester);
+      // スナックバーの代わりに登録完了シートが開く（追加改修 0828）
+      expect(find.text('固定費を登録しました'), findsOneWidget);
+      expect(find.text('¥ 8,000'), findsWidgets);
+      expect(find.text('毎月'), findsWidgets);
+      // 次回支払日は初回（7/6）の1ヶ月後
+      expect(find.text('8月6日（水）'), findsOneWidget);
+      expect(find.text('年間換算 ¥ 96,000'), findsOneWidget);
+
+      await tester.tap(find.text('閉じる'));
+      await pumpTimes(tester);
+      expect(find.text('固定費を登録しました'), findsNothing);
+
       await unmountRegisterPage(tester);
     });
   });
@@ -828,7 +839,14 @@ void main() {
       expect(updated.fixedCostId, isNotNull);
       expect(updated.isConfirmed, 1);
 
-      await waitForSnackBarDismissed(tester);
+      // 固定費化でも登録完了シートが開く（追加改修 0828）
+      expect(find.text('固定費を登録しました'), findsOneWidget);
+      // 次回支払日は今日（7/6）より後の最初の支払日（初回7/1の1ヶ月後）
+      expect(find.text('8月1日（金）'), findsOneWidget);
+
+      await tester.tap(find.text('閉じる'));
+      await pumpTimes(tester);
+
       await unmountRegisterPage(tester);
     });
   });

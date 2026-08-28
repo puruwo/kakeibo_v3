@@ -34,7 +34,9 @@ class FixedCostUsecase {
       _ref.read(updateDBCountNotifierProvider.notifier);
 
   // 登録処理
-  Future<void> add({required FixedCostEntity fixedCostEntity}) async {
+  // 登録完了シート（追加改修 0828）が次回支払日等を表示できるよう、
+  // 挿入したマスタ（nextPaymentDate設定済み）を返す
+  Future<FixedCostEntity> add({required FixedCostEntity fixedCostEntity}) async {
     // 現在のdateScopeを取得
     final dateScope = await _ref
         .read(systemDateScopeEntityProvider.selectAsync((data) => data));
@@ -73,7 +75,8 @@ class FixedCostUsecase {
         nextPaymentDate: fixedCostEntity.firstPaymentDate,
       );
       // fixed_costにデータを追加する
-      _fixedCostRepositoryProvider.insert(insertRecord);
+      // 挿入失敗を完了シート表示前に検知できるよう、完了を待つ
+      await _fixedCostRepositoryProvider.insert(insertRecord);
     } else {
       // レコードの初回支払いが今月かどうかチェックし、今月ならexpenseにデータを追加する
       // 次の支払い日と最近支払い日を埋めて、挿入用データを作成
@@ -95,6 +98,8 @@ class FixedCostUsecase {
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
+
+    return insertRecord;
   }
 
   // 1マスタあたりに回収する支払い周期の上限

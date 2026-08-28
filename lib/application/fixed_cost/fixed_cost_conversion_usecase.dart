@@ -43,7 +43,8 @@ class FixedCostConversionUsecase {
   ///
   /// [expenseEntity] は固定費化する支出レコード（実額を持つ確定済みの行）。
   /// [name] は固定費マスタの名称、[variable] は 0=確定型 / 1=変動型。
-  Future<void> convertToFixedCost({
+  /// 登録完了シート（追加改修 0828）向けに、作成したマスタを返す。
+  Future<FixedCostEntity> convertToFixedCost({
     required ExpenseEntity expenseEntity,
     required String name,
     required int variable,
@@ -98,6 +99,8 @@ class FixedCostConversionUsecase {
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
+
+    return baseEntity.copyWith(id: fixedCostId);
   }
 
   /// 次回支払日を「今日より後の最初の支払日」まで進めて返す

@@ -13,6 +13,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/color_getter.dart';
+import 'package:kakeibo/view/register_page/fixed_cost_complete_sheet.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
@@ -61,6 +62,9 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
         buttonType: ButtonColorType.main,
         buttonText: screenMode == RegisterScreenMode.edit ? '更新' : '追加',
         onPressed: () async {
+          // 固定費を登録した場合に完了シートへ渡すマスタ（追加改修 0828）
+          FixedCostEntity? registeredFixedCost;
+
           execute(
             context,
             action: () async {
@@ -94,7 +98,7 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
                       .read(fixedCostRegisterToggleControllerNotifierProvider);
 
                   if (isFixedCost) {
-                    await _submitFixedCost(
+                    registeredFixedCost = await _submitFixedCost(
                       ref,
                       screenMode: screenMode,
                       enteredPrice: enteredPrice,
@@ -170,6 +174,16 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
               // 呼び出し元画面のcontextを取得
               final rootContext =
                   Navigator.of(context, rootNavigator: true).context;
+
+              // 固定費を登録した場合は完了シートで次回支払日まで伝える（追加改修 0828）
+              if (registeredFixedCost != null) {
+                showFixedCostCompleteSheet(
+                  rootContext,
+                  entity: registeredFixedCost!,
+                );
+                return;
+              }
+
               // 呼び出し元画面でスナックバーを表示
               SuccessSnackBar.show(
                 ScaffoldMessenger.of(rootContext),
@@ -186,7 +200,8 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
   ///
   /// 追加は固定費マスタの新規作成（実績生成は既存の起動時バッチ経路に委ねる）、
   /// 編集は「既存支出の固定費化」。過去分の遡及生成は行わない（仕様 §6.2・§6.6）。
-  Future<void> _submitFixedCost(
+  /// 登録完了シート表示用に、作成した固定費マスタを返す。
+  Future<FixedCostEntity> _submitFixedCost(
     WidgetRef ref, {
     required RegisterScreenMode screenMode,
     required int enteredPrice,
@@ -219,8 +234,7 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
           intervalUnit: frequencyValue.intervalUnit.inturvalUnitNumber,
           firstPaymentDate: DateFormat('yyyyMMdd').format(inputDate),
         );
-        await fixedCostUsecase.add(fixedCostEntity: entity);
-        break;
+        return fixedCostUsecase.add(fixedCostEntity: entity);
 
       case RegisterScreenMode.edit:
         // 既存支出の固定費化。初回支払日の変更は当該行の日付に同期する（仕様 §6.6）
@@ -240,14 +254,13 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
             editEntity: editEntity,
           );
         }
-        await fixedCostConversionUsecase.convertToFixedCost(
+        return fixedCostConversionUsecase.convertToFixedCost(
           expenseEntity: editEntity,
           name: enteredName,
           variable: variable,
           intervalNumber: frequencyValue.intervalNumber,
           intervalUnit: frequencyValue.intervalUnit.inturvalUnitNumber,
         );
-        break;
     }
   }
 }
