@@ -43,6 +43,20 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  /// ステッパー（集計期間設定ページ）の選択中の数値用スタイル
+  static final TextStyle stepperValueLabel = MyFontStyle.sfUi.copyWith(
+    fontSize: 32,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w600,
+  );
+
+  /// 設定ページの説明文・補助ラベル用スタイル（細字の listTileSecondaryTitle より読みやすい w400）
+  static final TextStyle supportingText = MyFontStyle.notoSans.copyWith(
+    fontSize: 13,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w400,
+  );
+
   /// ダイアログ内文言用スタイル
   static final TextStyle dialogLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 13,

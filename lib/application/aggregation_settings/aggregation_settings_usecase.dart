@@ -7,6 +7,14 @@ import 'package:kakeibo/view_model/state/date_scope/historical_page/historical_d
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
+/// 集計開始日の下限・上限（29日以降は存在しない月があるため設定不可）
+const int kAggregationStartDayMin = 1;
+const int kAggregationStartDayMax = 28;
+
+/// 集計開始月の下限・上限
+const int kAggregationStartMonthMin = 1;
+const int kAggregationStartMonthMax = 12;
+
 final aggregationSettingsUsecaseProvider =
     Provider<AggregationSettingsUsecase>(AggregationSettingsUsecase.new);
 
@@ -30,10 +38,11 @@ class AggregationSettingsUsecase {
   Future<void> save({required int startDay, required int startMonth}) async {
     //エラーチェック
     // 29〜31日は存在しない月があるため設定不可とする
-    if (startDay < 1 || startDay > 28) {
+    if (startDay < kAggregationStartDayMin || startDay > kAggregationStartDayMax) {
       throw const AppException('開始日は1〜28日の間で設定してください');
     }
-    if (startMonth < 1 || startMonth > 12) {
+    if (startMonth < kAggregationStartMonthMin ||
+        startMonth > kAggregationStartMonthMax) {
       throw const AppException('開始月は1〜12月の間で設定してください');
     }
 
