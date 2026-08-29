@@ -30,6 +30,7 @@ Containerに `BoxDecoration` を直接書く前に、必ずこのドキュメン
 | `AppEmptyState` | 次アクションがある空状態の共通カード（ADR-022） | CardContainer + アイコン32px + 見出し + 説明1行 + Primaryボタン | `lib/view/component/app_empty_state.dart` |
 | `AppInsetGroup` / `AppInsetRow` | 設定アプリ風のインセットグループリスト | 背景: `fillQuaternary` / 1px `surfaceBorder` / 角丸14px / 行高46 / 行間0.5px `separator` | `lib/view/component/app_inset_group.dart` |
 | `AppSegmentedControl` | iOS風セグメンテッドコントロール（2件以上の排他選択） | 背景: `fillQuaternary` / 1px `surfaceBorder` / 角丸10px / 選択中は `surfaceElevated2` の角丸8px・高さ34 | `lib/view/component/app_segmented_control.dart` |
+| `MainButton` / `IconOnlyButton` / `AppFabStack` | ボタン（押すとアクションが起きる要素）。**種別・状態・配置のルールは Vault の `06_design/Kakeibo ボタンルール.md` が正本**（`kakeibo-button-rules` Skill 経由で必ず読む）。本Skillには書かない | 角丸12 `kButtonRadius` / 高さ40・円46 | `lib/view/component/button_util.dart` / `app_fab_stack.dart` |
 
 ---
 

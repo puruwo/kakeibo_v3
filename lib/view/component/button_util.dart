@@ -191,44 +191,19 @@ class MainButton extends StatelessWidget {
   }
 }
 
-class SubButton extends StatelessWidget {
-  const SubButton({
-    super.key,
-    this.buttonType = ButtonColorType.main,
-    required this.onPressed,
-    required this.buttonText,
-  });
-
-  final ButtonColorType buttonType;
-  final Function()? onPressed;
-  final String buttonText;
-
-  @override
-  Widget build(BuildContext context) {
-    final enabled = onPressed != null;
-    final spec = _resolveButtonSpec(context, buttonType);
-
-    return _ButtonSurface(
-      height: 30,
-      spec: spec,
-      enabled: enabled,
-      onPressed: onPressed,
-      child: Text(
-        buttonText,
-        style: AppTextStyles.mainButtonText.copyWith(
-          color: enabled ? spec.labelColor : context.colors.textTertiary,
-        ),
-      ),
-    );
-  }
-}
-
 /// ADR-016: Icon-only（ラベル無しの補助アクション）。
 /// 円・46px固定（[size]は塗りの直径。ADR-017の境界線1pxが外側に付くため外形は48px。
 /// 内側46px＋境界線1pxは、かつて隣に並べていたナビゲーション行と同寸にした名残（KP-004で同行は削除済み））。
 /// 既存の[AppIconCircleContainer]を経由し、独自にContainerを組まない。
 /// 定義上「主役になれない」——主要導線と同格の重要度が必要な場合はIcon-onlyではなく
 /// [MainButton]かナビゲーション行を使うこと。
+///
+/// 枠の有無は配置で決める（KP-006 ボタンルール §5）:
+/// - 単独で置く（一覧の「＋」等）→ [bordered] = true（既定）
+/// - 入力欄の両脇など内側の操作 → [bordered] = false
+///
+/// 非活性は [onTap] を null にする（他のボタンと同じ）。地は [backgroundColor] に関わらず
+/// `fillQuaternary`、アイコンは `textTertiary` に沈める。
 class IconOnlyButton extends StatelessWidget {
   const IconOnlyButton({
     super.key,
@@ -237,16 +212,48 @@ class IconOnlyButton extends StatelessWidget {
     this.iconColor,
     this.backgroundColor,
     this.size = 46,
+    this.iconSize,
+    this.bordered = true,
   });
 
   final IconData icon;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
   final Color? iconColor;
   final Color? backgroundColor;
   final double size;
 
+  /// アイコンの大きさ。省略時は [size] の40%
+  final double? iconSize;
+
+  /// 外側に1pxの境界線（`surfaceBorder`）を付けるか
+  final bool bordered;
+
   @override
   Widget build(BuildContext context) {
+    final enabled = onTap != null;
+
+    final button = AppInkWell(
+      borderRadius: BorderRadius.circular(size / 2),
+      onTap: onTap,
+      child: AppIconCircleContainer(
+        size: size,
+        color: enabled
+            ? (backgroundColor ?? context.colors.fillQuaternary)
+            : context.colors.fillQuaternary,
+        child: Icon(
+          icon,
+          size: iconSize ?? size * 0.4,
+          color: enabled
+              ? (iconColor ?? context.colors.textSecondary)
+              : context.colors.textTertiary,
+        ),
+      ),
+    );
+
+    if (!bordered) {
+      return button;
+    }
+
     // ADR-017: 他のカード・行と同じ境界線を出し、面としての格を揃える。
     // [AppInkWell]のborderは角丸（borderRadius）で枠を描くため、border込みの外形48pxに
     // 半径23が当たって真円にならない（各辺の中央に直線が残る）。Icon-onlyは円が要件
@@ -256,19 +263,7 @@ class IconOnlyButton extends StatelessWidget {
         border: Border.all(color: context.colors.surfaceBorder, width: 1),
         shape: BoxShape.circle,
       ),
-      child: AppInkWell(
-        borderRadius: BorderRadius.circular(size / 2),
-        onTap: onTap,
-        child: AppIconCircleContainer(
-          size: size,
-          color: backgroundColor ?? context.colors.fillQuaternary,
-          child: Icon(
-            icon,
-            size: size * 0.4,
-            color: iconColor ?? context.colors.textSecondary,
-          ),
-        ),
-      ),
+      child: button,
     );
   }
 }
