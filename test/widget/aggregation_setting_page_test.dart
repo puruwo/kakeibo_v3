@@ -1,7 +1,7 @@
 // 集計期間設定ページ（lib/view/config/aggregation_setting_page.dart）のWidget結合テスト（KP-005 B群）
 //
 // 初期表示・ステッパー操作とプレビュー連動・保存フロー（確認ダイアログ→ユースケース）を見る。
-// 期間計算の正しさは AggregationPeriodPreview のUTが担当なので、ここでは表示文字列の連動だけを見る。
+// 期間計算の正しさは AggregationPeriodRule のUTが担当なので、ここでは表示文字列の連動だけを見る。
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

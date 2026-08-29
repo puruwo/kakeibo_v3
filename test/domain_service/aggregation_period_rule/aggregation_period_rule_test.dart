@@ -4,7 +4,7 @@
 // との一致（二重実装の回帰防止）を固定する。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain_service/aggregation_period_preview/aggregation_period_preview.dart';
+import 'package:kakeibo/domain_service/aggregation_period_rule/aggregation_period_rule.dart';
 import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart';
 
@@ -194,10 +194,10 @@ void main() {
     ),
   ];
 
-  group('AggregationPeriodPreview.monthPeriod', () {
+  group('AggregationPeriodRule.monthPeriod', () {
     for (final c in monthCases) {
       test('${c.name}: ${c.today.month}/${c.today.day}・開始日${c.startDay}', () {
-        final period = AggregationPeriodPreview.monthPeriod(
+        final period = AggregationPeriodRule.monthPeriod(
           today: c.today,
           startDay: c.startDay,
         );
@@ -206,11 +206,11 @@ void main() {
     }
   });
 
-  group('AggregationPeriodPreview.yearPeriod', () {
+  group('AggregationPeriodRule.yearPeriod', () {
     for (final c in yearCases) {
       test('${c.name}: ${c.today.year}/${c.today.month}/${c.today.day}・'
           '開始日${c.startDay}・開始月${c.startMonth}', () {
-        final period = AggregationPeriodPreview.yearPeriod(
+        final period = AggregationPeriodRule.yearPeriod(
           today: c.today,
           startDay: c.startDay,
           startMonth: c.startMonth,
@@ -230,7 +230,7 @@ void main() {
             .read(monthPeriodServiceProvider)
             .fetchMonthPeriod(c.today);
 
-        final actual = AggregationPeriodPreview.monthPeriod(
+        final actual = AggregationPeriodRule.monthPeriod(
           today: c.today,
           startDay: c.startDay,
         );
@@ -250,7 +250,7 @@ void main() {
             .read(yearPeriodServiceProvider)
             .fetchYearPeriod(c.today);
 
-        final actual = AggregationPeriodPreview.yearPeriod(
+        final actual = AggregationPeriodRule.yearPeriod(
           today: c.today,
           startDay: c.startDay,
           startMonth: c.startMonth,

@@ -7,7 +7,7 @@ import 'package:kakeibo/application/aggregation_settings/aggregation_settings_us
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
-import 'package:kakeibo/domain_service/aggregation_period_preview/aggregation_period_preview.dart';
+import 'package:kakeibo/domain_service/aggregation_period_rule/aggregation_period_rule.dart';
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
@@ -16,14 +16,6 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
-
-/// 集計開始日の下限・上限（29日以降は存在しない月があるため設定不可）
-const int kAggregationStartDayMin = 1;
-const int kAggregationStartDayMax = 28;
-
-/// 集計開始月の下限・上限
-const int kAggregationStartMonthMin = 1;
-const int kAggregationStartMonthMax = 12;
 
 /// 集計期間（月の開始日・年度の開始月）の設定ページ（KP-005）
 ///
@@ -68,11 +60,11 @@ class _AggregationSettingPageState
   @override
   Widget build(BuildContext context) {
     final today = ref.watch(systemDatetimeNotifierProvider);
-    final monthPeriod = AggregationPeriodPreview.monthPeriod(
+    final monthPeriod = AggregationPeriodRule.monthPeriod(
       today: today,
       startDay: _selectedStartDay,
     );
-    final yearPeriod = AggregationPeriodPreview.yearPeriod(
+    final yearPeriod = AggregationPeriodRule.yearPeriod(
       today: today,
       startDay: _selectedStartDay,
       startMonth: _selectedStartMonth,
