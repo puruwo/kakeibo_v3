@@ -223,7 +223,7 @@ class SubButton extends StatelessWidget {
 
 /// ADR-016: Icon-only（ラベル無しの補助アクション）。
 /// 円・46px固定（[size]は塗りの直径。ADR-017の境界線1pxが外側に付くため外形は48px。
-/// これは[AppNavigationListTile]（内側46px＋境界線1px）と同じ寸法で、横に並べると高さが揃う）。
+/// 内側46px＋境界線1pxは、かつて隣に並べていたナビゲーション行と同寸にした名残（KP-004で同行は削除済み））。
 /// 既存の[AppIconCircleContainer]を経由し、独自にContainerを組まない。
 /// 定義上「主役になれない」——主要導線と同格の重要度が必要な場合はIcon-onlyではなく
 /// [MainButton]かナビゲーション行を使うこと。
@@ -245,8 +245,7 @@ class IconOnlyButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // ADR-017: 隣に並ぶナビゲーション行（[AppNavigationListTile]）と同じ境界線を出し、
-    // 面としての格を揃える。
+    // ADR-017: 他のカード・行と同じ境界線を出し、面としての格を揃える。
     // [AppInkWell]のborderは角丸（borderRadius）で枠を描くため、border込みの外形48pxに
     // 半径23が当たって真円にならない（各辺の中央に直線が残る）。Icon-onlyは円が要件
     // （ADR-016）なので、shape: BoxShape.circle の外枠を直接重ねる。
