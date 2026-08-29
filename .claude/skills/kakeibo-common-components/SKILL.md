@@ -20,7 +20,7 @@ Containerに `BoxDecoration` を直接書く前に、必ずこのドキュメン
 | Widget | 用途 | 主なスタイル | ファイル |
 |---|---|---|---|
 | `CardContainer` | 汎用カード（背景＋角丸18px） | 背景: `quarternarySystemfill` / 角丸: 18px | `lib/view/component/card_container.dart` |
-| `AppListCard` | 履歴・リストタイル | アイコン＋タイトル＋金額の統一レイアウト | `lib/view/component/app_list_card.dart` |
+| `AppListCard` | 履歴・リストタイル | アイコン＋タイトル＋金額の統一レイアウト / 角丸: 12px（`appListCardRadius`、ボタンと同値。KP-004） | `lib/view/component/app_list_card.dart` |
 | `AppPillContainer` | ピル型（角丸50px）コンテナ | 背景: `secondarySystemfill` / 角丸: 50px / 高さ: `pillHeight` | `lib/view/component/app_pill_container.dart` |
 | `AppIconCircleContainer` | アイコンボタン用円形背景 | shape: circle / 色は省略時 `secondarySystemfill` | `lib/view/component/app_icon_circle_container.dart` |
 | `UnconfirmedFixedCostChipLabel` | 「変動あり」表示用チップ | 角丸4px + テーマカラーborder | `lib/view/component/unconfirmed_fixed_cost_chip_label.dart` |
@@ -68,13 +68,16 @@ CardContainer(
 )
 ```
 
-カードの統一角丸は `appCardRadius`（`BorderRadius.circular(18)`）として `card_container.dart` でexportされているので、`InkWell` などで角丸を合わせたい場合はこれを使う。
+角丸は2段階（ADR-033・KP-004）。どちらも `card_container.dart` でexportされているので、`InkWell` などで角丸を合わせたい場合はこれを使う。
+
+- 面カード（`CardContainer`）: `appCardRadius` = 18px
+- 一覧行カード（`AppListCard`・月間分析のカテゴリーカード）: `appListCardRadius` = 12px（ボタンの `kButtonRadius` と同値）
 
 ---
 
 ### 2. AppListCard
 
-履歴・リスト系のタイル。アイコン＋タイトル＋金額の統一レイアウトを提供する。
+履歴・リスト系のタイル。アイコン＋タイトル＋金額の統一レイアウトを提供する。角丸は `appListCardRadius`（12px）で、面カードの18pxより小さい。
 
 ```dart
 import 'package:kakeibo/view/component/app_list_card.dart';
@@ -398,7 +401,8 @@ ON/OFFの2値なら `AppInsetRow.switchRow`、選択肢に名前を出したい�
 
 | 値 | 用途 | 対応widget |
 |---|---|---|
-| 18px | 汎用カード | `CardContainer` |
+| 18px | 面カード | `CardContainer` |
+| 12px | 一覧行カード・ボタン | `AppListCard`（`appListCardRadius`）, `MainButton`（`kButtonRadius`） |
 | 50px | ピル形状 | `AppPillContainer` |
 | 14px | インセットグループ（設定リスト） | `AppInsetGroup` |
 | circle | 円形（アイコン背景・チェックボックス） | `AppIconCircleContainer`, `CheckBox` |
