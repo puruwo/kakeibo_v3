@@ -337,7 +337,7 @@ class AppTextStyles {
 
   /// 面なしヒーローの総収入金額用スタイル（収入一覧サマリーヘッダー）
   static final TextStyle summaryHeroPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 34,
+    fontSize: 26,
     color: AppColorsDark.text,
     fontWeight: FontWeight.w700,
   );

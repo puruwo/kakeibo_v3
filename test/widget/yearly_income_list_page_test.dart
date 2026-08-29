@@ -195,6 +195,34 @@ void main() {
     await unmountRegisterPage(tester);
   });
 
+  testWidgets('カテゴリー行のタップで収入カテゴリー明細（全月展開済み）へ遷移する', (tester) async {
+    await pumpApp(
+      tester,
+      home: YearlyIncomeListPage(period: yearPeriod),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    // カテゴリー別内訳の「給与」行をタップ
+    await tester.tap(find.text('給与'));
+    await pumpTimes(tester);
+
+    // カテゴリー明細ページ: 合計＋月平均のみのサマリー
+    expect(find.text('合計'), findsOneWidget);
+    expect(find.text('¥ 510,000'), findsOneWidget);
+    expect(find.textContaining('月平均'), findsOneWidget);
+
+    // 遷移時から全月展開済み: 両月の明細タイルが最初から見える
+    expect(find.text('7月5日'), findsOneWidget);
+    expect(find.text('6月25日'), findsOneWidget);
+
+    // 月ヘッダーのタップで閉じられる
+    await tester.tap(find.text('7月'));
+    await pumpTimes(tester);
+    expect(find.text('7月5日'), findsNothing);
+    expect(find.text('6月25日'), findsOneWidget);
+  });
+
   testWidgets('収入が1件も無いときは空メッセージになる', (tester) async {
     await pumpApp(
       tester,

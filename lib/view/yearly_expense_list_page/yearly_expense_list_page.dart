@@ -236,6 +236,13 @@ class _CategoryRow extends StatelessWidget {
                 ],
               ),
             ),
+            // タップ可能であることを示すシェブロン（収入一覧のカテゴリー行と共通の語彙）
+            const SizedBox(width: AppSpacing.sm),
+            Icon(
+              Icons.chevron_right_rounded,
+              size: 18,
+              color: context.colors.textTertiary,
+            ),
           ],
         ),
       ),
