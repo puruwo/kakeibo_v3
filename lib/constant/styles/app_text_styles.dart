@@ -106,7 +106,7 @@ class AppTextStyles {
   /// ボタン用テキストスタイル
   ///
   /// 【使用箇所】
-  /// - MainButton/SubButton（Primary/Secondary/Destructive）のラベル、
+  /// - MainButton（Primary/Secondary/Destructive）のラベル、
   ///   ダイアログのキャンセルボタン等、ボタンラベル全般
   static final TextStyle mainButtonText = MyFontStyle.notoSans.copyWith(
     fontSize: 14,
