@@ -80,8 +80,13 @@ void main() {
     await pumpTimes(tester);
   }
 
-  String textOf(WidgetTester tester, Key key) =>
-      tester.widget<Text>(find.byKey(key)).data!;
+  /// 表示中の文字列。ステッパーの値は入力欄（TextField）、プレビューは Text
+  String textOf(WidgetTester tester, Key key) {
+    final finder = find.byKey(key);
+    final widget = tester.widget(finder);
+    if (widget is TextField) return widget.controller!.text;
+    return (widget as Text).data!;
+  }
 
   /// 増減ボタンが非活性（IgnorePointer）か
   bool isStepDisabled(WidgetTester tester, Key key) {
@@ -217,6 +222,80 @@ void main() {
 
       expect(textOf(tester, dayValue), '25');
       expect(isSaveEnabled(tester), isFalse);
+    });
+  });
+
+  group('直接入力（B-2 追加）', () {
+    testWidgets('日の入力欄に15と入力するとプレビューが即時更新される', (tester) async {
+      await openPage(tester);
+
+      await tester.enterText(find.byKey(dayValue), '15');
+      await tester.pump();
+
+      expect(textOf(tester, dayValue), '15');
+      expect(textOf(tester, previewMonth), '8/15 〜 9/14');
+      expect(isSaveEnabled(tester), isTrue);
+    });
+
+    testWidgets('日の入力欄に31と入力すると上限28に丸められる', (tester) async {
+      await openPage(tester);
+
+      await tester.enterText(find.byKey(dayValue), '31');
+      await tester.pump();
+
+      expect(textOf(tester, dayValue), '28');
+      expect(textOf(tester, previewMonth), '8/28 〜 9/27');
+      expect(isStepDisabled(tester, dayInc), isTrue);
+    });
+
+    testWidgets('日の入力欄に0と入力してフォーカスを外すと下限1になる', (tester) async {
+      await openPage(tester);
+
+      await tester.enterText(find.byKey(dayValue), '0');
+      await tester.pump();
+      // 入力途中なので 0 のまま保留される
+      expect(textOf(tester, dayValue), '0');
+      expect(textOf(tester, previewMonth), '8/25 〜 9/24');
+
+      await tester.testTextInput.receiveAction(TextInputAction.done);
+      await tester.pump();
+
+      expect(textOf(tester, dayValue), '1');
+      expect(textOf(tester, previewMonth), '8/1 〜 8/31');
+    });
+
+    testWidgets('日の入力欄を空にしてフォーカスを外すと元の値に戻る', (tester) async {
+      await openPage(tester);
+
+      await tester.enterText(find.byKey(dayValue), '');
+      await tester.pump();
+      // 別の場所をタップしてフォーカスを外す
+      await tester.tap(find.text('月の開始日'));
+      await tester.pump();
+
+      expect(textOf(tester, dayValue), '25');
+      expect(isSaveEnabled(tester), isFalse);
+    });
+
+    testWidgets('月の入力欄に13と入力すると上限12に丸められる', (tester) async {
+      await openPage(tester);
+
+      await tester.enterText(find.byKey(monthValue), '13');
+      await tester.pump();
+
+      expect(textOf(tester, monthValue), '12');
+      expect(textOf(tester, previewYear), '2025/12/25 〜 2026/12/24');
+    });
+
+    testWidgets('入力で変えた値はボタン操作にも引き継がれる', (tester) async {
+      await openPage(tester);
+
+      await tester.enterText(find.byKey(dayValue), '10');
+      await tester.pump();
+      await tapTimes(tester, dayInc, 1);
+
+      expect(textOf(tester, dayValue), '11');
+      expect(textOf(tester, previewMonth), '8/11 〜 9/10');
     });
   });
 

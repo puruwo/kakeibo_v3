@@ -50,6 +50,13 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  /// 設定ページの説明文・補助ラベル用スタイル（細字の listTileSecondaryTitle より読みやすい w400）
+  static final TextStyle supportingText = MyFontStyle.notoSans.copyWith(
+    fontSize: 13,
+    color: AppColorsDark.textSecondary,
+    fontWeight: FontWeight.w400,
+  );
+
   /// ダイアログ内文言用スタイル
   static final TextStyle dialogLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 13,

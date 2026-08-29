@@ -1,5 +1,6 @@
 // packegeImport
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
@@ -11,7 +12,9 @@ import 'package:kakeibo/domain_service/aggregation_period_rule/aggregation_perio
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/component/app_icon_circle_container.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -92,80 +95,87 @@ class _AggregationSettingPageState
           ),
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: SingleChildScrollView(
-              padding: EdgeInsets.only(
-                top: MediaQuery.of(context).padding.top + kToolbarHeight,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  AppSpacing.lg,
-                  AppSpacing.sm,
-                  AppSpacing.lg,
-                  AppSpacing.lg,
+      // 余白タップで入力欄のフォーカスを外す（キーボードを閉じ、入力途中の値を確定させる）
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).padding.top + kToolbarHeight,
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    _buildSection(
-                      title: '月の開始日',
-                      description: '毎月この日から翌月の前日までを「1ヶ月」として集計します（1〜28日）',
-                      stepper: _Stepper(
-                        keyPrefix: 'aggregation_day',
-                        value: _selectedStartDay,
-                        unit: '日',
-                        min: kAggregationStartDayMin,
-                        max: kAggregationStartDayMax,
-                        onChanged: (value) =>
-                            setState(() => _selectedStartDay = value),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.lg,
+                    AppSpacing.sm,
+                    AppSpacing.lg,
+                    AppSpacing.lg,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildSection(
+                        title: '月の開始日',
+                        description: '毎月この日から翌月の前日までを「1ヶ月」として集計します（1〜28日）',
+                        stepper: _Stepper(
+                          keyPrefix: 'aggregation_day',
+                          value: _selectedStartDay,
+                          unit: '日',
+                          min: kAggregationStartDayMin,
+                          max: kAggregationStartDayMax,
+                          onChanged: (value) =>
+                              setState(() => _selectedStartDay = value),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    _buildSection(
-                      title: '年度の開始月',
-                      description: 'この月の開始日から1年間を「年度」として集計します',
-                      stepper: _Stepper(
-                        keyPrefix: 'aggregation_month',
-                        value: _selectedStartMonth,
-                        unit: '月',
-                        min: kAggregationStartMonthMin,
-                        max: kAggregationStartMonthMax,
-                        onChanged: (value) =>
-                            setState(() => _selectedStartMonth = value),
+                      const SizedBox(height: AppSpacing.xl),
+                      _buildSection(
+                        title: '年度の開始月',
+                        description: 'この月の開始日から1年間を「年度」として集計します',
+                        stepper: _Stepper(
+                          keyPrefix: 'aggregation_month',
+                          value: _selectedStartMonth,
+                          unit: '月',
+                          min: kAggregationStartMonthMin,
+                          max: kAggregationStartMonthMax,
+                          onChanged: (value) =>
+                              setState(() => _selectedStartMonth = value),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    _PreviewCard(
-                      monthPeriod: monthPeriod,
-                      yearPeriod: yearPeriod,
-                    ),
-                    const SizedBox(height: AppSpacing.md),
-                    const _RecalculationNotice(),
-                  ],
+                      const SizedBox(height: AppSpacing.xl),
+                      _PreviewCard(
+                        monthPeriod: monthPeriod,
+                        yearPeriod: yearPeriod,
+                      ),
+                      const SizedBox(height: AppSpacing.md),
+                      const _RecalculationNotice(),
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-          // フッター（保存）。タブシェル内でpushされるページのためグロナビ分の余白を確保する
-          Padding(
-            padding: EdgeInsets.fromLTRB(
-              AppSpacing.lg,
-              AppSpacing.md,
-              AppSpacing.lg,
-              context.bottomNavClearance + AppSpacing.lg,
-            ),
-            child: SizedBox(
-              width: double.infinity,
-              child: MainButton(
-                buttonType: ButtonColorType.main,
-                buttonText: '保存する',
-                onPressed: _hasChanges ? () => _confirmAndSave(context) : null,
+            // フッター（保存）。タブシェル内でpushされるページのためグロナビ分の余白を確保する
+            Padding(
+              padding: EdgeInsets.fromLTRB(
+                AppSpacing.lg,
+                AppSpacing.md,
+                AppSpacing.lg,
+                context.bottomNavClearance + AppSpacing.lg,
+              ),
+              child: SizedBox(
+                width: double.infinity,
+                child: MainButton(
+                  buttonType: ButtonColorType.main,
+                  buttonText: '保存する',
+                  onPressed: _hasChanges
+                      ? () => _confirmAndSave(context)
+                      : null,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -183,7 +193,12 @@ class _AggregationSettingPageState
         const SizedBox(height: AppSpacing.sm),
         stepper,
         const SizedBox(height: AppSpacing.sm),
-        Text(description, style: AppTextStyles.listTileSecondaryTitle),
+        Text(
+          description,
+          style: AppTextStyles.supportingText.copyWith(
+            color: context.colors.textSecondary,
+          ),
+        ),
       ],
     );
   }
@@ -218,8 +233,11 @@ class _AggregationSettingPageState
   }
 }
 
-/// − / 値 / ＋ のステッパー。端では該当ボタンを非活性にする（循環しない）
-class _Stepper extends StatelessWidget {
+/// − / 値 / ＋ のステッパー。値は直接入力もできる（数字キーボード）
+///
+/// 端では該当ボタンを非活性にする（循環しない）。直接入力は範囲外なら
+/// 上限・下限に丸め、空のままフォーカスが外れたら元の値に戻す。
+class _Stepper extends StatefulWidget {
   const _Stepper({
     required this.keyPrefix,
     required this.value,
@@ -229,7 +247,7 @@ class _Stepper extends StatelessWidget {
     required this.onChanged,
   });
 
-  /// テストから増減ボタンを特定するためのキー接頭辞
+  /// テストから各要素を特定するためのキー接頭辞
   final String keyPrefix;
   final int value;
   final String unit;
@@ -238,9 +256,74 @@ class _Stepper extends StatelessWidget {
   final ValueChanged<int> onChanged;
 
   @override
+  State<_Stepper> createState() => _StepperState();
+}
+
+class _StepperState extends State<_Stepper> {
+  late final TextEditingController _controller;
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: '${widget.value}');
+    _focusNode.addListener(_onFocusChanged);
+  }
+
+  @override
+  void didUpdateWidget(covariant _Stepper oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // ボタン操作等で値が変わったら入力欄へ反映する（入力中の文字は上書きしない）
+    if (oldWidget.value != widget.value &&
+        _controller.text != '${widget.value}') {
+      _controller.text = '${widget.value}';
+    }
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChanged);
+    _focusNode.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  /// フォーカスが外れたとき、空・範囲外の入力を確定値に揃える
+  void _onFocusChanged() {
+    if (_focusNode.hasFocus) return;
+    _commitText(_controller.text);
+  }
+
+  /// 入力文字列を範囲内の値に丸めて通知する。数値でなければ元の値に戻す
+  void _commitText(String text) {
+    final parsed = int.tryParse(text);
+    final value = parsed == null
+        ? widget.value
+        : parsed.clamp(widget.min, widget.max);
+    _controller.text = '$value';
+    if (value != widget.value) widget.onChanged(value);
+  }
+
+  /// 入力のたびに範囲内なら即反映する（上限超過はその場で上限に丸める）
+  void _onTextChanged(String text) {
+    final parsed = int.tryParse(text);
+    if (parsed == null) return;
+    if (parsed > widget.max) {
+      _controller.text = '${widget.max}';
+      _controller.selection = TextSelection.collapsed(
+        offset: _controller.text.length,
+      );
+      widget.onChanged(widget.max);
+      return;
+    }
+    // 下限未満（0）は入力途中の可能性があるためフォーカスが外れるまで保留する
+    if (parsed >= widget.min) widget.onChanged(parsed);
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final canDecrement = value > min;
-    final canIncrement = value < max;
+    final canDecrement = widget.value > widget.min;
+    final canIncrement = widget.value < widget.max;
 
     return Container(
       padding: const EdgeInsets.symmetric(
@@ -256,25 +339,43 @@ class _Stepper extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _StepButton(
-            key: ValueKey('${keyPrefix}_decrement'),
+            key: ValueKey('${widget.keyPrefix}_decrement'),
             icon: Icons.remove_rounded,
             enabled: canDecrement,
-            onTap: () => onChanged(value - 1),
+            onTap: () => widget.onChanged(widget.value - 1),
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
             textBaseline: TextBaseline.alphabetic,
             children: [
-              Text(
-                '$value',
-                key: ValueKey('${keyPrefix}_value'),
-                style: AppTextStyles.stepperValueLabel.copyWith(
-                  color: context.colors.text,
+              IntrinsicWidth(
+                child: TextField(
+                  key: ValueKey('${widget.keyPrefix}_value'),
+                  controller: _controller,
+                  focusNode: _focusNode,
+                  keyboardType: TextInputType.number,
+                  textInputAction: TextInputAction.done,
+                  textAlign: TextAlign.center,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(2),
+                  ],
+                  style: AppTextStyles.stepperValueLabel.copyWith(
+                    color: context.colors.text,
+                  ),
+                  cursorColor: context.colors.primary,
+                  decoration: const InputDecoration(
+                    isCollapsed: true,
+                    border: InputBorder.none,
+                    contentPadding: EdgeInsets.symmetric(horizontal: 4),
+                  ),
+                  onChanged: _onTextChanged,
+                  onSubmitted: _commitText,
                 ),
               ),
               const SizedBox(width: AppSpacing.xs),
               Text(
-                unit,
+                widget.unit,
                 style: AppTextStyles.listTilePrimaryTitle.copyWith(
                   color: context.colors.textSecondary,
                 ),
@@ -282,10 +383,10 @@ class _Stepper extends StatelessWidget {
             ],
           ),
           _StepButton(
-            key: ValueKey('${keyPrefix}_increment'),
+            key: ValueKey('${widget.keyPrefix}_increment'),
             icon: Icons.add_rounded,
             enabled: canIncrement,
-            onTap: () => onChanged(value + 1),
+            onTap: () => widget.onChanged(widget.value + 1),
           ),
         ],
       ),
@@ -293,7 +394,10 @@ class _Stepper extends StatelessWidget {
   }
 }
 
-/// ステッパーの増減ボタン。非活性時はタップを受け付けず色を沈める
+/// ステッパーの増減ボタン（枠なしの円）。非活性時はタップを受け付けず色を沈める
+///
+/// 共通の [IconOnlyButton] は ADR-017 の境界線付きだが、ステッパーは
+/// 入力欄の両脇に置く内側の操作なので枠を持たせない（KP-005 レビュー）。
 class _StepButton extends StatelessWidget {
   const _StepButton({
     super.key,
@@ -308,17 +412,25 @@ class _StepButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double size = 46;
     return IgnorePointer(
       ignoring: !enabled,
-      child: IconOnlyButton(
-        icon: icon,
+      child: AppInkWell(
+        borderRadius: BorderRadius.circular(size / 2),
         onTap: onTap,
-        iconColor: enabled
-            ? context.colors.primary
-            : context.colors.textTertiary,
-        backgroundColor: enabled
-            ? context.colors.primaryTint
-            : context.colors.fillQuaternary,
+        child: AppIconCircleContainer(
+          size: size,
+          color: enabled
+              ? context.colors.primaryTint
+              : context.colors.fillQuaternary,
+          child: Icon(
+            icon,
+            size: size * 0.5,
+            color: enabled
+                ? context.colors.primary
+                : context.colors.textTertiary,
+          ),
+        ),
       ),
     );
   }
@@ -361,7 +473,7 @@ class _PreviewCard extends StatelessWidget {
         children: [
           Text(
             'この設定での集計期間（例）',
-            style: AppTextStyles.listTileTirtiaryTitle.copyWith(
+            style: AppTextStyles.supportingText.copyWith(
               color: context.colors.textSecondary,
             ),
           ),
@@ -403,8 +515,8 @@ class _PreviewRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTextStyles.listTileSecondaryTitle.copyWith(
-            color: context.colors.textSecondary,
+          style: AppTextStyles.listTilePrimaryTitle.copyWith(
+            color: context.colors.text,
           ),
         ),
         Text(
@@ -447,7 +559,7 @@ class _RecalculationNotice extends StatelessWidget {
           Expanded(
             child: Text(
               '変更すると過去の記録もすべて新しい区切りで再計算されます',
-              style: AppTextStyles.listTileSecondaryTitle.copyWith(
+              style: AppTextStyles.supportingText.copyWith(
                 color: context.colors.text,
               ),
             ),

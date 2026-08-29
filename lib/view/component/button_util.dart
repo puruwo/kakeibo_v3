@@ -90,12 +90,14 @@ class _ButtonSurface extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // 非活性時: 地はoverlay合成で沈め、枠も減衰させる（Tint語彙は枠と文字が
-    // 支配的なため、地の変化だけでは非活性が伝わらない。文字色は呼び出し側で減衰）
+    // 非活性時: 地はoverlay合成で沈め、枠は本来の色を減衰させる（Tint語彙は枠と文字が
+    // 支配的なため、地の変化だけでは非活性が伝わらない。文字色は呼び出し側で減衰）。
+    // 枠を無彩色（disabled）へ差し替えると種別の色味が消えて浮くため、色相は保つ（KP-005）
     final background = enabled
         ? spec.background
         : Color.alphaBlend(context.colors.overlay, spec.background);
-    final borderColor = enabled ? spec.borderColor : context.colors.disabled;
+    final borderColor =
+        enabled ? spec.borderColor : spec.borderColor.withValues(alpha: 0.35);
     final highlightColor = resolveSurfaceHighlight(context, background);
 
     // ElevatedButtonから置き換えたため、ボタンとしてのSemanticsを明示的に付与する
