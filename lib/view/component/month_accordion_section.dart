@@ -3,11 +3,12 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
-import 'package:kakeibo/view/component/card_container.dart';
 
 /// 月ごとのアコーディオンセクション（案件 UIデザイン改修 §6・追加改修 0828）
 ///
 /// ヘッダー行に月ラベル・件数・月計を表示し、タップで明細を開閉する。
+/// 明細タイル（カード面）と区別がつくよう、ヘッダーは面を持たない
+/// セクション見出し＋区切り線とする。
 /// 支出カテゴリー明細と収入一覧で共用する。
 class MonthAccordionSection extends StatelessWidget {
   const MonthAccordionSection({
@@ -38,23 +39,21 @@ class MonthAccordionSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+      padding: const EdgeInsets.only(bottom: AppSpacing.md),
       child: Column(
         children: [
-          // 月ヘッダー行（タイルと同じ面の語彙で、タップで開閉）
+          // 月ヘッダー行（面を持たないセクション見出し。タップで開閉）
           AppInkWell(
-            borderRadius: appCardRadius,
-            color: context.colors.fillQuaternary,
-            border: Border.all(color: context.colors.surfaceBorder, width: 1),
+            borderRadius: BorderRadius.circular(8),
             onTap: onToggle,
             child: Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg,
-                vertical: AppSpacing.md,
+                horizontal: AppSpacing.xs,
+                vertical: AppSpacing.sm,
               ),
               child: Row(
                 children: [
-                  Text(label, style: AppTextStyles.listTilePrimaryTitle),
+                  Text(label, style: AppTextStyles.appCardSectionTitle),
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Text(
@@ -81,6 +80,16 @@ class MonthAccordionSection extends StatelessWidget {
             ),
           ),
 
+          // 見出しと明細を区切る線
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+            child: Divider(
+              height: 0.5,
+              thickness: 0.5,
+              color: context.colors.separator,
+            ),
+          ),
+
           // 明細タイル（開閉アニメーション付き）
           AnimatedSize(
             duration: const Duration(milliseconds: 200),
@@ -88,7 +97,7 @@ class MonthAccordionSection extends StatelessWidget {
             alignment: Alignment.topCenter,
             child: isExpanded
                 ? Padding(
-                    padding: const EdgeInsets.only(top: AppSpacing.sm),
+                    padding: const EdgeInsets.only(top: AppSpacing.md),
                     child: Column(children: children),
                   )
                 : const SizedBox(width: double.infinity),
