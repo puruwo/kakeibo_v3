@@ -12,9 +12,7 @@ import 'package:kakeibo/domain_service/aggregation_period_rule/aggregation_perio
 import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/component/app_icon_circle_container.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
@@ -338,11 +336,17 @@ class _StepperState extends State<_Stepper> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          _StepButton(
+          // 入力欄の両脇に置く内側の操作なので枠なし（ボタンルール §5）
+          IconOnlyButton(
             key: ValueKey('${widget.keyPrefix}_decrement'),
             icon: Icons.remove_rounded,
-            enabled: canDecrement,
-            onTap: () => widget.onChanged(widget.value - 1),
+            bordered: false,
+            iconSize: 23,
+            backgroundColor: context.colors.primaryTint,
+            iconColor: context.colors.primary,
+            onTap: canDecrement
+                ? () => widget.onChanged(widget.value - 1)
+                : null,
           ),
           Row(
             crossAxisAlignment: CrossAxisAlignment.baseline,
@@ -382,55 +386,18 @@ class _StepperState extends State<_Stepper> {
               ),
             ],
           ),
-          _StepButton(
+          IconOnlyButton(
             key: ValueKey('${widget.keyPrefix}_increment'),
             icon: Icons.add_rounded,
-            enabled: canIncrement,
-            onTap: () => widget.onChanged(widget.value + 1),
+            bordered: false,
+            iconSize: 23,
+            backgroundColor: context.colors.primaryTint,
+            iconColor: context.colors.primary,
+            onTap: canIncrement
+                ? () => widget.onChanged(widget.value + 1)
+                : null,
           ),
         ],
-      ),
-    );
-  }
-}
-
-/// ステッパーの増減ボタン（枠なしの円）。非活性時はタップを受け付けず色を沈める
-///
-/// 共通の [IconOnlyButton] は ADR-017 の境界線付きだが、ステッパーは
-/// 入力欄の両脇に置く内側の操作なので枠を持たせない（KP-005 レビュー）。
-class _StepButton extends StatelessWidget {
-  const _StepButton({
-    super.key,
-    required this.icon,
-    required this.enabled,
-    required this.onTap,
-  });
-
-  final IconData icon;
-  final bool enabled;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    const double size = 46;
-    return IgnorePointer(
-      ignoring: !enabled,
-      child: AppInkWell(
-        borderRadius: BorderRadius.circular(size / 2),
-        onTap: onTap,
-        child: AppIconCircleContainer(
-          size: size,
-          color: enabled
-              ? context.colors.primaryTint
-              : context.colors.fillQuaternary,
-          child: Icon(
-            icon,
-            size: size * 0.5,
-            color: enabled
-                ? context.colors.primary
-                : context.colors.textTertiary,
-          ),
-        ),
       ),
     );
   }

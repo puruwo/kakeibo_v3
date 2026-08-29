@@ -88,15 +88,10 @@ void main() {
     return (widget as Text).data!;
   }
 
-  /// 増減ボタンが非活性（IgnorePointer）か
+  /// 増減ボタンが非活性（onTap が null）か。ボタンルール §3: 非活性は onTap null に一本化
   bool isStepDisabled(WidgetTester tester, Key key) {
-    final ignore = tester.widget<IgnorePointer>(
-      find.descendant(
-        of: find.byKey(key),
-        matching: find.byType(IgnorePointer),
-      ),
-    );
-    return ignore.ignoring;
+    final button = tester.widget<IconOnlyButton>(find.byKey(key));
+    return button.onTap == null;
   }
 
   bool isSaveEnabled(WidgetTester tester) =>
