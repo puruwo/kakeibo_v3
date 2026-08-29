@@ -92,6 +92,10 @@ class CardContainer extends StatelessWidget {
 
 BorderRadius get appCardRadius => BorderRadius.circular(18);
 
+/// 一覧行カード（AppListCard・月間分析のカテゴリーカード）の角丸。
+/// KP-004: 面カード（CardContainer, 18px）より一回り小さく、ボタン（kButtonRadius）と同じ12pxに揃える。
+BorderRadius get appListCardRadius => BorderRadius.circular(12);
+
 /// ADR-017 #1（実機フィードバックにより調整）: 面のグラデハイライトの開始色。
 /// ハイライトは控えめに、縦ではなく斜め（左上→右下）に乗せる。stopsは面全体
 /// （0.0〜1.0）に引き伸ばし、背の高いカードでも途中に遷移の境界線が見えないようにする。

@@ -253,7 +253,7 @@ class AppListCard extends StatelessWidget {
       // タイル下のタイル間の余白
       padding: EdgeInsets.only(bottom: bottomPadding),
       child: AppInkWell(
-        borderRadius: appCardRadius,
+        borderRadius: appListCardRadius,
         color: backgroundColor ?? context.colors.fillQuaternary,
         border: Border.all(color: context.colors.surfaceBorder, width: 1),
         onTap: onTap,
