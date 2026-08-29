@@ -13,6 +13,8 @@ class ExpenseHistoryTileValue with _$ExpenseHistoryTileValue {
     required int paymentCategoryId,
     @Default('') String memo,
     required String smallCategoryName,
+    // 大カテゴリー単位の集計・絞り込みはIDで行う（同名カテゴリーを合算しない）
+    required int bigCategoryId,
     required String bigCategoryName,
     required String colorCode,
     required String iconPath,

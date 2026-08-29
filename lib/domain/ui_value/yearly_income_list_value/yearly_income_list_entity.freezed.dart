@@ -236,7 +236,8 @@ abstract class _YearlyIncomeListValue implements YearlyIncomeListValue {
 
 /// @nodoc
 mixin _$MonthlyIncomeGroup {
-  String get monthLabel => throw _privateConstructorUsedError; // 例: "2023年 12月"
+  // 例: "8月"（期間開始年） / "2027年1月"（年跨ぎ）。支出カテゴリー明細と同じ規則
+  String get monthLabel => throw _privateConstructorUsedError;
   List<IncomeHistoryTileValue> get incomes =>
       throw _privateConstructorUsedError;
 
@@ -337,11 +338,10 @@ class _$MonthlyIncomeGroupImpl implements _MonthlyIncomeGroup {
     required final List<IncomeHistoryTileValue> incomes,
   }) : _incomes = incomes;
 
+  // 例: "8月"（期間開始年） / "2027年1月"（年跨ぎ）。支出カテゴリー明細と同じ規則
   @override
   final String monthLabel;
-  // 例: "2023年 12月"
   final List<IncomeHistoryTileValue> _incomes;
-  // 例: "2023年 12月"
   @override
   List<IncomeHistoryTileValue> get incomes {
     if (_incomes is EqualUnmodifiableListView) return _incomes;
@@ -389,8 +389,9 @@ abstract class _MonthlyIncomeGroup implements MonthlyIncomeGroup {
     required final List<IncomeHistoryTileValue> incomes,
   }) = _$MonthlyIncomeGroupImpl;
 
+  // 例: "8月"（期間開始年） / "2027年1月"（年跨ぎ）。支出カテゴリー明細と同じ規則
   @override
-  String get monthLabel; // 例: "2023年 12月"
+  String get monthLabel;
   @override
   List<IncomeHistoryTileValue> get incomes;
 

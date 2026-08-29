@@ -5,6 +5,8 @@ import 'package:kakeibo/application/yearly_income_list/yearly_income_list_usecas
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
+import 'package:kakeibo/domain/ui_value/yearly_income_list_value/income_category_summary_value.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -12,23 +14,30 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/month_accordion_section.dart';
-import 'package:kakeibo/view/yearly_expense_list_page/expense_month_group.dart';
+import 'package:kakeibo/view/component/summary_band_card.dart';
+import 'package:kakeibo/util/period_month_count.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_card.dart';
 
-/// カテゴリー別の収入明細画面
+/// 大カテゴリー別の収入明細画面
 ///
 /// 収入一覧のカテゴリー行タップで開く。ヘッダーにカテゴリーアイコン＋名称、
-/// 上部に合計と月平均のみのサマリー（面なし・構成比バーは置かない）、
+/// 上部に帯付きカード（帯=合計＋月平均、本文=小カテゴリー別の内訳）、
 /// 明細は月毎のアコーディオンで表示する。**遷移時は全月展開した状態**で開く
 /// （支出カテゴリー明細の初期全閉とは異なる。ユーザー指定 2026-08-29）。
 class YearlyCategoryIncomeListPage extends ConsumerStatefulWidget {
   const YearlyCategoryIncomeListPage({
     super.key,
     required this.period,
+    required this.bigCategoryId,
     required this.categoryName,
   });
 
   final PeriodValue period;
+
+  /// 大カテゴリーID（集計・絞り込みのキー）
+  final int bigCategoryId;
+
+  /// 大カテゴリー名（AppBarの表示用。記録が消えた後も名前を出せるよう別に持つ）
   final String categoryName;
 
   @override
@@ -51,7 +60,7 @@ class _YearlyCategoryIncomeListPageState
 
     // 編集・削除で再集計された最新の内訳から自カテゴリーを引き直す
     final category = valueAsync.valueOrNull?.categorySummaries
-        .where((c) => c.categoryName == widget.categoryName)
+        .where((c) => c.bigCategoryId == widget.bigCategoryId)
         .firstOrNull;
 
     return Scaffold(
@@ -92,8 +101,7 @@ class _YearlyCategoryIncomeListPageState
                 label: group.monthLabel,
                 incomes: group.incomes
                     .where(
-                      (income) =>
-                          income.smallCategoryName == widget.categoryName,
+                      (income) => income.bigCategoryId == widget.bigCategoryId,
                     )
                     .toList(),
               ),
@@ -115,7 +123,9 @@ class _YearlyCategoryIncomeListPageState
           // 編集・削除の再集計で消えた月のラベルを掃除する
           _expandedLabels.removeWhere((label) => !labels.contains(label));
 
-          final monthCount = expensePeriodMonthCount(widget.period);
+          // 月平均は年度内の経過月数で割る（12固定にしない）
+          final today = ref.read(systemDatetimeNotifierProvider);
+          final monthCount = elapsedPeriodMonthCount(widget.period, today);
           final monthlyAverage = (category.totalAmount / monthCount).round();
 
           return SingleChildScrollView(
@@ -130,28 +140,9 @@ class _YearlyCategoryIncomeListPageState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 合計サマリー（面なし・合計と月平均のみ）
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: AppSpacing.xs,
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.baseline,
-                      textBaseline: TextBaseline.alphabetic,
-                      children: [
-                        Text('合計', style: AppTextStyles.appCardTitleLabel),
-                        const Spacer(),
-                        Text(
-                          yenmarkFormattedPriceGetter(category.totalAmount),
-                          style: AppTextStyles.appCardPriceLabel,
-                        ),
-                        const SizedBox(width: AppSpacing.sm),
-                        Text(
-                          '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
-                          style: AppTextStyles.budgetFixedCostForecastLabel,
-                        ),
-                      ],
-                    ),
+                  _CategorySummaryCard(
+                    category: category,
+                    monthlyAverage: monthlyAverage,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   for (final group in groups)
@@ -185,6 +176,70 @@ class _YearlyCategoryIncomeListPageState
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (e, _) => const Center(child: AppErrorState()),
       ),
+    );
+  }
+}
+
+/// 合計サマリー（帯=合計＋月平均、本文=小カテゴリー別の内訳。バーは置かない）
+class _CategorySummaryCard extends StatelessWidget {
+  const _CategorySummaryCard({
+    required this.category,
+    required this.monthlyAverage,
+  });
+
+  final IncomeCategorySummaryValue category;
+  final int monthlyAverage;
+
+  @override
+  Widget build(BuildContext context) {
+    return SummaryBandCard(
+      tintColor: context.colors.income,
+      band: SummaryBandRow(
+        label: '合計',
+        priceLabel: yenmarkFormattedPriceGetter(category.totalAmount),
+        trailing: Text(
+          '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
+          style: AppTextStyles.budgetFixedCostForecastLabel,
+        ),
+      ),
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.md - 2,
+          ),
+          child: Column(
+            children: [
+              for (final small in category.smallCategories)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          small.smallCategoryName,
+                          style: AppTextStyles.appCardTertiaryTitleLabel,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      Text(
+                        '${small.percentage.toStringAsFixed(1)}%',
+                        style: AppTextStyles.budgetFixedCostForecastLabel,
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      Text(
+                        yenmarkFormattedPriceGetter(small.totalAmount),
+                        style: AppTextStyles.appCardTertiaryPriceLabel,
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }

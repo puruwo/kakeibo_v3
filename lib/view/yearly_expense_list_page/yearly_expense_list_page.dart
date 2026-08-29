@@ -5,31 +5,52 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/theme/app_colors.dart';
-import 'package:kakeibo/util/color_code.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
-import 'package:kakeibo/view/component/card_container.dart';
-import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/category_ratio_row.dart';
 import 'package:kakeibo/view/component/expense_category_icon.dart';
-import 'package:kakeibo/view/yearly_expense_list_page/expense_month_group.dart';
+import 'package:kakeibo/view/component/filter_chip_row.dart';
+import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/summary_band_card.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_category_expense_list_page.dart';
 
 /// 支出一覧画面（案件 UIデザイン改修 §6・本実装）
 ///
 /// トップ「年間収支」カードの総支出から遷移する、年度の支出を俯瞰する画面。
-/// カテゴリー別集計（使い道の俯瞰）のみを表示する。
-/// カテゴリー行のタップで月毎アコーディオンの明細（YearlyCategoryExpenseListPage）へ。
-class YearlyExpenseListPage extends ConsumerWidget {
+/// 帯付きカード1枚に総支出・会計種別の絞り込みチップ（全体/生活収支/特別枠）・
+/// カテゴリー別内訳を収める。絞り込みは総支出と構成比の分母にも効き、
+/// カテゴリー行のタップ先（YearlyCategoryExpenseListPage）にも引き継ぐ。
+class YearlyExpenseListPage extends ConsumerStatefulWidget {
   const YearlyExpenseListPage({super.key, required this.period});
 
   final PeriodValue period;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<YearlyExpenseListPage> createState() =>
+      _YearlyExpenseListPageState();
+}
+
+class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
+  ExpenseAccountFilter _filter = ExpenseAccountFilter.all;
+
+  // 絞り込み結果のメモ。ユースケースの値か絞り込みが変わったときだけ再集計する
+  YearlyExpenseListValue? _memoSource;
+  ExpenseAccountFilter? _memoFilter;
+  YearlyExpenseListValue? _memoFiltered;
+
+  YearlyExpenseListValue _filtered(YearlyExpenseListValue value) {
+    if (!identical(_memoSource, value) || _memoFilter != _filter) {
+      _memoSource = value;
+      _memoFilter = _filter;
+      _memoFiltered = value.filteredBy(_filter);
+    }
+    return _memoFiltered!;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final topInset = MediaQuery.of(context).padding.top + kToolbarHeight;
-    final monthCount = expensePeriodMonthCount(period);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -43,7 +64,7 @@ class YearlyExpenseListPage extends ConsumerWidget {
         title: Text('支出一覧', style: AppTextStyles.pageHeaderText),
       ),
       body: ref
-          .watch(yearlyExpenseListNotifierProvider(period))
+          .watch(yearlyExpenseListNotifierProvider(widget.period))
           .when(
             data: (value) {
               if (value.allRows.isEmpty) {
@@ -55,6 +76,8 @@ class YearlyExpenseListPage extends ConsumerWidget {
                 );
               }
 
+              final filtered = _filtered(value);
+
               return SingleChildScrollView(
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(
@@ -64,15 +87,52 @@ class YearlyExpenseListPage extends ConsumerWidget {
                     // グロナビに隠れないよう、末尾はグロナビ分の余白を必ず確保する
                     context.bottomNavClearance + AppSpacing.xl,
                   ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: SummaryBandCard(
+                    tintColor: context.colors.expense,
+                    band: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SummaryBandRow(
+                          label: _totalLabelOf(_filter),
+                          priceLabel: yenmarkFormattedPriceGetter(
+                            filtered.totalExpense,
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm + 2),
+                        FilterChipRow<ExpenseAccountFilter>(
+                          options: ExpenseAccountFilter.values,
+                          selected: _filter,
+                          labelOf: (filter) => filter.label,
+                          onSelected: (filter) =>
+                              setState(() => _filter = filter),
+                        ),
+                      ],
+                    ),
                     children: [
-                      _TotalCard(
-                        totalExpense: value.totalExpense,
-                        monthCount: monthCount,
-                      ),
-                      const SizedBox(height: AppSpacing.lg),
-                      _CategoryBreakdownCard(value: value, period: period),
+                      if (filtered.categories.isEmpty)
+                        // 絞り込み先に記録が無い（チップを残して切り替えられるようにする）
+                        Padding(
+                          padding: const EdgeInsets.all(AppSpacing.lg),
+                          child: Center(
+                            child: Text(
+                              '${_filter.label}の記録はありません',
+                              style: AppTextStyles.listEmptyMessage,
+                            ),
+                          ),
+                        )
+                      else ...[
+                        const SizedBox(height: AppSpacing.xs),
+                        for (var i = 0; i < filtered.categories.length; i++) ...[
+                          if (i != 0) const CategoryRowDivider(),
+                          _CategoryRow(
+                            category: filtered.categories[i],
+                            totalExpense: filtered.totalExpense,
+                            period: widget.period,
+                            filter: _filter,
+                          ),
+                        ],
+                        const SizedBox(height: AppSpacing.xs),
+                      ],
                     ],
                   ),
                 ),
@@ -83,203 +143,57 @@ class YearlyExpenseListPage extends ConsumerWidget {
           ),
     );
   }
-}
 
-/// 総支出の合計カード
-class _TotalCard extends StatelessWidget {
-  const _TotalCard({required this.totalExpense, required this.monthCount});
-
-  final int totalExpense;
-  final int monthCount;
-
-  @override
-  Widget build(BuildContext context) {
-    final monthlyAverage = (totalExpense / monthCount).round();
-
-    return CardContainer(
-      width: double.infinity,
-      padding: const EdgeInsets.all(AppSpacing.lg),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text('総支出', style: AppTextStyles.appCardTitleLabel),
-              ),
-              Text(
-                yenmarkFormattedPriceGetter(totalExpense),
-                style: AppTextStyles.appCardPriceLabel,
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
-              style: AppTextStyles.budgetFixedCostForecastLabel,
-            ),
-          ),
-        ],
-      ),
-    );
+  /// 帯のラベル。絞り込み中はどの枠の合計かを示す
+  static String _totalLabelOf(ExpenseAccountFilter filter) {
+    switch (filter) {
+      case ExpenseAccountFilter.all:
+        return '総支出';
+      case ExpenseAccountFilter.living:
+      case ExpenseAccountFilter.special:
+        return '${filter.label}の支出';
+    }
   }
 }
 
-/// カテゴリー別内訳カード（構成比バーつき・行タップで明細へ）
-class _CategoryBreakdownCard extends StatelessWidget {
-  const _CategoryBreakdownCard({required this.value, required this.period});
-
-  final YearlyExpenseListValue value;
-  final PeriodValue period;
-
-  @override
-  Widget build(BuildContext context) {
-    return CardContainer(
-      width: double.infinity,
-      clipBehavior: Clip.antiAlias,
-      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-      child: Column(
-        children: [
-          for (var i = 0; i < value.categories.length; i++) ...[
-            if (i != 0)
-              Padding(
-                padding: const EdgeInsets.only(left: AppSpacing.lg),
-                child: Divider(
-                  height: 0.5,
-                  thickness: 0.5,
-                  color: context.colors.separator,
-                ),
-              ),
-            _CategoryRow(
-              category: value.categories[i],
-              totalExpense: value.totalExpense,
-              period: period,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-/// カテゴリー1行（アイコン・名称・金額・構成比・バー）
+/// カテゴリー1行。タップで明細へ（絞り込みを引き継ぐ）
 class _CategoryRow extends StatelessWidget {
   const _CategoryRow({
     required this.category,
     required this.totalExpense,
     required this.period,
+    required this.filter,
   });
 
   final YearlyExpenseCategorySummary category;
   final int totalExpense;
   final PeriodValue period;
+  final ExpenseAccountFilter filter;
 
   @override
   Widget build(BuildContext context) {
-    final ratio = category.ratioOf(totalExpense);
-    final percentLabel = '${(ratio * 100).toStringAsFixed(1)}%';
-
-    return AppInkWell(
-      borderRadius: BorderRadius.zero,
+    return CategoryRatioRow(
+      icon: ExpenseCategoryIcon(
+        resourcePath: category.iconPath,
+        colorCode: category.colorCode,
+        size: 25,
+      ),
+      name: category.bigCategoryName,
+      priceLabel: yenmarkFormattedPriceGetter(category.sum),
+      ratio: category.ratioOf(totalExpense),
+      colorCode: category.colorCode,
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => YearlyCategoryExpenseListPage(
               period: period,
+              bigCategoryId: category.bigCategoryId,
               bigCategoryName: category.bigCategoryName,
+              filter: filter,
             ),
           ),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          children: [
-            ExpenseCategoryIcon(
-              resourcePath: category.iconPath,
-              colorCode: category.colorCode,
-              size: 22,
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          category.bigCategoryName,
-                          style: AppTextStyles.listTilePrimaryTitle,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        yenmarkFormattedPriceGetter(category.sum),
-                        style: AppTextStyles.appCardSecondaryPriceLabel,
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Text(
-                        percentLabel,
-                        style: AppTextStyles.budgetFixedCostForecastLabel,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  ExpenseRatioBar(ratio: ratio, colorCode: category.colorCode),
-                ],
-              ),
-            ),
-            // タップ可能であることを示すシェブロン（収入一覧のカテゴリー行と共通の語彙）
-            const SizedBox(width: AppSpacing.sm),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 18,
-              color: context.colors.textTertiary,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 構成比バー（高さ6・カテゴリー色）。カテゴリー明細の合計カードでも使う
-class ExpenseRatioBar extends StatelessWidget {
-  const ExpenseRatioBar({
-    super.key,
-    required this.ratio,
-    required this.colorCode,
-  });
-
-  final double ratio;
-  final String colorCode;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 6,
-      width: double.infinity,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(6),
-        child: Stack(
-          children: [
-            Container(color: context.colors.fillSecondary),
-            FractionallySizedBox(
-              widthFactor: ratio.clamp(0.0, 1.0),
-              // heightFactor未指定だと子の高さが0になり塗りが見えない
-              heightFactor: 1,
-              child: ColoredBox(color: ColorCode.toColor(colorCode)),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

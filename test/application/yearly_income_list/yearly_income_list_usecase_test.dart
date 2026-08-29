@@ -139,33 +139,109 @@ void main() {
     });
   });
 
-  group('YearlyIncomeListUsecaseNotifier のカテゴリー別サマリー', () {
-    test('同じ小カテゴリーの金額は合算される', () async {
+  group('YearlyIncomeListUsecaseNotifier のカテゴリー別サマリー（大カテゴリー単位）', () {
+    test('同じ大カテゴリーの金額は小カテゴリーをまたいで合算される', () async {
       final result = await fetchIncomeList();
 
       final salary = result.categorySummaries.firstWhere(
         (s) => s.categoryName == '給与',
       );
-      // 6月30万 + 7月31万 + 翌年1月32万
-      expect(salary.totalAmount, 930000);
+      // 給与（6月30万 + 7月31万 + 翌年1月32万）＋ 副業5万
+      expect(salary.totalAmount, 980000);
       expect(result.categorySummaries.map((s) => s.categoryName), [
         '給与',
-        '賞与',
-        '副業',
+        'ボーナス',
       ]);
+      // 色・アイコンは大カテゴリーのもの
+      expect(salary.colorCode, '0000FF');
+      expect(salary.iconPath, 'assets/images/icon_salary.svg');
     });
 
-    test('percentageは合計に対する比率で、金額の多い順に並ぶ', () async {
+    test('percentageは総収入に対する比率で、金額の多い順に並ぶ', () async {
       final result = await fetchIncomeList();
 
       expect(result.categorySummaries.map((s) => s.totalAmount), [
-        930000,
+        980000,
         500000,
-        50000,
       ]);
-      expect(result.categorySummaries[0].percentage, closeTo(62.8378, 1e-4));
+      expect(result.categorySummaries[0].percentage, closeTo(66.2162, 1e-4));
       expect(result.categorySummaries[1].percentage, closeTo(33.7838, 1e-4));
-      expect(result.categorySummaries[2].percentage, closeTo(3.3784, 1e-4));
+    });
+
+    test('大カテゴリーごとに小カテゴリー別の内訳（金額降順・大カテゴリー合計比）を持つ', () async {
+      final result = await fetchIncomeList();
+
+      final salary = result.categorySummaries.firstWhere(
+        (s) => s.categoryName == '給与',
+      );
+      expect(salary.smallCategories.map((s) => s.smallCategoryName), [
+        '給与',
+        '副業',
+      ]);
+      expect(salary.smallCategories.map((s) => s.totalAmount), [930000, 50000]);
+      // 分母は総収入ではなく大カテゴリー合計（98万）
+      expect(salary.smallCategories[0].percentage, closeTo(94.8980, 1e-4));
+      expect(salary.smallCategories[1].percentage, closeTo(5.1020, 1e-4));
+
+      final bonus = result.categorySummaries.firstWhere(
+        (s) => s.categoryName == 'ボーナス',
+      );
+      expect(bonus.smallCategories.map((s) => s.smallCategoryName), ['賞与']);
+      expect(bonus.smallCategories.single.percentage, 100.0);
+    });
+
+    test('同名でもIDが違う大カテゴリーは別行に集計される（名前で合算しない）', () async {
+      final container = createContainer(
+        overrides: [
+          incomeRepositoryProvider.overrideWithValue(
+            FakeIncomeRepository(
+              initialRecords: const [
+                IncomeEntity(id: 1, categoryId: 1, date: '20250625', price: 100),
+                IncomeEntity(id: 2, categoryId: 9, date: '20250626', price: 50),
+              ],
+            ),
+          ),
+          incomeSmallCategoryRepositoryProvider.overrideWithValue(
+            FakeIncomeSmallCategoryRepository(
+              initialRecords: const [
+                ...incomeSmallCategories,
+                // 大カテゴリー3（大1と同名の「給与」）に属する小カテゴリー
+                IncomeSmallCategoryEntity(
+                  id: 9,
+                  smallCategoryOrderKey: 9,
+                  bigCategoryKey: 3,
+                  displayedOrderInBig: 1,
+                  smallCategoryName: '手当',
+                  defaultDisplayed: 1,
+                ),
+              ],
+            ),
+          ),
+          incomeBigCategoryRepositoryProvider.overrideWithValue(
+            FakeIncomeBigCategoryRepository(
+              initialRecords: const [
+                ...incomeBigCategories,
+                IncomeBigCategoryEntity(
+                  id: 3,
+                  name: '給与',
+                  colorCode: '00FF00',
+                  iconPath: 'assets/images/icon_other.svg',
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+      final result = await container.read(
+        yearlyIncomeListNotifierProvider(yearPeriod).future,
+      );
+
+      expect(result.categorySummaries.map((s) => s.bigCategoryId), [1, 3]);
+      expect(result.categorySummaries.map((s) => s.totalAmount), [100, 50]);
+      expect(result.categorySummaries.map((s) => s.colorCode), [
+        '0000FF',
+        '00FF00',
+      ]);
     });
 
     test('収入が1件も無ければ空のグループ・合計0・空のサマリーになる', () async {

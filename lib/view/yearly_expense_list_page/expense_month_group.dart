@@ -1,4 +1,3 @@
-import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
 
 /// 支出明細の月ごとのまとまり（案件 UIデザイン改修 §6）
@@ -59,18 +58,4 @@ class ExpenseMonthGroup {
 
     return groups;
   }
-}
-
-/// 期間に含まれる集計月数（月平均の分母）
-///
-/// 集計開始日が1日以外の年度期間（例: 4/25〜翌4/24）でも12を返すよう、
-/// 終端の日が開始日以上のときだけ1ヶ月に数える。
-int expensePeriodMonthCount(PeriodValue period) {
-  final start = period.startDatetime;
-  final end = period.endDatetime;
-  final months =
-      (end.year - start.year) * 12 +
-      (end.month - start.month) +
-      (end.day >= start.day ? 1 : 0);
-  return months <= 0 ? 1 : months;
 }

@@ -30,7 +30,10 @@ class YearlyIncomeCard extends ConsumerWidget {
       onLongPress: () => _showMenuDialog(context, ref),
       iconPath: value.iconPath,
       iconColor: color,
-      primaryTitle: value.smallCategoryName,
+      // 一覧のカテゴリー集計が大カテゴリー単位のため、明細も大・小を併記する
+      // （支出履歴タイルと同じ語彙。ユーザー指定 2026-08-29）
+      primaryTitle: value.bigCategoryName,
+      secondaryTitle: value.smallCategoryName,
       subtitleLeading: '${value.date.month}月${value.date.day}日',
       subtitleTrailing: value.memo,
       priceLabel: priceLabel,

@@ -121,10 +121,16 @@ void main() {
     expect(find.text('¥ 260,000'), findsOneWidget); // 7月の月計
     expect(find.text('¥ 250,000'), findsOneWidget); // 6月の月計
 
-    // グラフエリアの総収入（250,000＋260,000）
+    // サマリーカードの総収入（250,000＋260,000）
     expect(find.text('総収入'), findsOneWidget);
-    // グラフエリアの合計とカテゴリー別内訳（給与のみ）で同じ金額が2箇所に出る
+    // 帯の合計とカテゴリー別内訳（大カテゴリー「月次収入」のみ）で同じ金額が2箇所に出る
     expect(find.text('¥ 510,000'), findsNWidgets(2));
+    // カテゴリー行は大カテゴリー単位（小カテゴリー「給与」は出ない）＋構成比
+    expect(find.text('月次収入'), findsOneWidget);
+    expect(find.text('給与'), findsNothing);
+    expect(find.text('100.0%'), findsOneWidget);
+    // 一覧画面には月平均を出さない
+    expect(find.textContaining('月平均'), findsNothing);
 
     // 初期は全月閉じた状態: 明細タイルは1件も出ない
     expect(find.text('7月5日'), findsNothing);
@@ -145,6 +151,9 @@ void main() {
     expect(find.text('7月5日'), findsOneWidget);
     expect(find.text('7月分'), findsOneWidget);
     expect(find.text('¥ 260,000'), findsNWidgets(2));
+    // 明細タイルは大カテゴリー＋小カテゴリーの併記（カテゴリー行の「月次収入」と合わせて2箇所）
+    expect(find.text('月次収入'), findsNWidgets(2));
+    expect(find.text('給与'), findsOneWidget);
     // 6月は閉じたまま
     expect(find.text('6月25日'), findsNothing);
 
@@ -203,14 +212,20 @@ void main() {
     );
     await pumpTimes(tester);
 
-    // カテゴリー別内訳の「給与」行をタップ
-    await tester.tap(find.text('給与'));
+    // カテゴリー別内訳の「月次収入」行をタップ
+    await tester.tap(find.text('月次収入'));
     await pumpTimes(tester);
 
-    // カテゴリー明細ページ: 合計＋月平均のみのサマリー
+    // カテゴリー明細ページ: 帯に合計＋月平均、本文に小カテゴリー別内訳
     expect(find.text('合計'), findsOneWidget);
-    expect(find.text('¥ 510,000'), findsOneWidget);
-    expect(find.textContaining('月平均'), findsOneWidget);
+    // 帯の合計と小カテゴリー内訳（給与のみ）で同じ金額が2箇所
+    expect(find.text('¥ 510,000'), findsNWidgets(2));
+    // 月平均は経過月数で割る: システム日時2025/7/6は年度3ヶ月目 → 510,000÷3
+    expect(find.text('月平均 ¥ 170,000'), findsOneWidget);
+    // 小カテゴリー内訳は大カテゴリー合計に対する比率
+    expect(find.text('100.0%'), findsOneWidget);
+    // 「給与」は内訳行＋展開済み明細2件で3箇所
+    expect(find.text('給与'), findsNWidgets(3));
 
     // 遷移時から全月展開済み: 両月の明細タイルが最初から見える
     expect(find.text('7月5日'), findsOneWidget);

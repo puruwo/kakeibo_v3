@@ -48,33 +48,34 @@ class YearlyExpenseListUsecaseNotifier
         return b.id.compareTo(a.id);
       });
 
-    final totalExpense = allRows.fold<int>(0, (sum, row) => sum + row.price);
+    return YearlyExpenseListValue.fromRows(allRows);
+  }
+}
 
-    // 支出大カテゴリーごとに集計する（タイル値は大カテゴリー名で解決済み）
-    final Map<String, List<ExpenseHistoryTileValue>> byCategory = {};
-    for (final row in allRows) {
-      byCategory.putIfAbsent(row.bigCategoryName, () => []).add(row);
+/// 支出一覧の表示対象（会計種別の絞り込み）
+///
+/// 一覧画面のフィルターチップで切り替え、カテゴリー明細画面にも引き継ぐ
+enum ExpenseAccountFilter {
+  /// 生活収支＋特別枠
+  all('全体'),
+  living(AccountTypeConstants.livingLabel),
+  special(AccountTypeConstants.specialLabel);
+
+  const ExpenseAccountFilter(this.label);
+
+  /// チップ・状態表示に使う名称
+  final String label;
+
+  /// この絞り込みに [row] が含まれるか
+  bool includes(ExpenseHistoryTileValue row) {
+    switch (this) {
+      case ExpenseAccountFilter.all:
+        return true;
+      case ExpenseAccountFilter.living:
+        return row.incomeSourceBigCategory == AccountTypeConstants.living;
+      case ExpenseAccountFilter.special:
+        return row.incomeSourceBigCategory == AccountTypeConstants.special;
     }
-
-    final categories =
-        [
-            for (final entry in byCategory.entries)
-              YearlyExpenseCategorySummary(
-                bigCategoryName: entry.key,
-                iconPath: entry.value.first.iconPath,
-                colorCode: entry.value.first.colorCode,
-                sum: entry.value.fold<int>(0, (sum, row) => sum + row.price),
-                rows: entry.value,
-              ),
-          ]
-          // 金額が大きい順（使い道の俯瞰が目的のため）
-          ..sort((a, b) => b.sum.compareTo(a.sum));
-
-    return YearlyExpenseListValue(
-      totalExpense: totalExpense,
-      allRows: allRows,
-      categories: categories,
-    );
   }
 }
 
@@ -86,6 +87,38 @@ class YearlyExpenseListValue {
     required this.categories,
   });
 
+  /// 日付降順の明細から総支出とカテゴリー別内訳を組み立てる
+  factory YearlyExpenseListValue.fromRows(List<ExpenseHistoryTileValue> rows) {
+    final totalExpense = rows.fold<int>(0, (sum, row) => sum + row.price);
+
+    // 支出大カテゴリーごとに集計する（キーはID。同名の大カテゴリーを合算しない）
+    final Map<int, List<ExpenseHistoryTileValue>> byCategory = {};
+    for (final row in rows) {
+      byCategory.putIfAbsent(row.bigCategoryId, () => []).add(row);
+    }
+
+    final categories =
+        [
+            for (final entry in byCategory.entries)
+              YearlyExpenseCategorySummary(
+                bigCategoryId: entry.key,
+                bigCategoryName: entry.value.first.bigCategoryName,
+                iconPath: entry.value.first.iconPath,
+                colorCode: entry.value.first.colorCode,
+                sum: entry.value.fold<int>(0, (sum, row) => sum + row.price),
+                rows: entry.value,
+              ),
+          ]
+          // 金額が大きい順（使い道の俯瞰が目的のため）
+          ..sort((a, b) => b.sum.compareTo(a.sum));
+
+    return YearlyExpenseListValue(
+      totalExpense: totalExpense,
+      allRows: rows,
+      categories: categories,
+    );
+  }
+
   /// 期間の総支出（未確定の固定費は予想額で計上）
   final int totalExpense;
 
@@ -94,11 +127,22 @@ class YearlyExpenseListValue {
 
   /// カテゴリー別の内訳（金額降順）
   final List<YearlyExpenseCategorySummary> categories;
+
+  /// 会計種別で絞り込んだ表示値
+  ///
+  /// 総支出・構成比の分母も絞り込み後の合計になる（ユーザー指定 2026-08-29）
+  YearlyExpenseListValue filteredBy(ExpenseAccountFilter filter) {
+    if (filter == ExpenseAccountFilter.all) return this;
+    return YearlyExpenseListValue.fromRows(
+      allRows.where(filter.includes).toList(),
+    );
+  }
 }
 
 /// カテゴリー1件分の内訳
 class YearlyExpenseCategorySummary {
   const YearlyExpenseCategorySummary({
+    required this.bigCategoryId,
     required this.bigCategoryName,
     required this.iconPath,
     required this.colorCode,
@@ -106,6 +150,7 @@ class YearlyExpenseCategorySummary {
     required this.rows,
   });
 
+  final int bigCategoryId;
   final String bigCategoryName;
   final String iconPath;
   final String colorCode;

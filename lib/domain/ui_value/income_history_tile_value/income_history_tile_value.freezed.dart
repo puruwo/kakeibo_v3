@@ -22,7 +22,9 @@ mixin _$IncomeHistoryTileValue {
   int get price => throw _privateConstructorUsedError;
   int get paymentCategoryId => throw _privateConstructorUsedError;
   String get memo => throw _privateConstructorUsedError;
-  String get smallCategoryName => throw _privateConstructorUsedError;
+  String get smallCategoryName =>
+      throw _privateConstructorUsedError; // 大カテゴリー単位の集計・絞り込みはIDで行う（同名カテゴリーを合算しない）
+  int get bigCategoryId => throw _privateConstructorUsedError;
   String get bigCategoryName => throw _privateConstructorUsedError;
   String get colorCode => throw _privateConstructorUsedError;
   String get iconPath => throw _privateConstructorUsedError;
@@ -48,6 +50,7 @@ abstract class $IncomeHistoryTileValueCopyWith<$Res> {
     int paymentCategoryId,
     String memo,
     String smallCategoryName,
+    int bigCategoryId,
     String bigCategoryName,
     String colorCode,
     String iconPath,
@@ -78,6 +81,7 @@ class _$IncomeHistoryTileValueCopyWithImpl<
     Object? paymentCategoryId = null,
     Object? memo = null,
     Object? smallCategoryName = null,
+    Object? bigCategoryId = null,
     Object? bigCategoryName = null,
     Object? colorCode = null,
     Object? iconPath = null,
@@ -108,6 +112,10 @@ class _$IncomeHistoryTileValueCopyWithImpl<
                 ? _value.smallCategoryName
                 : smallCategoryName // ignore: cast_nullable_to_non_nullable
                       as String,
+            bigCategoryId: null == bigCategoryId
+                ? _value.bigCategoryId
+                : bigCategoryId // ignore: cast_nullable_to_non_nullable
+                      as int,
             bigCategoryName: null == bigCategoryName
                 ? _value.bigCategoryName
                 : bigCategoryName // ignore: cast_nullable_to_non_nullable
@@ -142,6 +150,7 @@ abstract class _$$IncomeHistoryTileValueImplCopyWith<$Res>
     int paymentCategoryId,
     String memo,
     String smallCategoryName,
+    int bigCategoryId,
     String bigCategoryName,
     String colorCode,
     String iconPath,
@@ -169,6 +178,7 @@ class __$$IncomeHistoryTileValueImplCopyWithImpl<$Res>
     Object? paymentCategoryId = null,
     Object? memo = null,
     Object? smallCategoryName = null,
+    Object? bigCategoryId = null,
     Object? bigCategoryName = null,
     Object? colorCode = null,
     Object? iconPath = null,
@@ -199,6 +209,10 @@ class __$$IncomeHistoryTileValueImplCopyWithImpl<$Res>
             ? _value.smallCategoryName
             : smallCategoryName // ignore: cast_nullable_to_non_nullable
                   as String,
+        bigCategoryId: null == bigCategoryId
+            ? _value.bigCategoryId
+            : bigCategoryId // ignore: cast_nullable_to_non_nullable
+                  as int,
         bigCategoryName: null == bigCategoryName
             ? _value.bigCategoryName
             : bigCategoryName // ignore: cast_nullable_to_non_nullable
@@ -226,6 +240,7 @@ class _$IncomeHistoryTileValueImpl implements _IncomeHistoryTileValue {
     required this.paymentCategoryId,
     this.memo = '',
     required this.smallCategoryName,
+    required this.bigCategoryId,
     required this.bigCategoryName,
     required this.colorCode,
     required this.iconPath,
@@ -244,6 +259,9 @@ class _$IncomeHistoryTileValueImpl implements _IncomeHistoryTileValue {
   final String memo;
   @override
   final String smallCategoryName;
+  // 大カテゴリー単位の集計・絞り込みはIDで行う（同名カテゴリーを合算しない）
+  @override
+  final int bigCategoryId;
   @override
   final String bigCategoryName;
   @override
@@ -253,7 +271,7 @@ class _$IncomeHistoryTileValueImpl implements _IncomeHistoryTileValue {
 
   @override
   String toString() {
-    return 'IncomeHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath)';
+    return 'IncomeHistoryTileValue(id: $id, date: $date, price: $price, paymentCategoryId: $paymentCategoryId, memo: $memo, smallCategoryName: $smallCategoryName, bigCategoryId: $bigCategoryId, bigCategoryName: $bigCategoryName, colorCode: $colorCode, iconPath: $iconPath)';
   }
 
   @override
@@ -269,6 +287,8 @@ class _$IncomeHistoryTileValueImpl implements _IncomeHistoryTileValue {
             (identical(other.memo, memo) || other.memo == memo) &&
             (identical(other.smallCategoryName, smallCategoryName) ||
                 other.smallCategoryName == smallCategoryName) &&
+            (identical(other.bigCategoryId, bigCategoryId) ||
+                other.bigCategoryId == bigCategoryId) &&
             (identical(other.bigCategoryName, bigCategoryName) ||
                 other.bigCategoryName == bigCategoryName) &&
             (identical(other.colorCode, colorCode) ||
@@ -286,6 +306,7 @@ class _$IncomeHistoryTileValueImpl implements _IncomeHistoryTileValue {
     paymentCategoryId,
     memo,
     smallCategoryName,
+    bigCategoryId,
     bigCategoryName,
     colorCode,
     iconPath,
@@ -312,6 +333,7 @@ abstract class _IncomeHistoryTileValue implements IncomeHistoryTileValue {
     required final int paymentCategoryId,
     final String memo,
     required final String smallCategoryName,
+    required final int bigCategoryId,
     required final String bigCategoryName,
     required final String colorCode,
     required final String iconPath,
@@ -328,7 +350,9 @@ abstract class _IncomeHistoryTileValue implements IncomeHistoryTileValue {
   @override
   String get memo;
   @override
-  String get smallCategoryName;
+  String get smallCategoryName; // 大カテゴリー単位の集計・絞り込みはIDで行う（同名カテゴリーを合算しない）
+  @override
+  int get bigCategoryId;
   @override
   String get bigCategoryName;
   @override

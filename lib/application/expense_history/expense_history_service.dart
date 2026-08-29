@@ -50,6 +50,7 @@ class ExpenseHistoryService {
           paymentCategoryId: expense.paymentCategoryId,
           memo: expense.memo,
           smallCategoryName: small.smallCategoryName,
+          bigCategoryId: big.id,
           bigCategoryName: big.bigCategoryName,
           colorCode: big.colorCode,
           iconPath: big.resourcePath,

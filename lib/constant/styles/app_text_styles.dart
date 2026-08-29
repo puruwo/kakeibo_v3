@@ -335,9 +335,9 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
   );
 
-  /// 面なしヒーローの総収入金額用スタイル（収入一覧サマリーヘッダー）
+  /// 帯付きサマリーカードの帯に置く合計金額用スタイル（収入一覧・支出一覧とそのカテゴリー明細）
   static final TextStyle summaryHeroPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 26,
+    fontSize: 22,
     color: AppColorsDark.text,
     fontWeight: FontWeight.w700,
   );

@@ -68,6 +68,7 @@ class YearlyIncomeListUsecaseNotifier
         paymentCategoryId: income.categoryId,
         memo: income.memo,
         smallCategoryName: category.smallCategoryName,
+        bigCategoryId: bigCategory.id,
         bigCategoryName: bigCategory.name,
         colorCode: bigCategory.colorCode,
         iconPath: bigCategory.iconPath,
@@ -107,39 +108,23 @@ class YearlyIncomeListUsecaseNotifier
       );
     }
 
-    // カテゴリー別の集計を計算（小カテゴリー別）
-    final Map<String, IncomeCategorySummaryValue> categoryMap = {};
+    // カテゴリー別の集計を計算（大カテゴリー単位。ユーザー指定 2026-08-29）
+    // 大カテゴリーごとに小カテゴリー別の内訳も持たせる（カテゴリー明細のヘッダー用）
+    // キーは大カテゴリーID（同名の大カテゴリーを合算しない）
+    final Map<int, List<IncomeHistoryTileValue>> byBigCategory = {};
     int totalIncome = 0;
 
     for (var group in monthlyGroups) {
       for (var income in group.incomes) {
         totalIncome += income.price;
-
-        final categoryKey = income.smallCategoryName;
-        if (categoryMap.containsKey(categoryKey)) {
-          final existing = categoryMap[categoryKey]!;
-          categoryMap[categoryKey] = existing.copyWith(
-            totalAmount: existing.totalAmount + income.price,
-          );
-        } else {
-          categoryMap[categoryKey] = IncomeCategorySummaryValue(
-            categoryName: income.smallCategoryName,
-            colorCode: income.colorCode,
-            iconPath: income.iconPath,
-            totalAmount: income.price,
-            percentage: 0.0, // 後で計算
-          );
-        }
+        byBigCategory.putIfAbsent(income.bigCategoryId, () => []).add(income);
       }
     }
 
-    // 割合を計算
-    final categorySummaries = categoryMap.values.map((summary) {
-      final percentage = totalIncome > 0
-          ? (summary.totalAmount / totalIncome) * 100
-          : 0.0;
-      return summary.copyWith(percentage: percentage);
-    }).toList();
+    final categorySummaries = [
+      for (final entry in byBigCategory.entries)
+        _summarizeBigCategory(entry.value, totalIncome: totalIncome),
+    ];
 
     // 金額の多い順にソート
     categorySummaries.sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
@@ -148,6 +133,48 @@ class YearlyIncomeListUsecaseNotifier
       monthlyGroups: monthlyGroups,
       totalIncome: totalIncome,
       categorySummaries: categorySummaries,
+    );
+  }
+
+  /// 同じ大カテゴリーの明細をまとめて1件の集計にする
+  ///
+  /// 割合は総収入に対する構成比。小カテゴリー内訳の割合は大カテゴリー合計に対する構成比
+  IncomeCategorySummaryValue _summarizeBigCategory(
+    List<IncomeHistoryTileValue> incomes, {
+    required int totalIncome,
+  }) {
+    final bigTotal = incomes.fold<int>(0, (sum, income) => sum + income.price);
+
+    final Map<String, int> bySmallCategory = {};
+    for (final income in incomes) {
+      bySmallCategory.update(
+        income.smallCategoryName,
+        (sum) => sum + income.price,
+        ifAbsent: () => income.price,
+      );
+    }
+    final smallCategories =
+        [
+            for (final entry in bySmallCategory.entries)
+              IncomeSmallCategorySummaryValue(
+                smallCategoryName: entry.key,
+                totalAmount: entry.value,
+                percentage: bigTotal > 0 ? (entry.value / bigTotal) * 100 : 0.0,
+              ),
+          ]
+          // 金額の多い順
+          ..sort((a, b) => b.totalAmount.compareTo(a.totalAmount));
+
+    // 色・アイコンは大カテゴリーに紐づくため先頭の明細から取れる
+    final first = incomes.first;
+    return IncomeCategorySummaryValue(
+      bigCategoryId: first.bigCategoryId,
+      categoryName: first.bigCategoryName,
+      colorCode: first.colorCode,
+      iconPath: first.iconPath,
+      totalAmount: bigTotal,
+      percentage: totalIncome > 0 ? (bigTotal / totalIncome) * 100 : 0.0,
+      smallCategories: smallCategories,
     );
   }
 }

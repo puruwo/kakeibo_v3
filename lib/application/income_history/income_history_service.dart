@@ -51,6 +51,7 @@ class IncomeHistoryService {
           paymentCategoryId: income.categoryId,
           memo: income.memo,
           smallCategoryName: small.smallCategoryName,
+          bigCategoryId: big.id,
           bigCategoryName: big.name,
           colorCode: big.colorCode,
           iconPath: big.iconPath,

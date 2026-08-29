@@ -9,17 +9,16 @@ import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/yearly_income_list_value/income_category_summary_value.dart';
-import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/card_container.dart';
-import 'package:kakeibo/view/yearly_expense_list_page/expense_month_group.dart';
-import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
+import 'package:kakeibo/view/component/category_ratio_row.dart';
+import 'package:kakeibo/view/component/summary_band_card.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_category_income_list_page.dart';
 
 /// 収入一覧のサマリーヘッダー
 ///
-/// 総収入は面を持たないヒーロー表示（大きな金額＋月平均）、
-/// カテゴリー別内訳は支出一覧と同じ構成比バーのランキングカードで示す。
+/// 帯に総収入、その下に大カテゴリー別の内訳（構成比バー・金額・比率）を
+/// 1枚のカードで示す。行のタップでカテゴリー明細へ。
 class IncomeGraphArea extends ConsumerStatefulWidget {
   const IncomeGraphArea({super.key, required this.period});
 
@@ -50,67 +49,25 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
               );
             }
 
-            final monthCount = expensePeriodMonthCount(widget.period);
-            final monthlyAverage = (incomeDatas.totalIncome / monthCount)
-                .round();
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            return SummaryBandCard(
+              tintColor: context.colors.income,
+              band: SummaryBandRow(
+                label: '総収入',
+                priceLabel: yenmarkFormattedPriceGetter(
+                  incomeDatas.totalIncome,
+                ),
+              ),
               children: [
-                // 総収入ヒーロー（面なし・1行に集約して下部の表示領域を広げる）
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.xs,
+                const SizedBox(height: AppSpacing.xs),
+                for (var i = 0; i < incomeDatas.categorySummaries.length; i++) ...[
+                  if (i != 0) const CategoryRowDivider(),
+                  _IncomeCategoryRow(
+                    category: incomeDatas.categorySummaries[i],
+                    totalIncome: incomeDatas.totalIncome,
+                    period: widget.period,
                   ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Text('総収入', style: AppTextStyles.appCardTitleLabel),
-                      const Spacer(),
-                      Text(
-                        yenmarkFormattedPriceGetter(incomeDatas.totalIncome),
-                        style: AppTextStyles.summaryHeroPriceLabel,
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      Text(
-                        '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
-                        style: AppTextStyles.budgetFixedCostForecastLabel,
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: AppSpacing.lg),
-                // カテゴリー別内訳（支出一覧と同じ構成比バーのランキング）
-                CardContainer(
-                  width: double.infinity,
-                  clipBehavior: Clip.antiAlias,
-                  padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-                  child: Column(
-                    children: [
-                      for (
-                        var i = 0;
-                        i < incomeDatas.categorySummaries.length;
-                        i++
-                      ) ...[
-                        if (i != 0)
-                          Padding(
-                            padding: const EdgeInsets.only(left: AppSpacing.lg),
-                            child: Divider(
-                              height: 0.5,
-                              thickness: 0.5,
-                              color: context.colors.separator,
-                            ),
-                          ),
-                        _IncomeCategoryRow(
-                          category: incomeDatas.categorySummaries[i],
-                          totalIncome: incomeDatas.totalIncome,
-                          period: widget.period,
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
+                ],
+                const SizedBox(height: AppSpacing.xs),
               ],
             );
           },
@@ -136,7 +93,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
   }
 }
 
-/// カテゴリー1行（アイコン・名称・金額・構成比・バー）。タップでカテゴリー明細へ
+/// 大カテゴリー1行。タップでカテゴリー明細へ
 class _IncomeCategoryRow extends StatelessWidget {
   const _IncomeCategoryRow({
     required this.category,
@@ -153,79 +110,33 @@ class _IncomeCategoryRow extends StatelessWidget {
     final ratio = totalIncome == 0
         ? 0.0
         : category.totalAmount / totalIncome;
-    final percentLabel = '${(ratio * 100).toStringAsFixed(1)}%';
 
-    return AppInkWell(
-      borderRadius: BorderRadius.zero,
+    return CategoryRatioRow(
+      icon: SvgPicture.asset(
+        category.iconPath,
+        colorFilter: ColorFilter.mode(
+          ColorCode.toColor(category.colorCode),
+          BlendMode.srcIn,
+        ),
+        semanticsLabel: 'categoryIcon',
+        width: 25,
+        height: 25,
+      ),
+      name: category.categoryName,
+      priceLabel: yenmarkFormattedPriceGetter(category.totalAmount),
+      ratio: ratio,
+      colorCode: category.colorCode,
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) => YearlyCategoryIncomeListPage(
               period: period,
+              bigCategoryId: category.bigCategoryId,
               categoryName: category.categoryName,
             ),
           ),
         );
       },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.lg,
-          vertical: AppSpacing.md,
-        ),
-        child: Row(
-          children: [
-            SvgPicture.asset(
-              category.iconPath,
-              colorFilter: ColorFilter.mode(
-                ColorCode.toColor(category.colorCode),
-                BlendMode.srcIn,
-              ),
-              semanticsLabel: 'categoryIcon',
-              width: 22,
-              height: 22,
-            ),
-            const SizedBox(width: AppSpacing.md),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.baseline,
-                    textBaseline: TextBaseline.alphabetic,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          category.categoryName,
-                          style: AppTextStyles.listTilePrimaryTitle,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Text(
-                        yenmarkFormattedPriceGetter(category.totalAmount),
-                        style: AppTextStyles.appCardSecondaryPriceLabel,
-                      ),
-                      const SizedBox(width: AppSpacing.xs),
-                      Text(
-                        percentLabel,
-                        style: AppTextStyles.budgetFixedCostForecastLabel,
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.sm),
-                  ExpenseRatioBar(ratio: ratio, colorCode: category.colorCode),
-                ],
-              ),
-            ),
-            // タップ可能であることを示すシェブロン
-            const SizedBox(width: AppSpacing.sm),
-            Icon(
-              Icons.chevron_right_rounded,
-              size: 18,
-              color: context.colors.textTertiary,
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
