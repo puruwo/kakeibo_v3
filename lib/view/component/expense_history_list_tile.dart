@@ -11,9 +11,7 @@ import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
-import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/view/component/fixed_cost_chip_label.dart';
-import 'package:kakeibo/view/component/special_expense_chip_label.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -28,15 +26,9 @@ class ExpenseHistoryListTile extends ConsumerWidget {
   const ExpenseHistoryListTile({
     super.key,
     required this.value,
-    this.showsSpecialChip = false,
   });
 
   final ExpenseHistoryTileValue value;
-
-  /// 特別枠の行に「特別枠」チップを出すか。
-  /// 生活収支と特別枠が混在する画面（支出カテゴリー明細）でのみtrueにする
-  /// （特別枠支出リストでは全行が特別枠のため冗長になる）
-  final bool showsSpecialChip;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,9 +36,6 @@ class ExpenseHistoryListTile extends ConsumerWidget {
 
     // 固定費由来の行かどうか（仕様 §8.4）
     final isFixedCost = value.fixedCostId != null;
-    final isSpecial =
-        showsSpecialChip &&
-        value.incomeSourceBigCategory == AccountTypeConstants.special;
     // 未確定の固定費行は金額が未入力
     final isUnconfirmed = isFixedCost && value.isConfirmed == 0;
 
@@ -65,16 +54,8 @@ class ExpenseHistoryListTile extends ConsumerWidget {
       priceLabel: priceLabel,
       priceLabelStyle:
           isUnconfirmed ? AppTextStyles.listCardUnconfirmedPriceLabel : null,
-      // 固定費・特別枠の識別チップ（両方に該当する場合は並べて出す）
-      customWidget: (isFixedCost || isSpecial)
-          ? Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (isSpecial) const SpecialExpenseChipLabel(),
-                if (isFixedCost) const FixedCostChipLabel(),
-              ],
-            )
-          : null,
+      // 固定費行の識別チップ
+      customWidget: isFixedCost ? const FixedCostChipLabel() : null,
       isIncome: false,
       priceWidth: 100,
     );

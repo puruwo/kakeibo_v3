@@ -134,10 +134,10 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.byType(YearlyCategoryExpenseListPage), findsOneWidget);
-    // 合計サマリー: 食費60,000＋月平均（60,000÷12ヶ月）。総支出比・バーは置かない
+    // 合計サマリー: 食費60,000・総支出の60%
     expect(find.text('合計'), findsOneWidget);
     expect(find.text('¥ 60,000'), findsOneWidget);
-    expect(find.text('月平均 ¥ 5,000'), findsOneWidget);
+    expect(find.text('総支出の 60.0%'), findsOneWidget);
 
     // 月ヘッダー（新しい月が上）: 8月1件・7月2件
     expect(find.text('8月'), findsOneWidget);
@@ -179,49 +179,6 @@ void main() {
     await tester.tap(find.text('7月'));
     await pumpTimes(tester);
     expect(find.text('焼肉'), findsNothing);
-  });
-
-  testWidgets('特別枠の支出は生活/特別の内訳とチップで区別される', (tester) async {
-    // 食費: 生活収支30,000＋特別枠20,000
-    const mixedExpenses = [
-      ExpenseEntity(
-        id: 1,
-        date: '20250705',
-        price: 30000,
-        paymentCategoryId: 10,
-        memo: '焼肉',
-      ),
-      ExpenseEntity(
-        id: 2,
-        date: '20250710',
-        price: 20000,
-        paymentCategoryId: 10,
-        memo: '旅行外食',
-        incomeSourceBigCategory: 2,
-      ),
-    ];
-    await pumpApp(
-      tester,
-      home: YearlyExpenseListPage(period: period),
-      fakes: buildFakes(records: mixedExpenses),
-    );
-    await pumpTimes(tester);
-
-    // ヒーローの内訳行とカテゴリー行の内訳行
-    expect(find.text('生活収支 ¥ 30,000　特別枠 ¥ 20,000'), findsOneWidget);
-    expect(find.text('生活 ¥ 30,000　特別 ¥ 20,000'), findsOneWidget);
-
-    // カテゴリー明細へ: ヘッダーと月ヘッダーにも内訳が出る
-    await tester.tap(find.text('食費'));
-    await pumpTimes(tester);
-    expect(find.text('生活収支 ¥ 30,000　特別枠 ¥ 20,000'), findsOneWidget);
-    expect(find.text('生活 ¥ 30,000　特別 ¥ 20,000'), findsOneWidget);
-
-    // 月を開くと特別枠の行にだけ「特別枠」チップが出る
-    await tester.tap(find.text('7月'));
-    await pumpTimes(tester);
-    expect(find.text('旅行外食'), findsOneWidget);
-    expect(find.text('特別枠'), findsOneWidget); // チップ
   });
 
   testWidgets('記録が無ければ空メッセージが出る', (tester) async {

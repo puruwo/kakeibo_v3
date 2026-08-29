@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/expense_history/yearly_expense_list_usecase.dart';
-import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -68,7 +67,10 @@ class YearlyExpenseListPage extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _TotalHero(value: value, monthCount: monthCount),
+                      _TotalCard(
+                        totalExpense: value.totalExpense,
+                        monthCount: monthCount,
+                      ),
                       const SizedBox(height: AppSpacing.lg),
                       _CategoryBreakdownCard(value: value, period: period),
                     ],
@@ -83,52 +85,41 @@ class YearlyExpenseListPage extends ConsumerWidget {
   }
 }
 
-/// 総支出のヒーロー（面なし・収入一覧と同じ1行＋生活/特別の内訳行）
-class _TotalHero extends StatelessWidget {
-  const _TotalHero({required this.value, required this.monthCount});
+/// 総支出の合計カード
+class _TotalCard extends StatelessWidget {
+  const _TotalCard({required this.totalExpense, required this.monthCount});
 
-  final YearlyExpenseListValue value;
+  final int totalExpense;
   final int monthCount;
 
   @override
   Widget build(BuildContext context) {
-    final monthlyAverage = (value.totalExpense / monthCount).round();
-    final breakdownLabel = livingSpecialBreakdownLabel(
-      living: value.livingTotal,
-      special: value.specialTotal,
-      livingLabel: AccountTypeConstants.livingLabel,
-      specialLabel: AccountTypeConstants.specialLabel,
-    );
+    final monthlyAverage = (totalExpense / monthCount).round();
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
+    return CardContainer(
+      width: double.infinity,
+      padding: const EdgeInsets.all(AppSpacing.lg),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.baseline,
-            textBaseline: TextBaseline.alphabetic,
             children: [
-              Text('総支出', style: AppTextStyles.appCardTitleLabel),
-              const Spacer(),
-              Text(
-                yenmarkFormattedPriceGetter(value.totalExpense),
-                style: AppTextStyles.summaryHeroPriceLabel,
+              Expanded(
+                child: Text('総支出', style: AppTextStyles.appCardTitleLabel),
               ),
-              const SizedBox(width: AppSpacing.sm),
               Text(
-                '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
-                style: AppTextStyles.budgetFixedCostForecastLabel,
+                yenmarkFormattedPriceGetter(totalExpense),
+                style: AppTextStyles.appCardPriceLabel,
               ),
             ],
           ),
-          if (breakdownLabel != null) ...[
-            const SizedBox(height: AppSpacing.xs),
-            Text(
-              breakdownLabel,
+          const SizedBox(height: AppSpacing.xs),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+              '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
               style: AppTextStyles.budgetFixedCostForecastLabel,
             ),
-          ],
+          ),
         ],
       ),
     );
@@ -188,17 +179,6 @@ class _CategoryRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final ratio = category.ratioOf(totalExpense);
     final percentLabel = '${(ratio * 100).toStringAsFixed(1)}%';
-    // バーは生活=実色・特別=半透明の2トーンで分割する
-    final livingRatio = totalExpense <= 0
-        ? 0.0
-        : category.livingSum / totalExpense;
-    final specialRatio = totalExpense <= 0
-        ? 0.0
-        : category.specialSum / totalExpense;
-    final breakdownLabel = livingSpecialBreakdownLabel(
-      living: category.livingSum,
-      special: category.specialSum,
-    );
 
     return AppInkWell(
       borderRadius: BorderRadius.zero,
@@ -252,21 +232,7 @@ class _CategoryRow extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.sm),
-                  ExpenseRatioBar(
-                    ratio: livingRatio,
-                    colorCode: category.colorCode,
-                    secondaryRatio: specialRatio,
-                  ),
-                  if (breakdownLabel != null) ...[
-                    const SizedBox(height: AppSpacing.xs),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: Text(
-                        breakdownLabel,
-                        style: AppTextStyles.budgetFixedCostForecastLabel,
-                      ),
-                    ),
-                  ],
+                  ExpenseRatioBar(ratio: ratio, colorCode: category.colorCode),
                 ],
               ),
             ),
@@ -284,30 +250,19 @@ class _CategoryRow extends StatelessWidget {
   }
 }
 
-/// 構成比バー（高さ6・カテゴリー色）。収入一覧のカテゴリー行でも使う
-///
-/// [secondaryRatio] を渡すと、実色の右に同色40%の半透明セグメントを重ねて
-/// 生活収支/特別枠の2トーン分割を表現する（支出一覧のカテゴリー行）。
+/// 構成比バー（高さ6・カテゴリー色）。カテゴリー明細の合計カードでも使う
 class ExpenseRatioBar extends StatelessWidget {
   const ExpenseRatioBar({
     super.key,
     required this.ratio,
     required this.colorCode,
-    this.secondaryRatio = 0,
   });
 
   final double ratio;
   final String colorCode;
 
-  /// 半透明セグメント（特別枠）の構成比。0なら実色のみ
-  final double secondaryRatio;
-
   @override
   Widget build(BuildContext context) {
-    final color = ColorCode.toColor(colorCode);
-    final primary = ratio.clamp(0.0, 1.0);
-    final total = (ratio + secondaryRatio).clamp(0.0, 1.0);
-
     return SizedBox(
       height: 6,
       width: double.infinity,
@@ -316,18 +271,11 @@ class ExpenseRatioBar extends StatelessWidget {
         child: Stack(
           children: [
             Container(color: context.colors.fillSecondary),
-            // 半透明（特別枠）は実色の下に全長で敷き、上に実色（生活）を重ねる
-            if (secondaryRatio > 0)
-              FractionallySizedBox(
-                widthFactor: total,
-                // heightFactor未指定だと子の高さが0になり塗りが見えない
-                heightFactor: 1,
-                child: ColoredBox(color: color.withValues(alpha: 0.4)),
-              ),
             FractionallySizedBox(
-              widthFactor: primary,
+              widthFactor: ratio.clamp(0.0, 1.0),
+              // heightFactor未指定だと子の高さが0になり塗りが見えない
               heightFactor: 1,
-              child: ColoredBox(color: color),
+              child: ColoredBox(color: ColorCode.toColor(colorCode)),
             ),
           ],
         ),

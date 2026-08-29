@@ -94,18 +94,7 @@ class YearlyExpenseListValue {
 
   /// カテゴリー別の内訳（金額降順）
   final List<YearlyExpenseCategorySummary> categories;
-
-  /// 生活収支の合計
-  int get livingTotal => _sumBySource(allRows, AccountTypeConstants.living);
-
-  /// 特別枠の合計
-  int get specialTotal => _sumBySource(allRows, AccountTypeConstants.special);
 }
-
-/// 拠出元（生活収支/特別枠）を指定して明細を合計する
-int _sumBySource(List<ExpenseHistoryTileValue> rows, int source) => rows
-    .where((row) => row.incomeSourceBigCategory == source)
-    .fold<int>(0, (sum, row) => sum + row.price);
 
 /// カテゴリー1件分の内訳
 class YearlyExpenseCategorySummary {
@@ -128,10 +117,4 @@ class YearlyExpenseCategorySummary {
   /// 総支出に対する構成比（0.0〜1.0）。総支出0のときは0
   double ratioOf(int totalExpense) =>
       totalExpense <= 0 ? 0 : sum / totalExpense;
-
-  /// このカテゴリーの生活収支分の合計
-  int get livingSum => _sumBySource(rows, AccountTypeConstants.living);
-
-  /// このカテゴリーの特別枠分の合計
-  int get specialSum => _sumBySource(rows, AccountTypeConstants.special);
 }
