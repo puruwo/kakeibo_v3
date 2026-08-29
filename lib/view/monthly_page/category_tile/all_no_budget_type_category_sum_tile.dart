@@ -36,7 +36,7 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return AppInkWell(
       color: context.colors.fillQuaternary,
-      borderRadius: appCardRadius,
+      borderRadius: appListCardRadius,
       border: Border.all(color: context.colors.surfaceBorder, width: 1),
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
