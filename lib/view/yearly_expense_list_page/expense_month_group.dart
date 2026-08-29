@@ -1,5 +1,7 @@
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_history_tile_value/expense_history_tile_value/expense_history_tile_value.dart';
+import 'package:kakeibo/util/util.dart';
 
 /// 支出明細の月ごとのまとまり（案件 UIデザイン改修 §6）
 ///
@@ -20,6 +22,18 @@ class ExpenseMonthGroup {
 
   /// この月の明細（日付降順）
   final List<ExpenseHistoryTileValue> rows;
+
+  /// この月の生活収支分の合計
+  int get livingTotal => rows
+      .where((row) => row.incomeSourceBigCategory == AccountTypeConstants.living)
+      .fold<int>(0, (sum, row) => sum + row.price);
+
+  /// この月の特別枠分の合計
+  int get specialTotal => rows
+      .where(
+        (row) => row.incomeSourceBigCategory == AccountTypeConstants.special,
+      )
+      .fold<int>(0, (sum, row) => sum + row.price);
 
   /// 日付降順の明細リストを暦月ごとにまとめる
   static List<ExpenseMonthGroup> groupByMonth(
@@ -59,6 +73,23 @@ class ExpenseMonthGroup {
 
     return groups;
   }
+}
+
+/// 生活/特別の内訳ラベルを組み立てる（特別枠が無い場合はnull＝表示しない）
+///
+/// 支出一覧のカテゴリー行・カテゴリー明細のサマリー/月ヘッダーで共用する。
+String? livingSpecialBreakdownLabel({
+  required int living,
+  required int special,
+  String livingLabel = '生活',
+  String specialLabel = '特別',
+}) {
+  if (special <= 0) return null;
+  final parts = [
+    if (living > 0) '$livingLabel ${yenmarkFormattedPriceGetter(living)}',
+    '$specialLabel ${yenmarkFormattedPriceGetter(special)}',
+  ];
+  return parts.join('　');
 }
 
 /// 期間に含まれる集計月数（月平均の分母）

@@ -16,6 +16,7 @@ class MonthAccordionSection extends StatelessWidget {
     required this.label,
     required this.itemCount,
     required this.totalLabel,
+    this.breakdownLabel,
     required this.isExpanded,
     required this.onToggle,
     required this.children,
@@ -29,6 +30,10 @@ class MonthAccordionSection extends StatelessWidget {
 
   /// この月の合計の表示文字列（例: 「¥ 40,000」）
   final String totalLabel;
+
+  /// 月計の下に出す内訳の表示文字列（例: 「生活 ¥ 30,000　特別 ¥ 12,300」）。
+  /// nullなら内訳行を出さない（収入一覧など区別が不要な画面）
+  final String? breakdownLabel;
 
   final bool isExpanded;
   final VoidCallback onToggle;
@@ -51,30 +56,49 @@ class MonthAccordionSection extends StatelessWidget {
                 horizontal: AppSpacing.xs,
                 vertical: AppSpacing.sm,
               ),
-              child: Row(
+              child: Column(
                 children: [
-                  Text(label, style: AppTextStyles.appCardSectionTitle),
-                  const SizedBox(width: AppSpacing.sm),
-                  Expanded(
-                    child: Text(
-                      '$itemCount件',
-                      style: AppTextStyles.listCardSecondaryTitle,
+                  Row(
+                    children: [
+                      Text(label, style: AppTextStyles.appCardSectionTitle),
+                      const SizedBox(width: AppSpacing.sm),
+                      Expanded(
+                        child: Text(
+                          '$itemCount件',
+                          style: AppTextStyles.listCardSecondaryTitle,
+                        ),
+                      ),
+                      Text(
+                        totalLabel,
+                        style: AppTextStyles.appCardSecondaryPriceLabel,
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      AnimatedRotation(
+                        turns: isExpanded ? 0.5 : 0,
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          Icons.expand_more_rounded,
+                          size: 20,
+                          color: context.colors.textSecondary,
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (breakdownLabel != null)
+                    Padding(
+                      // 右端はシェブロン（20）＋余白（sm）の分を空け、月計の下に揃える
+                      padding: const EdgeInsets.only(
+                        top: 2,
+                        right: 20 + AppSpacing.sm,
+                      ),
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          breakdownLabel!,
+                          style: AppTextStyles.budgetFixedCostForecastLabel,
+                        ),
+                      ),
                     ),
-                  ),
-                  Text(
-                    totalLabel,
-                    style: AppTextStyles.appCardSecondaryPriceLabel,
-                  ),
-                  const SizedBox(width: AppSpacing.sm),
-                  AnimatedRotation(
-                    turns: isExpanded ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 200),
-                    child: Icon(
-                      Icons.expand_more_rounded,
-                      size: 20,
-                      color: context.colors.textSecondary,
-                    ),
-                  ),
                 ],
               ),
             ),

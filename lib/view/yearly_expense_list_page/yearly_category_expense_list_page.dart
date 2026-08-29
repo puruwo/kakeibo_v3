@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/expense_history/yearly_expense_list_usecase.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
@@ -13,7 +14,6 @@ import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/component/expense_history_list_tile.dart';
 import 'package:kakeibo/view/component/month_accordion_section.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/expense_month_group.dart';
-import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
 
 /// カテゴリー別の支出明細画面（案件 UIデザイン改修 §6）
 ///
@@ -95,7 +95,6 @@ class _YearlyCategoryExpenseListPageState
 
           final monthCount = expensePeriodMonthCount(widget.period);
           final monthlyAverage = (category.sum / monthCount).round();
-          final ratio = category.ratioOf(value.totalExpense);
 
           return SingleChildScrollView(
             child: Padding(
@@ -112,7 +111,6 @@ class _YearlyCategoryExpenseListPageState
                   _CategorySummaryHeader(
                     category: category,
                     monthlyAverage: monthlyAverage,
-                    ratio: ratio,
                   ),
                   const SizedBox(height: AppSpacing.lg),
                   for (final group in groups)
@@ -120,6 +118,10 @@ class _YearlyCategoryExpenseListPageState
                       label: group.label,
                       itemCount: group.rows.length,
                       totalLabel: yenmarkFormattedPriceGetter(group.total),
+                      breakdownLabel: livingSpecialBreakdownLabel(
+                        living: group.livingTotal,
+                        special: group.specialTotal,
+                      ),
                       isExpanded: _expandedLabels.contains(group.label),
                       onToggle: () {
                         setState(() {
@@ -130,7 +132,10 @@ class _YearlyCategoryExpenseListPageState
                       },
                       children: [
                         for (final row in group.rows)
-                          ExpenseHistoryListTile(value: row),
+                          ExpenseHistoryListTile(
+                            value: row,
+                            showsSpecialChip: true,
+                          ),
                       ],
                     ),
                 ],
@@ -145,55 +150,59 @@ class _YearlyCategoryExpenseListPageState
   }
 }
 
-/// カテゴリーの合計サマリー（合計・総支出比・月平均・構成比バー）
+/// カテゴリーの合計サマリー（合計・月平均・生活/特別の内訳）
 ///
 /// カード面にすると展開後の明細タイルと区別がつかないため、
-/// 面を持たないヘッダーとして地の上に直接置く（レビュー指摘 2026-08-25）
+/// 面を持たないヘッダーとして地の上に直接置く（レビュー指摘 2026-08-25）。
+/// 収入カテゴリー明細と同じ1行構成に揃え、構成比バー・総支出比は置かない
+/// （ユーザー指定 2026-08-29）
 class _CategorySummaryHeader extends StatelessWidget {
   const _CategorySummaryHeader({
     required this.category,
     required this.monthlyAverage,
-    required this.ratio,
   });
 
   final YearlyExpenseCategorySummary category;
   final int monthlyAverage;
-  final double ratio;
 
   @override
   Widget build(BuildContext context) {
+    final breakdownLabel = livingSpecialBreakdownLabel(
+      living: category.livingSum,
+      special: category.specialSum,
+      livingLabel: AccountTypeConstants.livingLabel,
+      specialLabel: AccountTypeConstants.specialLabel,
+    );
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xs),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.baseline,
+            textBaseline: TextBaseline.alphabetic,
             children: [
-              Expanded(
-                child: Text('合計', style: AppTextStyles.appCardTitleLabel),
-              ),
+              Text('合計', style: AppTextStyles.appCardTitleLabel),
+              const Spacer(),
               Text(
                 yenmarkFormattedPriceGetter(category.sum),
                 style: AppTextStyles.appCardPriceLabel,
               ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.xs),
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  '総支出の ${(ratio * 100).toStringAsFixed(1)}%',
-                  style: AppTextStyles.budgetFixedCostForecastLabel,
-                ),
-              ),
+              const SizedBox(width: AppSpacing.sm),
               Text(
                 '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
                 style: AppTextStyles.budgetFixedCostForecastLabel,
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.sm),
-          ExpenseRatioBar(ratio: ratio, colorCode: category.colorCode),
+          if (breakdownLabel != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Text(
+              breakdownLabel,
+              style: AppTextStyles.budgetFixedCostForecastLabel,
+            ),
+          ],
         ],
       ),
     );
