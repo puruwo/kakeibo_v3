@@ -149,18 +149,6 @@ class RegisterPageStyles {
   // ピッカー・ダイアログ
   // ==========================================================================
 
-  /// ドロップダウンの大きいテキスト（数字）
-  ///
-  /// 【使用箇所】
-  /// - ページ: config
-  ///   - エリア: aggregation_setting_dialog.dart (集計設定ダイアログ)
-  ///   - 詳細: 開始日ドロップダウンの数字表示
-  static final TextStyle pickerLargeNumber = MyFontStyle.sfUi.copyWith(
-    fontSize: 24,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.bold,
-  );
-
   // ==========================================================================
   // アイコン並べ替えページ
   // ==========================================================================

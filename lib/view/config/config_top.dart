@@ -11,7 +11,7 @@ import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
-import 'package:kakeibo/view/config/aggregation_setting_dialog.dart';
+import 'package:kakeibo/view/config/aggregation_setting_page.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
@@ -70,7 +70,7 @@ class ConfigTop extends ConsumerWidget {
                   _ConfigRow(
                     label: '集計期間を設定する',
                     isLast: true,
-                    onTap: () => _showAggregationSettingDialog(context, ref),
+                    onTap: () => _openAggregationSettingPage(context, ref),
                   ),
                 ],
               ),
@@ -158,18 +158,19 @@ class ConfigTop extends ConsumerWidget {
     }
   }
 
-  /// 現在の設定値を取得してから集計期間の設定ダイアログを表示する
-  Future<void> _showAggregationSettingDialog(
+  /// 現在の設定値を取得してから集計期間の設定ページへ遷移する（KP-005）
+  Future<void> _openAggregationSettingPage(
     BuildContext context,
     WidgetRef ref,
   ) async {
     final settings = await ref.read(aggregationSettingsUsecaseProvider).fetch();
     if (!context.mounted) return;
-    await showDialog(
-      context: context,
-      builder: (context) => AggregationSettingDialog(
-        originalStartDay: settings.startDay,
-        originalStartMonth: settings.startMonth,
+    await Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => AggregationSettingPage(
+          originalStartDay: settings.startDay,
+          originalStartMonth: settings.startMonth,
+        ),
       ),
     );
   }

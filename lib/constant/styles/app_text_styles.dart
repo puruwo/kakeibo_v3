@@ -43,6 +43,13 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
   );
 
+  /// ステッパー（集計期間設定ページ）の選択中の数値用スタイル
+  static final TextStyle stepperValueLabel = MyFontStyle.sfUi.copyWith(
+    fontSize: 32,
+    color: AppColorsDark.text,
+    fontWeight: FontWeight.w600,
+  );
+
   /// ダイアログ内文言用スタイル
   static final TextStyle dialogLabel = MyFontStyle.notoSans.copyWith(
     fontSize: 13,
