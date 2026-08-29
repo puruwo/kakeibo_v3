@@ -285,24 +285,21 @@ void main() {
       expect(paymentMonth.total, 120000);
 
       // 支払月でない月（8/25〜9/24）は0円
-      final otherMonth = await createForecastContainer(
-        fixedCosts: const [annual],
-      ).read(
-        fixedCostForecastNotifierProvider(
-          PeriodValue(
-            startDatetime: DateTime(2025, 8, 25),
-            endDatetime: DateTime(2025, 9, 24),
-          ),
-        ).future,
-      );
+      final otherMonth =
+          await createForecastContainer(fixedCosts: const [annual]).read(
+            fixedCostForecastNotifierProvider(
+              PeriodValue(
+                startDatetime: DateTime(2025, 8, 25),
+                endDatetime: DateTime(2025, 9, 24),
+              ),
+            ).future,
+          );
       expect(otherMonth.total, 0);
     });
 
     test('削除済み（delete_flag=1）のマスタは見込みに含まれない', () async {
       final container = createForecastContainer(
-        fixedCosts: [
-          rent(nextPaymentDate: '20250701').copyWith(deleteFlag: 1),
-        ],
+        fixedCosts: [rent(nextPaymentDate: '20250701').copyWith(deleteFlag: 1)],
       );
 
       final result = await container.read(
@@ -347,10 +344,10 @@ void main() {
       );
 
       expect(result.total, 116000);
-      expect(
-        result.byBigCategory.map((e) => e.expenseBigCategoryId).toList(),
-        [1, 2],
-      );
+      expect(result.byBigCategory.map((e) => e.expenseBigCategoryId).toList(), [
+        1,
+        2,
+      ]);
       expect(result.amountOf(1), 110000);
       expect(result.amountOf(2), 6000);
     });
@@ -365,6 +362,51 @@ void main() {
       expect(result.total, 0);
       expect(result.byBigCategory, isEmpty);
       expect(result.amountOf(1), 0);
+    });
+  });
+
+  group('集計開始日の変更後の期間で見込みが再計算される（KP-005 D-4-2）', () {
+    test('変更後の今月期間内に次回支払日が入る固定費だけが計上される', () async {
+      // f1: 25日払い（next=8/25）/ f2: 10日払い（next=9/10）。実績行は無し
+      final container = createForecastContainer(
+        fixedCosts: [
+          rent(nextPaymentDate: '20260825'),
+          const FixedCostEntity(
+            id: 30,
+            name: '電気代',
+            variable: 1,
+            estimatedPrice: 3000,
+            expenseSmallCategoryId: 21,
+            intervalNumber: 1,
+            intervalUnit: 1,
+            firstPaymentDate: '20260110',
+            nextPaymentDate: '20260910',
+          ),
+        ],
+      );
+
+      // 旧区切り 8/25〜9/24: 両方入る
+      final oldResult = await container.read(
+        fixedCostForecastNotifierProvider(
+          PeriodValue(
+            startDatetime: DateTime(2026, 8, 25),
+            endDatetime: DateTime(2026, 9, 24),
+          ),
+        ).future,
+      );
+      // 新区切り（開始日1）8/1〜8/31: 9/10 払いは翌月へ移る
+      final newResult = await container.read(
+        fixedCostForecastNotifierProvider(
+          PeriodValue(
+            startDatetime: DateTime(2026, 8, 1),
+            endDatetime: DateTime(2026, 8, 31),
+          ),
+        ).future,
+      );
+
+      expect(oldResult.total, 80000 + 3000);
+      expect(newResult.total, 80000);
+      expect(newResult.amountOf(2), 0);
     });
   });
 }

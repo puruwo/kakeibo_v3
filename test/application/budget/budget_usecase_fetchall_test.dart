@@ -12,6 +12,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/domain_service/month_period_service/period_status_service.dart';
+import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 
 import '../../helper/fake_repositories.dart';
 import '../../helper/test_container.dart';
@@ -167,8 +168,7 @@ void main() {
             date: '20250610',
             price: 9999,
             paymentCategoryId: 11,
-            incomeSourceBigCategory:
-                AccountTypeConstants.special,
+            incomeSourceBigCategory: AccountTypeConstants.special,
           ),
         ],
       );
@@ -185,9 +185,7 @@ void main() {
           fakeExpenseRepository.totalExpenseWithSmallCategoryAndSourceCalls;
       expect(
         calls.every(
-          (c) =>
-              c.incomeSourceBigCategory ==
-              AccountTypeConstants.living,
+          (c) => c.incomeSourceBigCategory == AccountTypeConstants.living,
         ),
         isTrue,
       );
@@ -258,6 +256,56 @@ void main() {
 
       expect(result.map((e) => e.expenseBigCategoryId), [2, 1]);
       expect(result.map((e) => e.displayOrder), [1, 3]);
+    });
+  });
+
+  group('集計開始日の変更後の区切りで参考実績が再計算される（KP-005 D-4-3）', () {
+    test('開始日1の今月 8/1〜8/31 なら先月は 7/1〜7/31 になり、その支出だけを合算する', () async {
+      // 7/24・7/25 は旧区切り（25日始まり）では別の月度だが、暦月では同じ7月度
+      final container = createUsecaseContainer(
+        expenses: const [
+          ExpenseEntity(
+            id: 11,
+            date: '20260724',
+            price: 1000,
+            paymentCategoryId: 11,
+          ),
+          ExpenseEntity(
+            id: 12,
+            date: '20260725',
+            price: 2000,
+            paymentCategoryId: 11,
+          ),
+          // 8月度の支出は参考実績（先月）に入らない
+          ExpenseEntity(
+            id: 13,
+            date: '20260824',
+            price: 4000,
+            paymentCategoryId: 11,
+          ),
+        ],
+      );
+      final usecase = container.read(budgetUsecaseProvider);
+      final calendarAugust = PeriodValue(
+        startDatetime: DateTime(2026, 8, 1),
+        endDatetime: DateTime(2026, 8, 31),
+      );
+
+      final result = await usecase.fetchAll(
+        dateScope: buildDateScope(
+          selectedDate: DateTime(2026, 8, 29),
+          aggregationMonthPeriod: calendarAugust,
+          representativeMonth: '202608',
+          periodStatus: PeriodStatus.current,
+        ),
+      );
+
+      expect(result.first.lastMonthBudgetPrice, 3000);
+      final call = fakeExpenseRepository
+          .totalExpenseWithSmallCategoryAndSourceCalls
+          .first;
+      expect(call.fromDate, DateTime(2026, 7, 1));
+      expect(call.toDate, DateTime(2026, 7, 31));
     });
   });
 }

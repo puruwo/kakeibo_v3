@@ -96,4 +96,54 @@ void main() {
       expect(result.scheduledPaymentAmount, 0);
     });
   });
+
+  group('集計開始日の変更後の期間で再集計される（KP-005 D-4-1）', () {
+    test('開始日 25→1 の期間 8/1〜8/31 には支払日10日の固定費行も25日の行も入る', () async {
+      // 旧期間（8/25〜9/24）では f2(8/10) は前月扱い。暦月に変えると同じ月に揃う
+      final calendarAugust = PeriodValue(
+        startDatetime: DateTime(2026, 8, 1),
+        endDatetime: DateTime(2026, 8, 31),
+      );
+      const rentOn25 = ExpenseEntity(
+        id: 201,
+        date: '20260825',
+        price: 5000,
+        paymentCategoryId: 11,
+        fixedCostId: 10,
+        isConfirmed: 1,
+      );
+      const electricityOn10 = ExpenseEntity(
+        id: 202,
+        date: '20260810',
+        price: null,
+        paymentCategoryId: 21,
+        fixedCostId: 30,
+        isConfirmed: 0,
+        estimatedPrice: 3000,
+      );
+      final container = createFixedCostReadContainer(
+        expenses: const [rentOn25, electricityOn10],
+      );
+
+      final oldPeriodResult = await container.read(
+        monthlyFixedCostSummaryNotifierProvider(
+          PeriodValue(
+            startDatetime: DateTime(2026, 8, 25),
+            endDatetime: DateTime(2026, 9, 24),
+          ),
+        ).future,
+      );
+      final newPeriodResult = await container.read(
+        monthlyFixedCostSummaryNotifierProvider(calendarAugust).future,
+      );
+
+      // 旧区切り: 25日の家賃のみ
+      expect(oldPeriodResult.fixedCostSum, 5000);
+      expect(oldPeriodResult.unconfirmedFixedCostSum, 0);
+      // 新区切り: 家賃＋未確定の電気代（予想額）
+      expect(newPeriodResult.fixedCostSum, 5000);
+      expect(newPeriodResult.unconfirmedFixedCostSum, 3000);
+      expect(newPeriodResult.scheduledPaymentAmount, 8000);
+    });
+  });
 }
