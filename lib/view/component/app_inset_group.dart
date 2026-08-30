@@ -348,9 +348,7 @@ class AppInsetRow extends StatelessWidget {
           controller: controller,
           textAlign: textAlign,
           textAlignVertical: TextAlignVertical.center,
-          style: numericValue
-              ? AppTextStyles.insetGroupValueNumeric
-              : AppTextStyles.insetGroupValue,
+          style: _valueStyle,
           cursorColor: context.colors.primary,
           cursorWidth: 2,
           minLines: 1,
@@ -386,16 +384,18 @@ class AppInsetRow extends StatelessWidget {
     }
   }
 
+  /// 値のスタイル。numericValue で sfUi 系の数字版に切り替える（display 行・textField 行で共用）
+  TextStyle get _valueStyle => numericValue
+      ? AppTextStyles.insetGroupValueNumeric
+      : AppTextStyles.insetGroupValue;
+
   Widget _buildValueText(BuildContext context) {
-    final base = numericValue
-        ? AppTextStyles.insetGroupValueNumeric
-        : AppTextStyles.insetGroupValue;
-    final style = valueColor == null ? base : base.copyWith(color: valueColor);
     return Text(
       value ?? '',
       textAlign: TextAlign.right,
       overflow: TextOverflow.ellipsis,
-      style: style,
+      // valueColor が null のときは copyWith が元の色を保つ
+      style: _valueStyle.copyWith(color: valueColor),
     );
   }
 }

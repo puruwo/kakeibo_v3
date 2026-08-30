@@ -2,6 +2,8 @@
 //
 // MyFontStyle（family）→ AppTypeScale（段）→ 役割スタイル（AppTextStyles 等）の値が
 // 規約どおりに組み立てられていることを確認する。
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/constant/font_style.dart';
@@ -139,6 +141,39 @@ void main() {
         RegisterPageStyles.yenSymbol(AppColorsDark.expense).color,
         AppColorsDark.expense,
       );
+    });
+  });
+
+  // 役割スタイルを列挙するテストは追加漏れを検知できないため、定義ソースに対する不変条件で補う。
+  // flutter test はパッケージルートを cwd にして走るので相対パスで読める
+  group('定義ソースの不変条件', () {
+    test('AppTypeScale に w300 の段が無い（論点12）', () {
+      final source = File(
+        'lib/constant/styles/app_type_scale.dart',
+      ).readAsStringSync();
+      expect(source, isNot(contains('w300')));
+    });
+
+    test('Numeric サフィックスの役割スタイルはすべて sfUi の段を参照する（論点11）', () {
+      final pattern = RegExp(
+        r'TextStyle\s+(\w+Numeric)\s*=\s*AppTypeScale\.(\w+)',
+      );
+      var count = 0;
+      final files = Directory(
+        'lib/constant/styles',
+      ).listSync().whereType<File>();
+      for (final file in files) {
+        for (final match in pattern.allMatches(file.readAsStringSync())) {
+          count++;
+          expect(
+            match.group(2),
+            startsWith('sfUi'),
+            reason: '${match.group(1)} (${file.path})',
+          );
+        }
+      }
+      // 正規表現が定義の書式とずれて空振りしていないことも確認する
+      expect(count, greaterThan(0));
     });
   });
 }

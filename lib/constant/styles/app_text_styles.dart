@@ -9,9 +9,8 @@ import 'package:kakeibo/theme/app_colors.dart';
 /// - 色は static 定義のため AppColorsDark（ダーク固定の逃げ道）。呼び出し側で状態色を当てるときは
 ///   `.copyWith(color: context.colors.<token>)` のみ許可（寸法・ウェイトの上書きは禁止）
 /// - 同じ役割の別名を作らない。値が同じでも役割が違えば別名でよい
-/// - 運用ルールの正本: Vault「Kakeibo テキストスタイルルール」
-/// ウェイト階層（ADR-017 #4 を KP-007 で改定）: 主要金額 w700 ／ 見出し・行金額・ボタン・選択中 w600 ／
-/// 標準ラベル・値 w500 ／ 説明文・補助文字・非選択 w400。w300 はダーク背景の小さな文字で細すぎるため使わない
+/// - 運用ルールの正本: Vault「Kakeibo テキストスタイルルール」（ウェイトの目安もそちら。ここに複製しない）
+/// - w300 は使わない（ダーク背景の小さな文字で細すぎる。ADR-017 #4 を KP-007 で改定）
 /// ============================================================================
 class AppTextStyles {
   AppTextStyles._();
@@ -78,7 +77,7 @@ class AppTextStyles {
     color: AppColorsDark.text,
   );
 
-  /// 設定ページの説明文・補助ラベル（読ませる補助文）
+  /// 設定ページ本文に置く独立した説明文・補助ラベル（13px。インセットグループ直下の補足は insetGroupNote）
   static final TextStyle supportingText = AppTypeScale.noto13w400.copyWith(
     color: AppColorsDark.textSecondary,
   );
@@ -205,7 +204,7 @@ class AppTextStyles {
   static final TextStyle listCardUnconfirmedPriceLabel = AppTypeScale.noto14w700
       .copyWith(color: AppColorsDark.text);
 
-  /// 小さな数値キャプション（「固定費 ¥1,980」「利用 35%」「次回 7/25」「月平均 ¥…」「3件」）
+  /// 小さな数値キャプション（「固定費 ¥1,980」「利用 35%」「次回 7/25」「月平均 ¥…」）。見出し行の件数は listCardSecondaryNumeric
   static final TextStyle numericCaption = AppTypeScale.sfUi11w400.copyWith(
     color: AppColorsDark.textSecondary,
   );
@@ -350,7 +349,8 @@ class AppTextStyles {
   static final TextStyle insetGroupPlaceholder = AppTypeScale.noto15w500
       .copyWith(color: AppColorsDark.textTertiary);
 
-  /// インセットグループの下に添える補足文（操作の結果を説明する1〜2行。読ませる文なので 12px w400）
+  /// インセットグループの直下に添える補足文（操作の結果を説明する1〜2行。読ませる文なので 12px w400。
+  /// ページ本文の独立した説明文は supportingText）
   static final TextStyle insetGroupNote = AppTypeScale.noto12w400.copyWith(
     color: AppColorsDark.textSecondary,
   );

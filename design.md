@@ -6,7 +6,7 @@
 - **対象アプリバージョン**: 1.1.2
 - **Flutter version**: 3.16.9
 - **テーマ**: ダーク固定（iOS HIG ライク）
-- **配置**: `/Users/puruwo/dev/kakeibo/claude_workspace/design.md`
+- **配置**: `design.md`（リポジトリ直下）
 
 ---
 
@@ -751,24 +751,24 @@ MaterialApp
 
 ### コアファイル
 
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/constant/colors.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/constant/font_style.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/constant/styles/app_text_styles.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/constant/styles/register_page_styles.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/constant/styles/graph_text_styles.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/constant/styles/calendar_styles.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/main.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/view/foundation.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/view/component/glass_app_bar_background.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/view/component/card_container.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/view/component/app_list_card.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/model/sql_on_create.dart`
-- `/Users/puruwo/dev/kakeibo/claude_workspace/pubspec.yaml`
+- `lib/constant/colors.dart`
+- `lib/constant/font_style.dart`
+- `lib/constant/styles/app_text_styles.dart`
+- `lib/constant/styles/register_page_styles.dart`
+- `lib/constant/styles/graph_text_styles.dart`
+- `lib/constant/styles/calendar_styles.dart`
+- `lib/main.dart`
+- `lib/view/foundation.dart`
+- `lib/view/component/glass_app_bar_background.dart`
+- `lib/view/component/card_container.dart`
+- `lib/view/component/app_list_card.dart`
+- `lib/model/sql_on_create.dart`
+- `pubspec.yaml`
 
 ### 既存ドキュメント・台帳
 
 - （`lib/docs/font_usage.csv`・`font_issues.csv` は 2026-08-30 KP-007 で廃止。テキストスタイルの一覧は Vault「Kakeibo テキストスタイルルール」§2）
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/docs/providers.csv` — Provider 一覧（参考）
+- `lib/docs/providers.csv` — Provider 一覧（参考）
 
 ### Skill
 
