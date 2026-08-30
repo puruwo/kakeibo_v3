@@ -10,7 +10,8 @@ import 'package:kakeibo/theme/app_colors.dart';
 ///   `.copyWith(color: context.colors.<token>)` のみ許可（寸法・ウェイトの上書きは禁止）
 /// - 同じ役割の別名を作らない。値が同じでも役割が違えば別名でよい
 /// - 運用ルールの正本: Vault「Kakeibo テキストスタイルルール」
-/// ウェイト階層（ADR-017 #4）: 主要金額 w700 ／ 行金額・主要ラベル w500〜w600 ／ 補助文字 w300
+/// ウェイト階層（ADR-017 #4 を KP-007 で改定）: 主要金額 w700 ／ 見出し・行金額・ボタン・選択中 w600 ／
+/// 標準ラベル・値 w500 ／ 説明文・補助文字・非選択 w400。w300 はダーク背景の小さな文字で細すぎるため使わない
 /// ============================================================================
 class AppTextStyles {
   AppTextStyles._();
@@ -30,7 +31,7 @@ class AppTextStyles {
   );
 
   /// ページヘッダーのサブテキスト（AppBar の2段目・補足情報）
-  static final TextStyle pageHeaderSubText = AppTypeScale.noto11w300.copyWith(
+  static final TextStyle pageHeaderSubText = AppTypeScale.noto12w400.copyWith(
     color: AppColorsDark.textSecondary,
   );
 
@@ -82,7 +83,7 @@ class AppTextStyles {
   );
 
   /// 非選択タブラベル（AppTab）
-  static final TextStyle unselectedLabelStyle = AppTypeScale.noto14w300
+  static final TextStyle unselectedLabelStyle = AppTypeScale.noto14w400
       .copyWith(color: AppColorsDark.textSecondary);
 
   // ==========================================================================
@@ -148,11 +149,11 @@ class AppTextStyles {
       .copyWith(color: AppColorsDark.text);
 
   /// 行の副ラベル
-  static final TextStyle listTileSecondaryTitle = AppTypeScale.noto13w300
+  static final TextStyle listTileSecondaryTitle = AppTypeScale.noto13w400
       .copyWith(color: AppColorsDark.textSecondary);
 
   /// 行の第三階層ラベル（履歴タイルの小カテゴリー名・メモ等）
-  static final TextStyle listTileTertiaryTitle = AppTypeScale.noto11w300
+  static final TextStyle listTileTertiaryTitle = AppTypeScale.noto11w400
       .copyWith(color: AppColorsDark.textSecondary);
 
   /// 行の金額（履歴タイル・リストカードの行金額）
@@ -176,8 +177,8 @@ class AppTextStyles {
   static final TextStyle listTileUnconfirmedPriceLabel = AppTypeScale.noto15w500
       .copyWith(color: AppColorsDark.text);
 
-  /// 凡例・列見出し・件数などの補足テキスト
-  static final TextStyle listTileLegendTitle = AppTypeScale.noto14w300.copyWith(
+  /// 凡例・列見出しなどの補足テキスト
+  static final TextStyle listTileLegendTitle = AppTypeScale.noto14w400.copyWith(
     color: AppColorsDark.textSecondary,
   );
 
@@ -330,8 +331,8 @@ class AppTextStyles {
   static final TextStyle insetGroupPlaceholder = AppTypeScale.noto15w500
       .copyWith(color: AppColorsDark.textTertiary);
 
-  /// インセットグループの下に添える補足文（操作の結果を説明する1〜2行）
-  static final TextStyle insetGroupNote = AppTypeScale.noto11w300.copyWith(
+  /// インセットグループの下に添える補足文（操作の結果を説明する1〜2行。読ませる文なので 12px w400）
+  static final TextStyle insetGroupNote = AppTypeScale.noto12w400.copyWith(
     color: AppColorsDark.textSecondary,
   );
 
