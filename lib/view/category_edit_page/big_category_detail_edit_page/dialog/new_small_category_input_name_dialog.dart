@@ -159,6 +159,9 @@ class _NewSmallCategoryInputNameDialog
                               '項目名を入力してください',
                               style: AppTextStyles.snackBarMessage,
                             ),
+                            // Material 3 の既定背景（inverseSurface = 白）に白文字が乗らないよう、
+                            // FailureSnackBar / SuccessSnackBar と同じ面色にする
+                            backgroundColor: context.colors.surfaceElevated2,
                             behavior: SnackBarBehavior.floating,
                             duration: const Duration(seconds: 2),
                             shape: RoundedRectangleBorder(
