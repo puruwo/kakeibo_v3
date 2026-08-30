@@ -359,7 +359,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
                     child: Center(
                       child: Text(
                         'すべての支払いを見る',
-                        style: AppTextStyles.insetGroupLinkRow,
+                        style: AppTextStyles.textButtonTextStyle,
                       ),
                     ),
                   ),

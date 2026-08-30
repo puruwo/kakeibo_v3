@@ -153,7 +153,7 @@ class _SummaryCell extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(label, style: AppTextStyles.listTileTirtiaryTitle),
+            Text(label, style: AppTextStyles.listTileTertiaryTitle),
             const SizedBox(height: 2),
             FittedBox(
               fit: BoxFit.scaleDown,

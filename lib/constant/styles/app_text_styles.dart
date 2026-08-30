@@ -1,549 +1,340 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/app_type_scale.dart';
 import 'package:kakeibo/theme/app_colors.dart';
-import 'package:kakeibo/constant/font_style.dart';
 
 /// ============================================================================
-/// アプリ全般で共通して使用するTextStyleを定義
+/// アプリ全般で共通して使用する役割スタイル
+///
+/// - 値（family × size × weight）は AppTypeScale の段を参照し、ここでは色と height だけ付ける
+/// - 色は static 定義のため AppColorsDark（ダーク固定の逃げ道）。呼び出し側で状態色を当てるときは
+///   `.copyWith(color: context.colors.<token>)` のみ許可（寸法・ウェイトの上書きは禁止）
+/// - 同じ役割の別名を作らない。値が同じでも役割が違えば別名でよい
+/// - 運用ルールの正本: Vault「Kakeibo テキストスタイルルール」
 /// ウェイト階層（ADR-017 #4）: 主要金額 w700 ／ 行金額・主要ラベル w500〜w600 ／ 補助文字 w300
 /// ============================================================================
 class AppTextStyles {
+  AppTextStyles._();
+
   // ==========================================================================
   // ページヘッダー
   // ==========================================================================
 
-  /// ページタイトル用のスタイル
-  static final TextStyle pageHeaderText = MyFontStyle.notoSans.copyWith(
+  /// ページタイトル（AppBar）
+  static final TextStyle pageHeaderText = AppTypeScale.noto18w500.copyWith(
     color: AppColorsDark.text,
-    fontSize: 18,
-    fontWeight: FontWeight.w500,
   );
 
-  /// ページヘッダーのサブテキスト用スタイル（補足情報）
-  static final TextStyle pageHeaderSubText = MyFontStyle.notoSans.copyWith(
+  /// ページヘッダーのサブテキスト（AppBar の2段目・補足情報）
+  static final TextStyle pageHeaderSubText = AppTypeScale.noto11w300.copyWith(
     color: AppColorsDark.textSecondary,
-    fontSize: 11,
-    fontWeight: FontWeight.w300,
   );
 
   /// ページ本文先頭に置く対象名（支払い履歴ページの固定費名など）
-  static final TextStyle pageSubjectTitle = MyFontStyle.notoSans.copyWith(
+  static final TextStyle pageSubjectTitle = AppTypeScale.noto22w600.copyWith(
     color: AppColorsDark.text,
-    fontSize: 22,
-    fontWeight: FontWeight.w600,
   );
 
   // ==========================================================================
-  // ダイアログ
+  // ダイアログ・シート・設定
   // ==========================================================================
 
-  /// ダイアログタイトル用スタイル
-  static final TextStyle dialogTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 18,
+  /// ダイアログタイトル
+  static final TextStyle dialogTitle = AppTypeScale.noto18w500.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
   );
 
-  /// ステッパー（集計期間設定ページ）の選択中の数値用スタイル
-  static final TextStyle stepperValueLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 32,
+  /// ダイアログ内文言
+  static final TextStyle dialogLabel = AppTypeScale.noto13w400.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
   );
 
-  /// 設定ページの説明文・補助ラベル用スタイル（細字の listTileSecondaryTitle より読みやすい w400）
-  static final TextStyle supportingText = MyFontStyle.notoSans.copyWith(
-    fontSize: 13,
+  /// メニュー（ActionSheet）の項目
+  static final TextStyle dialogList = AppTypeScale.noto16w500.copyWith(
+    color: AppColorsDark.text,
+  );
+
+  /// ステッパー（集計期間設定ページ）の選択中の数値
+  static final TextStyle stepperValueLabel = AppTypeScale.sfUi32w600.copyWith(
+    color: AppColorsDark.text,
+  );
+
+  /// 設定ページの説明文・補助ラベル（読ませる補助文）
+  static final TextStyle supportingText = AppTypeScale.noto13w400.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w400,
-  );
-
-  /// ダイアログ内文言用スタイル
-  static final TextStyle dialogLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 13,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w400,
-  );
-
-  /// メニューダイアログ内リスト項目用スタイル
-  static final TextStyle dialogList = MyFontStyle.notoSans.copyWith(
-    fontSize: 16,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
   );
 
   // ==========================================================================
   // タブ
   // ==========================================================================
 
-  /// 選択中タブラベル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: app_component.dart (AppTab共通コンポーネント)
-  ///   - エリア: TabBar
-  ///   - 詳細: 選択されているタブのテキストスタイル
-  static final TextStyle selectedLabelStyle = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+  /// 選択中タブラベル（AppTab）
+  static final TextStyle selectedLabelStyle = AppTypeScale.noto14w600.copyWith(
     color: AppColorsDark.primary,
-    fontWeight: FontWeight.w600,
   );
 
-  /// 非選択タブラベル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: app_component.dart (AppTab共通コンポーネント)
-  ///   - エリア: TabBar
-  ///   - 詳細: 選択されていないタブのテキストスタイル
-  static final TextStyle unselectedLabelStyle = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w300,
-  );
+  /// 非選択タブラベル（AppTab）
+  static final TextStyle unselectedLabelStyle = AppTypeScale.noto14w300
+      .copyWith(color: AppColorsDark.textSecondary);
 
   // ==========================================================================
-  // ボタン
+  // ボタン・リンク
   // ==========================================================================
 
-  /// ボタン用テキストスタイル
-  ///
-  /// 【使用箇所】
-  /// - MainButton（Primary/Secondary/Destructive）のラベル、
-  ///   ダイアログのキャンセルボタン等、ボタンラベル全般
-  static final TextStyle mainButtonText = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+  /// ボタンラベル全般（MainButton / FAB・ダイアログのキャンセル等）
+  static final TextStyle mainButtonText = AppTypeScale.noto14w600.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
   );
 
-  /// 一行ボタン用のテキスト
-  ///
-  static final TextStyle oneLineButtonText = MyFontStyle.notoSans.copyWith(
-    fontSize: 13,
+  /// 設定トップのメニュー行
+  static final TextStyle oneLineButtonText = AppTypeScale.noto13w500.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
+  );
+
+  /// テキストボタン・リンク行（「さらに表示する」「すべての支払いを見る」等）
+  static final TextStyle textButtonTextStyle = AppTypeScale.noto12w500.copyWith(
+    color: AppColorsDark.primary,
   );
 
   // ==========================================================================
-  // リスト共通
+  // 状態メッセージ
   // ==========================================================================
 
-  /// 空のリスト用メッセージスタイル
-  ///
-  /// 【使用箇所】
-  /// - ページ: 各リストページ
-  ///   - エリア: メインコンテンツ
-  ///   - 詳細: データがない場合の表示
-  static final TextStyle listEmptyMessage = MyFontStyle.notoSans.copyWith(
-    fontSize: 16,
+  /// 空状態（AppEmptyState・プレーンテキストバー）
+  static final TextStyle listEmptyMessage = AppTypeScale.noto16w400.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w400,
   );
 
-  /// エラーメッセージスタイル
-  ///
-  /// [listEmptyMessage]（空状態）とは意味的に分離し、ADR-018の失敗トーストと同じ
-  /// danger色で「異常」を伝える（空状態は情報が無いだけなのでtextSecondaryのまま）。
-  ///
-  /// 【使用箇所】
-  /// - ページ: 各ページ
-  ///   - エリア: メインコンテンツ
-  ///   - 詳細: エラー発生時の表示（AppErrorState）
-  static final TextStyle errorMessage = MyFontStyle.notoSans.copyWith(
-    fontSize: 16,
+  /// エラー表示（AppErrorState）。空状態とは danger 色で意味的に分ける（ADR-018）
+  static final TextStyle errorMessage = AppTypeScale.noto16w400.copyWith(
     color: AppColorsDark.danger,
-    fontWeight: FontWeight.w400,
-  );
-
-  /// 白文字ボタン用テキストスタイル
-  ///
-  /// 【使用箇所】
-  /// - 現在未使用（将来の拡張用）
-  static final TextStyle whiteButtonText = MyFontStyle.notoSans.copyWith(
-    fontSize: 17,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
   );
 
   // ==========================================================================
-  // サブヘッダー系
+  // セクション見出し
   // ==========================================================================
 
-  /// カードヘッダー用スタイル
-  static final TextStyle appCardSectionTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 16,
+  /// セクション見出し（AppContentsHeader 既定・月別アコーディオン）
+  static final TextStyle appCardSectionTitle = AppTypeScale.noto16w600.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
   );
 
-  /// リストカードのヘッダー
-  static final TextStyle listCardSectionTitle = MyFontStyle.sfUi.copyWith(
-    fontSize: 14,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w600,
-  );
+  /// リストカード見出し（AppContentsHeader.listCardSectionTitle・フィルター名）
+  static final TextStyle listCardSectionTitle = AppTypeScale.sfUi14w600
+      .copyWith(color: AppColorsDark.textSecondary);
 
-  /// リストタイルのセクションヘッダー
-  static final TextStyle listTileSectionTitle = MyFontStyle.sfUi.copyWith(
-    fontSize: 13,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w500,
-  );
+  /// 履歴一覧の日付見出し（yyyy年M月d日(E)）
+  static final TextStyle listTileSectionTitle = AppTypeScale.sfUi13w500
+      .copyWith(color: AppColorsDark.textSecondary);
 
   // ==========================================================================
-  // リストタイル（汎用）
+  // リストタイル
   // ==========================================================================
 
-  /// リストタイル・リストカードのメインタイトル用スタイル
-  static final TextStyle listTilePrimaryTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+  /// 行・リストカードの主ラベル
+  static final TextStyle listTilePrimaryTitle = AppTypeScale.noto14w500
+      .copyWith(color: AppColorsDark.text);
+
+  /// 行の副ラベル
+  static final TextStyle listTileSecondaryTitle = AppTypeScale.noto13w300
+      .copyWith(color: AppColorsDark.textSecondary);
+
+  /// 行の第三階層ラベル（履歴タイルの小カテゴリー名・メモ等）
+  static final TextStyle listTileTertiaryTitle = AppTypeScale.noto11w300
+      .copyWith(color: AppColorsDark.textSecondary);
+
+  /// 行の金額（履歴タイル・リストカードの行金額）
+  static final TextStyle listTilePriceLabel = AppTypeScale.sfUi17w600.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
   );
 
-  /// リストタイルのサブタイトル用スタイル
-  static final TextStyle listTileSecondaryTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 13,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w300,
-  );
+  /// 行の副金額
+  static final TextStyle listTileSubPriceLabel = AppTypeScale.sfUi15w400
+      .copyWith(color: AppColorsDark.textSecondary);
 
-  /// リストタイルの第三階層ラベル用スタイル
-  static final TextStyle listTileTirtiaryTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 11,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w300,
-  );
-
-  /// リスト行の金額表示用スタイル（履歴タイル・リストカードの行金額）
-  static final TextStyle listTilePriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 17,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
-  );
-
-  /// カード内金額表示用Secondaryスタイル
-  static final TextStyle listTileSubPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 15,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w400,
-  );
-
-  /// 入力フィールド用スタイル
-  static final TextStyle listTileInputPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 19,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
-  );
+  /// 行内の金額入力フィールド
+  static final TextStyle listTileInputPriceLabel = AppTypeScale.sfUi19w500
+      .copyWith(color: AppColorsDark.text);
 
   /// 入力フィールドのヒントテキスト
-  static final TextStyle listTileTextFieldHint = MyFontStyle.notoSans.copyWith(
-    fontSize: 15,
-    color: AppColorsDark.textTertiary,
-    fontWeight: FontWeight.w600,
-  );
+  static final TextStyle listTileTextFieldHint = AppTypeScale.noto15w600
+      .copyWith(color: AppColorsDark.textTertiary);
 
-  /// カード内未確定金額用スタイル
-  static final TextStyle listTileUnconfirmedPriceLabel = MyFontStyle.notoSans
-      .copyWith(
-        fontSize: 15,
-        color: AppColorsDark.text,
-        fontWeight: FontWeight.w500,
-      );
+  /// 未確定の金額欄（「---」「未入力」）
+  static final TextStyle listTileUnconfirmedPriceLabel = AppTypeScale.noto15w500
+      .copyWith(color: AppColorsDark.text);
 
-  /// リスト行の凡例・補足テキスト用（列見出しラベル・ナビゲーション行の件数表示等）
-  static final TextStyle listTileLegendTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+  /// 凡例・列見出し・件数などの補足テキスト
+  static final TextStyle listTileLegendTitle = AppTypeScale.noto14w300.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w300,
   );
 
   // ==========================================================================
-  // リストカード内スタイル
+  // リストカード
   // ==========================================================================
 
-  /// リストカード内未確定金額ラベルスタイル
-  static final TextStyle listCardUnconfirmedPriceLabel = MyFontStyle.notoSans
-      .copyWith(
-        fontSize: 14,
-        color: AppColorsDark.text,
-        fontWeight: FontWeight.w700,
-      );
+  /// リストカードの未確定ラベル
+  static final TextStyle listCardUnconfirmedPriceLabel = AppTypeScale.noto14w700
+      .copyWith(color: AppColorsDark.text);
 
-  /// 予算行に併記する固定費見込みラベル（「固定費 ¥1,980」）
-  static final TextStyle budgetFixedCostForecastLabel = MyFontStyle.notoSans
-      .copyWith(
-        fontSize: 11,
-        color: AppColorsDark.textSecondary,
-        fontWeight: FontWeight.w400,
-      );
+  /// 予算行に併記する固定費見込みラベル（「固定費 ¥1,980」）等の小さな数値キャプション
+  static final TextStyle budgetFixedCostForecastLabel = AppTypeScale.noto11w400
+      .copyWith(color: AppColorsDark.textSecondary);
 
-  /// チップ（「固定費」等）のラベル用スタイル
-  static final TextStyle chipLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 10,
+  /// チップ（「固定費」等）のラベル。塗り内で文字を垂直中央に置くため行高を詰める
+  static final TextStyle chipLabel = AppTypeScale.noto10w400.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w400,
-    // チップの塗り内で文字を垂直中央に置く（フォント既定の行高だと下寄りに見える）
     height: 1.0,
     leadingDistribution: TextLeadingDistribution.even,
   );
 
   /// チップの強調ラベル（固定費一覧の「変動」チップ）
-  static final TextStyle chipLabelAccent = MyFontStyle.notoSans.copyWith(
-    fontSize: 10,
+  static final TextStyle chipLabelAccent = AppTypeScale.noto10w500.copyWith(
     color: AppColorsDark.primary,
-    fontWeight: FontWeight.w500,
-    // チップの塗り内で文字を垂直中央に置く（フォント既定の行高だと下寄りに見える）
     height: 1.0,
     leadingDistribution: TextLeadingDistribution.even,
   );
 
-  static final TextStyle listCardSecondaryTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 12,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w500,
-  );
+  /// リストカードの副ラベル・フィルターチップ
+  static final TextStyle listCardSecondaryTitle = AppTypeScale.noto12w500
+      .copyWith(color: AppColorsDark.textSecondary);
 
-  static final TextStyle listCardMinusLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 16,
+  /// 支出の符号色つき金額
+  static final TextStyle listCardMinusLabel = AppTypeScale.sfUi16w600.copyWith(
     color: AppColorsDark.expense,
-    fontWeight: FontWeight.w600,
   );
 
-  static final TextStyle listCardPlusLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 16,
+  /// 収入の符号色つき金額
+  static final TextStyle listCardPlusLabel = AppTypeScale.sfUi16w600.copyWith(
     color: AppColorsDark.income,
-    fontWeight: FontWeight.w600,
   );
 
   // ==========================================================================
-  // アプリカード（収入グラフエリアなど）
-  // ページヘッダー（固定費ページなど）
+  // アプリカード（収支カード・グラフカード等）
   // ==========================================================================
 
-  /// Primary=========
-
-  /// アプリカードのタイトルラベル用スタイル
-  static final TextStyle appCardTitleLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+  /// カードのタイトル
+  static final TextStyle appCardTitleLabel = AppTypeScale.noto14w500.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w500,
   );
 
-  /// アプリカードのメインタイトルラベル用スタイル
-  /// （収支カードの総支出/総収入など、白・強調）
-  ///
-  /// height/leadingDistribution で行ボックス内のグリフを上下中央に寄せ、
-  /// 隣接するシェブロンアイコンと縦位置が揃うようにする
-  static final TextStyle appCardPrimaryTitleLabel = MyFontStyle.notoSans
+  /// 収支カードの「総支出」「総収入」。隣接するシェブロンと縦位置を揃えるため行高を詰める
+  static final TextStyle appCardPrimaryTitleLabel = AppTypeScale.noto16w600
       .copyWith(
-        fontSize: 16,
         color: AppColorsDark.text,
-        fontWeight: FontWeight.w600,
         height: 1.0,
         leadingDistribution: TextLeadingDistribution.even,
       );
 
-  /// アプリカードの金額表示用スタイル
-  static final TextStyle appCardPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 20,
+  /// カードの主金額
+  static final TextStyle appCardPriceLabel = AppTypeScale.sfUi20w700.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w700,
   );
 
-  /// 帯付きサマリーカードの帯に置く合計金額用スタイル（収入一覧・支出一覧とそのカテゴリー明細）
-  static final TextStyle summaryHeroPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 22,
+  /// 帯付きサマリーカードの帯に置く合計金額（収入一覧・支出一覧）
+  static final TextStyle summaryHeroPriceLabel = AppTypeScale.sfUi22w700
+      .copyWith(color: AppColorsDark.text);
+
+  /// カードの副金額
+  static final TextStyle appCardSecondaryPriceLabel = AppTypeScale.sfUi16w500
+      .copyWith(color: AppColorsDark.text);
+
+  /// カード内の第三階層タイトル
+  static final TextStyle appCardTertiaryTitleLabel = AppTypeScale.noto13w500
+      .copyWith(color: AppColorsDark.textSecondary);
+
+  /// カード内の第三階層金額・件数
+  static final TextStyle appCardTertiaryPriceLabel = AppTypeScale.sfUi14w500
+      .copyWith(color: AppColorsDark.textSecondary);
+
+  /// 金額に添える単位「円」（和文なので noto）
+  static final TextStyle appCardTertiaryPriceUnit = AppTypeScale.noto11w500
+      .copyWith(color: AppColorsDark.textSecondary);
+
+  /// カードの任意副金額
+  static final TextStyle appCardOptionalSecondaryPriceLabel = AppTypeScale
+      .sfUi18w500
+      .copyWith(color: AppColorsDark.text);
+
+  /// 円グラフ内ラベル（カテゴリー名と割合）
+  static final TextStyle appCardGraphLabel = AppTypeScale.noto11w600.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w700,
   );
 
-  /// Secondary=========
-
-  /// アプリカードのセカンダリ金額ラベル用スタイル
-  static final TextStyle appCardSecondaryPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 16,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
-  );
-
-  /// Tertiary=========
-
-  /// アプリカードのTertiaryタイトルラベル用スタイル
-  static final TextStyle appCardTertiaryTitleLabel = MyFontStyle.notoSans
-      .copyWith(
-        fontSize: 13,
-        color: AppColorsDark.textSecondary,
-        fontWeight: FontWeight.w500,
-      );
-
-  /// アプリカードのTertiary金額ラベル用スタイル
-  static final TextStyle appCardTertiaryPriceLabel = MyFontStyle.sfUi.copyWith(
-    fontSize: 14,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w500,
-  );
-
-  /// アプリカードのTertiary金額単位（円）用スタイル
-  static final TextStyle appCardTertiaryPriceUnit = MyFontStyle.notoSans
-      .copyWith(
-        fontSize: 11,
-        color: AppColorsDark.textSecondary,
-        fontWeight: FontWeight.w500,
-      );
-
-  /// OptionalSecondary=========
-
-  /// アプリカードのセカンダリ金額ラベル用スタイル
-  static final TextStyle appCardOptionalSecondaryPriceLabel = MyFontStyle.sfUi
-      .copyWith(
-        fontSize: 18,
-        color: AppColorsDark.text,
-        fontWeight: FontWeight.w500,
-      );
-
-  // ==========================================================================
-  // その他
-  // ==========================================================================
-
-  /// アプリカードのグラフラベル用スタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: income_graph_area.dart
-  ///   - エリア: 円グラフ内ラベル
-  ///   - 詳細: カテゴリー名と割合表示
-  static final TextStyle appCardGraphLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 11,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
-  );
-
-  /// ポップアップメニューアイテムのラベルスタイル
-  ///
-  /// 【使用箇所】
-  /// - ファイル: checkable_popup_menu_item.dart
-  ///   - エリア: メニューアイテム
-  ///   - 詳細: 選択状態に応じて太字になるスタイル
+  /// ポップアップメニュー項目（選択中は太字）
   static TextStyle popupMenuItemLabel({
     Color? textColor,
     bool isSelected = false,
   }) {
-    return MyFontStyle.notoSans.copyWith(
-      fontSize: 14,
-      color: textColor ?? AppColorsDark.text,
-      fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-    );
+    final base = isSelected ? AppTypeScale.noto14w700 : AppTypeScale.noto14w400;
+    return base.copyWith(color: textColor ?? AppColorsDark.text);
   }
-
-  // ==========================================================================
-  // テキストボタン ("さらに表示する"など)
-  // ==========================================================================
-  static final TextStyle textButtonTextStyle = MyFontStyle.notoSans.copyWith(
-    fontSize: 12,
-    color: AppColorsDark.primary,
-    fontWeight: FontWeight.w500,
-  );
 
   // ==========================================================================
   // ボトムナビゲーションバー
   // ==========================================================================
 
-  /// グロナビ選択中ラベル（白・視認性確保）
-  static final TextStyle bottomNavSelectedLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 11,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
-  );
+  /// グロナビ選択中ラベル
+  static final TextStyle bottomNavSelectedLabel = AppTypeScale.noto11w600
+      .copyWith(color: AppColorsDark.text);
 
   /// グロナビ非選択ラベル
-  static final TextStyle bottomNavUnselectedLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 11,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w500,
-  );
+  static final TextStyle bottomNavUnselectedLabel = AppTypeScale.noto11w500
+      .copyWith(color: AppColorsDark.textSecondary);
 
   // ==========================================================================
   // インセットグループ（AppInsetGroup / AppInsetRow）
   // ==========================================================================
 
   /// インセットグループの見出し（「固定費」「設定」など）
-  static final TextStyle insetGroupHeader = MyFontStyle.notoSans.copyWith(
-    fontSize: 13,
+  static final TextStyle insetGroupHeader = AppTypeScale.noto13w500.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w500,
   );
 
-  /// インセットグループ内の行ラベル（「拠出元」「頻度」など）
-  static final TextStyle insetGroupLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+  /// インセット行のラベル（「拠出元」「頻度」など）
+  static final TextStyle insetGroupLabel = AppTypeScale.noto14w500.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
   );
 
-  /// インセットグループ内の行の値（右寄せの選択値・入力値）
-  static final TextStyle insetGroupValue = MyFontStyle.notoSans.copyWith(
-    fontSize: 15,
+  /// インセット行の値（右寄せの選択値・入力値）
+  static final TextStyle insetGroupValue = AppTypeScale.noto15w500.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
   );
 
-  /// インセットグループ内の行の値のプレースホルダー（未入力時）
-  static final TextStyle insetGroupPlaceholder = MyFontStyle.notoSans.copyWith(
-    fontSize: 15,
-    color: AppColorsDark.textTertiary,
-    fontWeight: FontWeight.w500,
-  );
+  /// インセット行の値のプレースホルダー（未入力時）
+  static final TextStyle insetGroupPlaceholder = AppTypeScale.noto15w500
+      .copyWith(color: AppColorsDark.textTertiary);
 
   /// インセットグループの下に添える補足文（操作の結果を説明する1〜2行）
-  static final TextStyle insetGroupNote = MyFontStyle.notoSans.copyWith(
-    fontSize: 11,
+  static final TextStyle insetGroupNote = AppTypeScale.noto11w300.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w300,
   );
 
-  /// インセットグループ内の支払い履歴行の日付
-  static final TextStyle insetGroupHistoryDate = MyFontStyle.notoSans.copyWith(
-    fontSize: 13,
-    color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w400,
-  );
+  /// 支払い履歴行の日付
+  static final TextStyle insetGroupHistoryDate = AppTypeScale.noto13w400
+      .copyWith(color: AppColorsDark.textSecondary);
 
-  /// インセットグループ内の支払い履歴行の金額
-  static final TextStyle insetGroupHistoryPrice = MyFontStyle.sfUi.copyWith(
-    fontSize: 15,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w500,
-  );
-
-  /// インセットグループ末尾のリンク行（「すべての支払いを見る」）
-  static final TextStyle insetGroupLinkRow = MyFontStyle.notoSans.copyWith(
-    fontSize: 12,
-    color: AppColorsDark.primary,
-    fontWeight: FontWeight.w500,
-  );
+  /// 支払い履歴行の金額
+  static final TextStyle insetGroupHistoryPrice = AppTypeScale.sfUi15w500
+      .copyWith(color: AppColorsDark.text);
 
   // ==========================================================================
   // ボトムシート（予想額の入力シートなど）
   // ==========================================================================
 
   /// ボトムシートの見出し（「予想額」など）
-  static final TextStyle sheetTitle = MyFontStyle.notoSans.copyWith(
-    fontSize: 16,
+  static final TextStyle sheetTitle = AppTypeScale.noto16w600.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
   );
 
   /// ボトムシートの金額入力（大きい数値）
-  static final TextStyle sheetPriceInput = MyFontStyle.sfUi.copyWith(
-    fontSize: 40,
+  static final TextStyle sheetPriceInput = AppTypeScale.sfUi40w700.copyWith(
     color: AppColorsDark.text,
-    fontWeight: FontWeight.w700,
     height: 1.0,
   );
 
   /// ボトムシートの金額入力に添える円記号
-  static final TextStyle sheetPriceYenSymbol = MyFontStyle.sfUi.copyWith(
-    fontSize: 28,
+  static final TextStyle sheetPriceYenSymbol = AppTypeScale.sfUi28w700.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w700,
     height: 1.0,
   );
 
@@ -552,16 +343,11 @@ class AppTextStyles {
   // ==========================================================================
 
   /// 未選択セグメントのラベル
-  static final TextStyle segmentedLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
+  static final TextStyle segmentedLabel = AppTypeScale.noto14w400.copyWith(
     color: AppColorsDark.textSecondary,
-    fontWeight: FontWeight.w400,
   );
 
   /// 選択中セグメントのラベル
-  static final TextStyle segmentedSelectedLabel = MyFontStyle.notoSans.copyWith(
-    fontSize: 14,
-    color: AppColorsDark.text,
-    fontWeight: FontWeight.w600,
-  );
+  static final TextStyle segmentedSelectedLabel = AppTypeScale.noto14w600
+      .copyWith(color: AppColorsDark.text);
 }

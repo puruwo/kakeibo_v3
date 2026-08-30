@@ -307,7 +307,7 @@ class _AccountGroupHeader extends StatelessWidget {
           Expanded(
             child: Text(
               '${rows.length}件',
-              style: AppTextStyles.listTileTirtiaryTitle,
+              style: AppTextStyles.listTileTertiaryTitle,
             ),
           ),
           Text(
