@@ -58,8 +58,18 @@ class AppTextStyles {
     color: AppColorsDark.text,
   );
 
+  /// ダイアログ内文言の強調（削除確認のタイトル）
+  static final TextStyle dialogLabelEmphasis = AppTypeScale.noto13w600.copyWith(
+    color: AppColorsDark.text,
+  );
+
   /// メニュー（ActionSheet）の項目
   static final TextStyle dialogList = AppTypeScale.noto16w500.copyWith(
+    color: AppColorsDark.text,
+  );
+
+  /// メニュー（ActionSheet）の強調項目（キャンセル・選択中の頻度）
+  static final TextStyle dialogListEmphasis = AppTypeScale.noto16w600.copyWith(
     color: AppColorsDark.text,
   );
 
@@ -117,6 +127,11 @@ class AppTextStyles {
   /// エラー表示（AppErrorState）。空状態とは danger 色で意味的に分ける（ADR-018）
   static final TextStyle errorMessage = AppTypeScale.noto16w400.copyWith(
     color: AppColorsDark.danger,
+  );
+
+  /// スナックバーの文言（成功／失敗は呼び出し側で色を当てる）
+  static final TextStyle snackBarMessage = AppTypeScale.noto14w400.copyWith(
+    color: AppColorsDark.text,
   );
 
   // ==========================================================================
@@ -216,6 +231,10 @@ class AppTextStyles {
   /// 数字が主役のリストカード副ラベル（日付「8月25日」・件数「12件」・割合「35%」・小計）
   static final TextStyle listCardSecondaryNumeric = AppTypeScale.sfUi12w500
       .copyWith(color: AppColorsDark.textSecondary);
+
+  /// 選択中のフィルターチップのラベル（色は呼び出し側で塗りに合わせて当てる）
+  static final TextStyle filterChipSelectedLabel = AppTypeScale.noto12w600
+      .copyWith(color: AppColorsDark.text);
 
   /// 支出の符号色つき金額
   static final TextStyle listCardMinusLabel = AppTypeScale.sfUi16w600.copyWith(

@@ -205,9 +205,7 @@ class ActionSheetCancelButton extends StatelessWidget {
             child: Center(
               child: Text(
                 label,
-                style: AppTextStyles.dialogList.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: AppTextStyles.dialogListEmphasis,
               ),
             ),
           ),

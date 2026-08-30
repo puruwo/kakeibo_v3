@@ -52,8 +52,7 @@ Future<bool> showConfirmationDialog(
                       children: [
                         Text(
                           title,
-                          style: AppTextStyles.dialogLabel
-                              .copyWith(fontWeight: FontWeight.w600),
+                          style: AppTextStyles.dialogLabelEmphasis,
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 6),

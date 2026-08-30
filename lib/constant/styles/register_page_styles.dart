@@ -40,9 +40,9 @@ class RegisterPageStyles {
     height: 1.0,
   );
 
-  /// 円記号（¥）。支出／収入で色が変わる
+  /// 円記号（¥）。支出／収入で色が変わる。金額と下端を揃えるため行高を詰める
   static TextStyle yenSymbol(Color color) =>
-      AppTypeScale.sfUi32w700.copyWith(color: color);
+      AppTypeScale.sfUi32w700.copyWith(color: color, height: 1.0);
 
   // ==========================================================================
   // ピル・ボタン
@@ -56,10 +56,18 @@ class RegisterPageStyles {
   // カテゴリーエリア
   // ==========================================================================
 
-  /// カテゴリーアイコン下のラベル（「食費」「交通費」等）
+  /// カテゴリーアイコン下のラベル（「食費」「交通費」等。未選択状態が無いグリッド用）
   static final TextStyle categoryLabel = AppTypeScale.noto13w500.copyWith(
     color: AppColorsDark.text,
   );
+
+  /// カテゴリー選択グリッドの選択中ラベル
+  static final TextStyle categoryLabelSelected = AppTypeScale.noto13w700
+      .copyWith(color: AppColorsDark.text);
+
+  /// カテゴリー選択グリッドの未選択ラベル
+  static final TextStyle categoryLabelUnselected = AppTypeScale.noto13w400
+      .copyWith(color: AppColorsDark.textSecondary);
 
   /// 「アイコンを並べ替える」リンク
   static final TextStyle rearrangeLink = AppTypeScale.noto16w600.copyWith(

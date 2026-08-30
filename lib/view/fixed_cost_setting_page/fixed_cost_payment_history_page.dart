@@ -251,10 +251,7 @@ class _SummaryCard extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         cells[i].$2,
-                        style: AppTextStyles.insetGroupHistoryPrice.copyWith(
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                        ),
+                        style: AppTextStyles.listTilePriceLabel,
                       ),
                     ],
                   ),

@@ -10,6 +10,7 @@ import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:intl/intl.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/tiles/expense_item_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_expense_history_value_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
@@ -178,7 +179,7 @@ class _CategoryExpenceHistoryArea
             return children;
           },
           error: (error, stackTrace) {
-            return const Center(child: Text('データの取得に失敗しました'));
+            return const AppErrorState(message: 'データの取得に失敗しました');
           },
           loading: () {
             return const Center(child: CircularProgressIndicator());

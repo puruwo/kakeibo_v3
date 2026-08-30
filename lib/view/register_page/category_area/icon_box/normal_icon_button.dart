@@ -3,7 +3,6 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
-import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
@@ -59,10 +58,7 @@ class NormalIconButton extends ConsumerWidget {
             child: Center(
               child: Text(
                 categoryEntity.categoryName,
-                style: RegisterPageStyles.categoryLabel.copyWith(
-                  color: context.colors.textSecondary,
-                  fontWeight: FontWeight.w400,
-                ),
+                style: RegisterPageStyles.categoryLabelUnselected,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

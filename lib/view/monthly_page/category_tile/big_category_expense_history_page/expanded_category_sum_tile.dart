@@ -7,6 +7,7 @@ import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/small_category_expanded_history_page/small_category_expanded_history_page.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/budget_label.dart';
@@ -204,9 +205,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
         );
       },
       error: (error, stackTrace) {
-        return const Center(
-          child: Text('データの取得に失敗しました'),
-        );
+        return const AppErrorState(message: 'データの取得に失敗しました');
       },
       loading: () {
         return const Center(

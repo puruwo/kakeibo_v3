@@ -30,8 +30,11 @@ class AppTypeScale {
   static final TextStyle noto14w600 = _noto(14, FontWeight.w600);
   static final TextStyle noto14w500 = _noto(14, FontWeight.w500);
   static final TextStyle noto14w400 = _noto(14, FontWeight.w400);
+  static final TextStyle noto13w700 = _noto(13, FontWeight.w700);
+  static final TextStyle noto13w600 = _noto(13, FontWeight.w600);
   static final TextStyle noto13w500 = _noto(13, FontWeight.w500);
   static final TextStyle noto13w400 = _noto(13, FontWeight.w400);
+  static final TextStyle noto12w600 = _noto(12, FontWeight.w600);
   static final TextStyle noto12w500 = _noto(12, FontWeight.w500);
   static final TextStyle noto12w400 = _noto(12, FontWeight.w400);
   static final TextStyle noto11w600 = _noto(11, FontWeight.w600);

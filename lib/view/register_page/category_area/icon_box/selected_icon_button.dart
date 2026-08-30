@@ -48,9 +48,7 @@ class SelectedIconButton extends ConsumerWidget {
             child: Center(
               child: Text(
                 categoryEntity.categoryName,
-                style: RegisterPageStyles.categoryLabel.copyWith(
-                  fontWeight: FontWeight.w700,
-                ),
+                style: RegisterPageStyles.categoryLabelSelected,
                 overflow: TextOverflow.ellipsis,
               ),
             ),
