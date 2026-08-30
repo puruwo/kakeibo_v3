@@ -25,12 +25,7 @@
   - 2.8 Category Color - Fixed Cost
   - 2.9 Accent / Utility
   - 2.10 Helpers
-- [3. Typography](#3-typography)
-  - 3.1 MyFontStyle
-  - 3.2 AppTextStyles（48 トークン）
-  - 3.3 RegisterPageStyles
-  - 3.4 GraphTextStyles
-  - 3.5 CalendarStyles
+- [3. Typography](#3-typography) — Vault「Kakeibo テキストスタイルルール」へ移植済み
 - [4. Theme & Global Style](#4-theme--global-style)
 - [5. Common UI Components](#5-common-ui-components)
   - 5.1 Card 系
@@ -220,195 +215,14 @@ String getHexFromColor(Color color);
 
 ## 3. Typography
 
-### 3.1 MyFontStyle
-
-定義ファイル: `lib/constant/font_style.dart`
-
-| 名前 | family | weight 範囲 | 用途 |
-|------|--------|------------|------|
-| `notoSans` | `noto_sans` | 100-900（9段階） | 日本語・英数混在の見出し・本文 |
-| `sfUi` | `sf_ui` | 100-900（9段階） | 数字専用（金額・日付・タイムスタンプ） |
-
-`pubspec.yaml` に Noto Sans JP の TTF と SF UI Display の OTF を各9 weight 登録。
-
-**運用ルール**（Skill `kakeibo-style-rules`）:
-- `MyFontStyle.notoSans` / `sfUi` を使用箇所で直接 `copyWith` するのは禁止。
-- 必ず `AppTextStyles` 等の集約クラスに新規トークンとして定義してから参照する。
-
-### 3.2 AppTextStyles（41 トークン）
-
-定義ファイル: `lib/constant/styles/app_text_styles.dart`
-
-#### PageHeader（2）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `pageHeaderText` | noto / 18 / w500 / `white` |
-| `pageHeaderSubText` | noto / 11 / w300 / `secondaryLabel` |
-
-#### Dialog（3）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `dialogTitle` | noto / 18 / w500 / `white` |
-| `dialogLabel` | noto / 13 / w400 / `white` |
-| `dialogList` | noto / 16 / w500 / `white` |
-
-#### Tab（2）
-
-| トークン | family / size / weight / color | 使用箇所 |
-|---------|--------------------------------|---------|
-| `selectedLabelStyle` | noto / 14 / w600 / `themeColor` | `AppTab` の選択中タブ |
-| `unselectedLabelStyle` | noto / 14 / w300 / `secondaryLabel` | `AppTab` の非選択タブ |
-
-#### Button（4）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `mainButtonText` | noto / 14 / w600 / `label` |
-| `oneLineButtonText` | noto / 13 / w500 / `label` |
-| `whiteButtonText` | noto / 17 / w600 / `white` |
-| `textButtonTextStyle` | noto / 12 / w500 / `themeColor` |
-
-#### List 共通（2）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `listEmptyMessage` | noto / 16 / w400 / `secondaryLabel` |
-| `errorMessage` | noto / 16 / w400 / `danger`（空状態と意味的に分離・ADR-018） |
-
-#### Section Title（3）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `appCardSectionTitle` | noto / 16 / w600 / `label` |
-| `listCardSectionTitle` | sf / 14 / w600 / `secondaryLabel` |
-| `listTileSectionTitle` | sf / 13 / w500 / `secondaryLabel` |
-
-#### ListTile（9）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `listTilePrimaryTitle` | noto / 14 / w500 / `label` |
-| `listTileSecondaryTitle` | noto / 13 / w300 / `secondaryLabel` |
-| `listTileTirtiaryTitle` | noto / 11 / w300 / `secondaryLabel` |
-| `listTilePriceLabel` | sf / 17 / w600 / `label` |
-| `listTileSubPriceLabel` | sf / 15 / w400 / `secondaryLabel` |
-| `listTileInputPriceLabel` | sf / 19 / w500 / `label` |
-| `listTileTextFieldHint` | noto / 15 / w600 / `tirtiaryLabel` |
-| `listTileUnconfirmedPriceLabel` | noto / 15 / w500 / `label` |
-| `listTileLegendTitle` | noto / 14 / w300 / `secondaryLabel` |
-
-#### ListCard（4）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `listCardUnconfirmedPriceLabel` | noto / 14 / w700 / `label` |
-| `listCardSecondaryTitle` | noto / 12 / w500 / `secondaryLabel` |
-| `listCardMinusLabel` | sf / 16 / w600 / `pink` |
-| `listCardPlusLabel` | sf / 16 / w600 / `incomeEmerald` |
-
-#### AppCard Primary（3）
-
-カードヘッダー＋金額（年間収支カードのような大型表示）用。
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `appCardTitleLabel` | noto / 14 / w500 / `secondaryLabel` |
-| `appCardPrimaryTitleLabel` | noto / 16 / w600 / `label` / h1.0 |
-| `appCardPriceLabel` | sf / 20 / w700 / `white` |
-
-#### AppCard Secondary（1）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `appCardSecondaryPriceLabel` | sf / 16 / w500 / `white` |
-
-#### AppCard Tertiary（3）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `appCardTertiaryTitleLabel` | noto / 13 / w500 / `secondaryLabel` |
-| `appCardTertiaryPriceLabel` | sf / 14 / w500 / `secondaryLabel` |
-| `appCardTertiaryPriceUnit` | noto / 11 / w500 / `secondaryLabel` |
-
-#### AppCard OptionalSecondary（1）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `appCardOptionalSecondaryPriceLabel` | sf / 18 / w500 / `white` |
-
-#### Graph / Dynamic（2）
-
-| トークン | family / size / weight / color | 備考 |
-|---------|--------------------------------|------|
-| `appCardGraphLabel` | noto / 11 / w600 / `white` | 円グラフ内ラベル |
-| `popupMenuItemLabel({textColor, isSelected})` | noto / 14 / 動的 / 動的 | 選択時 bold、未選択時 normal |
-
-#### BottomNav（2）
-
-| トークン | family / size / weight / color |
-|---------|--------------------------------|
-| `bottomNavSelectedLabel` | noto / 11 / w600 / `label` |
-| `bottomNavUnselectedLabel` | noto / 11 / w500 / `secondaryLabel` |
-
----
-
-### 3.3 RegisterPageStyles
-
-定義ファイル: `lib/constant/styles/register_page_styles.dart`
-入力モーダル `RegisaterPageBase` 専用。
-
-| トークン | family / size / weight / color | 備考 |
-|---------|--------------------------------|------|
-| `placeHolder` | noto / 14 / w500 / `secondaryLabel` | メモ入力等のプレースホルダー |
-| `inputExpenseText` | sf / 25 / w500 / `label` / h1.0 | 固定費金額入力ダイアログ |
-| `inputText` | noto / 15 / w500 / `label` / h1.0 | 一般入力テキスト |
-| `priceInput` | sf / 42 / bold / `white` / h1.0 | 大型金額表示（¥42,000） |
-| `priceUnconfirmed` | sf / 42 / bold / `secondaryLabel` / h1.0 | 未確定時の「---」 |
-| `yenSymbol(Color)` | sf / 32 / bold / 動的 | ¥ 記号（収支で色変化） |
-| `pillLabel(Color)` | noto / 16 / w600 / 動的 / h1.0 | 支出/収入ピル |
-| `categoryLabel` | noto / 13 / w500 / `white` | カテゴリーアイコン下のラベル |
-| `rearrangeLink` | noto / 16 / w600 / `secondaryLabel` | 「アイコンを並べ替える」リンク |
-| `iconRearrangeDescription` | noto / 14 / w500 / `secondaryLabel` | 並べ替え説明 |
-| `pickerLargeNumber` | sf / 24 / bold / `label` | 支払頻度ピッカーの数字 |
-| `pickerMediumText` | noto / 20 / bold / `label` | 「ヶ月」「年」等の単位 |
-| `priceTypeSwitchLabel` | noto / 14 / w400 / `secondaryLabel` | 「支払額変動あり」ラベル |
-
-### 3.4 GraphTextStyles
-
-定義ファイル: `lib/constant/styles/graph_text_styles.dart`
-予測グラフ・ツールチップ用。
-
-| トークン | family / size / weight / color | 用途 |
-|---------|--------------------------------|------|
-| `graphLabel` | noto / 12 / w500 / `secondaryLabel` | 軸ラベル、凡例 |
-| `graphPriceLabel` | sf / 14 / w500 / `secondaryLabel` | グラフ金額、X軸日付 |
-| `graphMiniLabel` | noto / 11 / w500 / `secondaryLabel` | 小型補助ラベル |
-| `tooltipDate` | sf / 14 / w700 / `label` | ツールチップ日付（12/29 等） |
-| `tooltipSubtitle` | sf / 13 / w600 / `label` | ツールチップ累計金額 |
-| `tooltipCategory` | sf / 12 / w700 / `label` | ツールチップカテゴリ金額 |
-| `tooltipCumulativeLabel` | noto / 10 / — / `secondaryLabel` | 「累計」等の補助ラベル |
-
-### 3.5 CalendarStyles
-
-定義ファイル: `lib/constant/styles/calendar_styles.dart`
-履歴カレンダー（`ExpenseHistoryPage`）専用。
-
-| トークン | family / size / weight / color | 用途 |
-|---------|--------------------------------|------|
-| `calendarDateBoxLarge` | sf / 11.5 / w500 / `white` | 5週表示時の金額 |
-| `calendarDateBoxSmall` | sf / 11 / w500 / `white` / h1.0 | 6週表示時の金額 |
-| `calendarWeekdayLabel` | noto / 12 / w500 / `secondaryLabel` | 月〜金の曜日 |
-| `calendarWeekdaySunday` | noto / 12 / w500 / `pink` | 日曜の曜日 |
-| `calendarWeekdaySaturday` | noto / 12 / w500 / `mintBlue` | 土曜の曜日 |
-| `calendarDateLabel` | sf / 12 / w500 / `secondaryLabel` | 平日の日付 |
-| `calendarDateLabelSunday` | sf / 12 / w500 / `pink` | 日曜の日付 |
-| `calendarDateLabelSaturday` | sf / 12 / w500 / `mintBlue` | 土曜の日付 |
-| `calendarOutOfPeriodDateLabel` | sf / 12 / w500 / `tirtiaryLabel` | 前後月の日付 |
-
-> **更新時の注意**: 全 TextStyle の使用箇所一覧は `lib/docs/font_usage.csv` が Single Source of Truth。
-> フォント関連を変更したら `update-font-usage-csv` skill に従って CSV を同期する。
+> **本節は Vault へ移植済み（2026-08-30 KP-007）。正本は
+> `/Users/puruwo/kakeibo_vault/06_design/Kakeibo テキストスタイルルール.md`。**
+> 判断フロー・役割別の全スタイル一覧・型スケール（`AppTypeScale`）・ファミリーの使い分け・
+> 禁止事項・逸脱の記録はすべて Vault 側で管理し、本ファイルには書かない。
+>
+> 定義ファイル: `lib/constant/font_style.dart`（family）→ `lib/constant/styles/app_type_scale.dart`（段・値の正本）
+> → `lib/constant/styles/app_text_styles.dart` ほか（役割スタイル）。
+> 規約チェック: `scripts/check_text_style.sh`（警告のみ）。発火用 Skill: `~/.claude/skills/kakeibo-text-style-rules/`。
 
 ---
 
@@ -953,15 +767,13 @@ MaterialApp
 
 ### 既存ドキュメント・台帳
 
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/docs/font_usage.csv` — 全 TextStyle の使用箇所台帳
-- `/Users/puruwo/dev/kakeibo/claude_workspace/lib/docs/font_issues.csv` — 共通化漏れの記録
+- （`lib/docs/font_usage.csv`・`font_issues.csv` は 2026-08-30 KP-007 で廃止。テキストスタイルの一覧は Vault「Kakeibo テキストスタイルルール」§2）
 - `/Users/puruwo/dev/kakeibo/claude_workspace/lib/docs/providers.csv` — Provider 一覧（参考）
 
 ### Skill
 
-- `.claude/skills/kakeibo-style-rules/SKILL.md` — カラー・フォント運用ルール
+- `.claude/skills/kakeibo-style-rules/SKILL.md` — 色・文字・レイアウトの振り分けポインタ（本文は Vault）
 - `.claude/skills/kakeibo-common-components/SKILL.md` — 共通widget利用ガイド
-- `.claude/skills/update-font-usage-csv/SKILL.md` — font_usage.csv 更新ルール
 
 ---
 

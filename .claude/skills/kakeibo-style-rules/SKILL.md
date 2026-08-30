@@ -1,115 +1,35 @@
 ---
 name: kakeibo-style-rules
 description: >
-  Kakeiboプロジェクトでのカラー参照・フォント定義の運用ルール。
-  UIコンポーネントを実装・修正するときは必ずこのSkillに従うこと。
-  カラーの詳細ルールは kakeibo-design-tokens Skill を正とする。
+  kakeibo の UI 実装ルール（色・文字・レイアウト）の入口。本文は持たず、
+  色 → kakeibo-design-tokens Skill、文字 → Vault「Kakeibo テキストスタイルルール」、
+  レイアウト（グロナビ余白）→ Vault「Kakeibo 共通コンポーネント利用ガイド」へ振り分ける。
+  UI コンポーネントを実装・修正するときに起動し、該当する先を必ず読むこと。
 ---
 
-# カラー・フォント定義ルール
+# kakeibo スタイルルール（振り分けポインタ）
 
-## カラー定義
+**このファイルは振り分けのみ。ルール本文は書かない**（2026-08-30 KP-007 で本文を Vault へ移植）。
 
-**カラーの運用ルールは `kakeibo-design-tokens` Skill を正とする。**
-色を扱う作業（トークン追加・UI実装・ハードコード色の置き換え等）では必ずそちらに従うこと。
-
-要点のみ再掲：
-
-- 色の単一ソースは `design-tokens/tokens.json`。ここ以外に色値を書かない
-- アプリコードからは `context.colors.<token>` で参照する（`Colors.*` / `Color(0x...)` の直書き禁止）
-- `lib/theme/app_colors.dart` は生成物（`tool/generate_tokens.dart` で生成）。手で編集しない
-- 旧 `MyColors` は廃止済み。見つけたら対応する `context.colors.*` へ置き換える
-- `const TextStyle` や `CustomPainter` など context が使えない場所の例外パターンも
-  `kakeibo-design-tokens` Skill に定義がある
-
----
-
-## フォント定義
-
-### 基本ルール
-
-フォントスタイルはすべて `lib/constant/styles/app_text_styles.dart` の `AppTextStyles` クラスから参照すること。
-
-```dart
-// ✅ 正しい
-style: AppTextStyles.pageHeaderText
-style: AppTextStyles.listTilePrimaryTitle
-style: AppTextStyles.appCardPriceLabel
-
-// ❌ 禁止
-style: TextStyle(fontSize: 14, color: Colors.white, ...)
-style: MyFontStyle.notoSans.copyWith(...)  // 使用箇所に直接書くのは禁止
-```
-
-### 既存定義の選定基準
-
-| 用途 | 使うスタイル |
+| 対象 | 正本 |
 |---|---|
-| ページAppBarのタイトル | `pageHeaderText` (text, 18, w500) |
-| ページAppBarのサブテキスト | `pageHeaderSubText` (textSecondary, 11, w400) |
-| セクションヘッダー（カード上部） | `appCardSectionTitle` (text, 16, w600) |
-| リストタイルのメインラベル | `listTilePrimaryTitle` (text, 14, w500) |
-| リストタイルのサブラベル | `listTileSecondaryTitle` (textSecondary, 13, w400) |
-| カード内の金額 | `appCardPriceLabel` (text, 20, w600) |
-| ボタンのテキスト | `mainButtonText` (text, 14, w600) |
-| ダイアログタイトル | `dialogTitle` (text, 18, w500) |
+| 色（トークン・`context.colors.*`・ハードコード禁止） | `.claude/skills/kakeibo-design-tokens/SKILL.md`（リポジトリ内） |
+| 文字（`AppTextStyles` / `AppTypeScale` / `MyFontStyle` / ファミリー / ウェイト / `copyWith` の可否） | `/Users/puruwo/kakeibo_vault/06_design/Kakeibo テキストスタイルルール.md`（発火用 Skill: `~/.claude/skills/kakeibo-text-style-rules/`） |
+| ボタン | `/Users/puruwo/kakeibo_vault/06_design/Kakeibo ボタンルール.md`（発火用 Skill: `~/.claude/skills/kakeibo-button-rules/`） |
+| 共通コンポーネント・スクロール末尾の下部余白（グロナビ回避） | `/Users/puruwo/kakeibo_vault/06_design/Kakeibo 共通コンポーネント利用ガイド.md`（§3 注意点） |
 
-### 新しいスタイルが必要な場合
+## 手順
 
-既存定義に適切なものがなければ、**使用箇所に直接書かず**、`app_text_styles.dart` に定義してから参照する。
+1. 該当する正本を **必ず Read してから** 実装に入る
+2. 文字を触ったら `scripts/check_text_style.sh <file>`（警告のみ）を通す。色は `scripts/check_hardcoded_color.sh`
+3. 規約に無い状況は、その場で独自実装せず Vault ページの「既知の逸脱と対応」に追記して報告する
 
-```dart
-// app_text_styles.dart に追加
-/// ピッカーの選択中テキスト用スタイル
-static final TextStyle pickerSelectedLabel = MyFontStyle.notoSans.copyWith(
-  fontSize: 16,
-  color: AppColorsDark.text,
-  fontWeight: FontWeight.w600,
-);
-
-// 使用箇所
-style: AppTextStyles.pickerSelectedLabel
-```
-
-定義時のフォーマット：
-- 1行のdocコメント（用途を日本語で記述）
-- `MyFontStyle.notoSans` か `MyFontStyle.sfUi` を使う（数値系は sfUi、日本語文字列は notoSans）
-- カラーは `AppColorsDark`（static 逃げ道クラス・ダーク値）から参照する
-  - static 定義内では context が使えないためのやむを得ない例外（`kakeibo-design-tokens` Skill の対応B）
-  - 使用箇所で色をモード追従させたい場合は `.copyWith(color: context.colors.<token>)` を当てる（対応A）
-
----
-
-## レイアウト共通ルール
-
-### スクロール末尾の下部余白（グロナビ回避）【頻発事故・必須確認】
-
-タブシェル内でpushされたページ（`Navigator.of(context).push` で開く一覧・明細ページ等）は、
-グロナビ（BottomNavigationBar）が画面下に残る。
-**スクロールコンテンツの末尾に十分な下部余白を確保しないと、最下部の要素がグロナビに隠れる。**
-この実装ミスが繰り返し発生しているため、スクロールするページを新設・修正したら必ず確認すること。
-
-- 余白は `context.bottomNavClearance`（`lib/util/extension/media_query_extension.dart`）を基準にする
-  - グロナビ高さ＋下部セーフエリアを返す。`+ AppSpacing.xl` 程度を足して使う
-  - `MediaQuery.of(context).padding.bottom` は extendBody 時に当てにならないため使わない
-- FABがあるページは既存の `fabBottomOf(context)`（`app_fab_stack.dart`）パターンに従う
-- 検証フェーズのシミュレータ確認では、**必ず一番下までスクロールして最終要素が全て見えること**を確認する
-
-```dart
-// ✅ 正しい（スクロールコンテンツの末尾）
-padding: EdgeInsets.only(bottom: context.bottomNavClearance + AppSpacing.xl)
-
-// ❌ 禁止（固定値のみ。端末によってグロナビに隠れる）
-padding: const EdgeInsets.only(bottom: AppSpacing.xxl)
-```
-
----
-
-## ファイルパス
+## 定義ファイル
 
 | 定義ファイル | クラス名 | 用途 |
 |---|---|---|
 | `design-tokens/tokens.json` | - | カラーの単一ソース（`kakeibo-design-tokens` Skill 参照） |
 | `lib/theme/app_colors.dart` | `AppColors` / `AppColorsDark` | 生成されたカラートークン（手編集禁止） |
-| `lib/constant/styles/app_text_styles.dart` | `AppTextStyles` | フォントスタイル |
-| `lib/constant/font_style.dart` | `MyFontStyle` | ベースフォント（直接使用禁止） |
+| `lib/constant/font_style.dart` | `MyFontStyle` | ベースフォント（`app_type_scale.dart` からのみ参照） |
+| `lib/constant/styles/app_type_scale.dart` | `AppTypeScale` | 型スケール（family × size × weight の段。値の正本） |
+| `lib/constant/styles/app_text_styles.dart` ほか | `AppTextStyles` / `RegisterPageStyles` / `CalendarStyles` / `GraphTextStyles` | 役割スタイル（段への参照＋色） |
