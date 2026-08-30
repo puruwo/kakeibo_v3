@@ -234,6 +234,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
             icon: Icons.payments_outlined,
             label: '予想額',
             value: yenmarkFormattedPriceGetter(_estimatedPrice),
+            numericValue: true,
             onTap: _openEstimatedPriceSheet,
           )
         else
@@ -242,6 +243,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
             label: '金額',
             controller: _priceController,
             hintText: '未入力',
+            numericValue: true,
             keyboardType: TextInputType.number,
             inputFormatters: [NumberTextInputFormatter()],
             maxLength: 12,

@@ -60,16 +60,19 @@ class AppTypeScale {
   static final TextStyle sfUi15w500 = _sfUi(15, FontWeight.w500);
   static final TextStyle sfUi15w400 = _sfUi(15, FontWeight.w400);
   static final TextStyle sfUi14w700 = _sfUi(14, FontWeight.w700);
-  static final TextStyle sfUi14w600 = _sfUi(14, FontWeight.w600);
   static final TextStyle sfUi14w500 = _sfUi(14, FontWeight.w500);
   static final TextStyle sfUi13w600 = _sfUi(13, FontWeight.w600);
   static final TextStyle sfUi13w500 = _sfUi(13, FontWeight.w500);
+  static final TextStyle sfUi13w400 = _sfUi(13, FontWeight.w400);
   static final TextStyle sfUi12w700 = _sfUi(12, FontWeight.w700);
   static final TextStyle sfUi12w500 = _sfUi(12, FontWeight.w500);
+  static final TextStyle sfUi12w400 = _sfUi(12, FontWeight.w400);
 
   /// カレンダーの5週表示のセル金額専用（既存の例外値。新規に参照しない）
   static final TextStyle sfUi11_5w500 = _sfUi(11.5, FontWeight.w500);
+  static final TextStyle sfUi11w700 = _sfUi(11, FontWeight.w700);
   static final TextStyle sfUi11w500 = _sfUi(11, FontWeight.w500);
+  static final TextStyle sfUi11w400 = _sfUi(11, FontWeight.w400);
 
   static TextStyle _noto(double size, FontWeight weight) =>
       MyFontStyle.notoSans.copyWith(fontSize: size, fontWeight: weight);

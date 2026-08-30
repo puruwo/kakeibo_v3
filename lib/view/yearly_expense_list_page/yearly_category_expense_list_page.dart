@@ -274,7 +274,7 @@ class _FilterStatusPill extends StatelessWidget {
             color: context.colors.textSecondary,
           ),
           const SizedBox(width: AppSpacing.xs),
-          Text(label, style: AppTextStyles.budgetFixedCostForecastLabel),
+          Text(label, style: AppTextStyles.listTileTertiaryTitle),
         ],
       ),
     );
@@ -307,12 +307,12 @@ class _AccountGroupHeader extends StatelessWidget {
           Expanded(
             child: Text(
               '${rows.length}件',
-              style: AppTextStyles.listTileTertiaryTitle,
+              style: AppTextStyles.numericCaption,
             ),
           ),
           Text(
             yenmarkFormattedPriceGetter(sum),
-            style: AppTextStyles.listCardSecondaryTitle,
+            style: AppTextStyles.listCardSecondaryNumeric,
           ),
         ],
       ),

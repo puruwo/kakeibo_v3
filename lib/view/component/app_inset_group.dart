@@ -123,6 +123,7 @@ class AppInsetRow extends StatelessWidget {
     this.leading,
     // 選択して閉じる行など、遷移ではない行では右矢印を出さない
     this.showChevron = true,
+    this.numericValue = false,
   })  : _type = _AppInsetRowType.navigation,
         switchValue = null,
         onSwitchChanged = null,
@@ -145,6 +146,7 @@ class AppInsetRow extends StatelessWidget {
     this.leading,
   })  : _type = _AppInsetRowType.switchRow,
         showChevron = false,
+        numericValue = false,
         value = null,
         valueColor = null,
         valueWidget = null,
@@ -170,6 +172,7 @@ class AppInsetRow extends StatelessWidget {
     this.onChanged,
     this.iconColor,
     this.leading,
+    this.numericValue = false,
   })  : _type = _AppInsetRowType.textField,
         showChevron = false,
         value = null,
@@ -190,6 +193,7 @@ class AppInsetRow extends StatelessWidget {
     this.valueWidget,
     this.iconColor,
     this.leading,
+    this.numericValue = false,
   })  : _type = _AppInsetRowType.display,
         showChevron = false,
         onTap = null,
@@ -232,6 +236,10 @@ class AppInsetRow extends StatelessWidget {
   ///
   /// navigation / display 行で指定でき、[value] より優先する。
   final Widget? valueWidget;
+
+  /// 値が数字主体（金額・日付）のとき true。sfUi 系の役割スタイルで描く
+  /// （Vault「Kakeibo テキストスタイルルール」§5）
+  final bool numericValue;
 
   /// テキストフィールド行の変更通知
   final ValueChanged<String>? onChanged;
@@ -340,7 +348,9 @@ class AppInsetRow extends StatelessWidget {
           controller: controller,
           textAlign: textAlign,
           textAlignVertical: TextAlignVertical.center,
-          style: AppTextStyles.insetGroupValue,
+          style: numericValue
+              ? AppTextStyles.insetGroupValueNumeric
+              : AppTextStyles.insetGroupValue,
           cursorColor: context.colors.primary,
           cursorWidth: 2,
           minLines: 1,
@@ -377,9 +387,10 @@ class AppInsetRow extends StatelessWidget {
   }
 
   Widget _buildValueText(BuildContext context) {
-    final style = valueColor == null
-        ? AppTextStyles.insetGroupValue
-        : AppTextStyles.insetGroupValue.copyWith(color: valueColor);
+    final base = numericValue
+        ? AppTextStyles.insetGroupValueNumeric
+        : AppTextStyles.insetGroupValue;
+    final style = valueColor == null ? base : base.copyWith(color: valueColor);
     return Text(
       value ?? '',
       textAlign: TextAlign.right,

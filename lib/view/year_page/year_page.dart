@@ -137,7 +137,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                             const SizedBox(width: 32),
                             Text(
                               periodLabel,
-                              style: AppTextStyles.pageHeaderText,
+                              style: AppTextStyles.pageHeaderNumeric,
                             ),
                             Transform.translate(
                               offset: const Offset(-6, 0),
@@ -149,7 +149,10 @@ class _YearPageState extends ConsumerState<YearPage> {
                             ),
                           ],
                         ),
-                        Text(yearLabel, style: AppTextStyles.pageHeaderSubText),
+                        Text(
+                          yearLabel,
+                          style: AppTextStyles.pageHeaderSubNumeric,
+                        ),
                       ],
                     );
                   }(),

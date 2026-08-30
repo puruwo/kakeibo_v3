@@ -202,7 +202,7 @@ class _FixedCostMiniCard extends StatelessWidget {
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   _nextPaymentLabel(entity),
-                  style: AppTextStyles.budgetFixedCostForecastLabel,
+                  style: AppTextStyles.numericCaption,
                 ),
               ],
             ),

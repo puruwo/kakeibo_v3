@@ -53,12 +53,13 @@ class MonthAccordionSection extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Text(label, style: AppTextStyles.appCardSectionTitle),
+                  // 月見出し「8月」「2027年1月」と件数は数字が主役なので sfUi 系
+                  Text(label, style: AppTextStyles.appCardSectionNumeric),
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: Text(
                       '$itemCount件',
-                      style: AppTextStyles.listCardSecondaryTitle,
+                      style: AppTextStyles.listCardSecondaryNumeric,
                     ),
                   ),
                   Text(

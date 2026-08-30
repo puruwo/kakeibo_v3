@@ -19,8 +19,10 @@ class FixedCostHistoryPriceLabel extends StatelessWidget {
     if (expense.isConfirmed == 0) {
       return Text(
         '未入力',
-        style: AppTextStyles.insetGroupHistoryDate
-            .copyWith(color: context.colors.textTertiary),
+        // 和文なので noto 系。未入力の減衰は色（textTertiary）で表す
+        style: AppTextStyles.supportingText.copyWith(
+          color: context.colors.textTertiary,
+        ),
       );
     }
     return Text(

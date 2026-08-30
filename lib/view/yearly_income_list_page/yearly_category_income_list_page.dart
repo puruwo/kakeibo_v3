@@ -199,7 +199,7 @@ class _CategorySummaryCard extends StatelessWidget {
         priceLabel: yenmarkFormattedPriceGetter(category.totalAmount),
         trailing: Text(
           '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
-          style: AppTextStyles.budgetFixedCostForecastLabel,
+          style: AppTextStyles.numericCaption,
         ),
       ),
       children: [
@@ -226,7 +226,7 @@ class _CategorySummaryCard extends StatelessWidget {
                       ),
                       Text(
                         '${small.percentage.toStringAsFixed(1)}%',
-                        style: AppTextStyles.budgetFixedCostForecastLabel,
+                        style: AppTextStyles.numericCaption,
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Text(

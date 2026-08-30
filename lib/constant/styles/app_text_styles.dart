@@ -24,10 +24,19 @@ class AppTextStyles {
     color: AppColorsDark.text,
   );
 
+  /// 数字が主役のページタイトル（期間「2026年 8月」「2026年4月 - 2027年3月」・年月ピッカーの年／月度）
+  static final TextStyle pageHeaderNumeric = AppTypeScale.sfUi18w500.copyWith(
+    color: AppColorsDark.text,
+  );
+
   /// ページヘッダーのサブテキスト（AppBar の2段目・補足情報）
   static final TextStyle pageHeaderSubText = AppTypeScale.noto11w300.copyWith(
     color: AppColorsDark.textSecondary,
   );
+
+  /// 数字が主役のヘッダーサブテキスト（「2026年度」・年月ピッカーの見出し）
+  static final TextStyle pageHeaderSubNumeric = AppTypeScale.sfUi12w400
+      .copyWith(color: AppColorsDark.textSecondary);
 
   /// ページ本文先頭に置く対象名（支払い履歴ページの固定費名など）
   static final TextStyle pageSubjectTitle = AppTypeScale.noto22w600.copyWith(
@@ -113,13 +122,17 @@ class AppTextStyles {
   // セクション見出し
   // ==========================================================================
 
-  /// セクション見出し（AppContentsHeader 既定・月別アコーディオン）
+  /// セクション見出し（AppContentsHeader 既定）
   static final TextStyle appCardSectionTitle = AppTypeScale.noto16w600.copyWith(
     color: AppColorsDark.text,
   );
 
-  /// リストカード見出し（AppContentsHeader.listCardSectionTitle・フィルター名）
-  static final TextStyle listCardSectionTitle = AppTypeScale.sfUi14w600
+  /// 数字が主役のセクション見出し（月別アコーディオンの「8月」「2027年1月」）
+  static final TextStyle appCardSectionNumeric = AppTypeScale.sfUi16w600
+      .copyWith(color: AppColorsDark.text);
+
+  /// リストカード見出し（AppContentsHeader.listCardSectionTitle・フィルター名。和文が主役）
+  static final TextStyle listCardSectionTitle = AppTypeScale.noto14w600
       .copyWith(color: AppColorsDark.textSecondary);
 
   /// 履歴一覧の日付見出し（yyyy年M月d日(E)）
@@ -176,9 +189,10 @@ class AppTextStyles {
   static final TextStyle listCardUnconfirmedPriceLabel = AppTypeScale.noto14w700
       .copyWith(color: AppColorsDark.text);
 
-  /// 予算行に併記する固定費見込みラベル（「固定費 ¥1,980」）等の小さな数値キャプション
-  static final TextStyle budgetFixedCostForecastLabel = AppTypeScale.noto11w400
-      .copyWith(color: AppColorsDark.textSecondary);
+  /// 小さな数値キャプション（「固定費 ¥1,980」「利用 35%」「次回 7/25」「月平均 ¥…」「3件」）
+  static final TextStyle numericCaption = AppTypeScale.sfUi11w400.copyWith(
+    color: AppColorsDark.textSecondary,
+  );
 
   /// チップ（「固定費」等）のラベル。塗り内で文字を垂直中央に置くため行高を詰める
   static final TextStyle chipLabel = AppTypeScale.noto10w400.copyWith(
@@ -196,6 +210,10 @@ class AppTextStyles {
 
   /// リストカードの副ラベル・フィルターチップ
   static final TextStyle listCardSecondaryTitle = AppTypeScale.noto12w500
+      .copyWith(color: AppColorsDark.textSecondary);
+
+  /// 数字が主役のリストカード副ラベル（日付「8月25日」・件数「12件」・割合「35%」・小計）
+  static final TextStyle listCardSecondaryNumeric = AppTypeScale.sfUi12w500
       .copyWith(color: AppColorsDark.textSecondary);
 
   /// 支出の符号色つき金額
@@ -290,6 +308,10 @@ class AppTextStyles {
     color: AppColorsDark.textSecondary,
   );
 
+  /// 数字が主役のインセットグループ見出し（支払い履歴の「2026年」と年合計）
+  static final TextStyle insetGroupHeaderNumeric = AppTypeScale.sfUi13w500
+      .copyWith(color: AppColorsDark.textSecondary);
+
   /// インセット行のラベル（「拠出元」「頻度」など）
   static final TextStyle insetGroupLabel = AppTypeScale.noto14w500.copyWith(
     color: AppColorsDark.text,
@@ -300,6 +322,10 @@ class AppTextStyles {
     color: AppColorsDark.text,
   );
 
+  /// 数字が主役のインセット行の値（金額の表示・入力、次回支払日）。AppInsetRow.numericValue で切り替える
+  static final TextStyle insetGroupValueNumeric = AppTypeScale.sfUi15w500
+      .copyWith(color: AppColorsDark.text);
+
   /// インセット行の値のプレースホルダー（未入力時）
   static final TextStyle insetGroupPlaceholder = AppTypeScale.noto15w500
       .copyWith(color: AppColorsDark.textTertiary);
@@ -309,8 +335,8 @@ class AppTextStyles {
     color: AppColorsDark.textSecondary,
   );
 
-  /// 支払い履歴行の日付
-  static final TextStyle insetGroupHistoryDate = AppTypeScale.noto13w400
+  /// 支払い履歴行の日付（「7/25」。数字が主役なので sfUi）
+  static final TextStyle insetGroupHistoryDate = AppTypeScale.sfUi13w400
       .copyWith(color: AppColorsDark.textSecondary);
 
   /// 支払い履歴行の金額

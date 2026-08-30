@@ -121,7 +121,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                   Text(
                                     '固定費 ${yenmarkFormattedPriceGetter(forecast)}',
                                     style: AppTextStyles
-                                        .budgetFixedCostForecastLabel
+                                        .numericCaption
                                         .copyWith(
                                       color: isUnderFixedCost
                                           ? context.colors.danger

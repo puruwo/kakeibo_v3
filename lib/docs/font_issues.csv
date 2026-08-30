@@ -1,8 +1,0 @@
-問題の種類,該当ファイルパス,具体的な問題内容,推奨対応
-不統一,lib/constant/styles/register_page_styles.dart,"一部スタイル(priceInput等)のfontFamily指定方法は統一済みだが、金額系がsfUi/テキスト系がnotoSansの使い分けルールが暗黙的",コメントで使い分けルールを明記する
-copyWith多用,lib/view/daily_expense_summary_page/daily_expense_summary_page.dart,"AppTextStyles.listTileTirtiaryTitle.copyWith(fontSize: 14) でfontSizeだけ11→14に変更",AppTextStyles.listTileTirtiaryTitle のfontSize:14版を定数化する
-copyWith多用,lib/util/common_widget/app_delete_dialog.dart,"AppTextStyles.mainButtonText.copyWith(color: isPrimary ? context.colors.onPrimary : context.colors.onPrimary) で条件分岐が意味をなしていない(両方context.colors.onPrimary)",不要なcopyWithを削除し、固定のスタイルとして定数化する
-copyWith多用,lib/util/common_widget/app_dialog.dart,"AppTextStyles.dialogList.copyWith(fontWeight: FontWeight.w600) でfontWeightだけw500→w600に変更",dialogCancelButton 等の専用定数を追加する
-copyWith多用,lib/view/register_page/common_input_field/price_input_row/large_price_display.dart,"RegisterPageStyles.yenSymbol(...).copyWith(height: 1) でheightだけ追加",yenSymbol関数にheightパラメータを追加する
-未使用定数,lib/constant/styles/app_text_styles.dart,"AppTextStyles.whiteButtonText - コメントに「現在未使用（将来の拡張用）」と明記",不要なら削除する
-MyFontStyle統一状況(全体),lib/constant/styles/ (全ファイル),"全4ファイル(app_text_styles/register_page_styles/calendar_styles/graph_text_styles)が全てMyFontStyle経由に統一済み。GoogleFonts直接使用ゼロ。view配下のインラインTextStyleもゼロ。フォント管理の完全統一を達成",現状維持。新規スタイル追加時はMyFontStyle経由+AppTextStyles定数化のルールを継続する

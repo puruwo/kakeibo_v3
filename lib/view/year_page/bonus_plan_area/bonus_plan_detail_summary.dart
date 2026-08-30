@@ -89,7 +89,7 @@ class BonusPlanDetailSummary extends ConsumerWidget {
                               Text(
                                 '利用 $usagePercent%',
                                 style:
-                                    AppTextStyles.budgetFixedCostForecastLabel,
+                                    AppTextStyles.numericCaption,
                               ),
                               Text(
                                 // 予算超過時はマイナスの「残り」ではなく超過率を示す
@@ -97,7 +97,7 @@ class BonusPlanDetailSummary extends ConsumerWidget {
                                     ? '残り ${100 - usagePercent}%'
                                     : '超過 ${usagePercent - 100}%',
                                 style:
-                                    AppTextStyles.budgetFixedCostForecastLabel,
+                                    AppTextStyles.numericCaption,
                               ),
                             ],
                           ),
@@ -234,7 +234,7 @@ class BonusPlanCollapsedBar extends ConsumerWidget {
                     const SizedBox(width: AppSpacing.sm),
                     Text(
                       '$usagePercent%',
-                      style: AppTextStyles.budgetFixedCostForecastLabel,
+                      style: AppTextStyles.numericCaption,
                     ),
                   ],
                 ],

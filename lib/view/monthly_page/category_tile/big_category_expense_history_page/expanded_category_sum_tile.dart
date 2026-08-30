@@ -162,7 +162,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                   width: barFrameWidth * 0.15,
                                   child: Text(
                                     '${smallCategoryList[index].recordCount}件',
-                                    style: AppTextStyles.appCardTitleLabel,
+                                    style: AppTextStyles.appCardTertiaryPriceLabel,
                                     textAlign: TextAlign.right,
                                     overflow: TextOverflow.ellipsis,
                                   )),

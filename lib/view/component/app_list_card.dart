@@ -38,6 +38,7 @@ class AppListCard extends StatelessWidget {
     required this.primaryTitle,
     this.secondaryTitle,
     this.subtitleLeading,
+    this.subtitleLeadingNumeric = false,
     this.subtitleLeadingWidget,
     this.subtitleTrailing,
     required this.priceLabel,
@@ -68,6 +69,10 @@ class AppListCard extends StatelessWidget {
 
   /// サブタイトル行の左側 (2行目の左側)
   final String? subtitleLeading;
+
+  /// [subtitleLeading] が数字主体（日付「8月25日」「次回：2026/08/25」等）のとき true。
+  /// sfUi 系の役割スタイルで描く（Vault「Kakeibo テキストスタイルルール」§5）
+  final bool subtitleLeadingNumeric;
 
   /// サブタイトル行の左側を自前のWidgetで置き換える（指定時は[subtitleLeading]より優先）
   final Widget? subtitleLeadingWidget;
@@ -183,7 +188,9 @@ class AppListCard extends StatelessWidget {
                     subtitleLeading!,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.listCardSecondaryTitle,
+                    style: subtitleLeadingNumeric
+                        ? AppTextStyles.listCardSecondaryNumeric
+                        : AppTextStyles.listCardSecondaryTitle,
                   ),
                 ),
               if (subtitleTrailing != null && subtitleTrailing!.isNotEmpty)

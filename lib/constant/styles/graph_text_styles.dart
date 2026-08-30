@@ -23,8 +23,17 @@ class GraphTextStyles {
     color: AppColorsDark.textSecondary,
   );
 
-  /// 生活収支グラフの小さなラベル（月・金額・Y軸目盛り・「収支」）
-  static final TextStyle graphMiniLabel = AppTypeScale.noto11w500.copyWith(
+  /// 生活収支グラフの小さな数値ラベル（月「8月」・金額・Y軸目盛り「300万」）
+  static final TextStyle graphMiniLabel = AppTypeScale.sfUi11w500.copyWith(
+    color: AppColorsDark.textSecondary,
+  );
+
+  /// 生活収支グラフの当月ラベル（強調）
+  static final TextStyle graphMiniLabelEmphasis = AppTypeScale.sfUi11w700
+      .copyWith(color: AppColorsDark.text);
+
+  /// 生活収支グラフの小さな和文ラベル（「収支」）
+  static final TextStyle graphMiniTextLabel = AppTypeScale.noto11w500.copyWith(
     color: AppColorsDark.textSecondary,
   );
 

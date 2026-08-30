@@ -227,9 +227,10 @@ class PredictionGraphPainter extends CustomPainter {
   /// 折れ線グラフの0円軸とラベルを描画
   void _drawZeroLine(Canvas canvas, double leftMargin, double y,
       double totalWidth, double labelLeftPadding, double graphLeftOffset) {
+    // 金額なので他の軸ラベルと同じ sfUi 系（graphPriceLabel）
     final textSpan = TextSpan(
       text: '¥ 0',
-      style: GraphTextStyles.graphLabel,
+      style: GraphTextStyles.graphPriceLabel,
     );
 
     final textPainter = TextPainter(

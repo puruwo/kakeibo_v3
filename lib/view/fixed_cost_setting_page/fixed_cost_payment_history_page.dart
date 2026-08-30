@@ -113,11 +113,15 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
           padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
           child: Row(
             children: [
-              Text('${group.year}年', style: AppTextStyles.insetGroupHeader),
+              // 年・合計とも数字が主役なので sfUi 系
+              Text(
+                '${group.year}年',
+                style: AppTextStyles.insetGroupHeaderNumeric,
+              ),
               const Spacer(),
               Text(
                 yenmarkFormattedPriceGetter(group.confirmedTotal),
-                style: AppTextStyles.insetGroupHeader,
+                style: AppTextStyles.insetGroupHeaderNumeric,
               ),
             ],
           ),
