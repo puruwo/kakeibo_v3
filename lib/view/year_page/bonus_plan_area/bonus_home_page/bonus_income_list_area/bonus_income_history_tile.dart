@@ -32,6 +32,7 @@ class BonusIncomeHistoryTile extends ConsumerWidget {
       iconColor: color,
       primaryTitle: value.smallCategoryName,
       subtitleLeading: '${value.date.month}月${value.date.day}日',
+      subtitleLeadingNumeric: true,
       subtitleTrailing: value.memo,
       priceLabel: priceLabel,
       isIncome: true,

@@ -30,6 +30,7 @@ class IncomeHistoryTile extends ConsumerWidget {
       primaryTitle: value.smallCategoryName,
       subtitleTrailing: value.memo,
       subtitleLeading: '${value.date.month}月${value.date.day}日',
+      subtitleLeadingNumeric: true,
       priceLabel: priceLabel,
       isIncome: true,
     );

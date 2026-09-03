@@ -36,7 +36,7 @@ class ExpenseHistoryPage extends StatelessWidget {
                     );
                     final label =
                         '${selectedDate.year}年 ${selectedDate.month}月';
-                    return Text(label, style: AppTextStyles.pageHeaderText);
+                    return Text(label, style: AppTextStyles.pageHeaderNumeric);
                   },
                 ),
                 //右矢印ボタン、押すと次の月に移動

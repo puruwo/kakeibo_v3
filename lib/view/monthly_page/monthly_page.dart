@@ -140,7 +140,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       children: [
                         // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
                         const SizedBox(width: 28),
-                        Text(label, style: AppTextStyles.pageHeaderText),
+                        Text(label, style: AppTextStyles.pageHeaderNumeric),
                         Transform.translate(
                           offset: const Offset(-4, 0),
                           child: Icon(

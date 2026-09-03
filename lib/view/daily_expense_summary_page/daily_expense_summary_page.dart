@@ -149,7 +149,7 @@ class DailyExpenseSummaryHeader extends StatelessWidget {
           // カテゴリー合計金額
           Text(
             yenmarkFormattedPriceGetter(categoryTotal),
-            style: AppTextStyles.listTileTirtiaryTitle.copyWith(fontSize: 14),
+            style: AppTextStyles.appCardTertiaryPriceLabel,
           ),
         ],
       ),

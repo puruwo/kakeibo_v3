@@ -63,11 +63,11 @@ class BonusPlanArea extends ConsumerWidget {
                     children: [
                       Text(
                         '利用 ${yenmarkFormattedPriceGetter(bonusPlanValue.yearlyBonusExpense)}',
-                        style: AppTextStyles.budgetFixedCostForecastLabel,
+                        style: AppTextStyles.numericCaption,
                       ),
                       Text(
                         '収入 ${yenmarkFormattedPriceGetter(bonusPlanValue.yearlyBonusIncome)}',
-                        style: AppTextStyles.budgetFixedCostForecastLabel,
+                        style: AppTextStyles.numericCaption,
                       ),
                     ],
                   ),

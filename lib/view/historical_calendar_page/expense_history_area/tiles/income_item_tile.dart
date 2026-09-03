@@ -116,7 +116,7 @@ class IncomeItemTile extends ConsumerWidget {
                                   ' ${value.smallCategoryName}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileTirtiaryTitle,
+                                  style: AppTextStyles.listTileTertiaryTitle,
                                 ),
                               ),
                               // メモ
@@ -126,7 +126,7 @@ class IncomeItemTile extends ConsumerWidget {
                                   ' ${value.memo}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileTirtiaryTitle,
+                                  style: AppTextStyles.listTileTertiaryTitle,
                                 ),
                               ),
                             ],

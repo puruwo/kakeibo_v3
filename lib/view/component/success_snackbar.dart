@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 
 /// 処理成功用スナックバー。
@@ -24,7 +25,9 @@ class SuccessSnackBar extends SnackBar {
               Expanded(
                 child: Text(
                   message,
-                  style: const TextStyle(color: AppColorsDark.income),
+                  style: AppTextStyles.snackBarMessage.copyWith(
+                    color: AppColorsDark.income,
+                  ),
                 ),
               ),
             ],

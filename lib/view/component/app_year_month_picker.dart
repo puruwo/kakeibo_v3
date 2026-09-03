@@ -426,12 +426,12 @@ class _AppYearMonthPickerOverlayState
               children: [
                 Text(
                   _formatHeaderTitle(),
-                  style: AppTextStyles.pageHeaderSubText,
+                  style: AppTextStyles.pageHeaderSubNumeric,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   _formatRange(),
-                  style: AppTextStyles.pageHeaderText,
+                  style: AppTextStyles.pageHeaderNumeric,
                 ),
               ],
             ),
@@ -508,7 +508,10 @@ class _AppYearMonthPickerOverlayState
       children: years
           .map(
             (y) => Center(
-              child: Text(_formatYearItem(y), style: AppTextStyles.pageHeaderText),
+              child: Text(
+                _formatYearItem(y),
+                style: AppTextStyles.pageHeaderNumeric,
+              ),
             ),
           )
           .toList(),
@@ -530,7 +533,7 @@ class _AppYearMonthPickerOverlayState
       children: List.generate(
         12,
         (i) => Center(
-          child: Text('${i + 1}月度', style: AppTextStyles.pageHeaderText),
+          child: Text('${i + 1}月度', style: AppTextStyles.pageHeaderNumeric),
         ),
       ),
     );

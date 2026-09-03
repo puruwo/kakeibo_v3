@@ -50,6 +50,7 @@ class ExpenseHistoryListTile extends ConsumerWidget {
       primaryTitle: value.bigCategoryName,
       secondaryTitle: value.smallCategoryName,
       subtitleLeading: '${value.date.month}月${value.date.day}日',
+      subtitleLeadingNumeric: true,
       subtitleTrailing: value.memo,
       priceLabel: priceLabel,
       priceLabelStyle:

@@ -160,7 +160,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.smallCategoryName}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileTirtiaryTitle,
+                                  style: AppTextStyles.listTileTertiaryTitle,
                                 ),
                               ),
                               // メモ
@@ -170,7 +170,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.memo}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileTirtiaryTitle,
+                                  style: AppTextStyles.listTileTertiaryTitle,
                                 ),
                               ),
                             ],

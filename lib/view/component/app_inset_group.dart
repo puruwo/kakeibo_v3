@@ -123,6 +123,7 @@ class AppInsetRow extends StatelessWidget {
     this.leading,
     // 選択して閉じる行など、遷移ではない行では右矢印を出さない
     this.showChevron = true,
+    this.numericValue = false,
   })  : _type = _AppInsetRowType.navigation,
         switchValue = null,
         onSwitchChanged = null,
@@ -145,6 +146,7 @@ class AppInsetRow extends StatelessWidget {
     this.leading,
   })  : _type = _AppInsetRowType.switchRow,
         showChevron = false,
+        numericValue = false,
         value = null,
         valueColor = null,
         valueWidget = null,
@@ -170,6 +172,7 @@ class AppInsetRow extends StatelessWidget {
     this.onChanged,
     this.iconColor,
     this.leading,
+    this.numericValue = false,
   })  : _type = _AppInsetRowType.textField,
         showChevron = false,
         value = null,
@@ -190,6 +193,7 @@ class AppInsetRow extends StatelessWidget {
     this.valueWidget,
     this.iconColor,
     this.leading,
+    this.numericValue = false,
   })  : _type = _AppInsetRowType.display,
         showChevron = false,
         onTap = null,
@@ -232,6 +236,10 @@ class AppInsetRow extends StatelessWidget {
   ///
   /// navigation / display 行で指定でき、[value] より優先する。
   final Widget? valueWidget;
+
+  /// 値が数字主体（金額・日付）のとき true。sfUi 系の役割スタイルで描く
+  /// （Vault「Kakeibo テキストスタイルルール」§5）
+  final bool numericValue;
 
   /// テキストフィールド行の変更通知
   final ValueChanged<String>? onChanged;
@@ -340,7 +348,7 @@ class AppInsetRow extends StatelessWidget {
           controller: controller,
           textAlign: textAlign,
           textAlignVertical: TextAlignVertical.center,
-          style: AppTextStyles.insetGroupValue,
+          style: _valueStyle,
           cursorColor: context.colors.primary,
           cursorWidth: 2,
           minLines: 1,
@@ -376,15 +384,18 @@ class AppInsetRow extends StatelessWidget {
     }
   }
 
+  /// 値のスタイル。numericValue で sfUi 系の数字版に切り替える（display 行・textField 行で共用）
+  TextStyle get _valueStyle => numericValue
+      ? AppTextStyles.insetGroupValueNumeric
+      : AppTextStyles.insetGroupValue;
+
   Widget _buildValueText(BuildContext context) {
-    final style = valueColor == null
-        ? AppTextStyles.insetGroupValue
-        : AppTextStyles.insetGroupValue.copyWith(color: valueColor);
     return Text(
       value ?? '',
       textAlign: TextAlign.right,
       overflow: TextOverflow.ellipsis,
-      style: style,
+      // valueColor が null のときは copyWith が元の色を保つ
+      style: _valueStyle.copyWith(color: valueColor),
     );
   }
 }

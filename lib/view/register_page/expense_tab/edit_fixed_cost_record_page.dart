@@ -247,7 +247,7 @@ class _EditFixedCostRecordPageState
                 ),
                 child: Text(
                   '固定費の設定を開く ›',
-                  style: AppTextStyles.insetGroupLinkRow,
+                  style: AppTextStyles.textButtonTextStyle,
                 ),
               ),
             ),

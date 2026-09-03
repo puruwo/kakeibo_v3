@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 // localImport
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
@@ -154,7 +155,13 @@ class _NewSmallCategoryInputNameDialog
                         // スナックバーを表示する
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: const Text('項目名を入力してください'),
+                            content: Text(
+                              '項目名を入力してください',
+                              style: AppTextStyles.snackBarMessage,
+                            ),
+                            // Material 3 の既定背景（inverseSurface = 白）に白文字が乗らないよう、
+                            // FailureSnackBar / SuccessSnackBar と同じ面色にする
+                            backgroundColor: context.colors.surfaceElevated2,
                             behavior: SnackBarBehavior.floating,
                             duration: const Duration(seconds: 2),
                             shape: RoundedRectangleBorder(

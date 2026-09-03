@@ -105,12 +105,14 @@ class FixedCostCompleteSheet extends ConsumerWidget {
                   value: isVariable
                       ? '変動'
                       : yenmarkFormattedPriceGetter(entity.price),
+                  numericValue: !isVariable,
                 ),
                 AppInsetRow.display(label: '頻度', value: frequencyLabel),
                 AppInsetRow.display(
                   label: '次回支払日',
                   value: _nextPaymentLabel(today),
                   valueColor: context.colors.primary,
+                  numericValue: true,
                 ),
               ],
             ),

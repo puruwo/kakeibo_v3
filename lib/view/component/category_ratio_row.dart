@@ -89,7 +89,7 @@ class CategoryRatioRow extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     percentLabel,
-                    style: AppTextStyles.listCardSecondaryTitle,
+                    style: AppTextStyles.listCardSecondaryNumeric,
                   ),
                 ],
               ),

@@ -119,8 +119,7 @@ class _FrequencyRow extends StatelessWidget {
               Text(
                 value.dateLabel,
                 style: isSelected
-                    ? AppTextStyles.dialogList
-                        .copyWith(fontWeight: FontWeight.w600)
+                    ? AppTextStyles.dialogListEmphasis
                     : AppTextStyles.dialogList
                         .copyWith(color: context.colors.textSecondary),
               ),

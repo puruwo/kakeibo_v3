@@ -348,10 +348,7 @@ class AnnualBalanceChartPainter extends CustomPainter {
       final mv = value.monthlyBalanceValues[i];
       final isCurrentMonth = mv.month == value.currentMonth;
       final style = isCurrentMonth
-          ? GraphTextStyles.graphMiniLabel.copyWith(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-            )
+          ? GraphTextStyles.graphMiniLabelEmphasis
           : GraphTextStyles.graphMiniLabel;
       final tp = TextPainter(
         text: TextSpan(text: '${mv.month}月', style: style),
@@ -409,7 +406,7 @@ class AnnualBalanceAxisLabelsPainter extends CustomPainter {
 
     // 「収支」ラベル
     final barLabelTp = TextPainter(
-      text: TextSpan(text: '収支', style: GraphTextStyles.graphMiniLabel),
+      text: TextSpan(text: '収支', style: GraphTextStyles.graphMiniTextLabel),
       textDirection: TextDirection.ltr,
       maxLines: 1,
     )..layout();

@@ -7,6 +7,7 @@ import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/screen_size_func.dart';
+import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/history_list_skeleton.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/transaction_group_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_transaction_history_value_provider.dart';
@@ -156,9 +157,9 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                 }
               },
               error: (error, stackTrace) {
-                return const Center(
+                return const AppErrorState(
                   key: ValueKey('error'),
-                  child: Text('データの取得に失敗しました'),
+                  message: 'データの取得に失敗しました',
                 );
               },
               loading: () {

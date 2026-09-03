@@ -47,6 +47,7 @@ class FixedCostItemTile extends ConsumerWidget {
       subtitleLeading: formattedNextPaymentDate.isNotEmpty
           ? '次回：$formattedNextPaymentDate'
           : null,
+      subtitleLeadingNumeric: true,
       priceSubtitle: isVariable ? '平均' : null,
       priceLabel: priceLabel,
       isIncome: false,

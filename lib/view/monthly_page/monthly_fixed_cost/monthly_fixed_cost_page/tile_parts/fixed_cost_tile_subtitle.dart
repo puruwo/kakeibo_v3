@@ -36,7 +36,11 @@ class FixedCostTileSubtitle extends StatelessWidget {
               style: baseStyle.copyWith(color: context.colors.textTertiary),
             ),
           ],
-          TextSpan(text: dateLabel, style: baseStyle),
+          // 日付は数字が主役なので sfUi 系
+          TextSpan(
+            text: dateLabel,
+            style: AppTextStyles.listCardSecondaryNumeric,
+          ),
         ],
       ),
       maxLines: 1,
