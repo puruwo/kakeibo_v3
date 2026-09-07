@@ -11,7 +11,7 @@ import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/check_box.dart';
-import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_name_dialog.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_sheet.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
@@ -353,16 +353,11 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                               AppInkWell(
                                 borderRadius: BorderRadius.zero,
                                 onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return NewSmallCategoryInputNameDialog(
-                                        bigCategoryId: widget.bigId,
-                                        displayedOrderInBig:
-                                            itemList.length + 1,
-                                        categoryType: widget.categoryType,
-                                      );
-                                    },
+                                  showNewSmallCategoryInputSheet(
+                                    context,
+                                    bigCategoryId: widget.bigId,
+                                    displayedOrderInBig: itemList.length + 1,
+                                    categoryType: widget.categoryType,
                                   );
                                 },
                                 child: SizedBox(
