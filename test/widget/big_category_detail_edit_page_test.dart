@@ -12,8 +12,10 @@ import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_sheet.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 
 import '../helper/fake_repositories.dart';
@@ -215,12 +217,17 @@ void main() {
       await tester.tap(find.text('小カテゴリーを追加'));
       await pumpTimes(tester);
 
-      expect(find.text('新しい項目名を入力'), findsOneWidget);
-      // ダイアログ内の入力欄（末尾に追加されたTextFormField）
-      await tester.enterText(find.byType(TextFormField).last, 'カフェ');
+      // 入力シート（KP-010で中央ダイアログから置き換え）
+      final sheet = find.byType(NewSmallCategoryInputSheet);
+      expect(sheet, findsOneWidget);
+      await tester.enterText(
+        find.descendant(of: sheet, matching: find.byType(TextField)),
+        'カフェ',
+      );
       await pumpTimes(tester, times: 3);
-      await tester.tap(find.text('OK'));
+      await tester.tap(find.descendant(of: sheet, matching: find.text('追加')));
       await pumpTimes(tester);
+      expect(find.byType(NewSmallCategoryInputSheet), findsNothing);
 
       // 一覧に3件目として並ぶ
       expect(find.text('カフェ'), findsOneWidget);
@@ -232,6 +239,86 @@ void main() {
       final added = fakes.expenseSmallCategory.addedEntities.single;
       expect(added.smallCategoryName, 'カフェ');
       expect(added.bigCategoryKey, 1);
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('入力シートは未入力・空白だけだと「追加」が押せず、キャンセルで何も増えない', (tester) async {
+      final fakes = await pumpEditPage(tester);
+
+      await tester.tap(find.text('小カテゴリーを追加'));
+      await pumpTimes(tester);
+
+      final sheet = find.byType(NewSmallCategoryInputSheet);
+      expect(
+        find.descendant(of: sheet, matching: find.text('0 / 20')),
+        findsOneWidget,
+      );
+
+      // 未入力の間は onPressed が null（ボタンルール §3 の非活性）
+      expect(
+        tester
+            .widget<MainButton>(
+              find.descendant(
+                of: sheet,
+                matching: find.widgetWithText(MainButton, '追加'),
+              ),
+            )
+            .onPressed,
+        isNull,
+      );
+
+      // 1文字入れると押せるようになり、カウンターも追従する
+      await tester.enterText(
+        find.descendant(of: sheet, matching: find.byType(TextField)),
+        'カ',
+      );
+      await pumpTimes(tester, times: 3);
+      expect(
+        find.descendant(of: sheet, matching: find.text('1 / 20')),
+        findsOneWidget,
+      );
+      expect(
+        tester
+            .widget<MainButton>(
+              find.descendant(
+                of: sheet,
+                matching: find.widgetWithText(MainButton, '追加'),
+              ),
+            )
+            .onPressed,
+        isNotNull,
+      );
+
+      // 空白だけに戻すとまた押せなくなる（保存側の検査も isEmpty のため）
+      await tester.enterText(
+        find.descendant(of: sheet, matching: find.byType(TextField)),
+        '   ',
+      );
+      await pumpTimes(tester, times: 3);
+      expect(
+        tester
+            .widget<MainButton>(
+              find.descendant(
+                of: sheet,
+                matching: find.widgetWithText(MainButton, '追加'),
+              ),
+            )
+            .onPressed,
+        isNull,
+      );
+
+      // キャンセルで閉じ、一覧にも保存内容にも増えない
+      await tester.tap(
+        find.descendant(of: sheet, matching: find.text('キャンセル')),
+      );
+      await pumpTimes(tester);
+      expect(find.byType(NewSmallCategoryInputSheet), findsNothing);
+      expect(find.text('カ'), findsNothing);
+
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+      expect(fakes.expenseSmallCategory.addedEntities, isEmpty);
 
       await waitForSnackBarDismissed(tester);
     });
