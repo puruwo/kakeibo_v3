@@ -4,6 +4,8 @@
 // 支出・収入・固定費の3実装が同じ CategoryDetailEditPage を共有するため、
 // 分岐が共通の部分（名前編集・カラー選択・小カテゴリー編集）は支出で代表して確認し、
 // 実装が分かれる部分（小カテゴリーの有無・保存先リポジトリ）だけ個別に張る。
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
@@ -31,6 +33,15 @@ void main() {
       displayOrder: 1,
       isDisplayed: 1,
     ),
+    // 小カテゴリーの件数がid=1と違うカテゴリー（続けて開いたときの混在検証用）
+    ExpenseBigCategoryEntity(
+      id: 2,
+      colorCode: '0BB283',
+      bigCategoryName: '交通費',
+      resourcePath: 'assets/images/icon_transportation.svg',
+      displayOrder: 2,
+      isDisplayed: 1,
+    ),
   ];
 
   const expenseSmallCategories = [
@@ -50,8 +61,16 @@ void main() {
       smallCategoryName: '日用品',
       defaultDisplayed: 1,
     ),
+    // 大カテゴリーid=2の小カテゴリーは1件だけ（id=1は2件）
+    ExpenseSmallCategoryEntity(
+      id: 20,
+      smallCategoryOrderKey: 3,
+      bigCategoryKey: 2,
+      displayedOrderInBig: 1,
+      smallCategoryName: '電車',
+      defaultDisplayed: 1,
+    ),
   ];
-
 
   const incomeBigCategories = [
     IncomeBigCategoryEntity(
@@ -126,6 +145,143 @@ void main() {
       expect(find.text('食費'), findsOneWidget);
       expect(find.text('日用品'), findsOneWidget);
       expect(find.text('小カテゴリーを追加'), findsOneWidget);
+    });
+
+    testWidgets('別の大カテゴリーを続けて開くと前のカテゴリーの小カテゴリーが残らない', (tester) async {
+      await pumpEditPage(tester);
+      expect(find.text('食費'), findsOneWidget);
+      expect(find.text('日用品'), findsOneWidget);
+
+      // 戻るスワイプのように invalidate を通らない経路で別カテゴリーを開く
+      // （かつては共有の keepAlive provider で前のカテゴリーの状態が残っていた）
+      final navigator = tester.state<NavigatorState>(
+        find.byType(Navigator).last,
+      );
+      unawaited(
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const CategoryDetailEditPage(
+              screenMode: BigCategoryDetailEditScreenMode.edit,
+              categoryType: CategoryType.expense,
+              bigCategoryId: 2,
+            ),
+          ),
+        ),
+      );
+      await pumpTimes(tester, times: 6);
+
+      // 開いたカテゴリーの小カテゴリーだけが並ぶ
+      expect(find.text('電車'), findsOneWidget);
+      expect(find.text('食費'), findsNothing);
+      expect(find.text('日用品'), findsNothing);
+    });
+
+    testWidgets('別カテゴリーを重ねて開いて戻っても元のカテゴリーの一覧が壊れない', (tester) async {
+      await pumpEditPage(tester);
+
+      // 編集中リストは大カテゴリーごとのfamilyなので、別カテゴリーを重ねても
+      // 下のページの状態は影響を受けない
+      final navigator = tester.state<NavigatorState>(
+        find.byType(Navigator).last,
+      );
+      unawaited(
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const CategoryDetailEditPage(
+              screenMode: BigCategoryDetailEditScreenMode.edit,
+              categoryType: CategoryType.expense,
+              bigCategoryId: 2,
+            ),
+          ),
+        ),
+      );
+      await pumpTimes(tester, times: 6);
+      expect(find.text('電車'), findsOneWidget);
+
+      navigator.pop();
+      await pumpTimes(tester, times: 6);
+
+      expect(find.text('食費'), findsOneWidget);
+      expect(find.text('日用品'), findsOneWidget);
+      expect(find.text('電車'), findsNothing);
+    });
+
+    testWidgets('保存して閉じたあとに別カテゴリーを開いても混ざらない', (tester) async {
+      final fakes = buildFakes();
+      // 保存すると詳細ページがpopするので、土台の画面から push して開く
+      await pumpApp(
+        tester,
+        home: const Scaffold(body: SizedBox.shrink()),
+        fakes: fakes,
+      );
+      final navigator = tester.state<NavigatorState>(
+        find.byType(Navigator).last,
+      );
+
+      unawaited(
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const CategoryDetailEditPage(
+              screenMode: BigCategoryDetailEditScreenMode.edit,
+              categoryType: CategoryType.expense,
+              bigCategoryId: 1,
+            ),
+          ),
+        ),
+      );
+      await pumpTimes(tester, times: 6);
+      expect(find.text('食費'), findsOneWidget);
+
+      // 小カテゴリー名を変えて完了（保存経路を通って閉じる）
+      await tester.enterText(find.byType(TextFormField).at(1), 'カフェ');
+      await pumpTimes(tester, times: 3);
+      await tester.tap(doneButton());
+      await pumpTimes(tester, times: 6);
+      expect(fakes.expenseSmallCategory.updatedEntities, hasLength(1));
+
+      // 保存直後に別のカテゴリーを開く
+      unawaited(
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const CategoryDetailEditPage(
+              screenMode: BigCategoryDetailEditScreenMode.edit,
+              categoryType: CategoryType.expense,
+              bigCategoryId: 2,
+            ),
+          ),
+        ),
+      );
+      await pumpTimes(tester, times: 6);
+
+      expect(find.text('電車'), findsOneWidget);
+      expect(find.text('カフェ'), findsNothing);
+      expect(find.text('日用品'), findsNothing);
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('新規カテゴリー追加ページに前のカテゴリーの小カテゴリーが残らない', (tester) async {
+      await pumpEditPage(tester);
+
+      final navigator = tester.state<NavigatorState>(
+        find.byType(Navigator).last,
+      );
+      unawaited(
+        navigator.push(
+          MaterialPageRoute<void>(
+            builder: (_) => const CategoryDetailEditPage(
+              screenMode: BigCategoryDetailEditScreenMode.newCategoryAdd,
+              categoryType: CategoryType.expense,
+              categoryOrder: 3,
+            ),
+          ),
+        ),
+      );
+      await pumpTimes(tester, times: 6);
+
+      // 新規作成なので小カテゴリーは1件も無い
+      expect(find.text('食費'), findsNothing);
+      expect(find.text('日用品'), findsNothing);
     });
 
     testWidgets('名前を変えて完了すると大カテゴリーがupdateされる', (tester) async {
@@ -222,7 +378,7 @@ void main() {
       expect(sheet, findsOneWidget);
       await tester.enterText(
         find.descendant(of: sheet, matching: find.byType(TextField)),
-        'カフェ',
+        '  カフェ  ',
       );
       await pumpTimes(tester, times: 3);
       await tester.tap(find.descendant(of: sheet, matching: find.text('追加')));
@@ -237,6 +393,7 @@ void main() {
 
       expect(fakes.expenseSmallCategory.addedEntities, hasLength(1));
       final added = fakes.expenseSmallCategory.addedEntities.single;
+      // 入力の前後にあった空白は落として保存される
       expect(added.smallCategoryName, 'カフェ');
       expect(added.bigCategoryKey, 1);
 
@@ -327,6 +484,20 @@ void main() {
       final fakes = await pumpEditPage(tester);
 
       await tester.enterText(find.byType(TextFormField).at(1), '');
+      await pumpTimes(tester, times: 3);
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      expect(find.textContaining('名前が入力されていない項目名があります'), findsOneWidget);
+      expect(fakes.expenseSmallCategory.updatedEntities, isEmpty);
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('項目名を空白だけにして完了するとエラー文言が出て保存されない', (tester) async {
+      final fakes = await pumpEditPage(tester);
+
+      await tester.enterText(find.byType(TextFormField).at(1), '   ');
       await pumpTimes(tester, times: 3);
       await tester.tap(doneButton());
       await pumpTimes(tester);
