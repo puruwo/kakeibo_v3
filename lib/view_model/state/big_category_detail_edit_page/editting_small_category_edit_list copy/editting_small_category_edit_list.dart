@@ -2,11 +2,16 @@ import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/e
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'editting_small_category_edit_list.g.dart';
 
-// 大カテゴリー並び替え編集ページの状態を保持したカテゴリーリスト
-@Riverpod(keepAlive: true)
+// 大カテゴリー詳細編集ページの編集中カテゴリーリスト
+//
+// 大カテゴリーごとに別の状態を持つ（family）。ページを閉じると破棄される（autoDispose）ため、
+// 戻るスワイプなど invalidate を通らない経路で離れても次のカテゴリーへ持ち越さない。
+// 新規カテゴリー追加のときは bigId に -1 を渡す
+@riverpod
 class EdittingSmallCategoryListNotifier
     extends _$EdittingSmallCategoryListNotifier {
-  List<EditExpenseSmallCategoryValue> build() {
+  @override
+  List<EditExpenseSmallCategoryValue> build(int bigId) {
     // 最初のデータ
     return [];
   }

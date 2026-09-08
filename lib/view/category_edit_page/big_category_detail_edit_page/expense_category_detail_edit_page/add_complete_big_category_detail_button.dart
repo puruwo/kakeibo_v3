@@ -14,8 +14,8 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_categ
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_name_contoroller/big_category_name_contoroller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
-import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 
 class AddCompleteBigCategoryDetailButton extends ConsumerWidget
     with PresentationMixin {
@@ -51,13 +51,13 @@ class AddCompleteBigCategoryDetailButton extends ConsumerWidget
               }
 
               final editedSmallLsit =
-                  ref.watch(edittingSmallCategoryListNotifierProvider);
+                  ref.watch(edittingSmallCategoryListNotifierProvider(kNewCategoryBigId));
               if (editedSmallLsit.isEmpty) {
                 throw const AppException('項目を1つ以上入力してください');
               }
 
               for (EditExpenseSmallCategoryValue value in editedSmallLsit) {
-                if (value.name.isEmpty) {
+                if (value.name.trim().isEmpty) {
                   throw const AppException('名前が入力されていない項目名があります');
                 }
               }
@@ -116,7 +116,6 @@ class AddCompleteBigCategoryDetailButton extends ConsumerWidget
                 message: '登録が完了しました',
               );
 
-              ref.invalidate(isSmallCategoryListEditedNotifierProvider);
               ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
 
               Navigator.of(context).pop();

@@ -372,6 +372,11 @@ class AppTextStyles {
     color: AppColorsDark.text,
   );
 
+  /// ボトムシートの文字入力（小カテゴリー名など。金額は sheetPriceInput）
+  static final TextStyle sheetTextInput = AppTypeScale.noto15w500.copyWith(
+    color: AppColorsDark.text,
+  );
+
   /// ボトムシートの金額入力（大きい数値）
   static final TextStyle sheetPriceInput = AppTypeScale.sfUi40w700.copyWith(
     color: AppColorsDark.text,
