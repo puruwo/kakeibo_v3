@@ -2,12 +2,15 @@ import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/ed
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'editting_income_small_category_list.g.dart';
 
-// 大カテゴリー編集ページの状態を保持した収入小カテゴリーリスト
-@Riverpod(keepAlive: true)
+// 大カテゴリー詳細編集ページの編集中収入小カテゴリーリスト
+//
+// 大カテゴリーごとに別の状態を持ち（family）、ページを閉じると破棄される（autoDispose）。
+// 新規カテゴリー追加のときは bigId に -1 を渡す
+@riverpod
 class EdittingIncomeSmallCategoryListNotifier
     extends _$EdittingIncomeSmallCategoryListNotifier {
   @override
-  List<EditIncomeSmallCategoryValue> build() {
+  List<EditIncomeSmallCategoryValue> build(int bigId) {
     return [];
   }
 

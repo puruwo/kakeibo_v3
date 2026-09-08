@@ -94,13 +94,13 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                   );
 
                   ref.invalidate(
-                    isIncomeSmallCategoryListEditedNotifierProvider,
+                    isIncomeSmallCategoryListEditedNotifierProvider(bigId),
                   );
                   ref.invalidate(
                     isIncomeBigCategoryAppearanceEditedNotifierProvider,
                   );
                   ref.invalidate(
-                    edittingIncomeSmallCategoryListNotifierProvider,
+                    edittingIncomeSmallCategoryListNotifierProvider(bigId),
                   );
 
                   Navigator.of(context).pop();
@@ -120,17 +120,17 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                   isIncomeBigCategoryAppearanceEditedNotifierProvider,
                 );
                 final isSmallChanged = ref.watch(
-                  isIncomeSmallCategoryListEditedNotifierProvider,
+                  isIncomeSmallCategoryListEditedNotifierProvider(bigId),
                 );
                 if (!isBigChanged && !isSmallChanged) {
                   throw const AppException('編集がされていません');
                 }
 
                 final editedList = ref.watch(
-                  edittingIncomeSmallCategoryListNotifierProvider,
+                  edittingIncomeSmallCategoryListNotifierProvider(bigId),
                 );
                 for (EditIncomeSmallCategoryValue value in editedList) {
-                  if (value.name.isEmpty) {
+                  if (value.name.trim().isEmpty) {
                     throw const AppException('名前が入力されていない項目名があります');
                   }
                 }
@@ -201,11 +201,15 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
                   message: '登録が完了しました',
                 );
 
-                ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
+                ref.invalidate(
+                  isIncomeSmallCategoryListEditedNotifierProvider(bigId),
+                );
                 ref.invalidate(
                   isIncomeBigCategoryAppearanceEditedNotifierProvider,
                 );
-                ref.invalidate(edittingIncomeSmallCategoryListNotifierProvider);
+                ref.invalidate(
+                  edittingIncomeSmallCategoryListNotifierProvider(bigId),
+                );
 
                 Navigator.of(context).pop();
               },

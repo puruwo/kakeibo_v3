@@ -15,8 +15,8 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_bi
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_name_controller/income_big_category_name_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
-import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 
 class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
     with PresentationMixin {
@@ -47,14 +47,16 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
             }
 
             final editedSmallList = ref.watch(
-              edittingIncomeSmallCategoryListNotifierProvider,
+              edittingIncomeSmallCategoryListNotifierProvider(
+                kNewCategoryBigId,
+              ),
             );
             if (editedSmallList.isEmpty) {
               throw const AppException('項目を1つ以上入力してください');
             }
 
             for (EditIncomeSmallCategoryValue value in editedSmallList) {
-              if (value.name.isEmpty) {
+              if (value.name.trim().isEmpty) {
                 throw const AppException('名前が入力されていない項目名があります');
               }
             }
@@ -111,7 +113,6 @@ class AddCompleteIncomeCategoryDetailButton extends ConsumerWidget
               message: '登録が完了しました',
             );
 
-            ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
             ref.invalidate(isIncomeBigCategoryAppearanceEditedNotifierProvider);
 
             Navigator.of(context).pop();

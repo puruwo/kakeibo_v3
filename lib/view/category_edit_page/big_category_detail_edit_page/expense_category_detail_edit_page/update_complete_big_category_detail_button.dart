@@ -46,15 +46,15 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
                   ref.watch(isBigCategoryAppearanceEditedNotifierProvider);
               // 小カテゴリーが編集されているか確認する
               final isSmallCategoryListChanged =
-                  ref.watch(isSmallCategoryListEditedNotifierProvider);
+                  ref.watch(isSmallCategoryListEditedNotifierProvider(bigId));
               if (!isSmallCategoryListChanged && !isBigCategoryListChanged) {
                 throw const AppException('編集がされていません');
               }
 
               final editedLsit =
-                  ref.watch(edittingSmallCategoryListNotifierProvider);
+                  ref.watch(edittingSmallCategoryListNotifierProvider(bigId));
               for (EditExpenseSmallCategoryValue value in editedLsit) {
-                if (value.name.isEmpty) {
+                if (value.name.trim().isEmpty) {
                   throw const AppException('名前が入力されていない項目名があります');
                 }
               }
@@ -112,9 +112,9 @@ class UpdateCompleteBigCategoryDetailButton extends ConsumerWidget
                 message: '登録が完了しました',
               );
 
-              ref.invalidate(isSmallCategoryListEditedNotifierProvider);
+              ref.invalidate(isSmallCategoryListEditedNotifierProvider(bigId));
               ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
-              ref.invalidate(edittingSmallCategoryListNotifierProvider);
+              ref.invalidate(edittingSmallCategoryListNotifierProvider(bigId));
 
               Navigator.of(context).pop();
             },

@@ -9,6 +9,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/check_box.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_sheet.dart';
@@ -40,7 +41,10 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
   // アイテムリスト
   late List<dynamic> itemList;
 
-  bool isInitial = true;
+  /// 初期表示の取得が終わったか
+  ///
+  /// 終わる前に項目を追加できてしまうと、取得完了時の setData で消えてしまう
+  bool _isInitialized = false;
 
   // 各アイテムのテキスト編集コントローラー
   final List<TextEditingController> _controllers = [];
@@ -57,38 +61,81 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
     }
   }
 
+  /// コントローラーを作り直す（初期表示用）
+  ///
+  /// [_syncControllers] は末尾の増減しか合わせないため、前に開いたカテゴリーの
+  /// 名前を持ったコントローラーがそのまま残ってしまう。初期表示では作り直す。
+  void _rebuildControllers(List<dynamic> items) {
+    for (final c in _controllers) {
+      c.dispose();
+    }
+    _controllers
+      ..clear()
+      ..addAll(items.map((e) => TextEditingController(text: e.name)));
+  }
+
   @override
   void initState() {
     super.initState();
 
-    // 取得したデータをedittingSmallCategoryListNotifierProviderに格納し編集できる状態にする
+    // 取得したデータを編集中リストへ格納し編集できる状態にする。
+    // リストは大カテゴリーごとのfamilyで、ページを閉じると破棄されるため、
+    // 前に開いたカテゴリーの状態を引き継ぐことはない
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.bigId == -1) {
-        // 新規作成の時は初期化しない
+      if (widget.bigId == kNewCategoryBigId) {
+        // 新規作成の時は取得しない（空のまま編集を始める）
+        setState(() {
+          _isInitialized = true;
+        });
         return;
       }
 
       // 一度だけ取得してセット
       Future(() async {
+        // Futureの実行はイベントキューに回るため、開始時点で既に破棄されていることがある。
+        // 破棄後に ref を触るとStateErrorになるので先に抜ける
+        if (!mounted) {
+          return;
+        }
+
         if (widget.categoryType == CategoryType.income) {
+          // read だと購読者が居ないまま取得が走り、完了前に autoDispose の
+          // providerが破棄されて StateError になることがあるので watch を使う
           final initialList = await ref.watch(
             allIncomeSmallCategoriesListProvider(widget.bigId).future,
           );
+          // 取得中にページを離れていたら、次のページの状態を壊さないよう何もしない
+          if (!mounted) {
+            return;
+          }
           ref
-              .read(edittingIncomeSmallCategoryListNotifierProvider.notifier)
+              .read(
+                edittingIncomeSmallCategoryListNotifierProvider(
+                  widget.bigId,
+                ).notifier,
+              )
               .setData(initialList);
           setState(() {
-            _syncControllers(initialList);
+            _isInitialized = true;
+            _rebuildControllers(initialList);
           });
         } else {
           final initialList = await ref.watch(
             allSmallCategoriesListProvider(widget.bigId).future,
           );
+          if (!mounted) {
+            return;
+          }
           ref
-              .read(edittingSmallCategoryListNotifierProvider.notifier)
+              .read(
+                edittingSmallCategoryListNotifierProvider(
+                  widget.bigId,
+                ).notifier,
+              )
               .setData(initialList);
           setState(() {
-            _syncControllers(initialList);
+            _isInitialized = true;
+            _rebuildControllers(initialList);
           });
         }
       });
@@ -108,17 +155,29 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
     setState(() {
       if (widget.categoryType == CategoryType.income) {
         ref
-            .read(edittingIncomeSmallCategoryListNotifierProvider.notifier)
+            .read(
+              edittingIncomeSmallCategoryListNotifierProvider(
+                widget.bigId,
+              ).notifier,
+            )
             .toggleDisplay(index);
         ref
-            .read(isIncomeSmallCategoryListEditedNotifierProvider.notifier)
+            .read(
+              isIncomeSmallCategoryListEditedNotifierProvider(
+                widget.bigId,
+              ).notifier,
+            )
             .updateState(true);
       } else {
         ref
-            .read(edittingSmallCategoryListNotifierProvider.notifier)
+            .read(
+              edittingSmallCategoryListNotifierProvider(widget.bigId).notifier,
+            )
             .toggleDisplay(index);
         ref
-            .read(isSmallCategoryListEditedNotifierProvider.notifier)
+            .read(
+              isSmallCategoryListEditedNotifierProvider(widget.bigId).notifier,
+            )
             .updateState(true);
       }
     });
@@ -128,27 +187,49 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
   void _updateName(int index, String value) {
     if (widget.categoryType == CategoryType.income) {
       ref
-          .read(edittingIncomeSmallCategoryListNotifierProvider.notifier)
+          .read(
+            edittingIncomeSmallCategoryListNotifierProvider(
+              widget.bigId,
+            ).notifier,
+          )
           .updateName(index, value);
       ref
-          .read(isIncomeSmallCategoryListEditedNotifierProvider.notifier)
+          .read(
+            isIncomeSmallCategoryListEditedNotifierProvider(
+              widget.bigId,
+            ).notifier,
+          )
           .updateState(true);
     } else {
       ref
-          .read(edittingSmallCategoryListNotifierProvider.notifier)
+          .read(
+            edittingSmallCategoryListNotifierProvider(widget.bigId).notifier,
+          )
           .updateName(index, value);
       ref
-          .read(isSmallCategoryListEditedNotifierProvider.notifier)
+          .read(
+            isSmallCategoryListEditedNotifierProvider(widget.bigId).notifier,
+          )
           .updateState(true);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    // アイテムリストを状態監視
+    // アイテムリストを状態監視（大カテゴリーごとの状態）
     itemList = widget.categoryType == CategoryType.income
-        ? ref.watch(edittingIncomeSmallCategoryListNotifierProvider)
-        : ref.watch(edittingSmallCategoryListNotifierProvider);
+        ? ref.watch(
+            edittingIncomeSmallCategoryListNotifierProvider(widget.bigId),
+          )
+        : ref.watch(edittingSmallCategoryListNotifierProvider(widget.bigId));
+
+    // 編集済みフラグは完了ボタンが読む。autoDisposeなので購読者がいないと
+    // 書き込んだ直後に破棄されてしまうため、このエリアの表示中は購読して保持する
+    if (widget.categoryType == CategoryType.income) {
+      ref.watch(isIncomeSmallCategoryListEditedNotifierProvider(widget.bigId));
+    } else {
+      ref.watch(isSmallCategoryListEditedNotifierProvider(widget.bigId));
+    }
 
     // アイテム数が変わったときにコントローラー数を同期（新規追加など）
     if (_controllers.length != itemList.length) {
@@ -205,30 +286,34 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                         if (widget.categoryType == CategoryType.income) {
                           ref
                               .read(
-                                edittingIncomeSmallCategoryListNotifierProvider
-                                    .notifier,
+                                edittingIncomeSmallCategoryListNotifierProvider(
+                                  widget.bigId,
+                                ).notifier,
                               )
                               .reorder(oldIndex, newIndex);
                           ref
                               .read(
-                                isIncomeSmallCategoryListEditedNotifierProvider
-                                    .notifier,
+                                isIncomeSmallCategoryListEditedNotifierProvider(
+                                  widget.bigId,
+                                ).notifier,
                               )
                               .updateState(true);
                         } else {
                           // カテゴリーの状態を保持しているリストの並び替え
                           ref
                               .read(
-                                edittingSmallCategoryListNotifierProvider
-                                    .notifier,
+                                edittingSmallCategoryListNotifierProvider(
+                                  widget.bigId,
+                                ).notifier,
                               )
                               .reorder(oldIndex, newIndex);
 
                           // 変更を加えたことを管理する状態管理する
                           ref
                               .read(
-                                isSmallCategoryListEditedNotifierProvider
-                                    .notifier,
+                                isSmallCategoryListEditedNotifierProvider(
+                                  widget.bigId,
+                                ).notifier,
                               )
                               .updateState(true);
                         }
@@ -242,7 +327,9 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                           _controllers.insert(adjustedNewIndex, controller);
                         });
                       },
-                      itemCount: itemList.length + 1, // +1は追加ボタン用
+                      // 追加行は取得が終わってから出す（取得前に追加すると
+                      // 取得完了時の setData で消えてしまう）
+                      itemCount: itemList.length + (_isInitialized ? 1 : 0),
                       itemBuilder: (BuildContext context, int index) {
                         if (index < itemList.length) {
                           // 並べ替え可能なリストのアイテム

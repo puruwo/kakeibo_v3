@@ -184,21 +184,13 @@ class _NewSmallCategoryInputSheetState
       maxLines: 1,
       // 最大文字数の制約
       maxLength: _kMaxNameLength,
-      // 右下の既定カウンターは使わず、入力欄の右端に自前で出す
-      buildCounter:
-          (
-            BuildContext context, {
-            required int currentLength,
-            required bool isFocused,
-            required int? maxLength,
-          }) {
-            return null;
-          },
-
       // 枠や背景などのデザイン
       decoration: InputDecoration(
         // trueにするとテキストフィールド全体の密度が下がる
         isDense: true,
+
+        // 右下の既定カウンターは使わず、入力欄の右端に自前で出す
+        counterText: '',
 
         // 背景の塗りつぶし（入力欄の範囲がわかるように塗る）
         filled: true,
@@ -240,17 +232,15 @@ class _NewSmallCategoryInputSheetState
             ),
           ),
         ),
-        suffixIconConstraints: const BoxConstraints(
-          minWidth: 0,
-          minHeight: 0,
-        ),
+        suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
       ),
 
       keyboardAppearance: Brightness.dark,
 
       // onTapOutside は付けない。シート内のボタンを押したときに
-      // 先にキーボードが閉じてシートが下がり、1回目のタップが空振りするため
-      // （キーボードはシート外タップで閉じる／「完了」で確定できる）
+      // 先にキーボードが閉じてシートが下がり、1回目のタップが空振りするため。
+      // キーボードを閉じたいときはキーボードの「完了」を使う
+      // （シート外のタップはキーボードではなくシート自体を閉じる）
       onEditingComplete: () {
         //キーボードを閉じる
         FocusScope.of(context).unfocus();
@@ -280,11 +270,19 @@ class _NewSmallCategoryInputSheetState
       );
 
       ref
-          .read(edittingIncomeSmallCategoryListNotifierProvider.notifier)
+          .read(
+            edittingIncomeSmallCategoryListNotifierProvider(
+              widget.bigCategoryId,
+            ).notifier,
+          )
           .addSmallCategory(entity);
 
       ref
-          .read(isIncomeSmallCategoryListEditedNotifierProvider.notifier)
+          .read(
+            isIncomeSmallCategoryListEditedNotifierProvider(
+              widget.bigCategoryId,
+            ).notifier,
+          )
           .updateState(true);
     } else {
       // 入力された名前を使って新しい小カテゴリーのentityを作成
@@ -301,12 +299,20 @@ class _NewSmallCategoryInputSheetState
 
       // 追加する処理をここに書く
       ref
-          .read(edittingSmallCategoryListNotifierProvider.notifier)
+          .read(
+            edittingSmallCategoryListNotifierProvider(
+              widget.bigCategoryId,
+            ).notifier,
+          )
           .addSmallCategory(entity);
 
       // 変更を加えたことを管理する状態管理する
       ref
-          .read(isSmallCategoryListEditedNotifierProvider.notifier)
+          .read(
+            isSmallCategoryListEditedNotifierProvider(
+              widget.bigCategoryId,
+            ).notifier,
+          )
           .updateState(true);
     }
 

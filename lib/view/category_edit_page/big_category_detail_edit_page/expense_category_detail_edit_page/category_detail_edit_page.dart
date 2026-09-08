@@ -14,13 +14,9 @@ import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/in
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/income_category_detail_edit_page/add_complete_button/add_complete_income_category_detail_button.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/income_category_detail_edit_page/update_complete_button/update_complete_income_category_detail_button.dart';
 
-import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_account_type_controller/income_big_category_account_type_controller.dart';
-import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
-import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
-import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 
 class CategoryDetailEditPage extends ConsumerStatefulWidget {
@@ -59,16 +55,15 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
             // 閉じるときはネストしているModal内のRouteではなく、root側のNavigatorを指定する必要がある
             onPressed: () {
               Navigator.of(context).pop();
+              // 小カテゴリーの編集中リストと編集済みフラグは大カテゴリーごとの
+              // family かつ autoDispose なので、ここで invalidate しなくても
+              // ページが閉じた時点で破棄される（戻るスワイプでも同じ）
               if (widget.categoryType == CategoryType.expense) {
                 ref.invalidate(isBigCategoryAppearanceEditedNotifierProvider);
-                ref.invalidate(isSmallCategoryListEditedNotifierProvider);
-                ref.invalidate(edittingSmallCategoryListNotifierProvider);
               } else {
                 ref.invalidate(
                   isIncomeBigCategoryAppearanceEditedNotifierProvider,
                 );
-                ref.invalidate(isIncomeSmallCategoryListEditedNotifierProvider);
-                ref.invalidate(edittingIncomeSmallCategoryListNotifierProvider);
                 ref.invalidate(
                   incomeBigCategoryAccountTypeControllerNotifierProvider,
                 );
@@ -95,7 +90,7 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
 
             // 小カテゴリーのリスト
             SmallCategoryEditArea(
-              bigId: widget.bigCategoryId ?? -1,
+              bigId: widget.bigCategoryId ?? kNewCategoryBigId,
               categoryType: widget.categoryType,
             ),
           ],
@@ -127,12 +122,12 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
   Widget _buildAppearanceEditArea() {
     if (widget.categoryType == CategoryType.expense) {
       return CategoryAppearanceEditArea(
-        bigId: widget.bigCategoryId ?? -1,
+        bigId: widget.bigCategoryId ?? kNewCategoryBigId,
         categoryType: widget.categoryType,
       );
     } else {
       return IncomeCategoryAppearanceEditArea(
-        bigId: widget.bigCategoryId ?? -1,
+        bigId: widget.bigCategoryId ?? kNewCategoryBigId,
       );
     }
   }
