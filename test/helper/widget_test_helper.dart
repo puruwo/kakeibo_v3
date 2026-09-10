@@ -315,3 +315,70 @@ Future<void> pumpTimes(
     await tester.pump(duration);
   }
 }
+
+/// [labels] のうち画面に出ているものを、上から並ぶ順で返す
+///
+/// 並び替えの結果はWidgetツリーの順ではなくy座標で確かめる
+/// （どの行がどこへ挟まったかまで見たいため）。
+/// 同じ文言が2箇所以上に出ているとどの行を指すか決まらないため、
+/// 黙って先頭を採らずにその場で落とす（例: ボトムシートの見出しと一覧行が同名）。
+List<String> rowsInOrder(WidgetTester tester, List<String> labels) {
+  final visible = <String, double>{};
+  for (final label in labels) {
+    final elements = find.text(label).evaluate().toList();
+    if (elements.isEmpty) {
+      continue;
+    }
+    expect(
+      elements,
+      hasLength(1),
+      reason: '「$label」が${elements.length}箇所にあり、どの行か決められない',
+    );
+    visible[label] = tester.getCenter(find.byWidget(elements.single.widget)).dy;
+  }
+  final entries = visible.entries.toList()
+    ..sort((a, b) => a.value.compareTo(b.value));
+  return entries.map((e) => e.key).toList();
+}
+
+/// 並び替えリストで、[label] の行のドラッグハンドルを掴んで縦に [dy] だけ動かす
+///
+/// ハンドルは `ReorderableDragStartListener`（長押し不要）である前提。
+/// 1回の move では並び替え判定が動かないため、小刻みに動かしてフレームを進める。
+/// [rowHeight] は行の高さ。ハンドルは「[label] の行に最も近いもの」を選ぶ
+/// （許容幅で最初に見つかったものを採ると、行の間隔が狭いときに隣の行を掴む）。
+Future<void> dragReorderHandle(
+  WidgetTester tester,
+  String label,
+  double dy, {
+  IconData handleIcon = Icons.drag_handle_rounded,
+  required double rowHeight,
+}) async {
+  // 0だとドラッグが成立せず「動かなかった」と「操作していない」が区別できない
+  expect(dy, isNot(0), reason: 'ドラッグ距離が0では並び替えを検証できない');
+
+  final rowY = tester.getCenter(find.text(label)).dy;
+  final handles = find.byIcon(handleIcon).evaluate().toList();
+  Offset? handleCenter;
+  var nearest = double.infinity;
+  for (final handle in handles) {
+    final center = tester.getCenter(find.byWidget(handle.widget));
+    final distance = (center.dy - rowY).abs();
+    if (distance < rowHeight / 2 && distance < nearest) {
+      nearest = distance;
+      handleCenter = center;
+    }
+  }
+  expect(handleCenter, isNotNull, reason: '$label の行にドラッグハンドルが無い');
+
+  final gesture = await tester.startGesture(handleCenter!);
+  await tester.pump(const Duration(milliseconds: 200));
+  const stepHeight = 8.0;
+  final steps = (dy.abs() / stepHeight).ceil();
+  for (var i = 0; i < steps; i++) {
+    await gesture.moveBy(Offset(0, dy / steps));
+    await tester.pump(const Duration(milliseconds: 20));
+  }
+  await gesture.up();
+  await pumpTimes(tester, times: 8);
+}

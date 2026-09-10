@@ -8,6 +8,7 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_setting_page/big_category_edit_area.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 
 import '../helper/fake_repositories.dart';
@@ -207,5 +208,42 @@ void main() {
     expect(find.text('編集をキャンセル'), findsOneWidget);
     expect(find.text('編集を完了'), findsOneWidget);
     expect(find.text('表示・並び替え'), findsNothing);
+  });
+
+  // 大カテゴリーの並び替え（KP-011 で小カテゴリー側と合わせて観点を張った）。
+  // 大カテゴリー側は「追加」行を持たないため、リストの要素はすべて並び替え対象。
+  testWidgets('並び替え編集モードで大カテゴリーを入れ替えて完了すると新しい表示順で保存される', (tester) async {
+    final fakes = buildFakes();
+    await pumpApp(tester, home: const CategorySettingPage(), fakes: fakes);
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('表示・並び替え'));
+    await pumpTimes(tester);
+
+    const labels = ['生活費', '交通費'];
+    expect(rowsInOrder(tester, labels), ['生活費', '交通費']);
+
+    // 先頭の生活費を1行分（編集行の高さ50）下げる
+    await dragReorderHandle(
+      tester,
+      '生活費',
+      kBigCategoryEditRowHeight,
+      rowHeight: kBigCategoryEditRowHeight,
+    );
+
+    expect(rowsInOrder(tester, labels), ['交通費', '生活費']);
+    expect(tester.takeException(), isNull);
+
+    await tester.tap(find.text('編集を完了'));
+    await pumpTimes(tester);
+
+    // 表示順は並び替え後のindex（0始まり）で書き直される
+    final updated = {
+      for (final e in fakes.expenseBigCategory.updatedEntities)
+        e.id: e.displayOrder,
+    };
+    expect(updated, {2: 0, 1: 1});
+
+    await waitForSnackBarDismissed(tester);
   });
 }

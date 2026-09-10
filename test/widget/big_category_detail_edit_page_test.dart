@@ -13,6 +13,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_sheet.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
@@ -88,6 +89,15 @@ void main() {
       bigCategoryKey: 1,
       displayedOrderInBig: 1,
       smallCategoryName: '給与',
+      defaultDisplayed: 1,
+    ),
+    // 並び替えの検証用（1件だと入れ替え先が無い）
+    IncomeSmallCategoryEntity(
+      id: 2,
+      smallCategoryOrderKey: 2,
+      bigCategoryKey: 1,
+      displayedOrderInBig: 2,
+      smallCategoryName: '賞与',
       defaultDisplayed: 1,
     ),
   ];
@@ -543,6 +553,7 @@ void main() {
 
       expect(find.text('月次収入'), findsOneWidget); // 名前入力欄の初期値
       expect(find.text('給与'), findsOneWidget);
+      expect(find.text('賞与'), findsOneWidget);
       expect(find.text('小カテゴリーを追加'), findsOneWidget);
     });
 
@@ -558,6 +569,392 @@ void main() {
       final updated = fakes.incomeBigCategory.updatedEntities.single;
       expect(updated.id, 1);
       expect(updated.name, '毎月の収入');
+
+      await waitForSnackBarDismissed(tester);
+    });
+  });
+
+  // 「小カテゴリーを追加」はアクション行であって並べ替えの対象ではない（KP-011）。
+  // かつては ReorderableListView の要素に含めていたため、この行がドロップ先になり
+  // 項目の間に挟まったうえ、reorder が RangeError で落ちて状態更新が中断していた。
+  group('小カテゴリーの並び替え', () {
+    const rowLabels = ['食費', '日用品', '小カテゴリーを追加'];
+
+    /// [label] の行のハンドルを掴んで縦に [dy] だけ動かす
+    Future<void> dragRow(WidgetTester tester, String label, double dy) =>
+        dragReorderHandle(tester, label, dy, rowHeight: kAppInsetRowHeight);
+
+    /// 入力シートから小カテゴリーを1件追加する
+    Future<void> addSmallCategory(WidgetTester tester, String name) async {
+      await tester.tap(find.text('小カテゴリーを追加'));
+      await pumpTimes(tester);
+      final sheet = find.byType(NewSmallCategoryInputSheet);
+      await tester.enterText(
+        find.descendant(of: sheet, matching: find.byType(TextField)),
+        name,
+      );
+      await pumpTimes(tester, times: 3);
+      await tester.tap(find.descendant(of: sheet, matching: find.text('追加')));
+      await pumpTimes(tester);
+      expect(find.byType(NewSmallCategoryInputSheet), findsNothing);
+    }
+
+    Future<TestFakes> pumpExpensePage(
+      WidgetTester tester, {
+      TestFakes? fakes,
+    }) async {
+      final testFakes = fakes ?? buildFakes();
+      await pumpApp(
+        tester,
+        home: const CategoryDetailEditPage(
+          screenMode: BigCategoryDetailEditScreenMode.edit,
+          categoryType: CategoryType.expense,
+          bigCategoryId: 1,
+        ),
+        fakes: testFakes,
+      );
+      await pumpTimes(tester);
+      return testFakes;
+    }
+
+    testWidgets('ハンドルをドラッグすると小カテゴリーの順序が入れ替わる', (tester) async {
+      await pumpExpensePage(tester);
+      expect(rowsInOrder(tester, rowLabels), ['食費', '日用品', '小カテゴリーを追加']);
+
+      // 先頭の食費を1行分だけ下げる
+      await dragRow(tester, '食費', kAppInsetRowHeight);
+
+      expect(rowsInOrder(tester, rowLabels), ['日用品', '食費', '小カテゴリーを追加']);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('「小カテゴリーを追加」行より下へ引いてもアクション行は末尾のまま動かない', (tester) async {
+      // 3件で試す（2件だと「1行だけ下がる」場合と結果が同じで退行を見逃す）
+      final fakes = await pumpExpensePage(
+        tester,
+        fakes: TestFakes(
+          expenseBigCategory: FakeExpenseBigCategoryRepository(
+            initialRecords: expenseBigCategories,
+          ),
+          expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+            initialRecords: [
+              ...expenseSmallCategories,
+              const ExpenseSmallCategoryEntity(
+                id: 12,
+                smallCategoryOrderKey: 4,
+                bigCategoryKey: 1,
+                displayedOrderInBig: 3,
+                smallCategoryName: '外食',
+                defaultDisplayed: 1,
+              ),
+            ],
+          ),
+        ),
+      );
+
+      const labels = ['食費', '日用品', '外食', '小カテゴリーを追加'];
+      expect(rowsInOrder(tester, labels), ['食費', '日用品', '外食', '小カテゴリーを追加']);
+
+      // アクション行を飛び越える距離まで引き下げる
+      await dragRow(tester, '食費', kAppInsetRowHeight * 4);
+
+      // 食費は最終行に移るが、アクション行はその下に留まる
+      expect(rowsInOrder(tester, labels), ['日用品', '外食', '食費', '小カテゴリーを追加']);
+      // 範囲外のindexが渡らないので例外も出ない
+      expect(tester.takeException(), isNull);
+
+      // 保存される表示順も末尾になる
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+      final updated = {
+        for (final e in fakes.expenseSmallCategory.updatedEntities)
+          e.id: e.displayedOrderInBig,
+      };
+      expect(updated, {11: 0, 12: 1, 10: 2});
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('並び替えて完了すると新しい表示順で保存される', (tester) async {
+      final fakes = await pumpExpensePage(tester);
+
+      await dragRow(tester, '食費', kAppInsetRowHeight);
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      // 表示順は並び替え後のindex（0始まり）で全件書き直される
+      // （取得時点で editedStateDisplayOrder が0始まりの連番へ正規化されるため、
+      //   入れ替えた2件はどちらも値が変わる）
+      final updated = {
+        for (final e in fakes.expenseSmallCategory.updatedEntities)
+          e.id: e.displayedOrderInBig,
+      };
+      expect(updated, {11: 0, 10: 1});
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('並び替えたあとに名前を変えると入れ替え後の行が更新される', (tester) async {
+      final fakes = await pumpExpensePage(tester);
+
+      await dragRow(tester, '食費', kAppInsetRowHeight);
+      // 先頭に来た日用品（0番目は大カテゴリー名の入力欄）
+      await tester.enterText(find.byType(TextFormField).at(1), '掃除用品');
+      await pumpTimes(tester, times: 3);
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      final updated = {
+        for (final e in fakes.expenseSmallCategory.updatedEntities)
+          e.id: e.smallCategoryName,
+      };
+      // 入力は先頭行（日用品 = id11）に効き、食費の名前は変わらない
+      expect(updated[11], '掃除用品');
+      expect(updated[10], '食費');
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('追加した項目も並び替えの対象になる', (tester) async {
+      final fakes = await pumpExpensePage(tester);
+
+      await tester.tap(find.text('小カテゴリーを追加'));
+      await pumpTimes(tester);
+      await tester.enterText(
+        find.descendant(
+          of: find.byType(NewSmallCategoryInputSheet),
+          matching: find.byType(TextField),
+        ),
+        'カフェ',
+      );
+      await pumpTimes(tester, times: 3);
+      await tester.tap(
+        find.descendant(
+          of: find.byType(NewSmallCategoryInputSheet),
+          matching: find.text('追加'),
+        ),
+      );
+      await pumpTimes(tester);
+      expect(rowsInOrder(tester, [...rowLabels, 'カフェ']), [
+        '食費',
+        '日用品',
+        'カフェ',
+        '小カテゴリーを追加',
+      ]);
+
+      // 追加した項目を先頭まで引き上げる
+      await dragRow(tester, 'カフェ', -kAppInsetRowHeight * 2);
+
+      expect(rowsInOrder(tester, [...rowLabels, 'カフェ']), [
+        'カフェ',
+        '食費',
+        '日用品',
+        '小カテゴリーを追加',
+      ]);
+
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      // 先頭に移したので表示順は0で保存される
+      expect(fakes.expenseSmallCategory.addedEntities, hasLength(1));
+      expect(
+        fakes.expenseSmallCategory.addedEntities.single.displayedOrderInBig,
+        0,
+      );
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('小カテゴリーが0件ならアクション行だけが並びハンドルは出ない', (tester) async {
+      await pumpExpensePage(
+        tester,
+        fakes: TestFakes(
+          expenseBigCategory: FakeExpenseBigCategoryRepository(
+            initialRecords: expenseBigCategories,
+          ),
+          expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+            initialRecords: const [],
+          ),
+        ),
+      );
+
+      expect(find.text('小カテゴリーを追加'), findsOneWidget);
+      expect(find.byIcon(Icons.drag_handle_rounded), findsNothing);
+      expect(tester.takeException(), isNull);
+
+      // アクション行は0件でも押せる
+      await tester.tap(find.text('小カテゴリーを追加'));
+      await pumpTimes(tester);
+      expect(find.byType(NewSmallCategoryInputSheet), findsOneWidget);
+
+      // 開いたシートは閉じてから終わる（モーダルを残すとタイマーが残る）
+      await tester.tap(
+        find.descendant(
+          of: find.byType(NewSmallCategoryInputSheet),
+          matching: find.text('キャンセル'),
+        ),
+      );
+      await pumpTimes(tester);
+      expect(find.byType(NewSmallCategoryInputSheet), findsNothing);
+    });
+
+    testWidgets('複数追加しても表示順に歯抜けができない', (tester) async {
+      // 編集中リストは表示順を並びどおりの 0..n-1 に保つ（KP-011）。
+      // かつては追加時に「件数+1」を振っていたため、既存が0,1のときに3が入り2が空いた
+      final fakes = await pumpExpensePage(tester);
+
+      await addSmallCategory(tester, 'カフェ');
+      await addSmallCategory(tester, '弁当');
+      await addSmallCategory(tester, 'おやつ');
+
+      expect(rowsInOrder(tester, [...rowLabels, 'カフェ', '弁当', 'おやつ']), [
+        '食費',
+        '日用品',
+        'カフェ',
+        '弁当',
+        'おやつ',
+        '小カテゴリーを追加',
+      ]);
+
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      // 追加分は入力順に、既存の続きの表示順で保存される
+      expect(
+        fakes.expenseSmallCategory.addedEntities.map(
+          (e) => e.smallCategoryName,
+        ),
+        ['カフェ', '弁当', 'おやつ'],
+      );
+      expect(
+        fakes.expenseSmallCategory.addedEntities.map(
+          (e) => e.displayedOrderInBig,
+        ),
+        [2, 3, 4],
+      );
+      // 全体順（記録画面のアイコン順）も入力順に採番される
+      // （マスタ全体の最大は電車の3なので4から続く）
+      expect(
+        fakes.expenseSmallCategory.addedEntities.map(
+          (e) => e.smallCategoryOrderKey,
+        ),
+        [4, 5, 6],
+      );
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('追加した項目を並び替えても入力した名前が入れ替わらない', (tester) async {
+      // 行の同一性をidで持つため、並び替えても行と入力内容の対応が崩れない
+      final fakes = await pumpExpensePage(tester);
+
+      await addSmallCategory(tester, 'カフェ');
+      await addSmallCategory(tester, '弁当');
+
+      // 追加した2件を先頭へ運ぶ
+      await dragRow(tester, '弁当', -kAppInsetRowHeight * 3);
+      await dragRow(tester, 'カフェ', -kAppInsetRowHeight * 2);
+
+      expect(rowsInOrder(tester, [...rowLabels, 'カフェ', '弁当']), [
+        '弁当',
+        'カフェ',
+        '食費',
+        '日用品',
+        '小カテゴリーを追加',
+      ]);
+
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      // 名前と表示順の対応が保たれている
+      final added = {
+        for (final e in fakes.expenseSmallCategory.addedEntities)
+          e.smallCategoryName: e.displayedOrderInBig,
+      };
+      expect(added, {'弁当': 0, 'カフェ': 1});
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('並び替えてもテキスト入力欄が項目に追従する', (tester) async {
+      // コントローラーをidで持つため、入力欄は画面上の位置ではなく項目に付く
+      // （かつてはindexで持ち、並び替えのたびに手で付け替えていた）
+      final fakes = await pumpExpensePage(tester);
+
+      await dragRow(tester, '食費', kAppInsetRowHeight);
+      expect(rowsInOrder(tester, rowLabels), ['日用品', '食費', '小カテゴリーを追加']);
+
+      // 「食費」を表示している入力欄に打ち込むと、その項目（id10）が変わる
+      await tester.enterText(
+        find.ancestor(
+          of: find.text('食費'),
+          matching: find.byType(TextFormField),
+        ),
+        '食料品',
+      );
+      await pumpTimes(tester, times: 3);
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      final updated = {
+        for (final e in fakes.expenseSmallCategory.updatedEntities)
+          e.id: e.smallCategoryName,
+      };
+      expect(updated[10], '食料品');
+      expect(updated[11], '日用品');
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('小カテゴリーの取得が終わるまでアクション行を出さない', (tester) async {
+      // 取得前に追加できてしまうと、取得完了時の setData で消えてしまう。
+      // pumpApp の直後（初回フレーム）は取得が解決していない
+      await pumpApp(
+        tester,
+        home: const CategoryDetailEditPage(
+          screenMode: BigCategoryDetailEditScreenMode.edit,
+          categoryType: CategoryType.expense,
+          bigCategoryId: 1,
+        ),
+        fakes: buildFakes(),
+      );
+
+      expect(find.text('小カテゴリーを追加'), findsNothing);
+
+      // 取得が解決すると出る
+      await pumpTimes(tester);
+      expect(find.text('小カテゴリーを追加'), findsOneWidget);
+    });
+
+    testWidgets('収入カテゴリーでも並び替えができアクション行は動かない', (tester) async {
+      final fakes = buildFakes();
+      await pumpApp(
+        tester,
+        home: const CategoryDetailEditPage(
+          screenMode: BigCategoryDetailEditScreenMode.edit,
+          categoryType: CategoryType.income,
+          bigCategoryId: 1,
+        ),
+        fakes: fakes,
+      );
+      await pumpTimes(tester);
+
+      const incomeLabels = ['給与', '賞与', '小カテゴリーを追加'];
+      expect(rowsInOrder(tester, incomeLabels), ['給与', '賞与', '小カテゴリーを追加']);
+
+      await dragRow(tester, '給与', kAppInsetRowHeight * 3);
+
+      expect(rowsInOrder(tester, incomeLabels), ['賞与', '給与', '小カテゴリーを追加']);
+      expect(tester.takeException(), isNull);
+
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      final updated = {
+        for (final e in fakes.incomeSmallCategory.updatedEntities)
+          e.id: e.displayedOrderInBig,
+      };
+      expect(updated, {2: 0, 1: 1});
 
       await waitForSnackBarDismissed(tester);
     });
