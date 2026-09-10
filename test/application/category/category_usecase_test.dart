@@ -327,7 +327,7 @@ void main() {
   });
 
   group('CategoryUsecase.smallEdit', () {
-    test('編集前の方が要素が多いとエラー', () async {
+    test('既存項目が減っているとエラー（編集画面に削除の導線は無い）', () async {
       final container = createUsecaseContainer();
       final usecase = container.read(categoryUsecaseProvider);
 
@@ -349,7 +349,7 @@ void main() {
       );
     });
 
-    test('ID降順で対応づけられ、変更のあった行だけupdateされる', () async {
+    test('idで対応づけられ、変更のあった行だけupdateされる', () async {
       final container = createUsecaseContainer();
       final usecase = container.read(categoryUsecaseProvider);
 
@@ -357,7 +357,7 @@ void main() {
         buildEditSmall(id: 10, name: '食費', displayOrderInBig: 1),
         buildEditSmall(id: 11, name: '日用品', displayOrderInBig: 2),
       ];
-      // originalとは逆順で渡し、ID降順に並べ替えてから対応づけられることを確かめる
+      // originalとは逆順で渡し、並び順ではなくidで対応づけられることを確かめる
       final edited = [
         buildEditSmall(id: 11, name: '日用品', displayOrderInBig: 2),
         buildEditSmall(
@@ -385,10 +385,10 @@ void main() {
 
       final original = [buildEditSmall(id: 10, name: '食費')];
       final edited = [
-        buildEditSmall(id: 10, name: '食費'),
-        // 追加行はUI側でid=-1が割り当てられる
-        buildEditSmall(id: -1, name: 'カフェ', editedStateDisplayOrder: 2),
-        buildEditSmall(id: -1, name: '外食', editedStateDisplayOrder: 3),
+        buildEditSmall(id: 10, name: '食費', editedStateDisplayOrder: 0),
+        // まだDBに無い項目は編集中リストが負の一意なidを振る
+        buildEditSmall(id: -1, name: 'カフェ', editedStateDisplayOrder: 1),
+        buildEditSmall(id: -2, name: '外食', editedStateDisplayOrder: 2),
       ];
 
       await usecase.smallEdit(originalValues: original, editValues: edited);
@@ -399,14 +399,88 @@ void main() {
         fakeSmallRepository.addedEntities.map((e) => e.smallCategoryOrderKey),
         [10, 11],
       );
+      // 採番は編集中リストの並び順で行う（idの大小には依存しない）
       expect(
-        fakeSmallRepository.addedEntities
-            .map((e) => e.smallCategoryName)
-            .toSet(),
-        {'カフェ', '外食'},
+        fakeSmallRepository.addedEntities.map((e) => e.smallCategoryName),
+        ['カフェ', '外食'],
+      );
+      // 表示順は編集中リストの値をそのまま保存する
+      expect(
+        fakeSmallRepository.addedEntities.map((e) => e.displayedOrderInBig),
+        [1, 2],
       );
       // 採番は追加行の大カテゴリーを指定して問い合わせる
       expect(fakeSmallRepository.getMaxOrderKeyBigCategoryIds, [1]);
+    });
+
+    test('仮idが同じ順でなくても編集中リストの並び順で採番される', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(categoryUsecaseProvider);
+
+      final original = [
+        buildEditSmall(id: 10, name: '食費', editedStateDisplayOrder: 0),
+      ];
+      // 3件追加したあと先頭へ並べ替えた状態（id の降順・昇順のどちらでもない）
+      final edited = [
+        buildEditSmall(id: -3, name: 'おやつ', editedStateDisplayOrder: 0),
+        buildEditSmall(id: 10, name: '食費', editedStateDisplayOrder: 1),
+        buildEditSmall(id: -1, name: 'カフェ', editedStateDisplayOrder: 2),
+        buildEditSmall(id: -2, name: '弁当', editedStateDisplayOrder: 3),
+      ];
+
+      await usecase.smallEdit(originalValues: original, editValues: edited);
+
+      expect(
+        fakeSmallRepository.addedEntities.map((e) => e.smallCategoryName),
+        ['おやつ', 'カフェ', '弁当'],
+      );
+      expect(
+        fakeSmallRepository.addedEntities.map((e) => e.smallCategoryOrderKey),
+        [10, 11, 12],
+      );
+      // 既存項目は表示順が変わったのでupdateされる
+      expect(fakeSmallRepository.updatedEntities, hasLength(1));
+      expect(fakeSmallRepository.updatedEntities.single.id, 10);
+      expect(fakeSmallRepository.updatedEntities.single.displayedOrderInBig, 1);
+    });
+
+    test('編集前に無いidが既存項目として来るとエラー', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(categoryUsecaseProvider);
+
+      expect(
+        () => usecase.smallEdit(
+          originalValues: [buildEditSmall(id: 10, name: '食費')],
+          editValues: [buildEditSmall(id: 99, name: '食費')],
+        ),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            '予期せぬエラーが発生しました(E001)',
+          ),
+        ),
+      );
+    });
+
+    test('引数で渡したリストを並べ替えない', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(categoryUsecaseProvider);
+
+      // providerが保持しているリストをそのまま渡すため、副作用があってはならない
+      final original = [
+        buildEditSmall(id: 10, name: '食費'),
+        buildEditSmall(id: 11, name: '日用品'),
+      ];
+      final edited = [
+        buildEditSmall(id: 11, name: '日用品', editedStateDisplayOrder: 0),
+        buildEditSmall(id: 10, name: '食費', editedStateDisplayOrder: 1),
+      ];
+
+      await usecase.smallEdit(originalValues: original, editValues: edited);
+
+      expect(original.map((e) => e.id), [10, 11]);
+      expect(edited.map((e) => e.id), [11, 10]);
     });
   });
 
