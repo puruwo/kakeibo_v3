@@ -274,50 +274,67 @@ class IncomeCategoryUsecase {
   }
 
   /// 小カテゴリーの編集（並び替え・編集・追加）
+  ///
+  /// [editValues] は編集中リスト（→ EdittingIncomeSmallCategoryListNotifier）で、
+  /// まだDBに無い項目は id が負の一意な値、表示順は並びどおりの 0..n-1 になっている。
+  /// 編集前の値との対応づけは id で行う（引数のリストは並べ替えない）。
   Future<void> smallEdit({
     required List<EditIncomeSmallCategoryValue> originalValues,
     required List<EditIncomeSmallCategoryValue> editValues,
   }) async {
-    if (originalValues.length > editValues.length) {
+    final originalById = {for (final value in originalValues) value.id: value};
+
+    // id が負なら新規、0以上なら既存項目
+    final addedValues = editValues.where((value) => value.id < 0).toList();
+    final savedValues = editValues.where((value) => value.id >= 0).toList();
+
+    // 検証は書き込みを始める前に済ませる
+    // （トランザクションを張っていないため、途中で投げるとDBが半端に書き換わる）
+    // 編集画面に削除の導線は無いため、既存項目が減っているのは想定外
+    if (savedValues.length < originalValues.length) {
       throw const AppException('予期せぬエラーが発生しました(E001)');
     }
-
-    // ID降順（追加カテゴリーは-1のため先頭に来る）
-    originalValues.sort((a, b) => b.id.compareTo(a.id));
-    editValues.sort((a, b) => b.id.compareTo(a.id));
-
-    for (var i = 0; i < originalValues.length; i++) {
-      if (originalValues[i] != editValues[i]) {
-        final entity = IncomeSmallCategoryEntity(
-          id: editValues[i].id,
-          bigCategoryKey: editValues[i].bigCategoryKey,
-          smallCategoryName: editValues[i].name,
-          smallCategoryOrderKey: editValues[i].smallCategoryOrderKey,
-          displayedOrderInBig: editValues[i].editedStateDisplayOrder,
-          defaultDisplayed: editValues[i].etitedStateIsChecked ? 1 : 0,
-        );
-
-        await _smallCategoryRepositoryProvider.update(entity: entity);
+    for (final value in savedValues) {
+      // 編集前に無いidが既存項目として来るのは想定外
+      if (!originalById.containsKey(value.id)) {
+        throw const AppException('予期せぬエラーが発生しました(E001)');
       }
     }
 
-    if (originalValues.length < editValues.length) {
-      final addedElements = editValues.sublist(originalValues.length);
+    for (final value in savedValues) {
+      // 変更が無ければ書き込まない
+      if (originalById[value.id] == value) {
+        continue;
+      }
 
+      final entity = IncomeSmallCategoryEntity(
+        id: value.id,
+        bigCategoryKey: value.bigCategoryKey,
+        smallCategoryName: value.name,
+        smallCategoryOrderKey: value.smallCategoryOrderKey,
+        displayedOrderInBig: value.editedStateDisplayOrder,
+        defaultDisplayed: value.etitedStateIsChecked ? 1 : 0,
+      );
+
+      await _smallCategoryRepositoryProvider.update(entity: entity);
+    }
+
+    if (addedValues.isNotEmpty) {
       int maxOrderKey = await _smallCategoryRepositoryProvider
           .getMaxSmallCategoryOrderKey(
-            bigCategoryId: addedElements.first.bigCategoryKey,
+            bigCategoryId: addedValues.first.bigCategoryKey,
           );
 
-      for (var element in addedElements) {
+      // 編集中リストの並び順で採番する
+      for (final value in addedValues) {
         maxOrderKey++;
         final entity = IncomeSmallCategoryEntity(
-          id: element.id,
-          bigCategoryKey: element.bigCategoryKey,
-          smallCategoryName: element.name,
+          id: value.id,
+          bigCategoryKey: value.bigCategoryKey,
+          smallCategoryName: value.name,
           smallCategoryOrderKey: maxOrderKey,
-          displayedOrderInBig: element.editedStateDisplayOrder,
-          defaultDisplayed: element.etitedStateIsChecked ? 1 : 0,
+          displayedOrderInBig: value.editedStateDisplayOrder,
+          defaultDisplayed: value.etitedStateIsChecked ? 1 : 0,
         );
 
         await _smallCategoryRepositoryProvider.add(entity: entity);

@@ -253,59 +253,69 @@ class CategoryUsecase {
     _updateDBCountNotifier.incrementState();
   }
 
-  // 小カテゴリーの編集処理
+  /// 小カテゴリーの編集処理（並び替え・名称変更・表示切替・追加）
+  ///
+  /// [editValues] は編集中リスト（→ EdittingSmallCategoryListNotifier）で、
+  /// まだDBに無い項目は id が負の一意な値、表示順は並びどおりの 0..n-1 になっている。
+  /// 編集前の値との対応づけは id で行う（引数のリストは並べ替えない。
+  /// providerが保持しているリストを壊さないため）。
   Future<void> smallEdit(
       {required List<EditExpenseSmallCategoryValue> originalValues,
       required List<EditExpenseSmallCategoryValue> editValues}) async {
-    //エラーチェック
-    if (originalValues.length > editValues.length) {
-      // リストの長さが一致しない場合
+    final originalById = {for (final value in originalValues) value.id: value};
+
+    // id が負なら新規、0以上なら既存項目
+    final addedValues = editValues.where((value) => value.id < 0).toList();
+    final savedValues = editValues.where((value) => value.id >= 0).toList();
+
+    // 検証は書き込みを始める前に済ませる
+    // （トランザクションを張っていないため、途中で投げるとDBが半端に書き換わる）
+    // 編集画面に削除の導線は無いため、既存項目が減っているのは想定外
+    if (savedValues.length < originalValues.length) {
       throw const AppException('予期せぬエラーが発生しました(E001)');
     }
-
-    // カテゴリーID順に並べてfor文で扱いやすくする
-    // 追加カテゴリーは-1で入力されるため、ID順に並べると-1が先頭に来てしまう
-    // そのため、IDの降順で並べる
-    originalValues.sort((a, b) => b.id.compareTo(a.id));
-    editValues.sort((a, b) => b.id.compareTo(a.id));
-
-    for (var i = 0; i < originalValues.length; i++) {
-      // 変更があればアップデートする
-      if (originalValues[i] != editValues[i]) {
-        final entity = ExpenseSmallCategoryEntity(
-            id: editValues[i].id,
-            bigCategoryKey: editValues[i].bigCategoryKey,
-            smallCategoryName: editValues[i].name,
-            smallCategoryOrderKey: editValues[i].smallCategoryOrderKey,
-            displayedOrderInBig: editValues[i].editedStateDisplayOrder,
-            defaultDisplayed: editValues[i].etitedStateIsChecked ? 1 : 0);
-
-        // 小カテゴリーを更新する
-        _smallCategoryRepositoryProvider.update(entity: entity);
+    for (final value in savedValues) {
+      // 編集前に無いidが既存項目として来るのは想定外
+      if (!originalById.containsKey(value.id)) {
+        throw const AppException('予期せぬエラーが発生しました(E001)');
       }
     }
 
-    // 編集後の要素の方が多い場合は、追加された要素があると考えられる
-    if (originalValues.length < editValues.length) {
-      // 追加された要素を取得する
-      final addedElements = editValues.sublist(originalValues.length);
+    for (final value in savedValues) {
+      // 変更が無ければ書き込まない
+      if (originalById[value.id] == value) {
+        continue;
+      }
 
+      final entity = ExpenseSmallCategoryEntity(
+          id: value.id,
+          bigCategoryKey: value.bigCategoryKey,
+          smallCategoryName: value.name,
+          smallCategoryOrderKey: value.smallCategoryOrderKey,
+          displayedOrderInBig: value.editedStateDisplayOrder,
+          defaultDisplayed: value.etitedStateIsChecked ? 1 : 0);
+
+      // 小カテゴリーを更新する
+      await _smallCategoryRepositoryProvider.update(entity: entity);
+    }
+
+    if (addedValues.isNotEmpty) {
       // 現在の最大smallCategoryOrderKeyを取得する
       int maxOrderKey =
           await _smallCategoryRepositoryProvider.getMaxSmallCategoryOrderKey(
-              bigCategoryId: addedElements.first.bigCategoryKey);
+              bigCategoryId: addedValues.first.bigCategoryKey);
 
-      // 追加された要素をDBに保存する
-      for (var element in addedElements) {
+      // 追加された要素をDBに保存する（編集中リストの並び順で採番する）
+      for (final value in addedValues) {
         // 最大値 + 1 で新しいsmallCategoryOrderKeyを設定
         maxOrderKey++;
         final entity = ExpenseSmallCategoryEntity(
-            id: element.id,
-            bigCategoryKey: element.bigCategoryKey,
-            smallCategoryName: element.name,
+            id: value.id,
+            bigCategoryKey: value.bigCategoryKey,
+            smallCategoryName: value.name,
             smallCategoryOrderKey: maxOrderKey,
-            displayedOrderInBig: element.editedStateDisplayOrder,
-            defaultDisplayed: element.etitedStateIsChecked ? 1 : 0);
+            displayedOrderInBig: value.editedStateDisplayOrder,
+            defaultDisplayed: value.etitedStateIsChecked ? 1 : 0);
 
         await _smallCategoryRepositoryProvider.add(entity: entity);
       }

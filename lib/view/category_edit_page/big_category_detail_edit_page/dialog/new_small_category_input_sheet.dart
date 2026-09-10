@@ -28,7 +28,6 @@ const double _kCounterWidth = 52;
 Future<void> showNewSmallCategoryInputSheet(
   BuildContext context, {
   required int bigCategoryId,
-  required int displayedOrderInBig,
   CategoryType categoryType = CategoryType.expense,
 }) {
   return showModalBottomSheet<void>(
@@ -38,7 +37,6 @@ Future<void> showNewSmallCategoryInputSheet(
     useRootNavigator: true,
     builder: (context) => NewSmallCategoryInputSheet(
       bigCategoryId: bigCategoryId,
-      displayedOrderInBig: displayedOrderInBig,
       categoryType: categoryType,
     ),
   );
@@ -51,13 +49,11 @@ Future<void> showNewSmallCategoryInputSheet(
 class NewSmallCategoryInputSheet extends ConsumerStatefulWidget {
   const NewSmallCategoryInputSheet({
     required this.bigCategoryId,
-    required this.displayedOrderInBig,
     this.categoryType = CategoryType.expense,
     super.key,
   });
 
   final int bigCategoryId;
-  final int displayedOrderInBig;
   final CategoryType categoryType;
 
   @override
@@ -258,14 +254,16 @@ class _NewSmallCategoryInputSheetState
 
     if (widget.categoryType == CategoryType.income) {
       // 収入小カテゴリー用entity
+      // id（負の一意な値）と表示順は addSmallCategory が採番し直す。
+      // 仮値も負にしておく（0以上は「DBにある既存項目」を意味するため）
       final entity = EditIncomeSmallCategoryValue(
         id: -1,
         bigCategoryKey: widget.bigCategoryId,
         name: name,
         smallCategoryOrderKey: 0,
-        displayOrderInBig: widget.displayedOrderInBig,
+        displayOrderInBig: 0,
         defaultDisplayed: 1,
-        editedStateDisplayOrder: widget.displayedOrderInBig,
+        editedStateDisplayOrder: 0,
         etitedStateIsChecked: true,
       );
 
@@ -285,15 +283,17 @@ class _NewSmallCategoryInputSheetState
           )
           .updateState(true);
     } else {
-      // 入力された名前を使って新しい小カテゴリーのentityを作成
+      // 入力された名前を使って新しい小カテゴリーのentityを作成。
+      // id（負の一意な値）と表示順は addSmallCategory が採番し直す。
+      // 仮値も負にしておく（0以上は「DBにある既存項目」を意味するため）
       final entity = EditExpenseSmallCategoryValue(
-        id: -1, // 新規作成なのでIDは-1
+        id: -1,
         bigCategoryKey: widget.bigCategoryId,
         name: name,
         smallCategoryOrderKey: 0, // 新規作成なので0
-        displayOrderInBig: widget.displayedOrderInBig,
+        displayOrderInBig: 0,
         defaultDisplayed: 1,
-        editedStateDisplayOrder: widget.displayedOrderInBig,
+        editedStateDisplayOrder: 0,
         etitedStateIsChecked: true,
       );
 

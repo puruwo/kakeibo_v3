@@ -46,32 +46,33 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
   /// 終わる前に項目を追加できてしまうと、取得完了時の setData で消えてしまう
   bool _isInitialized = false;
 
-  // 各アイテムのテキスト編集コントローラー
-  final List<TextEditingController> _controllers = [];
+  /// 各アイテムのテキスト編集コントローラー（キーは小カテゴリーのid）
+  ///
+  /// indexで持つと並び替えのたびに付け替えが必要になり、
+  /// 編集中リストとコントローラーの対応がずれる余地が残る。
+  /// まだDBに無い項目にも負の一意なidが振られている（→ 編集中リストのnotifier）。
+  final Map<int, TextEditingController> _controllers = {};
 
-  /// コントローラー数をアイテムリストに同期する（末尾の追加/削除のみ）
-  void _syncControllers(List<dynamic> items) {
-    while (_controllers.length < items.length) {
-      _controllers.add(
-        TextEditingController(text: items[_controllers.length].name),
-      );
-    }
-    while (_controllers.length > items.length) {
-      _controllers.removeLast().dispose();
-    }
+  /// [item] の行のコントローラーを返す（無ければ作る）
+  ///
+  /// 破棄は [dispose] でまとめて行う。行の描画中に破棄すると、
+  /// まだツリーに残っている入力欄が参照しているコントローラーを壊す。
+  TextEditingController _controllerFor(dynamic item) {
+    return _controllers.putIfAbsent(
+      item.id as int,
+      () => TextEditingController(text: item.name as String),
+    );
   }
 
   /// コントローラーを作り直す（初期表示用）
   ///
-  /// [_syncControllers] は末尾の増減しか合わせないため、前に開いたカテゴリーの
-  /// 名前を持ったコントローラーがそのまま残ってしまう。初期表示では作り直す。
-  void _rebuildControllers(List<dynamic> items) {
-    for (final c in _controllers) {
+  /// 取得完了を待つ間に別のカテゴリーを開くことはないが、
+  /// setData で中身が入れ替わるため、取得前に作られたものは持ち越さない。
+  void _rebuildControllers() {
+    for (final c in _controllers.values) {
       c.dispose();
     }
-    _controllers
-      ..clear()
-      ..addAll(items.map((e) => TextEditingController(text: e.name)));
+    _controllers.clear();
   }
 
   @override
@@ -117,7 +118,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
               .setData(initialList);
           setState(() {
             _isInitialized = true;
-            _rebuildControllers(initialList);
+            _rebuildControllers();
           });
         } else {
           final initialList = await ref.watch(
@@ -135,7 +136,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
               .setData(initialList);
           setState(() {
             _isInitialized = true;
-            _rebuildControllers(initialList);
+            _rebuildControllers();
           });
         }
       });
@@ -144,7 +145,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
 
   @override
   void dispose() {
-    for (final c in _controllers) {
+    for (final c in _controllers.values) {
       c.dispose();
     }
     super.dispose();
@@ -152,35 +153,33 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
 
   /// チェックボックス（表示切替）のタップ処理
   void _toggleDisplay(int index) {
-    setState(() {
-      if (widget.categoryType == CategoryType.income) {
-        ref
-            .read(
-              edittingIncomeSmallCategoryListNotifierProvider(
-                widget.bigId,
-              ).notifier,
-            )
-            .toggleDisplay(index);
-        ref
-            .read(
-              isIncomeSmallCategoryListEditedNotifierProvider(
-                widget.bigId,
-              ).notifier,
-            )
-            .updateState(true);
-      } else {
-        ref
-            .read(
-              edittingSmallCategoryListNotifierProvider(widget.bigId).notifier,
-            )
-            .toggleDisplay(index);
-        ref
-            .read(
-              isSmallCategoryListEditedNotifierProvider(widget.bigId).notifier,
-            )
-            .updateState(true);
-      }
-    });
+    if (widget.categoryType == CategoryType.income) {
+      ref
+          .read(
+            edittingIncomeSmallCategoryListNotifierProvider(
+              widget.bigId,
+            ).notifier,
+          )
+          .toggleDisplay(index);
+      ref
+          .read(
+            isIncomeSmallCategoryListEditedNotifierProvider(
+              widget.bigId,
+            ).notifier,
+          )
+          .updateState(true);
+    } else {
+      ref
+          .read(
+            edittingSmallCategoryListNotifierProvider(widget.bigId).notifier,
+          )
+          .toggleDisplay(index);
+      ref
+          .read(
+            isSmallCategoryListEditedNotifierProvider(widget.bigId).notifier,
+          )
+          .updateState(true);
+    }
   }
 
   /// 名称の変更処理
@@ -214,6 +213,62 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
     }
   }
 
+  /// 末尾の「小カテゴリーを追加」アクション行
+  ///
+  /// 並べ替えの対象ではないため、リストの要素ではなく footer として置く
+  /// （要素にすると他の行のドロップ先になり、この行を挟んだ並びになってしまう）。
+  /// 件数は引数で受け取る（[itemList] は build で代入される late なので、
+  /// 区切り線の判定が別のタイミングの値を見ないようにする）。
+  Widget _buildAddRow(BuildContext context, int itemCount) {
+    return Column(
+      children: [
+        if (itemCount > 0)
+          Padding(
+            padding: const EdgeInsets.only(left: kAppInsetRowIndent),
+            child: Divider(
+              height: 0.5,
+              thickness: 0.5,
+              color: context.colors.separator,
+            ),
+          ),
+        AppInkWell(
+          borderRadius: BorderRadius.zero,
+          onTap: () {
+            showNewSmallCategoryInputSheet(
+              context,
+              bigCategoryId: widget.bigId,
+              categoryType: widget.categoryType,
+            );
+          },
+          child: SizedBox(
+            height: kAppInsetRowHeight,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: kAppInsetRowIndent,
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.add_rounded,
+                    size: kAppInsetRowIconSize,
+                    color: context.colors.primary,
+                  ),
+                  const SizedBox(width: 10),
+                  Text(
+                    '小カテゴリーを追加',
+                    style: AppTextStyles.insetGroupLabel.copyWith(
+                      color: context.colors.primary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // アイテムリストを状態監視（大カテゴリーごとの状態）
@@ -229,11 +284,6 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
       ref.watch(isIncomeSmallCategoryListEditedNotifierProvider(widget.bigId));
     } else {
       ref.watch(isSmallCategoryListEditedNotifierProvider(widget.bigId));
-    }
-
-    // アイテム数が変わったときにコントローラー数を同期（新規追加など）
-    if (_controllers.length != itemList.length) {
-      _syncControllers(itemList);
     }
 
     return Expanded(
@@ -318,164 +368,99 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                               .updateState(true);
                         }
 
-                        // コントローラーも同じ順番に並べ替える
-                        setState(() {
-                          int adjustedNewIndex = newIndex;
-                          if (oldIndex < adjustedNewIndex)
-                            adjustedNewIndex -= 1;
-                          final controller = _controllers.removeAt(oldIndex);
-                          _controllers.insert(adjustedNewIndex, controller);
-                        });
+                        // コントローラーはidで引くため、並べ替えの追従は不要
                       },
-                      // 追加行は取得が終わってから出す（取得前に追加すると
-                      // 取得完了時の setData で消えてしまう）
-                      itemCount: itemList.length + (_isInitialized ? 1 : 0),
+                      // 「小カテゴリーを追加」はアクション行であって並べ替えの対象ではない。
+                      // footerはリストの要素に含まれないため、他の行のドロップ先にもならない。
+                      // 取得が終わってから出す（取得前に追加すると取得完了時の setData で消えてしまう）
+                      footer: _isInitialized
+                          ? _buildAddRow(context, itemList.length)
+                          : null,
+                      itemCount: itemList.length,
                       itemBuilder: (BuildContext context, int index) {
-                        if (index < itemList.length) {
-                          // 並べ替え可能なリストのアイテム
-                          return Column(
-                            key: Key('$index'),
-                            children: [
-                              if (index != 0)
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: kAppInsetRowIndent,
-                                  ),
-                                  child: Divider(
-                                    height: 0.5,
-                                    thickness: 0.5,
-                                    color: context.colors.separator,
-                                  ),
+                        final item = itemList[index];
+                        final controller = _controllerFor(item);
+
+                        // 並べ替え可能なリストのアイテム。
+                        // キーは位置ではなくidにする（位置キーだと行の状態
+                        // ―フォーカスやIME― が並べ替えで別の項目に付いてしまう）
+                        return Column(
+                          key: ValueKey<int>(item.id),
+                          children: [
+                            if (index != 0)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  left: kAppInsetRowIndent,
                                 ),
-                              SizedBox(
-                                height: kAppInsetRowHeight,
-                                child: Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                    kAppInsetRowIndent,
-                                    0,
-                                    4,
-                                    0,
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      // チェックボックス（表示切替）
-                                      AppInkWell(
-                                        borderRadius: BorderRadius.circular(8),
-                                        onTap: () => _toggleDisplay(index),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(4),
-                                          child: CheckBox(
-                                            isChecked: itemList[index]
-                                                .etitedStateIsChecked,
-                                          ),
-                                        ),
-                                      ),
-
-                                      const SizedBox(width: 10),
-
-                                      // カテゴリー名（直接編集可能）
-                                      Expanded(
-                                        child: index < _controllers.length
-                                            ? TextFormField(
-                                                controller: _controllers[index],
-                                                style: AppTextStyles
-                                                    .insetGroupLabel,
-                                                maxLines: 1,
-                                                maxLength: 20,
-                                                decoration:
-                                                    const InputDecoration(
-                                                      border: InputBorder.none,
-                                                      counterText: '',
-                                                      isDense: true,
-                                                      contentPadding:
-                                                          EdgeInsets.zero,
-                                                    ),
-                                                onChanged: (value) =>
-                                                    _updateName(index, value),
-                                              )
-                                            : Text(
-                                                itemList[index].name,
-                                                style: AppTextStyles
-                                                    .insetGroupLabel,
-                                                overflow: TextOverflow.ellipsis,
-                                              ),
-                                      ),
-
-                                      // 並べ替えハンドル
-                                      ReorderableDragStartListener(
-                                        index: index,
-                                        child: Container(
-                                          alignment: Alignment.center,
-                                          width: 44,
-                                          height: kAppInsetRowHeight,
-                                          child: Icon(
-                                            Icons.drag_handle_rounded,
-                                            size: 20,
-                                            color: context.colors.icon,
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                                child: Divider(
+                                  height: 0.5,
+                                  thickness: 0.5,
+                                  color: context.colors.separator,
                                 ),
                               ),
-                            ],
-                          );
-                        } else {
-                          // 末尾の追加行
-                          return Column(
-                            key: Key('$index'),
-                            children: [
-                              if (itemList.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                    left: kAppInsetRowIndent,
-                                  ),
-                                  child: Divider(
-                                    height: 0.5,
-                                    thickness: 0.5,
-                                    color: context.colors.separator,
-                                  ),
+                            SizedBox(
+                              height: kAppInsetRowHeight,
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(
+                                  kAppInsetRowIndent,
+                                  0,
+                                  4,
+                                  0,
                                 ),
-                              AppInkWell(
-                                borderRadius: BorderRadius.zero,
-                                onTap: () {
-                                  showNewSmallCategoryInputSheet(
-                                    context,
-                                    bigCategoryId: widget.bigId,
-                                    displayedOrderInBig: itemList.length + 1,
-                                    categoryType: widget.categoryType,
-                                  );
-                                },
-                                child: SizedBox(
-                                  height: kAppInsetRowHeight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: kAppInsetRowIndent,
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.add_rounded,
-                                          size: kAppInsetRowIconSize,
-                                          color: context.colors.primary,
+                                child: Row(
+                                  children: [
+                                    // チェックボックス（表示切替）
+                                    AppInkWell(
+                                      borderRadius: BorderRadius.circular(8),
+                                      onTap: () => _toggleDisplay(index),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4),
+                                        child: CheckBox(
+                                          isChecked: item.etitedStateIsChecked,
                                         ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          '小カテゴリーを追加',
-                                          style: AppTextStyles.insetGroupLabel
-                                              .copyWith(
-                                                color: context.colors.primary,
-                                              ),
-                                        ),
-                                      ],
+                                      ),
                                     ),
-                                  ),
+
+                                    const SizedBox(width: 10),
+
+                                    // カテゴリー名（直接編集可能）
+                                    Expanded(
+                                      child: TextFormField(
+                                        controller: controller,
+                                        style: AppTextStyles.insetGroupLabel,
+                                        maxLines: 1,
+                                        maxLength: 20,
+                                        decoration: const InputDecoration(
+                                          border: InputBorder.none,
+                                          counterText: '',
+                                          isDense: true,
+                                          contentPadding: EdgeInsets.zero,
+                                        ),
+                                        onChanged: (value) =>
+                                            _updateName(index, value),
+                                      ),
+                                    ),
+
+                                    // 並べ替えハンドル
+                                    ReorderableDragStartListener(
+                                      index: index,
+                                      child: Container(
+                                        alignment: Alignment.center,
+                                        width: 44,
+                                        height: kAppInsetRowHeight,
+                                        child: Icon(
+                                          Icons.drag_handle_rounded,
+                                          size: 20,
+                                          color: context.colors.icon,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ],
-                          );
-                        }
+                            ),
+                          ],
+                        );
                       },
                     ),
                   ),

@@ -15,6 +15,9 @@ import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 
+/// 並び替え編集モードの1行の高さ
+const double kBigCategoryEditRowHeight = 50;
+
 class BigCategoryEditArea extends ConsumerStatefulWidget {
   const BigCategoryEditArea({super.key, required this.categoryType});
 
@@ -137,7 +140,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
                     child: SizedBox(
-                      height: 50,
+                      height: kBigCategoryEditRowHeight,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
