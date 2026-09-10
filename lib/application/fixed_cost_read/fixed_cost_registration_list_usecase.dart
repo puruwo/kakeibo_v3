@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
@@ -90,7 +91,7 @@ class FixedCostRegistrationListUsecaseNotifier
           categoryId: -1,
           categoryName: 'カテゴリー未設定',
           categoryIconPath: 'assets/images/icon_others.svg',
-          categoryColorCode: '8E8E93',
+          categoryColorCode: CategoryPalette.grayHex,
           items: unresolvedItems,
         ),
       );

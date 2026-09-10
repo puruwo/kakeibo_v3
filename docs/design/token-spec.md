@@ -34,7 +34,8 @@
 - カテゴリーのデータ色を `CategoryPalette`（`lib/theme/category_palette.dart`、tokens.json の `category` セットから生成）で**トークン化**
 - DB文字列⇄`Color` の変換ヘルパーを `MyColors` から `ColorCode`（`lib/util/color_code.dart`）に**分離**（ロジック不変）
 - 消費側（color_select_dialog のスウォッチ／`sql_on_create` のシード／固定費定数／予測グラフ注入）を `CategoryPalette` 参照へ
-- **DB無影響**：シードの6桁HEXは全て従来値と**バイト一致を機械確認**（`expense1Hex='FF7171'` 等）。既存DBの保存値も不変
+- **DB無影響**（トークン化時点）：シードの6桁HEXは全て従来値と**バイト一致を機械確認**（当時 `expense1Hex='FF7171'` 等）。既存DBの保存値も不変
+- 2026-09-10（KP-012）: パレット自体を刷新し、シードの値は新パレット（`expense1Hex='F45058'` 等）に変更。既存DBは **v13 マイグレーションで旧色→新色を置換**する（§3）
 
 ### バケットB（少数参照ニュートラル等）：確定マッピング
 | 旧 MyColors | 値(dark) | 移行先 | 移行先値(dark) | 備考 |
@@ -58,8 +59,8 @@
 |------------|-----|------|
 | `brand.teal` | `#0BB283FF` | ブランド主色（旧themeColor） |
 | `brand.teal-subtle` | `#D7FFF4FF` | 主色の淡色（旧themeThinColor）🔸 |
-| `domain.red` | `#FF7171FF` | 支出（旧pink）🔸 |
-| `domain.green` | `#21D19FFF` | 収入（旧incomeEmerald）🔸 |
+| `domain.red` | `#F45058FF` | 支出（旧pink。KP-012 でカテゴリー red と同値に更新。旧 `#FF7171FF`）🔸 |
+| `domain.green` | `#12C281FF` | 収入（旧incomeEmerald。KP-012 でカテゴリー income2 と同値に更新。旧 `#21D19FFF`）🔸 |
 
 > Apple由来のニュートラル/背景/フィル/ラベルは、モードで値が変わるためプリミティブ単独では持たず、
 > セマンティック層で light/dark を直接定義する（下記）。
@@ -119,11 +120,11 @@
 
 | トークン | light | dark | 置き換え対象 |
 |---------|-------|------|------------|
-| `color.expense` | `#FF7171FF` 🔸 | `#FF7171FF` | pink(支出用途 21) |
-| `color.income` | `#21D19FFF` 🔸 | `#21D19FFF` | incomeEmerald(8) |
-| `color.danger` | `#FF7171FF` 🔸 | `#FF7171FF` | （2026-08-10新設・ADR-018）削除等の破壊的操作の色。値は`color.expense`と同一（`primitive.domain.red`共有）だが意味が異なるため独立トークン化 |
+| `color.expense` | `#F45058FF` 🔸 | `#F45058FF` | pink(支出用途 21)。KP-012 で更新（旧 `#FF7171FF`） |
+| `color.income` | `#12C281FF` 🔸 | `#12C281FF` | incomeEmerald(8)。KP-012 で更新（旧 `#21D19FFF`） |
+| `color.danger` | `#F45058FF` 🔸 | `#F45058FF` | （2026-08-10新設・ADR-018）削除等の破壊的操作の色。値は`color.expense`と同一（`primitive.domain.red`共有）だが意味が異なるため独立トークン化 |
 
-> 🔸 ライト背景では `#FF7171`（明るい赤）・`#21D19F`（ティール緑）ともにコントラストが弱い可能性。
+> 🔸 ライト背景では `#F45058`（赤・CR 3.4）は許容、`#12C281`（緑・CR 2.3）はコントラストが弱い可能性。
 > テキスト用途で使う場合は要確認。必要なら濃色のライト変種を別途定義。
 
 ### 状態・インタラクション
@@ -148,10 +149,10 @@ tokens.json の `category` セットから生成）でトークン化済み**。
 変換ヘルパーは `ColorCode`（`lib/util/color_code.dart`）に分離（ロジック不変・**DB無影響＝シードのバイト一致を機械確認**）。
 詳細は §0「フェーズ0 ステータス＞決定3」を参照。
 
-- 支出パレット(8): `#FF7171 #FB5B01 #3DD8E0 #4BA6FF #BB87FF #DF2828 #FFC700 #AC3E00`（`CategoryPalette.expense1..8`）
-- 収入パレット(4): `#21D19F #10B981 #059669 #6EE7B7`（`CategoryPalette.income1..4`）
-- 固定費: `#8E8E93`（全カテゴリー同色 / `CategoryPalette.fixedCost`）
-- DB保存用6桁HEX定数も併記（`CategoryPalette.expense1Hex='FF7171'` 等）— シード/注入はこれを参照
+- 支出パレット(12): `#F45058 #FD7920 #FCAB00 #BFAD00 #08C2CA #63CBFE #0287F0 #6D61EB #BA7AFB #DA51CC #FD84B1 #94582A`（`CategoryPalette.expense1..12`。KP-012・2026-09-10 に v7 パレットから刷新）
+- 収入パレット(4): `#53E39C #12C281 #059F6D #067553`（`CategoryPalette.income1..4`。緑帯 158〜164° の明度4段）
+- グレー: `#8E8E93`（`CategoryPalette.gray`。支出スウォッチの末尾。旧 `fixedCost` を改名）
+- DB保存用6桁HEX定数も併記（`CategoryPalette.expense1Hex='F45058'` 等）— シード/注入はこれを参照。既存DBは v13 で旧色→新色に置換
 
 ---
 

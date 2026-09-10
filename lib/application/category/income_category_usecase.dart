@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/core/category_entity/income_category_entity/income_category_entity.dart';
@@ -9,6 +10,8 @@ import 'package:kakeibo/domain/db/income_small_category/income_small_category_re
 import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/income_big_category_value/edit_income_big_category_value.dart';
+import 'package:kakeibo/theme/category_palette.dart';
+import 'package:kakeibo/util/category_color_picker.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
@@ -32,6 +35,17 @@ class IncomeCategoryUsecase {
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get _updateDBCountNotifier =>
       _ref.read(updateDBCountNotifierProvider.notifier);
+
+  /// [pickDefaultColorForNewBigCategory] は新規収入大カテゴリーの既定色を返す
+  ///
+  /// 既存の大カテゴリーが使っていない色のうち、収入スウォッチ順で先頭の色（KP-012 D-07）。
+  Future<Color> pickDefaultColorForNewBigCategory() async {
+    final list = await _bigCategoryRepositoryProvider.fetchAll();
+    return CategoryColorPicker.firstUnused(
+      swatches: CategoryPalette.incomeSwatches,
+      usedColorCodes: list.map((e) => e.colorCode),
+    );
+  }
 
   /// [fetchAllBigCategory] メソッドは、収入大カテゴリーを全て取得する
   Future<List<IncomeBigCategoryEntity>> fetchAllBigCategory() async {

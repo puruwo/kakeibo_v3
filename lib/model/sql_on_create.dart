@@ -105,20 +105,22 @@ class DataBaseHelperHandling {
           ${SqfExpenseBigCategory.isDisplayed}) 
           VALUES('食費', '${CategoryPalette.expense1Hex}', 'assets/images/icon_meal.svg', 0, 1),
                 ('日用品', '${CategoryPalette.expense2Hex}', 'assets/images/icon_commodity.svg', 1, 1),
-                ('遊び娯楽', '${CategoryPalette.expense3Hex}', 'assets/images/icon_favo.svg', 2, 1),
-                ('交通費', '${CategoryPalette.expense4Hex}', 'assets/images/icon_transportation.svg', 3, 1),
-                ('衣服美容', '${CategoryPalette.expense5Hex}', 'assets/images/icon_clothes.svg', 4, 1),
-                ('医療費', '${CategoryPalette.expense6Hex}', 'assets/images/icon_medical.svg', 5, 1),
-                ('雑費', '${CategoryPalette.expense7Hex}', 'assets/images/icon_others.svg', 6, 1),
+                ('遊び娯楽', '${CategoryPalette.expense6Hex}', 'assets/images/icon_favo.svg', 2, 1),
+                ('交通費', '${CategoryPalette.expense7Hex}', 'assets/images/icon_transportation.svg', 3, 1),
+                ('衣服美容', '${CategoryPalette.expense9Hex}', 'assets/images/icon_clothes.svg', 4, 1),
+                ('医療費', '${CategoryPalette.expense10Hex}', 'assets/images/icon_medical.svg', 5, 1),
+                ('雑費', '${CategoryPalette.expense3Hex}', 'assets/images/icon_others.svg', 6, 1),
                 -- 固定費由来のカテゴリー（v10で旧固定費カテゴリーから移設する5件と同じ構成）。
                 -- 新規インストールと移行後の端末で形を揃えるため onCreate にも含める。
                 -- ただし「その他」は既存の「雑費」と用途が重複し紛らわしいため、
                 -- 新規インストールに限り「固定費その他」の名前で作る（移行時は元名のまま併存）。
-                ('住居費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_home.svg', 7, 1),
-                ('サブスク', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_subscription.svg', 8, 1),
-                ('通信費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_cell_tower.svg', 9, 1),
-                ('光熱費', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_water_drop.svg', 10, 1),
-                ('${FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName}', '${CategoryPalette.fixedCostHex}', 'assets/images/icon_others.svg', 11, 1);
+                -- 色は KP-012 で個別化（固定費向け割当色 indigo/pink/teal/lime、「その他」のみグレー。
+                -- v13 で旧グレーの行に巡回配布する並びと同じ）。
+                ('住居費', '${CategoryPalette.expense8Hex}', 'assets/images/icon_home.svg', 7, 1),
+                ('サブスク', '${CategoryPalette.expense11Hex}', 'assets/images/icon_subscription.svg', 8, 1),
+                ('通信費', '${CategoryPalette.expense5Hex}', 'assets/images/icon_cell_tower.svg', 9, 1),
+                ('光熱費', '${CategoryPalette.expense4Hex}', 'assets/images/icon_water_drop.svg', 10, 1),
+                ('${FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName}', '${CategoryPalette.grayHex}', 'assets/images/icon_others.svg', 11, 1);
           ''');
 
     await db.execute('''
@@ -163,8 +165,8 @@ class DataBaseHelperHandling {
           ${SqfIncomeBigCategory.resourcePath},
           ${SqfIncomeBigCategory.accountType})
           VALUES
-          ('月次収入', '${CategoryPalette.income1Hex}', 'assets/images/icon_regular_income.svg', 1),
-          ('ボーナス', '${CategoryPalette.income2Hex}', 'assets/images/icon_extra_income.svg', 2);
+          ('月次収入', '${CategoryPalette.income2Hex}', 'assets/images/icon_regular_income.svg', 1),
+          ('ボーナス', '${CategoryPalette.income3Hex}', 'assets/images/icon_extra_income.svg', 2);
           ''');
 
     await db.execute('''CREATE TABLE ${SqfFixedCost.tableName} (

@@ -37,6 +37,56 @@ class _LegacyFixedCostCategory {
 /// v10で削除した `fixed_cost.fixed_cost_category_id` 列（移行SQL専用）
 const _legacyFixedCostCategoryIdColumn = 'fixed_cost_category_id';
 
+/// v7〜v12 の固定費統一色（v13 で個別化する対象。移行SQL専用）
+const _v12FixedCostGrayHex = '8E8E93';
+
+/// v13: 旧支出パレット（v7〜v12）→ 新支出パレットの対応表（KP-012 仕様書 §3.1）
+///
+/// 既定7カテゴリーも同じ表で新既定色になる（食費 red / 日用品 orange / 遊び娯楽 sky /
+/// 交通費 blue / 衣服美容 violet / 医療費 magenta / 雑費 amber）。
+const _v13ExpenseColorMap = <String, String>{
+  'FF7171': CategoryPalette.expense1Hex, // red
+  'FB5B01': CategoryPalette.expense2Hex, // orange
+  '3DD8E0': CategoryPalette.expense6Hex, // シアン → sky
+  '4BA6FF': CategoryPalette.expense7Hex, // blue
+  'BB87FF': CategoryPalette.expense9Hex, // violet
+  'DF2828': CategoryPalette.expense10Hex, // 深紅 → magenta
+  'FFC700': CategoryPalette.expense3Hex, // amber
+  'AC3E00': CategoryPalette.expense12Hex, // brown
+};
+
+/// v13: 旧収入パレット → 新収入パレットの対応表（1段ずつ濃い側へ）
+const _v13IncomeColorMap = <String, String>{
+  '6EE7B7': CategoryPalette.income1Hex,
+  '21D19F': CategoryPalette.income2Hex,
+  '10B981': CategoryPalette.income3Hex,
+  '059669': CategoryPalette.income4Hex,
+};
+
+/// v13: 旧グレーの固定費由来カテゴリーに名前で割り当てる色（sql_on_create のシードと同じ対応）
+///
+/// v6 シードの並び（住居費・通信費・サブスク・光熱費）と新規インストールの並び
+/// （住居費・サブスク・通信費・光熱費）が異なるため、display_order ではなく名前で引く。
+/// 「その他」系はグレーのまま（新 gray と同値）。
+const _v13FixedCostDerivedColorByName = <String, String>{
+  '住居費': CategoryPalette.expense8Hex, // indigo
+  'サブスク': CategoryPalette.expense11Hex, // pink
+  '通信費': CategoryPalette.expense5Hex, // teal
+  '光熱費': CategoryPalette.expense4Hex, // lime
+  _legacyFallbackCategoryName: CategoryPalette.grayHex,
+  FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName:
+      CategoryPalette.grayHex,
+};
+
+/// v13: 名前が対応表に無い旧グレーの行（ユーザー独自の固定費カテゴリー）へ
+/// display_order 順に巡回配布する色。名前対応表で使われた色は後回しにする
+const _v13FixedCostDerivedRotation = <String>[
+  CategoryPalette.expense8Hex, // indigo
+  CategoryPalette.expense11Hex, // pink
+  CategoryPalette.expense5Hex, // teal
+  CategoryPalette.expense4Hex, // lime
+];
+
 /// 既定の固定費カテゴリー「その他」の名称
 ///
 /// 参照先の `fixed_cost_category` が欠損している行の救済先を特定するために使う
@@ -672,7 +722,8 @@ class DataBaseMigrate {
           ''',
       [
         name,
-        CategoryPalette.fixedCostHex,
+        // v10 当時の固定費統一色（歴史上の値。v13 手順1がこの値を検索して個別化する）
+        _v12FixedCostGrayHex,
         'assets/images/icon_others.svg',
         displayOrder,
       ],
@@ -949,6 +1000,125 @@ class DataBaseMigrate {
   // 配信済みのためバージョン番号は維持し、処理は行わない（2026/08/23）。
   Future<void> toV12(Database db) async {
     logger.i('=== v12マイグレーション: 変更なし（予約済みバージョン） ===');
+  }
+
+  // カテゴリーカラーパレット刷新 (v12 → v13)
+  //
+  // 支出8色＋固定費グレー1色 → 支出12色＋グレー1色、収入4色を新パレットへ置き換える（KP-012）。
+  // スキーマ変更はなく color_code の値だけを更新する。
+  //   手順0: color_code を大文字に正規化する（UI から保存した色は ColorCode.fromColor で小文字になる）
+  //   手順1: 旧グレー（固定費由来）の行を名前で個別色にする。名前が対応表に無い行は巡回配布
+  //   手順2: 残りの行を旧色→新色の対応表で1対1に置換する（既定カテゴリーも同じ表に乗る）
+  // 対応表に無い値（想定外）はそのまま残す。
+  // 新色は旧色のどれとも一致せず、手順1もグレーの行を「名前で」引くため、2回実行しても結果は同じ（冪等）。
+  Future<void> toV13(Database db) async {
+    logger.i('=== v13マイグレーション開始: カテゴリーカラーパレット刷新 ===');
+
+    await _normalizeColorCodeToUpperCase(db);
+    await _assignColorsToLegacyGrayExpenseCategories(db);
+    await _replaceColorsByMap(
+      db,
+      tableName: SqfExpenseBigCategory.tableName,
+      colorColumn: SqfExpenseBigCategory.colorCode,
+      colorMap: _v13ExpenseColorMap,
+      label: '13-2. 支出大カテゴリー',
+    );
+    await _replaceColorsByMap(
+      db,
+      tableName: SqfIncomeBigCategory.tableName,
+      colorColumn: SqfIncomeBigCategory.colorCode,
+      colorMap: _v13IncomeColorMap,
+      label: '13-3. 収入大カテゴリー',
+    );
+
+    logger.i('=== v13マイグレーション完了 ===');
+  }
+
+  /// v13-0: 支出・収入大カテゴリーの color_code を大文字に揃える
+  ///
+  /// 画面から保存した色は `ColorCode.fromColor` により小文字6桁で入るため、
+  /// 大文字で持つ対応表・旧グレー検索と一致させる（値の意味は変わらない）。
+  Future<void> _normalizeColorCodeToUpperCase(Database db) async {
+    await db.execute(
+      'UPDATE ${SqfExpenseBigCategory.tableName} '
+      'SET ${SqfExpenseBigCategory.colorCode} = UPPER(${SqfExpenseBigCategory.colorCode});',
+    );
+    await db.execute(
+      'UPDATE ${SqfIncomeBigCategory.tableName} '
+      'SET ${SqfIncomeBigCategory.colorCode} = UPPER(${SqfIncomeBigCategory.colorCode});',
+    );
+    logger.i('13-0. color_code を大文字に正規化しました');
+  }
+
+  /// v13-1: 旧グレー（v7〜v12 の固定費統一色）の支出大カテゴリーを個別色にする
+  ///
+  /// - 名前が対応表（住居費 indigo / サブスク pink / 通信費 teal / 光熱費 lime / その他系 gray）に
+  ///   あればその色。端末ごとの display_order に依らず、新規インストールのシードと同じ名前→色になる
+  /// - 対応表に無い名前（ユーザー独自の固定費カテゴリー）は display_order 昇順（同順位は _id 昇順）で、
+  ///   名前対応で使われなかった色 → 全4色の順に巡回配布する
+  Future<void> _assignColorsToLegacyGrayExpenseCategories(Database db) async {
+    final rows = await db.query(
+      SqfExpenseBigCategory.tableName,
+      columns: [SqfExpenseBigCategory.id, SqfExpenseBigCategory.name],
+      where: '${SqfExpenseBigCategory.colorCode} = ?',
+      whereArgs: [_v12FixedCostGrayHex],
+      orderBy: '${SqfExpenseBigCategory.displayOrder} ASC, ${SqfExpenseBigCategory.id} ASC',
+    );
+    logger.i('13-1. 旧グレーの支出大カテゴリー ${rows.length} 件を個別色にします');
+
+    final usedByName = <String>{};
+    final unnamedIds = <Object?>[];
+    for (final row in rows) {
+      final name = row[SqfExpenseBigCategory.name] as String;
+      final color = _v13FixedCostDerivedColorByName[name];
+      if (color == null) {
+        unnamedIds.add(row[SqfExpenseBigCategory.id]);
+        continue;
+      }
+      usedByName.add(color);
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: color},
+        where: '${SqfExpenseBigCategory.id} = ?',
+        whereArgs: [row[SqfExpenseBigCategory.id]],
+      );
+    }
+
+    // 名前で引けなかった行は、未使用色を優先した巡回で配る
+    final rotation = [
+      ..._v13FixedCostDerivedRotation.where((c) => !usedByName.contains(c)),
+      ..._v13FixedCostDerivedRotation.where(usedByName.contains),
+    ];
+    for (var i = 0; i < unnamedIds.length; i++) {
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: rotation[i % rotation.length]},
+        where: '${SqfExpenseBigCategory.id} = ?',
+        whereArgs: [unnamedIds[i]],
+      );
+    }
+  }
+
+  /// v13-2/3: 対応表に載っている旧色を新色へ1対1で置換する
+  ///
+  /// 新色は旧色のどれとも一致しないため、2回実行しても値は変わらない（冪等）。
+  Future<void> _replaceColorsByMap(
+    Database db, {
+    required String tableName,
+    required String colorColumn,
+    required Map<String, String> colorMap,
+    required String label,
+  }) async {
+    var updated = 0;
+    for (final entry in colorMap.entries) {
+      updated += await db.update(
+        tableName,
+        {colorColumn: entry.value},
+        where: '$colorColumn = ?',
+        whereArgs: [entry.key],
+      );
+    }
+    logger.i('$label: $updated 件の色を新パレットへ置換しました');
   }
 
   /// v11: fixed_cost に estimated_price_is_manual を追加する。

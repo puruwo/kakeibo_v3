@@ -3,6 +3,7 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
+import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
@@ -40,6 +41,20 @@ class _IncomeCategoryAppearanceEditAreaState
     // 編集モード時のみ初期値をセット
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.bigId == -1) {
+        // 新規作成: 既定色は「既存カテゴリーが使っていない先頭の色」（KP-012 D-07）
+        Future(() async {
+          final color = await ref
+              .read(incomeCategoryUsecaseProvider)
+              .pickDefaultColorForNewBigCategory();
+          if (!mounted) return;
+          // 取得を待つ間にユーザーが色や名前を触っていたら上書きしない
+          if (ref.read(isIncomeBigCategoryAppearanceEditedNotifierProvider)) {
+            return;
+          }
+          ref
+              .read(incomeBigCategoryColorControllerNotifierProvider.notifier)
+              .initState(color);
+        });
         return;
       }
 

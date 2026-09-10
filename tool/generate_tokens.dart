@@ -220,12 +220,13 @@ void _generateCategoryPalette(Map<String, dynamic> category, String inputPath) {
 
   final expense = readGroup('expense');
   final income = readGroup('income');
-  final fixedLeaf = category['fixed'];
-  if (fixedLeaf is! Map<String, dynamic> || fixedLeaf['type'] != 'color') {
-    stderr.writeln('❌ category.fixed が見つかりません');
+  // グレー（支出パレットの末尾に置く1色。旧 category.fixed を改名・KP-012）
+  final grayLeaf = category['gray'];
+  if (grayLeaf is! Map<String, dynamic> || grayLeaf['type'] != 'color') {
+    stderr.writeln('❌ category.gray が見つかりません');
     exit(1);
   }
-  final fixedHex = fixedLeaf['value'].toString();
+  final grayHex = grayLeaf['value'].toString();
 
   final buf = StringBuffer();
   buf.writeln('// GENERATED CODE - DO NOT MODIFY BY HAND');
@@ -251,8 +252,8 @@ void _generateCategoryPalette(Map<String, dynamic> category, String inputPath) {
     buf.writeln('  static const Color income${i + 1} = ${_toColorLiteral(income[i], 'category.income.${i + 1}')};');
   }
   buf.writeln('');
-  buf.writeln('  // 固定費カテゴリー');
-  buf.writeln('  static const Color fixedCost = ${_toColorLiteral(fixedHex, 'category.fixed')};');
+  buf.writeln('  // グレー（支出パレット末尾。固定費由来カテゴリーの「その他」等に使う）');
+  buf.writeln('  static const Color gray = ${_toColorLiteral(grayHex, 'category.gray')};');
   buf.writeln('');
   buf.writeln('  // --- DB保存用 6桁HEX（alpha無し） ---');
   for (var i = 0; i < expense.length; i++) {
@@ -261,10 +262,10 @@ void _generateCategoryPalette(Map<String, dynamic> category, String inputPath) {
   for (var i = 0; i < income.length; i++) {
     buf.writeln("  static const String income${i + 1}Hex = '${_hex6(income[i])}';");
   }
-  buf.writeln("  static const String fixedCostHex = '${_hex6(fixedHex)}';");
+  buf.writeln("  static const String grayHex = '${_hex6(grayHex)}';");
   buf.writeln('');
-  buf.writeln('  /// 支出パレットのスウォッチ（表示順）。');
-  buf.writeln('  static const List<Color> expenseSwatches = [${List.generate(expense.length, (i) => 'expense${i + 1}').join(', ')}];');
+  buf.writeln('  /// 支出パレットのスウォッチ（表示順。末尾はグレー）。');
+  buf.writeln('  static const List<Color> expenseSwatches = [${List.generate(expense.length, (i) => 'expense${i + 1}').join(', ')}, gray];');
   buf.writeln('');
   buf.writeln('  /// 収入パレットのスウォッチ（表示順）。');
   buf.writeln('  static const List<Color> incomeSwatches = [${List.generate(income.length, (i) => 'income${i + 1}').join(', ')}];');
@@ -275,7 +276,7 @@ void _generateCategoryPalette(Map<String, dynamic> category, String inputPath) {
   outFile.writeAsStringSync(buf.toString());
 
   stdout.writeln('✅ 生成完了: $outputPath');
-  stdout.writeln('   category : expense ${expense.length} / income ${income.length} / fixed 1（Color + 6桁HEX）');
+  stdout.writeln('   category : expense ${expense.length} / income ${income.length} / gray 1（Color + 6桁HEX）');
 }
 
 /// static const Color フィールドのみを持つ色クラスを buf に書き出す。

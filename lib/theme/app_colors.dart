@@ -86,9 +86,9 @@ class AppColors extends ThemeExtension<AppColors> {
     textSecondary: Color(0x993C3C43),
     textTertiary: Color(0x4C3C3C43),
     separator: Color(0x493C3C43),
-    expense: Color(0xFFFF7171),
-    income: Color(0xFF21D19F),
-    danger: Color(0xFFFF7171),
+    expense: Color(0xFFF45058),
+    income: Color(0xFF12C281),
+    danger: Color(0xFFF45058),
     icon: Color(0xFF8E8E93),
     disabled: Color(0xFFD1D1D6),
     overlay: Color(0x33000000),
@@ -115,9 +115,9 @@ class AppColors extends ThemeExtension<AppColors> {
     textSecondary: Color(0x99EBEBF5),
     textTertiary: Color(0x4CEBEBF5),
     separator: Color(0x99545458),
-    expense: Color(0xFFFF7171),
-    income: Color(0xFF21D19F),
-    danger: Color(0xFFFF7171),
+    expense: Color(0xFFF45058),
+    income: Color(0xFF12C281),
+    danger: Color(0xFFF45058),
     icon: Color(0xFF8E8E93),
     disabled: Color(0xFF3A3A3C),
     overlay: Color(0x33000000),
@@ -248,9 +248,9 @@ class AppColorsLight {
   static const Color textSecondary = Color(0x993C3C43);
   static const Color textTertiary = Color(0x4C3C3C43);
   static const Color separator = Color(0x493C3C43);
-  static const Color expense = Color(0xFFFF7171);
-  static const Color income = Color(0xFF21D19F);
-  static const Color danger = Color(0xFFFF7171);
+  static const Color expense = Color(0xFFF45058);
+  static const Color income = Color(0xFF12C281);
+  static const Color danger = Color(0xFFF45058);
   static const Color icon = Color(0xFF8E8E93);
   static const Color disabled = Color(0xFFD1D1D6);
   static const Color overlay = Color(0x33000000);
@@ -280,9 +280,9 @@ class AppColorsDark {
   static const Color textSecondary = Color(0x99EBEBF5);
   static const Color textTertiary = Color(0x4CEBEBF5);
   static const Color separator = Color(0x99545458);
-  static const Color expense = Color(0xFFFF7171);
-  static const Color income = Color(0xFF21D19F);
-  static const Color danger = Color(0xFFFF7171);
+  static const Color expense = Color(0xFFF45058);
+  static const Color income = Color(0xFF12C281);
+  static const Color danger = Color(0xFFF45058);
   static const Color icon = Color(0xFF8E8E93);
   static const Color disabled = Color(0xFF3A3A3C);
   static const Color overlay = Color(0x33000000);
