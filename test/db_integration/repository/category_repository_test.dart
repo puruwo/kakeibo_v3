@@ -6,6 +6,7 @@
 // - is_displayed = 0 のカテゴリーは「実績が1件も無いとき」だけ隠れる
 // - 並びは _id ではなく display_order
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/repository/category_repository.dart';
 
 import '../../helper/db_test_helper.dart';
@@ -130,7 +131,7 @@ void main() {
         12,
       ]);
       expect(results.first.bigCategoryName, '食費');
-      expect(results.first.categoryColor, 'FF7171');
+      expect(results.first.categoryColor, CategoryPalette.expense1Hex);
       expect(results.first.categoryIconPath, 'assets/images/icon_meal.svg');
     });
 

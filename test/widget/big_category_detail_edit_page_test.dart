@@ -313,7 +313,7 @@ void main() {
       await pumpTimes(tester);
       expect(find.text('カテゴリーカラーを選択'), findsOneWidget);
 
-      // パレット2色目（CategoryPalette.expense2 = FB5B01）を選ぶ
+      // パレット2色目（CategoryPalette.expense2 = FD7920・orange）を選ぶ
       // （案件 UIデザイン改修 §8: 選択UIはダイアログからボトムシートに変更）
       await tester.tap(
         find
@@ -331,7 +331,7 @@ void main() {
       expect(fakes.expenseBigCategory.updatedEntities, hasLength(1));
       final updated = fakes.expenseBigCategory.updatedEntities.single;
       // 保存されるカラーコードは小文字6桁HEX。名前は変更していないので元のまま
-      expect(updated.colorCode, 'fb5b01');
+      expect(updated.colorCode, 'fd7920');
       expect(updated.bigCategoryName, '生活費');
 
       await waitForSnackBarDismissed(tester);

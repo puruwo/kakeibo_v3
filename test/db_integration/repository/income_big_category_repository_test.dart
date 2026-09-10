@@ -31,11 +31,11 @@ void main() {
         const IncomeBigCategoryEntity(
           id: 1,
           name: '月次収入',
-          colorCode: CategoryPalette.income1Hex,
+          colorCode: CategoryPalette.income2Hex,
           iconPath: 'assets/images/icon_regular_income.svg',
         ),
       );
-      expect(results[1].colorCode, CategoryPalette.income2Hex);
+      expect(results[1].colorCode, CategoryPalette.income3Hex);
       expect(results[1].iconPath, 'assets/images/icon_extra_income.svg');
     });
 
@@ -61,7 +61,7 @@ void main() {
       final result = await repository.fetchByBigCategory(bigCategoryId: 2);
 
       expect(result.name, 'ボーナス');
-      expect(result.colorCode, CategoryPalette.income2Hex);
+      expect(result.colorCode, CategoryPalette.income3Hex);
     });
 
     test('存在しないidなら空の既定エンティティを返す', () async {

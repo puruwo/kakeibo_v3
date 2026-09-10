@@ -441,7 +441,7 @@ void main() {
       );
       expect(categoryExpenses.first.price, 86000);
       expect(categoryExpenses.first.categoryName, '固定費');
-      expect(categoryExpenses.first.colorCode, CategoryPalette.fixedCostHex);
+      expect(categoryExpenses.first.colorCode, CategoryPalette.grayHex);
       expect(categoryExpenses.first.iconPath, '');
       // 固定費行はカテゴリー別の棒には二重計上されない
       expect(categoryExpenses[1].bigCategoryId, 1);
