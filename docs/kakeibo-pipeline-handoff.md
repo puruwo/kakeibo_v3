@@ -40,7 +40,7 @@ kakeibo（Flutter家計簿アプリ、現在ダークのみ、カップル/共�
 | `design-tokens/tokens.json` | **全色の唯一の定義元**。primitive / light / dark / category の4セット（Tokens Studio形式） |
 | `tool/generate_tokens.dart` | tokens.json → Dartコード生成スクリプト（`dart run tool/generate_tokens.dart`） |
 | `lib/theme/app_colors.dart`（生成物） | `AppColors`（ThemeExtension・22トークン）+ `context.colors` 拡張 + const用 `AppColorsDark`/`AppColorsLight` |
-| `lib/theme/category_palette.dart`（生成物） | カテゴリーの支出8色/収入4色/固定費色（Color とDB用hex文字列） |
+| `lib/theme/category_palette.dart`（生成物） | カテゴリーの支出12色/収入4色/グレー（Color とDB用hex文字列。KP-012 で刷新） |
 | `lib/util/color_code.dart` | hex↔Color 変換ヘルパー（旧 MyColors から分離） |
 | `lib/main.dart` | MaterialApp に light/dark 両テーマ登録。`themeMode: ThemeMode.dark` 固定 |
 | `scripts/check_hardcoded_color.sh` + `.claude/settings.json` | ハードコード色 検出 hook |

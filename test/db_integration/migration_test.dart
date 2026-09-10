@@ -270,14 +270,15 @@ void main() {
             .take(7)
             .map((row) => row[SqfExpenseBigCategory.colorCode])
             .toList(),
+        // v7 当時のパレット（v13 で新パレットへ置き換えたため、歴史上の値をリテラルで固定する）
         [
-          CategoryPalette.expense1Hex,
-          CategoryPalette.expense2Hex,
-          CategoryPalette.expense3Hex,
-          CategoryPalette.expense4Hex,
-          CategoryPalette.expense5Hex,
-          CategoryPalette.expense6Hex,
-          CategoryPalette.expense7Hex,
+          'FF7171',
+          'FB5B01',
+          '3DD8E0',
+          '4BA6FF',
+          'BB87FF',
+          'DF2828',
+          'FFC700',
         ],
       );
     });
@@ -293,10 +294,11 @@ void main() {
       );
       expect(rows.length, 5);
       // WHERE句なしのUPDATEなので、カテゴリーに関係なく全件が同じ色になる
+      // （v7 の固定費統一色。v13 では grayHex と同じ値）
       for (final row in rows) {
         expect(
           row[SqfFixedCostCategory.colorCode],
-          CategoryPalette.fixedCostHex,
+          '8E8E93',
         );
       }
     });
@@ -310,9 +312,10 @@ void main() {
         SqfIncomeBigCategory.tableName,
         orderBy: SqfIncomeBigCategory.id,
       );
+      // v7 当時の収入色（歴史上の値）
       expect(rows.map((row) => row[SqfIncomeBigCategory.colorCode]).toList(), [
-        CategoryPalette.income1Hex,
-        CategoryPalette.income2Hex,
+        '21D19F',
+        '10B981',
       ]);
     });
 
@@ -1713,7 +1716,310 @@ void main() {
   // -------------------------------------------------------------------------
   // マイグレーションチェーン（本番のonUpgrade経路）
   // -------------------------------------------------------------------------
-  group('マイグレーションチェーン v6 → v10', () {
+  group('toV13: カテゴリーカラーパレット刷新', () {
+    // v12 時点の既定色（sql_on_create の旧値。歴史上の値なのでリテラルで固定する）
+    const legacyExpenseDefaults = [
+      'FF7171', // 食費
+      'FB5B01', // 日用品
+      '3DD8E0', // 遊び娯楽
+      '4BA6FF', // 交通費
+      'BB87FF', // 衣服美容
+      'DF2828', // 医療費
+      'FFC700', // 雑費
+    ];
+    const legacyGray = '8E8E93';
+
+    /// 現行スキーマのDBを開き、色コードだけ v12 時点の値へ差し戻す
+    ///
+    /// 支出: _id 1〜7 は旧既定色、8〜12（固定費由来）は旧グレー。
+    /// 収入: 月次収入 21D19F / ボーナス 10B981。
+    Future<Database> prepareV12Colors() async {
+      final db = await openTestDatabase();
+      for (var i = 0; i < legacyExpenseDefaults.length; i++) {
+        await db.update(
+          SqfExpenseBigCategory.tableName,
+          {SqfExpenseBigCategory.colorCode: legacyExpenseDefaults[i]},
+          where: '${SqfExpenseBigCategory.id} = ?',
+          whereArgs: [i + 1],
+        );
+      }
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: legacyGray},
+        where: '${SqfExpenseBigCategory.id} >= ?',
+        whereArgs: [8],
+      );
+      await db.update(
+        SqfIncomeBigCategory.tableName,
+        {SqfIncomeBigCategory.colorCode: '21D19F'},
+        where: '${SqfIncomeBigCategory.id} = ?',
+        whereArgs: [1],
+      );
+      await db.update(
+        SqfIncomeBigCategory.tableName,
+        {SqfIncomeBigCategory.colorCode: '10B981'},
+        where: '${SqfIncomeBigCategory.id} = ?',
+        whereArgs: [2],
+      );
+      return db;
+    }
+
+    Future<List<Object?>> expenseColorsById(Database db) async {
+      final rows = await db.query(
+        SqfExpenseBigCategory.tableName,
+        orderBy: SqfExpenseBigCategory.id,
+      );
+      return rows.map((row) => row[SqfExpenseBigCategory.colorCode]).toList();
+    }
+
+    test('既定7カテゴリーの色は対応表どおり新既定色になる', () async {
+      final db = await prepareV12Colors();
+
+      await DataBaseMigrate().toV13(db);
+
+      final colors = await expenseColorsById(db);
+      expect(colors.take(7).toList(), [
+        CategoryPalette.expense1Hex, // 食費 red
+        CategoryPalette.expense2Hex, // 日用品 orange
+        CategoryPalette.expense6Hex, // 遊び娯楽 sky
+        CategoryPalette.expense7Hex, // 交通費 blue
+        CategoryPalette.expense9Hex, // 衣服美容 violet
+        CategoryPalette.expense10Hex, // 医療費 magenta
+        CategoryPalette.expense3Hex, // 雑費 amber
+      ]);
+    });
+
+    test('旧グレーの固定費由来5件は名前で indigo/pink/teal/lime/gray になる', () async {
+      final db = await prepareV12Colors();
+
+      await DataBaseMigrate().toV13(db);
+
+      final colors = await expenseColorsById(db);
+      // _id 8〜12 = 住居費・サブスク・通信費・光熱費・固定費その他（新規インストールのシードと同じ名前→色）
+      expect(colors.skip(7).toList(), [
+        CategoryPalette.expense8Hex,
+        CategoryPalette.expense11Hex,
+        CategoryPalette.expense5Hex,
+        CategoryPalette.expense4Hex,
+        CategoryPalette.grayHex,
+      ]);
+    });
+
+    Future<int> insertLegacyGrayCategory(
+      Database db, {
+      required String name,
+      required int displayOrder,
+    }) {
+      return db.insert(SqfExpenseBigCategory.tableName, {
+        SqfExpenseBigCategory.name: name,
+        SqfExpenseBigCategory.colorCode: legacyGray,
+        SqfExpenseBigCategory.resourcePath: 'assets/images/icon_others.svg',
+        SqfExpenseBigCategory.displayOrder: displayOrder,
+        SqfExpenseBigCategory.isDisplayed: 1,
+      });
+    }
+
+    Future<Object?> colorOfName(Database db, String name) async {
+      final rows = await db.query(
+        SqfExpenseBigCategory.tableName,
+        where: '${SqfExpenseBigCategory.name} = ?',
+        whereArgs: [name],
+      );
+      return rows.single[SqfExpenseBigCategory.colorCode];
+    }
+
+    test('名前の割当は display_order の並びに依らない（v6 由来の 通信費→サブスク 順でも同じ色）', () async {
+      final db = await prepareV12Colors();
+      // v6 シードは 住居費・通信費・サブスク・光熱費 の順（新規インストールは サブスク・通信費）
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.displayOrder: 8},
+        where: '${SqfExpenseBigCategory.name} = ?',
+        whereArgs: ['通信費'],
+      );
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.displayOrder: 9},
+        where: '${SqfExpenseBigCategory.name} = ?',
+        whereArgs: ['サブスク'],
+      );
+
+      await DataBaseMigrate().toV13(db);
+
+      expect(await colorOfName(db, 'サブスク'), CategoryPalette.expense11Hex); // pink
+      expect(await colorOfName(db, '通信費'), CategoryPalette.expense5Hex); // teal
+    });
+
+    test('旧「その他」（v10 で移設した名前のまま）もグレーのまま残る', () async {
+      final db = await prepareV12Colors();
+      await insertLegacyGrayCategory(db, name: 'その他', displayOrder: 12);
+
+      await DataBaseMigrate().toV13(db);
+
+      expect(await colorOfName(db, 'その他'), CategoryPalette.grayHex);
+    });
+
+    test('名前が対応表に無い旧グレーの行は、名前割当で使われなかった色から display_order 順に配られる', () async {
+      final db = await prepareV12Colors();
+      // 住居費を消して indigo を空けておく（ユーザーが独自カテゴリーに整理した想定）
+      await db.delete(
+        SqfExpenseBigCategory.tableName,
+        where: '${SqfExpenseBigCategory.name} = ?',
+        whereArgs: ['住居費'],
+      );
+      await insertLegacyGrayCategory(db, name: '保険', displayOrder: 13);
+      await insertLegacyGrayCategory(db, name: '駐車場', displayOrder: 12);
+
+      await DataBaseMigrate().toV13(db);
+
+      // display_order 順: 駐車場(12) → 未使用の indigo、保険(13) → 使用済み側の先頭 pink
+      expect(await colorOfName(db, '駐車場'), CategoryPalette.expense8Hex);
+      expect(await colorOfName(db, '保険'), CategoryPalette.expense11Hex);
+    });
+
+    test('名前が対応表に無い旧グレーが複数あれば、未使用色を使い切ってから全4色を巡回する', () async {
+      final db = await prepareV12Colors();
+      await insertLegacyGrayCategory(db, name: '保険', displayOrder: 12);
+      await insertLegacyGrayCategory(db, name: '駐車場', displayOrder: 13);
+      await insertLegacyGrayCategory(db, name: '習い事', displayOrder: 14);
+
+      await DataBaseMigrate().toV13(db);
+
+      // 名前割当で4色すべて使用済み → indigo / pink / teal の順で巡回
+      expect(await colorOfName(db, '保険'), CategoryPalette.expense8Hex);
+      expect(await colorOfName(db, '駐車場'), CategoryPalette.expense11Hex);
+      expect(await colorOfName(db, '習い事'), CategoryPalette.expense5Hex);
+    });
+
+    test('画面から保存した小文字の色コードも大文字に正規化されて置換される', () async {
+      final db = await prepareV12Colors();
+      // ColorCode.fromColor は小文字6桁で保存する
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: 'ac3e00'},
+        where: '${SqfExpenseBigCategory.id} = ?',
+        whereArgs: [1],
+      );
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: '8e8e93'},
+        where: '${SqfExpenseBigCategory.name} = ?',
+        whereArgs: ['住居費'],
+      );
+      await db.update(
+        SqfIncomeBigCategory.tableName,
+        {SqfIncomeBigCategory.colorCode: '059669'.toLowerCase()},
+        where: '${SqfIncomeBigCategory.id} = ?',
+        whereArgs: [2],
+      );
+
+      await DataBaseMigrate().toV13(db);
+
+      final colors = await expenseColorsById(db);
+      expect(colors[0], CategoryPalette.expense12Hex); // brown
+      expect(await colorOfName(db, '住居費'), CategoryPalette.expense8Hex); // indigo
+      final income = await db.query(SqfIncomeBigCategory.tableName, orderBy: SqfIncomeBigCategory.id);
+      expect(income[1][SqfIncomeBigCategory.colorCode], CategoryPalette.income4Hex);
+    });
+
+    test('ユーザーが変更済みの色も対応表で同じ位置の新色へ乗り換える', () async {
+      final db = await prepareV12Colors();
+      // 食費を旧ブラウン、日用品を旧深紅に変えていたユーザー
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: 'AC3E00'},
+        where: '${SqfExpenseBigCategory.id} = ?',
+        whereArgs: [1],
+      );
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: 'DF2828'},
+        where: '${SqfExpenseBigCategory.id} = ?',
+        whereArgs: [2],
+      );
+
+      await DataBaseMigrate().toV13(db);
+
+      final colors = await expenseColorsById(db);
+      expect(colors[0], CategoryPalette.expense12Hex); // brown
+      expect(colors[1], CategoryPalette.expense10Hex); // magenta
+    });
+
+    test('対応表に無い色コードはそのまま残る', () async {
+      final db = await prepareV12Colors();
+      await db.update(
+        SqfExpenseBigCategory.tableName,
+        {SqfExpenseBigCategory.colorCode: '123456'},
+        where: '${SqfExpenseBigCategory.id} = ?',
+        whereArgs: [3],
+      );
+
+      await DataBaseMigrate().toV13(db);
+
+      final colors = await expenseColorsById(db);
+      expect(colors[2], '123456');
+    });
+
+    test('収入大カテゴリーは既定2件もユーザー追加分も対応表で1段濃い側の新色になる', () async {
+      final db = await prepareV12Colors();
+      await insertIncomeBigCategoryRow(name: '副業', colorCode: '059669', id: 3);
+      await insertIncomeBigCategoryRow(name: '配当', colorCode: '6EE7B7', id: 4);
+
+      await DataBaseMigrate().toV13(db);
+
+      final rows = await db.query(
+        SqfIncomeBigCategory.tableName,
+        orderBy: SqfIncomeBigCategory.id,
+      );
+      expect(rows.map((row) => row[SqfIncomeBigCategory.colorCode]).toList(), [
+        CategoryPalette.income2Hex, // 月次収入 21D19F →
+        CategoryPalette.income3Hex, // ボーナス 10B981 →
+        CategoryPalette.income4Hex, // 059669 →
+        CategoryPalette.income1Hex, // 6EE7B7 →
+      ]);
+    });
+
+    test('2回連続で実行しても値が変わらない（冪等）', () async {
+      final db = await prepareV12Colors();
+      await insertLegacyGrayCategory(db, name: '保険', displayOrder: 12);
+
+      await DataBaseMigrate().toV13(db);
+      final first = await expenseColorsById(db);
+      final firstIncome = await db.query(SqfIncomeBigCategory.tableName, orderBy: SqfIncomeBigCategory.id);
+      // 2回目: 新色は旧色と重ならず、残るグレーは「その他」系（名前で gray に固定）だけなので変わらない
+      await DataBaseMigrate().toV13(db);
+      final second = await expenseColorsById(db);
+      final secondIncome = await db.query(SqfIncomeBigCategory.tableName, orderBy: SqfIncomeBigCategory.id);
+
+      expect(second, first);
+      expect(secondIncome, firstIncome);
+    });
+
+    test('色以外の列（名前・アイコンパス・表示順・表示フラグ）は変化しない', () async {
+      final db = await prepareV12Colors();
+      final before = await db.query(
+        SqfExpenseBigCategory.tableName,
+        orderBy: SqfExpenseBigCategory.id,
+      );
+
+      await DataBaseMigrate().toV13(db);
+
+      final after = await db.query(
+        SqfExpenseBigCategory.tableName,
+        orderBy: SqfExpenseBigCategory.id,
+      );
+      expect(after.length, before.length);
+      for (var i = 0; i < before.length; i++) {
+        expect(after[i][SqfExpenseBigCategory.id], before[i][SqfExpenseBigCategory.id]);
+        expect(after[i][SqfExpenseBigCategory.name], before[i][SqfExpenseBigCategory.name]);
+        expect(after[i][SqfExpenseBigCategory.resourcePath], before[i][SqfExpenseBigCategory.resourcePath]);
+        expect(after[i][SqfExpenseBigCategory.displayOrder], before[i][SqfExpenseBigCategory.displayOrder]);
+        expect(after[i][SqfExpenseBigCategory.isDisplayed], before[i][SqfExpenseBigCategory.isDisplayed]);
+      }
+    });
+  });
+
+  group('マイグレーションチェーン v6 → v13', () {
     /// v6形状のDBファイルを DatabaseHelper のパスに作って閉じる
     ///
     /// テーブル定義はv6時点のもの（fixed_costはタイポ列 /
@@ -1852,7 +2158,7 @@ void main() {
       await db.close();
     }
 
-    test('v6形状のDBを開くとonUpgradeでv7〜v12が順に適用されuser_versionが12になる（v12は処理なし）', () async {
+    test('v6形状のDBを開くとonUpgradeでv7〜v13が順に適用されuser_versionが13になる（v12は処理なし）', () async {
       final path = await currentDatabasePath();
       await createV6DatabaseFile(path);
 
@@ -1860,7 +2166,7 @@ void main() {
       final db = await openTestDatabase();
 
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 12);
+      expect(rows.first.values.first, 13);
       // v11 の列追加まで到達していること
       final columns = await _columnNames(db, SqfFixedCost.tableName);
       expect(columns.contains(SqfFixedCost.estimatedPriceIsManual), isTrue);
@@ -1881,19 +2187,30 @@ void main() {
         bigCategories.first[SqfExpenseBigCategory.colorCode],
         CategoryPalette.expense1Hex,
       );
-      // v7で統一した固定費カテゴリーの色は、v10の移設先大カテゴリーへ引き継がれる
+      // v7で統一した固定費カテゴリーの色は v10 の移設先大カテゴリーへ引き継がれ、
+      // v13 で名前ごとの固定費向け割当色へ個別化される。
+      // v6 シードの並びは 住居費・通信費・サブスク・光熱費・その他（新規インストールとサブスク/通信費が逆）
+      // だが、名前で引くため新規インストールと同じ名前→色になる
       final movedCategories = await db.query(
         SqfExpenseBigCategory.tableName,
         where: '${SqfExpenseBigCategory.displayOrder} >= ?',
         whereArgs: [7],
+        orderBy: SqfExpenseBigCategory.displayOrder,
       );
       expect(movedCategories, hasLength(5));
-      for (final row in movedCategories) {
-        expect(
-          row[SqfExpenseBigCategory.colorCode],
-          CategoryPalette.fixedCostHex,
-        );
-      }
+      expect(
+        {
+          for (final row in movedCategories)
+            row[SqfExpenseBigCategory.name]: row[SqfExpenseBigCategory.colorCode],
+        },
+        {
+          '住居費': CategoryPalette.expense8Hex,
+          '通信費': CategoryPalette.expense5Hex,
+          'サブスク': CategoryPalette.expense11Hex,
+          '光熱費': CategoryPalette.expense4Hex,
+          'その他': CategoryPalette.grayHex,
+        },
+      );
 
       // v8: タイポ列の改名と fixed_cost_id の追加・バックフィル
       final fixedCostColumns = await _columnNames(db, SqfFixedCost.tableName);

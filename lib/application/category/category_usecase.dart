@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
@@ -6,6 +7,8 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_big_category_with_small_list_value/edit_expense_big_category_value.dart';
+import 'package:kakeibo/theme/category_palette.dart';
+import 'package:kakeibo/util/category_color_picker.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
@@ -110,6 +113,17 @@ class CategoryUsecase {
         .fetchByBigCategory(bigCategoryId: bigId);
 
     return bigCategoryEntity;
+  }
+
+  /// [pickDefaultColorForNewBigCategory] は新規大カテゴリーの既定色を返す
+  ///
+  /// 既存の大カテゴリーが使っていない色のうち、支出スウォッチ順で先頭の色（KP-012 D-07）。
+  Future<Color> pickDefaultColorForNewBigCategory() async {
+    final list = await _bigCategoryRepositoryProvider.fetchAll();
+    return CategoryColorPicker.firstUnused(
+      swatches: CategoryPalette.expenseSwatches,
+      usedColorCodes: list.map((e) => e.colorCode),
+    );
   }
 
   /// [fetchAllBigCategoriesWithSmallList]はsmallCategoryの情報を添えて全ての大カテゴリーを取得する

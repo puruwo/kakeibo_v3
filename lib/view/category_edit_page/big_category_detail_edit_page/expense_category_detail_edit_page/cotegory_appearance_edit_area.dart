@@ -3,6 +3,7 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
+import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/color_select_dialog.dart';
@@ -40,8 +41,20 @@ class _BigCategoryAppearanceEditAreaState
 
     // 取得したデータをコントローラーに格納し編集できる状態にする
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      // -1の時は新規作成のため、initialItemはなく、下記処理はしない
+      // -1の時は新規作成のため、initialItemはない。
+      // 既定色だけは「既存カテゴリーが使っていない先頭の色」にする（KP-012 D-07）
       if (widget.bigId == -1) {
+        Future(() async {
+          final color = await ref
+              .read(categoryUsecaseProvider)
+              .pickDefaultColorForNewBigCategory();
+          if (!mounted) return;
+          // 取得を待つ間にユーザーが色や名前を触っていたら上書きしない
+          if (ref.read(isBigCategoryAppearanceEditedNotifierProvider)) return;
+          ref
+              .read(bigCategroyColorControllerNotifierProvider.notifier)
+              .initState(color);
+        });
         return;
       }
 

@@ -37,11 +37,11 @@ void main() {
       );
     });
 
-    test('新規作成直後のスキーマバージョンは12になる', () async {
+    test('新規作成直後のスキーマバージョンは13になる', () async {
       final db = await openTestDatabase();
       // DatabaseHelper._databaseVersion と一致していること
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 12);
+      expect(rows.first.values.first, 13);
     });
 
     test('income_big_categoryは会計種別を持ち、月次収入=1・ボーナス=2で作成される', () async {
@@ -68,22 +68,23 @@ void main() {
       expect(rows.length, 12);
 
       // 色は CategoryPalette の6桁HEX定数と照合する（DB側はalpha無しの6桁）
+      // 割当は KP-012 仕様書 §4（display_order で隣接する色の色相が離れる並び）
       final expected = <List<Object>>[
-        ['食費', CategoryPalette.expense1Hex, 0],
-        ['日用品', CategoryPalette.expense2Hex, 1],
-        ['遊び娯楽', CategoryPalette.expense3Hex, 2],
-        ['交通費', CategoryPalette.expense4Hex, 3],
-        ['衣服美容', CategoryPalette.expense5Hex, 4],
-        ['医療費', CategoryPalette.expense6Hex, 5],
-        ['雑費', CategoryPalette.expense7Hex, 6],
-        // 固定費由来（色は固定費色で統一。「その他」だけ名前が「固定費その他」）
-        ['住居費', CategoryPalette.fixedCostHex, 7],
-        ['サブスク', CategoryPalette.fixedCostHex, 8],
-        ['通信費', CategoryPalette.fixedCostHex, 9],
-        ['光熱費', CategoryPalette.fixedCostHex, 10],
+        ['食費', CategoryPalette.expense1Hex, 0], // red
+        ['日用品', CategoryPalette.expense2Hex, 1], // orange
+        ['遊び娯楽', CategoryPalette.expense6Hex, 2], // sky
+        ['交通費', CategoryPalette.expense7Hex, 3], // blue
+        ['衣服美容', CategoryPalette.expense9Hex, 4], // violet
+        ['医療費', CategoryPalette.expense10Hex, 5], // magenta
+        ['雑費', CategoryPalette.expense3Hex, 6], // amber
+        // 固定費由来（v13 で個別色に。「その他」だけ名前が「固定費その他」で色はグレー）
+        ['住居費', CategoryPalette.expense8Hex, 7], // indigo
+        ['サブスク', CategoryPalette.expense11Hex, 8], // pink
+        ['通信費', CategoryPalette.expense5Hex, 9], // teal
+        ['光熱費', CategoryPalette.expense4Hex, 10], // lime
         [
           FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName,
-          CategoryPalette.fixedCostHex,
+          CategoryPalette.grayHex,
           11,
         ],
       ];
@@ -157,12 +158,12 @@ void main() {
       expect(rows[0][SqfIncomeBigCategory.name], '月次収入');
       expect(
         rows[0][SqfIncomeBigCategory.colorCode],
-        CategoryPalette.income1Hex,
+        CategoryPalette.income2Hex,
       );
       expect(rows[1][SqfIncomeBigCategory.name], 'ボーナス');
       expect(
         rows[1][SqfIncomeBigCategory.colorCode],
-        CategoryPalette.income2Hex,
+        CategoryPalette.income3Hex,
       );
     });
 

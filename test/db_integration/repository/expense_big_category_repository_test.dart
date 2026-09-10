@@ -129,7 +129,7 @@ void main() {
       final result = await repository.fetchByBigCategory(bigCategoryId: 3);
 
       expect(result.bigCategoryName, '遊び娯楽');
-      expect(result.colorCode, CategoryPalette.expense3Hex);
+      expect(result.colorCode, CategoryPalette.expense6Hex); // sky（KP-012 の割当）
       expect(result.displayOrder, 2);
     });
 
