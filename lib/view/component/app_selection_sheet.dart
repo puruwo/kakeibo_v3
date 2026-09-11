@@ -60,7 +60,7 @@ class AppSelectionSheet extends StatelessWidget {
           // タイトル
           Padding(
             padding: const EdgeInsets.fromLTRB(24, 12, 24, 4),
-            child: Text(title, style: AppTextStyles.dialogTitle),
+            child: Text(title, style: context.textStyles.dialogTitle),
           ),
           // 中身（あふれる場合はスクロール）
           Flexible(

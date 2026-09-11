@@ -21,7 +21,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text('固定費', style: AppTextStyles.pageHeaderText),
+        title: Text('固定費', style: context.textStyles.pageHeaderText),
       ),
       body: Column(
         children: [

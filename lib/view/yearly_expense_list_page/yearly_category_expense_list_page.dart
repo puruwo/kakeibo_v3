@@ -104,7 +104,7 @@ class _YearlyCategoryExpenseListPageState
               ),
               const SizedBox(width: AppSpacing.sm),
             ],
-            Text(widget.bigCategoryName, style: AppTextStyles.pageHeaderText),
+            Text(widget.bigCategoryName, style: context.textStyles.pageHeaderText),
           ],
         ),
       ),
@@ -117,7 +117,7 @@ class _YearlyCategoryExpenseListPageState
                 ? '記録がまだありません'
                 : '${widget.filter.label}の記録はありません';
             return Center(
-              child: Text(message, style: AppTextStyles.listEmptyMessage),
+              child: Text(message, style: context.textStyles.listEmptyMessage),
             );
           }
 
@@ -236,12 +236,12 @@ class _CategorySummaryCard extends StatelessWidget {
               Expanded(
                 child: Text(
                   '月平均',
-                  style: AppTextStyles.appCardTertiaryTitleLabel,
+                  style: context.textStyles.appCardTertiaryTitleLabel,
                 ),
               ),
               Text(
                 monthlyAverageLabel,
-                style: AppTextStyles.appCardSecondaryPriceLabel,
+                style: context.textStyles.appCardSecondaryPriceLabel,
               ),
             ],
           ),
@@ -274,7 +274,7 @@ class _FilterStatusPill extends StatelessWidget {
             color: context.colors.textSecondary,
           ),
           const SizedBox(width: AppSpacing.xs),
-          Text(label, style: AppTextStyles.listTileTertiaryTitle),
+          Text(label, style: context.textStyles.listTileTertiaryTitle),
         ],
       ),
     );
@@ -302,17 +302,17 @@ class _AccountGroupHeader extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.baseline,
         textBaseline: TextBaseline.alphabetic,
         children: [
-          Text(filter.label, style: AppTextStyles.listCardSectionTitle),
+          Text(filter.label, style: context.textStyles.listCardSectionTitle),
           const SizedBox(width: AppSpacing.sm),
           Expanded(
             child: Text(
               '${rows.length}件',
-              style: AppTextStyles.listCardSecondaryNumeric,
+              style: context.textStyles.listCardSecondaryNumeric,
             ),
           ),
           Text(
             yenmarkFormattedPriceGetter(sum),
-            style: AppTextStyles.listCardSecondaryNumeric,
+            style: context.textStyles.listCardSecondaryNumeric,
           ),
         ],
       ),

@@ -54,7 +54,7 @@ class ExpenseHistoryListTile extends ConsumerWidget {
       subtitleTrailing: value.memo,
       priceLabel: priceLabel,
       priceLabelStyle:
-          isUnconfirmed ? AppTextStyles.listCardUnconfirmedPriceLabel : null,
+          isUnconfirmed ? context.textStyles.listCardUnconfirmedPriceLabel : null,
       // 固定費行の識別チップ
       customWidget: isFixedCost ? const FixedCostChipLabel() : null,
       isIncome: false,

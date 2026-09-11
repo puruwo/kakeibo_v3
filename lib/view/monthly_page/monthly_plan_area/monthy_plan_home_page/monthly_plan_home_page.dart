@@ -18,7 +18,7 @@ class MonthlyPlanHomePage extends ConsumerWidget {
         backgroundColor: context.colors.surfaceElevated,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: Text('毎月の予算', style: AppTextStyles.pageHeaderText),
+          title: Text('毎月の予算', style: context.textStyles.pageHeaderText),
         ),
         body: Column(
           children: [

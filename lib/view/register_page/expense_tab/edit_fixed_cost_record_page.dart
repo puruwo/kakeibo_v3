@@ -113,7 +113,7 @@ class _EditFixedCostRecordPageState
                     alignment: Alignment.centerRight,
                     child: Text(
                       '金額を入力すると、この月の支払いが確定します',
-                      style: AppTextStyles.insetGroupNote,
+                      style: context.textStyles.insetGroupNote,
                     ),
                   ),
                 ],
@@ -247,7 +247,7 @@ class _EditFixedCostRecordPageState
                 ),
                 child: Text(
                   '固定費の設定を開く ›',
-                  style: AppTextStyles.textButtonTextStyle,
+                  style: context.textStyles.textButtonTextStyle,
                 ),
               ),
             ),

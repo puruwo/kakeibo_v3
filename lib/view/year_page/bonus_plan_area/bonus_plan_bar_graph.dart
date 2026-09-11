@@ -134,7 +134,7 @@ class BonusPlanBarGraph extends HookConsumerWidget {
         }
 
         // ボーナス収入が未登録の場合（underBudget / overBudget を処理した後なので残りは noBudget のみ）
-        return Text('特別枠の収入が未登録です', style: AppTextStyles.listEmptyMessage);
+        return Text('特別枠の収入が未登録です', style: context.textStyles.listEmptyMessage);
       }),
     );
   }

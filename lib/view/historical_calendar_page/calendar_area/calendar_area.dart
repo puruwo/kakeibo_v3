@@ -131,7 +131,7 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       // カレンダーヘッダー
-                      _calendarHeader(screenHorizontalMagnification),
+                      _calendarHeader(context, screenHorizontalMagnification),
 
                       // 区切り線
                       Divider(
@@ -177,19 +177,19 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
   }
 }
 
-SizedBox _calendarHeader(double boxWidth) {
+SizedBox _calendarHeader(BuildContext context, double boxWidth) {
   return SizedBox(
     width: 322 * boxWidth,
     child: Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Text('日', style: CalendarStyles.calendarWeekdaySunday),
-        Text('月', style: CalendarStyles.calendarWeekdayLabel),
-        Text('火', style: CalendarStyles.calendarWeekdayLabel),
-        Text('水', style: CalendarStyles.calendarWeekdayLabel),
-        Text('木', style: CalendarStyles.calendarWeekdayLabel),
-        Text('金', style: CalendarStyles.calendarWeekdayLabel),
-        Text('土', style: CalendarStyles.calendarWeekdaySaturday),
+        Text('日', style: context.calendarStyles.calendarWeekdaySunday),
+        Text('月', style: context.calendarStyles.calendarWeekdayLabel),
+        Text('火', style: context.calendarStyles.calendarWeekdayLabel),
+        Text('水', style: context.calendarStyles.calendarWeekdayLabel),
+        Text('木', style: context.calendarStyles.calendarWeekdayLabel),
+        Text('金', style: context.calendarStyles.calendarWeekdayLabel),
+        Text('土', style: context.calendarStyles.calendarWeekdaySaturday),
       ],
     ),
   );

@@ -29,12 +29,12 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                         children: [
                           Text(
                             '支払い予定',
-                            style: AppTextStyles.appCardTitleLabel,
+                            style: context.textStyles.appCardTitleLabel,
                           ),
                           Text(
                             yenmarkFormattedPriceGetter(
                                 summaryValue.scheduledPaymentAmount),
-                            style: AppTextStyles.appCardPriceLabel,
+                            style: context.textStyles.appCardPriceLabel,
                           ),
                         ]),
                     Row(
@@ -49,13 +49,13 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                           children: [
                             Text(
                               '確定分',
-                              style: AppTextStyles.appCardTertiaryTitleLabel,
+                              style: context.textStyles.appCardTertiaryTitleLabel,
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
                               yenmarkFormattedPriceGetter(summaryValue.fixedCostSum),
                               overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.appCardTertiaryPriceLabel,
+                              style: context.textStyles.appCardTertiaryPriceLabel,
                               textAlign: TextAlign.end,
                             ),
                           ],
@@ -70,7 +70,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                           children: [
                             Text(
                               '予想分',
-                              style: AppTextStyles.appCardTertiaryTitleLabel,
+                              style: context.textStyles.appCardTertiaryTitleLabel,
                             ),
                             const SizedBox(width: AppSpacing.sm),
                             Text(
@@ -79,7 +79,7 @@ class MonthlyFixedCostSummaryArea extends ConsumerWidget {
                                   : yenmarkFormattedPriceGetter(
                                       summaryValue.unconfirmedFixedCostSum),
                               overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.appCardTertiaryPriceLabel,
+                              style: context.textStyles.appCardTertiaryPriceLabel,
                               textAlign: TextAlign.end,
                             ),
                           ],

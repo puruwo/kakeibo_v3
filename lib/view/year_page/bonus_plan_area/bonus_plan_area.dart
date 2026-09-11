@@ -34,12 +34,12 @@ class BonusPlanArea extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.baseline,
                     textBaseline: TextBaseline.alphabetic,
                     children: [
-                      Text('残額', style: AppTextStyles.appCardTitleLabel),
+                      Text('残額', style: context.textStyles.appCardTitleLabel),
                       Text(
                         yenmarkFormattedPriceGetter(
                           bonusPlanValue.lastBonusPrice,
                         ),
-                        style: AppTextStyles.appCardPriceLabel,
+                        style: context.textStyles.appCardPriceLabel,
                       ),
                     ],
                   ),
@@ -63,11 +63,11 @@ class BonusPlanArea extends ConsumerWidget {
                     children: [
                       Text(
                         '利用 ${yenmarkFormattedPriceGetter(bonusPlanValue.yearlyBonusExpense)}',
-                        style: AppTextStyles.numericCaption,
+                        style: context.textStyles.numericCaption,
                       ),
                       Text(
                         '収入 ${yenmarkFormattedPriceGetter(bonusPlanValue.yearlyBonusIncome)}',
-                        style: AppTextStyles.numericCaption,
+                        style: context.textStyles.numericCaption,
                       ),
                     ],
                   ),

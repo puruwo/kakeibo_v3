@@ -19,12 +19,12 @@ class FixedCostHistoryPriceLabel extends StatelessWidget {
       return Text(
         '未入力',
         // 未入力の値なので、入力欄のプレースホルダーと同じ役割スタイル（和文 noto・textTertiary）
-        style: AppTextStyles.insetGroupPlaceholder,
+        style: context.textStyles.insetGroupPlaceholder,
       );
     }
     return Text(
       yenmarkFormattedPriceGetter(expense.effectivePrice),
-      style: AppTextStyles.insetGroupHistoryPrice,
+      style: context.textStyles.insetGroupHistoryPrice,
     );
   }
 }

@@ -120,13 +120,13 @@ class _NewSmallCategoryInputSheetState
                 ),
               ),
               const SizedBox(height: 14),
-              Text('小カテゴリーを追加', style: AppTextStyles.sheetTitle),
+              Text('小カテゴリーを追加', style: context.textStyles.sheetTitle),
               const SizedBox(height: 14),
               _buildNameField(context),
               const SizedBox(height: 10),
               Text(
                 '一覧の末尾に追加されます。保存するまで確定しません',
-                style: AppTextStyles.insetGroupNote,
+                style: context.textStyles.insetGroupNote,
               ),
               const SizedBox(height: 14),
               Row(
@@ -174,7 +174,7 @@ class _NewSmallCategoryInputSheetState
       // カーソルの先の太さ
       cursorWidth: 2,
       // 入力するテキストのstyle
-      style: AppTextStyles.sheetTextInput,
+      style: context.textStyles.sheetTextInput,
       // 行数の制約
       minLines: 1,
       maxLines: 1,
@@ -194,7 +194,7 @@ class _NewSmallCategoryInputSheetState
 
         // ヒントテキスト
         hintText: '小カテゴリー名',
-        hintStyle: AppTextStyles.listTileTextFieldHint,
+        hintStyle: context.textStyles.listTileTextFieldHint,
 
         // テキストの余白
         contentPadding: const EdgeInsets.symmetric(
@@ -223,7 +223,7 @@ class _NewSmallCategoryInputSheetState
               alignment: Alignment.centerRight,
               child: Text(
                 '$currentLength / $_kMaxNameLength',
-                style: AppTextStyles.numericCaption,
+                style: context.textStyles.numericCaption,
               ),
             ),
           ),

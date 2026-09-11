@@ -91,7 +91,7 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
                     const SizedBox(
                       width: gapBetweenLabelAndIcon,
                     ),
-                    MyIcon.next,
+                    MyIcon.next(context),
                   ],
                 ),
               )),

@@ -13,10 +13,10 @@ class FamilyPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: context.colors.surface,
         centerTitle: true,
-        title: Text('家族', style: AppTextStyles.pageHeaderText),
+        title: Text('家族', style: context.textStyles.pageHeaderText),
       ),
       body: Center(
-        child: Text('準備中', style: AppTextStyles.listEmptyMessage),
+        child: Text('準備中', style: context.textStyles.listEmptyMessage),
       ),
     );
   }

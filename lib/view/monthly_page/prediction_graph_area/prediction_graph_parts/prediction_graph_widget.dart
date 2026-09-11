@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
@@ -56,6 +57,8 @@ class _PredictionGraphWidgetState extends State<PredictionGraphWidget> {
                   separator: context.colors.separator,
                   icon: context.colors.icon,
                   expense: context.colors.expense,
+                  labelStyle: context.graphStyles.graphLabel,
+                  priceLabelStyle: context.graphStyles.graphPriceLabel,
                 ),
                 child: Container(),
               ),

@@ -68,7 +68,7 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
       iconTheme: IconThemeData(color: c.text),
       actionsIconTheme: IconThemeData(color: c.text),
       // 役割スタイル（KP-007）の値を使う。色だけモードのトークンに差し替える
-      titleTextStyle: AppTextStyles.pageHeaderText.copyWith(color: c.text),
+      titleTextStyle: AppTextStyles(c).pageHeaderText.copyWith(color: c.text),
       systemOverlayStyle: overlayStyle,
     ),
     dividerColor: c.separator,
@@ -85,7 +85,7 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
       ),
     ),
     inputDecorationTheme: InputDecorationThemeData(
-      hintStyle: AppTextStyles.insetGroupPlaceholder.copyWith(
+      hintStyle: AppTextStyles(c).insetGroupPlaceholder.copyWith(
         color: c.textTertiary,
       ),
     ),
@@ -110,7 +110,7 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
       headerBackgroundColor: c.surfaceElevated,
       headerForegroundColor: c.text,
       dividerColor: c.separator,
-      weekdayStyle: AppTextStyles.listTileSecondaryTitle.copyWith(
+      weekdayStyle: AppTextStyles(c).listTileSecondaryTitle.copyWith(
         color: c.textSecondary,
       ),
       dayForegroundColor: WidgetStateProperty.resolveWith(
@@ -143,7 +143,7 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
       behavior: SnackBarBehavior.floating,
       elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-      contentTextStyle: AppTextStyles.snackBarMessage.copyWith(color: c.text),
+      contentTextStyle: AppTextStyles(c).snackBarMessage.copyWith(color: c.text),
     ),
     progressIndicatorTheme: ProgressIndicatorThemeData(color: c.primary),
     // 押下表現はアプリ全体で「スプラッシュ無し・ハイライトのみ」（AppInkWell と同じ）
@@ -161,7 +161,7 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: c.primary,
-        textStyle: AppTextStyles.textButtonTextStyle.copyWith(color: c.primary),
+        textStyle: AppTextStyles(c).textButtonTextStyle.copyWith(color: c.primary),
         overlayColor: Colors.transparent,
       ),
     ),

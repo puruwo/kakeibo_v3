@@ -149,7 +149,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                     Text(
                                       smallCategoryList[index]
                                           .smallCategoryName,
-                                      style: AppTextStyles
+                                      style: context.textStyles
                                           .listTilePrimaryTitle,
                                       textAlign: TextAlign.start,
                                       overflow: TextOverflow.ellipsis,
@@ -163,7 +163,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                   width: barFrameWidth * 0.15,
                                   child: Text(
                                     '${smallCategoryList[index].recordCount}件',
-                                    style: AppTextStyles.appCardTertiaryPriceLabel,
+                                    style: context.textStyles.appCardTertiaryPriceLabel,
                                     textAlign: TextAlign.right,
                                     overflow: TextOverflow.ellipsis,
                                   )),
@@ -180,7 +180,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                   children: [
                                     Text(
                                       totalExpenseBySmallCategory,
-                                      style: AppTextStyles
+                                      style: context.textStyles
                                           .appCardSecondaryPriceLabel,
                                       textAlign: TextAlign.end,
                                       overflow: TextOverflow.ellipsis,
@@ -188,7 +188,7 @@ class ExpandedCategoryTile extends ConsumerWidget {
                                     const SizedBox(
                                       width: AppSpacing.sm,
                                     ),
-                                    MyIcon.next,
+                                    MyIcon.next(context),
                                   ],
                                 ),
                               ),

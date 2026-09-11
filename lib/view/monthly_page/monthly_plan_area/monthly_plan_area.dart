@@ -44,14 +44,14 @@ class MonthlyPlanArea extends ConsumerWidget {
                       children: [
                         Text(
                           '今月の収支',
-                          style: AppTextStyles.appCardTitleLabel,
+                          style: context.textStyles.appCardTitleLabel,
                         ),
                         Text(
                           signedYenmarkFormattedPriceGetter(
                             model.realSavings,
                             showPlusSign: true,
                           ),
-                          style: AppTextStyles.appCardPriceLabel,
+                          style: context.textStyles.appCardPriceLabel,
                         ),
                       ],
                     ),

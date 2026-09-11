@@ -105,7 +105,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
-          title: Text('特別枠の利用状況', style: AppTextStyles.pageHeaderText),
+          title: Text('特別枠の利用状況', style: context.textStyles.pageHeaderText),
         ),
 
         // 本体

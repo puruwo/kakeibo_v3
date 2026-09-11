@@ -51,7 +51,7 @@ class MonthlyFixedCostBigCategorySummaryList extends ConsumerWidget {
                           ),
                           const SizedBox(width: AppSpacing.md),
                           Text(summary.categoryName,
-                              style: AppTextStyles.listTilePrimaryTitle),
+                              style: context.textStyles.listTilePrimaryTitle),
                         ],
                       ),
                       // 金額 or 未確定
@@ -60,11 +60,11 @@ class MonthlyFixedCostBigCategorySummaryList extends ConsumerWidget {
                               yenmarkFormattedPriceGetter(summary.totalAmount),
                               textAlign: TextAlign.end,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.appCardSecondaryPriceLabel,
+                              style: context.textStyles.appCardSecondaryPriceLabel,
                             )
                           : Text(
                               '未確定',
-                              style: AppTextStyles.listTilePrimaryTitle,
+                              style: context.textStyles.listTilePrimaryTitle,
                             ),
                     ],
                   ),

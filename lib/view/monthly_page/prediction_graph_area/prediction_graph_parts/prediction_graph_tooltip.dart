@@ -54,7 +54,7 @@ class GraphTooltip extends StatelessWidget {
                 children: [
                   Text(
                     '${date.month}/${date.day}',
-                    style: GraphTextStyles.tooltipDate,
+                    style: context.graphStyles.tooltipDate,
                   ),
                   const SizedBox(width: AppSpacing.sm),
                   const Spacer(),
@@ -63,11 +63,11 @@ class GraphTooltip extends StatelessWidget {
                       children: [
                         TextSpan(
                           text: '累計 ',
-                          style: GraphTextStyles.tooltipCumulativeLabel,
+                          style: context.graphStyles.tooltipCumulativeLabel,
                         ),
                         TextSpan(
                           text: yenmarkFormattedPriceGetter(cumulativeExpense),
-                          style: GraphTextStyles.tooltipSubtitle,
+                          style: context.graphStyles.tooltipSubtitle,
                         ),
                       ],
                     ),
@@ -81,7 +81,7 @@ class GraphTooltip extends StatelessWidget {
                 // カテゴリー別支出（金額の降順でソート）
                 ...(List<CategoryExpense>.from(categoryExpenses)
                       ..sort((a, b) => b.price.compareTo(a.price)))
-                    .map((expense) => _buildCategoryRow(expense)),
+                    .map((expense) => _buildCategoryRow(context, expense)),
               ],
             ],
           ),
@@ -90,7 +90,7 @@ class GraphTooltip extends StatelessWidget {
     );
   }
 
-  Widget _buildCategoryRow(CategoryExpense expense) {
+  Widget _buildCategoryRow(BuildContext context, CategoryExpense expense) {
     // 色をパース
     final colorCode = expense.colorCode.replaceAll('#', '');
     int colorValue;
@@ -132,7 +132,7 @@ class GraphTooltip extends StatelessWidget {
           // 金額（右揃え）
           Text(
             yenmarkFormattedPriceGetter(expense.price),
-            style: GraphTextStyles.tooltipCategory,
+            style: context.graphStyles.tooltipCategory,
           ),
         ],
       ),

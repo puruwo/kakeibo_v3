@@ -96,8 +96,8 @@ void main(List<String> args) {
   buf.writeln('//');
   buf.writeln('// セマンティック色トークンの ThemeExtension。');
   buf.writeln('// primitive は生成時にインライン解決済み（公開フィールドには含めない）。');
-  buf.writeln('// あわせて const 文脈用の static const 色クラス AppColorsLight / AppColorsDark も出力する');
-  buf.writeln('// （生成物内の逃げ道。lib からは参照せず、テストの期待値には AppColors.light / dark を使う。KP-013）。');
+  buf.writeln('// アプリからは context.colors.<token> で参照する。テストの期待値には AppColors.light / dark を使う。');
+  buf.writeln('// （静的色クラス AppColorsLight / AppColorsDark は KP-013 で廃止）');
   buf.writeln('');
   buf.writeln("import 'package:flutter/material.dart';");
   buf.writeln('');
@@ -176,12 +176,9 @@ void main(List<String> args) {
   buf.writeln('}');
   buf.writeln('');
 
-  // ---- 移行期用: const TextStyle に入れられる static const 色クラス ----
-  // ThemeExtension はランタイム解決のため const 文脈（const TextStyle）に使えない。
-  // styles 配下の const TextStyle 用に light/dark の実値を static const で保持する。
-  _writeStaticColorClass(buf, 'AppColorsLight', fields, light);
-  buf.writeln('');
-  _writeStaticColorClass(buf, 'AppColorsDark', fields, dark);
+  // 静的色クラス（AppColorsLight / AppColorsDark）は KP-013 で廃止した。
+  // 役割スタイルは AppColors を受け取るインスタンス（context.textStyles）になり、
+  // const 文脈で色が必要な箇所は無くなった。テストの期待値は AppColors.light / dark を使う。
 
   // ---- 書き出し ----
   final outFile = File(outputPath);
@@ -192,7 +189,6 @@ void main(List<String> args) {
   stdout.writeln('✅ 生成完了: $outputPath');
   stdout.writeln('   primitive: ${primitives.length}個（内部解決・非公開）');
   stdout.writeln('   semantic : ${fields.length}フィールド（light/dark 各${fields.length}）');
-  stdout.writeln('   static   : AppColorsLight / AppColorsDark（各${fields.length} static const）');
 
   // ---- category パレット生成（lib/theme/category_palette.dart） ----
   final categorySet = root['category'];
@@ -281,26 +277,6 @@ void _generateCategoryPalette(Map<String, dynamic> category, String inputPath) {
 
   stdout.writeln('✅ 生成完了: $outputPath');
   stdout.writeln('   category : expense ${expense.length} / income ${income.length} / gray 1（Color + 6桁HEX）');
-}
-
-/// static const Color フィールドのみを持つ色クラスを buf に書き出す。
-/// ThemeExtension（AppColors）はランタイム解決のため const TextStyle に使えないため、
-/// 移行期のダーク固定運用では const 文脈用にこの静的クラスを使う。
-void _writeStaticColorClass(
-  StringBuffer buf,
-  String className,
-  List<String> fields,
-  Map<String, String> values,
-) {
-  final mode = className.endsWith('Dark') ? 'dark' : 'light';
-  buf.writeln('/// $className: const TextStyle 用の静的色トークン（$mode 実値）。');
-  buf.writeln('class $className {');
-  buf.writeln('  $className._();');
-  buf.writeln('');
-  for (final f in fields) {
-    buf.writeln('  static const Color $f = ${values[f]};');
-  }
-  buf.writeln('}');
 }
 
 /// #RRGGBBAA / #RRGGBB から DB用の6桁HEX（RRGGBB・alpha無し・大文字）を取り出す。

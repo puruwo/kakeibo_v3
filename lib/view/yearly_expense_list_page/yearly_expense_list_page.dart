@@ -61,7 +61,7 @@ class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
           icon: Icon(Icons.arrow_back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('支出一覧', style: AppTextStyles.pageHeaderText),
+        title: Text('支出一覧', style: context.textStyles.pageHeaderText),
       ),
       body: ref
           .watch(yearlyExpenseListNotifierProvider(widget.period))
@@ -71,7 +71,7 @@ class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
                 return Center(
                   child: Text(
                     '記録がまだありません',
-                    style: AppTextStyles.listEmptyMessage,
+                    style: context.textStyles.listEmptyMessage,
                   ),
                 );
               }
@@ -116,7 +116,7 @@ class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
                           child: Center(
                             child: Text(
                               '${_filter.label}の記録はありません',
-                              style: AppTextStyles.listEmptyMessage,
+                              style: context.textStyles.listEmptyMessage,
                             ),
                           ),
                         )

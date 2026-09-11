@@ -43,7 +43,7 @@ class _IncomeGraphAreaState extends ConsumerState<IncomeGraphArea> {
                 child: Center(
                   child: Text(
                     '収入データがありません',
-                    style: AppTextStyles.listEmptyMessage,
+                    style: context.textStyles.listEmptyMessage,
                   ),
                 ),
               );

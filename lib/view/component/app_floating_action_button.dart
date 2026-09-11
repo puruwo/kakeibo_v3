@@ -55,7 +55,7 @@ class AppFloatingActionButton extends StatelessWidget {
                       const SizedBox(width: AppSpacing.sm),
                       Text(
                         label!,
-                        style: AppTextStyles.mainButtonText.copyWith(
+                        style: context.textStyles.mainButtonText.copyWith(
                           color: fgColor,
                         ),
                       ),

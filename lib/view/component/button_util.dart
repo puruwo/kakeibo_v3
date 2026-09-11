@@ -168,7 +168,7 @@ class MainButton extends StatelessWidget {
       textColor: textColor,
     );
     // ADR-017 #4: secondaryButtonTextはmainButtonTextと同値だったため統合（種別によらず同一スタイル）
-    final textStyle = AppTextStyles.mainButtonText.copyWith(
+    final textStyle = context.textStyles.mainButtonText.copyWith(
       color: enabled ? spec.labelColor : context.colors.textTertiary,
     );
 

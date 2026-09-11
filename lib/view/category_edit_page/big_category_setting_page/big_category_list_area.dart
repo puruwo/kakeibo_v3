@@ -72,18 +72,18 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                               width: 37 + 90 + listSTextBoxOffset,
                               child: Text(
                                 'カテゴリー',
-                                style: AppTextStyles.listTileLegendTitle,
+                                style: context.textStyles.listTileLegendTitle,
                               ),
                             ),
                           ),
-                          Text('項目', style: AppTextStyles.listTileLegendTitle),
+                          Text('項目', style: context.textStyles.listTileLegendTitle),
                         ],
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
                           '詳細',
-                          style: AppTextStyles.listTileLegendTitle,
+                          style: context.textStyles.listTileLegendTitle,
                         ),
                       ),
                     ],
@@ -158,7 +158,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                           itemList.isEmpty
                                               ? ''
                                               : itemList[index].bigCategoryName,
-                                          style: AppTextStyles
+                                          style: context.textStyles
                                               .listTilePrimaryTitle,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -171,7 +171,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                               ? ''
                                               : itemList[index]
                                                     .incomeSmallCategoryNameText,
-                                          style: AppTextStyles
+                                          style: context.textStyles
                                               .listTileSecondaryTitle,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -238,7 +238,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                         width: double.infinity,
                                         child: Text(
                                           '+ 新しいカテゴリーを追加',
-                                          style: AppTextStyles
+                                          style: context.textStyles
                                               .listTileSecondaryTitle,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -301,18 +301,18 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                               width: 37 + 90 + listSTextBoxOffset,
                               child: Text(
                                 'カテゴリー',
-                                style: AppTextStyles.listTileLegendTitle,
+                                style: context.textStyles.listTileLegendTitle,
                               ),
                             ),
                           ),
-                          Text('項目', style: AppTextStyles.listTileLegendTitle),
+                          Text('項目', style: context.textStyles.listTileLegendTitle),
                         ],
                       ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: Text(
                           '詳細',
-                          style: AppTextStyles.listTileLegendTitle,
+                          style: context.textStyles.listTileLegendTitle,
                         ),
                       ),
                     ],
@@ -388,7 +388,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                           itemList.isEmpty
                                               ? ''
                                               : itemList[index].bigCategoryName,
-                                          style: AppTextStyles
+                                          style: context.textStyles
                                               .listTilePrimaryTitle,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -401,7 +401,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                               ? ''
                                               : itemList[index]
                                                     .expenseSmallCategoryNameText,
-                                          style: AppTextStyles
+                                          style: context.textStyles
                                               .listTileSecondaryTitle,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -469,7 +469,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                         width: double.infinity,
                                         child: Text(
                                           '+ 新しいカテゴリーを追加',
-                                          style: AppTextStyles
+                                          style: context.textStyles
                                               .listTileSecondaryTitle,
                                           overflow: TextOverflow.ellipsis,
                                         ),

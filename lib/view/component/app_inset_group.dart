@@ -54,7 +54,7 @@ class AppInsetGroup extends StatelessWidget {
         if (header != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
-            child: Text(header!, style: AppTextStyles.insetGroupHeader),
+            child: Text(header!, style: context.textStyles.insetGroupHeader),
           ),
         DecoratedBox(
           decoration: BoxDecoration(
@@ -73,7 +73,7 @@ class AppInsetGroup extends StatelessWidget {
         if (note != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 6, 4, 0),
-            child: Text(note!, style: AppTextStyles.insetGroupNote),
+            child: Text(note!, style: context.textStyles.insetGroupNote),
           ),
       ],
     );
@@ -274,7 +274,7 @@ class AppInsetRow extends StatelessWidget {
                         )),
             ),
             const SizedBox(width: 10),
-            Text(label, style: AppTextStyles.insetGroupLabel),
+            Text(label, style: context.textStyles.insetGroupLabel),
             const SizedBox(width: 10),
             Expanded(child: _buildTrailing(context)),
           ],
@@ -348,7 +348,7 @@ class AppInsetRow extends StatelessWidget {
           controller: controller,
           textAlign: textAlign,
           textAlignVertical: TextAlignVertical.center,
-          style: _valueStyle,
+          style: _valueStyle(context),
           cursorColor: context.colors.primary,
           cursorWidth: 2,
           minLines: 1,
@@ -371,7 +371,7 @@ class AppInsetRow extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             border: InputBorder.none,
             hintText: hintText,
-            hintStyle: AppTextStyles.insetGroupPlaceholder,
+            hintStyle: context.textStyles.insetGroupPlaceholder,
           ),
           onChanged: onChanged,
           onTapOutside: (event) {
@@ -385,9 +385,9 @@ class AppInsetRow extends StatelessWidget {
   }
 
   /// 値のスタイル。numericValue で sfUi 系の数字版に切り替える（display 行・textField 行で共用）
-  TextStyle get _valueStyle => numericValue
-      ? AppTextStyles.insetGroupValueNumeric
-      : AppTextStyles.insetGroupValue;
+  TextStyle _valueStyle(BuildContext context) => numericValue
+      ? context.textStyles.insetGroupValueNumeric
+      : context.textStyles.insetGroupValue;
 
   Widget _buildValueText(BuildContext context) {
     return Text(
@@ -395,7 +395,7 @@ class AppInsetRow extends StatelessWidget {
       textAlign: TextAlign.right,
       overflow: TextOverflow.ellipsis,
       // valueColor が null のときは copyWith が元の色を保つ
-      style: _valueStyle.copyWith(color: valueColor),
+      style: _valueStyle(context).copyWith(color: valueColor),
     );
   }
 }

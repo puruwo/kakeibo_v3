@@ -106,7 +106,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text('固定費の設定', style: AppTextStyles.pageHeaderText),
+        title: Text('固定費の設定', style: context.textStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(Icons.arrow_back_ios_new_rounded,
@@ -361,7 +361,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
                     child: Center(
                       child: Text(
                         'すべての支払いを見る',
-                        style: AppTextStyles.textButtonTextStyle,
+                        style: context.textStyles.textButtonTextStyle,
                       ),
                     ),
                   ),
@@ -387,7 +387,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
               child: Text(
                 '${int.parse(date.substring(4, 6))}/'
                 '${int.parse(date.substring(6, 8))}',
-                style: AppTextStyles.insetGroupHistoryDate,
+                style: context.textStyles.insetGroupHistoryDate,
               ),
             ),
             const Spacer(),

@@ -21,7 +21,7 @@ class FixedCostTileSubtitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseStyle = AppTextStyles.listCardSecondaryTitle;
+    final baseStyle = context.textStyles.listCardSecondaryTitle;
 
     return Text.rich(
       TextSpan(
@@ -39,7 +39,7 @@ class FixedCostTileSubtitle extends StatelessWidget {
           // 日付は数字が主役なので sfUi 系
           TextSpan(
             text: dateLabel,
-            style: AppTextStyles.listCardSecondaryNumeric,
+            style: context.textStyles.listCardSecondaryNumeric,
           ),
         ],
       ),

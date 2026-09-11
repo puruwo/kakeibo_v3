@@ -52,7 +52,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
       return CardContainer(
         padding: const EdgeInsets.all(16),
         child: Center(
-          child: Text('支出データがありません', style: AppTextStyles.listEmptyMessage),
+          child: Text('支出データがありません', style: context.textStyles.listEmptyMessage),
         ),
       );
     }
@@ -67,10 +67,10 @@ class DailyExpenseGraphArea extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('総支出', style: AppTextStyles.appCardTitleLabel),
+              Text('総支出', style: context.textStyles.appCardTitleLabel),
               Text(
                 yenmarkFormattedPriceGetter(totalExpense),
-                style: AppTextStyles.appCardPriceLabel,
+                style: context.textStyles.appCardPriceLabel,
               ),
             ],
           ),
@@ -78,16 +78,16 @@ class DailyExpenseGraphArea extends StatelessWidget {
           const Divider(height: 0, thickness: 1),
 
           // 変動費／固定費／うち未確定 の内訳（仕様 §8.4）
-          _breakdownRow('変動費', variableExpenseTotal),
-          _breakdownRow('固定費', fixedCostTotal),
+          _breakdownRow(context, '変動費', variableExpenseTotal),
+          _breakdownRow(context, '固定費', fixedCostTotal),
           if (unconfirmedFixedCostTotal > 0)
-            _breakdownRow('うち未確定', unconfirmedFixedCostTotal),
+            _breakdownRow(context, 'うち未確定', unconfirmedFixedCostTotal),
 
           const SizedBox(height: 16),
           // 円グラフとカテゴリー一覧
           categorySummaries.length == 1
               // カテゴリーが1つの場合は円グラフを表示せずカテゴリー一覧のみ
-              ? _buildCategoryList()
+              ? _buildCategoryList(context)
               // カテゴリーが複数の場合は円グラフとカテゴリー一覧を横並び
               : Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -109,7 +109,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
                               value: category.totalAmount.toDouble(),
                               titlePositionPercentageOffset: 0.3,
                               title: category.categoryName,
-                              titleStyle: AppTextStyles.appCardGraphLabel,
+                              titleStyle: context.textStyles.appCardGraphLabel,
                               radius: 25,
                             );
                           }).toList(),
@@ -119,7 +119,7 @@ class DailyExpenseGraphArea extends StatelessWidget {
                     ),
                     const SizedBox(width: 24),
                     // カテゴリー一覧
-                    Flexible(child: _buildCategoryList()),
+                    Flexible(child: _buildCategoryList(context)),
                   ],
                 ),
         ],
@@ -129,23 +129,23 @@ class DailyExpenseGraphArea extends StatelessWidget {
 
   /// カテゴリー一覧ウィジェット
   /// 内訳の1行（ラベルと金額）
-  Widget _breakdownRow(String label, int amount) {
+  Widget _breakdownRow(BuildContext context, String label, int amount) {
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: AppTextStyles.appCardTertiaryTitleLabel),
+          Text(label, style: context.textStyles.appCardTertiaryTitleLabel),
           Text(
             yenmarkFormattedPriceGetter(amount),
-            style: AppTextStyles.appCardTertiaryPriceLabel,
+            style: context.textStyles.appCardTertiaryPriceLabel,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryList() {
+  Widget _buildCategoryList(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: categorySummaries.map((category) {
@@ -172,14 +172,14 @@ class DailyExpenseGraphArea extends StatelessWidget {
               Expanded(
                 child: Text(
                   category.categoryName,
-                  style: AppTextStyles.listTilePrimaryTitle,
+                  style: context.textStyles.listTilePrimaryTitle,
                 ),
               ),
               const SizedBox(width: 8),
               // 金額
               Text(
                 yenmarkFormattedPriceGetter(category.totalAmount),
-                style: AppTextStyles.appCardSecondaryPriceLabel,
+                style: context.textStyles.appCardSecondaryPriceLabel,
               ),
             ],
           ),

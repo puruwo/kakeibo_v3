@@ -32,7 +32,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                               children: [
                                 Text(
                                   '総収入',
-                                  style: AppTextStyles.appCardTitleLabel,
+                                  style: context.textStyles.appCardTitleLabel,
                                 ),
                                 const SizedBox(
                                   width: AppSpacing.sm,
@@ -44,7 +44,7 @@ class MonthlyIncomeGraphArea extends HookConsumerWidget {
                                           .allCategoryTotalIncome),
                                   textAlign: TextAlign.end,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles
+                                  style: context.textStyles
                                       .appCardOptionalSecondaryPriceLabel,
                                 ),
                               ],

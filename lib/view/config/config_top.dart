@@ -20,7 +20,7 @@ class ConfigTop extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('設定', style: AppTextStyles.pageHeaderText),
+        title: Text('設定', style: context.textStyles.pageHeaderText),
         centerTitle: true,
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -218,8 +218,8 @@ class _ConfigRow extends StatelessWidget {
               Text(
                 label,
                 style: textColor != null
-                    ? AppTextStyles.oneLineButtonText.copyWith(color: textColor)
-                    : AppTextStyles.oneLineButtonText,
+                    ? context.textStyles.oneLineButtonText.copyWith(color: textColor)
+                    : context.textStyles.oneLineButtonText,
               ),
             ],
           ),

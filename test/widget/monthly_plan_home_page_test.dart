@@ -346,12 +346,12 @@ void main() {
 
     final forecastLabel =
         tester.widget<Text>(find.text('固定費 ¥ 30,000'));
-    expect(forecastLabel.style?.color, AppColorsDark.danger);
+    expect(forecastLabel.style?.color, AppColors.light.danger);
 
     final priceField = tester.widget<TextField>(
       find.byType(TextField).at(0),
     );
-    expect(priceField.style?.color, AppColorsDark.danger);
+    expect(priceField.style?.color, AppColors.light.danger);
   });
 
   testWidgets('予算合計に固定費見込みは加算されない', (tester) async {

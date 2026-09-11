@@ -86,13 +86,13 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
                   color: context.colors.text,
                 ),
                 const SizedBox(width: 8),
-                Text('拠出元', style: RegisterPageStyles.placeHolder),
+                Text('拠出元', style: context.registerStyles.placeHolder),
               ],
             ),
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(selectedEnum.label, style: RegisterPageStyles.inputText),
+                Text(selectedEnum.label, style: context.registerStyles.inputText),
                 const SizedBox(width: 4),
                 Icon(
                   Icons.keyboard_arrow_down_rounded,

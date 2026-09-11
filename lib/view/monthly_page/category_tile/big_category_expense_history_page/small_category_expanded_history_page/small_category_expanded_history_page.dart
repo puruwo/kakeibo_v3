@@ -19,7 +19,7 @@ class SmallCategoryExpenseHistoryPage extends ConsumerWidget {
         flexibleSpace: const GlassAppBarBackground(),
         title: Text(
           'カテゴリー別利用状況',
-          style: AppTextStyles.pageHeaderText,
+          style: context.textStyles.pageHeaderText,
         ),
       ),
       body: Column(

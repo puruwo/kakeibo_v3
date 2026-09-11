@@ -47,7 +47,7 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
 
         // ヘッダー
         appBar: AppBar(
-          title: Text('カテゴリーの設定', style: AppTextStyles.pageHeaderText),
+          title: Text('カテゴリーの設定', style: context.textStyles.pageHeaderText),
 
           backgroundColor: Colors.transparent,
           //ヘッダー左のアイコンボタン

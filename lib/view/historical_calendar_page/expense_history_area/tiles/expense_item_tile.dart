@@ -142,7 +142,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                     value.bigCategoryName,
                                     textAlign: TextAlign.start,
                                     overflow: TextOverflow.ellipsis,
-                                    style: AppTextStyles.listTilePrimaryTitle,
+                                    style: context.textStyles.listTilePrimaryTitle,
                                   ),
                                 ),
                                 if (isFixedCost) const FixedCostChipLabel(),
@@ -160,7 +160,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.smallCategoryName}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileTertiaryTitle,
+                                  style: context.textStyles.listTileTertiaryTitle,
                                 ),
                               ),
                               // メモ
@@ -170,7 +170,7 @@ class ExpenseItemTile extends ConsumerWidget {
                                   ' ${value.memo}',
                                   textAlign: TextAlign.start,
                                   overflow: TextOverflow.ellipsis,
-                                  style: AppTextStyles.listTileTertiaryTitle,
+                                  style: context.textStyles.listTileTertiaryTitle,
                                 ),
                               ),
                             ],
@@ -189,8 +189,8 @@ class ExpenseItemTile extends ConsumerWidget {
                           textAlign: TextAlign.end,
                           overflow: TextOverflow.ellipsis,
                           style: isUnconfirmed
-                              ? AppTextStyles.listTileUnconfirmedPriceLabel
-                              : AppTextStyles.listTilePriceLabel,
+                              ? context.textStyles.listTileUnconfirmedPriceLabel
+                              : context.textStyles.listTilePriceLabel,
                         ),
                       ),
                     ),

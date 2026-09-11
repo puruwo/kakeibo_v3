@@ -48,7 +48,7 @@ class _BonusIncomeListAreaState extends ConsumerState<BonusIncomeListArea> {
               return Center(
                 child: Text(
                   '記録がまだありません',
-                  style: AppTextStyles.listEmptyMessage,
+                  style: context.textStyles.listEmptyMessage,
                 ),
               );
             }

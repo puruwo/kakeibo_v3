@@ -102,11 +102,14 @@ PopupMenuItem<T> buildCheckableMenuItem<T>({
             else
               const SizedBox(width: 20),
             const SizedBox(width: 8),
-            Text(
-              label,
-              style: AppTextStyles.popupMenuItemLabel(
-                textColor: textColor,
-                isSelected: isSelected,
+            // 役割スタイルの色は現在のテーマから取るため Builder で context を得る（KP-013）
+            Builder(
+              builder: (context) => Text(
+                label,
+                style: context.textStyles.popupMenuItemLabel(
+                  textColor: textColor,
+                  isSelected: isSelected,
+                ),
               ),
             ),
           ],
@@ -136,11 +139,13 @@ class CheckablePopupMenuItem<T> extends PopupMenuItem<T> {
               else
                 const SizedBox(width: 20),
               const SizedBox(width: 8),
-              Text(
-                label,
-                style: AppTextStyles.popupMenuItemLabel(
-                  textColor: textColor,
-                  isSelected: isSelected,
+              Builder(
+                builder: (context) => Text(
+                  label,
+                  style: context.textStyles.popupMenuItemLabel(
+                    textColor: textColor,
+                    isSelected: isSelected,
+                  ),
                 ),
               ),
             ],

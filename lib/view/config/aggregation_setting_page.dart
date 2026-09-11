@@ -81,8 +81,8 @@ class _AggregationSettingPageState
         title: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('集計期間', style: AppTextStyles.pageHeaderText),
-            Text('家計の区切りを決めます', style: AppTextStyles.pageHeaderSubText),
+            Text('集計期間', style: context.textStyles.pageHeaderText),
+            Text('家計の区切りを決めます', style: context.textStyles.pageHeaderSubText),
           ],
         ),
         leading: IconButton(
@@ -187,13 +187,13 @@ class _AggregationSettingPageState
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title, style: AppTextStyles.appCardSectionTitle),
+        Text(title, style: context.textStyles.appCardSectionTitle),
         const SizedBox(height: AppSpacing.sm),
         stepper,
         const SizedBox(height: AppSpacing.sm),
         Text(
           description,
-          style: AppTextStyles.supportingText.copyWith(
+          style: context.textStyles.supportingText.copyWith(
             color: context.colors.textSecondary,
           ),
         ),
@@ -364,7 +364,7 @@ class _StepperState extends State<_Stepper> {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(2),
                   ],
-                  style: AppTextStyles.stepperValueLabel.copyWith(
+                  style: context.textStyles.stepperValueLabel.copyWith(
                     color: context.colors.text,
                   ),
                   cursorColor: context.colors.primary,
@@ -380,7 +380,7 @@ class _StepperState extends State<_Stepper> {
               const SizedBox(width: AppSpacing.xs),
               Text(
                 widget.unit,
-                style: AppTextStyles.listTilePrimaryTitle.copyWith(
+                style: context.textStyles.listTilePrimaryTitle.copyWith(
                   color: context.colors.textSecondary,
                 ),
               ),
@@ -440,7 +440,7 @@ class _PreviewCard extends StatelessWidget {
         children: [
           Text(
             'この設定での集計期間（例）',
-            style: AppTextStyles.supportingText.copyWith(
+            style: context.textStyles.supportingText.copyWith(
               color: context.colors.textSecondary,
             ),
           ),
@@ -482,14 +482,14 @@ class _PreviewRow extends StatelessWidget {
       children: [
         Text(
           label,
-          style: AppTextStyles.listTilePrimaryTitle.copyWith(
+          style: context.textStyles.listTilePrimaryTitle.copyWith(
             color: context.colors.text,
           ),
         ),
         Text(
           value,
           key: valueKey,
-          style: AppTextStyles.listTilePriceLabel.copyWith(
+          style: context.textStyles.listTilePriceLabel.copyWith(
             color: context.colors.text,
           ),
         ),
@@ -526,7 +526,7 @@ class _RecalculationNotice extends StatelessWidget {
           Expanded(
             child: Text(
               '変更すると過去の記録もすべて新しい区切りで再計算されます',
-              style: AppTextStyles.supportingText.copyWith(
+              style: context.textStyles.supportingText.copyWith(
                 color: context.colors.text,
               ),
             ),

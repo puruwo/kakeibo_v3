@@ -95,7 +95,7 @@ class CategorySumTile extends HookConsumerWidget {
                   ),
                 ),
                 const SizedBox(width: AppSpacing.md),
-                MyIcon.next,
+                MyIcon.next(context),
               ],
             ),
           ),

@@ -35,7 +35,7 @@ class AllNoBudgetTypePriceLabel extends StatelessWidget {
           paymentSumLabel,
           textAlign: TextAlign.end,
           overflow: TextOverflow.ellipsis,
-          style: AppTextStyles.appCardOptionalSecondaryPriceLabel,
+          style: context.textStyles.appCardOptionalSecondaryPriceLabel,
         ),
       ),
     );

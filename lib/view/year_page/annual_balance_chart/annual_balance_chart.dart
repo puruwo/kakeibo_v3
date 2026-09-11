@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -43,7 +44,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                 width: double.infinity,
                 height: 30,
                 child: Center(
-                  child: Text('まだ記録がありません', style: AppTextStyles.listEmptyMessage),
+                  child: Text('まだ記録がありません', style: context.textStyles.listEmptyMessage),
                 ),
               );
             }
@@ -138,6 +139,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                   separator: context.colors.separator,
                                   income: context.colors.income,
                                   expense: context.colors.expense,
+                                  miniLabelStyle: context.graphStyles.graphMiniLabel,
+                                  miniLabelEmphasisStyle: context.graphStyles.graphMiniLabelEmphasis,
                                 ),
                               ),
                             ),
@@ -205,6 +208,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                               painter: AnnualBalanceAxisLabelsPainter(
                                 scale: chartData.yAxisScale,
                                 dimensions: dimensions,
+                                miniLabelStyle: context.graphStyles.graphMiniLabel,
+                                miniTextLabelStyle: context.graphStyles.graphMiniTextLabel,
                               ),
                             ),
                           ),

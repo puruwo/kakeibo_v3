@@ -31,7 +31,7 @@ class YearlyIncomeListPage extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('収入一覧', style: AppTextStyles.pageHeaderText),
+        title: Text('収入一覧', style: context.textStyles.pageHeaderText),
       ),
       body: AppFabStack(
         fabLabel: '収入を追加',
