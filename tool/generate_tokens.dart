@@ -96,8 +96,8 @@ void main(List<String> args) {
   buf.writeln('//');
   buf.writeln('// セマンティック色トークンの ThemeExtension。');
   buf.writeln('// primitive は生成時にインライン解決済み（公開フィールドには含めない）。');
-  buf.writeln('// あわせて const TextStyle 用の static const 色クラス AppColorsLight / AppColorsDark も出力する。');
-  buf.writeln('// ※ MaterialApp への接続・既存 MyColors の置き換えは別STEPで対応。');
+  buf.writeln('// あわせて const 文脈用の static const 色クラス AppColorsLight / AppColorsDark も出力する');
+  buf.writeln('// （生成物内の逃げ道。lib からは参照せず、テストの期待値には AppColors.light / dark を使う。KP-013）。');
   buf.writeln('');
   buf.writeln("import 'package:flutter/material.dart';");
   buf.writeln('');
@@ -164,11 +164,15 @@ void main(List<String> args) {
 
   // BuildContext 拡張
   buf.writeln('extension AppColorsX on BuildContext {');
-  buf.writeln('  // 移行期: 新規 ThemeData を生成する Theme 配下など、AppColors 未登録の');
-  buf.writeln('  // subtree でも null クラッシュしないよう、未取得時はダーク既定値へフォールバックする。');
-  buf.writeln('  // （当面 themeMode.dark 固定のため dark を既定とする）');
-  buf.writeln('  AppColors get colors =>');
-  buf.writeln('      Theme.of(this).extension<AppColors>() ?? AppColors.dark;');
+  buf.writeln('  /// 現在の Theme に登録された AppColors を返す。');
+  buf.writeln('  ///');
+  buf.writeln('  /// 未登録（AppTheme を経由しない新規 ThemeData の配下）は設計上の誤りなので');
+  buf.writeln('  /// debug では assert で検出し、release では既定のライトへフォールバックする（KP-013）。');
+  buf.writeln('  AppColors get colors {');
+  buf.writeln('    final ext = Theme.of(this).extension<AppColors>();');
+  buf.writeln("    assert(ext != null, 'AppColors が Theme に未登録（AppTheme を経由していない Theme 配下）');");
+  buf.writeln('    return ext ?? AppColors.light;');
+  buf.writeln('  }');
   buf.writeln('}');
   buf.writeln('');
 

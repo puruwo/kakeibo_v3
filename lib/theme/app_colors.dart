@@ -4,8 +4,8 @@
 //
 // セマンティック色トークンの ThemeExtension。
 // primitive は生成時にインライン解決済み（公開フィールドには含めない）。
-// あわせて const TextStyle 用の static const 色クラス AppColorsLight / AppColorsDark も出力する。
-// ※ MaterialApp への接続・既存 MyColors の置き換えは別STEPで対応。
+// あわせて const 文脈用の static const 色クラス AppColorsLight / AppColorsDark も出力する
+// （生成物内の逃げ道。lib からは参照せず、テストの期待値には AppColors.light / dark を使う。KP-013）。
 
 import 'package:flutter/material.dart';
 
@@ -38,6 +38,9 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.overlay,
     required this.link,
     required this.handle,
+    required this.cardSurface,
+    required this.pressedOverlay,
+    required this.surfaceHighlight,
   });
 
   final Color primary;
@@ -66,6 +69,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color overlay;
   final Color link;
   final Color handle;
+  final Color cardSurface;
+  final Color pressedOverlay;
+  final Color surfaceHighlight;
 
   static const AppColors light = AppColors(
     primary: Color(0xFF0BB283),
@@ -91,9 +97,12 @@ class AppColors extends ThemeExtension<AppColors> {
     danger: Color(0xFFFF7171),
     icon: Color(0xFF8E8E93),
     disabled: Color(0xFFD1D1D6),
-    overlay: Color(0x33000000),
+    overlay: Color(0x99FFFFFF),
     link: Color(0xFF007AFF),
     handle: Color(0xFFC7C7CC),
+    cardSurface: Color(0xFFF2F2F7),
+    pressedOverlay: Color(0x1A000000),
+    surfaceHighlight: Color(0x00FFFFFF),
   );
 
   static const AppColors dark = AppColors(
@@ -123,6 +132,9 @@ class AppColors extends ThemeExtension<AppColors> {
     overlay: Color(0x33000000),
     link: Color(0xFF0A84FF),
     handle: Color(0xFFD9D9D9),
+    cardSurface: Color(0x39767680),
+    pressedOverlay: Color(0x1AFFFFFF),
+    surfaceHighlight: Color(0x09FFFFFF),
   );
 
   @override
@@ -153,6 +165,9 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? overlay,
     Color? link,
     Color? handle,
+    Color? cardSurface,
+    Color? pressedOverlay,
+    Color? surfaceHighlight,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -181,6 +196,9 @@ class AppColors extends ThemeExtension<AppColors> {
       overlay: overlay ?? this.overlay,
       link: link ?? this.link,
       handle: handle ?? this.handle,
+      cardSurface: cardSurface ?? this.cardSurface,
+      pressedOverlay: pressedOverlay ?? this.pressedOverlay,
+      surfaceHighlight: surfaceHighlight ?? this.surfaceHighlight,
     );
   }
 
@@ -214,16 +232,23 @@ class AppColors extends ThemeExtension<AppColors> {
       overlay: Color.lerp(overlay, other.overlay, t)!,
       link: Color.lerp(link, other.link, t)!,
       handle: Color.lerp(handle, other.handle, t)!,
+      cardSurface: Color.lerp(cardSurface, other.cardSurface, t)!,
+      pressedOverlay: Color.lerp(pressedOverlay, other.pressedOverlay, t)!,
+      surfaceHighlight: Color.lerp(surfaceHighlight, other.surfaceHighlight, t)!,
     );
   }
 }
 
 extension AppColorsX on BuildContext {
-  // 移行期: 新規 ThemeData を生成する Theme 配下など、AppColors 未登録の
-  // subtree でも null クラッシュしないよう、未取得時はダーク既定値へフォールバックする。
-  // （当面 themeMode.dark 固定のため dark を既定とする）
-  AppColors get colors =>
-      Theme.of(this).extension<AppColors>() ?? AppColors.dark;
+  /// 現在の Theme に登録された AppColors を返す。
+  ///
+  /// 未登録（AppTheme を経由しない新規 ThemeData の配下）は設計上の誤りなので
+  /// debug では assert で検出し、release では既定のライトへフォールバックする（KP-013）。
+  AppColors get colors {
+    final ext = Theme.of(this).extension<AppColors>();
+    assert(ext != null, 'AppColors が Theme に未登録（AppTheme を経由していない Theme 配下）');
+    return ext ?? AppColors.light;
+  }
 }
 
 /// AppColorsLight: const TextStyle 用の静的色トークン（light 実値）。
@@ -253,9 +278,12 @@ class AppColorsLight {
   static const Color danger = Color(0xFFFF7171);
   static const Color icon = Color(0xFF8E8E93);
   static const Color disabled = Color(0xFFD1D1D6);
-  static const Color overlay = Color(0x33000000);
+  static const Color overlay = Color(0x99FFFFFF);
   static const Color link = Color(0xFF007AFF);
   static const Color handle = Color(0xFFC7C7CC);
+  static const Color cardSurface = Color(0xFFF2F2F7);
+  static const Color pressedOverlay = Color(0x1A000000);
+  static const Color surfaceHighlight = Color(0x00FFFFFF);
 }
 
 /// AppColorsDark: const TextStyle 用の静的色トークン（dark 実値）。
@@ -288,4 +316,7 @@ class AppColorsDark {
   static const Color overlay = Color(0x33000000);
   static const Color link = Color(0xFF0A84FF);
   static const Color handle = Color(0xFFD9D9D9);
+  static const Color cardSurface = Color(0x39767680);
+  static const Color pressedOverlay = Color(0x1AFFFFFF);
+  static const Color surfaceHighlight = Color(0x09FFFFFF);
 }

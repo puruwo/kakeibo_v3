@@ -133,9 +133,17 @@
 |---------|-------|------|------------|
 | `color.icon` | `#8E8E93FF` | `#8E8E93FF` | systemGray(7) ※両モード同値 |
 | `color.disabled` | `#D1D1D6FF` | `#3A3A3CFF` | systemGray4(3) |
-| `color.overlay` | `#00000033` 🔸 | `#00000033` | hoverColor(1) |
+| `color.overlay` | `#FFFFFF99` 🔸（2026-09-11 KP-013 で `#00000033` から変更） | `#00000033` | 非活性ボタンの沈め（`button_util.dart`）。ライトでは黒を重ねると非活性の方が濃く見え意味が反転するため白60%へ |
 | `color.link` | `#007AFFFF` | `#0A84FFFF` | linkColor(新規有効化) |
 | `color.handle` | `#C7C7CCFF` 🔸 | `#D9D9D9FF` | barHandler(1) |
+
+### ライトモード対応で新設（2026-09-11 KP-013）
+
+| トークン | light | dark | 用途 |
+|---|-------|------|------|
+| `color.card-surface` | `#F2F2F7FF`（Apple secondarySystemBackground） | `#76768039`（従来の fill-quaternary と同値） | カードの地（`CardContainer`・固定費カード・一覧行カード・secondary ボタン）。ライトで半透明の無彩色グレーが地に溶け黄みを帯びて見える問題の対策（カンバス A-1 をユーザー選択） |
+| `color.pressed-overlay` | `#0000001A` 🔸 | `#FFFFFF1A` | 押下ハイライト（ThemeData.highlightColor・AppInkWell・FAB・PopupMenu）。従来は黒10%の直書き |
+| `color.surface-highlight` | `#FFFFFF00` 🔸（無し） | `#FFFFFF09` | カード・ボタンの微グラデ開始色（`resolveSurfaceHighlight`）。ライトでは黒系の `surface-border` を混ぜると上が影になるため平坦にする |
 
 > 残りニュートラル（systemGray2/5 等の少数参照）は、置き換え時に `color.icon` / `color.disabled` /
 > `color.text-*` のいずれかに寄せる。対応はSTEP6の置換マッピングで個別に決める。
@@ -171,8 +179,11 @@ Apple準拠でない以下は、ライト背景での見え方を実機/Figmaで
 - `color.primary-subtle` `#D7FFF4` — 白背景でほぼ視認不可の懸念。ライトは別値が必要な可能性大
 - `color.expense` `#FF7171` / `color.income` `#21D19F` — 白背景上のコントラスト（特に文字）
 - `color.fill-opaque` ライト `#EFEFF0` — 暫定。実際の用途（年間収支グラフのグラデ等）で確認
-- `color.overlay` `#000000` 20% — ライトでは妥当。ダークでは白オーバーレイの方が自然な場合あり
+- `color.overlay` ライト `#FFFFFF` 60%（KP-013 で変更） — 非活性ボタン（Tint 地）が「沈んで」見えるか確認
 - `color.handle` ライト `#C7C7CC` — 白背景で見えるグレーか確認
+- `color.pressed-overlay` ライト `#000000` 10% — 白いカード・行の押下で暗くなるのが見えるか確認
+- `color.surface-highlight` ライト 無し（完全透明） — カードが平坦になり iOS grouped 風に見えるか確認（光沢を残す場合は白系の低アルファ）
+- `color.card-surface` ライト `#F2F2F7` — 白地の全体タブと `#F2F2F7` 地のサブページの両方でカードが立つか確認
 - `color.surface-elevated-2` ライト（⚠️ 上記）— 3段階の段差維持の判断
 
 ---

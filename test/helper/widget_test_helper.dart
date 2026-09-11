@@ -1,7 +1,7 @@
 // Widget結合テスト用の共通ヘルパー
 //
 // 本番の main.dart は ProviderScope.overrides で実装リポジトリを注入し、
-// MaterialApp（ダークテーマ固定・textScaler 1.0）で画面を包んでいる。
+// MaterialApp（AppTheme の light / dark・既定はライト・textScaler 1.0）で画面を包んでいる。
 // Widgetテストでも同じ構成を再現し、リポジトリだけを Fake に差し替える。
 import 'dart:async';
 
@@ -22,7 +22,8 @@ import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
-import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/theme/app_theme.dart';
+import 'package:kakeibo/view_model/state/theme_mode.dart';
 
 import 'fake_repositories.dart';
 import 'test_container.dart';
@@ -175,8 +176,10 @@ void setUpWidgetTest(WidgetTester tester, {Size size = kTestScreenSize}) {
 /// 本番と同じラッパーで [home] を描画する
 ///
 /// - `ProviderScope` … main.dart と同じリポジトリ注入（Fake版）
-/// - `MaterialApp` … ダークテーマ固定・`AppColors.dark` ThemeExtension・
-///   textScaler 1.0固定（main.dart の builder と同じ）
+/// - `MaterialApp` … 本番と同じ `AppTheme.light()` / `AppTheme.dark()`・
+///   textScaler 1.0固定（KakeiboApp の builder と同じ）
+/// - テーマモードは [themeMode]（既定はライト＝本番の既定）。本番と同じく
+///   `themeModeNotifierProvider` を watch するので、テスト中に切り替えると追従する
 ///
 /// [overrides] はリポジトリ以外のProviderを差し替えるためのもの。
 /// リポジトリを差し替えたいときは [fakes] にデータ入りFakeを渡す
@@ -188,6 +191,7 @@ Future<TestFakes> pumpApp(
   List<Override> overrides = const [],
   DateTime? systemDate,
   Size size = kTestScreenSize,
+  ThemeMode themeMode = ThemeMode.light,
 }) async {
   setUpWidgetTest(tester, size: size);
   await loadAppFonts();
@@ -201,29 +205,26 @@ Future<TestFakes> pumpApp(
         ...aggregationSettingOverrides(
           systemDate: systemDate ?? kTestSystemDate,
         ),
+        initialThemeModeProvider.overrideWithValue(themeMode),
         ...overrides,
       ],
-      child: MaterialApp(
-        builder: (context, child) {
-          final mediaQuery = MediaQuery.of(context);
-          return MediaQuery(
-            data: mediaQuery.copyWith(
-              textScaler: const TextScaler.linear(1.0),
-              boldText: false,
-            ),
-            child: child!,
-          );
-        },
-        home: home,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.light().copyWith(extensions: const [AppColors.light]),
-        themeMode: ThemeMode.dark,
-        darkTheme: ThemeData.dark().copyWith(
-          appBarTheme: const AppBarTheme(
-            scrolledUnderElevation: 0,
-            elevation: 0,
-          ),
-          extensions: const [AppColors.dark],
+      child: Consumer(
+        builder: (context, ref, _) => MaterialApp(
+          builder: (context, child) {
+            final mediaQuery = MediaQuery.of(context);
+            return MediaQuery(
+              data: mediaQuery.copyWith(
+                textScaler: const TextScaler.linear(1.0),
+                boldText: false,
+              ),
+              child: child!,
+            );
+          },
+          home: home,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.light(),
+          darkTheme: AppTheme.dark(),
+          themeMode: ref.watch(themeModeNotifierProvider),
         ),
       ),
     ),
