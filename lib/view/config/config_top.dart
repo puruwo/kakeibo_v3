@@ -3,21 +3,28 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/aggregation_settings/aggregation_settings_usecase.dart';
 import 'package:kakeibo/application/data_management/data_management_usecase.dart';
 import 'package:kakeibo/application/export/export_provider.dart';
+import 'package:kakeibo/application/theme_mode/theme_mode_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/app_exception.dart';
+import 'package:kakeibo/view/component/app_switch.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/config/aggregation_setting_page.dart';
+import 'package:kakeibo/view_model/state/theme_mode.dart';
 
 class ConfigTop extends ConsumerWidget {
   const ConfigTop({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // テーマモード（ライト／ダーク）。スイッチは現在値を映し、切替は即時反映して保存する（KP-013）
+    final isDarkMode = ref.watch(themeModeNotifierProvider) == ThemeMode.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('設定', style: context.textStyles.pageHeaderText),
@@ -69,8 +76,23 @@ class ConfigTop extends ConsumerWidget {
                   ),
                   _ConfigRow(
                     label: '集計期間を設定する',
-                    isLast: true,
                     onTap: () => _openAggregationSettingPage(context, ref),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    indent: 16,
+                    color: context.colors.separator,
+                  ),
+                  // 行のどこをタップしても切り替わる。スイッチ自体の操作も同じ経路
+                  _ConfigRow(
+                    label: 'ダークモード',
+                    isLast: true,
+                    trailing: AppSwitch(
+                      value: isDarkMode,
+                      onChanged: (value) => _setDarkMode(context, ref, value),
+                    ),
+                    onTap: () => _setDarkMode(context, ref, !isDarkMode),
                   ),
                 ],
               ),
@@ -158,6 +180,25 @@ class ConfigTop extends ConsumerWidget {
     }
   }
 
+  /// テーマモードを切り替える（KP-013）
+  ///
+  /// 画面には即時反映され、SharedPreferences に保存される。保存に失敗したら
+  /// UseCase が表示も元に戻すので、ここでは失敗を知らせるだけでよい。
+  Future<void> _setDarkMode(
+    BuildContext context,
+    WidgetRef ref,
+    bool isDarkMode,
+  ) async {
+    final scaffoldMessenger = ScaffoldMessenger.of(context);
+    try {
+      await ref
+          .read(themeModeUsecaseProvider)
+          .save(isDarkMode ? ThemeMode.dark : ThemeMode.light);
+    } on AppException catch (e) {
+      FailureSnackBar.show(scaffoldMessenger, message: e.message);
+    }
+  }
+
   /// 現在の設定値を取得してから集計期間の設定ページへ遷移する（KP-005）
   Future<void> _openAggregationSettingPage(
     BuildContext context,
@@ -182,6 +223,7 @@ class _ConfigRow extends StatelessWidget {
     required this.label,
     required this.onTap,
     this.textColor,
+    this.trailing,
     this.isFirst = false,
     this.isLast = false,
   });
@@ -191,6 +233,9 @@ class _ConfigRow extends StatelessWidget {
 
   /// ラベル色の上書き（破壊的操作の行を赤系にする用途）
   final Color? textColor;
+
+  /// 行の右端に置く操作部品（テーマモードのスイッチ等。KP-013）
+  final Widget? trailing;
 
   final bool isFirst;
   final bool isLast;
@@ -221,6 +266,7 @@ class _ConfigRow extends StatelessWidget {
                     ? context.textStyles.oneLineButtonText.copyWith(color: textColor)
                     : context.textStyles.oneLineButtonText,
               ),
+              if (trailing != null) ...[const Spacer(), trailing!],
             ],
           ),
         ),

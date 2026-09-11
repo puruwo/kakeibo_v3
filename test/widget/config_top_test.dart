@@ -28,6 +28,7 @@ void main() {
     expect(find.text(' 設定画面'), findsOneWidget);
     expect(find.text('入力履歴をエクスポートする'), findsOneWidget);
     expect(find.text('集計期間を設定する'), findsOneWidget);
+    expect(find.text('ダークモード'), findsOneWidget); // KP-013 のスイッチ行
 
     expect(find.text(' データ管理'), findsOneWidget);
     expect(find.text('データベースを書き出す'), findsOneWidget);
