@@ -106,7 +106,6 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
               },
               inputFormatters: [NumberTextInputFormatter()],
               keyboardType: TextInputType.number,
-              keyboardAppearance: Brightness.dark,
               decoration: const InputDecoration(
                 isDense: true,
                 filled: false,

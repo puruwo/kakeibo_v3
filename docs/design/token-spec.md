@@ -24,9 +24,9 @@
 
 設計→デザイン→実装 自動化パイプライン **フェーズ0（デザイントークンの単一ソース化）は完了**。
 
-- ✅ `design-tokens/tokens.json` → `tool/generate_tokens.dart` で `lib/theme/app_colors.dart` を生成（`AppColors` ThemeExtension ＋ const TextStyle 用の静的クラス `AppColorsDark` / `AppColorsLight`）
-- ✅ `MaterialApp` に light/dark テーマと `AppColors` を接続（当面 `themeMode.dark` 固定）
-- ✅ 旧 `MyColors`（`lib/constant/colors.dart`）を**全廃・ファイル削除**。UI色は **ThemeExtension に一本化** — `context.colors.*`（ランタイム）／`AppColorsDark.*`（const文脈）／`CategoryPalette.*`（データ色）
+- ✅ `design-tokens/tokens.json` → `tool/generate_tokens.dart` で `lib/theme/app_colors.dart` を生成（`AppColors` ThemeExtension。const TextStyle 用の静的クラス `AppColorsDark` / `AppColorsLight` は 2026-09-11 KP-013 で廃止）
+- ✅ `MaterialApp` に light/dark テーマと `AppColors` を接続。2026-09-11 KP-013 で ThemeData の正本を `lib/theme/app_theme.dart`（`AppTheme.light()/dark()`）に集約し、**既定ライト・設定画面のスイッチでダークへ切替**（`ThemeModeStore` に保存）
+- ✅ 旧 `MyColors`（`lib/constant/colors.dart`）を**全廃・ファイル削除**。UI色は **ThemeExtension に一本化** — `context.colors.*`（ランタイム）／役割テキストスタイルは `context.textStyles.*`（KP-013）／`CategoryPalette.*`（データ色）
 - ✅ 色ハードコード検出フック（`scripts/check_hardcoded_color.sh` + PostToolUse）を導入
 - ✅ ダーク見た目は従来と不変（値同一マッピングを原則。意図的な例外は下表 `mintBlue→income` のみ）
 
@@ -197,6 +197,6 @@ Apple準拠でない以下は、ライト背景での見え方を実機/Figmaで
 - バケットB（少数参照ニュートラル）の用途別移行 ✅（§0）／ Painter注入 ✅
 
 **残課題（次フェーズ）**:
-1. **ライト有効化（6c-3b）**: const TextStyle 内の `AppColorsDark.*` 直参照を剥がす（context依存化）→ `themeMode.system` へ切り替え。併せて §5 の🔸（ライト値の実機確認）と §2「面」⚠️（surface 3段差）を確定
+1. ~~**ライト有効化（6c-3b）**~~ ✅ 2026-09-11 KP-013 で完了: 役割スタイルを `AppColors` を受け取るインスタンスにして `AppColorsDark.*` を全廃、`AppTheme` を新設して既定ライト＋設定画面で切替。§2「面」⚠️ はカード地を `card-surface`（ライト `#F2F2F7`）に分離して解消。§5 の🔸（ライト値の実機確認）は実機確認の結果を Vault の案件ハブへ記録
 2. **決定6（共同カラーパレット）**: Confluence未決事項と合流し `color.couple-accent` 等を確定 → `tokens.json` 追加（§4）
 3. **Figma生成の自動化**: `tokens.json` ⇄ Figma変数 の同期、画面デザイン生成の自動化

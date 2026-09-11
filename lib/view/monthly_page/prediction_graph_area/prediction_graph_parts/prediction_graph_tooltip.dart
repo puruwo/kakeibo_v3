@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/daily_bar_data.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
@@ -33,7 +34,7 @@ class GraphTooltip extends StatelessWidget {
           constraints: const BoxConstraints(minWidth: 140),
           padding: const EdgeInsets.all(AppSpacing.md),
           decoration: BoxDecoration(
-            color: const Color(0xFF2C2C2E), // ダークグレー背景
+            color: context.colors.surfaceElevated2,
             borderRadius: BorderRadius.circular(8),
             boxShadow: [
               BoxShadow(
@@ -76,7 +77,7 @@ class GraphTooltip extends StatelessWidget {
               ),
               if (categoryExpenses.isNotEmpty) ...[
                 const SizedBox(height: AppSpacing.sm),
-                const Divider(height: 1, color: Colors.white24),
+                Divider(height: 1, color: context.colors.separator),
                 const SizedBox(height: AppSpacing.sm),
                 // カテゴリー別支出（金額の降順でソート）
                 ...(List<CategoryExpense>.from(categoryExpenses)

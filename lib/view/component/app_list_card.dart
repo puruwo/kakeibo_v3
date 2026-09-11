@@ -104,7 +104,7 @@ class AppListCard extends StatelessWidget {
   /// 長押し時のコールバック
   final VoidCallback? onLongPress;
 
-  /// 背景色 (デフォルト: MyColors.quarternarySystemfill)
+  /// 背景色 (デフォルト: card-surface トークン)
   final Color? backgroundColor;
 
   /// タイルの高さ (デフォルト: 69.0)
@@ -261,7 +261,7 @@ class AppListCard extends StatelessWidget {
       padding: EdgeInsets.only(bottom: bottomPadding),
       child: AppInkWell(
         borderRadius: appListCardRadius,
-        color: backgroundColor ?? context.colors.fillQuaternary,
+        color: backgroundColor ?? context.colors.cardSurface,
         border: Border.all(color: context.colors.surfaceBorder, width: 1),
         onTap: onTap,
         onLongPress: onLongPress,

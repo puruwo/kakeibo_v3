@@ -57,7 +57,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
                         width: 150,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: context.colors.fillTertiary.withOpacity(0.5),
+                          color: context.colors.fillSecondary,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -94,7 +94,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: context.colors.fillTertiary.withOpacity(0.5),
+              color: context.colors.fillSecondary,
               borderRadius: BorderRadius.circular(8),
             ),
           ),
@@ -108,7 +108,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
                   width: double.infinity,
                   height: 14,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.5),
+                    color: context.colors.fillTertiary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -117,7 +117,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
                   width: 100,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.3),
+                    color: context.colors.fillQuaternary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -130,7 +130,7 @@ class _HistoryListSkeletonState extends State<HistoryListSkeleton> {
             width: 60,
             height: 14,
             decoration: BoxDecoration(
-              color: context.colors.fillTertiary.withOpacity(0.5),
+              color: context.colors.fillTertiary,
               borderRadius: BorderRadius.circular(4),
             ),
           ),

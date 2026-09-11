@@ -6,8 +6,8 @@ import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/theme/app_colors.dart';
-import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
+import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
@@ -43,37 +43,17 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
               color: context.colors.text,
             ),
             onPressed: () async {
-              final shouldDelete = await showDialog<bool>(
-                context: context,
-                builder: (BuildContext dialogContext) {
-                  return AlertDialog(
-                    backgroundColor: context.colors.surfaceElevated,
-                    title: Text(
-                      'カテゴリーを削除しますか？',
-                      style: TextStyle(color: context.colors.text),
-                    ),
-                    content: Text(
-                      'このカテゴリーに紐づく項目および収入レコードがすべて削除されます。',
-                      style: TextStyle(color: context.colors.text),
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(false),
-                        child: const Text('キャンセル'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(dialogContext).pop(true),
-                        child: const Text(
-                          '削除',
-                          style: TextStyle(color: CategoryPalette.expense1),
-                        ),
-                      ),
-                    ],
-                  );
-                },
+              // 削除確認は共通のアクションシート型（ADR-030）。素の AlertDialog は
+              // Material 既定色（紫のボタン・端末既定フォント）で描かれるため使わない（KP-013）
+              final shouldDelete = await showConfirmationDialog(
+                context,
+                title: 'カテゴリーを削除しますか？',
+                message: 'このカテゴリーに紐づく項目および収入レコードがすべて削除されます。',
+                confirmLabel: '削除する',
+                isDestructive: true,
               );
 
-              if (shouldDelete != true) return;
+              if (!shouldDelete) return;
 
               execute(
                 context,

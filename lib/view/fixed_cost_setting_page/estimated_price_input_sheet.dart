@@ -208,7 +208,6 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
                   style: context.textStyles.sheetPriceInput,
                   cursorColor: context.colors.primary,
                   cursorWidth: 2,
-                  keyboardAppearance: Brightness.dark,
                   buildCounter: (
                     context, {
                     required currentLength,

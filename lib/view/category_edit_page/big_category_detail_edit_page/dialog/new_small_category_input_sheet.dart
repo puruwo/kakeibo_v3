@@ -231,7 +231,6 @@ class _NewSmallCategoryInputSheetState
         suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
       ),
 
-      keyboardAppearance: Brightness.dark,
 
       // onTapOutside は付けない。シート内のボタンを押したときに
       // 先にキーボードが閉じてシートが下がり、1回目のタップが空振りするため。

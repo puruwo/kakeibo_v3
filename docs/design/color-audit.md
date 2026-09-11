@@ -1,7 +1,7 @@
 # 色監査レポート (Color Audit) — STEP0
 
 > ✅ **フェーズ0 完了（2026-06-11）**: 本レポートは**移行前(STEP0)のスナップショット（履歴記録）**。
-> ここで棚卸しした `MyColors`・生ハードコード色・データ色は、ThemeExtension（`AppColors` / 静的 `AppColorsDark`）
+> ここで棚卸しした `MyColors`・生ハードコード色・データ色は、ThemeExtension（`AppColors`。静的 `AppColorsDark` は KP-013 で廃止）
 > ＋ `CategoryPalette`（データ色）に全移行し、`lib/constant/colors.dart` は**削除済み**。
 > 確定仕様・決定事項・移行結果・残課題は [`token-spec.md`](./token-spec.md) を参照。
 

@@ -39,10 +39,11 @@ kakeibo（Flutter家計簿アプリ、現在ダークのみ、カップル/共�
 |---------|------|
 | `design-tokens/tokens.json` | **全色の唯一の定義元**。primitive / light / dark / category の4セット（Tokens Studio形式） |
 | `tool/generate_tokens.dart` | tokens.json → Dartコード生成スクリプト（`dart run tool/generate_tokens.dart`） |
-| `lib/theme/app_colors.dart`（生成物） | `AppColors`（ThemeExtension・22トークン）+ `context.colors` 拡張 + const用 `AppColorsDark`/`AppColorsLight` |
+| `lib/theme/app_colors.dart`（生成物） | `AppColors`（ThemeExtension・29トークン）+ `context.colors` 拡張（const用 `AppColorsDark`/`AppColorsLight` は KP-013 で廃止） |
+| `lib/theme/app_theme.dart` | ThemeData の正本 `AppTheme.light()/dark()`（Material 既定色をトークンで上書き。KP-013） |
 | `lib/theme/category_palette.dart`（生成物） | カテゴリーの支出12色/収入4色/グレー（Color とDB用hex文字列。KP-012 で刷新） |
 | `lib/util/color_code.dart` | hex↔Color 変換ヘルパー（旧 MyColors から分離） |
-| `lib/main.dart` | MaterialApp に light/dark 両テーマ登録。`themeMode: ThemeMode.dark` 固定 |
+| `lib/main.dart` / `lib/app.dart` | `ThemeModeStore` の保存値を起動時に読み込み、`KakeiboApp` が `themeModeNotifierProvider` を watch して MaterialApp に渡す（既定ライト。KP-013） |
 | `scripts/check_hardcoded_color.sh` + `.claude/settings.json` | ハードコード色 検出 hook |
 
 `lib/constant/colors.dart`（旧 `MyColors`、47定数）は**削除済み**。
@@ -62,7 +63,7 @@ kakeibo（Flutter家計簿アプリ、現在ダークのみ、カップル/共�
 - アプリからは `context.colors.<token>`。`Color(0x...)` / `Colors.*` を直書きしない
 - `app_colors.dart` / `category_palette.dart` は生成物（手編集禁止）
 - 半透明色の変換規則: tokens は `#RRGGBBAA`、Flutter は `0xAARRGGBB`（アルファ先頭）
-- const TextStyle は `AppColorsDark.*`、CustomPainter は constructor で色注入
+- 役割テキストスタイルは `context.textStyles.*`（`AppColors` を受け取るインスタンス。KP-013）、CustomPainter は constructor で色と TextStyle を注入
 
 ---
 
@@ -239,25 +240,16 @@ Confluence設計から Figma画面を生成する（C-2のコンポーネント�
 
 ## 7. 並行で進められる A / B
 
-### A：ライトモードの有効化
+### A：ライトモードの有効化 ✅ 完了（2026-09-11 KP-013）
 
-トークンは両対応済み。残るは仕上げ。
+トークンは両対応済みだった。KP-013 で次を実施した（詳細は Vault 案件「Kakeibo 案件 ライトモード対応とテーマ再構築」）。
 
-```
-ライトモードを有効化する（フェーズ0の積み残し 6c-3b → themeMode）。
-
-1. 6c-3b: constant/styles/ の TextStyle 定義から color を剥がし、タイポグラフィ
-   （size/weight/height）だけにする。色は描画箇所で
-   style: AppTextStyles.xxx.copyWith(color: context.colors.text) のように当てる
-   （AppColorsDark.* への暫定依存を解消し、モード追従させる）
-2. ライト値の視覚確認: 🔸付きトークンを実機/Figmaで確認し必要なら調整:
-   primary, primary-subtle, expense, income, fill-opaque, overlay, handle,
-   surfaceElevated2（特に surfaceElevated2 はライトで surface と同値=段差消失。要調整）
-3. main.dart の themeMode を ThemeMode.dark → ThemeMode.system に変更
-4. （任意）設定画面でライト/ダーク/システムをユーザーが選べるよう themeMode を状態管理に載せる
-
-完了後: 各段の差分、ライト表示の確認結果、flutter analyze
-```
+1. 6c-3b: 役割スタイル4クラスを `AppColors` を受け取るインスタンスにし、呼び出し側は
+   `context.textStyles.xxx` で現在のテーマの色が入ったスタイルを受け取る（`AppColorsDark.*` は廃止）
+2. ライト値の視覚確認: シミュレータで主要画面を確認。面の段差はカード地トークン `card-surface`
+   （ライト `#F2F2F7`）の新設で解消。`overlay` のライト値を白60%へ変更
+3. ThemeData の正本 `AppTheme.light()/dark()` を新設し、Material 既定色（seed 紫）を排除
+4. 既定ライト。設定画面の「ダークモード」スイッチで切替（`ThemeModeStore` に保存・起動時に事前読込）
 
 ### B：共同カラーパレット（決定6）
 

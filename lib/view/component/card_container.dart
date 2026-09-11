@@ -3,7 +3,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 
 /// アプリ共通のカードコンテナ
 ///
-/// 背景色: MyColors.quarternarySystemfill
+/// 背景色: card-surface トークン（ライト #F2F2F7・ダークは fill-quaternary と同値。KP-013）
 /// 角丸: 18px
 /// ADR-017 #1: 極薄境界線＋上から光が当たるような微細なグラデーションハイライトで
 /// 背景（surface）との奥行きを出す。
@@ -61,7 +61,7 @@ class CardContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final baseColor = context.colors.fillQuaternary;
+    final baseColor = context.colors.cardSurface;
     final highlightColor = resolveSurfaceHighlight(context, baseColor);
 
     return Container(
@@ -102,7 +102,7 @@ BorderRadius get appListCardRadius => BorderRadius.circular(12);
 /// カード（[CardContainer]）とボタン（button_util.dart）で同じ質感を共有するための単一定義。
 Color resolveSurfaceHighlight(BuildContext context, Color base) {
   return Color.alphaBlend(
-    context.colors.surfaceBorder.withValues(alpha: 0.035),
+    context.colors.surfaceHighlight,
     base,
   );
 }

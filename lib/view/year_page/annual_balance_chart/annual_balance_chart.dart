@@ -83,10 +83,10 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
               chartData.monthlyBalanceValues,
             );
 
-            // CardContainerが実際に描画する色（背景のsurfaceElevatedにfillQuaternaryを
+            // CardContainerが実際に描画する色（背景のsurfaceElevatedにcardSurfaceを
             // 合成した色）。Y軸ラベルオーバーレイの境界を見えなくするために使う
             final cardSurfaceColor = Color.alphaBlend(
-              context.colors.fillQuaternary,
+              context.colors.cardSurface,
               context.colors.surfaceElevated,
             );
 
@@ -156,9 +156,9 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                   ),
                   // 固定表示の Y軸ラベルオーバーレイ（左端は CardContainer と同色、右に向けてフェードアウト）
                   //
-                  // fillOpaqueは不透明トークンでCardContainerの半透明fillQuaternaryとは
+                  // fillOpaqueは不透明トークンでCardContainerのcardSurface（ダークは半透明）とは
                   // 別物のため、そのまま使うと縦軸ラベル付近に境界線が見えてしまう。
-                  // CardContainerが実際に描画する色（fillQuaternaryをsurfaceElevated上に
+                  // CardContainerが実際に描画する色（cardSurfaceをsurfaceElevated上に
                   // 合成した色）を計算して使うことで境界をなくす。
                   //
                   // 背景のグラデーションはCardContainerの上下端（Widget全体の高さ）まで

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/app_switch.dart';
 
 /// インセットグループの角丸（iOS設定アプリのグループ化リストに相当する見た目）
 final BorderRadius appInsetGroupRadius = BorderRadius.circular(14);
@@ -317,31 +318,11 @@ class AppInsetRow extends StatelessWidget {
           child: valueWidget ?? _buildValueText(context),
         );
       case _AppInsetRowType.switchRow:
+        // 枠線の消去・つまみの色は AppTheme の switchTheme に集約済み。
+        // ここで ThemeData を新規生成しない（AppColors 拡張が落ちる。KP-013）
         return Align(
           alignment: Alignment.centerRight,
-          child: SizedBox(
-            width: 45,
-            child: Theme(
-              // ThemeDataを上書きして、トグルOnの時のborderを透明にする
-              data: ThemeData(useMaterial3: true).copyWith(
-                colorScheme: Theme.of(
-                  context,
-                ).colorScheme.copyWith(outline: Colors.transparent),
-              ),
-              // 大きさを小さくするためにTransform.scaleを使用
-              child: Transform.scale(
-                alignment: Alignment.centerRight,
-                scale: 0.7,
-                child: Switch(
-                  activeTrackColor: context.colors.primary,
-                  inactiveTrackColor: context.colors.icon,
-                  thumbColor: WidgetStateProperty.all(Colors.white),
-                  value: switchValue!,
-                  onChanged: onSwitchChanged,
-                ),
-              ),
-            ),
-          ),
+          child: AppSwitch(value: switchValue!, onChanged: onSwitchChanged),
         );
       case _AppInsetRowType.textField:
         return TextFormField(
@@ -356,7 +337,6 @@ class AppInsetRow extends StatelessWidget {
           maxLength: maxLength,
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
-          keyboardAppearance: Brightness.dark,
           buildCounter: (
             BuildContext context, {
             required int currentLength,

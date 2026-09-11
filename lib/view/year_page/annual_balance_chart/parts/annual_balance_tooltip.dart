@@ -30,7 +30,7 @@ class AnnualBalanceTooltip extends StatelessWidget {
         constraints: const BoxConstraints(minWidth: 140),
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: const Color(0xFF2C2C2E),
+          color: context.colors.surfaceElevated2,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -46,7 +46,7 @@ class AnnualBalanceTooltip extends StatelessWidget {
           children: [
             Text('${value.month}月', style: context.graphStyles.tooltipDate),
             const SizedBox(height: AppSpacing.sm),
-            const Divider(height: 1, color: Colors.white24),
+            Divider(height: 1, color: context.colors.separator),
             const SizedBox(height: AppSpacing.sm),
             _row(context, label: '収入', amount: value.monthlyIncome, color: context.colors.income),
             const SizedBox(height: 2),

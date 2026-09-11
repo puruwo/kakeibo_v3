@@ -29,7 +29,8 @@ description: >
 | 定義ファイル | クラス名 | 用途 |
 |---|---|---|
 | `design-tokens/tokens.json` | - | カラーの単一ソース（`kakeibo-design-tokens` Skill 参照） |
-| `lib/theme/app_colors.dart` | `AppColors` / `AppColorsDark` | 生成されたカラートークン（手編集禁止） |
+| `lib/theme/app_colors.dart` | `AppColors` | 生成されたカラートークン（手編集禁止。`AppColorsDark` は KP-013 で廃止） |
+| `lib/theme/app_theme.dart` | `AppTheme` | ThemeData の正本（light / dark。Material 既定色をトークンで上書き） |
 | `lib/constant/font_style.dart` | `MyFontStyle` | ベースフォント（`app_type_scale.dart` からのみ参照） |
 | `lib/constant/styles/app_type_scale.dart` | `AppTypeScale` | 型スケール（family × size × weight の段。値の正本） |
 | `lib/constant/styles/app_text_styles.dart` ほか | `AppTextStyles` / `RegisterPageStyles` / `CalendarStyles` / `GraphTextStyles` | 役割スタイル（段への参照＋色） |

@@ -39,62 +39,55 @@ class AllNoBudgetTypeCategorySumTile extends HookConsumerWidget {
       borderRadius: appListCardRadius,
       border: Border.all(color: context.colors.surfaceBorder, width: 1),
       onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => CategoryExpenseHistoryPage(
-              bigId: monthlyExpenseByCategoryEntity.id),
-        ));
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => CategoryExpenseHistoryPage(
+              bigId: monthlyExpenseByCategoryEntity.id,
+            ),
+          ),
+        );
       },
       child: SizedBox(
         width: 343 * context.screenHorizontalMagnification,
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            dividerColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            listTileTheme: ListTileTheme.of(context).copyWith(
-              titleAlignment: ListTileTitleAlignment.center,
-              horizontalTitleGap: 0,
-              minVerticalPadding: 0,
-              dense: true,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.sm,
+          ),
+          child: LayoutBuilder(
+            builder: (context, constraints) => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      CategorySumText(categoryTile: categoryTile),
+                      CategorySumGraph(
+                        barFrameMaxWidth:
+                            constraints.maxWidth -
+                            priceLabelWidth -
+                            gapBetweenLabelAndIcon -
+                            gapBetweenGraphAndLabel -
+                            iconWidth,
+                        categoryTile: categoryTile,
+                      ),
+                    ],
+                  ),
+                ),
+                AllNoBudgetTypePriceLabel(
+                  gapBetweenGraphAndLabel: gapBetweenGraphAndLabel,
+                  width: priceLabelWidth,
+                  categoryTile: categoryTile,
+                ),
+                const SizedBox(width: gapBetweenLabelAndIcon),
+                MyIcon.next(context),
+              ],
             ),
           ),
-          child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-              child: LayoutBuilder(
-                builder: (context, constraints) => Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CategorySumText(categoryTile: categoryTile),
-                          CategorySumGraph(
-                            barFrameMaxWidth: constraints.maxWidth -
-                                priceLabelWidth -
-                                gapBetweenLabelAndIcon -
-                                gapBetweenGraphAndLabel -
-                                iconWidth,
-                            categoryTile: categoryTile,
-                          ),
-                        ],
-                      ),
-                    ),
-                    AllNoBudgetTypePriceLabel(
-                      gapBetweenGraphAndLabel: gapBetweenGraphAndLabel,
-                      width: priceLabelWidth,
-                      categoryTile: categoryTile,
-                    ),
-                    const SizedBox(
-                      width: gapBetweenLabelAndIcon,
-                    ),
-                    MyIcon.next(context),
-                  ],
-                ),
-              )),
         ),
       ),
     );

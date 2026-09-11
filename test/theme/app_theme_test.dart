@@ -41,7 +41,8 @@ void main() {
         expect(c.theme.colorScheme.onPrimary, c.colors.onPrimary);
         expect(c.theme.colorScheme.surface, c.colors.surface);
         expect(c.theme.colorScheme.error, c.colors.danger);
-        expect(c.theme.scaffoldBackgroundColor, c.colors.surfaceElevated);
+        // 主要タブ・設定画面の地。サブページは部品側で surfaceElevated を明示する（T3）
+        expect(c.theme.scaffoldBackgroundColor, c.colors.surface);
         expect(c.theme.dividerTheme.color, c.colors.separator);
         expect(c.theme.progressIndicatorTheme.color, c.colors.primary);
         expect(c.theme.textSelectionTheme.cursorColor, c.colors.primary);

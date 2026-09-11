@@ -54,8 +54,9 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
 
   return base.copyWith(
     extensions: <ThemeExtension<dynamic>>[c],
-    scaffoldBackgroundColor: c.surfaceElevated,
-    canvasColor: c.surfaceElevated,
+    // 主要タブ・設定画面などの地。サブページ・モーダルは部品側で surfaceElevated を明示する
+    scaffoldBackgroundColor: c.surface,
+    canvasColor: c.surface,
     textTheme: base.textTheme.apply(bodyColor: c.text, displayColor: c.text),
     appBarTheme: AppBarTheme(
       backgroundColor: Colors.transparent,
@@ -158,10 +159,11 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
         overlayColor: Colors.transparent,
       ),
     ),
+    // 文字の段は指定しない（日付ピッカー等の Material 部品のボタンまで 12px に縮むため）。
+    // アプリ内のテキストボタンは呼び出し側で役割スタイル textButtonTextStyle を当てる
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
         foregroundColor: c.primary,
-        textStyle: AppTextStyles(c).textButtonTextStyle.copyWith(color: c.primary),
         overlayColor: Colors.transparent,
       ),
     ),
