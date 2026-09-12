@@ -59,8 +59,7 @@ class ExpenseHistoryPage extends StatelessWidget {
         ),
       ),
 
-      // 本文
-      backgroundColor: context.colors.surfaceElevated,
+      // 本文（地は AppTheme の scaffoldBackgroundColor（surface）。KP-013）
       body: Column(children: [const CalendarArea(), ExpenceHistoryArea()]),
     );
   }

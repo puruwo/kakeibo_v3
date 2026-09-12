@@ -195,4 +195,33 @@ void main() {
       }
     });
   }
+
+  // 主要3タブの地は AppTheme の scaffoldBackgroundColor（surface）に委ねる。
+  // surfaceElevated を明示するとライトでカード地（card-surface #F2F2F7）と同色になり
+  // カードの面が消えるため、明示指定が復活しないことを固定する（KP-013）
+  group('主要3タブの地', () {
+    final tabs = <({String name, Widget Function() build})>[
+      (name: '全体タブ', build: () => const YearPage()),
+      (name: '月間分析タブ', build: () => const MonthlyPage()),
+      (name: '履歴タブ', build: () => const ExpenseHistoryPage()),
+    ];
+    for (final tab in tabs) {
+      testWidgets('${tab.name} の Scaffold は地を明示せず、テーマの surface で描く', (
+        tester,
+      ) async {
+        await pumpApp(tester, home: tab.build(), fakes: buildFakes());
+        await pumpTimes(tester);
+
+        final scaffoldFinder = find.byType(Scaffold).first;
+        expect(tester.widget<Scaffold>(scaffoldFinder).backgroundColor, isNull);
+        final context = tester.element(scaffoldFinder);
+        expect(
+          Theme.of(context).scaffoldBackgroundColor,
+          AppColors.light.surface,
+        );
+        // 地とカード地が同色なら、この検証自体が意味を失う
+        expect(AppColors.light.surface, isNot(AppColors.light.cardSurface));
+      });
+    }
+  });
 }
