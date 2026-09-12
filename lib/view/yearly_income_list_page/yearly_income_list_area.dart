@@ -11,7 +11,8 @@ import 'package:kakeibo/view/yearly_income_list_page/yearly_income_card.dart';
 /// 収入一覧の月別アコーディオンリスト（追加改修 0828）
 ///
 /// 支出カテゴリー明細と同じ月ヘッダー語彙（月・件数・月計）で表示し、
-/// 初期は全月閉じた状態。タップで明細タイルを開閉する。
+/// 初期は全月閉じた状態（[initiallyExpandAll] で全月開いた状態にもできる）。
+/// タップで明細タイルを開閉する。
 class YearlyIncomeListArea extends ConsumerStatefulWidget {
   const YearlyIncomeListArea({
     super.key,
@@ -19,12 +20,17 @@ class YearlyIncomeListArea extends ConsumerStatefulWidget {
     this.shrinkWrap = false,
     this.physics,
     this.padding = const EdgeInsets.fromLTRB(16, 16, 16, 16),
+    this.initiallyExpandAll = false,
   });
 
   final PeriodValue period;
   final bool shrinkWrap;
   final ScrollPhysics? physics;
   final EdgeInsetsGeometry padding;
+
+  /// 初回表示で全月を開いた状態にするか。
+  /// 単月（集計月）で開く月間分析からの遷移では true、年間タブからは false。
+  final bool initiallyExpandAll;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -34,6 +40,9 @@ class YearlyIncomeListArea extends ConsumerStatefulWidget {
 class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
   /// 開いている月のラベル集合。初期表示は全月閉じた状態
   final Set<String> _expandedLabels = {};
+
+  /// [YearlyIncomeListArea.initiallyExpandAll] を初回のデータ到着時に1度だけ適用したか
+  bool _initialExpandApplied = false;
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +59,17 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
               );
             }
 
-            // 編集・削除の再集計で消えた月のラベルを掃除する
             final labels = {
               for (final g in incomeList.monthlyGroups) g.monthLabel,
             };
+
+            // 初回のデータ到着時のみ全月を開く（以後の開閉はユーザー操作に任せる）
+            if (widget.initiallyExpandAll && !_initialExpandApplied) {
+              _initialExpandApplied = true;
+              _expandedLabels.addAll(labels);
+            }
+
+            // 編集・削除の再集計で消えた月のラベルを掃除する
             _expandedLabels.removeWhere((label) => !labels.contains(label));
 
             return ListView.builder(

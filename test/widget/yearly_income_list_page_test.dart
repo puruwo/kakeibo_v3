@@ -163,6 +163,25 @@ void main() {
     expect(find.text('7月5日'), findsNothing);
   });
 
+  testWidgets('initiallyExpandAll: true なら初回から全月開いた状態になる', (tester) async {
+    await pumpApp(
+      tester,
+      home: YearlyIncomeListPage(period: yearPeriod, initiallyExpandAll: true),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    // KP-016: 月間分析からの遷移（単月）で使う。両月の明細タイルが最初から見える
+    expect(find.text('7月5日'), findsOneWidget);
+    expect(find.text('6月25日'), findsOneWidget);
+
+    // 初回適用のみで、以後の開閉はユーザー操作に従う（閉じたまま戻らない）
+    await tester.tap(find.text('7月'));
+    await pumpTimes(tester);
+    expect(find.text('7月5日'), findsNothing);
+    expect(find.text('6月25日'), findsOneWidget);
+  });
+
   testWidgets('収入タイルのタップで編集モーダルが開く', (tester) async {
     await pumpApp(
       tester,
