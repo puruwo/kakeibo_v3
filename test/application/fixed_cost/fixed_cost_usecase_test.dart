@@ -568,6 +568,218 @@ void main() {
       expect(updated.nextPaymentDate, '20261001');
     });
 
+    // ---- 次回支払日の正規化と即時生成（ADR-006 規則1・3。KP-015） ----
+    // システム日時 2025/7/6 → 今の集計期間は 6/25〜7/24
+
+    test('編集後の次回支払日が今の集計期間内なら実績を即時生成し次回支払日を進める', () async {
+      const master = FixedCostEntity(
+        id: 7,
+        name: 'ジム',
+        variable: 0,
+        price: 10000,
+        expenseSmallCategoryId: 11,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250101',
+        nextPaymentDate: '20250801',
+      );
+      final container = createUsecaseContainer(initialRecords: const [master]);
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      // 8/1 → 7/10（期間内）に変更
+      await usecase.edit(
+        originalEntity: master,
+        editEntity: master.copyWith(nextPaymentDate: '20250710'),
+      );
+
+      // 7/10 の実績が即時生成される（バッチを待たない）
+      final record = fakeExpenseRepository.insertedFixedCostRecords.single;
+      expect(record.date, '20250710');
+      expect(record.fixedCostId, 7);
+      expect(record.price, 10000);
+      expect(record.isConfirmed, 1);
+      // マスタは同期更新の後、進めた次回支払日で保存し直される
+      final last = fakeFixedCostRepository.updatedEntities.last;
+      expect(last.nextPaymentDate, '20250810');
+      expect(last.recentPaymentDate, '20250710');
+    });
+
+    test('編集後の次回支払日が期間外（来月以降）なら実績は作らずマスタも再保存しない', () async {
+      const master = FixedCostEntity(
+        id: 7,
+        name: 'ジム',
+        variable: 0,
+        price: 10000,
+        expenseSmallCategoryId: 11,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250101',
+        nextPaymentDate: '20250801',
+      );
+      final container = createUsecaseContainer(initialRecords: const [master]);
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: master,
+        editEntity: master.copyWith(nextPaymentDate: '20250815'),
+      );
+
+      expect(fakeExpenseRepository.insertedFixedCostRecords, isEmpty);
+      // 同期更新の1回だけ
+      expect(fakeFixedCostRepository.updatedEntities, hasLength(1));
+      expect(
+        fakeFixedCostRepository.updatedEntities.single.nextPaymentDate,
+        '20250815',
+      );
+    });
+
+    test('過去日の次回支払日は今日以降で最初に来る支払日へ正規化される（規則1）', () async {
+      const master = FixedCostEntity(
+        id: 7,
+        name: 'ジム',
+        variable: 0,
+        price: 10000,
+        expenseSmallCategoryId: 11,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250101',
+        nextPaymentDate: '20250801',
+      );
+      final container = createUsecaseContainer(initialRecords: const [master]);
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      // 5/3（過去日）を保存 → 6/3・7/3 も今日（7/6）より前なので 8/3 まで進む
+      await usecase.edit(
+        originalEntity: master,
+        editEntity: master.copyWith(nextPaymentDate: '20250503'),
+      );
+
+      // 読み飛ばした過去の回の実績は作らない（過去分のキャッチアップはしない）
+      expect(fakeExpenseRepository.insertedFixedCostRecords, isEmpty);
+      final last = fakeFixedCostRepository.updatedEntities.last;
+      expect(last.nextPaymentDate, '20250803');
+    });
+
+    test('過去日を正規化した結果が期間内なら実績も即時生成される', () async {
+      const master = FixedCostEntity(
+        id: 7,
+        name: 'ジム',
+        variable: 1,
+        estimatedPrice: 3000,
+        expenseSmallCategoryId: 11,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250101',
+        nextPaymentDate: '20250801',
+      );
+      final container = createUsecaseContainer(initialRecords: const [master]);
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      // 6/20（過去日）→ 7/20（今日以降・期間内）に正規化され、7/20 の未確定行ができる
+      await usecase.edit(
+        originalEntity: master,
+        editEntity: master.copyWith(nextPaymentDate: '20250620'),
+      );
+
+      final record = fakeExpenseRepository.insertedFixedCostRecords.single;
+      expect(record.date, '20250720');
+      expect(record.price, isNull);
+      expect(record.estimatedPrice, 3000);
+      expect(record.isConfirmed, 0);
+      expect(
+        fakeFixedCostRepository.updatedEntities.last.nextPaymentDate,
+        '20250820',
+      );
+    });
+
+    test('期間内の次回支払日に同じ支払日の実績が既にあれば生成せず日付だけ進める', () async {
+      const master = FixedCostEntity(
+        id: 7,
+        name: 'ジム',
+        variable: 0,
+        price: 10000,
+        expenseSmallCategoryId: 11,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250101',
+        nextPaymentDate: '20250801',
+      );
+      final container = createUsecaseContainer(
+        initialRecords: const [master],
+        initialExpenses: const [
+          ExpenseEntity(
+            id: 500,
+            date: '20250710',
+            price: 10000,
+            paymentCategoryId: 11,
+            memo: 'ジム',
+            fixedCostId: 7,
+            isConfirmed: 1,
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: master,
+        editEntity: master.copyWith(nextPaymentDate: '20250710'),
+      );
+
+      expect(fakeExpenseRepository.insertedFixedCostRecords, isEmpty);
+      expect(
+        fakeFixedCostRepository.updatedEntities.last.nextPaymentDate,
+        '20250810',
+      );
+    });
+
+    test('手動→自動へ戻す保存と期間内の次回支払日を同時に行っても再計算した予想額が保たれる', () async {
+      const master = FixedCostEntity(
+        id: 7,
+        name: 'ジム',
+        variable: 1,
+        estimatedPrice: 9999,
+        estimatedPriceIsManual: 1,
+        expenseSmallCategoryId: 11,
+        intervalNumber: 1,
+        intervalUnit: 1,
+        firstPaymentDate: '20250101',
+        nextPaymentDate: '20250801',
+      );
+      final container = createUsecaseContainer(
+        initialRecords: const [master],
+        // 確定行の平均 = 3000
+        initialExpenses: const [
+          ExpenseEntity(
+            id: 500,
+            date: '20250601',
+            price: 3000,
+            paymentCategoryId: 11,
+            fixedCostId: 7,
+            isConfirmed: 1,
+          ),
+        ],
+      );
+      final usecase = container.read(fixedCostUsecaseProvider);
+
+      await usecase.edit(
+        originalEntity: master,
+        editEntity: master.copyWith(
+          estimatedPriceIsManual: 0,
+          nextPaymentDate: '20250710',
+        ),
+      );
+
+      // 即時生成された未確定行は再計算後の予想額（3000）を持つ
+      final record = fakeExpenseRepository.insertedFixedCostRecords.single;
+      expect(record.date, '20250710');
+      expect(record.estimatedPrice, 3000);
+      // 再保存されたマスタも古い手動値（9999）に戻らない
+      final saved = fakeFixedCostRepository.records.single;
+      expect(saved.estimatedPrice, 3000);
+      expect(saved.estimatedPriceIsManual, 0);
+      expect(saved.nextPaymentDate, '20250810');
+    });
+
     test('カテゴリー変更ありの編集は過去実績のカテゴリーも一括変更する', () async {
       final container = createUsecaseContainer(
         initialRecords: const [originalEntity],
