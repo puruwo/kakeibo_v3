@@ -100,7 +100,7 @@ class _BonusHomePage extends ConsumerState<BonusHomePage>
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
-        backgroundColor: context.colors.surfaceElevated,
+        // 地は AppTheme の scaffoldBackgroundColor（surface）。カード地 card-surface と同色になる surfaceElevated を明示しない（KP-013）
         // ヘッダー
         appBar: AppBar(
           backgroundColor: Colors.transparent,

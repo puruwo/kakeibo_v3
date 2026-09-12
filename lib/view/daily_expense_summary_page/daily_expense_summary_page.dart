@@ -26,7 +26,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: context.colors.surfaceElevated,
+      // 地は AppTheme の scaffoldBackgroundColor（surface）。カード地 card-surface と同色になる surfaceElevated を明示しない（KP-013）
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),

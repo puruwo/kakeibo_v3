@@ -21,6 +21,8 @@ import 'package:kakeibo/view/family_page/family_page.dart';
 import 'package:kakeibo/view/foundation.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
+import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/category_expense_hisotry_page.dart';
+import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/small_category_expanded_history_page/small_category_expanded_history_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
 import 'package:kakeibo/view/register_page/category_area/category_reorder_page.dart';
@@ -196,14 +198,29 @@ void main() {
     });
   }
 
-  // 主要3タブの地は AppTheme の scaffoldBackgroundColor（surface）に委ねる。
-  // surfaceElevated を明示するとライトでカード地（card-surface #F2F2F7）と同色になり
-  // カードの面が消えるため、明示指定が復活しないことを固定する（KP-013）
-  group('主要3タブの地', () {
+  // カード（CardContainer / AppListCard）を置く画面の地は AppTheme の
+  // scaffoldBackgroundColor（surface）に委ねる。surfaceElevated を明示すると
+  // ライトでカード地（card-surface #F2F2F7）と同色になりカードの面が消えるため、
+  // 明示指定が復活しないことを固定する（KP-013）
+  group('カードを置く画面の地', () {
     final tabs = <({String name, Widget Function() build})>[
       (name: '全体タブ', build: () => const YearPage()),
       (name: '月間分析タブ', build: () => const MonthlyPage()),
       (name: '履歴タブ', build: () => const ExpenseHistoryPage()),
+      (name: 'ボーナス', build: () => const BonusHomePage()),
+      (name: '月間計画', build: () => const MonthlyPlanHomePage()),
+      (
+        name: '日別支出',
+        build: () => DailyExpenseSummaryPage(date: DateTime(2025, 7, 6)),
+      ),
+      (
+        name: 'カテゴリー別利用状況',
+        build: () => const CategoryExpenseHistoryPage(bigId: 1),
+      ),
+      (
+        name: '小カテゴリー別利用状況',
+        build: () => const SmallCategoryExpenseHistoryPage(smallId: 10),
+      ),
     ];
     for (final tab in tabs) {
       testWidgets('${tab.name} の Scaffold は地を明示せず、テーマの surface で描く', (
