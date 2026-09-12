@@ -3,7 +3,7 @@ import 'package:kakeibo/view/component/app_empty_state.dart';
 
 /// 今月の収支データ（支出・収入・予算）がすべて未入力のとき、登録を促す誘導カード
 /// （ADR-022 の `AppEmptyState`・ボタン無し版）。
-/// ボタンは monthly_page.dart 側の「収入を追加 / 予算を編集」ボタン Row があるため省略する。
+/// ボタンは monthly_page.dart 側の「収入を見る / 予算を編集」ボタン Row があるため省略する。
 class MonthlyPlanRegisterPromptArea extends StatelessWidget {
   const MonthlyPlanRegisterPromptArea({super.key});
 

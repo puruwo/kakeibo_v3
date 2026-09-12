@@ -402,11 +402,14 @@ void main() {
     expect(find.text('外食'), findsWidgets);
   });
 
-  testWidgets('収入を追加・予算を編集のボタンが並ぶ', (tester) async {
+  testWidgets('収入を見る・予算を編集のボタンが並ぶ', (tester) async {
     await pumpApp(tester, home: const MonthlyPage(), fakes: buildFakes());
     await pumpTimes(tester);
 
-    expect(find.text('収入を追加'), findsOneWidget);
+    // KP-016: 遷移先は一覧なので「収入を見る」＋一覧アイコン（「＋」ではない）
+    expect(find.text('収入を見る'), findsOneWidget);
+    expect(find.text('収入を追加'), findsNothing);
+    expect(find.byIcon(Icons.format_list_bulleted_rounded), findsOneWidget);
     expect(find.text('予算を編集'), findsOneWidget);
 
     await tester.tap(find.text('予算を編集'));
@@ -414,6 +417,25 @@ void main() {
 
     // 予算編集（月次計画ホーム）へ遷移する
     expect(find.text('毎月の予算'), findsOneWidget);
+  });
+
+  testWidgets('「収入を見る」で集計月の収入一覧が月ヘッダー展開済みで開く', (tester) async {
+    await pumpApp(tester, home: const MonthlyPage(), fakes: buildFakes());
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('収入を見る'));
+    await pumpTimes(tester);
+
+    // 遷移先は収入一覧ページ（年間タブと同じ画面・期間は集計月）
+    expect(find.text('収入一覧'), findsOneWidget);
+    expect(find.text('7月'), findsOneWidget);
+    // KP-016: 単月なので月ヘッダーは初回から開いており、明細タイルが見える
+    expect(find.text('7月1日'), findsOneWidget);
+
+    // 開閉操作はそのまま使える（タップで閉じる）
+    await tester.tap(find.text('7月'));
+    await pumpTimes(tester);
+    expect(find.text('7月1日'), findsNothing);
   });
 
   testWidgets('記録が1件も無いときは記録を促すカードになり支出グラフは出ない', (tester) async {
@@ -433,7 +455,7 @@ void main() {
 
     expect(find.text('今月の収支を記録しましょう'), findsOneWidget);
     expect(find.text('収入や予算を登録すると今月の収支が表示されます'), findsOneWidget);
-    // Q-15: 誘導カードは AppEmptyState のボタン無し版（導線は下の「収入を追加 / 予算を編集」）
+    // Q-15: 誘導カードは AppEmptyState のボタン無し版（導線は下の「収入を見る / 予算を編集」）
     final emptyState = find.byType(AppEmptyState);
     expect(emptyState, findsOneWidget);
     expect(

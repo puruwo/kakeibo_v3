@@ -276,16 +276,19 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                                 YearlyIncomeListPage(
                                                   period: dateScope
                                                       .aggregationMonthPeriod,
+                                                  // 単月なので月ヘッダーは開いた状態で見せる（KP-016）
+                                                  initiallyExpandAll: true,
                                                 ),
                                           ),
                                         );
                                       },
+                                      // 遷移先は一覧（追加は一覧側のFAB）なので一覧アイコン
                                       icon: Icon(
-                                        Icons.add,
+                                        Icons.format_list_bulleted_rounded,
                                         size: 18,
                                         color: context.colors.primary,
                                       ),
-                                      buttonText: '収入を追加',
+                                      buttonText: '収入を見る',
                                     ),
                                   ),
                                   const SizedBox(width: AppSpacing.sm),

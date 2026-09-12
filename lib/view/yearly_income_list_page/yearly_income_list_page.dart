@@ -15,9 +15,16 @@ import 'package:kakeibo/view/yearly_income_list_page/income_graph_area.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_area.dart';
 
 class YearlyIncomeListPage extends ConsumerWidget {
-  const YearlyIncomeListPage({super.key, required this.period});
+  const YearlyIncomeListPage({
+    super.key,
+    required this.period,
+    this.initiallyExpandAll = false,
+  });
 
   final PeriodValue period;
+
+  /// 月別アコーディオンを初回から全月開いた状態にするか（単月で開くときに true）
+  final bool initiallyExpandAll;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,6 +73,7 @@ class YearlyIncomeListPage extends ConsumerWidget {
             SliverToBoxAdapter(
               child: YearlyIncomeListArea(
                 period: period,
+                initiallyExpandAll: initiallyExpandAll,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
               ),
