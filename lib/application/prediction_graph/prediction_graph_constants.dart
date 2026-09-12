@@ -20,8 +20,4 @@ class PredictionGraphConstants {
   /// 棒グラフの最大値スケールしきい値（円）
   /// 日別合計がこれを超えた場合は実値を最大値に採用、超えなければこの値を最大値に固定する
   static const int barChartScaleThreshold = 20000;
-
-  /// 固定費棒の大カテゴリーID
-  /// 一般カテゴリーのIDと衝突しないよう、負値を使用する
-  static const int fixedCostBarCategoryId = -1;
 }

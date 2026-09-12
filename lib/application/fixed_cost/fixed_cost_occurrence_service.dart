@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/application/fixed_cost/fixed_cost_service.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
@@ -18,6 +19,7 @@ class FixedCostOccurrence {
     required this.amount,
     required this.expenseSmallCategoryId,
     required this.isGenerated,
+    required this.incomeSourceBigCategory,
     this.expenseId,
   });
 
@@ -35,6 +37,12 @@ class FixedCostOccurrence {
 
   /// expenseに実績行が生成済みか
   final bool isGenerated;
+
+  /// 拠出元（生成済み＝実績行の値／未生成＝バッチが挿入する既定値の生活収支）
+  ///
+  /// 固定費行の編集シートで拠出元を特別枠に変えられるため、生活収支の集計に
+  /// 混ぜないよう利用側で判定できるようにする（KP-014）
+  final int incomeSourceBigCategory;
 
   /// 生成済みの場合のexpense行のid
   final int? expenseId;
@@ -99,6 +107,7 @@ class FixedCostOccurrenceService {
           amount: row.effectivePrice,
           expenseSmallCategoryId: row.paymentCategoryId,
           isGenerated: true,
+          incomeSourceBigCategory: row.incomeSourceBigCategory,
           expenseId: row.id,
         ),
       );
@@ -155,6 +164,7 @@ class FixedCostOccurrenceService {
               amount: _masterAmount(master),
               expenseSmallCategoryId: master.expenseSmallCategoryId,
               isGenerated: false,
+              incomeSourceBigCategory: AccountTypeConstants.living,
             ),
           );
         }

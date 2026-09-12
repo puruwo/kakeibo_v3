@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kakeibo/application/fixed_cost/fixed_cost_occurrence_service.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_data_source.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_layout_calculator.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_predictor.dart';
@@ -29,9 +28,6 @@ class PredictionGraphUsecase {
   );
   late final PredictionGraphPredictor _predictor = ref.read(
     predictionGraphPredictorProvider,
-  );
-  late final FixedCostOccurrenceService _fixedCostOccurrenceService = ref.read(
-    fixedCostOccurrenceServiceProvider,
   );
 
   /// 予測グラフのデータを取得
@@ -96,15 +92,6 @@ class PredictionGraphUsecase {
     // 予算を取得
     final budget = await _budgetRepo.fetchMonthlyAll(
       month: dateScope.representativeMonth,
-    );
-
-    // 今月の固定費（実績行＋未生成の支払日ぶん）の合計をツールチップ用に取得する
-    // 予算への加算は廃止した（仕様 §7.3）ので、この値は表示にのみ使う
-    final fixedCostOccurrences = await _fixedCostOccurrenceService
-        .fetchOccurrences(period: dateScope.aggregationMonthPeriod);
-    final fixedCostRecordTotal = fixedCostOccurrences.fold<int>(
-      0,
-      (sum, occurrence) => sum + occurrence.amount,
     );
 
     // 支出なし・予算なし・収入なしの場合はグラフ表示不要
@@ -229,7 +216,6 @@ class PredictionGraphUsecase {
       expenseLabelPosition: expenseLabelPosition,
       dailyBarDataList: dailyBarDataList,
       barMaxValue: barMaxValue,
-      totalFixedCostAmount: fixedCostRecordTotal,
     );
   }
 }
