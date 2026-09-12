@@ -129,8 +129,8 @@ class PredictionGraphDataSource {
 
   /// 棒グラフ用：日別カテゴリー別支出データを取得する
   ///
-  /// 一般支出を大カテゴリー別に集計し、固定費はその日に登録があれば
-  /// 1本のグレー棒として先頭に積む（同日複数レコードあれば1本に統合）。
+  /// 一般支出と固定費（実績行＋未生成の支払日ぶん）を大カテゴリー別に集計する。
+  /// 固定費は通常支出と同じく小カテゴリーから大カテゴリーへ引き当てる（ADR-026）。
   /// 各日の値は `barMaxValue` を基準に正規化された値で返す。
   Future<DailyBarResult> fetchDailyBarData({
     required DateTime fromDate,
@@ -155,18 +155,21 @@ class PredictionGraphDataSource {
       smallToBigMap[cat.id] = cat.bigCategoryKey;
     }
 
-    // 期間内に発生する固定費を「日付別の合計」に集計する
+    // 期間内に発生する固定費を「日付別 → 大カテゴリー別」に集計する
     // 生成済みの実績行は日次リストからも取れるが、未生成の支払日ぶん（仕様 §7.4）を
-    // 同じ経路で扱うためここでまとめて日付別に集計する
+    // 同じ経路で扱うためここでまとめて集計する。固定費は通常支出と同じく
+    // 小カテゴリーから大カテゴリーに引き当てる（ADR-026）
     final period = PeriodValue(startDatetime: fromDate, endDatetime: toDate);
     final occurrences = await _fixedCostOccurrenceService.fetchOccurrences(
       period: period,
     );
-    final fixedCostTotalByDate = <String, int>{};
+    final fixedCostTotalsByDate = <String, Map<int, int>>{};
     for (final occurrence in occurrences) {
       final dateKey = DateFormat('yyyyMMdd').format(occurrence.date);
-      fixedCostTotalByDate[dateKey] =
-          (fixedCostTotalByDate[dateKey] ?? 0) + occurrence.amount;
+      final bigCategoryId =
+          smallToBigMap[occurrence.expenseSmallCategoryId] ?? 0;
+      final totals = fixedCostTotalsByDate.putIfAbsent(dateKey, () => {});
+      totals[bigCategoryId] = (totals[bigCategoryId] ?? 0) + occurrence.amount;
     }
 
     final dailyBarDataList = <DailyBarData>[];
@@ -180,10 +183,10 @@ class PredictionGraphDataSource {
         date: currentDate,
       );
 
-      // 大カテゴリー別に集計（一般支出）
+      // 大カテゴリー別に集計
       final categoryTotals = <int, int>{};
 
-      // 一般支出を集計（固定費行は下でまとめて1本の棒にするため除外する）
+      // 一般支出を集計（固定費行は上で発生分として集計済みなので二重計上しない）
       for (final expense in expenses) {
         if (expense.fixedCostId != null) continue;
         final smallCategoryId = expense.paymentCategoryId;
@@ -192,12 +195,16 @@ class PredictionGraphDataSource {
             (categoryTotals[bigCategoryId] ?? 0) + expense.effectivePrice;
       }
 
-      // その日の固定費合計（実績行＋未生成の支払日ぶん）
+      // その日の固定費（実績行＋未生成の支払日ぶん）を同じ大カテゴリーへ合算する
       final dateKey = DateFormat('yyyyMMdd').format(currentDate);
-      final fixedCostForDay = fixedCostTotalByDate[dateKey] ?? 0;
+      final fixedCostForDay = fixedCostTotalsByDate[dateKey] ?? const {};
+      for (final entry in fixedCostForDay.entries) {
+        categoryTotals[entry.key] =
+            (categoryTotals[entry.key] ?? 0) + entry.value;
+      }
 
-      // 一般支出も固定費もない日はスキップ
-      if (categoryTotals.isEmpty && fixedCostForDay == 0) {
+      // 支出のない日はスキップ
+      if (categoryTotals.isEmpty) {
         currentDate = currentDate.add(const Duration(days: 1));
         continue;
       }
@@ -205,20 +212,6 @@ class PredictionGraphDataSource {
       // カテゴリー別支出リストを作成
       final categoryExpenses = <CategoryExpense>[];
       int dailyTotal = 0;
-
-      // その日に固定費があれば、先頭にまとめて1本の棒として積む
-      // （同じ日に複数レコードあっても1本に統合する）
-      if (fixedCostForDay > 0) {
-        categoryExpenses.add(CategoryExpense(
-          bigCategoryId: PredictionGraphConstants.fixedCostBarCategoryId,
-          price: fixedCostForDay,
-          colorCode: CategoryPalette.grayHex,
-          iconPath: '',
-          categoryName: '固定費',
-          normalizedHeight: 0, // 後で設定
-        ));
-        dailyTotal += fixedCostForDay;
-      }
 
       for (final entry in categoryTotals.entries) {
         final catInfo = bigCategoryMap[entry.key];

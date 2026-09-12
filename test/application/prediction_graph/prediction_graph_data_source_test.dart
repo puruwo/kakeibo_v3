@@ -11,7 +11,6 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
-import 'package:kakeibo/theme/category_palette.dart';
 
 import '../../helper/fake_repositories.dart';
 import '../../helper/test_container.dart';
@@ -388,7 +387,7 @@ void main() {
       expect(categoryExpenses[1].categoryName, '日用品');
     });
 
-    test('固定費は同じ日に複数あっても先頭の1本にまとまる', () async {
+    test('固定費は通常支出と同じく大カテゴリーへ合算される（グレー1本にしない）', () async {
       const rentOnJul2 = ExpenseEntity(
         id: 100,
         date: '20250702',
@@ -418,7 +417,14 @@ void main() {
               price: 1000,
               paymentCategoryId: 11,
             ),
-            // 固定費行も日次リストに含まれる（v10）。カテゴリー棒には積まれない
+            ExpenseEntity(
+              id: 2,
+              date: '20250702',
+              price: 300,
+              paymentCategoryId: 21,
+            ),
+            // 固定費行も日次リストに含まれる（v10）。発生分として集計するので
+            // ここからは二重計上しない
             rentOnJul2,
             electricityOnJul2,
           ],
@@ -433,19 +439,18 @@ void main() {
       );
 
       final categoryExpenses = result.dailyBarDataList.first.categoryExpenses;
-      // 固定費2件が1本に統合され、先頭に積まれる
+      // 固定費2件（小カテゴリー11 → 大カテゴリー1）は食費に合算され、
+      // 固定費専用の行は作られない（ADR-026）
       expect(categoryExpenses, hasLength(2));
-      expect(
-        categoryExpenses.first.bigCategoryId,
-        PredictionGraphConstants.fixedCostBarCategoryId,
-      );
-      expect(categoryExpenses.first.price, 86000);
-      expect(categoryExpenses.first.categoryName, '固定費');
-      expect(categoryExpenses.first.colorCode, CategoryPalette.grayHex);
-      expect(categoryExpenses.first.iconPath, '');
-      // 固定費行はカテゴリー別の棒には二重計上されない
-      expect(categoryExpenses[1].bigCategoryId, 1);
-      expect(categoryExpenses[1].price, 1000);
+      final food = categoryExpenses.singleWhere((e) => e.bigCategoryId == 1);
+      expect(food.price, 1000 + 80000 + 6000);
+      expect(food.categoryName, '食費');
+      expect(food.colorCode, 'FF0000');
+      expect(food.iconPath, 'assets/images/icon_food.svg');
+      final daily = categoryExpenses.singleWhere((e) => e.bigCategoryId == 2);
+      expect(daily.price, 300);
+      expect(categoryExpenses.every((e) => e.bigCategoryId > 0), isTrue);
+      expect(categoryExpenses.every((e) => e.categoryName != '固定費'), isTrue);
     });
 
     test('実績未生成の固定費も未来のスパイクとして棒に積まれる', () async {
@@ -462,7 +467,12 @@ void main() {
       // 7/4だけが棒として現れる（未来日）
       expect(result.dailyBarDataList.map((e) => e.date), [DateTime(2025, 7, 4)]);
       expect(result.dailyBarDataList.single.isFutureDate, isTrue);
-      expect(result.dailyBarDataList.single.categoryExpenses.single.price, 9000);
+      // 未生成分も固定費マスタの小カテゴリーから大カテゴリーへ引き当てる
+      final expense = result.dailyBarDataList.single.categoryExpenses.single;
+      expect(expense.price, 9000);
+      expect(expense.bigCategoryId, 1);
+      expect(expense.categoryName, '食費');
+      expect(expense.colorCode, 'FF0000');
     });
 
     test('barMaxValueは日別最大合計としきい値20,000円の大きい方になる', () async {

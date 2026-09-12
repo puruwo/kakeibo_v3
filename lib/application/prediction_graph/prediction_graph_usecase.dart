@@ -98,8 +98,9 @@ class PredictionGraphUsecase {
       month: dateScope.representativeMonth,
     );
 
-    // 今月の固定費（実績行＋未生成の支払日ぶん）の合計をツールチップ用に取得する
-    // 予算への加算は廃止した（仕様 §7.3）ので、この値は表示にのみ使う
+    // 今月の固定費（実績行＋未生成の支払日ぶん）の合計。予算への加算は廃止済み（仕様 §7.3）。
+    // KP-014 でツールチップの固定費行も廃止したため、現在この値を使う表示は無い
+    // （PredictionGraphValue.totalFixedCostAmount の削除は別件）
     final fixedCostOccurrences = await _fixedCostOccurrenceService
         .fetchOccurrences(period: dateScope.aggregationMonthPeriod);
     final fixedCostRecordTotal = fixedCostOccurrences.fold<int>(
