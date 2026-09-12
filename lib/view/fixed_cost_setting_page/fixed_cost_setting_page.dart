@@ -9,6 +9,7 @@ import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -399,15 +400,21 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
   }
 
   /// 次回支払日を選ぶ
+  ///
+  /// 下限はアプリの運用日付（今日）。過去日を次回支払日にすると周期展開が
+  /// 実績の無い過去の支払いを作ってしまうため選べないようにする（ADR-006 規則1・KP-015）。
   Future<void> _pickNextPaymentDate() async {
     final current = DateTime.parse(
       '${_nextPaymentDate.substring(0, 4)}-${_nextPaymentDate.substring(4, 6)}-${_nextPaymentDate.substring(6, 8)}',
     );
+    final today = DateUtils.dateOnly(ref.read(systemDatetimeNotifierProvider));
+    // 既に過去日で保存されているマスタは下限に寄せて開く
+    final initialDate = current.isBefore(today) ? today : current;
     final picked = await showDatePicker(
       context: context,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
-      initialDate: current,
-      firstDate: DateTime(2020),
+      initialDate: initialDate,
+      firstDate: today,
       lastDate: DateTime(2040),
     );
     if (picked != null) {

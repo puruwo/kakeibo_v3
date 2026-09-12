@@ -143,41 +143,11 @@ class FixedCostUsecase {
         continue;
       }
 
-      var currentEntity = fixedCostEntity;
-      // 処理中の支払い日。populateNextPaymentEntityは必ず次の支払い日を埋めるためnullにならない
-      var paymentDate = fixedCostEntity.nextPaymentDate!;
-      var cycleCount = 0;
-
       // 次の支払い日が期間終了日を超えるまで、周期ぶんの実績を生成し続ける
-      while (paymentDate.compareTo(periodEndDate) <= 0) {
-        if (cycleCount >= _maxCatchUpCycles) {
-          logger.e(
-              '[FAIL]: 固定費の回収が上限($_maxCatchUpCycles回)に達したため打ち切ります id=${fixedCostEntity.id}');
-          break;
-        }
-        cycleCount++;
-
-        // 同じ支払い日の実績が既にある場合は生成しない（多重生成の防止）
-        // ただしスキップした場合も次の支払い日は進める
-        final alreadyExists = await _expenseRepositoryProvider
-            .existsByFixedCostIdAndDate(
-          fixedCostId: currentEntity.id!,
-          date: paymentDate,
-        );
-        if (!alreadyExists) {
-          // fixedCostRecordEntityを作成し、DBに挿入する
-          await FixedCostService().insertToFixedCostRecord(
-            _ref,
-            currentEntity,
-            paymentDate,
-          );
-        }
-
-        // 次の支払い日と最近支払い日を埋めて、次の周期へ進める
-        currentEntity =
-            FixedCostService().populateNextPaymentEntity(currentEntity);
-        paymentDate = currentEntity.nextPaymentDate!;
-      }
+      final currentEntity = await _generateRecordsThroughPeriodEnd(
+        fixedCostEntity,
+        periodEndDate,
+      );
 
       // 何周期進んだかに関わらず、fixed_costの更新は最後に1回だけ行う
       await _fixedCostRepositoryProvider.update(currentEntity);
@@ -185,6 +155,86 @@ class FixedCostUsecase {
 
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
+  }
+
+
+  /// 次の支払い日が [periodEndDate]（yyyyMMdd）を超えるまで、周期ぶんの実績を生成する
+  ///
+  /// バッチ（月の変わり目）と、固定費の設定画面での編集（ADR-006 規則3・KP-015）が
+  /// 同じ規則で実績を作るための共通処理。マスタの更新は呼び出し側で行う。
+  /// 同じ支払い日の実績が既にある場合は生成せず日付だけ進める（多重生成の防止）。
+  /// [entity.nextPaymentDate] は非nullであること。
+  Future<FixedCostEntity> _generateRecordsThroughPeriodEnd(
+    FixedCostEntity entity,
+    String periodEndDate,
+  ) async {
+    var currentEntity = entity;
+    // 処理中の支払い日。populateNextPaymentEntityは必ず次の支払い日を埋めるためnullにならない
+    var paymentDate = entity.nextPaymentDate!;
+    var cycleCount = 0;
+
+    while (paymentDate.compareTo(periodEndDate) <= 0) {
+      if (cycleCount >= _maxCatchUpCycles) {
+        logger.e(
+            '[FAIL]: 固定費の回収が上限($_maxCatchUpCycles回)に達したため打ち切ります id=${entity.id}');
+        break;
+      }
+      cycleCount++;
+
+      final alreadyExists =
+          await _expenseRepositoryProvider.existsByFixedCostIdAndDate(
+        fixedCostId: currentEntity.id!,
+        date: paymentDate,
+      );
+      if (!alreadyExists) {
+        // fixedCostRecordEntityを作成し、DBに挿入する
+        await FixedCostService().insertToFixedCostRecord(
+          _ref,
+          currentEntity,
+          paymentDate,
+        );
+      }
+
+      // 次の支払い日と最近支払い日を埋めて、次の周期へ進める
+      currentEntity =
+          FixedCostService().populateNextPaymentEntity(currentEntity);
+      paymentDate = currentEntity.nextPaymentDate!;
+    }
+
+    return currentEntity;
+  }
+
+  /// 次の支払い日を「今日以降で最初に来る支払日」に正規化する（ADR-006 規則1・KP-015）
+  ///
+  /// 固定費の設定画面は今日より前を選べないが、別導線で過去日が保存されても
+  /// 周期展開が過去日の未生成分を作らないよう usecase 側でも防御する。
+  /// 過去日でなければそのまま返す。
+  FixedCostEntity _normalizeNextPaymentDate(
+    FixedCostEntity entity,
+    String today,
+  ) {
+    var currentEntity = entity;
+    var cycleCount = 0;
+    while ((currentEntity.nextPaymentDate ?? today).compareTo(today) < 0) {
+      if (cycleCount >= _maxCatchUpCycles) {
+        logger.e(
+            '[FAIL]: 次回支払日の正規化が上限($_maxCatchUpCycles回)に達したため打ち切ります id=${entity.id}');
+        break;
+      }
+      cycleCount++;
+      final next = FixedCostService().populateNextPaymentEntity(currentEntity);
+      if (next.nextPaymentDate == null ||
+          next.nextPaymentDate!.compareTo(currentEntity.nextPaymentDate!) <=
+              0) {
+        // 日付が前進しない（周期が不正）場合は無限ループになるため打ち切る
+        break;
+      }
+      // 正規化は「まだ支払っていない回を読み飛ばす」操作なので最近支払日は動かさない
+      currentEntity = currentEntity.copyWith(
+        nextPaymentDate: next.nextPaymentDate,
+      );
+    }
+    return currentEntity;
   }
 
   // 変動固定費の想定支出を再計算し、未確定行の予想額まで同期する（仕様 §6.5）
@@ -258,8 +308,48 @@ class FixedCostUsecase {
           .updateWithUnconfirmedRowsSync(newEntity);
     }
 
+    // 次回支払日の正規化と、今の集計期間内ぶんの実績の即時生成（ADR-006 規則1・3。KP-015）
+    // 編集で次回支払日が期間内に入った場合、月次バッチは期間が変わるまで走らないため
+    // ここで生成しないと日別支出・履歴に行が無い状態が翌月まで続く
+    await _normalizeAndGenerateAfterEdit(newEntity);
+
     // DBの更新回数をインクリメント
     updateDBCountNotifier.incrementState();
+  }
+
+  /// 編集後のマスタについて、次回支払日を今日以降に正規化し、
+  /// 今の集計期間内に支払日があれば実績を即時生成してマスタを更新する
+  Future<void> _normalizeAndGenerateAfterEdit(FixedCostEntity entity) async {
+    // 周期が不正・次回支払日が無いマスタは日付を前進できないため何もしない
+    if ((entity.intervalUnit != 1 && entity.intervalUnit != 2) ||
+        entity.intervalNumber <= 0 ||
+        entity.nextPaymentDate == null ||
+        entity.nextPaymentDate!.isEmpty ||
+        entity.id == null) {
+      return;
+    }
+
+    final today =
+        DateFormat('yyyyMMdd').format(_ref.read(systemDatetimeNotifierProvider));
+    final dateScope = await _ref
+        .read(systemDateScopeEntityProvider.selectAsync((data) => data));
+    final periodEndDate =
+        DateFormat('yyyyMMdd').format(dateScope.aggregationMonthPeriod.endDatetime);
+
+    // 保存直後のマスタをDBから読み直す。手動→自動へ戻した保存では
+    // 予想額がDB側で再計算されており、編集エンティティの値は古いため
+    final saved = await _fixedCostRepositoryProvider.fetch(
+      fixedCostId: entity.id!,
+    );
+
+    final normalized = _normalizeNextPaymentDate(saved, today);
+    final generated =
+        await _generateRecordsThroughPeriodEnd(normalized, periodEndDate);
+
+    // 日付が動いた場合だけマスタを保存し直す
+    if (generated.nextPaymentDate != saved.nextPaymentDate) {
+      await _fixedCostRepositoryProvider.update(generated);
+    }
   }
 
   // マスタのレコードは削除せず、deleteFlagを1にする

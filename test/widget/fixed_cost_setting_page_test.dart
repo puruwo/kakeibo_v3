@@ -124,6 +124,41 @@ void main() {
     expect(find.text('保存'), findsOneWidget);
   });
 
+  testWidgets('次回支払日のピッカーは今日より前を選べない（下限＝運用日付）', (tester) async {
+    // 運用日付 7/6 のマスタ（次回支払日 8/1）
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('次回支払日'));
+    await pumpTimes(tester);
+
+    final dialog = tester.widget<DatePickerDialog>(find.byType(DatePickerDialog));
+    expect(dialog.firstDate, kTestSystemDate);
+    expect(dialog.initialDate, DateTime(2025, 8, 1));
+  });
+
+  testWidgets('既に過去日で保存された次回支払日はピッカーが下限に寄せて開く', (tester) async {
+    await pumpApp(
+      tester,
+      home: FixedCostSettingPage(
+        fixedCostEntity: target.copyWith(nextPaymentDate: '20250601'),
+      ),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('次回支払日'));
+    await pumpTimes(tester);
+
+    final dialog = tester.widget<DatePickerDialog>(find.byType(DatePickerDialog));
+    expect(dialog.firstDate, kTestSystemDate);
+    expect(dialog.initialDate, kTestSystemDate);
+  });
+
   testWidgets('変動スイッチONで金額行が予想額の表示に切り替わる', (tester) async {
     await pumpApp(
       tester,
