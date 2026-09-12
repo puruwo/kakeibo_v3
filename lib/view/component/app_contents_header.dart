@@ -57,10 +57,10 @@ class AppContentsHeader extends StatelessWidget {
     late TextStyle effectiveTitleStyle;
     switch (type) {
       case AppContentsHeaderType.appCardSectionTitle:
-        effectiveTitleStyle = AppTextStyles.appCardSectionTitle;
+        effectiveTitleStyle = context.textStyles.appCardSectionTitle;
         break;
       case AppContentsHeaderType.listCardSectionTitle:
-        effectiveTitleStyle = AppTextStyles.listCardSectionTitle;
+        effectiveTitleStyle = context.textStyles.listCardSectionTitle;
         break;
     }
 
@@ -101,12 +101,12 @@ class AppContentsHeader extends StatelessWidget {
                         onPressed: onTap,
                         child: Text(
                           subLabel!,
-                          style: AppTextStyles.textButtonTextStyle,
+                          style: context.textStyles.textButtonTextStyle,
                         ),
                       )
                     : Text(
                         subLabel!,
-                        style: AppTextStyles.listCardSecondaryTitle,
+                        style: context.textStyles.listCardSecondaryTitle,
                       ),
             ],
           ),

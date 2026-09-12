@@ -180,7 +180,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                         children: [
                                           TextSpan(
                                             text: '総支出',
-                                            style: AppTextStyles
+                                            style: context.textStyles
                                                 .appCardPrimaryTitleLabel,
                                           ),
                                           WidgetSpan(
@@ -207,7 +207,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   yenmarkFormattedPriceGetter(
                                     yearlyBalanceValue.yearlyExpense,
                                   ),
-                                  style: AppTextStyles.listTilePriceLabel,
+                                  style: context.textStyles.listTilePriceLabel,
                                 ),
                               ],
                             ),
@@ -237,7 +237,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                 const SizedBox(width: AppSpacing.sm),
                                 Text(
                                   '＋ 支出を登録する',
-                                  style: AppTextStyles.appCardPrimaryTitleLabel
+                                  style: context.textStyles.appCardPrimaryTitleLabel
                                       .copyWith(
                                     color: context.colors.textSecondary,
                                   ),
@@ -302,7 +302,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                         children: [
                                           TextSpan(
                                             text: '総収入',
-                                            style: AppTextStyles
+                                            style: context.textStyles
                                                 .appCardPrimaryTitleLabel,
                                           ),
                                           WidgetSpan(
@@ -329,7 +329,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                   yenmarkFormattedPriceGetter(
                                     yearlyBalanceValue.yearlyIncome,
                                   ),
-                                  style: AppTextStyles.listTilePriceLabel,
+                                  style: context.textStyles.listTilePriceLabel,
                                 ),
                               ],
                             ),
@@ -360,7 +360,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                 const SizedBox(width: AppSpacing.sm),
                                 Text(
                                   '＋ 収入を登録する',
-                                  style: AppTextStyles.appCardPrimaryTitleLabel
+                                  style: context.textStyles.appCardPrimaryTitleLabel
                                       .copyWith(
                                     color: context.colors.textSecondary,
                                   ),
@@ -399,13 +399,13 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             children: [
                               Text(
                                 '残金',
-                                style: AppTextStyles.appCardTitleLabel,
+                                style: context.textStyles.appCardTitleLabel,
                               ),
                               Text(
                                 signedYenmarkFormattedPriceGetter(
                                   yearlyBalanceValue.savings,
                                 ),
-                                style: AppTextStyles.appCardPriceLabel,
+                                style: context.textStyles.appCardPriceLabel,
                               ),
                             ],
                           ),

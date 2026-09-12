@@ -21,7 +21,7 @@ class FixedCostChipLabel extends StatelessWidget {
       ),
       child: Text(
         '固定費',
-        style: AppTextStyles.chipLabel,
+        style: context.textStyles.chipLabel,
       ),
     );
   }

@@ -61,7 +61,7 @@ class CategoryRatioRow extends StatelessWidget {
                       Expanded(
                         child: Text(
                           name,
-                          style: AppTextStyles.listTilePrimaryTitle,
+                          style: context.textStyles.listTilePrimaryTitle,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
@@ -83,19 +83,19 @@ class CategoryRatioRow extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     child: Text(
                       priceLabel,
-                      style: AppTextStyles.appCardSecondaryPriceLabel,
+                      style: context.textStyles.appCardSecondaryPriceLabel,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     percentLabel,
-                    style: AppTextStyles.listCardSecondaryNumeric,
+                    style: context.textStyles.listCardSecondaryNumeric,
                   ),
                 ],
               ),
             ),
             const SizedBox(width: AppSpacing.md),
-            MyIcon.next,
+            MyIcon.next(context),
           ],
         ),
       ),

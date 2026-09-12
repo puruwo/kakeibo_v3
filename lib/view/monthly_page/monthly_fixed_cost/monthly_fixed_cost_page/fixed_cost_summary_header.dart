@@ -53,13 +53,13 @@ class _FixedCostSummaryHeaderState
                         Expanded(
                           child: Text(
                             '今月の固定費',
-                            style: AppTextStyles.appCardTitleLabel,
+                            style: context.textStyles.appCardTitleLabel,
                           ),
                         ),
                         Text(
                           yenmarkFormattedPriceGetter(
                               value.scheduledPaymentAmount),
-                          style: AppTextStyles.appCardPriceLabel,
+                          style: context.textStyles.appCardPriceLabel,
                         ),
                       ],
                     ),
@@ -81,13 +81,13 @@ class _FixedCostSummaryHeaderState
                             children: [
                               Text(
                                 '確定分',
-                                style: AppTextStyles.appCardTertiaryTitleLabel,
+                                style: context.textStyles.appCardTertiaryTitleLabel,
                               ),
                               const SizedBox(height: AppSpacing.xs),
                               Text(
                                 yenmarkFormattedPriceGetter(value.fixedCostSum),
                                 style:
-                                    AppTextStyles.appCardSecondaryPriceLabel,
+                                    context.textStyles.appCardSecondaryPriceLabel,
                               ),
                             ],
                           ),
@@ -98,14 +98,14 @@ class _FixedCostSummaryHeaderState
                             children: [
                               Text(
                                 '未確定分（予想）',
-                                style: AppTextStyles.appCardTertiaryTitleLabel,
+                                style: context.textStyles.appCardTertiaryTitleLabel,
                               ),
                               const SizedBox(height: AppSpacing.xs),
                               Text(
                                 yenmarkFormattedPriceGetter(
                                     value.unconfirmedFixedCostSum),
                                 style:
-                                    AppTextStyles.appCardSecondaryPriceLabel,
+                                    context.textStyles.appCardSecondaryPriceLabel,
                               ),
                             ],
                           ),

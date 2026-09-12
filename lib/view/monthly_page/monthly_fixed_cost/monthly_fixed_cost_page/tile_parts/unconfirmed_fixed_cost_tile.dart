@@ -32,7 +32,7 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
         dateLabel: paymentDateLabel,
       ),
       priceLabel: '未入力',
-      priceLabelStyle: AppTextStyles.listCardUnconfirmedPriceLabel,
+      priceLabelStyle: context.textStyles.listCardUnconfirmedPriceLabel,
       isIncome: false,
       customUnderPriceLabel:
           '平均 ${yenmarkFormattedPriceGetter(value.estimatedPrice)} / ${value.frequencyLabel}',

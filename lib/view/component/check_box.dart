@@ -19,7 +19,7 @@ class CheckBox extends StatelessWidget {
             child: Icon(
               Icons.done_rounded,
               size: 19,
-              color: context.colors.text,
+              color: context.colors.onPrimary,
             ),
           )
         : Container(

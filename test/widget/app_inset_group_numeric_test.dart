@@ -29,11 +29,11 @@ void main() {
     await tester.pump();
 
     final price = tester.widget<Text>(find.text('¥ 12,345'));
-    expect(price.style, AppTextStyles.insetGroupValueNumeric);
+    expect(price.style, AppTextStyles.light.insetGroupValueNumeric);
     expect(price.style!.fontFamily, 'sf_ui');
 
     final frequency = tester.widget<Text>(find.text('1ヶ月に1回'));
-    expect(frequency.style, AppTextStyles.insetGroupValue);
+    expect(frequency.style, AppTextStyles.light.insetGroupValue);
     expect(frequency.style!.fontFamily, 'noto_sans');
   });
 
@@ -58,7 +58,7 @@ void main() {
     final text = tester.widget<Text>(find.text('9月25日（金）'));
     expect(text.style!.fontFamily, 'sf_ui');
     expect(text.style!.color, Colors.green);
-    expect(text.style!.fontSize, AppTextStyles.insetGroupValueNumeric.fontSize);
+    expect(text.style!.fontSize, AppTextStyles.light.insetGroupValueNumeric.fontSize);
   });
 
   testWidgets('textField 行: numericValue で入力文字のスタイルが切り替わる', (tester) async {
@@ -88,11 +88,11 @@ void main() {
     expect(editable.style.fontFamily, 'sf_ui');
     expect(
       editable.style.fontSize,
-      AppTextStyles.insetGroupValueNumeric.fontSize,
+      AppTextStyles.light.insetGroupValueNumeric.fontSize,
     );
     expect(
       editable.style.fontWeight,
-      AppTextStyles.insetGroupValueNumeric.fontWeight,
+      AppTextStyles.light.insetGroupValueNumeric.fontWeight,
     );
   });
 }

@@ -89,7 +89,7 @@ class BonusPlanDetailSummary extends ConsumerWidget {
                               Text(
                                 '利用 $usagePercent%',
                                 style:
-                                    AppTextStyles.numericCaption,
+                                    context.textStyles.numericCaption,
                               ),
                               Text(
                                 // 予算超過時はマイナスの「残り」ではなく超過率を示す
@@ -97,7 +97,7 @@ class BonusPlanDetailSummary extends ConsumerWidget {
                                     ? '残り ${100 - usagePercent}%'
                                     : '超過 ${usagePercent - 100}%',
                                 style:
-                                    AppTextStyles.numericCaption,
+                                    context.textStyles.numericCaption,
                               ),
                             ],
                           ),
@@ -141,8 +141,8 @@ class _SummaryCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final priceStyle = priceColor == null
-        ? AppTextStyles.listTilePriceLabel
-        : AppTextStyles.listTilePriceLabel.copyWith(color: priceColor);
+        ? context.textStyles.listTilePriceLabel
+        : context.textStyles.listTilePriceLabel.copyWith(color: priceColor);
 
     return Expanded(
       child: Padding(
@@ -153,7 +153,7 @@ class _SummaryCell extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(label, style: AppTextStyles.listTileTertiaryTitle),
+            Text(label, style: context.textStyles.listTileTertiaryTitle),
             const SizedBox(height: 2),
             FittedBox(
               fit: BoxFit.scaleDown,
@@ -203,11 +203,11 @@ class BonusPlanCollapsedBar extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
               child: Row(
                 children: [
-                  Text('残額', style: AppTextStyles.appCardTertiaryTitleLabel),
+                  Text('残額', style: context.textStyles.appCardTertiaryTitleLabel),
                   const SizedBox(width: 10),
                   Text(
                     yenmarkFormattedPriceGetter(value.lastBonusPrice),
-                    style: AppTextStyles.listTilePriceLabel.copyWith(
+                    style: context.textStyles.listTilePriceLabel.copyWith(
                       color: context.colors.primary,
                     ),
                   ),
@@ -234,7 +234,7 @@ class BonusPlanCollapsedBar extends ConsumerWidget {
                     const SizedBox(width: AppSpacing.sm),
                     Text(
                       '$usagePercent%',
-                      style: AppTextStyles.numericCaption,
+                      style: context.textStyles.numericCaption,
                     ),
                   ],
                 ],

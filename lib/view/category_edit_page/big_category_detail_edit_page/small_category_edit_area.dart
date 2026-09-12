@@ -256,7 +256,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                   const SizedBox(width: 10),
                   Text(
                     '小カテゴリーを追加',
-                    style: AppTextStyles.insetGroupLabel.copyWith(
+                    style: context.textStyles.insetGroupLabel.copyWith(
                       color: context.colors.primary,
                     ),
                   ),
@@ -297,11 +297,11 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
               padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
               child: Row(
                 children: [
-                  Text('小カテゴリー', style: AppTextStyles.insetGroupHeader),
+                  Text('小カテゴリー', style: context.textStyles.insetGroupHeader),
                   const Spacer(),
                   Text(
                     'チェックで表示 / 右端で並び替え',
-                    style: AppTextStyles.insetGroupNote,
+                    style: context.textStyles.insetGroupNote,
                   ),
                 ],
               ),
@@ -427,7 +427,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                     Expanded(
                                       child: TextFormField(
                                         controller: controller,
-                                        style: AppTextStyles.insetGroupLabel,
+                                        style: context.textStyles.insetGroupLabel,
                                         maxLines: 1,
                                         maxLength: 20,
                                         decoration: const InputDecoration(

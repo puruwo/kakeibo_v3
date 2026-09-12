@@ -80,9 +80,9 @@ class SummaryBandRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        Text(label, style: AppTextStyles.appCardTertiaryTitleLabel),
+        Text(label, style: context.textStyles.appCardTertiaryTitleLabel),
         const SizedBox(width: AppSpacing.sm),
-        Text(priceLabel, style: AppTextStyles.summaryHeroPriceLabel),
+        Text(priceLabel, style: context.textStyles.summaryHeroPriceLabel),
         if (trailing != null) ...[const Spacer(), trailing!],
       ],
     );

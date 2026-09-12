@@ -46,24 +46,18 @@ class AppPopupMenu<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Theme(
-      // 新規 ThemeData を作ると AppColors 等の ThemeExtension が欠落し、
-      // child（AppPillContainer 等）の context.colors が null になるため、
-      // 現在のテーマを copyWith して splash/highlight のみ上書きする。
-      data: Theme.of(context).copyWith(
-          splashColor: Colors.transparent,
-          highlightColor: Colors.black.withOpacity(0.1)),
-      child: PopupMenuButton<T>(
-        enabled: enabled,
-        offset: offset,
-        color: context.colors.surfaceElevated2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(borderRadius),
-        ),
-        onSelected: onSelected,
-        itemBuilder: itemBuilder,
-        child: child,
+    // 押下表現（スプラッシュ無し・ハイライトのみ）は AppTheme に集約済みのため、
+    // ここで Theme を上書きしない（KP-013）
+    return PopupMenuButton<T>(
+      enabled: enabled,
+      offset: offset,
+      color: context.colors.surfaceElevated2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius),
       ),
+      onSelected: onSelected,
+      itemBuilder: itemBuilder,
+      child: child,
     );
   }
 }
@@ -102,11 +96,14 @@ PopupMenuItem<T> buildCheckableMenuItem<T>({
             else
               const SizedBox(width: 20),
             const SizedBox(width: 8),
-            Text(
-              label,
-              style: AppTextStyles.popupMenuItemLabel(
-                textColor: textColor,
-                isSelected: isSelected,
+            // 役割スタイルの色は現在のテーマから取るため Builder で context を得る（KP-013）
+            Builder(
+              builder: (context) => Text(
+                label,
+                style: context.textStyles.popupMenuItemLabel(
+                  textColor: textColor,
+                  isSelected: isSelected,
+                ),
               ),
             ),
           ],
@@ -136,11 +133,13 @@ class CheckablePopupMenuItem<T> extends PopupMenuItem<T> {
               else
                 const SizedBox(width: 20),
               const SizedBox(width: 8),
-              Text(
-                label,
-                style: AppTextStyles.popupMenuItemLabel(
-                  textColor: textColor,
-                  isSelected: isSelected,
+              Builder(
+                builder: (context) => Text(
+                  label,
+                  style: context.textStyles.popupMenuItemLabel(
+                    textColor: textColor,
+                    isSelected: isSelected,
+                  ),
                 ),
               ),
             ],

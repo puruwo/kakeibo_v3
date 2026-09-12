@@ -88,7 +88,7 @@ class _YearlyCategoryIncomeListPageState
               ),
               const SizedBox(width: AppSpacing.sm),
             ],
-            Text(widget.categoryName, style: AppTextStyles.pageHeaderText),
+            Text(widget.categoryName, style: context.textStyles.pageHeaderText),
           ],
         ),
       ),
@@ -110,7 +110,7 @@ class _YearlyCategoryIncomeListPageState
           if (category == null || groups.isEmpty) {
             // 全件削除された等でこのカテゴリーの記録が無くなった場合
             return Center(
-              child: Text('記録がまだありません', style: AppTextStyles.listEmptyMessage),
+              child: Text('記録がまだありません', style: context.textStyles.listEmptyMessage),
             );
           }
 
@@ -199,7 +199,7 @@ class _CategorySummaryCard extends StatelessWidget {
         priceLabel: yenmarkFormattedPriceGetter(category.totalAmount),
         trailing: Text(
           '月平均 ${yenmarkFormattedPriceGetter(monthlyAverage)}',
-          style: AppTextStyles.numericCaption,
+          style: context.textStyles.numericCaption,
         ),
       ),
       children: [
@@ -220,18 +220,18 @@ class _CategorySummaryCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           small.smallCategoryName,
-                          style: AppTextStyles.appCardTertiaryTitleLabel,
+                          style: context.textStyles.appCardTertiaryTitleLabel,
                           overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       Text(
                         '${small.percentage.toStringAsFixed(1)}%',
-                        style: AppTextStyles.numericCaption,
+                        style: context.textStyles.numericCaption,
                       ),
                       const SizedBox(width: AppSpacing.sm),
                       Text(
                         yenmarkFormattedPriceGetter(small.totalAmount),
-                        style: AppTextStyles.appCardTertiaryPriceLabel,
+                        style: context.textStyles.appCardTertiaryPriceLabel,
                       ),
                     ],
                   ),

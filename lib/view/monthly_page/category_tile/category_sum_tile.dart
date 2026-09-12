@@ -42,62 +42,51 @@ class CategorySumTile extends HookConsumerWidget {
       },
       child: SizedBox(
         width: 343 * context.screenHorizontalMagnification,
-        child: Theme(
-          data: Theme.of(context).copyWith(
-            dividerColor: Colors.transparent,
-            splashColor: Colors.transparent,
-            listTileTheme: ListTileTheme.of(context).copyWith(
-              titleAlignment: ListTileTitleAlignment.center,
-              horizontalTitleGap: 0,
-              minVerticalPadding: 0,
-              dense: true,
-            ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(
+            horizontal: AppSpacing.lg,
+            vertical: AppSpacing.sm,
           ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Flexible(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          CategorySumText(categoryTile: categoryTile),
-                          PriceLabel(categoryTile: categoryTile),
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          // バー
-                          Expanded(
-                            child: LayoutBuilder(
-                              builder: (context, constraints) =>
-                                  CategorySumGraph(
-                                    barFrameMaxWidth: constraints.maxWidth,
-                                    categoryTile: categoryTile,
-                                  ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Flexible(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CategorySumText(categoryTile: categoryTile),
+                        PriceLabel(categoryTile: categoryTile),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        // バー
+                        Expanded(
+                          child: LayoutBuilder(
+                            builder: (context, constraints) => CategorySumGraph(
+                              barFrameMaxWidth: constraints.maxWidth,
+                              categoryTile: categoryTile,
                             ),
                           ),
-                          // 予算
-                          BudgetLabel(categoryTile: categoryTile),
-                        ],
-                      ),
-                    ],
-                  ),
+                        ),
+                        // 予算
+                        BudgetLabel(categoryTile: categoryTile),
+                      ],
+                    ),
+                  ],
                 ),
-                const SizedBox(width: AppSpacing.md),
-                MyIcon.next,
-              ],
-            ),
+              ),
+              const SizedBox(width: AppSpacing.md),
+              MyIcon.next(context),
+            ],
           ),
         ),
       ),

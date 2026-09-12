@@ -137,7 +137,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                             const SizedBox(width: 32),
                             Text(
                               periodLabel,
-                              style: AppTextStyles.pageHeaderNumeric,
+                              style: context.textStyles.pageHeaderNumeric,
                             ),
                             Transform.translate(
                               offset: const Offset(-6, 0),
@@ -151,7 +151,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                         ),
                         Text(
                           yearLabel,
-                          style: AppTextStyles.pageHeaderSubNumeric,
+                          style: context.textStyles.pageHeaderSubNumeric,
                         ),
                       ],
                     );
@@ -175,7 +175,8 @@ class _YearPageState extends ConsumerState<YearPage> {
           ),
         ],
       ),
-      backgroundColor: context.colors.surfaceElevated,
+      // 地は AppTheme の scaffoldBackgroundColor（surface）。カード地 card-surface と
+      // 同色になる surfaceElevated を明示しない（KP-013）
       // ローディング → コンテンツの切り替えをフェードで行う
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),

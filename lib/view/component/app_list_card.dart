@@ -104,7 +104,7 @@ class AppListCard extends StatelessWidget {
   /// 長押し時のコールバック
   final VoidCallback? onLongPress;
 
-  /// 背景色 (デフォルト: MyColors.quarternarySystemfill)
+  /// 背景色 (デフォルト: card-surface トークン)
   final Color? backgroundColor;
 
   /// タイルの高さ (デフォルト: 69.0)
@@ -155,7 +155,7 @@ class AppListCard extends StatelessWidget {
                   primaryTitle,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.listTilePrimaryTitle,
+                  style: context.textStyles.listTilePrimaryTitle,
                 ),
               ),
               if (secondaryTitle != null && secondaryTitle!.isNotEmpty)
@@ -163,7 +163,7 @@ class AppListCard extends StatelessWidget {
                   secondaryTitle!,
                   textAlign: TextAlign.start,
                   overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.listCardSecondaryTitle,
+                  style: context.textStyles.listCardSecondaryTitle,
                 ),
             ],
           )
@@ -189,8 +189,8 @@ class AppListCard extends StatelessWidget {
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
                     style: subtitleLeadingNumeric
-                        ? AppTextStyles.listCardSecondaryNumeric
-                        : AppTextStyles.listCardSecondaryTitle,
+                        ? context.textStyles.listCardSecondaryNumeric
+                        : context.textStyles.listCardSecondaryTitle,
                   ),
                 ),
               if (subtitleTrailing != null && subtitleTrailing!.isNotEmpty)
@@ -200,7 +200,7 @@ class AppListCard extends StatelessWidget {
                     subtitleTrailing!,
                     textAlign: TextAlign.start,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.listCardSecondaryTitle,
+                    style: context.textStyles.listCardSecondaryTitle,
                   ),
                 ),
             ],
@@ -214,7 +214,7 @@ class AppListCard extends StatelessWidget {
       children: [
         // 金額のサブタイトル（例: "平均"）
         if (priceSubtitle != null && priceSubtitle!.isNotEmpty) ...[
-          Text(priceSubtitle!, style: AppTextStyles.listCardSecondaryTitle),
+          Text(priceSubtitle!, style: context.textStyles.listCardSecondaryTitle),
           const SizedBox(width: 6),
         ],
         ConstrainedBox(
@@ -225,7 +225,7 @@ class AppListCard extends StatelessWidget {
             child: Text(
               priceLabel,
               textAlign: TextAlign.end,
-              style: priceLabelStyle ?? AppTextStyles.listTilePriceLabel,
+              style: priceLabelStyle ?? context.textStyles.listTilePriceLabel,
             ),
           ),
         ),
@@ -233,8 +233,8 @@ class AppListCard extends StatelessWidget {
         Text(
           isIncome ? '+' : '-',
           style: isIncome
-              ? AppTextStyles.listCardPlusLabel
-              : AppTextStyles.listCardMinusLabel,
+              ? context.textStyles.listCardPlusLabel
+              : context.textStyles.listCardMinusLabel,
         ),
       ],
     );
@@ -251,7 +251,7 @@ class AppListCard extends StatelessWidget {
           Text(
             customUnderPriceLabel!,
             textAlign: TextAlign.end,
-            style: AppTextStyles.listCardSecondaryTitle,
+            style: context.textStyles.listCardSecondaryTitle,
           ),
       ],
     );
@@ -261,7 +261,7 @@ class AppListCard extends StatelessWidget {
       padding: EdgeInsets.only(bottom: bottomPadding),
       child: AppInkWell(
         borderRadius: appListCardRadius,
-        color: backgroundColor ?? context.colors.fillQuaternary,
+        color: backgroundColor ?? context.colors.cardSurface,
         border: Border.all(color: context.colors.surfaceBorder, width: 1),
         onTap: onTap,
         onLongPress: onLongPress,

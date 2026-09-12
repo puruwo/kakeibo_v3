@@ -210,9 +210,9 @@ class _IncomeCategoryAppearanceEditAreaState
     required bool locked,
   }) {
     final valueStyle = locked
-        ? AppTextStyles.insetGroupValue
+        ? context.textStyles.insetGroupValue
             .copyWith(color: context.colors.textSecondary)
-        : AppTextStyles.insetGroupValue;
+        : context.textStyles.insetGroupValue;
 
     return AppInsetRow.display(
       icon: Icons.sell_outlined,

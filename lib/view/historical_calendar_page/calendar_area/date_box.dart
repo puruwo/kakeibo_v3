@@ -100,6 +100,7 @@ class DateBox extends ConsumerWidget {
           isCompact,
         ),
         CalendarTileStatus.unselected => normalDateBox(
+          context,
           weekday,
           dateLabel,
           expenseLabel,
@@ -109,6 +110,7 @@ class DateBox extends ConsumerWidget {
           isCompact,
         ),
         CalendarTileStatus.outOfPeriod => vacantDateBox(
+          context,
           weekday,
           dateLabel,
           boxHeight,
@@ -131,8 +133,8 @@ Widget calculatePriceLabel(
   } else {
     // isCompactに応じてフォントスタイルを切り替え
     final style = isCompact
-        ? CalendarStyles.calendarDateBoxSmall
-        : CalendarStyles.calendarDateBoxLarge;
+        ? context.calendarStyles.calendarDateBoxSmall
+        : context.calendarStyles.calendarDateBoxLarge;
 
     // FittedBoxでラップして、オーバーフロー時に自動縮小
     return FittedBox(
@@ -181,10 +183,10 @@ Container activeDateBox(
         Text(
           dateLabel,
           style: weekday == 6
-              ? CalendarStyles.calendarDateLabelSaturday
+              ? context.calendarStyles.calendarDateLabelSaturday
               : weekday == 7
-              ? CalendarStyles.calendarDateLabelSunday
-              : CalendarStyles.calendarDateLabel,
+              ? context.calendarStyles.calendarDateLabelSunday
+              : context.calendarStyles.calendarDateLabel,
         ),
         // 1つ目の金額表示エリア(支出優先、なければ収入)
         Center(
@@ -229,6 +231,7 @@ Container activeDateBox(
 }
 
 Container normalDateBox(
+  BuildContext context,
   int weekday,
   String dateLabel,
   Widget expenseLabel,
@@ -249,10 +252,10 @@ Container normalDateBox(
         Text(
           dateLabel,
           style: weekday == 6
-              ? CalendarStyles.calendarDateLabelSaturday
+              ? context.calendarStyles.calendarDateLabelSaturday
               : weekday == 7
-              ? CalendarStyles.calendarDateLabelSunday
-              : CalendarStyles.calendarDateLabel,
+              ? context.calendarStyles.calendarDateLabelSunday
+              : context.calendarStyles.calendarDateLabel,
         ),
         // 1つ目の金額表示エリア(支出優先、なければ収入)
         Center(
@@ -298,6 +301,7 @@ Container normalDateBox(
 }
 
 Container vacantDateBox(
+  BuildContext context,
   int weekday,
   String dateLabel,
   double boxHeight,
@@ -313,7 +317,7 @@ Container vacantDateBox(
     child: Center(
       child: Column(
         children: [
-          Text(dateLabel, style: CalendarStyles.calendarOutOfPeriodDateLabel),
+          Text(dateLabel, style: context.calendarStyles.calendarOutOfPeriodDateLabel),
         ],
       ),
     ),

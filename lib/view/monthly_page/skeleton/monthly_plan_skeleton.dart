@@ -43,7 +43,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                   width: 50,
                   height: 16,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.5),
+                    color: context.colors.fillTertiary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -52,7 +52,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                   width: 80,
                   height: 14,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.4),
+                    color: context.colors.fillTertiary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -61,7 +61,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                   width: 100,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.3),
+                    color: context.colors.fillQuaternary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -73,7 +73,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
               width: double.infinity,
               height: 24,
               decoration: BoxDecoration(
-                color: context.colors.fillTertiary.withOpacity(0.4),
+                color: context.colors.fillSecondary,
                 borderRadius: BorderRadius.circular(6),
               ),
             ),
@@ -85,7 +85,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                   width: 50,
                   height: 16,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.5),
+                    color: context.colors.fillTertiary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -94,7 +94,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                   width: 80,
                   height: 14,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.4),
+                    color: context.colors.fillTertiary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -103,7 +103,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
                   width: 80,
                   height: 12,
                   decoration: BoxDecoration(
-                    color: context.colors.fillTertiary.withOpacity(0.3),
+                    color: context.colors.fillQuaternary,
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -115,7 +115,7 @@ class _MonthlyPlanSkeletonState extends State<MonthlyPlanSkeleton> {
               width: double.infinity,
               height: 24,
               decoration: BoxDecoration(
-                color: context.colors.fillTertiary.withOpacity(0.4),
+                color: context.colors.fillSecondary,
                 borderRadius: BorderRadius.circular(6),
               ),
             ),

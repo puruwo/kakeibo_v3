@@ -7,36 +7,39 @@ import 'package:kakeibo/theme/app_colors.dart';
 /// 値は AppTypeScale の段を参照する。新しいスタイルは AppTextStyles に置く（画面専用クラスは新設しない）
 /// ============================================================================
 class RegisterPageStyles {
-  RegisterPageStyles._();
+  /// [colors] は現在のテーマの色トークン。通常は `context.registerStyles` 経由で受け取る
+  const RegisterPageStyles(this.colors);
+
+  /// 役割スタイルの色の出どころ（ライト／ダークで値が変わる）
+  final AppColors colors;
+
+  /// context 無しに使う固定インスタンス（テストの期待値・Painter への注入元）
+  static const RegisterPageStyles light = RegisterPageStyles(AppColors.light);
+  static const RegisterPageStyles dark = RegisterPageStyles(AppColors.dark);
 
   // ==========================================================================
   // 入力フィールド
   // ==========================================================================
 
   /// プレースホルダー・ラベル類（「メモを入力」「予算」「支払い頻度」等）
-  static final TextStyle placeHolder = AppTypeScale.noto14w500.copyWith(
-    color: AppColorsDark.textSecondary,
-  );
+  TextStyle get placeHolder =>
+      AppTypeScale.noto14w500.copyWith(color: colors.textSecondary);
 
   /// 一般入力テキスト（メモ・拠出元・頻度の表示）
-  static final TextStyle inputText = AppTypeScale.noto15w500.copyWith(
-    color: AppColorsDark.text,
-    height: 1.0,
-  );
+  TextStyle get inputText =>
+      AppTypeScale.noto15w500.copyWith(color: colors.text, height: 1.0);
 
   // ==========================================================================
   // 金額表示（大きなフォント）
   // ==========================================================================
 
   /// 金額入力フィールド（¥42,000）
-  static final TextStyle priceInput = AppTypeScale.sfUi42w700.copyWith(
-    color: AppColorsDark.text,
-    height: 1.0,
-  );
+  TextStyle get priceInput =>
+      AppTypeScale.sfUi42w700.copyWith(color: colors.text, height: 1.0);
 
   /// 未確定金額表示（---）
-  static final TextStyle priceUnconfirmed = AppTypeScale.sfUi42w700.copyWith(
-    color: AppColorsDark.textSecondary,
+  TextStyle get priceUnconfirmed => AppTypeScale.sfUi42w700.copyWith(
+    color: colors.textSecondary,
     height: 1.0,
   );
 
@@ -57,28 +60,31 @@ class RegisterPageStyles {
   // ==========================================================================
 
   /// カテゴリーアイコン下のラベル（「食費」「交通費」等。未選択状態が無いグリッド用）
-  static final TextStyle categoryLabel = AppTypeScale.noto13w500.copyWith(
-    color: AppColorsDark.text,
-  );
+  TextStyle get categoryLabel =>
+      AppTypeScale.noto13w500.copyWith(color: colors.text);
 
   /// カテゴリー選択グリッドの選択中ラベル
-  static final TextStyle categoryLabelSelected = AppTypeScale.noto13w700
-      .copyWith(color: AppColorsDark.text);
+  TextStyle get categoryLabelSelected =>
+      AppTypeScale.noto13w700.copyWith(color: colors.text);
 
   /// カテゴリー選択グリッドの未選択ラベル
-  static final TextStyle categoryLabelUnselected = AppTypeScale.noto13w400
-      .copyWith(color: AppColorsDark.textSecondary);
+  TextStyle get categoryLabelUnselected =>
+      AppTypeScale.noto13w400.copyWith(color: colors.textSecondary);
 
   /// 「アイコンを並べ替える」リンク
-  static final TextStyle rearrangeLink = AppTypeScale.noto16w600.copyWith(
-    color: AppColorsDark.textSecondary,
-  );
+  TextStyle get rearrangeLink =>
+      AppTypeScale.noto16w600.copyWith(color: colors.textSecondary);
 
   // ==========================================================================
   // アイコン並べ替えページ
   // ==========================================================================
 
   /// アイコン並べ替えページの説明文
-  static final TextStyle iconRearrangeDescription = AppTypeScale.noto14w500
-      .copyWith(color: AppColorsDark.textSecondary);
+  TextStyle get iconRearrangeDescription =>
+      AppTypeScale.noto14w500.copyWith(color: colors.textSecondary);
+}
+
+/// BuildContext から現在のテーマの記録モーダル専用の役割スタイルを取る（KP-013）
+extension RegisterPageStylesX on BuildContext {
+  RegisterPageStyles get registerStyles => RegisterPageStyles(colors);
 }

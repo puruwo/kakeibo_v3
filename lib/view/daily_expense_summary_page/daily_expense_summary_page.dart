@@ -26,7 +26,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
 
     return Scaffold(
       extendBodyBehindAppBar: true,
-      backgroundColor: context.colors.surfaceElevated,
+      // 地は AppTheme の scaffoldBackgroundColor（surface）。カード地 card-surface と同色になる surfaceElevated を明示しない（KP-013）
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
@@ -36,7 +36,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         ),
         title: Text(
           '${date.month}月${date.day}日の支出',
-          style: AppTextStyles.pageHeaderText,
+          style: context.textStyles.pageHeaderText,
         ),
         centerTitle: true,
       ),
@@ -64,7 +64,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             if (summary.hasNoData)
-              _buildEmptyState()
+              _buildEmptyState(context)
             else ...[
               // グラフエリア（総支出とカテゴリー別）
               DailyExpenseGraphArea(
@@ -112,12 +112,12 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
   }
 
   /// データなしの状態
-  Widget _buildEmptyState() {
+  Widget _buildEmptyState(BuildContext context) {
     return CardContainer(
       width: double.infinity,
       height: 120,
       child: Center(
-        child: Text('この日の支出はありません', style: AppTextStyles.listEmptyMessage),
+        child: Text('この日の支出はありません', style: context.textStyles.listEmptyMessage),
       ),
     );
   }
@@ -143,13 +143,13 @@ class DailyExpenseSummaryHeader extends StatelessWidget {
           Expanded(
             child: Text(
               categoryName,
-              style: AppTextStyles.listTilePrimaryTitle,
+              style: context.textStyles.listTilePrimaryTitle,
             ),
           ),
           // カテゴリー合計金額
           Text(
             yenmarkFormattedPriceGetter(categoryTotal),
-            style: AppTextStyles.appCardTertiaryPriceLabel,
+            style: context.textStyles.appCardTertiaryPriceLabel,
           ),
         ],
       ),

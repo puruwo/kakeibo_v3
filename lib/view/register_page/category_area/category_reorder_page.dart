@@ -208,7 +208,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text('アイコンの並び替え', style: AppTextStyles.pageHeaderText),
+        title: Text('アイコンの並び替え', style: context.textStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(Icons.close, color: context.colors.text),
@@ -232,7 +232,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           child: Text(
                             'アイコンを長押しして並び替えができます',
-                            style: RegisterPageStyles.iconRearrangeDescription,
+                            style: context.registerStyles.iconRearrangeDescription,
                           ),
                         ),
 
@@ -403,7 +403,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
           width: labelWidth,
           child: Text(
             item.categoryName,
-            style: RegisterPageStyles.categoryLabel,
+            style: context.registerStyles.categoryLabel,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
           ),

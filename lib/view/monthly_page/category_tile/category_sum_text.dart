@@ -30,7 +30,7 @@ class CategorySumText extends HookConsumerWidget {
         // カテゴリー名
         Text(
           monthlyExpenseByCategoryEntity.bigCategoryName,
-          style: AppTextStyles.listTilePrimaryTitle,
+          style: context.textStyles.listTilePrimaryTitle,
           overflow: TextOverflow.ellipsis,
         ),
       ],

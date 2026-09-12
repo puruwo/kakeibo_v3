@@ -56,7 +56,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
-          title: Text('カテゴリー設定', style: AppTextStyles.pageHeaderText),
+          title: Text('カテゴリー設定', style: context.textStyles.pageHeaderText),
 
           //ヘッダー左のアイコンボタン
           leading: IconButton(

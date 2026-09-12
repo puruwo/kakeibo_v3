@@ -34,7 +34,7 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
           icon: Icon(Icons.arrow_back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('固定費', style: AppTextStyles.pageHeaderText),
+        title: Text('固定費', style: context.textStyles.pageHeaderText),
         actions: [
           IconButton(
             icon: Icon(Icons.settings, color: context.colors.text),

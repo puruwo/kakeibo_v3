@@ -111,7 +111,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                                       'yyyy年M月d日(E)',
                                       'ja_JP',
                                     ).format(tileGroupList[index].date),
-                                    style: AppTextStyles.listTileSectionTitle,
+                                    style: context.textStyles.listTileSectionTitle,
                                   ),
                                 ),
                               ],
@@ -149,7 +149,7 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
                       Center(
                         child: Text(
                           '記録がまだありません',
-                          style: AppTextStyles.listEmptyMessage,
+                          style: context.textStyles.listEmptyMessage,
                         ),
                       ),
                     ],

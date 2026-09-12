@@ -3,6 +3,8 @@
 #
 # 規約の正本: Vault「Kakeibo テキストスタイルルール」（KP-007）
 #   MyFontStyle（family）→ AppTypeScale（段・値の正本）→ 役割スタイル（AppTextStyles 等）→ 呼び出し側
+#   役割スタイルは AppColors を受け取るインスタンス（KP-013）。定義は `TextStyle get <名前> => AppTypeScale.<段>…`、
+#   呼び出し側は `context.textStyles.<名前>`（画面専用は context.registerStyles / calendarStyles / graphStyles）で取る
 #
 # 検出対象:
 #   [呼び出し側] lib/constant/styles/ 以外の .dart
@@ -65,8 +67,8 @@ noto_style_names() {
   [ -d "$dir" ] || return 0
   sed -E '/^[[:space:]]*\/\/\//d' "$dir"/*.dart \
     | tr -d '\n' \
-    | grep -oE 'TextStyle [A-Za-z0-9_]+[^;]*AppTypeScale *\. *noto' \
-    | sed -E 's/^TextStyle ([A-Za-z0-9_]+).*/\1/' \
+    | grep -oE 'TextStyle (get )?[A-Za-z0-9_]+[^;]*AppTypeScale *\. *noto' \
+    | sed -E 's/^TextStyle (get )?([A-Za-z0-9_]+).*/\2/' \
     | sort -u \
     | paste -sd '|' -
 }
@@ -87,7 +89,7 @@ check_call_site() {
     [ -n "$ln" ] || continue
     add_finding "$f" "$ln" "数字が主役の内容に noto 系スタイルの疑い（sfUi 系の <役割>Numeric を検討）" "$rest"
   done < <(awk -v noto="$noto_names" '
-    BEGIN { noto_re = "style: *(AppTextStyles|GraphTextStyles|RegisterPageStyles|CalendarStyles)\\.(" noto ")([^A-Za-z0-9_]|$)" }
+    BEGIN { noto_re = "style: *((context\\.)?(textStyles|graphStyles|registerStyles|calendarStyles)|(AppTextStyles|GraphTextStyles|RegisterPageStyles|CalendarStyles)(\\.(light|dark))?)\\.(" noto ")([^A-Za-z0-9_]|$)" }
     function is_numeric(s) { return (s ~ /PriceGetter\(|DateFormat\(|件'"'"'|%'"'"'/) }
     {
       line[NR] = $0
@@ -112,6 +114,8 @@ check_file() {
   case "/$f" in
     *.g.dart|*.freezed.dart) return ;;
     */lib/constant/font_style.dart|*/lib/constant/styles/app_type_scale.dart) return ;;
+    # AppTheme は ThemeData の正本。既定フォント等の指定は役割スタイルの呼び出しではないため対象外（KP-013）
+    */lib/theme/app_theme.dart) return ;;
     */lib/constant/styles/*.dart) check_style_definition "$f" ;;
     */lib/*.dart) check_call_site "$f" ;;
   esac

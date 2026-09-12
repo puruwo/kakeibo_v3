@@ -84,8 +84,8 @@ class _Segment extends StatelessWidget {
           child: Text(
             label,
             style: isSelected
-                ? AppTextStyles.segmentedSelectedLabel
-                : AppTextStyles.segmentedLabel,
+                ? context.textStyles.segmentedSelectedLabel
+                : context.textStyles.segmentedLabel,
           ),
         ),
       ),

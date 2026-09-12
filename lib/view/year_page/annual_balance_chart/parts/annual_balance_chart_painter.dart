@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show NumberFormat;
-import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/annual_balance_chart_value.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/monthly_balance_value/monthly_balance_value.dart';
 import 'package:kakeibo/domain/ui_value/annual_balance_chart_value/y_axis_scale.dart';
@@ -142,6 +141,8 @@ class AnnualBalanceChartPainter extends CustomPainter {
     required this.separator,
     required this.income,
     required this.expense,
+    required this.miniLabelStyle,
+    required this.miniLabelEmphasisStyle,
   });
 
   final AnnualBalanceChartValue value;
@@ -156,6 +157,12 @@ class AnnualBalanceChartPainter extends CustomPainter {
 
   /// 支出折れ線・赤字バーの色（context.colors.expense を注入）
   final Color expense;
+
+  /// 月・金額ラベルのスタイル（miniLabelStyle を注入）
+  final TextStyle miniLabelStyle;
+
+  /// 当月ラベルの強調スタイル（miniLabelEmphasisStyle を注入）
+  final TextStyle miniLabelEmphasisStyle;
 
   static final NumberFormat _numberFormat = NumberFormat('#,###');
 
@@ -316,7 +323,7 @@ class AnnualBalanceChartPainter extends CustomPainter {
       final amountText = _numberFormat.format(diff.abs().toInt());
       final cellWidth = _cellWidth(i);
       final amountTp = TextPainter(
-        text: TextSpan(text: amountText, style: GraphTextStyles.graphMiniLabel),
+        text: TextSpan(text: amountText, style: miniLabelStyle),
         textDirection: TextDirection.ltr,
         textAlign: TextAlign.center,
       )..layout(maxWidth: cellWidth);
@@ -348,8 +355,8 @@ class AnnualBalanceChartPainter extends CustomPainter {
       final mv = value.monthlyBalanceValues[i];
       final isCurrentMonth = mv.month == value.currentMonth;
       final style = isCurrentMonth
-          ? GraphTextStyles.graphMiniLabelEmphasis
-          : GraphTextStyles.graphMiniLabel;
+          ? miniLabelEmphasisStyle
+          : miniLabelStyle;
       final tp = TextPainter(
         text: TextSpan(text: '${mv.month}月', style: style),
         textDirection: TextDirection.ltr,
@@ -370,7 +377,9 @@ class AnnualBalanceChartPainter extends CustomPainter {
     return oldDelegate.value != value ||
         oldDelegate.selectedMonthIndex != selectedMonthIndex ||
         oldDelegate.dimensions.barCenterLineY != dimensions.barCenterLineY ||
-        oldDelegate.dimensions.monthLabelTop != dimensions.monthLabelTop;
+        oldDelegate.dimensions.monthLabelTop != dimensions.monthLabelTop ||
+        oldDelegate.miniLabelStyle != miniLabelStyle ||
+        oldDelegate.miniLabelEmphasisStyle != miniLabelEmphasisStyle;
   }
 }
 
@@ -381,10 +390,18 @@ class AnnualBalanceAxisLabelsPainter extends CustomPainter {
   AnnualBalanceAxisLabelsPainter({
     required this.scale,
     required this.dimensions,
+    required this.miniLabelStyle,
+    required this.miniTextLabelStyle,
   });
 
   final YAxisScale scale;
   final AnnualBalanceChartDimensions dimensions;
+
+  /// Y軸目盛りのスタイル（miniLabelStyle を注入）
+  final TextStyle miniLabelStyle;
+
+  /// 「収支」ラベルのスタイル（miniTextLabelStyle を注入）
+  final TextStyle miniTextLabelStyle;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -394,7 +411,7 @@ class AnnualBalanceAxisLabelsPainter extends CustomPainter {
       if (y < 0 || y > AnnualBalanceChartLayout.lineAreaHeight) continue;
       final label = '${(gridValue / 10000).truncate()}万';
       final tp = TextPainter(
-        text: TextSpan(text: label, style: GraphTextStyles.graphMiniLabel),
+        text: TextSpan(text: label, style: miniLabelStyle),
         textDirection: TextDirection.ltr,
         maxLines: 1,
       )..layout();
@@ -406,7 +423,7 @@ class AnnualBalanceAxisLabelsPainter extends CustomPainter {
 
     // 「収支」ラベル
     final barLabelTp = TextPainter(
-      text: TextSpan(text: '収支', style: GraphTextStyles.graphMiniTextLabel),
+      text: TextSpan(text: '収支', style: miniTextLabelStyle),
       textDirection: TextDirection.ltr,
       maxLines: 1,
     )..layout();
@@ -430,6 +447,8 @@ class AnnualBalanceAxisLabelsPainter extends CustomPainter {
   @override
   bool shouldRepaint(covariant AnnualBalanceAxisLabelsPainter oldDelegate) {
     return oldDelegate.scale != scale ||
-        oldDelegate.dimensions.barCenterLineY != dimensions.barCenterLineY;
+        oldDelegate.dimensions.barCenterLineY != dimensions.barCenterLineY ||
+        oldDelegate.miniLabelStyle != miniLabelStyle ||
+        oldDelegate.miniTextLabelStyle != miniTextLabelStyle;
   }
 }

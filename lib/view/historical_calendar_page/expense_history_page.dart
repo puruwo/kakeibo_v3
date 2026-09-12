@@ -36,7 +36,7 @@ class ExpenseHistoryPage extends StatelessWidget {
                     );
                     final label =
                         '${selectedDate.year}年 ${selectedDate.month}月';
-                    return Text(label, style: AppTextStyles.pageHeaderNumeric);
+                    return Text(label, style: context.textStyles.pageHeaderNumeric);
                   },
                 ),
                 //右矢印ボタン、押すと次の月に移動
@@ -59,8 +59,7 @@ class ExpenseHistoryPage extends StatelessWidget {
         ),
       ),
 
-      // 本文
-      backgroundColor: context.colors.surfaceElevated,
+      // 本文（地は AppTheme の scaffoldBackgroundColor（surface）。KP-013）
       body: Column(children: [const CalendarArea(), ExpenceHistoryArea()]),
     );
   }

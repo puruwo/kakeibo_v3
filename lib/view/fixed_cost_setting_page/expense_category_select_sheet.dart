@@ -50,7 +50,7 @@ class ExpenseCategorySelectSheet extends ConsumerWidget {
         appBar: AppBar(
           backgroundColor: Colors.transparent,
           flexibleSpace: const GlassAppBarBackground(),
-          title: Text('カテゴリーを選ぶ', style: AppTextStyles.pageHeaderText),
+          title: Text('カテゴリーを選ぶ', style: context.textStyles.pageHeaderText),
           leading: IconButton(
             onPressed: () => Navigator.of(context).pop(),
             icon: Icon(Icons.close_rounded, color: context.colors.text),
@@ -171,7 +171,7 @@ class _SmallCategorySelectPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text('カテゴリーを選ぶ', style: AppTextStyles.pageHeaderText),
+        title: Text('カテゴリーを選ぶ', style: context.textStyles.pageHeaderText),
         leading: IconButton(
           key: kSmallCategoryBackButtonKey,
           onPressed: () => Navigator.of(context).pop(),
@@ -240,7 +240,7 @@ class _SmallCategorySelectPage extends StatelessWidget {
             colorCode: group.colorCode,
           ),
           const SizedBox(width: 10),
-          Text(group.name, style: AppTextStyles.insetGroupLabel),
+          Text(group.name, style: context.textStyles.insetGroupLabel),
         ],
       ),
     );

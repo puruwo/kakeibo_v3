@@ -18,8 +18,8 @@ class AppTab extends StatelessWidget implements PreferredSizeWidget {
       controller: tabController,
       indicatorSize: TabBarIndicatorSize.tab,
       indicatorColor: context.colors.primary,
-      unselectedLabelStyle: AppTextStyles.unselectedLabelStyle,
-      labelStyle: AppTextStyles.selectedLabelStyle,
+      unselectedLabelStyle: context.textStyles.unselectedLabelStyle,
+      labelStyle: context.textStyles.selectedLabelStyle,
       indicatorWeight: 2,
       tabs: tabs,
     );

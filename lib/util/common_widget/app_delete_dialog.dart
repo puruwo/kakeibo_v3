@@ -52,13 +52,13 @@ Future<bool> showConfirmationDialog(
                       children: [
                         Text(
                           title,
-                          style: AppTextStyles.dialogLabelEmphasis,
+                          style: context.textStyles.dialogLabelEmphasis,
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 6),
                         Text(
                           message,
-                          style: AppTextStyles.dialogLabel
+                          style: context.textStyles.dialogLabel
                               .copyWith(color: context.colors.textSecondary),
                           textAlign: TextAlign.center,
                         ),
@@ -84,7 +84,7 @@ Future<bool> showConfirmationDialog(
                         child: Center(
                           child: Text(
                             confirmLabel,
-                            style: AppTextStyles.dialogList.copyWith(
+                            style: context.textStyles.dialogList.copyWith(
                               color: isDestructive
                                   ? context.colors.danger
                                   : context.colors.primary,

@@ -1,5 +1,6 @@
 // カテゴリー別サマリーリスト
 import 'package:flutter/material.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -21,12 +22,12 @@ class MonthlyFixedCostBigCategorySummaryList extends ConsumerWidget {
 
             return Column(children: [
               // 区切り線
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: AppSpacing.md),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
                 child: Divider(
                   height: 1,
                   thickness: 1,
-                  color: Colors.white24,
+                  color: context.colors.separator,
                 ),
               ),
 
@@ -51,7 +52,7 @@ class MonthlyFixedCostBigCategorySummaryList extends ConsumerWidget {
                           ),
                           const SizedBox(width: AppSpacing.md),
                           Text(summary.categoryName,
-                              style: AppTextStyles.listTilePrimaryTitle),
+                              style: context.textStyles.listTilePrimaryTitle),
                         ],
                       ),
                       // 金額 or 未確定
@@ -60,11 +61,11 @@ class MonthlyFixedCostBigCategorySummaryList extends ConsumerWidget {
                               yenmarkFormattedPriceGetter(summary.totalAmount),
                               textAlign: TextAlign.end,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles.appCardSecondaryPriceLabel,
+                              style: context.textStyles.appCardSecondaryPriceLabel,
                             )
                           : Text(
                               '未確定',
-                              style: AppTextStyles.listTilePrimaryTitle,
+                              style: context.textStyles.listTilePrimaryTitle,
                             ),
                     ],
                   ),

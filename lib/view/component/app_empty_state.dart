@@ -9,7 +9,7 @@ import 'package:kakeibo/view/component/card_container.dart';
 /// 記録がゼロで、そのセクションから登録導線を出せる場合に使う
 /// （CardContainer + アイコン + 見出し + 説明1行 + Primaryボタン）。
 /// 次アクションが無い従属領域（グラフ・サブリスト・絞り込み結果）の空状態は
-/// [AppTextStyles.listEmptyMessage] の1行テキスト、取得失敗は `AppErrorState` を使うこと。
+/// [context.textStyles.listEmptyMessage] の1行テキスト、取得失敗は `AppErrorState` を使うこと。
 /// カード形式の空状態は1画面につき原則1つまで（「記録を追加」「固定費を登録」「ボーナスを登録」
 /// のように**別々の次アクション**を持つカードが同一画面に並ぶことは例外として許容する）。
 ///
@@ -54,11 +54,11 @@ class AppEmptyState extends StatelessWidget {
           children: [
             Icon(icon, size: 32, color: context.colors.textSecondary),
             const SizedBox(height: 8),
-            Text(title, style: AppTextStyles.appCardTitleLabel),
+            Text(title, style: context.textStyles.appCardTitleLabel),
             const SizedBox(height: 4),
             Text(
               description,
-              style: AppTextStyles.listCardSecondaryTitle,
+              style: context.textStyles.listCardSecondaryTitle,
               textAlign: TextAlign.center,
             ),
             // 両方セット／両方なしは assert で保証済みなので片側だけ見る

@@ -28,7 +28,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                           children: [
                             Text(
                               '総支出',
-                              style: AppTextStyles.appCardTitleLabel,
+                              style: context.textStyles.appCardTitleLabel,
                             ),
                             const SizedBox(
                               width: AppSpacing.sm,
@@ -40,7 +40,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                                       .allCategoryTotalExpense),
                               textAlign: TextAlign.end,
                               overflow: TextOverflow.ellipsis,
-                              style: AppTextStyles
+                              style: context.textStyles
                                   .appCardOptionalSecondaryPriceLabel,
                             ),
 
@@ -53,12 +53,12 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                                         text: TextSpan(children: [
                                           TextSpan(
                                             text: ' /',
-                                            style: AppTextStyles
+                                            style: context.textStyles
                                                 .appCardTertiaryTitleLabel,
                                           ),
                                           TextSpan(
                                             text: '予算 ',
-                                            style: AppTextStyles
+                                            style: context.textStyles
                                                 .appCardTertiaryTitleLabel,
                                           ),
                                           // カテゴリー予算
@@ -66,7 +66,7 @@ class MnothlyPlanGraphArea extends HookConsumerWidget {
                                             text: yenmarkFormattedPriceGetter(
                                                 allCategoryCardEntity
                                                     .allCategoryTotalBudget),
-                                            style: AppTextStyles
+                                            style: context.textStyles
                                                 .appCardTertiaryPriceLabel,
                                           ),
                                         ])),

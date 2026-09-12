@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/constant/strings.dart';
@@ -43,7 +44,7 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                 width: double.infinity,
                 height: 30,
                 child: Center(
-                  child: Text('まだ記録がありません', style: AppTextStyles.listEmptyMessage),
+                  child: Text('まだ記録がありません', style: context.textStyles.listEmptyMessage),
                 ),
               );
             }
@@ -82,11 +83,11 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
               chartData.monthlyBalanceValues,
             );
 
-            // CardContainerが実際に描画する色（背景のsurfaceElevatedにfillQuaternaryを
+            // CardContainerが実際に描画する色（背景（Scaffold の地）にcardSurfaceを
             // 合成した色）。Y軸ラベルオーバーレイの境界を見えなくするために使う
             final cardSurfaceColor = Color.alphaBlend(
-              context.colors.fillQuaternary,
-              context.colors.surfaceElevated,
+              context.colors.cardSurface,
+              Theme.of(context).scaffoldBackgroundColor,
             );
 
             return CardContainer(
@@ -138,6 +139,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                                   separator: context.colors.separator,
                                   income: context.colors.income,
                                   expense: context.colors.expense,
+                                  miniLabelStyle: context.graphStyles.graphMiniLabel,
+                                  miniLabelEmphasisStyle: context.graphStyles.graphMiniLabelEmphasis,
                                 ),
                               ),
                             ),
@@ -153,9 +156,9 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                   ),
                   // 固定表示の Y軸ラベルオーバーレイ（左端は CardContainer と同色、右に向けてフェードアウト）
                   //
-                  // fillOpaqueは不透明トークンでCardContainerの半透明fillQuaternaryとは
+                  // fillOpaqueは不透明トークンでCardContainerのcardSurface（ダークは半透明）とは
                   // 別物のため、そのまま使うと縦軸ラベル付近に境界線が見えてしまう。
-                  // CardContainerが実際に描画する色（fillQuaternaryをsurfaceElevated上に
+                  // CardContainerが実際に描画する色（cardSurfaceをScaffoldの地の上に
                   // 合成した色）を計算して使うことで境界をなくす。
                   //
                   // 背景のグラデーションはCardContainerの上下端（Widget全体の高さ）まで
@@ -205,6 +208,8 @@ class _AnnualBalanceChartState extends ConsumerState<AnnualBalanceChart> {
                               painter: AnnualBalanceAxisLabelsPainter(
                                 scale: chartData.yAxisScale,
                                 dimensions: dimensions,
+                                miniLabelStyle: context.graphStyles.graphMiniLabel,
+                                miniTextLabelStyle: context.graphStyles.graphMiniTextLabel,
                               ),
                             ),
                           ),

@@ -4,8 +4,8 @@
 //
 // セマンティック色トークンの ThemeExtension。
 // primitive は生成時にインライン解決済み（公開フィールドには含めない）。
-// あわせて const TextStyle 用の static const 色クラス AppColorsLight / AppColorsDark も出力する。
-// ※ MaterialApp への接続・既存 MyColors の置き換えは別STEPで対応。
+// アプリからは context.colors.<token> で参照する。テストの期待値には AppColors.light / dark を使う。
+// （静的色クラス AppColorsLight / AppColorsDark は KP-013 で廃止）
 
 import 'package:flutter/material.dart';
 
@@ -38,6 +38,9 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.overlay,
     required this.link,
     required this.handle,
+    required this.cardSurface,
+    required this.pressedOverlay,
+    required this.surfaceHighlight,
   });
 
   final Color primary;
@@ -66,6 +69,9 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color overlay;
   final Color link;
   final Color handle;
+  final Color cardSurface;
+  final Color pressedOverlay;
+  final Color surfaceHighlight;
 
   static const AppColors light = AppColors(
     primary: Color(0xFF0BB283),
@@ -91,9 +97,12 @@ class AppColors extends ThemeExtension<AppColors> {
     danger: Color(0xFFFF7171),
     icon: Color(0xFF8E8E93),
     disabled: Color(0xFFD1D1D6),
-    overlay: Color(0x33000000),
+    overlay: Color(0x99FFFFFF),
     link: Color(0xFF007AFF),
     handle: Color(0xFFC7C7CC),
+    cardSurface: Color(0xFFF2F2F7),
+    pressedOverlay: Color(0x1A000000),
+    surfaceHighlight: Color(0x00FFFFFF),
   );
 
   static const AppColors dark = AppColors(
@@ -123,6 +132,9 @@ class AppColors extends ThemeExtension<AppColors> {
     overlay: Color(0x33000000),
     link: Color(0xFF0A84FF),
     handle: Color(0xFFD9D9D9),
+    cardSurface: Color(0x39767680),
+    pressedOverlay: Color(0x1AFFFFFF),
+    surfaceHighlight: Color(0x09FFFFFF),
   );
 
   @override
@@ -153,6 +165,9 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? overlay,
     Color? link,
     Color? handle,
+    Color? cardSurface,
+    Color? pressedOverlay,
+    Color? surfaceHighlight,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -181,6 +196,9 @@ class AppColors extends ThemeExtension<AppColors> {
       overlay: overlay ?? this.overlay,
       link: link ?? this.link,
       handle: handle ?? this.handle,
+      cardSurface: cardSurface ?? this.cardSurface,
+      pressedOverlay: pressedOverlay ?? this.pressedOverlay,
+      surfaceHighlight: surfaceHighlight ?? this.surfaceHighlight,
     );
   }
 
@@ -214,78 +232,22 @@ class AppColors extends ThemeExtension<AppColors> {
       overlay: Color.lerp(overlay, other.overlay, t)!,
       link: Color.lerp(link, other.link, t)!,
       handle: Color.lerp(handle, other.handle, t)!,
+      cardSurface: Color.lerp(cardSurface, other.cardSurface, t)!,
+      pressedOverlay: Color.lerp(pressedOverlay, other.pressedOverlay, t)!,
+      surfaceHighlight: Color.lerp(surfaceHighlight, other.surfaceHighlight, t)!,
     );
   }
 }
 
 extension AppColorsX on BuildContext {
-  // 移行期: 新規 ThemeData を生成する Theme 配下など、AppColors 未登録の
-  // subtree でも null クラッシュしないよう、未取得時はダーク既定値へフォールバックする。
-  // （当面 themeMode.dark 固定のため dark を既定とする）
-  AppColors get colors =>
-      Theme.of(this).extension<AppColors>() ?? AppColors.dark;
+  /// 現在の Theme に登録された AppColors を返す。
+  ///
+  /// 未登録（AppTheme を経由しない新規 ThemeData の配下）は設計上の誤りなので
+  /// debug では assert で検出し、release では既定のライトへフォールバックする（KP-013）。
+  AppColors get colors {
+    final ext = Theme.of(this).extension<AppColors>();
+    assert(ext != null, 'AppColors が Theme に未登録（AppTheme を経由していない Theme 配下）');
+    return ext ?? AppColors.light;
+  }
 }
 
-/// AppColorsLight: const TextStyle 用の静的色トークン（light 実値）。
-class AppColorsLight {
-  AppColorsLight._();
-
-  static const Color primary = Color(0xFF0BB283);
-  static const Color onPrimary = Color(0xFFFFFFFF);
-  static const Color primarySubtle = Color(0xFFD7FFF4);
-  static const Color primaryTint = Color(0x290BB283);
-  static const Color surface = Color(0xFFFFFFFF);
-  static const Color surfaceElevated = Color(0xFFF2F2F7);
-  static const Color surfaceElevated2 = Color(0xFFFFFFFF);
-  static const Color surfaceBorder = Color(0x24000000);
-  static const Color surfaceBorderSubtle = Color(0x14000000);
-  static const Color fill = Color(0x33787880);
-  static const Color fillSecondary = Color(0x28787880);
-  static const Color fillTertiary = Color(0x1E767680);
-  static const Color fillQuaternary = Color(0x14747480);
-  static const Color fillOpaque = Color(0xFFEFEFF0);
-  static const Color text = Color(0xFF000000);
-  static const Color textSecondary = Color(0x993C3C43);
-  static const Color textTertiary = Color(0x4C3C3C43);
-  static const Color separator = Color(0x493C3C43);
-  static const Color expense = Color(0xFFFF7171);
-  static const Color income = Color(0xFF12C281);
-  static const Color danger = Color(0xFFFF7171);
-  static const Color icon = Color(0xFF8E8E93);
-  static const Color disabled = Color(0xFFD1D1D6);
-  static const Color overlay = Color(0x33000000);
-  static const Color link = Color(0xFF007AFF);
-  static const Color handle = Color(0xFFC7C7CC);
-}
-
-/// AppColorsDark: const TextStyle 用の静的色トークン（dark 実値）。
-class AppColorsDark {
-  AppColorsDark._();
-
-  static const Color primary = Color(0xFF0BB283);
-  static const Color onPrimary = Color(0xFFFFFFFF);
-  static const Color primarySubtle = Color(0xFFD7FFF4);
-  static const Color primaryTint = Color(0x290BB283);
-  static const Color surface = Color(0xFF0A0A0D);
-  static const Color surfaceElevated = Color(0xFF1C1C1E);
-  static const Color surfaceElevated2 = Color(0xFF2C2C2E);
-  static const Color surfaceBorder = Color(0x24FFFFFF);
-  static const Color surfaceBorderSubtle = Color(0x14FFFFFF);
-  static const Color fill = Color(0x5B787880);
-  static const Color fillSecondary = Color(0x51787880);
-  static const Color fillTertiary = Color(0x3D767680);
-  static const Color fillQuaternary = Color(0x39767680);
-  static const Color fillOpaque = Color(0xFF2C2C30);
-  static const Color text = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0x99EBEBF5);
-  static const Color textTertiary = Color(0x4CEBEBF5);
-  static const Color separator = Color(0x99545458);
-  static const Color expense = Color(0xFFFF7171);
-  static const Color income = Color(0xFF12C281);
-  static const Color danger = Color(0xFFFF7171);
-  static const Color icon = Color(0xFF8E8E93);
-  static const Color disabled = Color(0xFF3A3A3C);
-  static const Color overlay = Color(0x33000000);
-  static const Color link = Color(0xFF0A84FF);
-  static const Color handle = Color(0xFFD9D9D9);
-}

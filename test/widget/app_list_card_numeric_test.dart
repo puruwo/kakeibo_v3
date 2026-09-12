@@ -33,14 +33,14 @@ void main() {
     'subtitleLeadingNumeric: true なら副ラベルは sf_ui（listCardSecondaryNumeric）',
     (tester) async {
       final text = await pumpAndFindSubtitle(tester, numeric: true);
-      expect(text.style, AppTextStyles.listCardSecondaryNumeric);
+      expect(text.style, AppTextStyles.light.listCardSecondaryNumeric);
       expect(text.style!.fontFamily, 'sf_ui');
     },
   );
 
   testWidgets('既定（false）なら副ラベルは noto（listCardSecondaryTitle）', (tester) async {
     final text = await pumpAndFindSubtitle(tester, numeric: false);
-    expect(text.style, AppTextStyles.listCardSecondaryTitle);
+    expect(text.style, AppTextStyles.light.listCardSecondaryTitle);
     expect(text.style!.fontFamily, 'noto_sans');
   });
 }

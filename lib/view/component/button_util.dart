@@ -32,7 +32,7 @@ class _ButtonSpec {
 
 /// 種別・上書き色からボタンの見た目を解決する（案件 UIデザイン改修 §1）。
 /// - main: primaryTint地 + primary枠 + primary文字
-/// - secondary: fillQuaternary地 + surfaceBorder枠 + text文字
+/// - secondary: cardSurface地 + surfaceBorder枠 + text文字
 /// - danger: dangerのTint地 + danger枠 + danger文字
 /// - buttonColor指定時: その色をアクセントとしてTint語彙を適用（入力モード色のSubmitButton用）
 _ButtonSpec _resolveButtonSpec(
@@ -58,7 +58,7 @@ _ButtonSpec _resolveButtonSpec(
         labelColor: textColor ?? colors.primary,
       ),
     ButtonColorType.secondary => _ButtonSpec(
-        background: colors.fillQuaternary,
+        background: colors.cardSurface,
         borderColor: colors.surfaceBorder,
         labelColor: textColor ?? colors.text,
       ),
@@ -168,7 +168,7 @@ class MainButton extends StatelessWidget {
       textColor: textColor,
     );
     // ADR-017 #4: secondaryButtonTextはmainButtonTextと同値だったため統合（種別によらず同一スタイル）
-    final textStyle = AppTextStyles.mainButtonText.copyWith(
+    final textStyle = context.textStyles.mainButtonText.copyWith(
       color: enabled ? spec.labelColor : context.colors.textTertiary,
     );
 

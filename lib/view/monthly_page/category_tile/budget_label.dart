@@ -32,11 +32,11 @@ class BudgetLabel extends StatelessWidget {
                     children: [
                       TextSpan(
                         text: '予算 ',
-                        style: AppTextStyles.appCardTertiaryPriceUnit,
+                        style: context.textStyles.appCardTertiaryPriceUnit,
                       ),
                       TextSpan(
                         text: yenmarkFormattedPriceGetter(budget),
-                        style: AppTextStyles.appCardTertiaryPriceLabel,
+                        style: context.textStyles.appCardTertiaryPriceLabel,
                       ),
                     ],
                   ),

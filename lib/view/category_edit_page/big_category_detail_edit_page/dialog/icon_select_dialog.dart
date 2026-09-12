@@ -93,7 +93,7 @@ class IconSelectDialog extends ConsumerWidget {
         for (final section in _iconSections) ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 12, 4, 6),
-            child: Text(section.title, style: AppTextStyles.insetGroupHeader),
+            child: Text(section.title, style: context.textStyles.insetGroupHeader),
           ),
           GridView.count(
             crossAxisCount: 5,

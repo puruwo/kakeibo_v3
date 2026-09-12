@@ -127,7 +127,7 @@ class _CategoryExpenceHistoryArea
                                     'yyyy年M月d日(E)',
                                     'ja_JP',
                                   ).format(tileGroupList[index].date),
-                                  style: AppTextStyles.listTileSectionTitle,
+                                  style: context.textStyles.listTileSectionTitle,
                                 ),
                               ),
                               //右余白
@@ -169,7 +169,7 @@ class _CategoryExpenceHistoryArea
                   Center(
                     child: Text(
                       '記録がまだありません',
-                      style: AppTextStyles.listEmptyMessage,
+                      style: context.textStyles.listEmptyMessage,
                     ),
                   ),
                 ],

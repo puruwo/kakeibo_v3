@@ -38,7 +38,7 @@ class BudgetCategoryArea extends ConsumerWidget {
               Expanded(
                 child: Text(
                   'カテゴリー別予算',
-                  style: AppTextStyles.insetGroupHeader,
+                  style: context.textStyles.insetGroupHeader,
                 ),
               ),
               SizedBox(
@@ -46,7 +46,7 @@ class BudgetCategoryArea extends ConsumerWidget {
                 child: Text(
                   expenseLabel,
                   textAlign: TextAlign.right,
-                  style: AppTextStyles.listTileLegendTitle,
+                  style: context.textStyles.listTileLegendTitle,
                 ),
               ),
               SizedBox(
@@ -54,7 +54,7 @@ class BudgetCategoryArea extends ConsumerWidget {
                 child: Text(
                   '今月の予算',
                   textAlign: TextAlign.right,
-                  style: AppTextStyles.listTileLegendTitle,
+                  style: context.textStyles.listTileLegendTitle,
                 ),
               ),
             ],

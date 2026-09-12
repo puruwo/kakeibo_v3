@@ -15,10 +15,10 @@ class MonthlyPlanHomePage extends ConsumerWidget {
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
-        backgroundColor: context.colors.surfaceElevated,
+        // 地は AppTheme の scaffoldBackgroundColor（surface）。カード地 card-surface と同色になる surfaceElevated を明示しない（KP-013）
         appBar: AppBar(
           backgroundColor: Colors.transparent,
-          title: Text('毎月の予算', style: AppTextStyles.pageHeaderText),
+          title: Text('毎月の予算', style: context.textStyles.pageHeaderText),
         ),
         body: Column(
           children: [

@@ -121,7 +121,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
           children: [
             SizedBox(
               width: _labelWidth,
-              child: Text(label, style: AppTextStyles.insetGroupLabel),
+              child: Text(label, style: context.textStyles.insetGroupLabel),
             ),
             Expanded(
               child: LayoutBuilder(
@@ -140,7 +140,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
                 yenmarkFormattedPriceGetter(total),
                 textAlign: TextAlign.right,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.insetGroupHistoryPrice,
+                style: context.textStyles.insetGroupHistoryPrice,
               ),
             ),
           ],
@@ -163,7 +163,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
           children: [
             Text(
               '予定収支',
-              style: AppTextStyles.insetGroupLabel
+              style: context.textStyles.insetGroupLabel
                   .copyWith(color: context.colors.textSecondary),
             ),
             const Spacer(),
@@ -171,7 +171,7 @@ class BudgetPageSummaryArea extends HookConsumerWidget {
               signedYenmarkFormattedPriceGetter(projectedSavings, showPlusSign: true),
               textAlign: TextAlign.right,
               overflow: TextOverflow.ellipsis,
-              style: AppTextStyles.insetGroupHistoryPrice.copyWith(color: color),
+              style: context.textStyles.insetGroupHistoryPrice.copyWith(color: color),
             ),
           ],
         ),

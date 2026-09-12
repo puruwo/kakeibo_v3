@@ -13,12 +13,12 @@ class CategoryExpenseHistoryPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: context.colors.surfaceElevated,
+      // 地は AppTheme の scaffoldBackgroundColor（surface）。カード地 card-surface と同色になる surfaceElevated を明示しない（KP-013）
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
           'カテゴリー別利用状況',
-          style: AppTextStyles.pageHeaderText,
+          style: context.textStyles.pageHeaderText,
         ),
       ),
       body: Column(

@@ -130,7 +130,7 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
                 ),
               ),
               const SizedBox(height: 14),
-              Text('予想額', style: AppTextStyles.sheetTitle),
+              Text('予想額', style: context.textStyles.sheetTitle),
               const SizedBox(height: 14),
               AppSegmentedControl(
                 labels: const ['自動で算出', '自分で設定'],
@@ -149,7 +149,7 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
                     : '自動で算出 ＝ 過去の確定額の平均'
                         '（現在 ${yenmarkFormattedPriceGetter(_autoPrice)}）。'
                         '自分で設定した額は、支払いを確定しても上書きされません',
-                style: AppTextStyles.insetGroupNote,
+                style: context.textStyles.insetGroupNote,
               ),
               const SizedBox(height: 14),
               SizedBox(
@@ -188,7 +188,7 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         const Spacer(),
-        Text('¥', style: AppTextStyles.sheetPriceYenSymbol),
+        Text('¥', style: context.textStyles.sheetPriceYenSymbol),
         const SizedBox(width: AppSpacing.sm),
         Flexible(
           // 自動／手動で同じ TextField を使い、金額の表示位置を揃える
@@ -205,10 +205,9 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
                   keyboardType: TextInputType.number,
                   inputFormatters: [NumberTextInputFormatter()],
                   maxLength: 12,
-                  style: AppTextStyles.sheetPriceInput,
+                  style: context.textStyles.sheetPriceInput,
                   cursorColor: context.colors.primary,
                   cursorWidth: 2,
-                  keyboardAppearance: Brightness.dark,
                   buildCounter: (
                     context, {
                     required currentLength,

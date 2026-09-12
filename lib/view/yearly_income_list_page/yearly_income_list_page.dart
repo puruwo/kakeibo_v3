@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kakeibo/theme/app_colors.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
@@ -28,10 +29,10 @@ class YearlyIncomeListPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: Icon(Icons.arrow_back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title: Text('収入一覧', style: AppTextStyles.pageHeaderText),
+        title: Text('収入一覧', style: context.textStyles.pageHeaderText),
       ),
       body: AppFabStack(
         fabLabel: '収入を追加',

@@ -5,7 +5,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 
 /// 汎用フローティングアクションボタン。
 /// [label] を指定すると Extended（pill 形）、省略すると円形になる。
-/// 背景色・前景色は引数で上書き可。既定は [MyColors.themeColor] / 白。
+/// 背景色・前景色は引数で上書き可。既定は primary / onPrimary。
 class AppFloatingActionButton extends StatelessWidget {
   const AppFloatingActionButton({
     super.key,
@@ -22,16 +22,16 @@ class AppFloatingActionButton extends StatelessWidget {
   /// ラベル文字列。null なら円形 FAB、指定で Extended（pill）FAB になる。
   final String? label;
 
-  /// ボタン背景色。省略時は [MyColors.themeColor]。
+  /// ボタン背景色。省略時は primary。
   final Color? backgroundColor;
 
-  /// アイコン・ラベルの前景色。省略時は白。
+  /// アイコン・ラベルの前景色。省略時は onPrimary。
   final Color? foregroundColor;
 
   @override
   Widget build(BuildContext context) {
     final bgColor = backgroundColor ?? context.colors.primary;
-    final fgColor = foregroundColor ?? Colors.white;
+    final fgColor = foregroundColor ?? context.colors.onPrimary;
     final hasLabel = label != null;
 
     return Material(
@@ -41,7 +41,7 @@ class AppFloatingActionButton extends StatelessWidget {
       child: InkWell(
         customBorder: hasLabel ? const StadiumBorder() : const CircleBorder(),
         splashColor: Colors.transparent,
-        highlightColor: Colors.black.withValues(alpha: 0.1),
+        highlightColor: Theme.of(context).highlightColor,
         onTap: onTap,
         child: hasLabel
             ? SizedBox(
@@ -55,7 +55,7 @@ class AppFloatingActionButton extends StatelessWidget {
                       const SizedBox(width: AppSpacing.sm),
                       Text(
                         label!,
-                        style: AppTextStyles.mainButtonText.copyWith(
+                        style: context.textStyles.mainButtonText.copyWith(
                           color: fgColor,
                         ),
                       ),

@@ -426,12 +426,12 @@ class _AppYearMonthPickerOverlayState
               children: [
                 Text(
                   _formatHeaderTitle(),
-                  style: AppTextStyles.pageHeaderSubNumeric,
+                  style: context.textStyles.pageHeaderSubNumeric,
                 ),
                 const SizedBox(height: 2),
                 Text(
                   _formatRange(),
-                  style: AppTextStyles.pageHeaderNumeric,
+                  style: context.textStyles.pageHeaderNumeric,
                 ),
               ],
             ),
@@ -510,7 +510,7 @@ class _AppYearMonthPickerOverlayState
             (y) => Center(
               child: Text(
                 _formatYearItem(y),
-                style: AppTextStyles.pageHeaderNumeric,
+                style: context.textStyles.pageHeaderNumeric,
               ),
             ),
           )
@@ -533,7 +533,7 @@ class _AppYearMonthPickerOverlayState
       children: List.generate(
         12,
         (i) => Center(
-          child: Text('${i + 1}月度', style: AppTextStyles.pageHeaderNumeric),
+          child: Text('${i + 1}月度', style: context.textStyles.pageHeaderNumeric),
         ),
       ),
     );
@@ -562,7 +562,7 @@ class _AppYearMonthPickerOverlayState
               widget.mode == AppYearMonthPickerMode.yearMonth
                   ? '今月度に戻す'
                   : '今年度に戻す',
-              style: AppTextStyles.mainButtonText,
+              style: context.textStyles.mainButtonText,
             ),
           ),
         ),
@@ -578,7 +578,13 @@ class _AppYearMonthPickerOverlayState
               children: [
                 Icon(Icons.check, color: context.colors.onPrimary, size: 18),
                 const SizedBox(width: AppSpacing.xs),
-                Text('適用', style: AppTextStyles.mainButtonText),
+                // primary 塗りの上の文字なので onPrimary（ライトでは text が黒になるため明示。KP-013）
+                Text(
+                  '適用',
+                  style: context.textStyles.mainButtonText.copyWith(
+                    color: context.colors.onPrimary,
+                  ),
+                ),
               ],
             ),
           ),

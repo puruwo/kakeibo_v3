@@ -24,7 +24,7 @@ class VariableFixedCostChipLabel extends StatelessWidget {
       ),
       child: Text(
         '変動',
-        style: AppTextStyles.chipLabelAccent,
+        style: context.textStyles.chipLabelAccent,
       ),
     );
   }

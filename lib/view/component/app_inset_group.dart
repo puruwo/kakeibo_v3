@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/component/app_switch.dart';
 
 /// インセットグループの角丸（iOS設定アプリのグループ化リストに相当する見た目）
 final BorderRadius appInsetGroupRadius = BorderRadius.circular(14);
@@ -54,7 +55,7 @@ class AppInsetGroup extends StatelessWidget {
         if (header != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
-            child: Text(header!, style: AppTextStyles.insetGroupHeader),
+            child: Text(header!, style: context.textStyles.insetGroupHeader),
           ),
         DecoratedBox(
           decoration: BoxDecoration(
@@ -73,7 +74,7 @@ class AppInsetGroup extends StatelessWidget {
         if (note != null)
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 6, 4, 0),
-            child: Text(note!, style: AppTextStyles.insetGroupNote),
+            child: Text(note!, style: context.textStyles.insetGroupNote),
           ),
       ],
     );
@@ -274,7 +275,7 @@ class AppInsetRow extends StatelessWidget {
                         )),
             ),
             const SizedBox(width: 10),
-            Text(label, style: AppTextStyles.insetGroupLabel),
+            Text(label, style: context.textStyles.insetGroupLabel),
             const SizedBox(width: 10),
             Expanded(child: _buildTrailing(context)),
           ],
@@ -317,38 +318,18 @@ class AppInsetRow extends StatelessWidget {
           child: valueWidget ?? _buildValueText(context),
         );
       case _AppInsetRowType.switchRow:
+        // 枠線の消去・つまみの色は AppTheme の switchTheme に集約済み。
+        // ここで ThemeData を新規生成しない（AppColors 拡張が落ちる。KP-013）
         return Align(
           alignment: Alignment.centerRight,
-          child: SizedBox(
-            width: 45,
-            child: Theme(
-              // ThemeDataを上書きして、トグルOnの時のborderを透明にする
-              data: ThemeData(useMaterial3: true).copyWith(
-                colorScheme: Theme.of(
-                  context,
-                ).colorScheme.copyWith(outline: Colors.transparent),
-              ),
-              // 大きさを小さくするためにTransform.scaleを使用
-              child: Transform.scale(
-                alignment: Alignment.centerRight,
-                scale: 0.7,
-                child: Switch(
-                  activeTrackColor: context.colors.primary,
-                  inactiveTrackColor: context.colors.icon,
-                  thumbColor: WidgetStateProperty.all(Colors.white),
-                  value: switchValue!,
-                  onChanged: onSwitchChanged,
-                ),
-              ),
-            ),
-          ),
+          child: AppSwitch(value: switchValue!, onChanged: onSwitchChanged),
         );
       case _AppInsetRowType.textField:
         return TextFormField(
           controller: controller,
           textAlign: textAlign,
           textAlignVertical: TextAlignVertical.center,
-          style: _valueStyle,
+          style: _valueStyle(context),
           cursorColor: context.colors.primary,
           cursorWidth: 2,
           minLines: 1,
@@ -356,7 +337,6 @@ class AppInsetRow extends StatelessWidget {
           maxLength: maxLength,
           keyboardType: keyboardType,
           inputFormatters: inputFormatters,
-          keyboardAppearance: Brightness.dark,
           buildCounter: (
             BuildContext context, {
             required int currentLength,
@@ -371,7 +351,7 @@ class AppInsetRow extends StatelessWidget {
             contentPadding: EdgeInsets.zero,
             border: InputBorder.none,
             hintText: hintText,
-            hintStyle: AppTextStyles.insetGroupPlaceholder,
+            hintStyle: context.textStyles.insetGroupPlaceholder,
           ),
           onChanged: onChanged,
           onTapOutside: (event) {
@@ -385,9 +365,9 @@ class AppInsetRow extends StatelessWidget {
   }
 
   /// 値のスタイル。numericValue で sfUi 系の数字版に切り替える（display 行・textField 行で共用）
-  TextStyle get _valueStyle => numericValue
-      ? AppTextStyles.insetGroupValueNumeric
-      : AppTextStyles.insetGroupValue;
+  TextStyle _valueStyle(BuildContext context) => numericValue
+      ? context.textStyles.insetGroupValueNumeric
+      : context.textStyles.insetGroupValue;
 
   Widget _buildValueText(BuildContext context) {
     return Text(
@@ -395,7 +375,7 @@ class AppInsetRow extends StatelessWidget {
       textAlign: TextAlign.right,
       overflow: TextOverflow.ellipsis,
       // valueColor が null のときは copyWith が元の色を保つ
-      style: _valueStyle.copyWith(color: valueColor),
+      style: _valueStyle(context).copyWith(color: valueColor),
     );
   }
 }

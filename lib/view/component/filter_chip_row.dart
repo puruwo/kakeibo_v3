@@ -67,10 +67,10 @@ class _FilterChip extends StatelessWidget {
         child: Text(
           label,
           style: isSelected
-              ? AppTextStyles.filterChipSelectedLabel.copyWith(
+              ? context.textStyles.filterChipSelectedLabel.copyWith(
                   color: colors.surface,
                 )
-              : AppTextStyles.listCardSecondaryTitle,
+              : context.textStyles.listCardSecondaryTitle,
         ),
       ),
     );

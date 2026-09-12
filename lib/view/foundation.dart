@@ -213,8 +213,8 @@ class _FoundationState extends ConsumerState<Foundation>
             Text(
               label,
               style: isSelected
-                  ? AppTextStyles.bottomNavSelectedLabel
-                  : AppTextStyles.bottomNavUnselectedLabel,
+                  ? context.textStyles.bottomNavSelectedLabel
+                  : context.textStyles.bottomNavUnselectedLabel,
             ),
           ],
         ),

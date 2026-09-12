@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/domain/ui_value/prediction_graph_value/prediction_graph_value.dart';
-import 'package:kakeibo/constant/styles/graph_text_styles.dart';
 
 class PredictionGraphPainter extends CustomPainter {
   PredictionGraphPainter({
@@ -10,6 +9,8 @@ class PredictionGraphPainter extends CustomPainter {
     required this.separator,
     required this.icon,
     required this.expense,
+    required this.labelStyle,
+    required this.priceLabelStyle,
   });
 
   final PredictionGraphValue data;
@@ -22,6 +23,12 @@ class PredictionGraphPainter extends CustomPainter {
 
   /// 支出系ラインの色（context.colors.expense を注入）
   final Color expense;
+
+  /// 軸ラベルの和文部分のスタイル（labelStyle を注入）
+  final TextStyle labelStyle;
+
+  /// 金額・日付ラベルのスタイル（priceLabelStyle を注入）
+  final TextStyle priceLabelStyle;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -230,7 +237,7 @@ class PredictionGraphPainter extends CustomPainter {
     // 金額なので他の軸ラベルと同じ sfUi 系（graphPriceLabel）
     final textSpan = TextSpan(
       text: '¥ 0',
-      style: GraphTextStyles.graphPriceLabel,
+      style: priceLabelStyle,
     );
 
     final textPainter = TextPainter(
@@ -261,7 +268,7 @@ class PredictionGraphPainter extends CustomPainter {
       Canvas canvas, double leftMargin, double y, double labelLeftPadding) {
     final textSpan = TextSpan(
       text: '日別',
-      style: GraphTextStyles.graphLabel,
+      style: labelStyle,
     );
 
     final textPainter = TextPainter(
@@ -390,7 +397,7 @@ class PredictionGraphPainter extends CustomPainter {
 
       final textSpan = TextSpan(
         text: xLabel.label,
-        style: GraphTextStyles.graphPriceLabel,
+        style: priceLabelStyle,
       );
 
       final textPainter = TextPainter(
@@ -439,11 +446,11 @@ class PredictionGraphPainter extends CustomPainter {
       children: [
         TextSpan(
           text: '収入 ',
-          style: GraphTextStyles.graphLabel,
+          style: labelStyle,
         ),
         TextSpan(
           text: labelPosition.label,
-          style: GraphTextStyles.graphPriceLabel,
+          style: priceLabelStyle,
         ),
       ],
     );
@@ -457,7 +464,7 @@ class PredictionGraphPainter extends CustomPainter {
     // 項目名のみのTextPainterを作成（重なった場合の描画用）
     final titleSpan = TextSpan(
       text: '収入 ',
-      style: GraphTextStyles.graphLabel,
+      style: labelStyle,
     );
     final titlePainter = TextPainter(
       text: titleSpan,
@@ -543,11 +550,11 @@ class PredictionGraphPainter extends CustomPainter {
       children: [
         TextSpan(
           text: '予算+固定費 ',
-          style: GraphTextStyles.graphLabel,
+          style: labelStyle,
         ),
         TextSpan(
           text: labelPosition.label,
-          style: GraphTextStyles.graphPriceLabel,
+          style: priceLabelStyle,
         ),
       ],
     );
@@ -561,7 +568,7 @@ class PredictionGraphPainter extends CustomPainter {
     // 項目名のみのTextPainterを作成（重なった場合の描画用）
     final titleSpan = TextSpan(
       text: '予算+固定費 ',
-      style: GraphTextStyles.graphLabel,
+      style: labelStyle,
     );
     final titlePainter = TextPainter(
       text: titleSpan,
@@ -662,11 +669,11 @@ class PredictionGraphPainter extends CustomPainter {
       children: [
         TextSpan(
           text: '予想支出 ',
-          style: GraphTextStyles.graphLabel,
+          style: labelStyle,
         ),
         TextSpan(
           text: data.predictionLabel,
-          style: GraphTextStyles.graphPriceLabel,
+          style: priceLabelStyle,
         ),
       ],
     );
@@ -741,18 +748,18 @@ class PredictionGraphPainter extends CustomPainter {
         children: [
           TextSpan(
             text: '支出 ',
-            style: GraphTextStyles.graphLabel,
+            style: labelStyle,
           ),
           TextSpan(
             text: expenseLabelPosition.label,
-            style: GraphTextStyles.graphPriceLabel,
+            style: priceLabelStyle,
           ),
         ],
       );
 
       final titleSpan = TextSpan(
         text: '支出 ',
-        style: GraphTextStyles.graphLabel,
+        style: labelStyle,
       );
 
       final textPainter = TextPainter(

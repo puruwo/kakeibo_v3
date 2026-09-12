@@ -114,13 +114,13 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                 Text(
                                   widget
                                       .budgetEditValue.expenseBigCategoryName,
-                                  style: AppTextStyles.listTilePrimaryTitle,
+                                  style: context.textStyles.listTilePrimaryTitle,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 if (forecast > 0)
                                   Text(
                                     '固定費 ${yenmarkFormattedPriceGetter(forecast)}',
-                                    style: AppTextStyles
+                                    style: context.textStyles
                                         .numericCaption
                                         .copyWith(
                                       color: isUnderFixedCost
@@ -142,7 +142,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                   : yenmarkFormattedPriceGetter(
                                       widget.budgetEditValue.lastMonthBudgetPrice,
                                     ),
-                              style: AppTextStyles.listTileSubPriceLabel,
+                              style: context.textStyles.listTileSubPriceLabel,
                               textAlign: TextAlign.right,
                             ),
                           ),
@@ -187,7 +187,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                 if (controller.text.isNotEmpty)
                                   Text(
                                     '¥',
-                                    style: AppTextStyles.listTileInputPriceLabel
+                                    style: context.textStyles.listTileInputPriceLabel
                                         .copyWith(
                                       color: isUnderFixedCost
                                           ? context.colors.danger
@@ -203,7 +203,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                     // テキストフィールドのプロパティ
                                     textAlign: TextAlign.right,
                                     textAlignVertical: TextAlignVertical.top,
-                                    style: AppTextStyles
+                                    style: context.textStyles
                                         .listTileInputPriceLabel
                                         .copyWith(
                                       color: isUnderFixedCost
@@ -260,7 +260,7 @@ class _BudgetCategoryTileState extends ConsumerState<BudgetCategoryTile> {
                                           ? ""
                                           : "金額を入力",
                                       hintStyle:
-                                          AppTextStyles.listTileTextFieldHint,
+                                          context.textStyles.listTileTextFieldHint,
 
                                       // テキストの余白
                                       contentPadding: const EdgeInsets.only(

@@ -58,7 +58,7 @@ class NormalIconButton extends ConsumerWidget {
             child: Center(
               child: Text(
                 categoryEntity.categoryName,
-                style: RegisterPageStyles.categoryLabelUnselected,
+                style: context.registerStyles.categoryLabelUnselected,
                 overflow: TextOverflow.ellipsis,
               ),
             ),

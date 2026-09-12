@@ -55,7 +55,7 @@ class PaymentFrequencyPicker extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(24, 20, 16, 14),
             child: Row(
               children: [
-                Text('支払い頻度', style: AppTextStyles.dialogTitle),
+                Text('支払い頻度', style: context.textStyles.dialogTitle),
                 const Spacer(),
                 _CloseButton(onTap: () => Navigator.of(context).pop()),
               ],
@@ -119,8 +119,8 @@ class _FrequencyRow extends StatelessWidget {
               Text(
                 value.dateLabel,
                 style: isSelected
-                    ? AppTextStyles.dialogListEmphasis
-                    : AppTextStyles.dialogList
+                    ? context.textStyles.dialogListEmphasis
+                    : context.textStyles.dialogList
                         .copyWith(color: context.colors.textSecondary),
               ),
               const Spacer(),

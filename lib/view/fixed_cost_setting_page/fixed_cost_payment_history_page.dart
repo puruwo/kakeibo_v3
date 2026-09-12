@@ -43,7 +43,7 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text('支払い履歴', style: AppTextStyles.pageHeaderText),
+        title: Text('支払い履歴', style: context.textStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
@@ -116,12 +116,12 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
               // 年・合計とも数字が主役なので sfUi 系
               Text(
                 '${group.year}年',
-                style: AppTextStyles.insetGroupHeaderNumeric,
+                style: context.textStyles.insetGroupHeaderNumeric,
               ),
               const Spacer(),
               Text(
                 yenmarkFormattedPriceGetter(group.confirmedTotal),
-                style: AppTextStyles.insetGroupHeaderNumeric,
+                style: context.textStyles.insetGroupHeaderNumeric,
               ),
             ],
           ),
@@ -158,7 +158,7 @@ class _TitleRow extends ConsumerWidget {
     final fixedCost = this.fixedCost;
     // マスタ取得前は高さだけ確保する
     if (fixedCost == null) {
-      return Text('', style: AppTextStyles.pageSubjectTitle);
+      return Text('', style: context.textStyles.pageSubjectTitle);
     }
 
     return FutureBuilder(
@@ -182,7 +182,7 @@ class _TitleRow extends ConsumerWidget {
               child: Text(
                 fixedCost.name,
                 overflow: TextOverflow.ellipsis,
-                style: AppTextStyles.pageSubjectTitle,
+                style: context.textStyles.pageSubjectTitle,
               ),
             ),
           ],
@@ -247,11 +247,11 @@ class _SummaryCard extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Text(cells[i].$1, style: AppTextStyles.insetGroupNote),
+                      Text(cells[i].$1, style: context.textStyles.insetGroupNote),
                       const SizedBox(height: 2),
                       Text(
                         cells[i].$2,
-                        style: AppTextStyles.listTilePriceLabel,
+                        style: context.textStyles.listTilePriceLabel,
                       ),
                     ],
                   ),
@@ -290,7 +290,7 @@ class _HistoryRow extends StatelessWidget {
                 child: Text(
                   '${int.parse(date.substring(4, 6))}/'
                   '${int.parse(date.substring(6, 8))}',
-                  style: AppTextStyles.insetGroupHistoryDate,
+                  style: context.textStyles.insetGroupHistoryDate,
                 ),
               ),
               const Spacer(),

@@ -140,7 +140,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                       children: [
                         // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
                         const SizedBox(width: 28),
-                        Text(label, style: AppTextStyles.pageHeaderNumeric),
+                        Text(label, style: context.textStyles.pageHeaderNumeric),
                         Transform.translate(
                           offset: const Offset(-4, 0),
                           child: Icon(
@@ -151,7 +151,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         ),
                       ],
                     ),
-                    Text('生活収支', style: AppTextStyles.pageHeaderSubText),
+                    Text('生活収支', style: context.textStyles.pageHeaderSubText),
                   ],
                 ),
               ),
@@ -170,7 +170,8 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
           ),
         ],
       ),
-      backgroundColor: context.colors.surfaceElevated,
+      // 地は AppTheme の scaffoldBackgroundColor（surface）。カード地 card-surface と
+      // 同色になる surfaceElevated を明示しない（KP-013）
       // ローディング → コンテンツの切り替えをフェードで行う
       body: AnimatedSwitcher(
         duration: const Duration(milliseconds: 300),

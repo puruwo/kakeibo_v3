@@ -92,7 +92,7 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
               controller: _controller,
               autofocus: true,
               textAlign: TextAlign.right,
-              style: RegisterPageStyles.priceInput,
+              style: context.registerStyles.priceInput,
               cursorColor: context.colors.primary,
               cursorWidth: 3,
               cursorHeight: 42,
@@ -106,7 +106,6 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
               },
               inputFormatters: [NumberTextInputFormatter()],
               keyboardType: TextInputType.number,
-              keyboardAppearance: Brightness.dark,
               decoration: const InputDecoration(
                 isDense: true,
                 filled: false,
@@ -134,7 +133,7 @@ class _LargePriceDisplayState extends ConsumerState<LargePriceDisplay> {
   Widget _buildUnconfirmedDisplay() {
     return Text(
       '---',
-      style: RegisterPageStyles.priceUnconfirmed,
+      style: context.registerStyles.priceUnconfirmed,
     );
   }
 }

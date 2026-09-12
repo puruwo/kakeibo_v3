@@ -83,13 +83,13 @@ class FixedCostCompleteSheet extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.sm),
             Center(
-              child: Text('固定費を登録しました', style: AppTextStyles.sheetTitle),
+              child: Text('固定費を登録しました', style: context.textStyles.sheetTitle),
             ),
             const SizedBox(height: AppSpacing.xs),
             Center(
               child: Text(
                 '次回から自動で支出に記録されます',
-                style: AppTextStyles.insetGroupNote,
+                style: context.textStyles.insetGroupNote,
               ),
             ),
             const SizedBox(height: AppSpacing.lg),

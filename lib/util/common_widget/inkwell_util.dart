@@ -35,7 +35,7 @@ class AppInkWell extends StatelessWidget {
       child: InkWell(
         borderRadius: resolvedRadius,
         splashColor: Colors.transparent,
-        highlightColor: highlightColor ?? Colors.black.withOpacity(0.1),
+        highlightColor: highlightColor ?? Theme.of(context).highlightColor,
         onTap: onTap,
         onLongPress: onLongPress,
         child: child,

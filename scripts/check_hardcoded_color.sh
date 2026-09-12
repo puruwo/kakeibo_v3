@@ -49,6 +49,7 @@ check_file() {
   # 対象外ファイル（生成物・旧定義）はスキップ
   case "$f" in
     */lib/theme/app_colors.dart|lib/theme/app_colors.dart) return ;;
+    */lib/theme/category_palette.dart|lib/theme/category_palette.dart) return ;;
     */lib/constant/colors.dart|lib/constant/colors.dart) return ;;
   esac
 
@@ -75,6 +76,14 @@ check_file() {
     findings+="  ${f}:${ln}: ${content}"$'\n'
     total=$((total + 1))
   done < <(grep -noE '(^|[^A-Za-z0-9_])Colors\.[A-Za-z][A-Za-z0-9_]*' "$f")
+
+  # --- 静的色クラス AppColorsDark / AppColorsLight（KP-013 で廃止。context.colors を使う） ---
+  while IFS=: read -r ln rest; do
+    [ -n "$ln" ] || continue
+    content=$(sed -n "${ln}p" "$f" | sed -E 's/^[[:space:]]*//')
+    findings+="  ${f}:${ln}: [静的色クラス参照。context.colors.<トークン> を使う] ${content}"$'\n'
+    total=$((total + 1))
+  done < <(grep -noE '(^|[^A-Za-z0-9_])AppColors(Dark|Light)\.' "$f")
 }
 
 if [ "$#" -gt 0 ]; then

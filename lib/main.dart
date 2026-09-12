@@ -30,17 +30,23 @@ import 'package:kakeibo/repository/month_basis_repository.dart';
 import 'package:kakeibo/repository/small_category_Tile_repository.dart';
 import 'package:kakeibo/repository/expense_small_category_repository.dart';
 import 'package:kakeibo/repository/year_basis_repository.dart';
-import 'package:kakeibo/theme/app_colors.dart';
-import 'package:kakeibo/view/foundation.dart';
+import 'package:kakeibo/app.dart';
+import 'package:kakeibo/model/theme_mode_store.dart';
+import 'package:kakeibo/view_model/state/theme_mode.dart';
 
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_repository.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/repository/category_repository.dart';
 
-void main() {
+Future<void> main() async {
+  // 初回フレームから保存済みのテーマモードで描くため、runApp の前に読み込む（KP-013）
+  WidgetsFlutterBinding.ensureInitialized();
+  final initialThemeMode = await ThemeModeStore().fetch();
+
   runApp(
     ProviderScope(
       overrides: [
+        initialThemeModeProvider.overrideWithValue(initialThemeMode),
         categoryAccountingRepositoryProvider.overrideWithValue(
           ImplementsCategoryAccountingRepository(),
         ),
@@ -91,37 +97,8 @@ void main() {
         ),
       ],
       observers: const [ProviderLogger()],
-      child: MaterialApp(
-        builder: (context, child) {
-          final mediaQuery = MediaQuery.of(context);
-          return MediaQuery(
-            data: mediaQuery.copyWith(
-              textScaler: const TextScaler.linear(1.0),
-              boldText: false,
-            ),
-            child: child!,
-          );
-        },
-        home: const Foundation(),
-        debugShowCheckedModeBanner: false,
-        // ライト用テーマ。細部は後回しで、まずは ThemeData.light() ベースに
-        // AppColors.light を ThemeExtension として登録するのみ。
-        // 当面 themeMode.dark 固定のため、このテーマは実際には使われない。
-        theme: ThemeData.light().copyWith(
-          extensions: const [AppColors.light],
-        ),
-        // 当面ダーク固定。移行完了後に ThemeMode.system へ変える。
-        themeMode: ThemeMode.dark,
-        // 既存のダークテーマ設定（AppBarのelevation上書き等）は保持したまま、
-        // AppColors.dark を ThemeExtension として追加する。
-        darkTheme: ThemeData.dark().copyWith(
-          appBarTheme: const AppBarTheme(
-            scrolledUnderElevation: 0,
-            elevation: 0,
-          ),
-          extensions: const [AppColors.dark],
-        ),
-      ),
+      // MaterialApp とテーマ（AppTheme）の組み立ては lib/app.dart の KakeiboApp
+      child: const KakeiboApp(),
     ),
   );
 }

@@ -24,9 +24,9 @@
 
 設計→デザイン→実装 自動化パイプライン **フェーズ0（デザイントークンの単一ソース化）は完了**。
 
-- ✅ `design-tokens/tokens.json` → `tool/generate_tokens.dart` で `lib/theme/app_colors.dart` を生成（`AppColors` ThemeExtension ＋ const TextStyle 用の静的クラス `AppColorsDark` / `AppColorsLight`）
-- ✅ `MaterialApp` に light/dark テーマと `AppColors` を接続（当面 `themeMode.dark` 固定）
-- ✅ 旧 `MyColors`（`lib/constant/colors.dart`）を**全廃・ファイル削除**。UI色は **ThemeExtension に一本化** — `context.colors.*`（ランタイム）／`AppColorsDark.*`（const文脈）／`CategoryPalette.*`（データ色）
+- ✅ `design-tokens/tokens.json` → `tool/generate_tokens.dart` で `lib/theme/app_colors.dart` を生成（`AppColors` ThemeExtension。const TextStyle 用の静的クラス `AppColorsDark` / `AppColorsLight` は 2026-09-11 KP-013 で廃止）
+- ✅ `MaterialApp` に light/dark テーマと `AppColors` を接続。2026-09-11 KP-013 で ThemeData の正本を `lib/theme/app_theme.dart`（`AppTheme.light()/dark()`）に集約し、**既定ライト・設定画面のスイッチでダークへ切替**（`ThemeModeStore` に保存）
+- ✅ 旧 `MyColors`（`lib/constant/colors.dart`）を**全廃・ファイル削除**。UI色は **ThemeExtension に一本化** — `context.colors.*`（ランタイム）／役割テキストスタイルは `context.textStyles.*`（KP-013）／`CategoryPalette.*`（データ色）
 - ✅ 色ハードコード検出フック（`scripts/check_hardcoded_color.sh` + PostToolUse）を導入
 - ✅ ダーク見た目は従来と不変（値同一マッピングを原則。意図的な例外は下表 `mintBlue→income` のみ）
 
@@ -133,9 +133,17 @@
 |---------|-------|------|------------|
 | `color.icon` | `#8E8E93FF` | `#8E8E93FF` | systemGray(7) ※両モード同値 |
 | `color.disabled` | `#D1D1D6FF` | `#3A3A3CFF` | systemGray4(3) |
-| `color.overlay` | `#00000033` 🔸 | `#00000033` | hoverColor(1) |
+| `color.overlay` | `#FFFFFF99` 🔸（2026-09-11 KP-013 で `#00000033` から変更） | `#00000033` | 非活性ボタンの沈め（`button_util.dart`）。ライトでは黒を重ねると非活性の方が濃く見え意味が反転するため白60%へ |
 | `color.link` | `#007AFFFF` | `#0A84FFFF` | linkColor(新規有効化) |
 | `color.handle` | `#C7C7CCFF` 🔸 | `#D9D9D9FF` | barHandler(1) |
+
+### ライトモード対応で新設（2026-09-11 KP-013）
+
+| トークン | light | dark | 用途 |
+|---|-------|------|------|
+| `color.card-surface` | `#F2F2F7FF`（Apple secondarySystemBackground） | `#76768039`（従来の fill-quaternary と同値） | カードの地（`CardContainer`・固定費カード・一覧行カード・secondary ボタン）。ライトで半透明の無彩色グレーが地に溶け黄みを帯びて見える問題の対策（カンバス A-1 をユーザー選択） |
+| `color.pressed-overlay` | `#0000001A` 🔸 | `#FFFFFF1A` | 押下ハイライト（ThemeData.highlightColor・AppInkWell・FAB・PopupMenu）。従来は黒10%の直書き |
+| `color.surface-highlight` | `#FFFFFF00` 🔸（無し） | `#FFFFFF09` | カード・ボタンの微グラデ開始色（`resolveSurfaceHighlight`）。ライトでは黒系の `surface-border` を混ぜると上が影になるため平坦にする |
 
 > 残りニュートラル（systemGray2/5 等の少数参照）は、置き換え時に `color.icon` / `color.disabled` /
 > `color.text-*` のいずれかに寄せる。対応はSTEP6の置換マッピングで個別に決める。
@@ -171,8 +179,11 @@ Apple準拠でない以下は、ライト背景での見え方を実機/Figmaで
 - `color.primary-subtle` `#D7FFF4` — 白背景でほぼ視認不可の懸念。ライトは別値が必要な可能性大
 - `color.expense` `#FF7171` / `color.income` `#21D19F` — 白背景上のコントラスト（特に文字）
 - `color.fill-opaque` ライト `#EFEFF0` — 暫定。実際の用途（年間収支グラフのグラデ等）で確認
-- `color.overlay` `#000000` 20% — ライトでは妥当。ダークでは白オーバーレイの方が自然な場合あり
+- `color.overlay` ライト `#FFFFFF` 60%（KP-013 で変更） — 非活性ボタン（Tint 地）が「沈んで」見えるか確認
 - `color.handle` ライト `#C7C7CC` — 白背景で見えるグレーか確認
+- `color.pressed-overlay` ライト `#000000` 10% — 白いカード・行の押下で暗くなるのが見えるか確認
+- `color.surface-highlight` ライト 無し（完全透明） — カードが平坦になり iOS grouped 風に見えるか確認（光沢を残す場合は白系の低アルファ）
+- `color.card-surface` ライト `#F2F2F7` — 白地の全体タブと `#F2F2F7` 地のサブページの両方でカードが立つか確認
 - `color.surface-elevated-2` ライト（⚠️ 上記）— 3段階の段差維持の判断
 
 ---
@@ -186,6 +197,6 @@ Apple準拠でない以下は、ライト背景での見え方を実機/Figmaで
 - バケットB（少数参照ニュートラル）の用途別移行 ✅（§0）／ Painter注入 ✅
 
 **残課題（次フェーズ）**:
-1. **ライト有効化（6c-3b）**: const TextStyle 内の `AppColorsDark.*` 直参照を剥がす（context依存化）→ `themeMode.system` へ切り替え。併せて §5 の🔸（ライト値の実機確認）と §2「面」⚠️（surface 3段差）を確定
+1. ~~**ライト有効化（6c-3b）**~~ ✅ 2026-09-11 KP-013 で完了: 役割スタイルを `AppColors` を受け取るインスタンスにして `AppColorsDark.*` を全廃、`AppTheme` を新設して既定ライト＋設定画面で切替。§2「面」⚠️ はカード地を `card-surface`（ライト `#F2F2F7`）に分離して解消。§5 の🔸（ライト値の実機確認）は実機確認の結果を Vault の案件ハブへ記録
 2. **決定6（共同カラーパレット）**: Confluence未決事項と合流し `color.couple-accent` 等を確定 → `tokens.json` 追加（§4）
 3. **Figma生成の自動化**: `tokens.json` ⇄ Figma変数 の同期、画面デザイン生成の自動化

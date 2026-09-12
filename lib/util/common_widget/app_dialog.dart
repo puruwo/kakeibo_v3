@@ -148,8 +148,8 @@ class _MenuItemTile extends StatelessWidget {
                 child: Text(
                   item.label,
                   style: item.isDestructive
-                      ? AppTextStyles.dialogList.copyWith(color: resolvedColor)
-                      : AppTextStyles.dialogList,
+                      ? context.textStyles.dialogList.copyWith(color: resolvedColor)
+                      : context.textStyles.dialogList,
                 ),
               ),
             ],
@@ -205,7 +205,7 @@ class ActionSheetCancelButton extends StatelessWidget {
             child: Center(
               child: Text(
                 label,
-                style: AppTextStyles.dialogListEmphasis,
+                style: context.textStyles.dialogListEmphasis,
               ),
             ),
           ),

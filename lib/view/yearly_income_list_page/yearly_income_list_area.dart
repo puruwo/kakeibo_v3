@@ -45,7 +45,7 @@ class _YearlyIncomeListAreaState extends ConsumerState<YearlyIncomeListArea> {
               return Center(
                 child: Text(
                   '収入が登録されていません',
-                  style: AppTextStyles.listEmptyMessage,
+                  style: context.textStyles.listEmptyMessage,
                 ),
               );
             }

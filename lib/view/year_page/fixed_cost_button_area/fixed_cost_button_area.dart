@@ -183,7 +183,7 @@ class _FixedCostMiniCard extends StatelessWidget {
                     Expanded(
                       child: Text(
                         entity.name,
-                        style: AppTextStyles.listCardSecondaryTitle.copyWith(
+                        style: context.textStyles.listCardSecondaryTitle.copyWith(
                           color: context.colors.text,
                         ),
                         maxLines: 1,
@@ -195,14 +195,14 @@ class _FixedCostMiniCard extends StatelessWidget {
                 const Spacer(),
                 Text(
                   _priceLabel(entity),
-                  style: AppTextStyles.insetGroupHistoryPrice,
+                  style: context.textStyles.insetGroupHistoryPrice,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   _nextPaymentLabel(entity),
-                  style: AppTextStyles.numericCaption,
+                  style: context.textStyles.numericCaption,
                 ),
               ],
             ),

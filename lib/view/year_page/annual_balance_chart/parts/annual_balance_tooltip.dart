@@ -30,7 +30,7 @@ class AnnualBalanceTooltip extends StatelessWidget {
         constraints: const BoxConstraints(minWidth: 140),
         padding: const EdgeInsets.all(AppSpacing.md),
         decoration: BoxDecoration(
-          color: const Color(0xFF2C2C2E),
+          color: context.colors.surfaceElevated2,
           borderRadius: BorderRadius.circular(8),
           boxShadow: [
             BoxShadow(
@@ -44,29 +44,29 @@ class AnnualBalanceTooltip extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('${value.month}月', style: GraphTextStyles.tooltipDate),
+            Text('${value.month}月', style: context.graphStyles.tooltipDate),
             const SizedBox(height: AppSpacing.sm),
-            const Divider(height: 1, color: Colors.white24),
+            Divider(height: 1, color: context.colors.separator),
             const SizedBox(height: AppSpacing.sm),
-            _row(label: '収入', amount: value.monthlyIncome, color: context.colors.income),
+            _row(context, label: '収入', amount: value.monthlyIncome, color: context.colors.income),
             const SizedBox(height: 2),
-            _row(label: '支出', amount: value.monthlyExpense, color: context.colors.expense),
+            _row(context, label: '支出', amount: value.monthlyExpense, color: context.colors.expense),
             const SizedBox(height: 2),
-            _row(label: '収支', amount: value.savings, color: savingsColor),
+            _row(context, label: '収支', amount: value.savings, color: savingsColor),
           ],
         ),
       ),
     );
   }
 
-  Widget _row({required String label, required int amount, required Color color}) {
+  Widget _row(BuildContext context, {required String label, required int amount, required Color color}) {
     return Row(
       children: [
-        Text(label, style: GraphTextStyles.tooltipCumulativeLabel),
+        Text(label, style: context.graphStyles.tooltipCumulativeLabel),
         const Spacer(),
         Text(
           '¥ ${_numberFormat.format(amount)}',
-          style: GraphTextStyles.tooltipSubtitle.copyWith(color: color),
+          style: context.graphStyles.tooltipSubtitle.copyWith(color: color),
         ),
       ],
     );

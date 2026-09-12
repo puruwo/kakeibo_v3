@@ -86,20 +86,20 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Text('表示', style: AppTextStyles.listTileLegendTitle),
+                    Text('表示', style: context.textStyles.listTileLegendTitle),
                     const SizedBox(width: 18),
                     SizedBox(
                       width: 110 + listSTextBoxOffset,
                       child: Text(
                         'カテゴリー',
-                        style: AppTextStyles.listTileLegendTitle,
+                        style: context.textStyles.listTileLegendTitle,
                       ),
                     ),
-                    Text('項目', style: AppTextStyles.listTileLegendTitle),
+                    Text('項目', style: context.textStyles.listTileLegendTitle),
                   ],
                 ),
               ),
-              Text('並べ替え', style: AppTextStyles.listTileLegendTitle),
+              Text('並べ替え', style: context.textStyles.listTileLegendTitle),
             ],
           ),
         ),
@@ -195,7 +195,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             width: 72 + listSTextBoxOffset,
                             child: Text(
                               itemList[index].bigCategoryName,
-                              style: AppTextStyles.listTilePrimaryTitle,
+                              style: context.textStyles.listTilePrimaryTitle,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
@@ -205,7 +205,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                             width: 120 + listSTextBoxOffset,
                             child: Text(
                               itemList[index].expenseSmallCategoryNameText,
-                              style: AppTextStyles.listTileSecondaryTitle,
+                              style: context.textStyles.listTileSecondaryTitle,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),

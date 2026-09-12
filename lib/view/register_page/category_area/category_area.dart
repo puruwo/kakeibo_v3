@@ -213,7 +213,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               color: context.colors.textSecondary,
             ),
             const SizedBox(width: 6),
-            Text('アイコンを並べ替える', style: RegisterPageStyles.rearrangeLink),
+            Text('アイコンを並べ替える', style: context.registerStyles.rearrangeLink),
           ],
         ),
       ),
