@@ -171,6 +171,12 @@ class PredictionGraphDataSource {
       if (occurrence.incomeSourceBigCategory != AccountTypeConstants.living) {
         continue;
       }
+      // 未生成分は今日より後の支払日だけ積む。今日以前で未生成の発生は
+      // 次回支払日が過去日で固定されたマスタ由来のデータ不整合であり、
+      // 日別支出画面に対応する行が無いため表示しない（KP-014）
+      if (!occurrence.isGenerated && !occurrence.date.isAfter(today)) {
+        continue;
+      }
       final dateKey = DateFormat('yyyyMMdd').format(occurrence.date);
       final bigCategoryId =
           smallToBigMap[occurrence.expenseSmallCategoryId] ?? 0;

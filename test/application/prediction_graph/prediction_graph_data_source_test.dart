@@ -454,6 +454,22 @@ void main() {
       expect(categoryExpenses.every((e) => e.categoryName != '固定費'), isTrue);
     });
 
+    test('次回支払日が過去日で固定されたマスタの未生成分は棒に積まない', () async {
+      // ガス代（次回支払日 7/4・未生成）に対して今日が 7/5 の状態。
+      // 7/4 以前の支払いは実績行として存在すべきなので、行の無い展開結果は表示しない
+      final dataSource = buildDataSource(
+        masters: const [...fixedCosts, ungeneratedGas],
+      );
+
+      final result = await dataSource.fetchDailyBarData(
+        fromDate: DateTime(2025, 7, 1),
+        toDate: DateTime(2025, 7, 5),
+        today: DateTime(2025, 7, 5),
+      );
+
+      expect(result.dailyBarDataList, isEmpty);
+    });
+
     test('拠出元が特別枠の固定費行は棒に積まれない（日別支出画面と一致させる）', () async {
       // 7/2 の家賃（確定済み）を、固定費行の編集シートで特別枠に変えた状態
       const rentFromSpecial = ExpenseEntity(
