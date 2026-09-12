@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_constants.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_data_source.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
@@ -451,6 +452,50 @@ void main() {
       expect(daily.price, 300);
       expect(categoryExpenses.every((e) => e.bigCategoryId > 0), isTrue);
       expect(categoryExpenses.every((e) => e.categoryName != '固定費'), isTrue);
+    });
+
+    test('拠出元が特別枠の固定費行は棒に積まれない（日別支出画面と一致させる）', () async {
+      // 7/2 の家賃（確定済み）を、固定費行の編集シートで特別枠に変えた状態
+      const rentFromSpecial = ExpenseEntity(
+        id: 100,
+        date: '20250702',
+        price: 80000,
+        paymentCategoryId: 11,
+        memo: '家賃',
+        incomeSourceBigCategory: AccountTypeConstants.special,
+        fixedCostId: 10,
+        isConfirmed: 1,
+      );
+      // 同日の未確定の電気代は生活収支のまま
+      const electricityOnJul2 = ExpenseEntity(
+        id: 201,
+        date: '20250702',
+        price: null,
+        paymentCategoryId: 11,
+        memo: '電気代',
+        fixedCostId: 30,
+        isConfirmed: 0,
+        estimatedPrice: 6000,
+      );
+      final dataSource = buildDataSource(
+        dailyExpenseLists: {
+          // 本物の日次リストは生活収支のみを返すので、特別枠の家賃は含まれない
+          DateTime(2025, 7, 2): const [electricityOnJul2],
+        },
+        expenses: const [rentFromSpecial, electricityOnJul2],
+      );
+
+      final result = await dataSource.fetchDailyBarData(
+        fromDate: DateTime(2025, 7, 2),
+        toDate: DateTime(2025, 7, 2),
+        today: DateTime(2025, 7, 2),
+      );
+
+      final categoryExpenses = result.dailyBarDataList.single.categoryExpenses;
+      expect(categoryExpenses, hasLength(1));
+      expect(categoryExpenses.single.bigCategoryId, 1);
+      // 特別枠の家賃 80,000 円は積まれず、電気代の予想額だけになる
+      expect(categoryExpenses.single.price, 6000);
     });
 
     test('実績未生成の固定費も未来のスパイクとして棒に積まれる', () async {

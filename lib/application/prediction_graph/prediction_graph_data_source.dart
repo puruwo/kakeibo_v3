@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:kakeibo/application/fixed_cost/fixed_cost_occurrence_service.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_constants.dart';
+import 'package:kakeibo/constant/sqf_constants.dart';
 import 'package:kakeibo/theme/category_palette.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
@@ -165,6 +166,11 @@ class PredictionGraphDataSource {
     );
     final fixedCostTotalsByDate = <String, Map<int, int>>{};
     for (final occurrence in occurrences) {
+      // 拠出元が特別枠の固定費行は生活収支のグラフに積まない
+      // （折れ線の日次合計・日別支出画面と同じ絞り込み）
+      if (occurrence.incomeSourceBigCategory != AccountTypeConstants.living) {
+        continue;
+      }
       final dateKey = DateFormat('yyyyMMdd').format(occurrence.date);
       final bigCategoryId =
           smallToBigMap[occurrence.expenseSmallCategoryId] ?? 0;

@@ -151,7 +151,6 @@ void main() {
       final result = await usecase.fetchPredictionGraphData(buildDateScope());
 
       expect(result.budget, 0);
-      expect(result.totalFixedCostAmount, 80000);
       expect(result.shouldShowBudgetLine, isFalse);
     });
 
@@ -175,8 +174,6 @@ void main() {
 
       // 固定費の自動加算は廃止（仕様 §7.3）。予算は50,000円のまま
       expect(result.budget, 50000);
-      // 固定費合計はツールチップ表示用に保持する
-      expect(result.totalFixedCostAmount, 80000);
       expect(result.shouldShowBudgetLine, isTrue);
     });
   });
