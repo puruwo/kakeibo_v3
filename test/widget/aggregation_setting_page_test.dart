@@ -9,6 +9,7 @@ import 'package:kakeibo/application/aggregation_settings/aggregation_settings_us
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/config/aggregation_setting_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/widget_test_helper.dart';
 
@@ -360,7 +361,7 @@ void main() {
       await openPage(tester);
       await tapTimes(tester, dayInc, 1);
 
-      await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
+      await tester.tap(find.byIcon(AppIcons.back));
       await pumpTimes(tester);
 
       expect(find.byType(AggregationSettingPage), findsNothing);

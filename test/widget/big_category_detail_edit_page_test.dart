@@ -20,6 +20,7 @@ import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/ex
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -125,7 +126,7 @@ void main() {
   /// 小カテゴリーのチェックボックスも同じアイコンを使うため、AppBar配下に絞る。
   Finder doneButton() => find.descendant(
     of: find.byType(AppBar),
-    matching: find.byIcon(Icons.done_rounded),
+    matching: find.byIcon(AppIcons.done),
   );
 
   group('一般（支出）カテゴリー', () {
@@ -779,7 +780,7 @@ void main() {
       );
 
       expect(find.text('小カテゴリーを追加'), findsOneWidget);
-      expect(find.byIcon(Icons.drag_handle_rounded), findsNothing);
+      expect(find.byIcon(AppIcons.dragHandle), findsNothing);
       expect(tester.takeException(), isNull);
 
       // アクション行は0件でも押せる

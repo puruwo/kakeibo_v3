@@ -29,6 +29,7 @@ import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/app_year_month_picker.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/selected_datetime/home_selected_datetime.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class YearPage extends ConsumerStatefulWidget {
   const YearPage({super.key});
@@ -142,7 +143,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                             Transform.translate(
                               offset: const Offset(-6, 0),
                               child: Icon(
-                                Icons.arrow_drop_down,
+                                AppIcons.dropdown,
                                 color: context.colors.icon,
                                 size: 30,
                               ),
@@ -171,7 +172,7 @@ class _YearPageState extends ConsumerState<YearPage> {
                 MaterialPageRoute(builder: (context) => const ConfigTop()),
               ),
             },
-            icon: const Icon(Icons.settings_rounded),
+            icon: const Icon(AppIcons.settings),
           ),
         ],
       ),

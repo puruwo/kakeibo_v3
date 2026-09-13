@@ -11,6 +11,7 @@ import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_cat
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
   const BigCategorySettingFooter({super.key, required this.categoryType});
@@ -69,6 +70,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
         Expanded(
           child: MainButton(
+            iconData: AppIcons.done,
             buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
             onPressed: () async {

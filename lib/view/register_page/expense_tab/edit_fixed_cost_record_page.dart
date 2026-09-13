@@ -30,6 +30,7 @@ import 'package:kakeibo/view_model/state/register_page/input_date_controller/inp
 import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 固定費の実績行（expenseのうち fixed_cost_id を持つ行）の編集シート
 ///
@@ -145,6 +146,7 @@ class _EditFixedCostRecordPageState
             child: SizedBox(
               width: double.infinity,
               child: MainButton(
+                iconData: AppIcons.done,
                 buttonColor: getPillColor(context, TransactionMode.expense),
                 buttonText: isUnconfirmed ? '金額を確定' : '更新',
                 onPressed: () => _submit(context),
@@ -173,18 +175,18 @@ class _EditFixedCostRecordPageState
               children: [
                 // 名称はマスタの名前（最上段）
                 AppInsetRow.display(
-                  icon: Icons.autorenew_rounded,
+                  icon: AppIcons.rename,
                   label: '名称',
                   value: fixedCost.name,
                 ),
                 _buildCategoryRow(),
                 AppInsetRow.display(
-                  icon: Icons.repeat_rounded,
+                  icon: AppIcons.repeat,
                   label: '頻度',
                   value: frequencyLabel,
                 ),
                 AppInsetRow.display(
-                  icon: Icons.calendar_today_outlined,
+                  icon: AppIcons.calendar,
                   label: '支払日',
                   value: '${int.parse(date.substring(4, 6))}/'
                       '${int.parse(date.substring(6, 8))}',
@@ -192,7 +194,7 @@ class _EditFixedCostRecordPageState
                 // 予想額は変動型のみ（確定型は実額そのものなので出さない）
                 if (fixedCost.variable == 1)
                   AppInsetRow.display(
-                    icon: Icons.trending_up_rounded,
+                    icon: AppIcons.payments,
                     label: '予想額',
                     value:
                         yenmarkFormattedPriceGetter(fixedCost.estimatedPrice),

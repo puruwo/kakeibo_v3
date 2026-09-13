@@ -6,6 +6,7 @@ import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.d
 import 'package:kakeibo/view_model/state/register_page/fixed_cost_input_controller/fixed_cost_input_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 登録・編集シートの「固定費」グループ
 ///
@@ -37,7 +38,7 @@ class FixedCostRegisterGroup extends ConsumerWidget {
         children: [
           // 固定費として登録
           AppInsetRow.switchRow(
-            icon: Icons.autorenew_rounded,
+            icon: AppIcons.fixedCost,
             label: '固定費として登録',
             switchValue: isFixedCost,
             onSwitchChanged: (value) => _onToggleChanged(ref, value),
@@ -46,7 +47,7 @@ class FixedCostRegisterGroup extends ConsumerWidget {
           if (isFixedCost) ...[
             // 名称（メモの値を引き継ぐ）
             AppInsetRow.textField(
-              icon: Icons.drive_file_rename_outline_rounded,
+              icon: AppIcons.rename,
               label: '名称',
               controller: ref.watch(enteredFixedCostNameControllerProvider),
               hintText: '未入力',
@@ -55,7 +56,7 @@ class FixedCostRegisterGroup extends ConsumerWidget {
 
             // 初回支払日（日付の値を引き継ぐ）
             AppInsetRow.navigation(
-              icon: Icons.calendar_today_outlined,
+              icon: AppIcons.calendar,
               label: '初回支払日',
               value: '${enteredDate.month}/${enteredDate.day}',
               onTap: () => _showDatePicker(context, ref, enteredDate),
@@ -63,7 +64,7 @@ class FixedCostRegisterGroup extends ConsumerWidget {
 
             // 支払い頻度
             AppInsetRow.navigation(
-              icon: Icons.repeat_rounded,
+              icon: AppIcons.repeat,
               label: '頻度',
               value: paymentFrequency.dateLabel,
               onTap: () async {
@@ -80,7 +81,7 @@ class FixedCostRegisterGroup extends ConsumerWidget {
 
             // 支払い額が毎回変わる（変動型）
             AppInsetRow.switchRow(
-              icon: Icons.trending_up_rounded,
+              icon: AppIcons.variable,
               label: '支払い額が毎回変わる',
               switchValue: isVariable,
               onSwitchChanged: (value) {

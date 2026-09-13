@@ -8,6 +8,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
 
 import 'package:kakeibo/view_model/state/register_page/payment_frequency_controller/payment_frequency_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 支払い頻度の選択ダイアログ（案件 UIデザイン改修 §7）
 ///
@@ -126,7 +127,7 @@ class _FrequencyRow extends StatelessWidget {
               const Spacer(),
               if (isSelected)
                 Icon(
-                  Icons.done_rounded,
+                  AppIcons.done,
                   size: 18,
                   color: context.colors.primary,
                 ),
@@ -157,7 +158,7 @@ class _CloseButton extends StatelessWidget {
           color: context.colors.fillSecondary,
         ),
         child: Icon(
-          Icons.close_rounded,
+          AppIcons.close,
           size: 16,
           color: context.colors.textSecondary,
         ),

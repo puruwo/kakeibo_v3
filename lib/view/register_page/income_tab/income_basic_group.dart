@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 収入の登録・編集シートの「基本」グループ（日付／メモ）
 ///
@@ -19,7 +20,7 @@ class IncomeBasicGroup extends ConsumerWidget {
       children: [
         // 日付
         AppInsetRow.navigation(
-          icon: Icons.calendar_today_outlined,
+          icon: AppIcons.calendar,
           label: '日付',
           value: '${enteredDate.month}/${enteredDate.day}',
           onTap: () => _showDatePicker(context, ref, enteredDate),
@@ -27,7 +28,7 @@ class IncomeBasicGroup extends ConsumerWidget {
 
         // メモ
         AppInsetRow.textField(
-          icon: Icons.notes_rounded,
+          icon: AppIcons.memo,
           label: 'メモ',
           controller: ref.watch(enteredMemoControllerProvider),
           hintText: '未入力',

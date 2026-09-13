@@ -19,6 +19,7 @@ import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_
 import 'package:kakeibo/view/register_page/expense_tab/expense_basic_group.dart';
 import 'package:kakeibo/view/register_page/expense_tab/fixed_cost_register_group.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -147,7 +148,7 @@ void main() {
       expect(
         find.descendant(
           of: incomeSourceRow,
-          matching: find.byIcon(Icons.arrow_forward_ios_rounded),
+          matching: find.byIcon(AppIcons.next),
         ),
         findsOneWidget,
       );
@@ -583,7 +584,7 @@ void main() {
       );
       await pumpTimes(tester);
 
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byIcon(AppIcons.delete));
       await pumpTimes(tester, times: 5);
 
       expect(find.text('登録履歴の削除'), findsOneWidget);
@@ -607,7 +608,7 @@ void main() {
       );
       await pumpTimes(tester);
 
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byIcon(AppIcons.delete));
       await pumpTimes(tester, times: 5);
       await tester.tap(find.text('キャンセル'));
       await pumpTimes(tester, times: 10);

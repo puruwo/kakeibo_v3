@@ -18,6 +18,7 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_bi
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class CategoryDetailEditPage extends ConsumerStatefulWidget {
   const CategoryDetailEditPage({
@@ -70,7 +71,7 @@ class _BigCategoryDetailEditPage extends ConsumerState<CategoryDetailEditPage> {
               }
             },
             icon: Icon(
-              Icons.arrow_back_ios_rounded,
+              AppIcons.back,
               color: context.colors.text,
             ),
           ),

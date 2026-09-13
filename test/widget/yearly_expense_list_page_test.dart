@@ -3,7 +3,6 @@
 // 案件 UIデザイン改修 §6 の本実装。帯付きサマリーカード・カテゴリー別内訳・
 // 会計種別（全体/生活収支/特別枠）の絞り込みと明細画面への引き継ぎ・
 // カテゴリー明細（月毎アコーディオン・生活/特別のグループ分け）を見る。
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/application/expense_history/yearly_expense_list_usecase.dart';
 import 'package:kakeibo/constant/sqf_constants.dart';
@@ -13,6 +12,7 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_category_expense_list_page.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -234,7 +234,7 @@ void main() {
       // 帯: 食費の合計80,000（生活＋特別）。絞り込み無しなので状態ピルは出ない
       expect(find.text('合計'), findsOneWidget);
       expect(find.text('¥ 80,000'), findsOneWidget);
-      expect(find.byIcon(Icons.filter_alt_outlined), findsNothing);
+      expect(find.byIcon(AppIcons.filter), findsNothing);
       // 月平均は年度3ヶ月目までの経過月数で割る: 80,000÷3=26,667
       expect(find.text('月平均'), findsOneWidget);
       expect(find.text('¥ 26,667'), findsOneWidget);
@@ -314,7 +314,7 @@ void main() {
       expect(find.byType(YearlyCategoryExpenseListPage), findsOneWidget);
       // 帯: 特別枠の合計20,000＋状態ピル「特別枠」
       expect(find.text('¥ 20,000'), findsNWidgets(2)); // 帯と7月の月計
-      expect(find.byIcon(Icons.filter_alt_outlined), findsOneWidget);
+      expect(find.byIcon(AppIcons.filter), findsOneWidget);
       expect(find.text('特別枠'), findsOneWidget);
       // 月平均も特別枠の合計から: 20,000÷3=6,667
       expect(find.text('¥ 6,667'), findsOneWidget);

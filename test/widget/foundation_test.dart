@@ -10,6 +10,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/view/family_page/family_page.dart';
 import 'package:kakeibo/view/foundation.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -70,11 +71,11 @@ void main() {
     expect(find.text('家族'), findsOneWidget);
     expect(find.text('履歴'), findsOneWidget);
 
-    expect(find.byIcon(Icons.home_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.bar_chart_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.add_rounded), findsOneWidget); // 中央の＋ボタン
-    expect(find.byIcon(Icons.people_rounded), findsOneWidget);
-    expect(find.byIcon(Icons.calendar_month_rounded), findsOneWidget);
+    expect(find.byIcon(AppIcons.navHome), findsOneWidget);
+    expect(find.byIcon(AppIcons.navAnalysis), findsOneWidget);
+    expect(find.byIcon(AppIcons.add), findsOneWidget); // 中央の＋ボタン
+    expect(find.byIcon(AppIcons.navCouple), findsOneWidget);
+    expect(find.byIcon(AppIcons.navCalendar), findsOneWidget);
   });
 
   testWidgets('タブをタップすると表示中の画面が入れ替わる', (tester) async {
@@ -110,7 +111,7 @@ void main() {
 
     expect(find.byType(RegisaterPageBase), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.add_rounded));
+    await tester.tap(find.byIcon(AppIcons.add));
     // かつては1つ前のモーダルの dispose が LateInitializationError で中断され、
     // ConsumerStatefulElement の購読解除まで到達しないまま開き直すと
     // 破棄済みElementへ通知が飛んでアサーション（_ElementLifecycle.defunct）が出た。

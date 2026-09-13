@@ -17,6 +17,7 @@ import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_da
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
   const MonthlyPlanHomeFooter({super.key});
@@ -83,6 +84,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
         return SizedBox(
           width: double.infinity,
           child: MainButton(
+            iconData: AppIcons.done,
               buttonType: ButtonColorType.main,
               buttonText: '編集を完了',
               onPressed: () async {
@@ -145,6 +147,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
       error: (error, stackTrace) {
         return const Expanded(
           child: MainButton(
+            iconData: AppIcons.done,
             buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
             onPressed: null, // エラー時はボタンを無効化
@@ -154,6 +157,7 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
       loading: () {
         return const Expanded(
           child: MainButton(
+            iconData: AppIcons.done,
             buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
             onPressed: null, // エラー時はボタンを無効化

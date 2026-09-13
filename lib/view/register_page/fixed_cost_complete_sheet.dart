@@ -10,6 +10,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 固定費の登録完了シートを開く（追加改修 0828・案2）
 ///
@@ -77,7 +78,7 @@ class FixedCostCompleteSheet extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.lg),
             Icon(
-              Icons.check_circle_rounded,
+              AppIcons.success,
               size: 44,
               color: context.colors.income,
             ),

@@ -118,7 +118,7 @@ class DataBaseHelperHandling {
                 -- v13 で旧グレーの行に巡回配布する並びと同じ）。
                 ('住居費', '${CategoryPalette.expense8Hex}', 'assets/images/icon_home.svg', 7, 1),
                 ('サブスク', '${CategoryPalette.expense11Hex}', 'assets/images/icon_subscription.svg', 8, 1),
-                ('通信費', '${CategoryPalette.expense5Hex}', 'assets/images/icon_cell_tower.svg', 9, 1),
+                ('通信費', '${CategoryPalette.expense5Hex}', 'assets/images/icon_router.svg', 9, 1),
                 ('光熱費', '${CategoryPalette.expense4Hex}', 'assets/images/icon_water_drop.svg', 10, 1),
                 ('${FixedCostDerivedCategoryConstants.freshInstallFallbackCategoryName}', '${CategoryPalette.grayHex}', 'assets/images/icon_others.svg', 11, 1);
           ''');

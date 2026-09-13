@@ -13,48 +13,88 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_categ
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
 
 /// アイコンの分類セクション（案件 UIデザイン改修 §8）
-class _IconSection {
-  const _IconSection(this.title, this.assetNames);
+class IconSection {
+  const IconSection(this.title, this.assetNames);
 
   final String title;
   final List<String> assetNames;
 }
 
-/// カテゴリー用アセット27種（icon_*.svg。UI用のui_icon_editは除く）を
-/// 意味で分類して全提示する（旧実装は10種のみだった）
-const List<_IconSection> _iconSections = [
-  _IconSection('食事・生活', [
-    'icon_meal',
-    'icon_commodity',
-    'icon_clothes',
-    'icon_favo',
-    'icon_medical',
-    'icon_pets',
-    'icon_school',
-    'icon_travel',
-    'icon_transportation',
-    'icon_star',
-    'icon_others',
+/// 支出カテゴリー用アイコン40種（KP-023。Material Symbols Rounded・Filled の
+/// `icon_*.svg`）。一般的な家計簿アプリの分類を基準に意味で分類して全提示する
+const List<IconSection> expenseIconSections = [
+  IconSection('食・買い物', [
+    'icon_meal', // 食費
+    'icon_local_cafe', // カフェ・外食
+    'icon_commodity', // 日用品
+    'icon_clothes', // 衣服
+    'icon_content_cut', // 美容
+    'icon_local_laundry_service', // クリーニング・家事
+    'icon_local_atm', // 現金・ATM
+    'icon_credit_card', // ローン・返済
   ]),
-  _IconSection('住まい・固定費', [
-    'icon_home',
-    'icon_apartment',
-    'icon_domain',
-    'icon_bolt',
-    'icon_water_drop',
-    'icon_energy_savings_leaf',
-    'icon_router',
-    'icon_cell_tower',
-    'icon_smartphone',
-    'icon_subscription',
-    'icon_autorenew',
-    'icon_credit_card',
+  IconSection('健康・趣味・交際', [
+    'icon_medical', // 医療
+    'icon_medication', // 薬・ドラッグストア
+    'icon_fitness_center', // 健康・運動
+    'icon_sports_esports', // 趣味・娯楽
+    'icon_favo', // 推し・嗜好品
+    'icon_movie', // 映画・音楽
+    'icon_confirmation_number', // イベント・チケット
+    'icon_liquor', // お酒
+    'icon_groups', // 交際費
+    'icon_celebration', // 冠婚葬祭
+    'icon_featured_seasonal_and_gifts', // プレゼント
+    'icon_handshake', // 寄付
   ]),
-  _IconSection('収入・その他', [
-    'icon_regular_income',
-    'icon_extra_income',
-    'icon_account_balance',
-    'icon_workspace_premium',
+  IconSection('教育・移動', [
+    'icon_school', // 教育
+    'icon_menu_book', // 書籍
+    'icon_child_care', // 子ども
+    'icon_pets', // ペット
+    'icon_travel', // 旅行
+    'icon_transportation', // 交通
+    'icon_directions_car', // 車
+    'icon_local_gas_station', // ガソリン
+  ]),
+  IconSection('住まい・固定費', [
+    'icon_home', // 住居・家賃
+    'icon_chair', // 家具・家電
+    'icon_bolt', // 電気
+    'icon_water_drop', // 水道
+    'icon_local_fire_department', // ガス
+    'icon_router', // 通信
+    'icon_smartphone', // スマホ
+    'icon_subscription', // サブスク
+    'icon_health_and_safety', // 保険
+    'icon_receipt_long', // 税金
+  ]),
+  IconSection('その他', [
+    'icon_star', // 特別支出
+    'icon_others', // その他
+  ]),
+];
+
+/// 収入カテゴリー用アイコン15種（KP-023）
+const List<IconSection> incomeIconSections = [
+  IconSection('給与・事業', [
+    'icon_regular_income', // 給与
+    'icon_workspace_premium', // 賞与
+    'icon_extra_income', // 臨時収入
+    'icon_work', // 副業
+    'icon_storefront', // 事業・フリーランス
+    'icon_real_estate_agent', // 家賃収入
+  ]),
+  IconSection('資産・その他', [
+    'icon_finance', // 投資・配当
+    'icon_toll', // 利息
+    'icon_savings', // 貯金の取り崩し
+    'icon_account_balance', // 年金
+    'icon_request_quote', // 還付金・給付金
+    'icon_volunteer_activism', // 仕送り・援助
+    'icon_sell', // 売却・フリマ
+    'icon_local_parking', // ポイント
+    'icon_wallet', // その他
   ]),
 ];
 
@@ -90,7 +130,9 @@ class IconSelectDialog extends ConsumerWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        for (final section in _iconSections) ...[
+        for (final section in (categoryType == CategoryType.income
+            ? incomeIconSections
+            : expenseIconSections)) ...[
           Padding(
             padding: const EdgeInsets.fromLTRB(4, 12, 4, 6),
             child: Text(section.title, style: context.textStyles.insetGroupHeader),

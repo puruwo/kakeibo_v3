@@ -11,6 +11,7 @@ import 'package:kakeibo/view/component/card_container.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_graph_area.dart';
 import 'package:kakeibo/view/daily_expense_summary_page/parts/daily_expense_item_tile.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_daily_expense_summary_provider.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 日次支出サマリーページ（フルモーダル形式）
 /// ツールチップからタップで遷移し、1日の支出詳細を表示
@@ -32,7 +33,7 @@ class DailyExpenseSummaryPage extends ConsumerWidget {
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
           onPressed: () => Navigator.of(context, rootNavigator: true).pop(),
-          icon: const Icon(Icons.close),
+          icon: const Icon(AppIcons.close),
         ),
         title: Text(
           '${date.month}月${date.day}日の支出',

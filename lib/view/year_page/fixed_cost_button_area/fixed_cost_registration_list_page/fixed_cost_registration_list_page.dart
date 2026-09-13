@@ -12,6 +12,7 @@ import 'package:kakeibo/view/config/config_top.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_call_to_action_button.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/expense_big_category_cards_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class FixedCostRegistrationListPage extends ConsumerWidget {
   const FixedCostRegistrationListPage({super.key});
@@ -31,13 +32,13 @@ class FixedCostRegistrationListPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.colors.text),
+          icon: Icon(AppIcons.back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text('固定費', style: context.textStyles.pageHeaderText),
         actions: [
           IconButton(
-            icon: Icon(Icons.settings, color: context.colors.text),
+            icon: Icon(AppIcons.settings, color: context.colors.text),
             onPressed: () => {
               // 設定画面にrootのNavigatorで遷移
               Navigator.of(context, rootNavigator: true).push(

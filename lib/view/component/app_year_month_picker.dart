@@ -13,6 +13,7 @@ import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/domain_service/year_period_service/aggregation_start_month_provider.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart'
     as year_service;
+import 'package:kakeibo/constant/icon.dart';
 
 /// AppYearMonthPicker の表示モード
 enum AppYearMonthPickerMode {
@@ -413,7 +414,7 @@ class _AppYearMonthPickerOverlayState
         children: [
           IconButton(
             icon: Icon(
-              Icons.chevron_left_rounded,
+              AppIcons.periodPrev,
               color: _canShiftPrevious
                   ? context.colors.text
                   : context.colors.textSecondary,
@@ -438,7 +439,7 @@ class _AppYearMonthPickerOverlayState
           ),
           IconButton(
             icon: Icon(
-              Icons.chevron_right_rounded,
+              AppIcons.periodNext,
               color: _canShiftNext
                   ? context.colors.text
                   : context.colors.textSecondary,
@@ -576,7 +577,7 @@ class _AppYearMonthPickerOverlayState
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.check, color: context.colors.onPrimary, size: 18),
+                Icon(AppIcons.done, color: context.colors.onPrimary, size: 18),
                 const SizedBox(width: AppSpacing.xs),
                 // primary 塗りの上の文字なので onPrimary（ライトでは text が黒になるため明示。KP-013）
                 Text(

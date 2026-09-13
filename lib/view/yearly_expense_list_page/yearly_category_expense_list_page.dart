@@ -17,6 +17,7 @@ import 'package:kakeibo/view/component/expense_history_list_tile.dart';
 import 'package:kakeibo/view/component/month_accordion_section.dart';
 import 'package:kakeibo/view/component/summary_band_card.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/expense_month_group.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// カテゴリー別の支出明細画面（案件 UIデザイン改修 §6）
 ///
@@ -90,7 +91,7 @@ class _YearlyCategoryExpenseListPageState
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.colors.text),
+          icon: Icon(AppIcons.back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Row(
@@ -269,7 +270,7 @@ class _FilterStatusPill extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            Icons.filter_alt_outlined,
+            AppIcons.filter,
             size: 12,
             color: context.colors.textSecondary,
           ),

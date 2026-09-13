@@ -9,6 +9,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/fixed_cost_tile_subtitle.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class UnconfirmedFixedCostTile extends ConsumerWidget {
   const UnconfirmedFixedCostTile({
@@ -43,14 +44,14 @@ class UnconfirmedFixedCostTile extends ConsumerWidget {
         return await showMenuDialog(context, items: [
           MenuDialogItem(
               label: '編集',
-              icon: Icons.edit_outlined,
+              icon: AppIcons.edit,
               onPressed: () async {
                 await openFixedCostRecordEditSheet(context, ref,
                     expenseId: value.id);
               }),
           MenuDialogItem(
               label: '削除',
-              icon: Icons.delete_outline,
+              icon: AppIcons.delete,
               isDestructive: true,
               onPressed: () async {
                 showDeleteConfirmationDialog(

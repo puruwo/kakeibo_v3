@@ -17,6 +17,7 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_bi
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_icon_controller/income_big_category_icon_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_big_category_name_controller/income_big_category_name_controller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 収入カテゴリーの外観編集エリア（案件 UIデザイン改修 §2）
 ///
@@ -103,7 +104,7 @@ class _IncomeCategoryAppearanceEditAreaState
           // 名称（先頭・インライン編集）
           // 文字数制限・autofocus・クリアボタンの扱いは支出側と同じ（§2）
           AppInsetRow.textField(
-            icon: Icons.drive_file_rename_outline_rounded,
+            icon: AppIcons.rename,
             label: '名称',
             controller: ref.watch(incomeBigCategoryNameControllerProvider),
             hintText: 'カテゴリー名を入力',
@@ -119,7 +120,7 @@ class _IncomeCategoryAppearanceEditAreaState
 
           // アイコン
           AppInsetRow.navigation(
-            icon: Icons.grid_view_rounded,
+            icon: AppIcons.iconGrid,
             label: 'アイコン',
             valueWidget: SvgPicture.asset(
               iconPath,
@@ -135,7 +136,7 @@ class _IncomeCategoryAppearanceEditAreaState
 
           // カテゴリーカラー
           AppInsetRow.navigation(
-            icon: Icons.palette_outlined,
+            icon: AppIcons.palette,
             label: 'カテゴリーカラー',
             valueWidget: Container(
               height: 16,
@@ -215,7 +216,7 @@ class _IncomeCategoryAppearanceEditAreaState
         : context.textStyles.insetGroupValue;
 
     return AppInsetRow.display(
-      icon: Icons.sell_outlined,
+      icon: AppIcons.accountType,
       label: '会計種別',
       valueWidget: Row(
         mainAxisSize: MainAxisSize.min,
@@ -224,8 +225,8 @@ class _IncomeCategoryAppearanceEditAreaState
           const SizedBox(width: 4),
           Icon(
             locked
-                ? Icons.lock_outline_rounded
-                : Icons.keyboard_arrow_down_rounded,
+                ? AppIcons.lock
+                : AppIcons.expand,
             size: locked ? 16 : 18,
             color: context.colors.textSecondary,
           ),

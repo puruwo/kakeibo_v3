@@ -5,6 +5,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/number_text_input_formatter.dart';
 import 'package:kakeibo/view/component/app_segmented_control.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 予想額の入力シートの結果（仕様 §6.9）
 class EstimatedPriceInputResult {
@@ -153,6 +154,7 @@ class _EstimatedPriceInputSheetState extends State<EstimatedPriceInputSheet> {
               SizedBox(
                 width: double.infinity,
                 child: MainButton(
+                  iconData: AppIcons.done,
                   buttonType: ButtonColorType.main,
                   buttonText: '決定',
                   onPressed: _onDecided,
