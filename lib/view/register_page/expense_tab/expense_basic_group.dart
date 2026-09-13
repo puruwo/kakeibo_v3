@@ -17,7 +17,6 @@ class ExpenseBasicGroup extends ConsumerWidget {
     super.key,
     this.showDate = true,
     this.showMemo = true,
-    this.showIncomeSourceChevron = false,
   });
 
   /// 日付行を表示するか
@@ -25,11 +24,6 @@ class ExpenseBasicGroup extends ConsumerWidget {
 
   /// メモ行を表示するか
   final bool showMemo;
-
-  /// 拠出元行に右矢印を付けるか
-  ///
-  /// 固定費行の編集シートでは編集可能な項目だと分かるように付ける（仕様 §6.8）。
-  final bool showIncomeSourceChevron;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -66,18 +60,13 @@ class ExpenseBasicGroup extends ConsumerWidget {
                 )
                 .toList(),
             // タップはAppPopupMenu側で受けるため、行自体にonTapは持たせない
-            child: showIncomeSourceChevron
-                ? AppInsetRow.navigation(
-                    icon: Icons.account_balance_wallet_outlined,
-                    label: '拠出元',
-                    value: selectedEnum.label,
-                    onTap: null,
-                  )
-                : AppInsetRow.display(
-                    icon: Icons.account_balance_wallet_outlined,
-                    label: '拠出元',
-                    value: selectedEnum.label,
-                  ),
+            // 選択できる項目だと分かるように右矢印を付ける（日付行と揃える）
+            child: AppInsetRow.navigation(
+              icon: Icons.account_balance_wallet_outlined,
+              label: '拠出元',
+              value: selectedEnum.label,
+              onTap: null,
+            ),
           ),
 
           // 日付
