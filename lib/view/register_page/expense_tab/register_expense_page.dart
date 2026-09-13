@@ -114,14 +114,14 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
         backgroundColor: context.colors.surfaceElevated,
+        // 固定費トグルONで行が増えると画面に収まらない端末があるため、スクロールを許可する（KP-020）
         body: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: AppSpacing.lg),
+                const SizedBox(height: AppSpacing.sm),
 
                 // 上部：支出ピル + 大きな金額表示
                 PriceInputRow(
@@ -130,7 +130,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                   status: priceInputFieldStatus,
                 ),
 
-                const SizedBox(height: AppSpacing.xl),
+                const SizedBox(height: AppSpacing.lg),
 
                 // 基本グループ（拠出元／日付／メモ）
                 ExpenseBasicGroup(

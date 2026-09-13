@@ -151,10 +151,12 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    // 前後の余白を詰め、固定費トグルONでも並べ替えリンクが画面内に残るようにする（KP-020）
+                    // 下側はリンク自身の上パディング（8）と合わせて見た目の間隔を取る
                     children: [
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 8),
                       _buildPageIndicator(pagination.pageCount),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 4),
                     ],
                   ),
                 ),
