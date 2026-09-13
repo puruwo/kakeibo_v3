@@ -9,9 +9,9 @@ import 'package:kakeibo/application/aggregation_settings/aggregation_settings_us
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/config/aggregation_setting_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 /// ページを push で開くための起点画面（pop・スナックバー表示を本番と同じ経路で見るため）
 class _Launcher extends StatelessWidget {

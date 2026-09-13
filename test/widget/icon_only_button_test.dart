@@ -6,9 +6,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/app_icon_circle_container.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   /// 円の地色を取り出す

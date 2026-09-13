@@ -17,8 +17,9 @@ class CalendarPreviousArrowButton extends ConsumerWidget {
             .read(calendarPageControllerNotifierProvider.notifier)
             .previousPage();
       },
-      iconSize: 15,
-      icon: const Icon(AppIcons.backward),
+      // chevron は24グリッド内で小さく描かれるため、期間ピッカーと同じ24にする（KP-023）
+      iconSize: 24,
+      icon: const Icon(AppIcons.periodPrev),
       color: context.colors.text,
     );
   }

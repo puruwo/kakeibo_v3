@@ -12,7 +12,7 @@ class FixedCostRegistrationCallToActionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppEmptyState(
-      icon: AppIcons.repeat,
+      icon: AppIcons.fixedCost,
       title: '固定費を登録しましょう',
       description: '毎月の家賃やサブスクを登録すると自動で記録されます',
       buttonLabel: '＋ 固定費を登録する',

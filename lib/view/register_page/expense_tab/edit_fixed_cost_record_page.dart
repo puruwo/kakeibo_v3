@@ -175,7 +175,7 @@ class _EditFixedCostRecordPageState
               children: [
                 // 名称はマスタの名前（最上段）
                 AppInsetRow.display(
-                  icon: AppIcons.fixedCost,
+                  icon: AppIcons.rename,
                   label: '名称',
                   value: fixedCost.name,
                 ),
@@ -194,7 +194,7 @@ class _EditFixedCostRecordPageState
                 // 予想額は変動型のみ（確定型は実額そのものなので出さない）
                 if (fixedCost.variable == 1)
                   AppInsetRow.display(
-                    icon: AppIcons.variable,
+                    icon: AppIcons.payments,
                     label: '予想額',
                     value:
                         yenmarkFormattedPriceGetter(fixedCost.estimatedPrice),

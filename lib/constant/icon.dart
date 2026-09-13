@@ -17,14 +17,14 @@ class AppIcons {
   /// モーダル・シートを閉じる
   static const IconData close = Icons.close_rounded;
 
-  /// 行末の「次へ」シェブロン（一覧カード・`AppInsetRow` の右端）
+  /// 行末の「次へ」シェブロン（一覧カード・`AppInsetRow` の右端）。期間送りには使わない（→ [periodNext]）
   static const IconData next = Icons.arrow_forward_ios_rounded;
 
-  /// 期間送り（前へ）: カレンダー・期間ピッカー
-  static const IconData backward = Icons.chevron_left_rounded;
+  /// 期間送り（前の月・年へ）: カレンダー・期間ピッカー。行末の「次へ」には使わない（→ [next]）
+  static const IconData periodPrev = Icons.chevron_left_rounded;
 
-  /// 期間送り（次へ）: カレンダー・期間ピッカー
-  static const IconData forward = Icons.chevron_right_rounded;
+  /// 期間送り（次の月・年へ）: カレンダー・期間ピッカー。行末の「次へ」には使わない（→ [next]）
+  static const IconData periodNext = Icons.chevron_right_rounded;
 
   /// 展開（ピル・行のプルダウン・アコーディオン）
   static const IconData expand = Icons.keyboard_arrow_down_rounded;

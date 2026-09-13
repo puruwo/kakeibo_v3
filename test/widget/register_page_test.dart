@@ -19,10 +19,10 @@ import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_
 import 'package:kakeibo/view/register_page/expense_tab/expense_basic_group.dart';
 import 'package:kakeibo/view/register_page/expense_tab/fixed_cost_register_group.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   // 支出小カテゴリー（画面の並びは smallCategoryOrderKey 昇順 → 食費→日用品）

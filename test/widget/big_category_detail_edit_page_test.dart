@@ -20,10 +20,10 @@ import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/ex
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   const expenseBigCategories = [

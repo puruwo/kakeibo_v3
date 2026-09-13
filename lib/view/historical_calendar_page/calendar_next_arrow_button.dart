@@ -15,8 +15,9 @@ class CalendarNextArrowButton extends ConsumerWidget {
         // selectedDatetimeの更新はonPageChanged内でselectedDatetimeを更新する
         ref.read(calendarPageControllerNotifierProvider.notifier).nextPage();
       },
-      iconSize: 15,
-      icon: const Icon(AppIcons.forward),
+      // chevron は24グリッド内で小さく描かれるため、期間ピッカーと同じ24にする（KP-023）
+      iconSize: 24,
+      icon: const Icon(AppIcons.periodNext),
       color: context.colors.text,
     );
   }

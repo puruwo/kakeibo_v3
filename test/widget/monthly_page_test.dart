@@ -20,10 +20,10 @@ import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   /// セクション見出しのFinder

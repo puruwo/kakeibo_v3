@@ -36,6 +36,32 @@ void main() {
       expect(missing, isEmpty, reason: '存在しないアセット: $missing');
     });
 
+    test('新規インストールの初期カテゴリーのアイコンは選択シートに含まれる', () {
+      final seed = File('lib/model/sql_on_create.dart').readAsStringSync();
+      final used = RegExp(r"assets/images/(icon_[a-z_]+)\.svg")
+          .allMatches(seed)
+          .map((m) => m.group(1)!)
+          .toSet();
+      final selectable = {
+        ...namesOf(expenseIconSections),
+        ...namesOf(incomeIconSections),
+      };
+      expect(used, isNotEmpty);
+      expect(used.difference(selectable), isEmpty);
+    });
+
+    test('lib 配下で Icons.* を直書きしているのは AppIcons 台帳だけ', () {
+      final offenders = Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))
+          .where((f) => !f.path.endsWith('lib/constant/icon.dart'))
+          .where((f) => RegExp(r'(?<![A-Za-z_])Icons\.').hasMatch(f.readAsStringSync()))
+          .map((f) => f.path)
+          .toList();
+      expect(offenders, isEmpty, reason: 'AppIcons の意味名を使うこと: $offenders');
+    });
+
     test('DB に残り得る旧アセット名も実在する（論点5-A: ファイル名据え置き）', () {
       const legacy = [
         'icon_apartment',

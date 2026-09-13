@@ -24,10 +24,10 @@ import 'package:kakeibo/domain/db/income_small_category/income_small_category_re
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_repository.dart';
 import 'package:kakeibo/theme/app_theme.dart';
 import 'package:kakeibo/view_model/state/theme_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import 'fake_repositories.dart';
 import 'test_container.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 /// UTと揃えた基準シナリオのシステム日時
 ///

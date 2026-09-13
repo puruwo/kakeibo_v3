@@ -18,10 +18,10 @@ import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/date_box.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   // システム日時2025/7/6固定 → 履歴タブが表示する月は2025/7/1〜7/31
@@ -390,11 +390,11 @@ void main() {
 
     expect(find.text('2025年 7月'), findsOneWidget);
 
-    await tester.tap(find.byIcon(AppIcons.backward));
+    await tester.tap(find.byIcon(AppIcons.periodPrev));
     await pumpTimes(tester);
     expect(find.text('2025年 6月'), findsOneWidget);
 
-    await tester.tap(find.byIcon(AppIcons.forward));
+    await tester.tap(find.byIcon(AppIcons.periodNext));
     await pumpTimes(tester);
     expect(find.text('2025年 7月'), findsOneWidget);
   });

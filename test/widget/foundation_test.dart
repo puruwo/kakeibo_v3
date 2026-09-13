@@ -10,10 +10,10 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/view/family_page/family_page.dart';
 import 'package:kakeibo/view/foundation.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   // 起動時に自動表示される記録モーダルがカテゴリーを引くため、最低限のマスタを積む

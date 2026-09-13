@@ -11,10 +11,10 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   // 固定費マスタ（10は固定額・次回支払日あり / 30は想定額6,000円の変動費）

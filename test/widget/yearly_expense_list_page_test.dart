@@ -12,10 +12,10 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_category_expense_list_page.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
-import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   // 年度期間: 2025/4/25〜2026/4/24（システム日時2025/7/6は年度3ヶ月目）

@@ -299,7 +299,8 @@ class _HistoryRow extends StatelessWidget {
               const SizedBox(width: AppSpacing.sm),
               Icon(
                 AppIcons.next,
-                size: kAppInsetRowIconSize,
+                // AppInsetRow の行末シェブロンと同じ大きさ（KP-023 で chevron_right から揃えた）
+                size: 14,
                 color: context.colors.textTertiary,
               ),
             ],

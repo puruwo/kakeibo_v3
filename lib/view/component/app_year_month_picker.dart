@@ -414,7 +414,7 @@ class _AppYearMonthPickerOverlayState
         children: [
           IconButton(
             icon: Icon(
-              AppIcons.backward,
+              AppIcons.periodPrev,
               color: _canShiftPrevious
                   ? context.colors.text
                   : context.colors.textSecondary,
@@ -439,7 +439,7 @@ class _AppYearMonthPickerOverlayState
           ),
           IconButton(
             icon: Icon(
-              AppIcons.forward,
+              AppIcons.periodNext,
               color: _canShiftNext
                   ? context.colors.text
                   : context.colors.textSecondary,
