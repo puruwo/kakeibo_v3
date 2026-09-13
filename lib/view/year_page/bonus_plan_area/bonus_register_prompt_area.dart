@@ -7,6 +7,7 @@ import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// ボーナス未入力時に登録を促すカード（ADR-022 の `AppEmptyState`）。
 class BonusRegisterPromptArea extends ConsumerWidget {
@@ -15,7 +16,7 @@ class BonusRegisterPromptArea extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AppEmptyState(
-      icon: Icons.savings_rounded,
+      icon: AppIcons.savings,
       title: '特別枠の収入を登録しましょう',
       description: 'ボーナスなどの収入を登録すると利用状況が表示されます',
       buttonLabel: '＋ 収入を登録する',

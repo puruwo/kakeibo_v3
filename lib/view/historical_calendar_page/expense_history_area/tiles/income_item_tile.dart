@@ -14,6 +14,7 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class IncomeItemTile extends ConsumerWidget {
   const IncomeItemTile({
@@ -65,7 +66,7 @@ class IncomeItemTile extends ConsumerWidget {
             alignment: Alignment.centerRight,
             child: Padding(
               padding: EdgeInsets.only(right: 18.0),
-              child: Icon(Icons.delete, color: context.colors.icon),
+              child: Icon(AppIcons.delete, color: context.colors.icon),
             ),
           ),
         ),
@@ -165,7 +166,7 @@ class IncomeItemTile extends ConsumerWidget {
                       padding: EdgeInsets.only(right: 4),
                       child: Icon(
                         size: 18,
-                        Icons.add,
+                        AppIcons.add,
                         color: context.colors.income,
                       ),
                     ),

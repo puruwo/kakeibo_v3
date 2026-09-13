@@ -11,6 +11,7 @@ import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 支出カテゴリー（大→小）を選ぶシートを開く
 ///
@@ -53,7 +54,7 @@ class ExpenseCategorySelectSheet extends ConsumerWidget {
           title: Text('カテゴリーを選ぶ', style: context.textStyles.pageHeaderText),
           leading: IconButton(
             onPressed: () => Navigator.of(context).pop(),
-            icon: Icon(Icons.close_rounded, color: context.colors.text),
+            icon: Icon(AppIcons.close, color: context.colors.text),
           ),
         ),
         body: ref.watch(allCategoriesProvider).when(
@@ -176,7 +177,7 @@ class _SmallCategorySelectPage extends StatelessWidget {
           key: kSmallCategoryBackButtonKey,
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
+            AppIcons.back,
             color: context.colors.text,
           ),
         ),
@@ -204,7 +205,7 @@ class _SmallCategorySelectPage extends StatelessWidget {
           children: group.smallCategories
               .map(
                 (category) => AppInsetRow.navigation(
-                  icon: Icons.circle,
+                  icon: AppIcons.dot,
                   iconColor: ColorCode.toColor(category.colorCode),
                   label: category.categoryName,
                   value: category.id == selectedSmallCategoryId

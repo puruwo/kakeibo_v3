@@ -7,6 +7,7 @@ import 'package:kakeibo/view/register_page/common_input_field/budget_row.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_memo_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 登録・編集シートの「基本」グループ（拠出元／日付／メモ）
 ///
@@ -62,7 +63,7 @@ class ExpenseBasicGroup extends ConsumerWidget {
             // タップはAppPopupMenu側で受けるため、行自体にonTapは持たせない
             // 選択できる項目だと分かるように右矢印を付ける（日付行と揃える）
             child: AppInsetRow.navigation(
-              icon: Icons.account_balance_wallet_outlined,
+              icon: AppIcons.budget,
               label: '拠出元',
               value: selectedEnum.label,
               onTap: null,
@@ -72,7 +73,7 @@ class ExpenseBasicGroup extends ConsumerWidget {
           // 日付
           if (showDate)
             AppInsetRow.navigation(
-              icon: Icons.calendar_today_outlined,
+              icon: AppIcons.calendar,
               label: '日付',
               value: '${enteredDate.month}/${enteredDate.day}',
               onTap: () => _showDatePicker(context, ref, enteredDate),
@@ -81,7 +82,7 @@ class ExpenseBasicGroup extends ConsumerWidget {
           // メモ
           if (showMemo)
             AppInsetRow.textField(
-              icon: Icons.notes_rounded,
+              icon: AppIcons.memo,
               label: 'メモ',
               controller: ref.watch(enteredMemoControllerProvider),
               hintText: '未入力',

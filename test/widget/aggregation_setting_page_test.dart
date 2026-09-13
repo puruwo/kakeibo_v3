@@ -11,6 +11,7 @@ import 'package:kakeibo/view/config/aggregation_setting_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/widget_test_helper.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// ページを push で開くための起点画面（pop・スナックバー表示を本番と同じ経路で見るため）
 class _Launcher extends StatelessWidget {
@@ -359,7 +360,7 @@ void main() {
       await openPage(tester);
       await tapTimes(tester, dayInc, 1);
 
-      await tester.tap(find.byIcon(Icons.arrow_back_ios_new_rounded));
+      await tester.tap(find.byIcon(AppIcons.back));
       await pumpTimes(tester);
 
       expect(find.byType(AggregationSettingPage), findsNothing);

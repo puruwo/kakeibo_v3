@@ -17,6 +17,7 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 小カテゴリーの編集エリア（案件 UIデザイン改修 §2）
 ///
@@ -249,7 +250,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
               child: Row(
                 children: [
                   Icon(
-                    Icons.add_rounded,
+                    AppIcons.add,
                     size: kAppInsetRowIconSize,
                     color: context.colors.primary,
                   ),
@@ -449,7 +450,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                         width: 44,
                                         height: kAppInsetRowHeight,
                                         child: Icon(
-                                          Icons.drag_handle_rounded,
+                                          AppIcons.dragHandle,
                                           size: 20,
                                           color: context.colors.icon,
                                         ),

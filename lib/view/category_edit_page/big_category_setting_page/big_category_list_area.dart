@@ -16,6 +16,7 @@ import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class BigCategoryListArea extends ConsumerStatefulWidget {
   const BigCategoryListArea({super.key, required this.categoryType});
@@ -181,7 +182,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                       Padding(
                                         padding: const EdgeInsets.all(12.5),
                                         child: Icon(
-                                          Icons.arrow_forward_ios_rounded,
+                                          AppIcons.next,
                                           size: 18,
                                           color: context.colors.text,
                                         ),
@@ -411,7 +412,7 @@ class _BigCategoryListAreaState extends ConsumerState<BigCategoryListArea> {
                                       Padding(
                                         padding: const EdgeInsets.all(12.5),
                                         child: Icon(
-                                          Icons.arrow_forward_ios_rounded,
+                                          AppIcons.next,
                                           size: 18,
                                           color: context.colors.text,
                                         ),

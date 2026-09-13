@@ -4,7 +4,6 @@
 //
 // 登録済み固定費がカテゴリー別に並ぶか、追加・編集の導線が開くかを見る。
 // グルーピングのロジックは fixed_cost_registration_list_usecase_test（UT）で担保済み。
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
@@ -15,6 +14,7 @@ import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registr
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   // 固定費マスタ（10は固定額・次回支払日あり / 30は想定額6,000円の変動費）
@@ -240,7 +240,7 @@ void main() {
     );
     await pumpTimes(tester);
 
-    await tester.tap(find.byIcon(Icons.settings));
+    await tester.tap(find.byIcon(AppIcons.settings));
     await pumpTimes(tester);
 
     expect(find.text('設定'), findsOneWidget);

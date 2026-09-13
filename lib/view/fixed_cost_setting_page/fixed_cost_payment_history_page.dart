@@ -17,6 +17,7 @@ import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 固定費の支払い履歴ページ
 ///
@@ -47,7 +48,7 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
+            AppIcons.back,
             color: context.colors.text,
           ),
         ),
@@ -61,7 +62,7 @@ class FixedCostPaymentHistoryPage extends ConsumerWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: AppSpacing.lg),
                 child: AppEmptyState(
-                  icon: Icons.receipt_long_rounded,
+                  icon: AppIcons.receipt,
                   title: 'まだ支払いの記録がありません',
                   description: '支払日が来ると自動で記録され、ここに並びます',
                 ),
@@ -297,7 +298,7 @@ class _HistoryRow extends StatelessWidget {
               FixedCostHistoryPriceLabel(expense: expense),
               const SizedBox(width: AppSpacing.sm),
               Icon(
-                Icons.chevron_right_rounded,
+                AppIcons.next,
                 size: kAppInsetRowIconSize,
                 color: context.colors.textTertiary,
               ),

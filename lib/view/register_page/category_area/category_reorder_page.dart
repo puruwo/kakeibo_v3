@@ -15,6 +15,7 @@ import 'package:kakeibo/domain/core/category_selection/category_selection_types.
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/category_reorder/reordering_category_list.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// カテゴリー並び替えページ
 ///
@@ -211,7 +212,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
         title: Text('アイコンの並び替え', style: context.textStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
-          icon: Icon(Icons.close, color: context.colors.text),
+          icon: Icon(AppIcons.close, color: context.colors.text),
         ),
       ),
       body: SafeArea(

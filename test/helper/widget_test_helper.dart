@@ -27,6 +27,7 @@ import 'package:kakeibo/view_model/state/theme_mode.dart';
 
 import 'fake_repositories.dart';
 import 'test_container.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// UTと揃えた基準シナリオのシステム日時
 ///
@@ -250,7 +251,7 @@ Future<void> unmountRegisterPage(WidgetTester tester) async {
 /// 下の画面を操作するテストではまずこれで閉じる。
 /// 閉じる過程で例外が出ないことも併せて担保する。
 Future<void> closeRegisterModal(WidgetTester tester) async {
-  await tester.tap(find.byIcon(Icons.close_rounded));
+  await tester.tap(find.byIcon(AppIcons.close));
   final exceptions = await pumpAndCollectExceptions(tester);
   expect(exceptions, isEmpty, reason: 'モーダルを閉じるときに例外が出てはいけない');
 }
@@ -352,7 +353,7 @@ Future<void> dragReorderHandle(
   WidgetTester tester,
   String label,
   double dy, {
-  IconData handleIcon = Icons.drag_handle_rounded,
+  IconData handleIcon = AppIcons.dragHandle,
   required double rowHeight,
 }) async {
   // 0だとドラッグが成立せず「動かなかった」と「操作していない」が区別できない

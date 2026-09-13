@@ -11,6 +11,7 @@ import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/state/calendar_page/is_datebox_selected/is_datebox_selected.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 enum CalendarTileStatus { selected, unselected, outOfPeriod }
 
@@ -145,7 +146,7 @@ Widget calculatePriceLabel(
         children: [
           // 収入は青い+アイコン、支出は赤い-アイコン
           Icon(
-            isIncome ? Icons.add : Icons.remove,
+            isIncome ? AppIcons.add : AppIcons.remove,
             color: isIncome ? context.colors.income : context.colors.expense,
             size: isCompact ? 8 : 10,
           ),

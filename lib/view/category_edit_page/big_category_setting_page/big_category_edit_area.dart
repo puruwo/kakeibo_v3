@@ -14,6 +14,7 @@ import 'package:kakeibo/view/component/check_box.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 並び替え編集モードの1行の高さ
 const double kBigCategoryEditRowHeight = 50;
@@ -218,7 +219,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                               width: 50,
                               height: 50,
                               child: Icon(
-                                Icons.drag_handle_rounded,
+                                AppIcons.dragHandle,
                                 color: context.colors.icon,
                               ),
                             ),

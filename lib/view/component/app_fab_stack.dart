@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/app_floating_action_button.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// FAB下端のオフセット値を計算するユーティリティ。
 /// グロナビ回避分は bottomNavClearance（正準ヘルパー）に集約する。
@@ -15,7 +16,7 @@ class AppFabStack extends StatelessWidget {
     required this.child,
     required this.fabLabel,
     required this.onFabTap,
-    this.fabIcon = Icons.add_rounded,
+    this.fabIcon = AppIcons.add,
   });
 
   final Widget child;

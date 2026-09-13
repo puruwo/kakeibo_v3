@@ -3,6 +3,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 月ごとのアコーディオンセクション（案件 UIデザイン改修 §6・追加改修 0828）
 ///
@@ -71,7 +72,7 @@ class MonthAccordionSection extends StatelessWidget {
                     turns: isExpanded ? 0.5 : 0,
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
-                      Icons.expand_more_rounded,
+                      AppIcons.expand,
                       size: 20,
                       color: context.colors.textSecondary,
                     ),

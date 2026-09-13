@@ -4,6 +4,7 @@ import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/component/app_switch.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// インセットグループの角丸（iOS設定アプリのグループ化リストに相当する見た目）
 final BorderRadius appInsetGroupRadius = BorderRadius.circular(14);
@@ -305,7 +306,7 @@ class AppInsetRow extends StatelessWidget {
             if (showChevron) ...[
               const SizedBox(width: 2),
               Icon(
-                Icons.arrow_forward_ios_rounded,
+                AppIcons.next,
                 size: 14,
                 color: context.colors.textTertiary,
               ),

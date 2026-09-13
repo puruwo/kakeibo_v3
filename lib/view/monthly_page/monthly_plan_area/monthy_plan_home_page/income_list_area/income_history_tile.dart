@@ -10,6 +10,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class IncomeHistoryTile extends ConsumerWidget {
   const IncomeHistoryTile({
@@ -40,14 +41,14 @@ class IncomeHistoryTile extends ConsumerWidget {
     await showMenuDialog(context, items: [
       MenuDialogItem(
         label: '編集',
-        icon: Icons.edit_outlined,
+        icon: AppIcons.edit,
         onPressed: () async {
           _showModalBottomSheet(context);
         },
       ),
       MenuDialogItem(
         label: '削除',
-        icon: Icons.delete_outline,
+        icon: AppIcons.delete,
         isDestructive: true,
         onPressed: () async {
           showDeleteConfirmationDialog(

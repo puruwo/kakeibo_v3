@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// アプリ共通のPopupMenuButton
 ///
@@ -91,7 +92,7 @@ PopupMenuItem<T> buildCheckableMenuItem<T>({
         child: Row(
           children: [
             if (isSelected)
-              Icon(Icons.check,
+              Icon(AppIcons.done,
                   color: selectedColor, size: 20)
             else
               const SizedBox(width: 20),
@@ -128,7 +129,7 @@ class CheckablePopupMenuItem<T> extends PopupMenuItem<T> {
           child: Row(
             children: [
               if (isSelected)
-                Icon(Icons.check,
+                Icon(AppIcons.done,
                     color: selectedColor, size: 20)
               else
                 const SizedBox(width: 20),

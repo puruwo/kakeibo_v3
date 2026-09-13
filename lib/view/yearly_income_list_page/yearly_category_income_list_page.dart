@@ -17,6 +17,7 @@ import 'package:kakeibo/view/component/month_accordion_section.dart';
 import 'package:kakeibo/view/component/summary_band_card.dart';
 import 'package:kakeibo/util/period_month_count.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_card.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 大カテゴリー別の収入明細画面
 ///
@@ -69,7 +70,7 @@ class _YearlyCategoryIncomeListPageState
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.colors.text),
+          icon: Icon(AppIcons.back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Row(

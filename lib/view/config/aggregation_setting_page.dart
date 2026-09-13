@@ -17,6 +17,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 集計期間（月の開始日・年度の開始月）の設定ページ（KP-005）
 ///
@@ -88,7 +89,7 @@ class _AggregationSettingPageState
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
+            AppIcons.back,
             color: context.colors.text,
           ),
         ),
@@ -339,7 +340,7 @@ class _StepperState extends State<_Stepper> {
           // 入力欄の両脇に置く内側の操作なので枠なし（ボタンルール §5）
           IconOnlyButton(
             key: ValueKey('${widget.keyPrefix}_decrement'),
-            icon: Icons.remove_rounded,
+            icon: AppIcons.remove,
             bordered: false,
             iconSize: 23,
             backgroundColor: context.colors.primaryTint,
@@ -388,7 +389,7 @@ class _StepperState extends State<_Stepper> {
           ),
           IconOnlyButton(
             key: ValueKey('${widget.keyPrefix}_increment'),
-            icon: Icons.add_rounded,
+            icon: AppIcons.add,
             bordered: false,
             iconSize: 23,
             backgroundColor: context.colors.primaryTint,
@@ -518,7 +519,7 @@ class _RecalculationNotice extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(
-            Icons.info_outline_rounded,
+            AppIcons.info,
             size: 18,
             color: context.colors.danger,
           ),

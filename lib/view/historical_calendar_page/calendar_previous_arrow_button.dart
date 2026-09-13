@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class CalendarPreviousArrowButton extends ConsumerWidget {
   const CalendarPreviousArrowButton({super.key});
@@ -17,7 +18,7 @@ class CalendarPreviousArrowButton extends ConsumerWidget {
             .previousPage();
       },
       iconSize: 15,
-      icon: const Icon(Icons.arrow_back_ios_rounded),
+      icon: const Icon(AppIcons.backward),
       color: context.colors.text,
     );
   }

@@ -14,6 +14,7 @@ import 'package:kakeibo/view/component/filter_chip_row.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/summary_band_card.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_category_expense_list_page.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 支出一覧画面（案件 UIデザイン改修 §6・本実装）
 ///
@@ -58,7 +59,7 @@ class _YearlyExpenseListPageState extends ConsumerState<YearlyExpenseListPage> {
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.colors.text),
+          icon: Icon(AppIcons.back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text('支出一覧', style: context.textStyles.pageHeaderText),

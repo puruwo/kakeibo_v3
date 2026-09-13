@@ -22,6 +22,7 @@ import 'package:kakeibo/view/register_page/register_page_base.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   // 支出小カテゴリー（画面の並びは smallCategoryOrderKey 昇順 → 食費→日用品）
@@ -147,7 +148,7 @@ void main() {
       expect(
         find.descendant(
           of: incomeSourceRow,
-          matching: find.byIcon(Icons.arrow_forward_ios_rounded),
+          matching: find.byIcon(AppIcons.next),
         ),
         findsOneWidget,
       );
@@ -583,7 +584,7 @@ void main() {
       );
       await pumpTimes(tester);
 
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byIcon(AppIcons.delete));
       await pumpTimes(tester, times: 5);
 
       expect(find.text('登録履歴の削除'), findsOneWidget);
@@ -607,7 +608,7 @@ void main() {
       );
       await pumpTimes(tester);
 
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byIcon(AppIcons.delete));
       await pumpTimes(tester, times: 5);
       await tester.tap(find.text('キャンセル'));
       await pumpTimes(tester, times: 10);

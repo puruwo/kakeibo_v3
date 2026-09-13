@@ -23,6 +23,7 @@ import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 void main() {
   /// セクション見出しのFinder
@@ -409,7 +410,7 @@ void main() {
     // KP-016: 遷移先は一覧なので「収入を見る」＋一覧アイコン（「＋」ではない）
     expect(find.text('収入を見る'), findsOneWidget);
     expect(find.text('収入を追加'), findsNothing);
-    expect(find.byIcon(Icons.format_list_bulleted_rounded), findsOneWidget);
+    expect(find.byIcon(AppIcons.list), findsOneWidget);
     expect(find.text('予算を編集'), findsOneWidget);
 
     await tester.tap(find.text('予算を編集'));

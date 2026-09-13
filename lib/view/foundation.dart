@@ -15,6 +15,7 @@ import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/year_page/year_page.dart';
 import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
 import 'package:kakeibo/view_model/state/initial_open.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class Foundation extends ConsumerStatefulWidget {
   const Foundation({super.key});
@@ -148,30 +149,30 @@ class _FoundationState extends ConsumerState<Foundation>
                   child: Row(
                     children: [
                       _buildNavItem(
-                        Icons.home_rounded,
-                        Icons.home_rounded,
+                        AppIcons.navHome,
+                        AppIcons.navHome,
                         '全体',
                         0,
                         navigationBarState,
                       ),
                       _buildNavItem(
-                        Icons.bar_chart_rounded,
-                        Icons.bar_chart_rounded,
+                        AppIcons.navAnalysis,
+                        AppIcons.navAnalysis,
                         '月間分析',
                         1,
                         navigationBarState,
                       ),
                       _buildAddButton(),
                       _buildNavItem(
-                        Icons.people_rounded,
-                        Icons.people_rounded,
+                        AppIcons.navCouple,
+                        AppIcons.navCouple,
                         '家族',
                         3,
                         navigationBarState,
                       ),
                       _buildNavItem(
-                        Icons.calendar_month_rounded,
-                        Icons.calendar_month_rounded,
+                        AppIcons.navCalendar,
+                        AppIcons.navCalendar,
                         '履歴',
                         4,
                         navigationBarState,
@@ -236,7 +237,7 @@ class _FoundationState extends ConsumerState<Foundation>
               borderRadius: BorderRadius.circular(14),
             ),
             child: Icon(
-              Icons.add_rounded,
+              AppIcons.add,
               color: context.colors.onPrimary,
               size: 26,
             ),

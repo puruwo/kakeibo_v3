@@ -16,6 +16,7 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class AddCompleteBigCategoryDetailButton extends ConsumerWidget
     with PresentationMixin {
@@ -35,7 +36,7 @@ class AddCompleteBigCategoryDetailButton extends ConsumerWidget
     return IconButton(
         icon: Icon(
           //完了チェックマーク
-          Icons.done_rounded,
+          AppIcons.done,
           color: context.colors.text,
         ),
         onPressed: () async {

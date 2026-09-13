@@ -13,6 +13,7 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/yearly_income_list_page/income_graph_area.dart';
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_area.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class YearlyIncomeListPage extends ConsumerWidget {
   const YearlyIncomeListPage({
@@ -36,7 +37,7 @@ class YearlyIncomeListPage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: context.colors.text),
+          icon: Icon(AppIcons.back, color: context.colors.text),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text('収入一覧', style: context.textStyles.pageHeaderText),

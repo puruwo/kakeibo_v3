@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class CalendarNextArrowButton extends ConsumerWidget {
   const CalendarNextArrowButton({super.key});
@@ -15,7 +16,7 @@ class CalendarNextArrowButton extends ConsumerWidget {
         ref.read(calendarPageControllerNotifierProvider.notifier).nextPage();
       },
       iconSize: 15,
-      icon: const Icon(Icons.arrow_forward_ios_rounded),
+      icon: const Icon(AppIcons.forward),
       color: context.colors.text,
     );
   }

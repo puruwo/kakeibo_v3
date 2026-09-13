@@ -9,6 +9,7 @@ import 'package:kakeibo/view/historical_calendar_page/calendar_next_arrow_button
 import 'package:kakeibo/view/historical_calendar_page/calendar_previous_arrow_button.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_area/expence_history_list_area.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class ExpenseHistoryPage extends StatelessWidget {
   const ExpenseHistoryPage({super.key});
@@ -52,7 +53,7 @@ class ExpenseHistoryPage extends StatelessWidget {
                     MaterialPageRoute(builder: (context) => const ConfigTop()),
                   ),
                 },
-                icon: const Icon(Icons.settings_rounded),
+                icon: const Icon(AppIcons.settings),
               ),
             ),
           ],

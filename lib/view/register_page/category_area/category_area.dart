@@ -15,6 +15,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// カテゴリー選択エリアウィジェット
 ///
@@ -208,7 +209,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.settings_outlined,
+              AppIcons.settings,
               size: 16,
               color: context.colors.textSecondary,
             ),
