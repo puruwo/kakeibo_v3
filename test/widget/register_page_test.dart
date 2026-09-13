@@ -128,6 +128,33 @@ void main() {
       await unmountRegisterPage(tester);
     });
 
+    testWidgets('拠出元行に日付行と同じ右矢印が付く', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      // 拠出元行はポップアップで選択できるため、表示のみの行ではなく右矢印付きの行にする
+      final incomeSourceRow = find.ancestor(
+        of: find.text('拠出元'),
+        matching: find.byType(AppInsetRow),
+      );
+      expect(incomeSourceRow, findsOneWidget);
+      expect(
+        find.descendant(
+          of: incomeSourceRow,
+          matching: find.byIcon(Icons.arrow_forward_ios_rounded),
+        ),
+        findsOneWidget,
+      );
+
+      await unmountRegisterPage(tester);
+    });
+
     testWidgets('金額とメモの入力が画面に反映される', (tester) async {
       await pumpApp(
         tester,

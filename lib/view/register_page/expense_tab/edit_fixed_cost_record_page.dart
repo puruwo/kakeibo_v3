@@ -134,7 +134,6 @@ class _EditFixedCostRecordPageState
                 const ExpenseBasicGroup(
                   showDate: false,
                   showMemo: false,
-                  showIncomeSourceChevron: true,
                 ),
               ],
             ),
