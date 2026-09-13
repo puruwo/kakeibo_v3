@@ -25,6 +25,7 @@ import 'package:kakeibo/view_model/state/register_page/input_initialized_control
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class SubmitButton extends ConsumerWidget with PresentationMixin {
   const SubmitButton({
@@ -58,6 +59,7 @@ class SubmitButton extends ConsumerWidget with PresentationMixin {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
+        iconData: AppIcons.done,
         buttonColor: getPillColor(context, ref.watch(inputModeControllerProvider)),
         buttonType: ButtonColorType.main,
         buttonText: screenMode == RegisterScreenMode.edit ? '更新' : '追加',

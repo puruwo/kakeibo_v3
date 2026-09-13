@@ -142,10 +142,11 @@ class MainButton extends StatelessWidget {
     this.buttonColor,
     this.buttonType = ButtonColorType.main,
     this.icon,
+    this.iconData,
     this.textColor,
     required this.onPressed,
     required this.buttonText,
-  });
+  }) : assert(icon == null || iconData == null, 'icon と iconData は併用しない');
 
   final ButtonColorType buttonType;
   final Function()? onPressed;
@@ -154,6 +155,12 @@ class MainButton extends StatelessWidget {
   /// アクセント色の上書き。指定時はこの色でTint語彙（Tint地+枠+文字）を組む（仕様 §1）
   final Color? buttonColor;
   final Widget? icon;
+
+  /// ラベル左のアイコン（KP-023 ボタン内アイコン基準）。
+  /// 色は文字色（非活性時は `textTertiary`）・18px で自動的に揃える。
+  /// 「完了・保存・追加・削除」のような結果を表す主操作には `AppIcons` の意味名を必ず渡す。
+  /// 独自の色や大きさが必要なときだけ [icon] を使う。
+  final IconData? iconData;
 
   /// ラベルの文字色。secondary背景にdanger文字を載せる削除ボタン用（仕様 §6.7）
   final Color? textColor;
@@ -172,16 +179,21 @@ class MainButton extends StatelessWidget {
       color: enabled ? spec.labelColor : context.colors.textTertiary,
     );
 
+    final leading = icon ??
+        (iconData != null
+            ? Icon(iconData, size: 18, color: textStyle.color)
+            : null);
+
     return _ButtonSurface(
       height: 40,
       spec: spec,
       enabled: enabled,
       onPressed: onPressed,
-      child: icon != null
+      child: leading != null
           ? Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                icon!,
+                leading,
                 const SizedBox(width: 6),
                 Text(buttonText, style: textStyle),
               ],

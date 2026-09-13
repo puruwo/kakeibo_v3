@@ -146,6 +146,7 @@ class _EditFixedCostRecordPageState
             child: SizedBox(
               width: double.infinity,
               child: MainButton(
+                iconData: AppIcons.done,
                 buttonColor: getPillColor(context, TransactionMode.expense),
                 buttonText: isUnconfirmed ? '金額を確定' : '更新',
                 onPressed: () => _submit(context),

@@ -9,6 +9,7 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view_model/state/bonus_home_page/selected_tab_controller/selected_tab_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class BonusHomeFooter extends ConsumerWidget {
   const BonusHomeFooter({super.key});
@@ -29,6 +30,7 @@ class BonusHomeFooter extends ConsumerWidget {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
+        iconData: AppIcons.add,
         buttonType: ButtonColorType.main,
         buttonText: '新しい支出を追加',
         onPressed: () {
@@ -52,6 +54,7 @@ class BonusHomeFooter extends ConsumerWidget {
     return SizedBox(
       width: double.infinity,
       child: MainButton(
+        iconData: AppIcons.add,
         buttonType: ButtonColorType.main,
         buttonText: '新しい収入を追加',
         onPressed: () {

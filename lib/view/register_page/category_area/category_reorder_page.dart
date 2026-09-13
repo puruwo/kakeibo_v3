@@ -271,6 +271,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                     child: SizedBox(
                       width: double.infinity,
                       child: MainButton(
+                        iconData: AppIcons.done,
                         onPressed: reorderingState.hasChanges
                             ? _saveOrder
                             : null,

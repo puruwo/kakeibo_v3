@@ -153,6 +153,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
                 children: [
                   Expanded(
                     child: MainButton(
+                      iconData: AppIcons.delete,
                       buttonType: ButtonColorType.secondary,
                       textColor: context.colors.danger,
                       buttonText: 'この固定費を削除',
@@ -162,6 +163,7 @@ class _FixedCostSettingPageState extends ConsumerState<FixedCostSettingPage>
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: MainButton(
+                      iconData: AppIcons.done,
                       buttonType: ButtonColorType.main,
                       buttonText: '保存',
                       onPressed: () => _save(context),

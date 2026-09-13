@@ -165,6 +165,7 @@ class _AggregationSettingPageState
               child: SizedBox(
                 width: double.infinity,
                 child: MainButton(
+                  iconData: AppIcons.done,
                   buttonType: ButtonColorType.main,
                   buttonText: '保存する',
                   onPressed: _hasChanges

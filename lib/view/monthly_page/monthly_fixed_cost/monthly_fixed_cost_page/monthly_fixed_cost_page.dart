@@ -9,6 +9,7 @@ import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/fixed_cost_by_category_list_area.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class MonthlyFixedCostPage extends ConsumerWidget {
   const MonthlyFixedCostPage({super.key});
@@ -77,6 +78,7 @@ class MonthlyFixedCostPage extends ConsumerWidget {
                   // 固定費を新しく登録する
                   Expanded(
                     child: MainButton(
+                      iconData: AppIcons.add,
                       buttonType: ButtonColorType.main,
                       buttonText: '固定費を登録',
                       onPressed: () {

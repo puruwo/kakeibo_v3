@@ -14,6 +14,7 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_small_category_list_edited/is_small_category_list_edited.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 小カテゴリー名の最大文字数（旧ダイアログから据え置き）
 const int _kMaxNameLength = 20;
@@ -141,6 +142,7 @@ class _NewSmallCategoryInputSheetState
                   const SizedBox(width: AppSpacing.sm),
                   Expanded(
                     child: MainButton(
+                      iconData: AppIcons.add,
                       buttonType: ButtonColorType.main,
                       buttonText: '追加',
                       onPressed: canSubmit ? _onAddPressed : null,
