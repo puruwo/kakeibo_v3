@@ -123,11 +123,6 @@ class _NewSmallCategoryInputSheetState
               Text('小カテゴリーを追加', style: context.textStyles.sheetTitle),
               const SizedBox(height: 14),
               _buildNameField(context),
-              const SizedBox(height: 10),
-              Text(
-                '一覧の末尾に追加されます。保存するまで確定しません',
-                style: context.textStyles.insetGroupNote,
-              ),
               const SizedBox(height: 14),
               Row(
                 children: [

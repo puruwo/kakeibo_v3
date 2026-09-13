@@ -105,11 +105,12 @@ void main() {
   }
 
   group('初期表示（B-1）', () {
-    testWidgets('AppBarのタイトルとサブテキスト・保存値・プレビュー・注意文が表示される', (tester) async {
+    testWidgets('AppBarのタイトル・保存値・プレビュー・注意文が表示される', (tester) async {
       await openPage(tester);
 
       expect(find.text('集計期間'), findsOneWidget);
-      expect(find.text('家計の区切りを決めます'), findsOneWidget);
+      // サブテキストは出さない（KP-021）
+      expect(find.text('家計の区切りを決めます'), findsNothing);
       expect(find.text('月の開始日'), findsOneWidget);
       expect(find.text('年度の開始月'), findsOneWidget);
       expect(textOf(tester, dayValue), '25');

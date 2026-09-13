@@ -295,16 +295,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
             // グループ見出し（インセットグループのヘッダーと同じ書式）
             Padding(
               padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
-              child: Row(
-                children: [
-                  Text('小カテゴリー', style: context.textStyles.insetGroupHeader),
-                  const Spacer(),
-                  Text(
-                    'チェックで表示 / 右端で並び替え',
-                    style: context.textStyles.insetGroupNote,
-                  ),
-                ],
-              ),
+              child: Text('小カテゴリー', style: context.textStyles.insetGroupHeader),
             ),
 
             // リスト部分（インセット枠に収める）。

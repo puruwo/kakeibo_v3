@@ -240,14 +240,30 @@ void main() {
     expect(find.text('自動で算出'), findsOneWidget);
     expect(find.text('自分で設定'), findsOneWidget);
     expect(find.text('決定'), findsOneWidget);
-    expect(
-      find.textContaining('自分で設定した額は、支払いを確定しても上書きされません'),
-      findsOneWidget,
-    );
+    // 注記は選択中の方式（自動）の説明だけを出す
+    expect(find.textContaining('過去の確定額の平均'), findsOneWidget);
+    expect(find.text('設定した額は、支払いを確定しても上書きされません'), findsNothing);
     // 自動選択中は入力欄を出さず、過去の確定額の平均を表示する
     expect(find.byKey(const Key('estimatedPriceSheetAutoValue')), findsOneWidget);
     expect(find.byKey(const Key('estimatedPriceSheetField')), findsNothing);
     expect(find.text('80,000'), findsOneWidget);
+  });
+
+  testWidgets('確定した支払いが無いときは、予想額シートの注記が現在の予想額を使う旨になる', (tester) async {
+    await pumpApp(
+      tester,
+      home: const FixedCostSettingPage(fixedCostEntity: target),
+      fakes: buildFakes(rows: const []),
+    );
+    await pumpTimes(tester);
+
+    await tester.tap(find.byType(Switch));
+    await pumpTimes(tester);
+    await tester.tap(find.text('予想額'));
+    await pumpTimes(tester, times: 5);
+
+    expect(find.textContaining('確定した支払いがまだないため'), findsOneWidget);
+    expect(find.textContaining('過去の確定額の平均'), findsNothing);
   });
 
   testWidgets('「自分で設定」で入力した額が決定で画面に反映され、保存でマスタに書かれる', (tester) async {
@@ -268,6 +284,9 @@ void main() {
     await tester.tap(find.text('自分で設定'));
     await pumpTimes(tester, times: 5);
     expect(find.byKey(const Key('estimatedPriceSheetField')), findsOneWidget);
+    // 注記も手動の説明に切り替わる
+    expect(find.text('設定した額は、支払いを確定しても上書きされません'), findsOneWidget);
+    expect(find.textContaining('過去の確定額の平均'), findsNothing);
 
     await tester.enterText(
       find.byKey(const Key('estimatedPriceSheetField')),
