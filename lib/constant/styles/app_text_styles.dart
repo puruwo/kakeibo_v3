@@ -196,16 +196,9 @@ class AppTextStyles {
   TextStyle get numericCaption =>
       AppTypeScale.sfUi11w400.copyWith(color: colors.textSecondary);
 
-  /// チップ（「固定費」等）のラベル。塗り内で文字を垂直中央に置くため行高を詰める
-  TextStyle get chipLabel => AppTypeScale.noto10w400.copyWith(
+  /// チップ（「固定費」「変動」等）のラベル。塗り内で文字を垂直中央に置くため行高を詰める
+  TextStyle get chipLabel => AppTypeScale.noto10w500.copyWith(
     color: colors.textSecondary,
-    height: 1.0,
-    leadingDistribution: TextLeadingDistribution.even,
-  );
-
-  /// チップの強調ラベル（固定費一覧の「変動」チップ）
-  TextStyle get chipLabelAccent => AppTypeScale.noto10w500.copyWith(
-    color: colors.primary,
     height: 1.0,
     leadingDistribution: TextLeadingDistribution.even,
   );
