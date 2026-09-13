@@ -143,7 +143,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                 // 固定費グループ（トグル＋ON時の4行）
                 FixedCostRegisterGroup(
                   note: widget.mode == RegisterScreenMode.edit
-                      ? 'ONにすると、この支出を初回の支払いとして固定費を作成します（頻度・名称を続けて入力）'
+                      ? 'ONにすると、この支出を初回分として固定費を作成します'
                       : null,
                 ),
 

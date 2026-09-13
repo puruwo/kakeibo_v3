@@ -78,13 +78,7 @@ class _AggregationSettingPageState
         backgroundColor: Colors.transparent,
         centerTitle: true,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('集計期間', style: context.textStyles.pageHeaderText),
-            Text('家計の区切りを決めます', style: context.textStyles.pageHeaderSubText),
-          ],
-        ),
+        title: Text('集計期間', style: context.textStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(
