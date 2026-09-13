@@ -10,6 +10,7 @@ import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -35,6 +36,11 @@ class IncomeItemTile extends ConsumerWidget {
       fit: BoxFit.scaleDown,
       child: SvgPicture.asset(
         value.iconPath,
+        // KP-023: アセットは無着色（黒）になったため、カテゴリー色で着色する
+        colorFilter: ColorFilter.mode(
+          ColorCode.toColor(value.colorCode),
+          BlendMode.srcIn,
+        ),
         semanticsLabel: 'categoryIcon',
         width: 25,
         height: 25,
