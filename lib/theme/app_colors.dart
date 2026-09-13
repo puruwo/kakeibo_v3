@@ -41,6 +41,7 @@ class AppColors extends ThemeExtension<AppColors> {
     required this.cardSurface,
     required this.pressedOverlay,
     required this.surfaceHighlight,
+    required this.scrim,
   });
 
   final Color primary;
@@ -72,6 +73,7 @@ class AppColors extends ThemeExtension<AppColors> {
   final Color cardSurface;
   final Color pressedOverlay;
   final Color surfaceHighlight;
+  final Color scrim;
 
   static const AppColors light = AppColors(
     primary: Color(0xFF0BB283),
@@ -103,6 +105,7 @@ class AppColors extends ThemeExtension<AppColors> {
     cardSurface: Color(0xFFF2F2F7),
     pressedOverlay: Color(0x1A000000),
     surfaceHighlight: Color(0x00FFFFFF),
+    scrim: Color(0x8A000000),
   );
 
   static const AppColors dark = AppColors(
@@ -135,6 +138,7 @@ class AppColors extends ThemeExtension<AppColors> {
     cardSurface: Color(0x39767680),
     pressedOverlay: Color(0x1AFFFFFF),
     surfaceHighlight: Color(0x09FFFFFF),
+    scrim: Color(0x8A000000),
   );
 
   @override
@@ -168,6 +172,7 @@ class AppColors extends ThemeExtension<AppColors> {
     Color? cardSurface,
     Color? pressedOverlay,
     Color? surfaceHighlight,
+    Color? scrim,
   }) {
     return AppColors(
       primary: primary ?? this.primary,
@@ -199,6 +204,7 @@ class AppColors extends ThemeExtension<AppColors> {
       cardSurface: cardSurface ?? this.cardSurface,
       pressedOverlay: pressedOverlay ?? this.pressedOverlay,
       surfaceHighlight: surfaceHighlight ?? this.surfaceHighlight,
+      scrim: scrim ?? this.scrim,
     );
   }
 
@@ -235,6 +241,7 @@ class AppColors extends ThemeExtension<AppColors> {
       cardSurface: Color.lerp(cardSurface, other.cardSurface, t)!,
       pressedOverlay: Color.lerp(pressedOverlay, other.pressedOverlay, t)!,
       surfaceHighlight: Color.lerp(surfaceHighlight, other.surfaceHighlight, t)!,
+      scrim: Color.lerp(scrim, other.scrim, t)!,
     );
   }
 }

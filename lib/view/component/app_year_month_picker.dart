@@ -13,6 +13,8 @@ import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/domain_service/year_period_service/aggregation_start_month_provider.dart';
 import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart'
     as year_service;
+import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/component/card_container.dart';
 
 /// AppYearMonthPicker の表示モード
 enum AppYearMonthPickerMode {
@@ -359,11 +361,11 @@ class _AppYearMonthPickerOverlayState
       color: Colors.transparent,
       child: Stack(
         children: [
-          // 背景タップ層（半透明）
+          // 背景タップ層（暗幕。ボトムシートと同じ黒54%。KP-022）
           Positioned.fill(
             child: GestureDetector(
               onTap: () => widget.onClose(null),
-              child: Container(color: Colors.black.withValues(alpha: 0.75)),
+              child: Container(color: context.colors.scrim),
             ),
           ),
           // ピッカー本体（AppBar直下にスライドイン）
@@ -383,15 +385,7 @@ class _AppYearMonthPickerOverlayState
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const SizedBox(height: AppSpacing.sm),
-                      _buildHeaderCard(),
-                      const SizedBox(height: AppSpacing.sm),
-                      _buildPickerSection(),
-                      const SizedBox(height: AppSpacing.sm),
-                      _buildButtonRow(),
-                      SizedBox(
-                        height: MediaQuery.of(context).padding.bottom +
-                            AppSpacing.sm,
-                      ),
+                      _buildPanel(),
                     ],
                   ),
                 ),
@@ -403,60 +397,78 @@ class _AppYearMonthPickerOverlayState
     );
   }
 
-  Widget _buildHeaderCard() {
+  // 見出し・ドラム・ボタンを1枚のパネルにまとめる（KP-022 案B）。
+  // CardContainer の地（cardSurface）はダークで半透明になり暗幕越しに下の画面が透けるため、
+  // 形（角丸18＋1px枠）だけカードに揃え、地は不透明の surfaceElevated2 にする
+  Widget _buildPanel() {
     return Container(
+      padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
         color: context.colors.surfaceElevated2,
-        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: context.colors.surfaceBorder, width: 1),
+        borderRadius: appCardRadius,
       ),
-      child: Row(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          IconButton(
-            icon: Icon(
-              Icons.chevron_left_rounded,
-              color: _canShiftPrevious
-                  ? context.colors.text
-                  : context.colors.textSecondary,
-            ),
-            onPressed: _canShiftPrevious ? _onShiftPrevious : null,
-          ),
-          Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  _formatHeaderTitle(),
-                  style: context.textStyles.pageHeaderSubNumeric,
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  _formatRange(),
-                  style: context.textStyles.pageHeaderNumeric,
-                ),
-              ],
-            ),
-          ),
-          IconButton(
-            icon: Icon(
-              Icons.chevron_right_rounded,
-              color: _canShiftNext
-                  ? context.colors.text
-                  : context.colors.textSecondary,
-            ),
-            onPressed: _canShiftNext ? _onShiftNext : null,
-          ),
+          _buildHeaderRow(),
+          const SizedBox(height: AppSpacing.sm),
+          _buildPickerSection(),
+          const SizedBox(height: AppSpacing.md),
+          _buildButtonRow(),
         ],
       ),
     );
   }
 
+  Widget _buildHeaderRow() {
+    return Row(
+      children: [
+        // 入力欄の両脇に置く内側の操作なので枠なし・Tint 地（ボタンルール §5。KP-005 のステッパーと同じ）。
+        // 選択範囲の端では onTap: null で非活性にする（ボタンルール §3）
+        IconOnlyButton(
+          key: const ValueKey('year_month_picker_previous'),
+          icon: Icons.chevron_left_rounded,
+          bordered: false,
+          iconSize: 23,
+          backgroundColor: context.colors.primaryTint,
+          iconColor: context.colors.primary,
+          onTap: _canShiftPrevious ? _onShiftPrevious : null,
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        Expanded(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                _formatHeaderTitle(),
+                style: context.textStyles.pageHeaderSubNumeric,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                _formatRange(),
+                style: context.textStyles.pageHeaderNumeric,
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(width: AppSpacing.sm),
+        IconOnlyButton(
+          key: const ValueKey('year_month_picker_next'),
+          icon: Icons.chevron_right_rounded,
+          bordered: false,
+          iconSize: 23,
+          backgroundColor: context.colors.primaryTint,
+          iconColor: context.colors.primary,
+          onTap: _canShiftNext ? _onShiftNext : null,
+        ),
+      ],
+    );
+  }
+
   Widget _buildPickerSection() {
-    return Container(
+    return SizedBox(
       height: 216,
-      decoration: BoxDecoration(
-        color: context.colors.surfaceElevated2,
-        borderRadius: BorderRadius.circular(16),
-      ),
       child: widget.mode == AppYearMonthPickerMode.yearMonth
           ? Row(
               children: [
@@ -543,50 +555,38 @@ class _AppYearMonthPickerOverlayState
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.sm),
       decoration: BoxDecoration(
-        color: context.colors.disabled.withValues(alpha: 0.6),
+        // 選択中の行の帯。非活性色（disabled）の流用をやめ、無彩色の塗りにする（KP-022）
+        color: context.colors.fillTertiary,
         borderRadius: BorderRadius.circular(8),
       ),
     );
   }
 
+  // 並列2ボタン: 左 Secondary・右 Primary（ボタンルール §4。KP-022 で CupertinoButton から置換）
   Widget _buildButtonRow() {
     return Row(
       children: [
         Expanded(
-          child: CupertinoButton(
-            color: context.colors.disabled,
-            borderRadius: BorderRadius.circular(28),
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: MainButton(
+            buttonType: ButtonColorType.secondary,
             onPressed: _onResetToCurrent,
-            child: Text(
-              widget.mode == AppYearMonthPickerMode.yearMonth
-                  ? '今月度に戻す'
-                  : '今年度に戻す',
-              style: context.textStyles.mainButtonText,
-            ),
+            buttonText: widget.mode == AppYearMonthPickerMode.yearMonth
+                ? '今月度に戻す'
+                : '今年度に戻す',
           ),
         ),
         const SizedBox(width: AppSpacing.sm),
         Expanded(
-          child: CupertinoButton(
-            color: context.colors.primary,
-            borderRadius: BorderRadius.circular(28),
-            padding: const EdgeInsets.symmetric(vertical: AppSpacing.md),
+          child: MainButton(
+            buttonType: ButtonColorType.main,
             onPressed: _onConfirm,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.check, color: context.colors.onPrimary, size: 18),
-                const SizedBox(width: AppSpacing.xs),
-                // primary 塗りの上の文字なので onPrimary（ライトでは text が黒になるため明示。KP-013）
-                Text(
-                  '適用',
-                  style: context.textStyles.mainButtonText.copyWith(
-                    color: context.colors.onPrimary,
-                  ),
-                ),
-              ],
+            // main ボタンの文字色は primary なのでアイコンも揃える
+            icon: Icon(
+              Icons.check_rounded,
+              size: 18,
+              color: context.colors.primary,
             ),
+            buttonText: '適用',
           ),
         ),
       ],

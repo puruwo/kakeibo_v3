@@ -250,8 +250,16 @@ class IconOnlyButton extends StatelessWidget {
       ),
     );
 
+    // MainButton（_ButtonSurface）と同じく、ボタンとしての Semantics を明示する。
+    // AppInkWell だけでは「ボタンであること」と非活性（onTap: null）が読み上げに伝わらない（KP-022）
+    final semanticButton = Semantics(
+      button: true,
+      enabled: enabled,
+      child: button,
+    );
+
     if (!bordered) {
-      return button;
+      return semanticButton;
     }
 
     // ADR-017: 他のカード・行と同じ境界線を出し、面としての格を揃える。
@@ -263,7 +271,7 @@ class IconOnlyButton extends StatelessWidget {
         border: Border.all(color: context.colors.surfaceBorder, width: 1),
         shape: BoxShape.circle,
       ),
-      child: button,
+      child: semanticButton,
     );
   }
 }

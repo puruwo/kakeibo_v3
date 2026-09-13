@@ -105,6 +105,8 @@ ThemeData buildAppTheme(AppColors c, Brightness b) {
       surfaceTintColor: Colors.transparent,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
     ),
+    // ボトムシートの暗幕を期間ピッカーと同じ scrim トークンに揃える（値は Flutter 既定の黒54%と同じ。KP-022）
+    bottomSheetTheme: BottomSheetThemeData(modalBarrierColor: c.scrim),
     datePickerTheme: DatePickerThemeData(
       backgroundColor: c.surfaceElevated,
       surfaceTintColor: Colors.transparent,
