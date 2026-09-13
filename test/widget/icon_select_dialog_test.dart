@@ -62,6 +62,41 @@ void main() {
       expect(offenders, isEmpty, reason: 'AppIcons の意味名を使うこと: $offenders');
     });
 
+    test('カテゴリー SVG の描画はすべて着色している（アセットは無着色＝黒のため）', () {
+      // 呼び出しの括弧内だけを取り出す（入れ子の括弧を数える）
+      String callBody(String src, int start) {
+        var depth = 0;
+        for (var i = start; i < src.length; i++) {
+          if (src[i] == '(') depth++;
+          if (src[i] == ')') {
+            depth--;
+            if (depth == 0) return src.substring(start, i);
+          }
+        }
+        return src.substring(start);
+      }
+
+      final offenders = <String>[];
+      for (final file in Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))) {
+        final src = file.readAsStringSync();
+        for (final m in RegExp(r'SvgPicture\.asset\(').allMatches(src)) {
+          if (!callBody(src, m.end - 1).contains('colorFilter')) {
+            offenders.add('${file.path}: SvgPicture.asset に colorFilter が無い');
+          }
+        }
+        for (final m in RegExp(r'AppListCard\(').allMatches(src)) {
+          final body = callBody(src, m.end - 1);
+          if (body.contains('iconPath:') && !body.contains('iconColor:')) {
+            offenders.add('${file.path}: AppListCard に iconColor が無い');
+          }
+        }
+      }
+      expect(offenders, isEmpty, reason: offenders.join('\n'));
+    });
+
     test('DB に残り得る旧アセット名も実在する（論点5-A: ファイル名据え置き）', () {
       const legacy = [
         'icon_apartment',
