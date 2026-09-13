@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
+import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 
@@ -160,7 +161,8 @@ void main() {
     expect(find.text('電気代'), findsOneWidget);
     expect(find.text('平均'), findsOneWidget);
     expect(find.text('¥ 6,000'), findsOneWidget); // 想定額
-    expect(find.text('変動'), findsOneWidget);
+    // 「変動」は共通チップで描く（KP-019）
+    expect(find.widgetWithText(AppChipLabel, '変動'), findsOneWidget);
     // 次回支払日が未設定なら「次回：」行そのものが出ない
     expect(find.textContaining('次回：'), findsOneWidget);
   });

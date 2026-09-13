@@ -14,6 +14,7 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
+import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/date_box.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -256,7 +257,7 @@ void main() {
     // 未確定の固定費行は金額が「未入力」
     expect(find.text('未入力'), findsOneWidget);
     // 確定済み・未確定の2行に「固定費」チップが付く
-    expect(find.text('固定費'), findsNWidgets(2));
+    expect(find.widgetWithText(AppChipLabel, '固定費'), findsNWidgets(2));
     // 収入タイル
     expect(find.text('給与'), findsOneWidget);
     expect(find.text('¥ 250,000'), findsOneWidget);

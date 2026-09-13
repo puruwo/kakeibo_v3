@@ -11,7 +11,7 @@ import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/app_dialog.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
-import 'package:kakeibo/view/component/fixed_cost_chip_label.dart';
+import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
@@ -56,7 +56,7 @@ class ExpenseHistoryListTile extends ConsumerWidget {
       priceLabelStyle:
           isUnconfirmed ? context.textStyles.listCardUnconfirmedPriceLabel : null,
       // 固定費行の識別チップ
-      customWidget: isFixedCost ? const FixedCostChipLabel() : null,
+      customWidget: isFixedCost ? const AppChipLabel(label: '固定費') : null,
       isIncome: false,
       priceWidth: 100,
     );
