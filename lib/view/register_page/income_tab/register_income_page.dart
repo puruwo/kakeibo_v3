@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
@@ -82,14 +83,15 @@ class _RegisterIncomePageState extends ConsumerState<RegisterIncomePage> {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
       child: Scaffold(
         backgroundColor: context.colors.surfaceElevated,
+        // 小さい端末でも下端まで届くようスクロールを許可する（KP-020）
         body: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: leftsidePadding),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 16),
+                // 種別ピルで支出と切り替えたときに位置がずれないよう、支出ページと同じ余白にする（KP-020）
+                const SizedBox(height: AppSpacing.sm),
 
                 // 上部：支出ピル + 大きな金額表示
                 PriceInputRow(
@@ -97,7 +99,7 @@ class _RegisterIncomePageState extends ConsumerState<RegisterIncomePage> {
                   originalPrice: initialIncomeData.price,
                 ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: AppSpacing.lg),
 
                 // 基本グループ（日付／メモ）
                 const IncomeBasicGroup(),
