@@ -20,7 +20,8 @@ class ImplementsIncomeBigCategoryRepository
         a.${SqfIncomeBigCategory.name} AS name,
         a.${SqfIncomeBigCategory.colorCode} AS colorCode,
         a.${SqfIncomeBigCategory.resourcePath} AS iconPath,
-        a.${SqfIncomeBigCategory.accountType} AS accountType
+        a.${SqfIncomeBigCategory.accountType} AS accountType,
+        a.${SqfIncomeBigCategory.deleteFlag} AS deleteFlag
       FROM ${SqfIncomeBigCategory.tableName} a
       ORDER BY a.${SqfIncomeBigCategory.id} ASC;
     ''';
@@ -54,7 +55,8 @@ class ImplementsIncomeBigCategoryRepository
         a.${SqfIncomeBigCategory.name} AS name,
         a.${SqfIncomeBigCategory.colorCode} AS colorCode,
         a.${SqfIncomeBigCategory.resourcePath} AS iconPath,
-        a.${SqfIncomeBigCategory.accountType} AS accountType
+        a.${SqfIncomeBigCategory.accountType} AS accountType,
+        a.${SqfIncomeBigCategory.deleteFlag} AS deleteFlag
       FROM ${SqfIncomeBigCategory.tableName} a
       where a.${SqfIncomeBigCategory.id} = $bigCategoryId;
     ''';
@@ -99,13 +101,24 @@ class ImplementsIncomeBigCategoryRepository
     }, entity.id);
   }
 
+  @override
+  Future<List<IncomeBigCategoryEntity>> fetchAllActive() async {
+    final list = await fetchAll();
+    return list.where((e) => e.deleteFlag == 0).toList();
+  }
+
   // 既定カテゴリー（月次収入・ボーナス）は他機能で参照されているため削除させない
+  // 行は消さずに論理削除する（登録済みの収入の参照先を残すため。KP-024）
   @override
   Future<void> delete({required int id}) async {
     if (IncomeBigCategoryConstants.isDefaultCategory(id)) {
       throw StateError('id=1（月次収入）/ id=2（ボーナス）は削除できません');
     }
-    await db.delete(SqfIncomeBigCategory.tableName, id);
+    await db.update(
+      SqfIncomeBigCategory.tableName,
+      {SqfIncomeBigCategory.deleteFlag: 1},
+      id,
+    );
   }
 
   @override

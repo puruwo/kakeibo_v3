@@ -20,7 +20,8 @@ class ImplementsExpenseSmallCategoryRepository
         a.${SqfExpenseSmallCategory.bigCategoryKey} AS bigCategoryKey,
         a.${SqfExpenseSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
-        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
+        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed,
+        a.${SqfExpenseSmallCategory.deleteFlag} AS deleteFlag
       FROM ${SqfExpenseSmallCategory.tableName} a
       where a.${SqfExpenseSmallCategory.id} = $smallCategoryId;
     ''';
@@ -55,7 +56,8 @@ class ImplementsExpenseSmallCategoryRepository
         a.${SqfExpenseSmallCategory.bigCategoryKey} AS bigCategoryKey,
         a.${SqfExpenseSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
-        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
+        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed,
+        a.${SqfExpenseSmallCategory.deleteFlag} AS deleteFlag
       FROM ${SqfExpenseSmallCategory.tableName} a
       ORDER BY a.${SqfExpenseSmallCategory.id} ASC;
     ''';
@@ -82,7 +84,8 @@ class ImplementsExpenseSmallCategoryRepository
         a.${SqfExpenseSmallCategory.bigCategoryKey} AS bigCategoryKey,
         a.${SqfExpenseSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfExpenseSmallCategory.name} AS smallCategoryName,
-        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed
+        a.${SqfExpenseSmallCategory.defaultDisplayed} AS defaultDisplayed,
+        a.${SqfExpenseSmallCategory.deleteFlag} AS deleteFlag
       FROM ${SqfExpenseSmallCategory.tableName} a
       WHERE a.${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId
       ORDER BY a.${SqfExpenseSmallCategory.displayedOrderInBig} ASC
@@ -99,6 +102,28 @@ class ImplementsExpenseSmallCategoryRepository
     }).toList();
 
     return result;
+  }
+
+  @override
+  Future<List<ExpenseSmallCategoryEntity>> fetchAllActive() async {
+    final list = await fetchAll();
+    return list.where((e) => e.deleteFlag == 0).toList();
+  }
+
+  @override
+  Future<List<ExpenseSmallCategoryEntity>> fetchActiveByBigCategory(
+      {required int bigCategoryId}) async {
+    final list = await fetchByBigCategory(bigCategoryId: bigCategoryId);
+    return list.where((e) => e.deleteFlag == 0).toList();
+  }
+
+  @override
+  Future<void> logicalDelete({required int id}) async {
+    await db.update(
+      SqfExpenseSmallCategory.tableName,
+      {SqfExpenseSmallCategory.deleteFlag: 1},
+      id,
+    );
   }
 
   @override

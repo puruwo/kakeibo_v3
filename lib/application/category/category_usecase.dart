@@ -5,6 +5,7 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_big_category_with_small_list_value/edit_expense_big_category_value.dart';
 import 'package:kakeibo/theme/category_palette.dart';
@@ -26,6 +27,12 @@ class CategoryUsecase {
       _ref.read(expenseSmallCategoryRepositoryProvider);
   ExpenseBigCategoryRepository get _bigCategoryRepositoryProvider =>
       _ref.read(expensebigCategoryRepositoryProvider);
+  FixedCostRepository get _fixedCostRepository =>
+      _ref.read(fixedCostRepositoryProvider);
+
+  /// 固定費が使っているため削除できないときの案内文（KP-024）
+  static String fixedCostInUseMessage(List<String> fixedCostNames) =>
+      '固定費「${fixedCostNames.join("」「")}」が使っているため削除できません';
 
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get _updateDBCountNotifier =>
@@ -34,8 +41,8 @@ class CategoryUsecase {
   /// [fetchAll] メソッドは、全ての小カテゴリー情報を取得し、それに関連する大カテゴリー情報を取得して、最終的に
   /// カテゴリー情報をまとめて返す
   Future<List<ExpenseCategoryEntity>> fetchAll() async {
-    // 小カテゴリーを全て取得する
-    final list = await _smallCategoryRepositoryProvider.fetchAll();
+    // 削除されていない小カテゴリーを全て取得する（入力画面・並び替え・固定費のカテゴリー選択で使う。KP-024）
+    final list = await _smallCategoryRepositoryProvider.fetchAllActive();
 
     final categoryList = <ExpenseCategoryEntity>[];
 
@@ -119,7 +126,8 @@ class CategoryUsecase {
   ///
   /// 既存の大カテゴリーが使っていない色のうち、支出スウォッチ順で先頭の色（KP-012 D-07）。
   Future<Color> pickDefaultColorForNewBigCategory() async {
-    final list = await _bigCategoryRepositoryProvider.fetchAll();
+    // 削除済みのカテゴリーの色は空いているものとして扱う（KP-024）
+    final list = await _bigCategoryRepositoryProvider.fetchAllActive();
     return CategoryColorPicker.firstUnused(
       swatches: CategoryPalette.expenseSwatches,
       usedColorCodes: list.map((e) => e.colorCode),
@@ -129,16 +137,16 @@ class CategoryUsecase {
   /// [fetchAllBigCategoriesWithSmallList]はsmallCategoryの情報を添えて全ての大カテゴリーを取得する
   Future<List<EditExpenseBigCategoryValue>>
       fetchAllBigCategoriesWithSmallList() async {
-    // 大カテゴリーを全て取得する
-    final list = await _bigCategoryRepositoryProvider.fetchAll();
+    // 削除されていない大カテゴリーを全て取得する（KP-024）
+    final list = await _bigCategoryRepositoryProvider.fetchAllActive();
 
     final bigCategoryList = <EditExpenseBigCategoryValue>[];
 
     // 各カテゴリー情報をentity化する
     for (var element in list) {
-      // 大カテゴリーから小カテゴリーのリストを取得する
+      // 大カテゴリーから、削除されていない小カテゴリーのリストを取得する
       final smallCategoryEntity = await _smallCategoryRepositoryProvider
-          .fetchByBigCategory(bigCategoryId: element.id);
+          .fetchActiveByBigCategory(bigCategoryId: element.id);
 
       String smallCategoryNameText = '';
       // 小カテゴリーの名前をまとめる
@@ -185,9 +193,9 @@ class CategoryUsecase {
   /// [fetchSmallCategoriesByBig]はBigIDを指定してsmallCategoryの一覧を取得する
   Future<List<EditExpenseSmallCategoryValue>> fetchSmallCategoriesByBig(
       int bigCategoryId) async {
-    // カテゴリーのリストを取得する
-    final fetchList = await _smallCategoryRepositoryProvider.fetchByBigCategory(
-        bigCategoryId: bigCategoryId);
+    // 削除されていない小カテゴリーのリストを取得する（KP-024）
+    final fetchList = await _smallCategoryRepositoryProvider
+        .fetchActiveByBigCategory(bigCategoryId: bigCategoryId);
 
     final resultList = <EditExpenseSmallCategoryValue>[];
 
@@ -267,12 +275,13 @@ class CategoryUsecase {
     _updateDBCountNotifier.incrementState();
   }
 
-  /// 小カテゴリーの編集処理（並び替え・名称変更・表示切替・追加）
+  /// 小カテゴリーの編集処理（並び替え・名称変更・追加・削除）
   ///
   /// [editValues] は編集中リスト（→ EdittingSmallCategoryListNotifier）で、
   /// まだDBに無い項目は id が負の一意な値、表示順は並びどおりの 0..n-1 になっている。
   /// 編集前の値との対応づけは id で行う（引数のリストは並べ替えない。
   /// providerが保持しているリストを壊さないため）。
+  /// 編集前にあって編集中リストに無い項目は、画面で削除した小カテゴリーとして論理削除する（KP-024）。
   Future<void> smallEdit(
       {required List<EditExpenseSmallCategoryValue> originalValues,
       required List<EditExpenseSmallCategoryValue> editValues}) async {
@@ -281,17 +290,29 @@ class CategoryUsecase {
     // id が負なら新規、0以上なら既存項目
     final addedValues = editValues.where((value) => value.id < 0).toList();
     final savedValues = editValues.where((value) => value.id >= 0).toList();
+    final savedIds = savedValues.map((value) => value.id).toSet();
+    final removedValues = originalValues
+        .where((value) => !savedIds.contains(value.id))
+        .toList();
 
     // 検証は書き込みを始める前に済ませる
     // （トランザクションを張っていないため、途中で投げるとDBが半端に書き換わる）
-    // 編集画面に削除の導線は無いため、既存項目が減っているのは想定外
-    if (savedValues.length < originalValues.length) {
-      throw const AppException('予期せぬエラーが発生しました(E001)');
-    }
     for (final value in savedValues) {
       // 編集前に無いidが既存項目として来るのは想定外
       if (!originalById.containsKey(value.id)) {
         throw const AppException('予期せぬエラーが発生しました(E001)');
+      }
+    }
+    if (removedValues.isNotEmpty) {
+      // 入力画面で選べるカテゴリーが無くならないよう、最後の1件は残す
+      if (editValues.isEmpty) {
+        throw const AppException('小カテゴリーは1件以上必要です');
+      }
+      // 固定費が使っている小カテゴリーは削除させない（使われ続けると削除済みで実績が作られる）
+      final fixedCostNames = await fetchFixedCostNamesUsingSmallCategories(
+          removedValues.map((value) => value.id).toList());
+      if (fixedCostNames.isNotEmpty) {
+        throw AppException(fixedCostInUseMessage(fixedCostNames));
       }
     }
 
@@ -334,6 +355,54 @@ class CategoryUsecase {
         await _smallCategoryRepositoryProvider.add(entity: entity);
       }
     }
+
+    // 削除した小カテゴリーは行を消さずに論理削除する（登録済みの支出の参照先を残す）
+    for (final value in removedValues) {
+      await _smallCategoryRepositoryProvider.logicalDelete(id: value.id);
+    }
+
+    // DBの更新回数をインクリメント
+    _updateDBCountNotifier.incrementState();
+  }
+
+  /// [smallCategoryIds] のいずれかを使っている固定費（削除されていないもの）の名前を返す
+  ///
+  /// 固定費が使っているカテゴリーは削除させない（KP-024）。空なら削除してよい。
+  Future<List<String>> fetchFixedCostNamesUsingSmallCategories(
+      List<int> smallCategoryIds) async {
+    if (smallCategoryIds.isEmpty) {
+      return [];
+    }
+    final idSet = smallCategoryIds.toSet();
+    final fixedCosts = await _fixedCostRepository.fetchAllActive();
+    return fixedCosts
+        .where((fixedCost) => idSet.contains(fixedCost.expenseSmallCategoryId))
+        .map((fixedCost) => fixedCost.name)
+        .toList();
+  }
+
+  /// 大カテゴリーを配下の小カテゴリーごと論理削除する（KP-024）
+  ///
+  /// 行は残すため、登録済みの支出の表示・集計は変わらない。
+  /// 最後の1件のとき、または固定費が配下の小カテゴリーを使っているときは削除させない。
+  Future<void> deleteBig(int bigId) async {
+    final activeBigList = await _bigCategoryRepositoryProvider.fetchAllActive();
+    if (activeBigList.length <= 1) {
+      throw const AppException('カテゴリーは1件以上必要です');
+    }
+
+    final smallIds = await _smallCategoryRepositoryProvider
+        .fetchSmallCategoryIdListByBigCategoryId(bigCategoryId: bigId);
+    final fixedCostNames =
+        await fetchFixedCostNamesUsingSmallCategories(smallIds);
+    if (fixedCostNames.isNotEmpty) {
+      throw AppException(fixedCostInUseMessage(fixedCostNames));
+    }
+
+    for (final smallId in smallIds) {
+      await _smallCategoryRepositoryProvider.logicalDelete(id: smallId);
+    }
+    await _bigCategoryRepositoryProvider.logicalDelete(id: bigId);
 
     // DBの更新回数をインクリメント
     _updateDBCountNotifier.incrementState();

@@ -10,8 +10,17 @@ final expenseSmallCategoryRepositoryProvider = Provider<ExpenseSmallCategoryRepo
 /// tbl201(小カテゴリー)に関するリポジトリ
 abstract interface class ExpenseSmallCategoryRepository {
 
-  // 全ての小カテゴリーの情報を取得する
+  // 全ての小カテゴリーの情報を取得する（削除済みを含む。登録済みの支出の表示・集計用）
   Future<List<ExpenseSmallCategoryEntity>> fetchAll();
+
+  /// 削除されていない小カテゴリーを全て取得する（入力・設定画面用。KP-024）
+  Future<List<ExpenseSmallCategoryEntity>> fetchAllActive();
+
+  /// 大カテゴリー指定で、削除されていない小カテゴリーのリストを取得する（設定画面用。KP-024）
+  Future<List<ExpenseSmallCategoryEntity>> fetchActiveByBigCategory({required int bigCategoryId});
+
+  /// 小カテゴリーを論理削除する（行は残す。KP-024）
+  Future<void> logicalDelete({required int id});
 
   /// 小カテゴリー指定で小カテゴリーの情報を取得する
   Future<ExpenseSmallCategoryEntity> fetchBySmallCategory({required int smallCategoryId});

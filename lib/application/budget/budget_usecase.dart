@@ -100,8 +100,8 @@ class BudgetUsecase {
         displayOrder: bigCategory.displayOrder,
       );
 
-      // 0の場合は予算を表示しない
-      if (bigCategory.isDisplayed == 1) {
+      // 削除済みの大カテゴリーは予算を表示しない（KP-024）
+      if (bigCategory.deleteFlag == 0) {
         tileList.add(budgetEditValue);
       }
     }

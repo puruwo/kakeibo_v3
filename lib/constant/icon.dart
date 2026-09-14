@@ -44,6 +44,9 @@ class AppIcons {
   static const IconData edit = Icons.edit_rounded;
   static const IconData delete = Icons.delete_rounded;
 
+  /// 編集中リストの行頭に置く削除（カテゴリー設定の丸マイナス。KP-024）
+  static const IconData deleteRow = Icons.remove_circle_rounded;
+
   /// 完了・保存・適用・チェック（チェックボックスを含む）
   static const IconData done = Icons.done_rounded;
   static const IconData settings = Icons.settings_rounded;

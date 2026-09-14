@@ -35,11 +35,14 @@ class EdittingBigCategoryListNotifier
     state = updatedList;
   }
 
-  // 表示チェックボックスの操作時
-  void toggleDisplay(int order){
-    // 旧状態を取得
-    final oldState = state[order].etitedStateIsChecked;
-    // 状態を反転させ更新
-    state[order] = state[order].copyWith(etitedStateIsChecked: !oldState);
+  /// 削除した大カテゴリーをリストから外す（KP-024）
+  ///
+  /// DBの論理削除は済んでいる。残りの表示順は並びどおりに振り直す
+  void removeById(int id) {
+    final updatedList = state.where((e) => e.id != id).toList();
+    for (var i = 0; i < updatedList.length; i++) {
+      updatedList[i] = updatedList[i].copyWith(editedStateDisplayOrder: i);
+    }
+    state = updatedList;
   }
 }

@@ -20,7 +20,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 収入カテゴリーは並び替え・表示ON/OFFの仕組みを持たないためフッターは表示しない
+    // 収入カテゴリーは並び替え・削除モードを持たないためフッターは表示しない（収入の削除は詳細画面の上部バー）
     if (categoryType == CategoryType.income) {
       return const SizedBox.shrink();
     }
@@ -39,7 +39,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
       width: double.infinity,
       child: MainButton(
         buttonType: ButtonColorType.main,
-        buttonText: '表示・並び替え',
+        buttonText: '並び替え・削除',
         onPressed: () {
           // 編集モードの状態を更新
           final notifier = ref.read(editModeNotifierProvider.notifier);

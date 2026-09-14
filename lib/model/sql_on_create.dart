@@ -51,7 +51,8 @@ class DataBaseHelperHandling {
             ${SqfExpenseSmallCategory.name} TEXT NOT NULL,
             ${SqfExpenseSmallCategory.smallCategoryOrderKey} INTEGER NOT NULL,
             ${SqfExpenseSmallCategory.displayedOrderInBig} INTEGER NOT NULL,
-            ${SqfExpenseSmallCategory.defaultDisplayed} INTEGER NOT NULL
+            ${SqfExpenseSmallCategory.defaultDisplayed} INTEGER NOT NULL,
+            ${SqfExpenseSmallCategory.deleteFlag} INTEGER NOT NULL DEFAULT 0
           );
           ''');
 
@@ -92,7 +93,8 @@ class DataBaseHelperHandling {
             ${SqfExpenseBigCategory.colorCode} TEXT NOT NULL,
             ${SqfExpenseBigCategory.resourcePath} TEXT NOT NULL,
             ${SqfExpenseBigCategory.displayOrder} INTEGER NOT NULL,
-            ${SqfExpenseBigCategory.isDisplayed} INTEGER NOT NULL
+            ${SqfExpenseBigCategory.isDisplayed} INTEGER NOT NULL,
+            ${SqfExpenseBigCategory.deleteFlag} INTEGER NOT NULL DEFAULT 0
           )
           ;''');
 
@@ -130,7 +132,8 @@ class DataBaseHelperHandling {
             ${SqfIncomeSmallCategory.name} TEXT NOT NULL,
             ${SqfIncomeSmallCategory.smallCategoryOrderKey} INTEGER NOT NULL,
             ${SqfIncomeSmallCategory.displayedOrderInBig} INTEGER NOT NULL,
-            ${SqfIncomeSmallCategory.defaultDisplayed} INTEGER NOT NULL
+            ${SqfIncomeSmallCategory.defaultDisplayed} INTEGER NOT NULL,
+            ${SqfIncomeSmallCategory.deleteFlag} INTEGER NOT NULL DEFAULT 0
           );
           ''');
 
@@ -153,7 +156,8 @@ class DataBaseHelperHandling {
             ${SqfIncomeBigCategory.name} TEXT NOT NULL,
             ${SqfIncomeBigCategory.colorCode} TEXT NOT NULL,
             ${SqfIncomeBigCategory.resourcePath} TEXT NOT NULL,
-            ${SqfIncomeBigCategory.accountType} INTEGER NOT NULL DEFAULT 1
+            ${SqfIncomeBigCategory.accountType} INTEGER NOT NULL DEFAULT 1,
+            ${SqfIncomeBigCategory.deleteFlag} INTEGER NOT NULL DEFAULT 0
           )
           ;''');
 

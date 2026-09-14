@@ -37,16 +37,12 @@ class EdittingSmallCategoryListNotifier
     state = _withNormalizedOrder(updatedList);
   }
 
-  // 表示チェックボックスの操作時
-  void toggleDisplay(int order) {
-    // 旧状態を取得
-    final oldState = state[order].etitedStateIsChecked;
-    // 状態を反転させ更新（listを差し替えて購読者へ通知する）
-    final updatedList = [...state];
-    updatedList[order] = updatedList[order].copyWith(
-      etitedStateIsChecked: !oldState,
-    );
-    state = updatedList;
+  /// 小カテゴリーをリストから外す（KP-024）
+  ///
+  /// 既存の項目は保存時に論理削除される（編集前のリストとの差分で判定する）。
+  /// まだDBに無い項目は外すだけで何も残らない
+  void removeById(int id) {
+    state = _withNormalizedOrder(state.where((e) => e.id != id).toList());
   }
 
   /// 小カテゴリーを末尾に追加する

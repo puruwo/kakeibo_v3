@@ -20,6 +20,8 @@ class IncomeBigCategoryEntity with _$IncomeBigCategoryEntity {
     required String iconPath,
     // 会計種別（1=生活収支, 2=特別枠）。ADR-025
     @Default(AccountTypeConstants.living) int accountType,
+    // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+    @Default(0) int deleteFlag,
   }) = _IncomeBigCategoryEntity;
 
   @override

@@ -28,7 +28,9 @@ mixin _$IncomeSmallCategoryEntity {
   int get bigCategoryKey => throw _privateConstructorUsedError;
   int get displayedOrderInBig => throw _privateConstructorUsedError;
   String get smallCategoryName => throw _privateConstructorUsedError;
-  int get defaultDisplayed => throw _privateConstructorUsedError;
+  int get defaultDisplayed =>
+      throw _privateConstructorUsedError; // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  int get deleteFlag => throw _privateConstructorUsedError;
 
   /// Serializes this IncomeSmallCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,6 +56,7 @@ abstract class $IncomeSmallCategoryEntityCopyWith<$Res> {
     int displayedOrderInBig,
     String smallCategoryName,
     int defaultDisplayed,
+    int deleteFlag,
   });
 }
 
@@ -81,6 +84,7 @@ class _$IncomeSmallCategoryEntityCopyWithImpl<
     Object? displayedOrderInBig = null,
     Object? smallCategoryName = null,
     Object? defaultDisplayed = null,
+    Object? deleteFlag = null,
   }) {
     return _then(
       _value.copyWith(
@@ -108,6 +112,10 @@ class _$IncomeSmallCategoryEntityCopyWithImpl<
                 ? _value.defaultDisplayed
                 : defaultDisplayed // ignore: cast_nullable_to_non_nullable
                       as int,
+            deleteFlag: null == deleteFlag
+                ? _value.deleteFlag
+                : deleteFlag // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -130,6 +138,7 @@ abstract class _$$IncomeSmallCategoryEntityImplCopyWith<$Res>
     int displayedOrderInBig,
     String smallCategoryName,
     int defaultDisplayed,
+    int deleteFlag,
   });
 }
 
@@ -157,6 +166,7 @@ class __$$IncomeSmallCategoryEntityImplCopyWithImpl<$Res>
     Object? displayedOrderInBig = null,
     Object? smallCategoryName = null,
     Object? defaultDisplayed = null,
+    Object? deleteFlag = null,
   }) {
     return _then(
       _$IncomeSmallCategoryEntityImpl(
@@ -184,6 +194,10 @@ class __$$IncomeSmallCategoryEntityImplCopyWithImpl<$Res>
             ? _value.defaultDisplayed
             : defaultDisplayed // ignore: cast_nullable_to_non_nullable
                   as int,
+        deleteFlag: null == deleteFlag
+            ? _value.deleteFlag
+            : deleteFlag // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -199,6 +213,7 @@ class _$IncomeSmallCategoryEntityImpl extends _IncomeSmallCategoryEntity {
     required this.displayedOrderInBig,
     required this.smallCategoryName,
     required this.defaultDisplayed,
+    this.deleteFlag = 0,
   }) : super._();
 
   factory _$IncomeSmallCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
@@ -216,10 +231,14 @@ class _$IncomeSmallCategoryEntityImpl extends _IncomeSmallCategoryEntity {
   final String smallCategoryName;
   @override
   final int defaultDisplayed;
+  // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  @override
+  @JsonKey()
+  final int deleteFlag;
 
   @override
   String toString() {
-    return 'IncomeSmallCategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displayedOrderInBig: $displayedOrderInBig, smallCategoryName: $smallCategoryName, defaultDisplayed: $defaultDisplayed)';
+    return 'IncomeSmallCategoryEntity(id: $id, smallCategoryOrderKey: $smallCategoryOrderKey, bigCategoryKey: $bigCategoryKey, displayedOrderInBig: $displayedOrderInBig, smallCategoryName: $smallCategoryName, defaultDisplayed: $defaultDisplayed, deleteFlag: $deleteFlag)';
   }
 
   @override
@@ -237,7 +256,9 @@ class _$IncomeSmallCategoryEntityImpl extends _IncomeSmallCategoryEntity {
             (identical(other.smallCategoryName, smallCategoryName) ||
                 other.smallCategoryName == smallCategoryName) &&
             (identical(other.defaultDisplayed, defaultDisplayed) ||
-                other.defaultDisplayed == defaultDisplayed));
+                other.defaultDisplayed == defaultDisplayed) &&
+            (identical(other.deleteFlag, deleteFlag) ||
+                other.deleteFlag == deleteFlag));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -250,6 +271,7 @@ class _$IncomeSmallCategoryEntityImpl extends _IncomeSmallCategoryEntity {
     displayedOrderInBig,
     smallCategoryName,
     defaultDisplayed,
+    deleteFlag,
   );
 
   /// Create a copy of IncomeSmallCategoryEntity
@@ -277,6 +299,7 @@ abstract class _IncomeSmallCategoryEntity extends IncomeSmallCategoryEntity {
     required final int displayedOrderInBig,
     required final String smallCategoryName,
     required final int defaultDisplayed,
+    final int deleteFlag,
   }) = _$IncomeSmallCategoryEntityImpl;
   const _IncomeSmallCategoryEntity._() : super._();
 
@@ -294,7 +317,9 @@ abstract class _IncomeSmallCategoryEntity extends IncomeSmallCategoryEntity {
   @override
   String get smallCategoryName;
   @override
-  int get defaultDisplayed;
+  int get defaultDisplayed; // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  @override
+  int get deleteFlag;
 
   /// Create a copy of IncomeSmallCategoryEntity
   /// with the given fields replaced by the non-null parameter values.

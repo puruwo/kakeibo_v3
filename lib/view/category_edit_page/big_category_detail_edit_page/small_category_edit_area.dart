@@ -2,16 +2,19 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
+import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
+import 'package:kakeibo/application/category/income_category_usecase.dart';
 
 /// localImport
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/category_edit_page/category_delete_dialog.dart';
+import 'package:kakeibo/view/category_edit_page/category_delete_row_button.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
-import 'package:kakeibo/view/component/check_box.dart';
 import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/dialog/new_small_category_input_sheet.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_income_small_category_list/editting_income_small_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/editting_small_category_edit_list%20copy/editting_small_category_edit_list.dart';
@@ -21,8 +24,8 @@ import 'package:kakeibo/constant/icon.dart';
 
 /// 小カテゴリーの編集エリア（案件 UIデザイン改修 §2）
 ///
-/// 外観エリアと同じインセット枠に収める。行の機能は従来どおり
-/// （チェックで表示切替／行内で名称編集／右端ハンドルで並び替え／末尾行で追加）。
+/// 外観エリアと同じインセット枠に収める。行の機能は
+/// 行頭の丸マイナスで削除（KP-024。旧・チェックで表示切替）／行内で名称編集／右端ハンドルで並び替え／末尾行で追加。
 class SmallCategoryEditArea extends ConsumerStatefulWidget {
   const SmallCategoryEditArea({
     required this.bigId,
@@ -152,8 +155,59 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
     super.dispose();
   }
 
-  /// チェックボックス（表示切替）のタップ処理
-  void _toggleDisplay(int index) {
+  /// [item] の行を削除できるか（KP-024）
+  ///
+  /// 入力画面で選べるカテゴリーが無くならないよう最後の1件は残す。
+  /// 収入の給与・ボーナスは収入追加の初期選択に使うため削除させない
+  bool _canDelete(dynamic item) {
+    if (itemList.length <= 1) {
+      return false;
+    }
+    if (widget.categoryType == CategoryType.income &&
+        IncomeCategoryUsecase.isDefaultSmallCategory(item.id as int)) {
+      return false;
+    }
+    return true;
+  }
+
+  /// 行頭の削除ボタンのタップ処理（KP-024）
+  ///
+  /// 既存の小カテゴリーは確認してからリストを外し、保存時に論理削除する。
+  /// まだDBに無い項目は確認せずに外す。固定費が使っている小カテゴリーは外さずに案内する
+  Future<void> _onDeleteTap(dynamic item) async {
+    final id = item.id as int;
+    final name = _controllerFor(item).text;
+
+    if (id >= 0) {
+      if (widget.categoryType == CategoryType.expense) {
+        final fixedCostNames = await ref
+            .read(categoryUsecaseProvider)
+            .fetchFixedCostNamesUsingSmallCategories([id]);
+        if (!mounted) {
+          return;
+        }
+        if (fixedCostNames.isNotEmpty) {
+          await showCategoryInUseByFixedCostDialog(
+            context,
+            categoryName: name,
+            fixedCostNames: fixedCostNames,
+          );
+          return;
+        }
+      }
+
+      final recordLabel =
+          widget.categoryType == CategoryType.income ? '収入' : '支出';
+      final shouldDelete = await showCategoryDeleteConfirmationDialog(
+        context,
+        categoryName: name,
+        message: '削除した小カテゴリーは元に戻せません。\n登録済みの$recordLabelはそのまま残ります。',
+      );
+      if (!shouldDelete || !mounted) {
+        return;
+      }
+    }
+
     if (widget.categoryType == CategoryType.income) {
       ref
           .read(
@@ -161,7 +215,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
               widget.bigId,
             ).notifier,
           )
-          .toggleDisplay(index);
+          .removeById(id);
       ref
           .read(
             isIncomeSmallCategoryListEditedNotifierProvider(
@@ -174,7 +228,7 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
           .read(
             edittingSmallCategoryListNotifierProvider(widget.bigId).notifier,
           )
-          .toggleDisplay(index);
+          .removeById(id);
       ref
           .read(
             isSmallCategoryListEditedNotifierProvider(widget.bigId).notifier,
@@ -401,16 +455,11 @@ class _SmallCategoryEditArea extends ConsumerState<SmallCategoryEditArea> {
                                 ),
                                 child: Row(
                                   children: [
-                                    // チェックボックス（表示切替）
-                                    AppInkWell(
-                                      borderRadius: BorderRadius.circular(8),
-                                      onTap: () => _toggleDisplay(index),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(4),
-                                        child: CheckBox(
-                                          isChecked: item.etitedStateIsChecked,
-                                        ),
-                                      ),
+                                    // 削除ボタン（KP-024。旧・表示切替のチェックボックス）
+                                    CategoryDeleteRowButton(
+                                      onTap: _canDelete(item)
+                                          ? () => _onDeleteTap(item)
+                                          : null,
                                     ),
 
                                     const SizedBox(width: 10),
