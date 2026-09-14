@@ -5,6 +5,8 @@ import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entit
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_repository.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_repository.dart';
 import 'package:kakeibo/domain/ui_value/edit_expense_small_category_list_value/edit_expense_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/expense_big_category_with_small_list_value/edit_expense_big_category_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
@@ -15,6 +17,7 @@ import '../../helper/test_container.dart';
 void main() {
   late FakeExpenseSmallCategoryRepository fakeSmallRepository;
   late FakeExpenseBigCategoryRepository fakeBigRepository;
+  late FakeFixedCostRepository fakeFixedCostRepository;
 
   // 支出大カテゴリー（displayOrderはid順と一致させず、並び替えを検証できるようにする）
   // 3:特別費 は小カテゴリーを1件も持たない
@@ -76,11 +79,15 @@ void main() {
   ProviderContainer createUsecaseContainer({
     List<ExpenseSmallCategoryEntity> smalls = smallCategories,
     List<ExpenseBigCategoryEntity> bigs = bigCategories,
+    List<FixedCostEntity> fixedCosts = const [],
   }) {
     fakeSmallRepository = FakeExpenseSmallCategoryRepository(
       initialRecords: smalls,
     );
     fakeBigRepository = FakeExpenseBigCategoryRepository(initialRecords: bigs);
+    fakeFixedCostRepository = FakeFixedCostRepository(
+      initialRecords: fixedCosts,
+    );
     return createContainer(
       overrides: [
         expenseSmallCategoryRepositoryProvider.overrideWithValue(
@@ -89,7 +96,28 @@ void main() {
         expensebigCategoryRepositoryProvider.overrideWithValue(
           fakeBigRepository,
         ),
+        fixedCostRepositoryProvider.overrideWithValue(fakeFixedCostRepository),
       ],
+    );
+  }
+
+  /// 小カテゴリー[smallCategoryId]を使う固定費マスタ（KP-024 の削除ガード検証用）
+  FixedCostEntity buildFixedCost({
+    required int id,
+    required String name,
+    required int smallCategoryId,
+    int deleteFlag = 0,
+  }) {
+    return FixedCostEntity(
+      id: id,
+      name: name,
+      variable: 0,
+      price: 80000,
+      expenseSmallCategoryId: smallCategoryId,
+      intervalNumber: 1,
+      intervalUnit: 1,
+      firstPaymentDate: '20250125',
+      deleteFlag: deleteFlag,
     );
   }
 
@@ -170,6 +198,23 @@ void main() {
       expect(result.map((e) => e.smallCategoryOrderKey), [1, 5, 9]);
       expect(result.map((e) => e.sortKey), [0, 1, 2]);
     });
+
+    test('削除済みの小カテゴリーは入力画面向けの一覧に出さず、sortKeyは詰めて振る', () async {
+      final container = createUsecaseContainer(
+        smalls: [
+          smallCategories[0],
+          // smallCategoryOrderKey が最小の「日用品」を削除済みにする
+          smallCategories[1].copyWith(deleteFlag: 1),
+          smallCategories[2],
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      final result = await usecase.fetchAll();
+
+      expect(result.map((e) => e.id), [10, 12]);
+      expect(result.map((e) => e.sortKey), [0, 1]);
+    });
   });
 
   group('CategoryUsecase.fetchBySmallId', () {
@@ -219,6 +264,30 @@ void main() {
       // isDisplayedのint→boolの初期変換
       expect(result.map((e) => e.etitedStateIsChecked), [false, true, true]);
     });
+
+    test('削除済みの大カテゴリーは並べず、削除済みの小カテゴリーは名前に含めない', () async {
+      final container = createUsecaseContainer(
+        bigs: [
+          bigCategories[0],
+          bigCategories[1].copyWith(deleteFlag: 1),
+          bigCategories[2],
+        ],
+        smalls: [
+          smallCategories[0],
+          smallCategories[1].copyWith(deleteFlag: 1),
+          smallCategories[2],
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      final result = await usecase.fetchAllBigCategoriesWithSmallList();
+
+      // レジャー（id=2）が外れ、表示順は 1 → 3 を 0 からの連番で振り直す
+      expect(result.map((e) => e.id), [1, 3]);
+      expect(result.map((e) => e.editedStateDisplayOrder), [0, 1]);
+      // 生活費の小カテゴリーは食費だけ（日用品は削除済み）
+      expect(result.first.expenseSmallCategoryNameText, '食費');
+    });
   });
 
   group('CategoryUsecase.fetchSmallCategoriesByBig', () {
@@ -234,6 +303,22 @@ void main() {
       expect(result.map((e) => e.editedStateDisplayOrder), [0, 1]);
       // defaultDisplayed == 1 のものだけチェック済みになる
       expect(result.map((e) => e.etitedStateIsChecked), [false, true]);
+    });
+
+    test('削除済みの小カテゴリーは詳細画面の編集対象に出さない', () async {
+      final container = createUsecaseContainer(
+        smalls: [
+          smallCategories[0].copyWith(deleteFlag: 1),
+          smallCategories[1],
+          smallCategories[2],
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      final result = await usecase.fetchSmallCategoriesByBig(1);
+
+      expect(result.map((e) => e.id), [11]);
+      expect(result.map((e) => e.editedStateDisplayOrder), [0]);
     });
   });
 
@@ -327,26 +412,92 @@ void main() {
   });
 
   group('CategoryUsecase.smallEdit', () {
-    test('既存項目が減っているとエラー（編集画面に削除の導線は無い）', () async {
+    // KP-024: 詳細画面の丸マイナスで外した既存項目は、保存時に論理削除する
+    test('編集中リストから外した既存項目は論理削除され、行は残る', () async {
       final container = createUsecaseContainer();
       final usecase = container.read(categoryUsecaseProvider);
 
+      await usecase.smallEdit(
+        originalValues: [
+          buildEditSmall(id: 10, name: '食費'),
+          buildEditSmall(id: 11, name: '日用品'),
+        ],
+        editValues: [buildEditSmall(id: 10, name: '食費')],
+      );
+
+      expect(fakeSmallRepository.logicallyDeletedIds, [11]);
       expect(
-        () => usecase.smallEdit(
+        fakeSmallRepository.records.firstWhere((e) => e.id == 11).deleteFlag,
+        1,
+      );
+      // 残した項目は変更が無いので書き込まない
+      expect(fakeSmallRepository.updatedEntities, isEmpty);
+    });
+
+    test('固定費が使っている小カテゴリーを外すとエラーになり、ほかの変更も書き込まない', () async {
+      final container = createUsecaseContainer(
+        fixedCosts: [buildFixedCost(id: 1, name: '家賃', smallCategoryId: 11)],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      await expectLater(
+        usecase.smallEdit(
           originalValues: [
             buildEditSmall(id: 10, name: '食費'),
             buildEditSmall(id: 11, name: '日用品'),
           ],
-          editValues: [buildEditSmall(id: 10, name: '食費')],
+          // 名前の変更も同時にしているが、検証で止まるので書き込まれない
+          editValues: [buildEditSmall(id: 10, name: '食料品')],
         ),
         throwsA(
           isA<AppException>().having(
             (e) => e.message,
             'message',
-            '予期せぬエラーが発生しました(E001)',
+            '固定費「家賃」が使っているため削除できません',
           ),
         ),
       );
+      expect(fakeSmallRepository.logicallyDeletedIds, isEmpty);
+      expect(fakeSmallRepository.updatedEntities, isEmpty);
+    });
+
+    test('削除済みの固定費だけが使っている小カテゴリーは削除できる', () async {
+      final container = createUsecaseContainer(
+        fixedCosts: [
+          buildFixedCost(id: 1, name: '家賃', smallCategoryId: 11, deleteFlag: 1),
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      await usecase.smallEdit(
+        originalValues: [
+          buildEditSmall(id: 10, name: '食費'),
+          buildEditSmall(id: 11, name: '日用品'),
+        ],
+        editValues: [buildEditSmall(id: 10, name: '食費')],
+      );
+
+      expect(fakeSmallRepository.logicallyDeletedIds, [11]);
+    });
+
+    test('小カテゴリーをすべて外すとエラー（最後の1件は残す）', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(categoryUsecaseProvider);
+
+      await expectLater(
+        usecase.smallEdit(
+          originalValues: [buildEditSmall(id: 10, name: '食費')],
+          editValues: const [],
+        ),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            '小カテゴリーは1件以上必要です',
+          ),
+        ),
+      );
+      expect(fakeSmallRepository.logicallyDeletedIds, isEmpty);
     });
 
     test('idで対応づけられ、変更のあった行だけupdateされる', () async {
@@ -481,6 +632,110 @@ void main() {
 
       expect(original.map((e) => e.id), [10, 11]);
       expect(edited.map((e) => e.id), [11, 10]);
+    });
+  });
+
+  group('CategoryUsecase.fetchFixedCostNamesUsingSmallCategories', () {
+    test('指定した小カテゴリーを使う有効な固定費の名前だけを返す', () async {
+      final container = createUsecaseContainer(
+        fixedCosts: [
+          buildFixedCost(id: 1, name: '家賃', smallCategoryId: 10),
+          buildFixedCost(id: 2, name: 'ジム', smallCategoryId: 12),
+          // 削除済みの固定費は対象外
+          buildFixedCost(id: 3, name: '旧回線', smallCategoryId: 10, deleteFlag: 1),
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      final names = await usecase.fetchFixedCostNamesUsingSmallCategories([
+        10,
+        11,
+      ]);
+
+      expect(names, ['家賃']);
+    });
+
+    test('小カテゴリーを指定しなければ空を返す', () async {
+      final container = createUsecaseContainer(
+        fixedCosts: [buildFixedCost(id: 1, name: '家賃', smallCategoryId: 10)],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      expect(await usecase.fetchFixedCostNamesUsingSmallCategories([]), isEmpty);
+    });
+  });
+
+  group('CategoryUsecase.deleteBig', () {
+    test('大カテゴリーを配下の小カテゴリーごと論理削除し、行は残る', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(categoryUsecaseProvider);
+      final dbCount = listenUpdateDBCount(container);
+
+      await usecase.deleteBig(1);
+
+      // 生活費（id=1）の配下は 食費(10)・日用品(11)
+      expect(fakeSmallRepository.logicallyDeletedIds, [10, 11]);
+      expect(fakeBigRepository.logicallyDeletedIds, [1]);
+      expect(fakeBigRepository.records, hasLength(3));
+      expect(
+        fakeBigRepository.records.firstWhere((e) => e.id == 1).deleteFlag,
+        1,
+      );
+      expect(dbCount.read(), 1);
+    });
+
+    test('固定費が配下の小カテゴリーを使っているとエラーになり何も削除しない', () async {
+      final container = createUsecaseContainer(
+        fixedCosts: [buildFixedCost(id: 1, name: '家賃', smallCategoryId: 11)],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      await expectLater(
+        usecase.deleteBig(1),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            '固定費「家賃」が使っているため削除できません',
+          ),
+        ),
+      );
+      expect(fakeSmallRepository.logicallyDeletedIds, isEmpty);
+      expect(fakeBigRepository.logicallyDeletedIds, isEmpty);
+    });
+
+    test('有効な大カテゴリーが残り1件ならエラー（削除済みは数えない）', () async {
+      final container = createUsecaseContainer(
+        bigs: [
+          bigCategories[0],
+          bigCategories[1].copyWith(deleteFlag: 1),
+          bigCategories[2].copyWith(deleteFlag: 1),
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      await expectLater(
+        usecase.deleteBig(1),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            'カテゴリーは1件以上必要です',
+          ),
+        ),
+      );
+      expect(fakeBigRepository.logicallyDeletedIds, isEmpty);
+    });
+
+    test('小カテゴリーを持たない大カテゴリーも削除できる', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(categoryUsecaseProvider);
+
+      // 特別費（id=3）は小カテゴリーを1件も持たない
+      await usecase.deleteBig(3);
+
+      expect(fakeSmallRepository.logicallyDeletedIds, isEmpty);
+      expect(fakeBigRepository.logicallyDeletedIds, [3]);
     });
   });
 

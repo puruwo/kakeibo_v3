@@ -137,7 +137,8 @@ void main() {
   });
 
   group('delete', () {
-    test('追加した大カテゴリーは物理削除できる', () async {
+    // KP-024: 物理削除から論理削除（delete_flag = 1）に変わった
+    test('追加した大カテゴリーは論理削除でき、行は残る', () async {
       final id = await repository.add(
         entity: const IncomeBigCategoryEntity(
           id: 0,
@@ -149,8 +150,11 @@ void main() {
 
       await repository.delete(id: id);
 
-      final results = await repository.fetchAll();
-      expect(results.map((e) => e.id).toList(), [1, 2]);
+      final all = await repository.fetchAll();
+      expect(all.map((e) => e.id).toList(), [1, 2, id]);
+      expect(all.firstWhere((e) => e.id == id).deleteFlag, 1);
+      final active = await repository.fetchAllActive();
+      expect(active.map((e) => e.id).toList(), [1, 2]);
     });
 
     test('id=1（月次収入）は削除できずStateErrorになる', () async {

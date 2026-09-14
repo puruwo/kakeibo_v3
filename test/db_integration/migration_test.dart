@@ -2019,7 +2019,161 @@ void main() {
     });
   });
 
-  group('マイグレーションチェーン v6 → v13', () {
+  group('toV14: カテゴリーの論理削除', () {
+    /// v13 形状のカテゴリー4テーブルを持つDBを作る
+    ///
+    /// テーブル定義の出典: dev@ca40ae4 時点の sql_on_create.dart（delete_flag 追加前）。
+    /// 支出大・支出小・収入小は非表示の行を1件ずつ含める（表示に戻ることを確かめるため）。
+    Future<Database> createV13ShapeCategoryTables() async {
+      final db = await databaseFactory.openDatabase(
+        inMemoryDatabasePath,
+        options: OpenDatabaseOptions(singleInstance: false),
+      );
+      addTearDown(db.close);
+      await db.execute('''
+        CREATE TABLE expense_big_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          color_code TEXT NOT NULL,
+          resource_path TEXT NOT NULL,
+          display_order INTEGER NOT NULL,
+          is_displayed INTEGER NOT NULL
+        );
+      ''');
+      await db.execute('''
+        CREATE TABLE expense_small_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          big_category_key INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          small_category_order_key INTEGER NOT NULL,
+          displayed_order_in_big INTEGER NOT NULL,
+          default_displayed INTEGER NOT NULL
+        );
+      ''');
+      await db.execute('''
+        CREATE TABLE income_small_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          big_category_key INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          small_category_order_key INTEGER NOT NULL,
+          displayed_order_in_big INTEGER NOT NULL,
+          default_displayed INTEGER NOT NULL
+        );
+      ''');
+      await db.execute('''
+        CREATE TABLE income_big_category (
+          _id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          color_code TEXT NOT NULL,
+          resource_path TEXT NOT NULL,
+          account_type INTEGER NOT NULL DEFAULT 1
+        );
+      ''');
+      await db.execute('''
+        INSERT INTO expense_big_category (name, color_code, resource_path, display_order, is_displayed)
+        VALUES ('食費', 'F45058', 'assets/images/icon_meal.svg', 0, 1),
+               ('医療費', 'DA51CC', 'assets/images/icon_medical.svg', 1, 0);
+      ''');
+      await db.execute('''
+        INSERT INTO expense_small_category (big_category_key, name, small_category_order_key, displayed_order_in_big, default_displayed)
+        VALUES (1, '外食', 0, 0, 1),
+               (1, '社食', 1, 1, 0);
+      ''');
+      await db.execute('''
+        INSERT INTO income_small_category (big_category_key, name, small_category_order_key, displayed_order_in_big, default_displayed)
+        VALUES (1, '給与', 0, 0, 1),
+               (1, '臨時収入', 1, 1, 0);
+      ''');
+      await db.execute('''
+        INSERT INTO income_big_category (name, color_code, resource_path, account_type)
+        VALUES ('月次収入', '12C281', 'assets/images/icon_regular_income.svg', 1);
+      ''');
+      return db;
+    }
+
+    const categoryTables = [
+      SqfExpenseBigCategory.tableName,
+      SqfExpenseSmallCategory.tableName,
+      SqfIncomeBigCategory.tableName,
+      SqfIncomeSmallCategory.tableName,
+    ];
+
+    test('カテゴリー4テーブルに delete_flag が追加され、既存行は0（有効）になる', () async {
+      final db = await createV13ShapeCategoryTables();
+
+      await DataBaseMigrate().toV14(db);
+
+      for (final tableName in categoryTables) {
+        final columns = await _columnNames(db, tableName);
+        expect(columns.contains(SqfExpenseBigCategory.deleteFlag), isTrue,
+            reason: tableName);
+        final rows = await db.query(tableName);
+        expect(
+          rows.map((row) => row[SqfExpenseBigCategory.deleteFlag]).toSet(),
+          {0},
+          reason: tableName,
+        );
+      }
+    });
+
+    test('非表示だったカテゴリーは削除扱いにせず表示（1）に戻す', () async {
+      final db = await createV13ShapeCategoryTables();
+
+      await DataBaseMigrate().toV14(db);
+
+      final expenseBig = await db.query(SqfExpenseBigCategory.tableName);
+      expect(
+        expenseBig.map((row) => row[SqfExpenseBigCategory.isDisplayed]).toSet(),
+        {1},
+      );
+      final expenseSmall = await db.query(SqfExpenseSmallCategory.tableName);
+      expect(
+        expenseSmall
+            .map((row) => row[SqfExpenseSmallCategory.defaultDisplayed])
+            .toSet(),
+        {1},
+      );
+      final incomeSmall = await db.query(SqfIncomeSmallCategory.tableName);
+      expect(
+        incomeSmall
+            .map((row) => row[SqfIncomeSmallCategory.defaultDisplayed])
+            .toSet(),
+        {1},
+      );
+    });
+
+    test('2回実行しても結果は同じ（冪等）で、削除済みの行はそのまま', () async {
+      final db = await createV13ShapeCategoryTables();
+      await DataBaseMigrate().toV14(db);
+      // 1回目のあとにユーザーが削除した状態を作る
+      await db.update(
+        SqfExpenseSmallCategory.tableName,
+        {SqfExpenseSmallCategory.deleteFlag: 1},
+        where: '${SqfExpenseSmallCategory.id} = ?',
+        whereArgs: [2],
+      );
+
+      await DataBaseMigrate().toV14(db);
+
+      final rows = await db.query(
+        SqfExpenseSmallCategory.tableName,
+        orderBy: SqfExpenseSmallCategory.id,
+      );
+      expect(rows.map((row) => row[SqfExpenseSmallCategory.deleteFlag]), [0, 1]);
+    });
+
+    test('新規インストール（onCreate）のカテゴリー4テーブルも delete_flag を持つ', () async {
+      final db = await openTestDatabase();
+
+      for (final tableName in categoryTables) {
+        final columns = await _columnNames(db, tableName);
+        expect(columns.contains(SqfExpenseBigCategory.deleteFlag), isTrue,
+            reason: tableName);
+      }
+    });
+  });
+
+  group('マイグレーションチェーン v6 → v14', () {
     /// v6形状のDBファイルを DatabaseHelper のパスに作って閉じる
     ///
     /// テーブル定義はv6時点のもの（fixed_costはタイポ列 /
@@ -2158,7 +2312,7 @@ void main() {
       await db.close();
     }
 
-    test('v6形状のDBを開くとonUpgradeでv7〜v13が順に適用されuser_versionが13になる（v12は処理なし）', () async {
+    test('v6形状のDBを開くとonUpgradeでv7〜v14が順に適用されuser_versionが14になる（v12は処理なし）', () async {
       final path = await currentDatabasePath();
       await createV6DatabaseFile(path);
 
@@ -2166,10 +2320,16 @@ void main() {
       final db = await openTestDatabase();
 
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 13);
+      expect(rows.first.values.first, 14);
       // v11 の列追加まで到達していること
       final columns = await _columnNames(db, SqfFixedCost.tableName);
       expect(columns.contains(SqfFixedCost.estimatedPriceIsManual), isTrue);
+      // v14 の列追加まで到達していること（KP-024）
+      final categoryColumns = await _columnNames(
+        db,
+        SqfExpenseSmallCategory.tableName,
+      );
+      expect(categoryColumns.contains(SqfExpenseSmallCategory.deleteFlag), isTrue);
     });
 
     test('チェーン適用後はv7の色更新とv8の列追加・バックフィルとv10の統合が反映される', () async {

@@ -23,7 +23,7 @@ void main() {
   // システム日時2025/7/6・開始日25日 → 集計期間は2025/6/25〜7/24（代表月202506）
   const monthKey = '202506';
 
-  // 支出大カテゴリー（表示順どおりに並ぶ。id=3は非表示カテゴリー）
+  // 支出大カテゴリー（表示順どおりに並ぶ。id=3は削除済みカテゴリー。KP-024）
   const expenseBigCategories = [
     ExpenseBigCategoryEntity(
       id: 1,
@@ -44,10 +44,11 @@ void main() {
     ExpenseBigCategoryEntity(
       id: 3,
       colorCode: '00FF00',
-      bigCategoryName: '非表示カテゴリー',
+      bigCategoryName: '削除済みカテゴリー',
       resourcePath: 'assets/images/icon_others.svg',
       displayOrder: 3,
-      isDisplayed: 0,
+      isDisplayed: 1,
+      deleteFlag: 1,
     ),
   ];
 
@@ -212,8 +213,8 @@ void main() {
     expect(find.text('¥ 8,000'), findsOneWidget);
     expect(find.text('---'), findsOneWidget);
 
-    // isDisplayed=0 のカテゴリーは一覧に出ない
-    expect(find.text('非表示カテゴリー'), findsNothing);
+    // 削除済みのカテゴリーは一覧に出ない
+    expect(find.text('削除済みカテゴリー'), findsNothing);
   });
 
   testWidgets('予算未登録のカテゴリーは入力欄が空でヒント「金額を入力」が出る', (tester) async {

@@ -37,11 +37,11 @@ void main() {
       );
     });
 
-    test('新規作成直後のスキーマバージョンは13になる', () async {
+    test('新規作成直後のスキーマバージョンは14になる', () async {
       final db = await openTestDatabase();
-      // DatabaseHelper._databaseVersion と一致していること
+      // DatabaseHelper._databaseVersion と一致していること（v14: カテゴリーの論理削除。KP-024）
       final rows = await db.rawQuery('PRAGMA user_version');
-      expect(rows.first.values.first, 13);
+      expect(rows.first.values.first, 14);
     });
 
     test('income_big_categoryは会計種別を持ち、月次収入=1・ボーナス=2で作成される', () async {
