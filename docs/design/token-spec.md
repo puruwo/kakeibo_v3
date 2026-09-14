@@ -136,6 +136,7 @@
 | `color.overlay` | `#FFFFFF99` 🔸（2026-09-11 KP-013 で `#00000033` から変更） | `#00000033` | 非活性ボタンの沈め（`button_util.dart`）。ライトでは黒を重ねると非活性の方が濃く見え意味が反転するため白60%へ |
 | `color.link` | `#007AFFFF` | `#0A84FFFF` | linkColor(新規有効化) |
 | `color.handle` | `#C7C7CCFF` 🔸 | `#D9D9D9FF` | barHandler(1) |
+| `color.scrim` | `#0000008A` | `#0000008A` | （2026-09-13 KP-022 新設）前面に重ねるパネルの背後の暗幕（期間ピッカー・`AppTheme` の `bottomSheetTheme.modalBarrierColor`）。Flutter のボトムシート既定の暗幕（黒54%）と同値。ピッカーは従来黒75%の直書き |
 
 ### ライトモード対応で新設（2026-09-11 KP-013）
 
@@ -184,6 +185,7 @@ Apple準拠でない以下は、ライト背景での見え方を実機/Figmaで
 - `color.pressed-overlay` ライト `#000000` 10% — 白いカード・行の押下で暗くなるのが見えるか確認
 - `color.surface-highlight` ライト 無し（完全透明） — カードが平坦になり iOS grouped 風に見えるか確認（光沢を残す場合は白系の低アルファ）
 - `color.card-surface` ライト `#F2F2F7` — 白地の全体タブと `#F2F2F7` 地のサブページの両方でカードが立つか確認
+- `color.scrim` ライト `#000000` 54%（KP-022 で新設） — 白地の分析画面の上で暗すぎず、前面のパネルが浮いて見えるか確認
 - `color.surface-elevated-2` ライト（⚠️ 上記）— 3段階の段差維持の判断
 
 ---

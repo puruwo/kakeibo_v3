@@ -67,6 +67,10 @@ void main() {
         expect(c.theme.highlightColor, c.colors.pressedOverlay);
       });
 
+      test('ボトムシートの暗幕は scrim（期間ピッカーと同じ色）', () {
+        expect(c.theme.bottomSheetTheme.modalBarrierColor, c.colors.scrim);
+      });
+
       test('スイッチは枠線なし・つまみ onPrimary・トラックは primary / icon', () {
         final switchTheme = c.theme.switchTheme;
         expect(
