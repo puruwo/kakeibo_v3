@@ -20,6 +20,7 @@ import 'package:kakeibo/view_model/state/register_page/fixed_cost_input_controll
 import 'package:kakeibo/view_model/state/register_page/input_date_controller/input_date_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/input_initialized_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class RegisaterPageBase extends ConsumerStatefulWidget {
   final TransactionMode transactionMode;
@@ -157,7 +158,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
             },
             icon: Icon(
               //バッテン
-              Icons.close_rounded,
+              AppIcons.close,
               color: context.colors.text,
             ),
           ),
@@ -168,7 +169,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
                   IconButton(
                     onPressed: () => _showDeleteConfirmDialog(context),
                     icon: Icon(
-                      Icons.delete_outline,
+                      AppIcons.delete,
                       color: context.colors.danger,
                     ),
                   ),

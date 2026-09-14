@@ -50,7 +50,7 @@ class ImplementsCategoryAccountingRepository
                     GROUP BY ${SqfBudget.expenseBigCategoryId}
                   ) t3 
                   ON t1.${SqfExpenseBigCategory.id} = t3.${SqfBudget.expenseBigCategoryId}
-                  WHERE NOT (t1.${SqfExpenseBigCategory.isDisplayed} = 0 AND t2.${SqfExpenseSmallCategory.bigCategoryKey} IS NULL)
+                  WHERE NOT (t1.${SqfExpenseBigCategory.deleteFlag} = 1 AND t2.${SqfExpenseSmallCategory.bigCategoryKey} IS NULL)
                   ORDER BY t1.${SqfExpenseBigCategory.displayOrder} ASC;
                 ''';
 
@@ -106,7 +106,7 @@ class ImplementsCategoryAccountingRepository
                     GROUP BY ${SqfBudget.expenseBigCategoryId}
                   ) t3
                   ON t1.${SqfExpenseBigCategory.id} = t3.${SqfBudget.expenseBigCategoryId}
-                  WHERE NOT (t1.${SqfExpenseBigCategory.isDisplayed} = 0 AND t2.${SqfExpenseSmallCategory.bigCategoryKey} IS NULL)
+                  WHERE NOT (t1.${SqfExpenseBigCategory.deleteFlag} = 1 AND t2.${SqfExpenseSmallCategory.bigCategoryKey} IS NULL)
                   AND t1.${SqfExpenseBigCategory.id} = $expenseBigCategoryId;
                 ''';
     // 実行

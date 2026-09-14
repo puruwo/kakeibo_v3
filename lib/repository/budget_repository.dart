@@ -61,6 +61,7 @@ class ImplementsBudgetRepository implements BudgetRepository {
 
   // 月の合計予算を算出する
   // 同一月・同一カテゴリーに複数行あるときはカテゴリーごと最新行（MAX(_id)）のみを合計する
+  // 削除済みの大カテゴリーの予算は合計しない（予算画面から消えて直せなくなるため。KP-024）
   @override
   Future<int> fetchMonthlyAll({required MonthValue month}) async {
     final sql = '''
@@ -73,7 +74,12 @@ class ImplementsBudgetRepository implements BudgetRepository {
         WHERE ${SqfBudget.month} = ${month.month}
         GROUP BY ${SqfBudget.expenseBigCategoryId}
       ) b
-      ON a.${SqfBudget.id} = b.max_id;
+      ON a.${SqfBudget.id} = b.max_id
+      WHERE a.${SqfBudget.expenseBigCategoryId} NOT IN (
+        SELECT ${SqfExpenseBigCategory.id}
+        FROM ${SqfExpenseBigCategory.tableName}
+        WHERE ${SqfExpenseBigCategory.deleteFlag} = 1
+      );
     ''';
 
     try {

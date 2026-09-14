@@ -1178,6 +1178,19 @@ class FakeIncomeSmallCategoryRepository
   Future<List<IncomeSmallCategoryEntity>> fetchAll() async => List.of(records);
 
   @override
+  Future<List<IncomeSmallCategoryEntity>> fetchAllActive() async =>
+      records.where((e) => e.deleteFlag == 0).toList();
+
+  @override
+  Future<List<IncomeSmallCategoryEntity>> fetchActiveByBigCategory({
+    required int bigCategoryId,
+  }) async {
+    return records
+        .where((e) => e.bigCategoryKey == bigCategoryId && e.deleteFlag == 0)
+        .toList();
+  }
+
+  @override
   Future<IncomeSmallCategoryEntity> fetchBySmallCategory({
     required int smallCategoryId,
   }) async {
@@ -1228,10 +1241,11 @@ class FakeIncomeSmallCategoryRepository
     }
   }
 
+  /// 本実装は行を消さずに delete_flag を1にする（KP-024）
   @override
   Future<void> delete({required int id}) async {
     deletedIds.add(id);
-    records.removeWhere((e) => e.id == id);
+    _markDeleted((e) => e.id == id);
   }
 
   @override
@@ -1242,8 +1256,16 @@ class FakeIncomeSmallCategoryRepository
         .where((e) => e.bigCategoryKey == bigCategoryId)
         .map((e) => e.id)
         .toList();
-    records.removeWhere((e) => e.bigCategoryKey == bigCategoryId);
+    _markDeleted((e) => e.bigCategoryKey == bigCategoryId);
     return ids;
+  }
+
+  void _markDeleted(bool Function(IncomeSmallCategoryEntity) test) {
+    for (var i = 0; i < records.length; i++) {
+      if (test(records[i])) {
+        records[i] = records[i].copyWith(deleteFlag: 1);
+      }
+    }
   }
 
   @override
@@ -1305,8 +1327,34 @@ class FakeExpenseSmallCategoryRepository
   /// getMaxSmallCategoryOrderKey に渡された大カテゴリーIDの記録（検証用）
   final List<int> getMaxOrderKeyBigCategoryIds = [];
 
+  /// logicalDelete で渡されたidの記録（検証用）
+  final List<int> logicallyDeletedIds = [];
+
   @override
   Future<List<ExpenseSmallCategoryEntity>> fetchAll() async => List.of(records);
+
+  @override
+  Future<List<ExpenseSmallCategoryEntity>> fetchAllActive() async =>
+      records.where((e) => e.deleteFlag == 0).toList();
+
+  @override
+  Future<List<ExpenseSmallCategoryEntity>> fetchActiveByBigCategory({
+    required int bigCategoryId,
+  }) async {
+    return records
+        .where((e) => e.bigCategoryKey == bigCategoryId && e.deleteFlag == 0)
+        .toList();
+  }
+
+  /// 本実装は行を消さずに delete_flag を1にする（KP-024）
+  @override
+  Future<void> logicalDelete({required int id}) async {
+    logicallyDeletedIds.add(id);
+    final index = records.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      records[index] = records[index].copyWith(deleteFlag: 1);
+    }
+  }
 
   @override
   Future<ExpenseSmallCategoryEntity> fetchBySmallCategory({
@@ -1384,8 +1432,25 @@ class FakeExpenseBigCategoryRepository implements ExpenseBigCategoryRepository {
 
   int _nextId = 1000;
 
+  /// logicalDelete で渡されたidの記録（検証用）
+  final List<int> logicallyDeletedIds = [];
+
   @override
   Future<List<ExpenseBigCategoryEntity>> fetchAll() async => List.of(records);
+
+  @override
+  Future<List<ExpenseBigCategoryEntity>> fetchAllActive() async =>
+      records.where((e) => e.deleteFlag == 0).toList();
+
+  /// 本実装は行を消さずに delete_flag を1にする（KP-024）
+  @override
+  Future<void> logicalDelete({required int id}) async {
+    logicallyDeletedIds.add(id);
+    final index = records.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      records[index] = records[index].copyWith(deleteFlag: 1);
+    }
+  }
 
   @override
   Future<ExpenseBigCategoryEntity> fetchByBigCategory({
@@ -1437,6 +1502,10 @@ class FakeIncomeBigCategoryRepository implements IncomeBigCategoryRepository {
   Future<List<IncomeBigCategoryEntity>> fetchAll() async => List.of(records);
 
   @override
+  Future<List<IncomeBigCategoryEntity>> fetchAllActive() async =>
+      records.where((e) => e.deleteFlag == 0).toList();
+
+  @override
   Future<IncomeBigCategoryEntity> fetchByBigCategory({
     required int bigCategoryId,
   }) async {
@@ -1467,7 +1536,11 @@ class FakeIncomeBigCategoryRepository implements IncomeBigCategoryRepository {
       throw StateError('id=1（月次収入）/ id=2（ボーナス）は削除できません');
     }
     deletedIds.add(id);
-    records.removeWhere((e) => e.id == id);
+    // 本実装は行を消さずに delete_flag を1にする（KP-024）
+    final index = records.indexWhere((e) => e.id == id);
+    if (index >= 0) {
+      records[index] = records[index].copyWith(deleteFlag: 1);
+    }
   }
 
   @override

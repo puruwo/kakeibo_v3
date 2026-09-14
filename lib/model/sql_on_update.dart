@@ -1034,6 +1034,68 @@ class DataBaseMigrate {
     logger.i('=== v13マイグレーション完了 ===');
   }
 
+  // カテゴリーの論理削除 (v13 → v14)
+  //
+  // 大・小カテゴリーの表示/非表示を廃止し、削除（delete_flag）に置き換える（KP-024）。
+  //   手順1: 支出・収入の大・小カテゴリー4テーブルに delete_flag を追加する（既存行は0=有効）
+  //   手順2: 非表示だったカテゴリーを表示に戻す（is_displayed / default_displayed を1にする）
+  // 非表示は削除とみなさない（取り消せない変化をユーザーの操作なしに起こさないため）。
+  // 列は存在を確かめてから追加し、手順2も値を1に揃えるだけなので、2回実行しても結果は同じ（冪等）。
+  Future<void> toV14(Database db) async {
+    logger.i('=== v14マイグレーション開始: カテゴリーの論理削除 ===');
+
+    for (final tableName in [
+      SqfExpenseBigCategory.tableName,
+      SqfExpenseSmallCategory.tableName,
+      SqfIncomeBigCategory.tableName,
+      SqfIncomeSmallCategory.tableName,
+    ]) {
+      await _addCategoryDeleteFlagColumn(db, tableName);
+    }
+
+    for (final entry in {
+      SqfExpenseBigCategory.tableName: SqfExpenseBigCategory.isDisplayed,
+      SqfExpenseSmallCategory.tableName: SqfExpenseSmallCategory.defaultDisplayed,
+      SqfIncomeSmallCategory.tableName: SqfIncomeSmallCategory.defaultDisplayed,
+    }.entries) {
+      if (!await _tableExists(db, entry.key)) {
+        continue;
+      }
+      await db.execute('UPDATE ${entry.key} SET ${entry.value} = 1;');
+    }
+    logger.i('14-2. 非表示だったカテゴリーを表示に戻しました');
+
+    logger.i('=== v14マイグレーション完了 ===');
+  }
+
+  /// v14-1: カテゴリーのテーブルに delete_flag を追加する
+  ///
+  /// 4テーブルとも列名は同じ `delete_flag`。列が既にあれば何もしない（新規インストールは onCreate で持つ）。
+  /// テーブル自体が無ければ何もしない（古い版から段階的に上げる途中のDBへの耐性）。
+  Future<void> _addCategoryDeleteFlagColumn(
+    Database db,
+    String tableName,
+  ) async {
+    if (!await _tableExists(db, tableName)) {
+      logger.i('14-1. $tableName が無いためスキップ');
+      return;
+    }
+    final columns = await db.rawQuery('PRAGMA table_info($tableName)');
+    final hasColumn = columns.any(
+      (column) => column['name'] == SqfExpenseBigCategory.deleteFlag,
+    );
+    if (hasColumn) {
+      logger.i('14-1. $tableName の delete_flag は追加済みのためスキップ');
+      return;
+    }
+
+    await db.execute(
+      'ALTER TABLE $tableName '
+      'ADD COLUMN ${SqfExpenseBigCategory.deleteFlag} INTEGER NOT NULL DEFAULT 0;',
+    );
+    logger.i('14-1. $tableName に delete_flag を追加しました');
+  }
+
   /// v13-0: 支出・収入大カテゴリーの color_code を大文字に揃える
   ///
   /// 画面から保存した色は `ColorCode.fromColor` により小文字6桁で入るため、

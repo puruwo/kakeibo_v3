@@ -20,6 +20,8 @@ class ExpenseSmallCategoryEntity with _$ExpenseSmallCategoryEntity {
     required int displayedOrderInBig,
     required String smallCategoryName,
     required int defaultDisplayed,
+    // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+    @Default(0) int deleteFlag,
   }) = _SmallCategoryEntity;
 
   @override

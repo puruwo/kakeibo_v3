@@ -19,6 +19,7 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/income_bi
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_big_category_appearance_edited/is_income_big_category_appearance_edited.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_income_small_category_list_edited/is_income_small_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
     with PresentationMixin {
@@ -38,9 +39,10 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
         // 削除ボタン（id=1, id=2 は表示しない）
         if (!IncomeBigCategoryConstants.isDefaultCategory(bigId))
           IconButton(
+            // AppBar の削除は danger 色（ボタンルール §4）
             icon: Icon(
-              Icons.delete_outline_rounded,
-              color: context.colors.text,
+              AppIcons.delete,
+              color: context.colors.danger,
             ),
             onPressed: () async {
               // 削除確認は共通のアクションシート型（ADR-030）。素の AlertDialog は
@@ -48,7 +50,8 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
               final shouldDelete = await showConfirmationDialog(
                 context,
                 title: 'カテゴリーを削除しますか？',
-                message: 'このカテゴリーに紐づく項目および収入レコードがすべて削除されます。',
+                // 論理削除のため登録済みの収入は残る（KP-024）
+                message: '小カテゴリーもあわせて削除します。\n元に戻せません。\n登録済みの収入はそのまま残ります。',
                 confirmLabel: '削除する',
                 isDestructive: true,
               );
@@ -91,7 +94,7 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
 
         // 完了ボタン
         IconButton(
-          icon: Icon(Icons.done_rounded, color: context.colors.text),
+          icon: Icon(AppIcons.done, color: context.colors.text),
           onPressed: () async {
             execute(
               context,

@@ -297,27 +297,27 @@ Future<int> insertFixedCostRow({
   });
 }
 
-/// 支出大カテゴリーの表示フラグ（is_displayed）を書き換える
+/// 支出大カテゴリーの削除フラグ（delete_flag）を書き換える（KP-024）
 ///
-/// カテゴリー集計SQLの「非表示かつ実績なしのカテゴリーを隠す」条件を検証するために使う。
-/// マスタはonCreateでシード済みなので、投入ではなく更新で状態を作る。
-Future<int> updateExpenseBigCategoryIsDisplayed({
+/// カテゴリー集計SQLの「削除済みかつ実績なしのカテゴリーを隠す」条件を検証するために使う。
+Future<int> updateExpenseBigCategoryDeleteFlag({
   required int id,
-  required int isDisplayed,
+  required int deleteFlag,
 }) {
   return DatabaseHelper.instance.update(SqfExpenseBigCategory.tableName, {
-    SqfExpenseBigCategory.isDisplayed: isDisplayed,
+    SqfExpenseBigCategory.deleteFlag: deleteFlag,
   }, id);
 }
 
-/// 支出小カテゴリーの既定表示フラグ（default_displayed）を書き換える
+/// 支出小カテゴリーの削除フラグ（delete_flag）を書き換える（KP-024）
 ///
-/// 小カテゴリータイルSQLの「既定非表示かつ実績なしのタイルを隠す」条件の検証用。
-Future<int> updateExpenseSmallCategoryDefaultDisplayed({
+/// 小カテゴリータイルSQLの「削除済みかつ実績なしのタイルを隠す」条件の検証用。
+Future<int> updateExpenseSmallCategoryDeleteFlag({
   required int id,
-  required int defaultDisplayed,
+  required int deleteFlag,
 }) {
   return DatabaseHelper.instance.update(SqfExpenseSmallCategory.tableName, {
-    SqfExpenseSmallCategory.defaultDisplayed: defaultDisplayed,
+    SqfExpenseSmallCategory.deleteFlag: deleteFlag,
   }, id);
 }
+

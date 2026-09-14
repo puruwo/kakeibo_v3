@@ -15,6 +15,7 @@ import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 支出履歴の共通タイル（案件 UIデザイン改修 §6）
 ///
@@ -75,14 +76,14 @@ class ExpenseHistoryListTile extends ConsumerWidget {
     await showMenuDialog(context, items: [
       MenuDialogItem(
         label: '編集',
-        icon: Icons.edit_outlined,
+        icon: AppIcons.edit,
         onPressed: () async {
           await _openEditSheet(context, ref);
         },
       ),
       MenuDialogItem(
         label: '削除',
-        icon: Icons.delete_outline,
+        icon: AppIcons.delete,
         isDestructive: true,
         onPressed: () async {
           showDeleteConfirmationDialog(

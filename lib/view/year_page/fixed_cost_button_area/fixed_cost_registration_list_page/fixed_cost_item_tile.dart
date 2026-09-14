@@ -9,6 +9,7 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_setting_page.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class FixedCostItemTile extends ConsumerWidget {
   const FixedCostItemTile({
@@ -59,11 +60,11 @@ class FixedCostItemTile extends ConsumerWidget {
         return await showMenuDialog(context, items: [
           MenuDialogItem(
               label: '編集',
-              icon: Icons.edit_outlined,
+              icon: AppIcons.edit,
               onPressed: () => _openSettingPage(context)),
           MenuDialogItem(
               label: '削除',
-              icon: Icons.delete_outline,
+              icon: AppIcons.delete,
               isDestructive: true,
               onPressed: () async {
                 showFixedCostDeleteConfirmationDialog(

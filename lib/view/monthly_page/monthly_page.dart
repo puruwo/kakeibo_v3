@@ -1,6 +1,5 @@
 /// Package imports
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'package:kakeibo/constant/strings.dart';
@@ -34,6 +33,7 @@ import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/app_year_month_picker.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class MonthlyPage extends ConsumerStatefulWidget {
   const MonthlyPage({super.key});
@@ -144,7 +144,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         Transform.translate(
                           offset: const Offset(-4, 0),
                           child: Icon(
-                            Icons.arrow_drop_down,
+                            AppIcons.dropdown,
                             color: context.colors.icon,
                             size: 30,
                           ),
@@ -166,7 +166,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                 MaterialPageRoute(builder: (context) => const ConfigTop()),
               ),
             },
-            icon: const Icon(Icons.settings_rounded),
+            icon: const Icon(AppIcons.settings),
           ),
         ],
       ),
@@ -284,7 +284,7 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                       },
                                       // 遷移先は一覧（追加は一覧側のFAB）なので一覧アイコン
                                       icon: Icon(
-                                        Icons.format_list_bulleted_rounded,
+                                        AppIcons.list,
                                         size: 18,
                                         color: context.colors.primary,
                                       ),
@@ -303,15 +303,12 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                                           ),
                                         );
                                       },
-                                      icon: SvgPicture.asset(
-                                        'assets/images/ui_icon_edit.svg',
-                                        // 仕様 §1: mainボタンの文字色がprimaryになったためアイコンも揃える
-                                        colorFilter: ColorFilter.mode(
-                                          context.colors.primary,
-                                          BlendMode.srcIn,
-                                        ),
-                                        width: 15,
-                                        height: 15,
+                                      // 仕様 §1: mainボタンの文字色がprimaryになったためアイコンも揃える
+                                      // KP-023: UI用 SVG を廃止し Material の編集アイコンへ
+                                      icon: Icon(
+                                        AppIcons.edit,
+                                        size: 15,
+                                        color: context.colors.primary,
                                       ),
                                       buttonText: '予算を編集',
                                     ),

@@ -208,9 +208,9 @@ void main() {
       );
     });
 
-    test('非表示(is_displayed = 0)かつ実績が無い大カテゴリーは返さない', () async {
-      // id=6（医療費）を非表示にする
-      await updateExpenseBigCategoryIsDisplayed(id: 6, isDisplayed: 0);
+    test('削除済み(delete_flag = 1)かつ実績が無い大カテゴリーは返さない', () async {
+      // id=6（医療費）を削除済みにする
+      await updateExpenseBigCategoryDeleteFlag(id: 6, deleteFlag: 1);
 
       final results = await repository.fetchAll(
         incomeSourceBigCategoryId: 1,
@@ -222,8 +222,8 @@ void main() {
       expect(results.map((e) => e.id), isNot(contains(6)));
     });
 
-    test('非表示でも期間内に実績があれば返す', () async {
-      await updateExpenseBigCategoryIsDisplayed(id: 6, isDisplayed: 0);
+    test('削除済みでも期間内に実績があれば返す', () async {
+      await updateExpenseBigCategoryDeleteFlag(id: 6, deleteFlag: 1);
       // 小カテゴリー14（医療費）は大カテゴリー6に属する
       await insertExpenseRow(
         id: 1,
@@ -420,8 +420,8 @@ void main() {
       );
     });
 
-    test('非表示かつ実績が無いカテゴリーを指定すると例外を投げる', () async {
-      await updateExpenseBigCategoryIsDisplayed(id: 6, isDisplayed: 0);
+    test('削除済みかつ実績が無いカテゴリーを指定すると例外を投げる', () async {
+      await updateExpenseBigCategoryDeleteFlag(id: 6, deleteFlag: 1);
 
       await expectLater(
         () => repository.fetchSelectedCategory(

@@ -15,6 +15,7 @@ _$BigCategoryEntityImpl _$$BigCategoryEntityImplFromJson(
   resourcePath: json['resourcePath'] as String,
   displayOrder: (json['displayOrder'] as num).toInt(),
   isDisplayed: (json['isDisplayed'] as num).toInt(),
+  deleteFlag: (json['deleteFlag'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$$BigCategoryEntityImplToJson(
@@ -26,4 +27,5 @@ Map<String, dynamic> _$$BigCategoryEntityImplToJson(
   'resourcePath': instance.resourcePath,
   'displayOrder': instance.displayOrder,
   'isDisplayed': instance.isDisplayed,
+  'deleteFlag': instance.deleteFlag,
 };

@@ -15,6 +15,7 @@ import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.d
 import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_yearly_balance_provider.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class YearlyBalanceArea extends ConsumerStatefulWidget {
   const YearlyBalanceArea({super.key});
@@ -49,7 +50,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
             if (yearlyBalanceValue.yearlyBalanceType ==
                 YearlyBalanceType.noRecorod) {
               return AppEmptyState(
-                icon: Icons.show_chart_rounded,
+                icon: AppIcons.chart,
                 title: '家計簿をはじめましょう',
                 description: '毎日の収支を記録するとグラフが表示されます',
                 buttonLabel: '＋ 記録を追加する',
@@ -191,7 +192,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                                 left: AppSpacing.xs,
                                               ),
                                               child: Icon(
-                                                Icons.arrow_forward_ios_rounded,
+                                                AppIcons.next,
                                                 size: 12,
                                                 color:
                                                     context.colors.textSecondary,
@@ -313,7 +314,7 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                                                 left: AppSpacing.xs,
                                               ),
                                               child: Icon(
-                                                Icons.arrow_forward_ios_rounded,
+                                                AppIcons.next,
                                                 size: 12,
                                                 color:
                                                     context.colors.textSecondary,

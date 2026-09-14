@@ -11,6 +11,7 @@ import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_en
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class SubmitBudgetButton extends ConsumerWidget with PresentationMixin {
   const SubmitBudgetButton({super.key});
@@ -25,6 +26,7 @@ class SubmitBudgetButton extends ConsumerWidget with PresentationMixin {
       data: (budgetEditList) {
         return Expanded(
           child: MainButton(
+            iconData: AppIcons.done,
               buttonType: ButtonColorType.main,
               buttonText: '編集を完了',
               onPressed: () async {
@@ -87,14 +89,14 @@ class SubmitBudgetButton extends ConsumerWidget with PresentationMixin {
       error: (error, stackTrace) {
         return Icon(
           //完了チェックマーク
-          Icons.done_rounded,
+          AppIcons.done,
           color: context.colors.text,
         );
       },
       loading: () {
         return Icon(
           //完了チェックマーク
-          Icons.done_rounded,
+          AppIcons.done,
           color: context.colors.text,
         );
       },

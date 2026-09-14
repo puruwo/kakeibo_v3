@@ -11,6 +11,7 @@ import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_cat
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
   const BigCategorySettingFooter({super.key, required this.categoryType});
@@ -19,7 +20,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 収入カテゴリーは並び替え・表示ON/OFFの仕組みを持たないためフッターは表示しない
+    // 収入カテゴリーは並び替え・削除モードを持たないためフッターは表示しない（収入の削除は詳細画面の上部バー）
     if (categoryType == CategoryType.income) {
       return const SizedBox.shrink();
     }
@@ -38,7 +39,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
       width: double.infinity,
       child: MainButton(
         buttonType: ButtonColorType.main,
-        buttonText: '表示・並び替え',
+        buttonText: '並び替え・削除',
         onPressed: () {
           // 編集モードの状態を更新
           final notifier = ref.read(editModeNotifierProvider.notifier);
@@ -69,6 +70,7 @@ class BigCategorySettingFooter extends ConsumerWidget with PresentationMixin {
 
         Expanded(
           child: MainButton(
+            iconData: AppIcons.done,
             buttonType: ButtonColorType.main,
             buttonText: '編集を完了',
             onPressed: () async {

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
@@ -20,6 +21,7 @@ import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/ex
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -125,7 +127,7 @@ void main() {
   /// 小カテゴリーのチェックボックスも同じアイコンを使うため、AppBar配下に絞る。
   Finder doneButton() => find.descendant(
     of: find.byType(AppBar),
-    matching: find.byIcon(Icons.done_rounded),
+    matching: find.byIcon(AppIcons.done),
   );
 
   group('一般（支出）カテゴリー', () {
@@ -532,6 +534,129 @@ void main() {
     });
   });
 
+  // KP-024: 表示チェックボックスを行頭の丸マイナス（削除）に置き換えた。
+  // 確認後にリストから外し、保存（✓）で論理削除する
+  group('小カテゴリーの削除', () {
+    Future<TestFakes> pumpExpensePage(
+      WidgetTester tester, {
+      int bigCategoryId = 1,
+    }) async {
+      final fakes = buildFakes();
+      await pumpApp(
+        tester,
+        home: CategoryDetailEditPage(
+          screenMode: BigCategoryDetailEditScreenMode.edit,
+          categoryType: CategoryType.expense,
+          bigCategoryId: bigCategoryId,
+        ),
+        fakes: fakes,
+      );
+      await pumpTimes(tester);
+      return fakes;
+    }
+
+    /// [label] の行の丸マイナス
+    Finder deleteButtonOf(String label) => find.descendant(
+      of: find.ancestor(of: find.text(label), matching: find.byType(Row)).first,
+      matching: find.byIcon(AppIcons.deleteRow),
+    );
+
+    testWidgets('丸マイナスで確認して削除すると一覧から消え、保存で論理削除される', (tester) async {
+      final fakes = await pumpExpensePage(tester);
+
+      await tester.tap(deleteButtonOf('食費'));
+      await pumpTimes(tester);
+
+      expect(find.text('「食費」を削除しますか？'), findsOneWidget);
+      expect(
+        find.text('削除した小カテゴリーは元に戻せません。\n登録済みの支出はそのまま残ります。'),
+        findsOneWidget,
+      );
+
+      await tester.tap(find.text('削除する'));
+      await pumpTimes(tester);
+
+      expect(find.text('食費'), findsNothing);
+      expect(find.text('日用品'), findsOneWidget);
+      // 保存するまでDBには書き込まない
+      expect(fakes.expenseSmallCategory.logicallyDeletedIds, isEmpty);
+
+      await tester.tap(doneButton());
+      await pumpTimes(tester);
+
+      expect(fakes.expenseSmallCategory.logicallyDeletedIds, [10]);
+
+      await waitForSnackBarDismissed(tester);
+    });
+
+    testWidgets('確認でキャンセルすると一覧に残る', (tester) async {
+      final fakes = await pumpExpensePage(tester);
+
+      await tester.tap(deleteButtonOf('食費'));
+      await pumpTimes(tester);
+      await tester.tap(find.text('キャンセル'));
+      await pumpTimes(tester);
+
+      expect(find.text('「食費」を削除しますか？'), findsNothing);
+      expect(find.text('食費'), findsOneWidget);
+      expect(fakes.expenseSmallCategory.logicallyDeletedIds, isEmpty);
+    });
+
+    testWidgets('固定費が使っている小カテゴリーは削除できない案内が出て一覧に残る', (tester) async {
+      final fakes = buildFakes();
+      // 固定費「家賃」が日用品（id=11）を使っている
+      fakes.fixedCost.records.add(
+        const FixedCostEntity(
+          id: 1,
+          name: '家賃',
+          variable: 0,
+          price: 80000,
+          expenseSmallCategoryId: 11,
+          intervalNumber: 1,
+          intervalUnit: 1,
+          firstPaymentDate: '20250125',
+        ),
+      );
+      await pumpApp(
+        tester,
+        home: const CategoryDetailEditPage(
+          screenMode: BigCategoryDetailEditScreenMode.edit,
+          categoryType: CategoryType.expense,
+          bigCategoryId: 1,
+        ),
+        fakes: fakes,
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(deleteButtonOf('日用品'));
+      await pumpTimes(tester);
+
+      expect(find.text('「日用品」は削除できません'), findsOneWidget);
+      expect(
+        find.text('固定費「家賃」がこのカテゴリーを使っています。\n固定費のカテゴリーを変更してから\n削除してください。'),
+        findsOneWidget,
+      );
+      // 削除の確認は出ない
+      expect(find.text('削除する'), findsNothing);
+
+      await tester.tap(find.text('閉じる'));
+      await pumpTimes(tester);
+
+      expect(find.text('日用品'), findsOneWidget);
+    });
+
+    testWidgets('小カテゴリーが1件だけなら丸マイナスは押せず確認も出ない', (tester) async {
+      // 交通費（id=2）の小カテゴリーは電車の1件だけ
+      await pumpExpensePage(tester, bigCategoryId: 2);
+
+      await tester.tap(deleteButtonOf('電車'));
+      await pumpTimes(tester);
+
+      expect(find.text('「電車」を削除しますか？'), findsNothing);
+      expect(find.text('電車'), findsOneWidget);
+    });
+  });
+
   group('収入カテゴリー', () {
     Future<TestFakes> pumpEditPage(WidgetTester tester) async {
       final fakes = buildFakes();
@@ -779,7 +904,7 @@ void main() {
       );
 
       expect(find.text('小カテゴリーを追加'), findsOneWidget);
-      expect(find.byIcon(Icons.drag_handle_rounded), findsNothing);
+      expect(find.byIcon(AppIcons.dragHandle), findsNothing);
       expect(tester.takeException(), isNull);
 
       // アクション行は0件でも押せる

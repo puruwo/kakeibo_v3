@@ -6,6 +6,7 @@ import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/register_page/common_input_field/const_getter.dart/const_input_page_size_getter.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/register_screen_mode/register_screen_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 支出/収入を切り替えるピルボタン
 ///
@@ -76,7 +77,7 @@ class TransactionTypePill extends StatelessWidget {
             Visibility(
               visible: enabled,
               child: Icon(
-                Icons.keyboard_arrow_down_rounded,
+                AppIcons.expand,
                 color: getPillColor(context, currentMode),
                 size: 14,
               ),

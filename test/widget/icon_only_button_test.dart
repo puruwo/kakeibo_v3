@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view/component/app_icon_circle_container.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/widget_test_helper.dart';
 
@@ -39,7 +40,7 @@ void main() {
                 ctx = context;
                 return Center(
                   child: IconOnlyButton(
-                    icon: Icons.add_rounded,
+                    icon: AppIcons.add,
                     onTap: () => tapped++,
                   ),
                 );
@@ -74,7 +75,7 @@ void main() {
                 ctx = context;
                 return Center(
                   child: IconOnlyButton(
-                    icon: Icons.add_rounded,
+                    icon: AppIcons.add,
                     onTap: null,
                     backgroundColor: context.colors.primaryTint,
                     iconColor: context.colors.primary,
@@ -102,7 +103,7 @@ void main() {
         home: Scaffold(
           body: Center(
             child: IconOnlyButton(
-              icon: Icons.remove_rounded,
+              icon: AppIcons.remove,
               onTap: () {},
               bordered: false,
               iconSize: 23,

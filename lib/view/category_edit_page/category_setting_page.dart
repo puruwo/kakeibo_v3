@@ -13,6 +13,7 @@ import 'package:kakeibo/view/component/app_component.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
 import 'package:kakeibo/view_model/state/category_edit_page/edit_mode.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 // カテゴリータイプのEnum
 enum CategoryType {
@@ -73,7 +74,7 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
                 Navigator.of(context, rootNavigator: true).pop();
               }
             },
-            icon: Icon(Icons.close, color: context.colors.text),
+            icon: Icon(AppIcons.close, color: context.colors.text),
           ),
 
           // タブバー（編集モード中はIgnorePointerでタップを遮断し半透明表示）

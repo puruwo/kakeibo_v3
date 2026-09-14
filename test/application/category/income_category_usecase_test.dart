@@ -192,26 +192,71 @@ void main() {
   });
 
   group('IncomeCategoryUsecase.smallEdit', () {
-    test('既存項目が減っているとエラー（編集画面に削除の導線は無い）', () async {
+    // KP-024: 詳細画面の丸マイナスで外した既存項目は、保存時に論理削除する
+    test('編集中リストから外した既存項目は論理削除され、行は残る', () async {
       final container = createUsecaseContainer();
       final usecase = container.read(incomeCategoryUsecaseProvider);
 
+      await usecase.smallEdit(
+        originalValues: [
+          buildEditSmall(id: 10, name: '基本給'),
+          buildEditSmall(id: 11, name: '残業代'),
+        ],
+        editValues: [buildEditSmall(id: 10, name: '基本給')],
+      );
+
+      expect(fakeSmallRepository.deletedIds, [11]);
       expect(
-        () => usecase.smallEdit(
+        fakeSmallRepository.records.firstWhere((e) => e.id == 11).deleteFlag,
+        1,
+      );
+      // 残した項目は変更が無いので書き込まない
+      expect(fakeSmallRepository.updatedEntities, isEmpty);
+    });
+
+    test('給与・ボーナス（既定の小カテゴリー）を外すとエラーになり何も書き込まない', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(incomeCategoryUsecaseProvider);
+
+      await expectLater(
+        usecase.smallEdit(
           originalValues: [
+            // id=1 は IncomeSmallCategoryConstants.salary（給与）
+            buildEditSmall(id: 1, name: '給与'),
             buildEditSmall(id: 10, name: '基本給'),
-            buildEditSmall(id: 11, name: '残業代'),
           ],
-          editValues: [buildEditSmall(id: 10, name: '基本給')],
+          editValues: [buildEditSmall(id: 10, name: '月給')],
         ),
         throwsA(
           isA<AppException>().having(
             (e) => e.message,
             'message',
-            '予期せぬエラーが発生しました(E001)',
+            '既定の小カテゴリーは削除できません',
           ),
         ),
       );
+      expect(fakeSmallRepository.deletedIds, isEmpty);
+      expect(fakeSmallRepository.updatedEntities, isEmpty);
+    });
+
+    test('小カテゴリーをすべて外すとエラー（最後の1件は残す）', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(incomeCategoryUsecaseProvider);
+
+      await expectLater(
+        usecase.smallEdit(
+          originalValues: [buildEditSmall(id: 10, name: '基本給')],
+          editValues: const [],
+        ),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            '小カテゴリーは1件以上必要です',
+          ),
+        ),
+      );
+      expect(fakeSmallRepository.deletedIds, isEmpty);
     });
 
     test('idで対応づけられ、変更のあった行だけupdateされる', () async {
@@ -441,17 +486,17 @@ void main() {
       expect(fakeIncomeRepository.deletedIds, isEmpty);
     });
 
-    test('配下の小カテゴリーに紐づく収入レコードが連動削除される', () async {
+    // KP-024: 以前は配下の収入レコードごと物理削除していた
+    test('配下の小カテゴリーに紐づく収入レコードは削除しない', () async {
       final container = createUsecaseContainer(incomes: incomes);
       final usecase = container.read(incomeCategoryUsecaseProvider);
 
       await usecase.deleteBig(3);
 
-      // 小カテゴリー12に紐づくレコードだけが削除される
-      expect(fakeIncomeRepository.deletedIds, [100, 102]);
+      expect(fakeIncomeRepository.deletedIds, isEmpty);
     });
 
-    test('小カテゴリーの一括削除と大カテゴリーの削除が実行される', () async {
+    test('小カテゴリーと大カテゴリーが論理削除され、行は残る', () async {
       final container = createUsecaseContainer(incomes: incomes);
       final usecase = container.read(incomeCategoryUsecaseProvider);
 
@@ -459,12 +504,28 @@ void main() {
 
       expect(fakeSmallRepository.deletedBigCategoryIds, [3]);
       expect(fakeBigRepository.deletedIds, [3]);
-      // マスタからも消えている
+      // 行は残り、削除フラグだけが立つ
+      final smallsOfBig3 =
+          fakeSmallRepository.records.where((e) => e.bigCategoryKey == 3);
+      expect(smallsOfBig3, isNotEmpty);
+      expect(smallsOfBig3.every((e) => e.deleteFlag == 1), isTrue);
       expect(
-        fakeSmallRepository.records.any((e) => e.bigCategoryKey == 3),
-        isFalse,
+        fakeBigRepository.records.firstWhere((e) => e.id == 3).deleteFlag,
+        1,
       );
-      expect(fakeBigRepository.records.any((e) => e.id == 3), isFalse);
+    });
+
+    test('削除後は設定画面・入力画面向けの取得から外れる', () async {
+      final container = createUsecaseContainer(incomes: incomes);
+      final usecase = container.read(incomeCategoryUsecaseProvider);
+
+      await usecase.deleteBig(3);
+
+      final bigs = await usecase.fetchAllBigCategoriesWithSmallList();
+      expect(bigs.map((e) => e.id), [1, 2]);
+      final categories = await usecase.fetchAllCategory();
+      // 小カテゴリー12（原稿料・大3）が外れる
+      expect(categories.map((e) => e.id), [11, 10]);
     });
 
     test('対象カテゴリーに収入レコードが無ければ収入の削除は発生しない', () async {

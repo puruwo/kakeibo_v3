@@ -15,6 +15,7 @@ import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/input_mode_controller.dart';
 import 'package:kakeibo/view_model/state/register_page/select_category_controller/select_category_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// カテゴリー選択エリアウィジェット
 ///
@@ -151,10 +152,12 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
+                    // 前後の余白を詰め、固定費トグルONでも並べ替えリンクが画面内に残るようにする（KP-020）
+                    // 下側はリンク自身の上パディング（8）と合わせて見た目の間隔を取る
                     children: [
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 8),
                       _buildPageIndicator(pagination.pageCount),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 4),
                     ],
                   ),
                 ),
@@ -208,7 +211,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
-              Icons.settings_outlined,
+              AppIcons.settings,
               size: 16,
               color: context.colors.textSecondary,
             ),

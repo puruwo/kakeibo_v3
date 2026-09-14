@@ -15,6 +15,7 @@ _$IncomeSmallCategoryEntityImpl _$$IncomeSmallCategoryEntityImplFromJson(
   displayedOrderInBig: (json['displayedOrderInBig'] as num).toInt(),
   smallCategoryName: json['smallCategoryName'] as String,
   defaultDisplayed: (json['defaultDisplayed'] as num).toInt(),
+  deleteFlag: (json['deleteFlag'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$$IncomeSmallCategoryEntityImplToJson(
@@ -26,4 +27,5 @@ Map<String, dynamic> _$$IncomeSmallCategoryEntityImplToJson(
   'displayedOrderInBig': instance.displayedOrderInBig,
   'smallCategoryName': instance.smallCategoryName,
   'defaultDisplayed': instance.defaultDisplayed,
+  'deleteFlag': instance.deleteFlag,
 };

@@ -10,9 +10,11 @@ import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/ui_value/income_history_tile_value/income_history_tile_value.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class IncomeItemTile extends ConsumerWidget {
   const IncomeItemTile({
@@ -35,6 +37,11 @@ class IncomeItemTile extends ConsumerWidget {
       fit: BoxFit.scaleDown,
       child: SvgPicture.asset(
         value.iconPath,
+        // KP-023: アセットは無着色（黒）になったため、カテゴリー色で着色する
+        colorFilter: ColorFilter.mode(
+          ColorCode.toColor(value.colorCode),
+          BlendMode.srcIn,
+        ),
         semanticsLabel: 'categoryIcon',
         width: 25,
         height: 25,
@@ -59,7 +66,7 @@ class IncomeItemTile extends ConsumerWidget {
             alignment: Alignment.centerRight,
             child: Padding(
               padding: EdgeInsets.only(right: 18.0),
-              child: Icon(Icons.delete, color: context.colors.icon),
+              child: Icon(AppIcons.delete, color: context.colors.icon),
             ),
           ),
         ),
@@ -159,7 +166,7 @@ class IncomeItemTile extends ConsumerWidget {
                       padding: EdgeInsets.only(right: 4),
                       child: Icon(
                         size: 18,
-                        Icons.add,
+                        AppIcons.add,
                         color: context.colors.income,
                       ),
                     ),

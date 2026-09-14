@@ -18,6 +18,7 @@ import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class ExpenseItemTile extends ConsumerWidget {
   const ExpenseItemTile({
@@ -92,7 +93,7 @@ class ExpenseItemTile extends ConsumerWidget {
             alignment: Alignment.centerRight,
             child: Padding(
               padding: EdgeInsets.only(right: 18.0),
-              child: Icon(Icons.delete, color: context.colors.icon),
+              child: Icon(AppIcons.delete, color: context.colors.icon),
             ),
           ),
         ),
@@ -202,7 +203,7 @@ class ExpenseItemTile extends ConsumerWidget {
                     // nextArrowアイコン
                     Padding(
                       padding: EdgeInsets.only(right: 4),
-                      child: Icon(size: 18, Icons.remove, color: context.colors.expense),
+                      child: Icon(size: 18, AppIcons.remove, color: context.colors.expense),
                     ),
                   ],
                 ),

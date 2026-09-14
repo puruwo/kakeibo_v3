@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 class CheckBox extends StatelessWidget {
   const CheckBox({required this.isChecked, super.key});
@@ -17,7 +18,7 @@ class CheckBox extends StatelessWidget {
               color: context.colors.primary,
             ),
             child: Icon(
-              Icons.done_rounded,
+              AppIcons.done,
               size: 19,
               color: context.colors.onPrimary,
             ),

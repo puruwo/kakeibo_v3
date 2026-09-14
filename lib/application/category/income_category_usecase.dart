@@ -7,7 +7,6 @@ import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_repository.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_repository.dart';
-import 'package:kakeibo/domain/db/income/income_repository.dart';
 import 'package:kakeibo/domain/ui_value/edit_income_small_category_list_value/edit_income_small_category_value.dart';
 import 'package:kakeibo/domain/ui_value/income_big_category_value/edit_income_big_category_value.dart';
 import 'package:kakeibo/theme/category_palette.dart';
@@ -29,8 +28,6 @@ class IncomeCategoryUsecase {
       _ref.read(incomeSmallCategoryRepositoryProvider);
   IncomeBigCategoryRepository get _bigCategoryRepositoryProvider =>
       _ref.read(incomeBigCategoryRepositoryProvider);
-  IncomeRepository get _incomeRepositoryProvider =>
-      _ref.read(incomeRepositoryProvider);
 
   // DBの更新を管理するnotifierを取得
   UpdateDBCountNotifier get _updateDBCountNotifier =>
@@ -40,7 +37,8 @@ class IncomeCategoryUsecase {
   ///
   /// 既存の大カテゴリーが使っていない色のうち、収入スウォッチ順で先頭の色（KP-012 D-07）。
   Future<Color> pickDefaultColorForNewBigCategory() async {
-    final list = await _bigCategoryRepositoryProvider.fetchAll();
+    // 削除済みのカテゴリーの色は空いているものとして扱う（KP-024）
+    final list = await _bigCategoryRepositoryProvider.fetchAllActive();
     return CategoryColorPicker.firstUnused(
       swatches: CategoryPalette.incomeSwatches,
       usedColorCodes: list.map((e) => e.colorCode),
@@ -57,9 +55,9 @@ class IncomeCategoryUsecase {
 
   /// [fetchAllCategory] メソッドは、収入カテゴリーを全て取得する
   Future<List<IncomeCategoryEntity>> fetchAllCategory() async {
-    // 小カテゴリーを取得する
+    // 削除されていない小カテゴリーを取得する（入力画面・並び替えで使う。KP-024）
     final smallCategoryEntityList = await _smallCategoryRepositoryProvider
-        .fetchAll();
+        .fetchAllActive();
 
     final results = <IncomeCategoryEntity>[];
 
@@ -145,13 +143,14 @@ class IncomeCategoryUsecase {
   /// [fetchAllBigCategoriesWithSmallList] は smallCategory の情報を添えて全ての大カテゴリーを取得する
   Future<List<EditIncomeBigCategoryValue>>
   fetchAllBigCategoriesWithSmallList() async {
-    final list = await _bigCategoryRepositoryProvider.fetchAll();
+    // 削除されていない大・小カテゴリーだけを設定画面に出す（KP-024）
+    final list = await _bigCategoryRepositoryProvider.fetchAllActive();
 
     final bigCategoryList = <EditIncomeBigCategoryValue>[];
 
     for (var element in list) {
       final smallCategoryEntity = await _smallCategoryRepositoryProvider
-          .fetchByBigCategory(bigCategoryId: element.id);
+          .fetchActiveByBigCategory(bigCategoryId: element.id);
 
       String smallCategoryNameText = '';
       for (var smallCategory in smallCategoryEntity) {
@@ -183,9 +182,9 @@ class IncomeCategoryUsecase {
   Future<List<EditIncomeSmallCategoryValue>> fetchSmallCategoriesByBig(
     int bigCategoryId,
   ) async {
-    final fetchList = await _smallCategoryRepositoryProvider.fetchByBigCategory(
-      bigCategoryId: bigCategoryId,
-    );
+    // 削除されていない小カテゴリーのリストを取得する（KP-024）
+    final fetchList = await _smallCategoryRepositoryProvider
+        .fetchActiveByBigCategory(bigCategoryId: bigCategoryId);
 
     final resultList = <EditIncomeSmallCategoryValue>[];
 
@@ -237,31 +236,19 @@ class IncomeCategoryUsecase {
   }
 
   /// 大カテゴリー削除（既定カテゴリー: 月次収入・ボーナスは削除不可）
-  /// 紐づく小カテゴリーと income レコードも削除する
+  ///
+  /// 配下の小カテゴリーごと論理削除し、登録済みの収入は残す（KP-024。以前は収入レコードごと物理削除していた）
   Future<void> deleteBig(int bigId) async {
     if (IncomeBigCategoryConstants.isDefaultCategory(bigId)) {
       throw const AppException('このカテゴリーは削除できません');
     }
 
-    // 紐づく小カテゴリーIDを先に取得
-    final smallIds = await _smallCategoryRepositoryProvider
-        .fetchSmallCategoryIdListByBigCategoryId(bigCategoryId: bigId);
-    final smallIdSet = smallIds.toSet();
-
-    // 紐づく income レコードを削除（期間によらず該当する小カテゴリーをまとめて削除）
-    final allIncomes = await _incomeRepositoryProvider.fetchAll();
-    for (final income in allIncomes) {
-      if (smallIdSet.contains(income.categoryId)) {
-        _incomeRepositoryProvider.delete(income.id);
-      }
-    }
-
-    // 小カテゴリーを削除
+    // 小カテゴリーを論理削除
     await _smallCategoryRepositoryProvider.deleteByBigCategory(
       bigCategoryId: bigId,
     );
 
-    // 大カテゴリーを削除
+    // 大カテゴリーを論理削除
     await _bigCategoryRepositoryProvider.delete(id: bigId);
 
     _updateDBCountNotifier.incrementState();
@@ -287,11 +274,12 @@ class IncomeCategoryUsecase {
     _updateDBCountNotifier.incrementState();
   }
 
-  /// 小カテゴリーの編集（並び替え・編集・追加）
+  /// 小カテゴリーの編集（並び替え・編集・追加・削除）
   ///
   /// [editValues] は編集中リスト（→ EdittingIncomeSmallCategoryListNotifier）で、
   /// まだDBに無い項目は id が負の一意な値、表示順は並びどおりの 0..n-1 になっている。
   /// 編集前の値との対応づけは id で行う（引数のリストは並べ替えない）。
+  /// 編集前にあって編集中リストに無い項目は、画面で削除した小カテゴリーとして論理削除する（KP-024）。
   Future<void> smallEdit({
     required List<EditIncomeSmallCategoryValue> originalValues,
     required List<EditIncomeSmallCategoryValue> editValues,
@@ -301,17 +289,27 @@ class IncomeCategoryUsecase {
     // id が負なら新規、0以上なら既存項目
     final addedValues = editValues.where((value) => value.id < 0).toList();
     final savedValues = editValues.where((value) => value.id >= 0).toList();
+    final savedIds = savedValues.map((value) => value.id).toSet();
+    final removedValues = originalValues
+        .where((value) => !savedIds.contains(value.id))
+        .toList();
 
     // 検証は書き込みを始める前に済ませる
     // （トランザクションを張っていないため、途中で投げるとDBが半端に書き換わる）
-    // 編集画面に削除の導線は無いため、既存項目が減っているのは想定外
-    if (savedValues.length < originalValues.length) {
-      throw const AppException('予期せぬエラーが発生しました(E001)');
-    }
     for (final value in savedValues) {
       // 編集前に無いidが既存項目として来るのは想定外
       if (!originalById.containsKey(value.id)) {
         throw const AppException('予期せぬエラーが発生しました(E001)');
+      }
+    }
+    if (removedValues.isNotEmpty) {
+      // 入力画面で選べるカテゴリーが無くならないよう、最後の1件は残す
+      if (editValues.isEmpty) {
+        throw const AppException('小カテゴリーは1件以上必要です');
+      }
+      // 給与・ボーナスは収入追加の初期選択に使うため削除させない
+      if (removedValues.any((value) => isDefaultSmallCategory(value.id))) {
+        throw const AppException('既定の小カテゴリーは削除できません');
       }
     }
 
@@ -355,8 +353,18 @@ class IncomeCategoryUsecase {
       }
     }
 
+    // 削除した小カテゴリーは行を消さずに論理削除する（登録済みの収入の参照先を残す）
+    for (final value in removedValues) {
+      await _smallCategoryRepositoryProvider.delete(id: value.id);
+    }
+
     _updateDBCountNotifier.incrementState();
   }
+
+  /// 削除させない既定の小カテゴリー（給与・ボーナス）かどうか（KP-024）
+  static bool isDefaultSmallCategory(int id) =>
+      id == IncomeSmallCategoryConstants.salary ||
+      id == IncomeSmallCategoryConstants.bonus;
 
   /// 表示順を一括更新（並び替え画面用）
   /// [newOrders] は { カテゴリーID: 新しい表示順 } のMap

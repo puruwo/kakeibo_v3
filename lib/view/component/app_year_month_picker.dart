@@ -15,6 +15,7 @@ import 'package:kakeibo/domain_service/year_period_service/month_period_service.
     as year_service;
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/component/card_container.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// AppYearMonthPicker の表示モード
 enum AppYearMonthPickerMode {
@@ -428,7 +429,7 @@ class _AppYearMonthPickerOverlayState
         // 選択範囲の端では onTap: null で非活性にする（ボタンルール §3）
         IconOnlyButton(
           key: const ValueKey('year_month_picker_previous'),
-          icon: Icons.chevron_left_rounded,
+          icon: AppIcons.periodPrev,
           bordered: false,
           iconSize: 23,
           backgroundColor: context.colors.primaryTint,
@@ -455,7 +456,7 @@ class _AppYearMonthPickerOverlayState
         const SizedBox(width: AppSpacing.sm),
         IconOnlyButton(
           key: const ValueKey('year_month_picker_next'),
-          icon: Icons.chevron_right_rounded,
+          icon: AppIcons.periodNext,
           bordered: false,
           iconSize: 23,
           backgroundColor: context.colors.primaryTint,
@@ -580,12 +581,8 @@ class _AppYearMonthPickerOverlayState
           child: MainButton(
             buttonType: ButtonColorType.main,
             onPressed: _onConfirm,
-            // main ボタンの文字色は primary なのでアイコンも揃える
-            icon: Icon(
-              Icons.check_rounded,
-              size: 18,
-              color: context.colors.primary,
-            ),
+            // 色（文字色の primary）と大きさ（18px）は MainButton が揃える（KP-023 ボタン内アイコン基準）
+            iconData: AppIcons.done,
             buttonText: '適用',
           ),
         ),

@@ -4,16 +4,21 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
+import 'package:kakeibo/application/category/category_usecase.dart';
 
 /// localImport
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/constant/properties.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/domain/ui_value/expense_big_category_with_small_list_value/edit_expense_big_category_value.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
-import 'package:kakeibo/view/component/check_box.dart';
+import 'package:kakeibo/view/category_edit_page/category_delete_dialog.dart';
+import 'package:kakeibo/view/category_edit_page/category_delete_row_button.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/editting_big_category_list/editting_big_category_list.dart';
 import 'package:kakeibo/view_model/state/big_category_edit_page/is_big_category_list_edited/is_big_category_list_edited.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 並び替え編集モードの1行の高さ
 const double kBigCategoryEditRowHeight = 50;
@@ -28,7 +33,60 @@ class BigCategoryEditArea extends ConsumerStatefulWidget {
       _BigCategoryEditAreaState();
 }
 
-class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
+class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea>
+    with PresentationMixin {
+  /// 行頭の削除ボタンのタップ処理（KP-024）
+  ///
+  /// 大カテゴリーは確認後すぐに配下の小カテゴリーごと論理削除する（並び替えの保存は待たない）。
+  /// 固定費が配下の小カテゴリーを使っているときは削除せずに案内する
+  Future<void> _onDeleteTap(EditExpenseBigCategoryValue item) async {
+    final usecase = ref.read(categoryUsecaseProvider);
+    final smallIds = item.expenseSmallCategoryList.map((e) => e.id).toList();
+
+    final fixedCostNames =
+        await usecase.fetchFixedCostNamesUsingSmallCategories(smallIds);
+    if (!mounted) {
+      return;
+    }
+    if (fixedCostNames.isNotEmpty) {
+      await showCategoryInUseByFixedCostDialog(
+        context,
+        categoryName: item.bigCategoryName,
+        fixedCostNames: fixedCostNames,
+      );
+      return;
+    }
+
+    // 1行が画面幅で折り返して行頭が「す。」だけにならないよう、文の区切りで改行する
+    final message = smallIds.isEmpty
+        ? '元に戻せません。\n登録済みの支出はそのまま残ります。'
+        : '小カテゴリー${smallIds.length}件もあわせて削除します。\n元に戻せません。\n登録済みの支出はそのまま残ります。';
+    final shouldDelete = await showCategoryDeleteConfirmationDialog(
+      context,
+      categoryName: item.bigCategoryName,
+      message: message,
+    );
+    if (!shouldDelete || !mounted) {
+      return;
+    }
+
+    await execute(
+      context,
+      action: () => usecase.deleteBig(item.id),
+      succesAction: () async {
+        // 並び替えの編集中状態は残したまま、削除した行だけを外す
+        ref
+            .read(edittingBigCategoryListNotifierProvider.notifier)
+            .removeById(item.id);
+        // 削除だけして「編集を完了」を押しても「編集がされていません」にしない
+        ref.read(isBigCategoryListEditedNotifierProvider.notifier).updateState(true);
+        // 保存時に比べる編集前のリストからも外すため取り直す
+        ref.invalidate(allBigCategoriesWithSmallListProvider);
+      },
+      successMessage: '削除が完了しました',
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -86,7 +144,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Row(
                   children: [
-                    Text('表示', style: context.textStyles.listTileLegendTitle),
+                    Text('削除', style: context.textStyles.listTileLegendTitle),
                     const SizedBox(width: 18),
                     SizedBox(
                       width: 110 + listSTextBoxOffset,
@@ -144,32 +202,14 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          // チェックボックス
+                          // 削除ボタン（KP-024。旧・表示切替のチェックボックス）
+                          // 入力画面で選べるカテゴリーが無くならないよう、最後の1件は削除させない
                           Padding(
-                            padding: const EdgeInsets.all(12.5),
-                            child: GestureDetector(
-                              onTap: () {
-                                // チェックボックスのタップ処理
-                                setState(() {
-                                  // チェックボックスの状態を更新する
-                                  ref
-                                      .read(
-                                        edittingBigCategoryListNotifierProvider
-                                            .notifier,
-                                      )
-                                      .toggleDisplay(index);
-                                  // 変更を加えたことを管理する状態管理する
-                                  ref
-                                      .read(
-                                        isBigCategoryListEditedNotifierProvider
-                                            .notifier,
-                                      )
-                                      .updateState(true);
-                                });
-                              },
-                              child: CheckBox(
-                                isChecked: itemList[index].etitedStateIsChecked,
-                              ),
+                            padding: const EdgeInsets.all(8.5),
+                            child: CategoryDeleteRowButton(
+                              onTap: itemList.length > 1
+                                  ? () => _onDeleteTap(itemList[index])
+                                  : null,
                             ),
                           ),
 
@@ -218,7 +258,7 @@ class _BigCategoryEditAreaState extends ConsumerState<BigCategoryEditArea> {
                               width: 50,
                               height: 50,
                               child: Icon(
-                                Icons.drag_handle_rounded,
+                                AppIcons.dragHandle,
                                 color: context.colors.icon,
                               ),
                             ),

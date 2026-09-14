@@ -12,6 +12,7 @@ import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_categ
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_icon_contoroller/big_category_icon_contoroller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/big_category_name_contoroller/big_category_name_contoroller.dart';
 import 'package:kakeibo/view_model/state/big_category_detail_edit_page/is_big_category_appearance_edited/is_big_category_appearance_edited.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 支出カテゴリーの外観編集エリア（案件 UIデザイン改修 §2）
 ///
@@ -91,7 +92,7 @@ class _BigCategoryAppearanceEditAreaState
           // 旧実装のautofocus・クリア（×）ボタンはインセット行化に伴い廃止
           // （行タップで編集開始する語彙に統一。案件 UIデザイン改修 §2）
           AppInsetRow.textField(
-            icon: Icons.drive_file_rename_outline_rounded,
+            icon: AppIcons.rename,
             label: '名称',
             controller: ref.watch(bigCategoryNameControllerProvider),
             hintText: 'カテゴリー名を入力',
@@ -105,7 +106,7 @@ class _BigCategoryAppearanceEditAreaState
 
           // アイコン（右端に現在のアイコンをカテゴリー色でプレビュー）
           AppInsetRow.navigation(
-            icon: Icons.grid_view_rounded,
+            icon: AppIcons.iconGrid,
             label: 'アイコン',
             valueWidget: SvgPicture.asset(
               iconPath,
@@ -121,7 +122,7 @@ class _BigCategoryAppearanceEditAreaState
 
           // カテゴリーカラー（右端に現在色のスウォッチ）
           AppInsetRow.navigation(
-            icon: Icons.palette_outlined,
+            icon: AppIcons.palette,
             label: 'カテゴリーカラー',
             valueWidget: Container(
               height: 16,

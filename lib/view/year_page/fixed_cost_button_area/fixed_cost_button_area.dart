@@ -17,6 +17,7 @@ import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_setting_page.dar
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_call_to_action_button.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// トップ画面の固定費セクション（案件 UIデザイン改修 §5・案4の試行）
 ///
@@ -266,7 +267,7 @@ class _FixedCostAddCard extends StatelessWidget {
           ),
           child: Center(
             child: Icon(
-              Icons.add_rounded,
+              AppIcons.add,
               size: 20,
               color: context.colors.textSecondary,
             ),

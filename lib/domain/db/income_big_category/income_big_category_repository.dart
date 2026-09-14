@@ -11,8 +11,11 @@ final incomeBigCategoryRepositoryProvider = Provider<IncomeBigCategoryRepository
 /// 収入大カテゴリーに関するリポジトリ
 abstract interface class IncomeBigCategoryRepository {
 
- // 全ての大カテゴリーの情報を取得する
+ // 全ての大カテゴリーの情報を取得する（削除済みを含む。登録済みの収入の表示・集計用）
   Future<List<IncomeBigCategoryEntity>> fetchAll();
+
+  /// 削除されていない大カテゴリーを全て取得する（入力・設定画面用。KP-024）
+  Future<List<IncomeBigCategoryEntity>> fetchAllActive();
 
   /// 大カテゴリー指定で大カテゴリーのリストを取得する
   Future<IncomeBigCategoryEntity> fetchByBigCategory({required int bigCategoryId});
@@ -23,7 +26,7 @@ abstract interface class IncomeBigCategoryRepository {
   /// 大カテゴリーを更新する
   Future<void> update({required IncomeBigCategoryEntity entity});
 
-  /// 大カテゴリーを削除する（id=1, id=2 は削除不可）
+  /// 大カテゴリーを論理削除する（行は残す。id=1, id=2 は削除不可。KP-024）
   Future<void> delete({required int id});
 
   /// 既存の大カテゴリーIDの最大値を返す

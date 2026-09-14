@@ -19,6 +19,7 @@ import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_
 import 'package:kakeibo/view/register_page/expense_tab/expense_basic_group.dart';
 import 'package:kakeibo/view/register_page/expense_tab/fixed_cost_register_group.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -147,7 +148,7 @@ void main() {
       expect(
         find.descendant(
           of: incomeSourceRow,
-          matching: find.byIcon(Icons.arrow_forward_ios_rounded),
+          matching: find.byIcon(AppIcons.next),
         ),
         findsOneWidget,
       );
@@ -583,7 +584,7 @@ void main() {
       );
       await pumpTimes(tester);
 
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byIcon(AppIcons.delete));
       await pumpTimes(tester, times: 5);
 
       expect(find.text('登録履歴の削除'), findsOneWidget);
@@ -607,7 +608,7 @@ void main() {
       );
       await pumpTimes(tester);
 
-      await tester.tap(find.byIcon(Icons.delete_outline));
+      await tester.tap(find.byIcon(AppIcons.delete));
       await pumpTimes(tester, times: 5);
       await tester.tap(find.text('キャンセル'));
       await pumpTimes(tester, times: 10);
@@ -723,6 +724,45 @@ void main() {
       await unmountRegisterPage(tester);
     });
 
+    testWidgets('トグルONで画面に収まらなくなっても、スクロールで並べ替えリンクに届く', (tester) async {
+      // KP-020: 本体がスクロールしない実装では、トグルONで伸びた分だけリンクが画面外に押し出され
+      // 操作できなかった。縦の短い画面（本体の表示高さ約376pt）でトグルON後にリンクが画面外へ出る状態を作る
+      const screenSize = Size(375, 480);
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+        size: screenSize,
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(find.byType(Switch));
+      await pumpTimes(tester);
+
+      final rearrangeLink = find.text('アイコンを並べ替える');
+      // 前提: トグルON直後はリンクが画面の下端より下にある
+      expect(tester.getRect(rearrangeLink).top, greaterThan(screenSize.height));
+
+      // カテゴリーグリッドの PageView（横）ではなく、本体の縦スクロールで探す
+      final verticalScrollable = find.byWidgetPredicate(
+        (widget) =>
+            widget is Scrollable && widget.axisDirection == AxisDirection.down,
+      );
+      await tester.scrollUntilVisible(
+        rearrangeLink,
+        100,
+        scrollable: verticalScrollable.first,
+      );
+      await tester.tap(rearrangeLink);
+      await pumpTimes(tester);
+
+      expect(find.text('アイコンの並び替え'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
     testWidgets('変動ONにすると金額表示が---になる', (tester) async {
       await pumpApp(
         tester,
@@ -817,7 +857,7 @@ void main() {
 
       // トグルOFFのときは固定費化の説明文を添える
       expect(
-        find.text('ONにすると、この支出を初回の支払いとして固定費を作成します（頻度・名称を続けて入力）'),
+        find.text('ONにすると、この支出を初回分として固定費を作成します'),
         findsOneWidget,
       );
 

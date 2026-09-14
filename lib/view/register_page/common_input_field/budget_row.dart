@@ -6,6 +6,7 @@ import 'package:kakeibo/util/common_widget/checkable_popup_menu_item.dart';
 import 'package:kakeibo/view/component/app_pill_container.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/view_model/state/register_page/entered_income_source_controller/entered_income_source_controller.dart';
+import 'package:kakeibo/constant/icon.dart';
 
 /// 拠出元行（「拠出元」ラベルと拠出元選択）
 ///
@@ -81,7 +82,7 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
-                  Icons.account_balance_wallet_outlined,
+                  AppIcons.budget,
                   size: 18,
                   color: context.colors.text,
                 ),
@@ -95,7 +96,7 @@ class _BudgetRowState extends ConsumerState<BudgetRow> {
                 Text(selectedEnum.label, style: context.registerStyles.inputText),
                 const SizedBox(width: 4),
                 Icon(
-                  Icons.keyboard_arrow_down_rounded,
+                  AppIcons.expand,
                   size: 20,
                   color: context.colors.textSecondary,
                 ),

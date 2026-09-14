@@ -45,7 +45,7 @@ class ImplementsSmallCategoryTileRepository implements SmallCategoryTileReposito
                 INNER JOIN ${SqfExpenseBigCategory.tableName} t3
                 ON t1.${SqfExpenseSmallCategory.bigCategoryKey} = t3.${SqfExpenseBigCategory.id}
                 WHERE t1.${SqfExpenseSmallCategory.bigCategoryKey} = $bigCategoryId
-                AND NOT(t1.${SqfExpenseSmallCategory.defaultDisplayed} = 0 AND t2.small_category_payment_sum IS NULL)
+                AND NOT(t1.${SqfExpenseSmallCategory.deleteFlag} = 1 AND t2.small_category_payment_sum IS NULL)
                 ORDER BY t1.${SqfExpenseSmallCategory.displayedOrderInBig};
                 ''';
     
