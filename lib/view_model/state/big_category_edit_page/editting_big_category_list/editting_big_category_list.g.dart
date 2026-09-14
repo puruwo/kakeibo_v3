@@ -7,7 +7,7 @@ part of 'editting_big_category_list.dart';
 // **************************************************************************
 
 String _$edittingBigCategoryListNotifierHash() =>
-    r'5b6d8d19b838b203ea80073d7ec10efc9fc83769';
+    r'a82dc42e12cb01d59fc2bc68ef08a5902c2e309a';
 
 /// See also [EdittingBigCategoryListNotifier].
 @ProviderFor(EdittingBigCategoryListNotifier)

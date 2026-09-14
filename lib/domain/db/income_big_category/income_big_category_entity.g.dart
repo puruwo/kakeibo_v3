@@ -15,6 +15,7 @@ _$IncomeBigCategoryEntityImpl _$$IncomeBigCategoryEntityImplFromJson(
   iconPath: json['iconPath'] as String,
   accountType:
       (json['accountType'] as num?)?.toInt() ?? AccountTypeConstants.living,
+  deleteFlag: (json['deleteFlag'] as num?)?.toInt() ?? 0,
 );
 
 Map<String, dynamic> _$$IncomeBigCategoryEntityImplToJson(
@@ -25,4 +26,5 @@ Map<String, dynamic> _$$IncomeBigCategoryEntityImplToJson(
   'colorCode': instance.colorCode,
   'iconPath': instance.iconPath,
   'accountType': instance.accountType,
+  'deleteFlag': instance.deleteFlag,
 };

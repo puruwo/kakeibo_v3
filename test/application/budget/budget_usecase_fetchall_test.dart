@@ -220,7 +220,7 @@ void main() {
       expect(result[1].expenseBigCategoryId, 2);
     });
 
-    test('isDisplayed=1の大カテゴリーだけをdisplayOrder昇順で返す', () async {
+    test('削除されていない大カテゴリーだけをdisplayOrder昇順で返す', () async {
       final container = createUsecaseContainer(
         bigCategories: const [
           ExpenseBigCategoryEntity(
@@ -239,14 +239,15 @@ void main() {
             displayOrder: 1,
             isDisplayed: 1,
           ),
-          // 非表示の大カテゴリーはタイルに含めない
+          // 削除済みの大カテゴリーはタイルに含めない（KP-024。旧・非表示）
           ExpenseBigCategoryEntity(
             id: 3,
             colorCode: '0000FF',
             bigCategoryName: '交際費',
             resourcePath: 'assets/images/icon_friend.svg',
             displayOrder: 2,
-            isDisplayed: 0,
+            isDisplayed: 1,
+            deleteFlag: 1,
           ),
         ],
       );

@@ -28,7 +28,9 @@ mixin _$IncomeBigCategoryEntity {
   String get colorCode => throw _privateConstructorUsedError;
   String get iconPath =>
       throw _privateConstructorUsedError; // 会計種別（1=生活収支, 2=特別枠）。ADR-025
-  int get accountType => throw _privateConstructorUsedError;
+  int get accountType =>
+      throw _privateConstructorUsedError; // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  int get deleteFlag => throw _privateConstructorUsedError;
 
   /// Serializes this IncomeBigCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -53,6 +55,7 @@ abstract class $IncomeBigCategoryEntityCopyWith<$Res> {
     String colorCode,
     String iconPath,
     int accountType,
+    int deleteFlag,
   });
 }
 
@@ -79,6 +82,7 @@ class _$IncomeBigCategoryEntityCopyWithImpl<
     Object? colorCode = null,
     Object? iconPath = null,
     Object? accountType = null,
+    Object? deleteFlag = null,
   }) {
     return _then(
       _value.copyWith(
@@ -102,6 +106,10 @@ class _$IncomeBigCategoryEntityCopyWithImpl<
                 ? _value.accountType
                 : accountType // ignore: cast_nullable_to_non_nullable
                       as int,
+            deleteFlag: null == deleteFlag
+                ? _value.deleteFlag
+                : deleteFlag // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -123,6 +131,7 @@ abstract class _$$IncomeBigCategoryEntityImplCopyWith<$Res>
     String colorCode,
     String iconPath,
     int accountType,
+    int deleteFlag,
   });
 }
 
@@ -149,6 +158,7 @@ class __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>
     Object? colorCode = null,
     Object? iconPath = null,
     Object? accountType = null,
+    Object? deleteFlag = null,
   }) {
     return _then(
       _$IncomeBigCategoryEntityImpl(
@@ -172,6 +182,10 @@ class __$$IncomeBigCategoryEntityImplCopyWithImpl<$Res>
             ? _value.accountType
             : accountType // ignore: cast_nullable_to_non_nullable
                   as int,
+        deleteFlag: null == deleteFlag
+            ? _value.deleteFlag
+            : deleteFlag // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -186,6 +200,7 @@ class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
     required this.colorCode,
     required this.iconPath,
     this.accountType = AccountTypeConstants.living,
+    this.deleteFlag = 0,
   }) : super._();
 
   factory _$IncomeBigCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
@@ -203,10 +218,14 @@ class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
   @override
   @JsonKey()
   final int accountType;
+  // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  @override
+  @JsonKey()
+  final int deleteFlag;
 
   @override
   String toString() {
-    return 'IncomeBigCategoryEntity(id: $id, name: $name, colorCode: $colorCode, iconPath: $iconPath, accountType: $accountType)';
+    return 'IncomeBigCategoryEntity(id: $id, name: $name, colorCode: $colorCode, iconPath: $iconPath, accountType: $accountType, deleteFlag: $deleteFlag)';
   }
 
   @override
@@ -221,13 +240,22 @@ class _$IncomeBigCategoryEntityImpl extends _IncomeBigCategoryEntity {
             (identical(other.iconPath, iconPath) ||
                 other.iconPath == iconPath) &&
             (identical(other.accountType, accountType) ||
-                other.accountType == accountType));
+                other.accountType == accountType) &&
+            (identical(other.deleteFlag, deleteFlag) ||
+                other.deleteFlag == deleteFlag));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, id, name, colorCode, iconPath, accountType);
+  int get hashCode => Object.hash(
+    runtimeType,
+    id,
+    name,
+    colorCode,
+    iconPath,
+    accountType,
+    deleteFlag,
+  );
 
   /// Create a copy of IncomeBigCategoryEntity
   /// with the given fields replaced by the non-null parameter values.
@@ -253,6 +281,7 @@ abstract class _IncomeBigCategoryEntity extends IncomeBigCategoryEntity {
     required final String colorCode,
     required final String iconPath,
     final int accountType,
+    final int deleteFlag,
   }) = _$IncomeBigCategoryEntityImpl;
   const _IncomeBigCategoryEntity._() : super._();
 
@@ -268,7 +297,9 @@ abstract class _IncomeBigCategoryEntity extends IncomeBigCategoryEntity {
   @override
   String get iconPath; // 会計種別（1=生活収支, 2=特別枠）。ADR-025
   @override
-  int get accountType;
+  int get accountType; // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  @override
+  int get deleteFlag;
 
   /// Create a copy of IncomeBigCategoryEntity
   /// with the given fields replaced by the non-null parameter values.

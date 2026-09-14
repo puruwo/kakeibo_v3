@@ -7,7 +7,7 @@ part of 'editting_small_category_edit_list.dart';
 // **************************************************************************
 
 String _$edittingSmallCategoryListNotifierHash() =>
-    r'64e25858f694dfdb8c43a5023e3227ec16a001be';
+    r'd13fe8a965640a1a862ae3516fd702a0b21da187';
 
 /// Copied from Dart SDK
 class _SystemHash {

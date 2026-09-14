@@ -20,7 +20,8 @@ class ImplementsIncomeSmallCategoryRepository
         a.${SqfIncomeSmallCategory.bigCategoryKey} AS bigCategoryKey,
         a.${SqfIncomeSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfIncomeSmallCategory.name} AS smallCategoryName,
-        a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed
+        a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed,
+        a.${SqfIncomeSmallCategory.deleteFlag} AS deleteFlag
       FROM ${SqfIncomeSmallCategory.tableName} a
       where a.${SqfIncomeSmallCategory.id} = $smallCategoryId;
     ''';
@@ -55,7 +56,8 @@ class ImplementsIncomeSmallCategoryRepository
         a.${SqfIncomeSmallCategory.bigCategoryKey} AS bigCategoryKey,
         a.${SqfIncomeSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfIncomeSmallCategory.name} AS smallCategoryName,
-        a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed
+        a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed,
+        a.${SqfIncomeSmallCategory.deleteFlag} AS deleteFlag
       FROM ${SqfIncomeSmallCategory.tableName} a
       ORDER BY a.${SqfIncomeSmallCategory.id} ASC;
     ''';
@@ -82,7 +84,8 @@ class ImplementsIncomeSmallCategoryRepository
         a.${SqfIncomeSmallCategory.bigCategoryKey} AS bigCategoryKey,
         a.${SqfIncomeSmallCategory.displayedOrderInBig} AS displayedOrderInBig,
         a.${SqfIncomeSmallCategory.name} AS smallCategoryName,
-        a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed
+        a.${SqfIncomeSmallCategory.defaultDisplayed} AS defaultDisplayed,
+        a.${SqfIncomeSmallCategory.deleteFlag} AS deleteFlag
       FROM ${SqfIncomeSmallCategory.tableName} a
       WHERE a.${SqfIncomeSmallCategory.bigCategoryKey} = $bigCategoryId
       ORDER BY a.${SqfIncomeSmallCategory.displayedOrderInBig} ASC;
@@ -130,8 +133,26 @@ class ImplementsIncomeSmallCategoryRepository
   }
 
   @override
+  Future<List<IncomeSmallCategoryEntity>> fetchAllActive() async {
+    final list = await fetchAll();
+    return list.where((e) => e.deleteFlag == 0).toList();
+  }
+
+  @override
+  Future<List<IncomeSmallCategoryEntity>> fetchActiveByBigCategory(
+      {required int bigCategoryId}) async {
+    final list = await fetchByBigCategory(bigCategoryId: bigCategoryId);
+    return list.where((e) => e.deleteFlag == 0).toList();
+  }
+
+  // 行は消さずに論理削除する（登録済みの収入の参照先を残すため。KP-024）
+  @override
   Future<void> delete({required int id}) async {
-    await db.delete(SqfIncomeSmallCategory.tableName, id);
+    await db.update(
+      SqfIncomeSmallCategory.tableName,
+      {SqfIncomeSmallCategory.deleteFlag: 1},
+      id,
+    );
   }
 
   @override
@@ -141,7 +162,7 @@ class ImplementsIncomeSmallCategoryRepository
         await fetchSmallCategoryIdListByBigCategoryId(bigCategoryId: bigCategoryId);
 
     for (final id in ids) {
-      await db.delete(SqfIncomeSmallCategory.tableName, id);
+      await delete(id: id);
     }
     return ids;
   }

@@ -39,9 +39,10 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
         // 削除ボタン（id=1, id=2 は表示しない）
         if (!IncomeBigCategoryConstants.isDefaultCategory(bigId))
           IconButton(
+            // AppBar の削除は danger 色（ボタンルール §4）
             icon: Icon(
               AppIcons.delete,
-              color: context.colors.text,
+              color: context.colors.danger,
             ),
             onPressed: () async {
               // 削除確認は共通のアクションシート型（ADR-030）。素の AlertDialog は
@@ -49,7 +50,8 @@ class UpdateCompleteIncomeCategoryDetailButton extends ConsumerWidget
               final shouldDelete = await showConfirmationDialog(
                 context,
                 title: 'カテゴリーを削除しますか？',
-                message: 'このカテゴリーに紐づく項目および収入レコードがすべて削除されます。',
+                // 論理削除のため登録済みの収入は残る（KP-024）
+                message: '小カテゴリーもあわせて削除します。\n元に戻せません。\n登録済みの収入はそのまま残ります。',
                 confirmLabel: '削除する',
                 isDestructive: true,
               );

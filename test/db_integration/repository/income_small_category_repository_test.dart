@@ -5,6 +5,8 @@
 // getMaxSmallCategoryOrderKey が引数の大カテゴリーを無視する挙動を固定する。
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
+import 'package:kakeibo/model/database_helper.dart';
+import 'package:kakeibo/model/table_calmn_name.dart';
 import 'package:kakeibo/repository/income_small_category_repository.dart';
 
 import '../../helper/db_test_helper.dart';
@@ -183,37 +185,44 @@ void main() {
     });
   });
 
+  // KP-024: 物理削除から論理削除（delete_flag = 1）に変わった。
+  // 登録済みの収入の参照先を残すため行は消えず、fetchAll には残り fetchAllActive から外れる
   group('delete', () {
-    test('指定idの行が物理削除される', () async {
+    test('指定idの行が論理削除され、行は残る', () async {
       await repository.delete(id: 3);
 
-      final results = await repository.fetchAll();
-      expect(results.map((e) => e.id).toList(), [1, 2, 4]);
+      final all = await repository.fetchAll();
+      expect(all.map((e) => e.id).toList(), [1, 2, 3, 4]);
+      expect(all.firstWhere((e) => e.id == 3).deleteFlag, 1);
+      final active = await repository.fetchAllActive();
+      expect(active.map((e) => e.id).toList(), [1, 2, 4]);
     });
 
     test('存在しないidを指定しても何も削除されない', () async {
       await repository.delete(id: 999);
 
-      final results = await repository.fetchAll();
-      expect(results.length, 4);
+      final active = await repository.fetchAllActive();
+      expect(active.length, 4);
     });
   });
 
   group('deleteByBigCategory', () {
-    test('指定した大カテゴリーに紐づく小カテゴリーを全件削除し、削除したIDリストを返す', () async {
+    test('指定した大カテゴリーに紐づく小カテゴリーを全件論理削除し、削除したIDリストを返す', () async {
       final deletedIds = await repository.deleteByBigCategory(bigCategoryId: 1);
 
       // 大カテゴリー1は 給与(1)・小遣い(3)・臨時収入(4)
       expect(deletedIds, [1, 3, 4]);
-      final results = await repository.fetchAll();
-      expect(results.map((e) => e.id).toList(), [2]);
+      final active = await repository.fetchAllActive();
+      expect(active.map((e) => e.id).toList(), [2]);
+      // 行は残る
+      expect((await repository.fetchAll()).length, 4);
     });
 
     test('別の大カテゴリーの小カテゴリーは削除しない', () async {
       await repository.deleteByBigCategory(bigCategoryId: 2);
 
-      final results = await repository.fetchAll();
-      expect(results.map((e) => e.id).toList(), [1, 3, 4]);
+      final active = await repository.fetchAllActive();
+      expect(active.map((e) => e.id).toList(), [1, 3, 4]);
     });
 
     test('該当が無いなら空リストを返し、1件も削除しない', () async {
@@ -222,8 +231,21 @@ void main() {
       );
 
       expect(deletedIds, isEmpty);
-      final results = await repository.fetchAll();
-      expect(results.length, 4);
+      final active = await repository.fetchAllActive();
+      expect(active.length, 4);
+    });
+  });
+
+  group('fetchActiveByBigCategory', () {
+    test('削除済みの小カテゴリーを除いて大カテゴリー内の表示順で返す', () async {
+      await repository.delete(id: 3);
+
+      final results = await repository.fetchActiveByBigCategory(
+        bigCategoryId: 1,
+      );
+
+      // 大カテゴリー1は 給与(1)・小遣い(3)・臨時収入(4)。3 を削除済みにした
+      expect(results.map((e) => e.id).toList(), [1, 4]);
     });
   });
 
@@ -252,9 +274,25 @@ void main() {
       expect(forUnknown, 3);
     });
 
+    test('論理削除した行も最大値に含める（削除済みの表示順キーを再利用しない）', () async {
+      // 表示順キーが最大（3）の臨時収入(4)を論理削除する（KP-024）
+      await repository.delete(id: 4);
+
+      final maxOrderKey = await repository.getMaxSmallCategoryOrderKey(
+        bigCategoryId: 1,
+      );
+
+      expect(maxOrderKey, 3);
+    });
+
     test('1件も無いなら（MAXがNULLになるため）0を返す', () async {
-      await repository.deleteByBigCategory(bigCategoryId: 1);
-      await repository.deleteByBigCategory(bigCategoryId: 2);
+      // KP-024 以降、リポジトリの削除は行を残す論理削除なので、行そのものを消して0件を作る
+      for (final id in [1, 2, 3, 4]) {
+        await DatabaseHelper.instance.delete(
+          SqfIncomeSmallCategory.tableName,
+          id,
+        );
+      }
 
       final maxOrderKey = await repository.getMaxSmallCategoryOrderKey(
         bigCategoryId: 1,

@@ -17,7 +17,8 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
         a.${SqfExpenseBigCategory.name} AS bigCategoryName, 
         a.${SqfExpenseBigCategory.resourcePath} AS resourcePath, 
         a.${SqfExpenseBigCategory.displayOrder} AS displayOrder, 
-        a.${SqfExpenseBigCategory.isDisplayed} AS isDisplayed
+        a.${SqfExpenseBigCategory.isDisplayed} AS isDisplayed,
+        a.${SqfExpenseBigCategory.deleteFlag} AS deleteFlag
       FROM ${SqfExpenseBigCategory.tableName} a
       ORDER BY a.${SqfExpenseBigCategory.displayOrder} ASC;
     ''';
@@ -36,6 +37,21 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
     }
   }
 
+  @override
+  Future<List<ExpenseBigCategoryEntity>> fetchAllActive() async {
+    final list = await fetchAll();
+    return list.where((e) => e.deleteFlag == 0).toList();
+  }
+
+  @override
+  Future<void> logicalDelete({required int id}) async {
+    await db.update(
+      SqfExpenseBigCategory.tableName,
+      {SqfExpenseBigCategory.deleteFlag: 1},
+      id,
+    );
+  }
+
   // カテゴリーを指定して取得する
   @override
   Future<ExpenseBigCategoryEntity> fetchByBigCategory(
@@ -47,7 +63,8 @@ class ImplementsExpenseBigCategoryRepository implements ExpenseBigCategoryReposi
         a.${SqfExpenseBigCategory.name} AS bigCategoryName, 
         a.${SqfExpenseBigCategory.resourcePath} AS resourcePath, 
         a.${SqfExpenseBigCategory.displayOrder} AS displayOrder, 
-        a.${SqfExpenseBigCategory.isDisplayed} AS isDisplayed
+        a.${SqfExpenseBigCategory.isDisplayed} AS isDisplayed,
+        a.${SqfExpenseBigCategory.deleteFlag} AS deleteFlag
       FROM ${SqfExpenseBigCategory.tableName} a
       where a.${SqfExpenseBigCategory.id} = $bigCategoryId;
     ''';

@@ -219,6 +219,41 @@ void main() {
 
       expect(total, 0);
     });
+
+    // KP-024: 削除した大カテゴリーは予算画面から消えて直せないため、合計にも含めない
+    test('削除済みの大カテゴリーの予算は合計に含まない', () async {
+      await insertBudgetRow(
+        id: 1,
+        expenseBigCategoryId: 1,
+        month: '202506',
+        price: 35000,
+      );
+      await insertBudgetRow(
+        id: 2,
+        expenseBigCategoryId: 2,
+        month: '202506',
+        price: 5000,
+      );
+      await updateExpenseBigCategoryDeleteFlag(id: 2, deleteFlag: 1);
+
+      final total = await repository.fetchMonthlyAll(month: _month);
+
+      expect(total, 35000);
+    });
+
+    test('予算のある大カテゴリーがすべて削除済みなら0を返す', () async {
+      await insertBudgetRow(
+        id: 1,
+        expenseBigCategoryId: 1,
+        month: '202506',
+        price: 35000,
+      );
+      await updateExpenseBigCategoryDeleteFlag(id: 1, deleteFlag: 1);
+
+      final total = await repository.fetchMonthlyAll(month: _month);
+
+      expect(total, 0);
+    });
   });
 
   group('fetchMonthly', () {

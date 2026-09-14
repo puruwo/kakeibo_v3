@@ -28,7 +28,9 @@ mixin _$ExpenseBigCategoryEntity {
   String get bigCategoryName => throw _privateConstructorUsedError;
   String get resourcePath => throw _privateConstructorUsedError;
   int get displayOrder => throw _privateConstructorUsedError;
-  int get isDisplayed => throw _privateConstructorUsedError;
+  int get isDisplayed =>
+      throw _privateConstructorUsedError; // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  int get deleteFlag => throw _privateConstructorUsedError;
 
   /// Serializes this ExpenseBigCategoryEntity to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -54,6 +56,7 @@ abstract class $ExpenseBigCategoryEntityCopyWith<$Res> {
     String resourcePath,
     int displayOrder,
     int isDisplayed,
+    int deleteFlag,
   });
 }
 
@@ -81,6 +84,7 @@ class _$ExpenseBigCategoryEntityCopyWithImpl<
     Object? resourcePath = null,
     Object? displayOrder = null,
     Object? isDisplayed = null,
+    Object? deleteFlag = null,
   }) {
     return _then(
       _value.copyWith(
@@ -108,6 +112,10 @@ class _$ExpenseBigCategoryEntityCopyWithImpl<
                 ? _value.isDisplayed
                 : isDisplayed // ignore: cast_nullable_to_non_nullable
                       as int,
+            deleteFlag: null == deleteFlag
+                ? _value.deleteFlag
+                : deleteFlag // ignore: cast_nullable_to_non_nullable
+                      as int,
           )
           as $Val,
     );
@@ -130,6 +138,7 @@ abstract class _$$BigCategoryEntityImplCopyWith<$Res>
     String resourcePath,
     int displayOrder,
     int isDisplayed,
+    int deleteFlag,
   });
 }
 
@@ -154,6 +163,7 @@ class __$$BigCategoryEntityImplCopyWithImpl<$Res>
     Object? resourcePath = null,
     Object? displayOrder = null,
     Object? isDisplayed = null,
+    Object? deleteFlag = null,
   }) {
     return _then(
       _$BigCategoryEntityImpl(
@@ -181,6 +191,10 @@ class __$$BigCategoryEntityImplCopyWithImpl<$Res>
             ? _value.isDisplayed
             : isDisplayed // ignore: cast_nullable_to_non_nullable
                   as int,
+        deleteFlag: null == deleteFlag
+            ? _value.deleteFlag
+            : deleteFlag // ignore: cast_nullable_to_non_nullable
+                  as int,
       ),
     );
   }
@@ -196,6 +210,7 @@ class _$BigCategoryEntityImpl extends _BigCategoryEntity {
     required this.resourcePath,
     required this.displayOrder,
     required this.isDisplayed,
+    this.deleteFlag = 0,
   }) : super._();
 
   factory _$BigCategoryEntityImpl.fromJson(Map<String, dynamic> json) =>
@@ -213,10 +228,14 @@ class _$BigCategoryEntityImpl extends _BigCategoryEntity {
   final int displayOrder;
   @override
   final int isDisplayed;
+  // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  @override
+  @JsonKey()
+  final int deleteFlag;
 
   @override
   String toString() {
-    return 'ExpenseBigCategoryEntity(id: $id, colorCode: $colorCode, bigCategoryName: $bigCategoryName, resourcePath: $resourcePath, displayOrder: $displayOrder, isDisplayed: $isDisplayed)';
+    return 'ExpenseBigCategoryEntity(id: $id, colorCode: $colorCode, bigCategoryName: $bigCategoryName, resourcePath: $resourcePath, displayOrder: $displayOrder, isDisplayed: $isDisplayed, deleteFlag: $deleteFlag)';
   }
 
   @override
@@ -234,7 +253,9 @@ class _$BigCategoryEntityImpl extends _BigCategoryEntity {
             (identical(other.displayOrder, displayOrder) ||
                 other.displayOrder == displayOrder) &&
             (identical(other.isDisplayed, isDisplayed) ||
-                other.isDisplayed == isDisplayed));
+                other.isDisplayed == isDisplayed) &&
+            (identical(other.deleteFlag, deleteFlag) ||
+                other.deleteFlag == deleteFlag));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
@@ -247,6 +268,7 @@ class _$BigCategoryEntityImpl extends _BigCategoryEntity {
     resourcePath,
     displayOrder,
     isDisplayed,
+    deleteFlag,
   );
 
   /// Create a copy of ExpenseBigCategoryEntity
@@ -274,6 +296,7 @@ abstract class _BigCategoryEntity extends ExpenseBigCategoryEntity {
     required final String resourcePath,
     required final int displayOrder,
     required final int isDisplayed,
+    final int deleteFlag,
   }) = _$BigCategoryEntityImpl;
   const _BigCategoryEntity._() : super._();
 
@@ -291,7 +314,9 @@ abstract class _BigCategoryEntity extends ExpenseBigCategoryEntity {
   @override
   int get displayOrder;
   @override
-  int get isDisplayed;
+  int get isDisplayed; // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  @override
+  int get deleteFlag;
 
   /// Create a copy of ExpenseBigCategoryEntity
   /// with the given fields replaced by the non-null parameter values.

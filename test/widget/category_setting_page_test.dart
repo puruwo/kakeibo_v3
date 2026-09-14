@@ -3,7 +3,9 @@
 //
 // 支出・収入の2タブの切り替えと、各タブの一覧表示、
 // 詳細編集ページへの導線を見る。
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
@@ -147,7 +149,7 @@ void main() {
     await pumpTimes(tester);
 
     // 支出タブでは並び替えフッターが出る
-    expect(find.text('表示・並び替え'), findsOneWidget);
+    expect(find.text('並び替え・削除'), findsOneWidget);
 
     await tester.tap(find.text('収入'));
     await pumpTimes(tester);
@@ -155,8 +157,8 @@ void main() {
     expect(find.text('月次収入'), findsOneWidget);
     expect(find.text('ボーナス'), findsOneWidget);
     expect(find.text('給与'), findsOneWidget);
-    // 収入タブは並び替え・表示ON/OFFを持たないためフッターが無い
-    expect(find.text('表示・並び替え'), findsNothing);
+    // 収入タブは並び替え・削除モードを持たないためフッターが無い（KP-024）
+    expect(find.text('並び替え・削除'), findsNothing);
   });
 
   testWidgets('カテゴリー行のタップで詳細編集ページへ遷移する', (tester) async {
@@ -194,7 +196,7 @@ void main() {
     expect(find.text('カテゴリー名を入力'), findsOneWidget); // 空の名前入力欄のヒント
   });
 
-  testWidgets('「表示・並び替え」で並び替え編集モードのフッターに変わる', (tester) async {
+  testWidgets('「並び替え・削除」で並び替え編集モードのフッターに変わる', (tester) async {
     await pumpApp(
       tester,
       home: const CategorySettingPage(),
@@ -202,12 +204,100 @@ void main() {
     );
     await pumpTimes(tester);
 
-    await tester.tap(find.text('表示・並び替え'));
+    await tester.tap(find.text('並び替え・削除'));
     await pumpTimes(tester);
 
     expect(find.text('編集をキャンセル'), findsOneWidget);
     expect(find.text('編集を完了'), findsOneWidget);
-    expect(find.text('表示・並び替え'), findsNothing);
+    expect(find.text('並び替え・削除'), findsNothing);
+  });
+
+  /// 並び替え・削除モードで [label] の行の丸マイナス（KP-024）
+  Finder bigDeleteButtonOf(String label) => find.descendant(
+    of: find.ancestor(of: find.text(label), matching: find.byType(Row)).first,
+    matching: find.byIcon(AppIcons.deleteRow),
+  );
+
+  testWidgets('並び替え・削除モードの丸マイナスで確認すると大カテゴリーが小カテゴリーごと削除され一覧から消える', (
+    tester,
+  ) async {
+    final fakes = buildFakes();
+    await pumpApp(tester, home: const CategorySettingPage(), fakes: fakes);
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('並び替え・削除'));
+    await pumpTimes(tester);
+    await tester.tap(bigDeleteButtonOf('生活費'));
+    await pumpTimes(tester);
+
+    expect(find.text('「生活費」を削除しますか？'), findsOneWidget);
+    expect(
+      find.text('小カテゴリー2件もあわせて削除します。\n元に戻せません。\n登録済みの支出はそのまま残ります。'),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.text('削除する'));
+    await pumpTimes(tester, times: 6);
+
+    // 大カテゴリーは確認後すぐに論理削除する（編集を完了するのを待たない）
+    expect(fakes.expenseBigCategory.logicallyDeletedIds, [1]);
+    expect(fakes.expenseSmallCategory.logicallyDeletedIds, [10, 11]);
+    expect(find.text('生活費'), findsNothing);
+    expect(find.text('交通費'), findsOneWidget);
+
+    await waitForSnackBarDismissed(tester);
+  });
+
+  testWidgets('大カテゴリーを削除しただけで「編集を完了」を押してもエラーにならず一覧に戻る', (
+    tester,
+  ) async {
+    final fakes = buildFakes();
+    await pumpApp(tester, home: const CategorySettingPage(), fakes: fakes);
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('並び替え・削除'));
+    await pumpTimes(tester);
+    await tester.tap(bigDeleteButtonOf('生活費'));
+    await pumpTimes(tester);
+    await tester.tap(find.text('削除する'));
+    await pumpTimes(tester, times: 6);
+    await waitForSnackBarDismissed(tester);
+
+    await tester.tap(find.text('編集を完了'));
+    await pumpTimes(tester, times: 6);
+
+    // 並び替えをしていなくても削除は編集として扱う（コードレビュー指摘・KP-024）
+    expect(find.text('編集がされていません'), findsNothing);
+    expect(find.text('並び替え・削除'), findsOneWidget);
+
+    await waitForSnackBarDismissed(tester);
+  });
+
+  testWidgets('大カテゴリーが1件だけなら丸マイナスは押せず確認も出ない', (tester) async {
+    final fakes = TestFakes(
+      expenseBigCategory: FakeExpenseBigCategoryRepository(
+        initialRecords: [expenseBigCategories.first],
+      ),
+      expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+        initialRecords: expenseSmallCategories,
+      ),
+      incomeBigCategory: FakeIncomeBigCategoryRepository(
+        initialRecords: incomeBigCategories,
+      ),
+      incomeSmallCategory: FakeIncomeSmallCategoryRepository(
+        initialRecords: incomeSmallCategories,
+      ),
+    );
+    await pumpApp(tester, home: const CategorySettingPage(), fakes: fakes);
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('並び替え・削除'));
+    await pumpTimes(tester);
+    await tester.tap(bigDeleteButtonOf('生活費'));
+    await pumpTimes(tester);
+
+    expect(find.text('「生活費」を削除しますか？'), findsNothing);
+    expect(fakes.expenseBigCategory.logicallyDeletedIds, isEmpty);
   });
 
   // 大カテゴリーの並び替え（KP-011 で小カテゴリー側と合わせて観点を張った）。
@@ -217,7 +307,7 @@ void main() {
     await pumpApp(tester, home: const CategorySettingPage(), fakes: fakes);
     await pumpTimes(tester);
 
-    await tester.tap(find.text('表示・並び替え'));
+    await tester.tap(find.text('並び替え・削除'));
     await pumpTimes(tester);
 
     const labels = ['生活費', '交通費'];

@@ -53,6 +53,8 @@ class SqfExpenseSmallCategory {
   static const smallCategoryOrderKey = 'small_category_order_key';
   static const displayedOrderInBig = 'displayed_order_in_big';
   static const defaultDisplayed = 'default_displayed';
+  // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  static const deleteFlag = 'delete_flag';
 }
 
 class SqfExpenseBigCategory {
@@ -64,6 +66,8 @@ class SqfExpenseBigCategory {
   static const resourcePath = 'resource_path';
   static const displayOrder = 'display_order';
   static const isDisplayed = 'is_displayed';
+  // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  static const deleteFlag = 'delete_flag';
 }
 
 class SqfIncomeSmallCategory {
@@ -75,6 +79,8 @@ class SqfIncomeSmallCategory {
   static const smallCategoryOrderKey = 'small_category_order_key';
   static const displayedOrderInBig = 'displayed_order_in_big';
   static const defaultDisplayed = 'default_displayed';
+  // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  static const deleteFlag = 'delete_flag';
 }
 
 class SqfIncomeBigCategory {
@@ -86,6 +92,8 @@ class SqfIncomeBigCategory {
   static const resourcePath = 'resource_path';
   // 会計種別（1=生活収支, 2=特別枠）。v9で追加
   static const accountType = 'account_type';
+  // 論理削除（0=有効 / 1=削除済み）。v14で追加（KP-024）
+  static const deleteFlag = 'delete_flag';
 }
 
 class SqfFixedCost {

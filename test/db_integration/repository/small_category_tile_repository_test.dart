@@ -79,11 +79,8 @@ void main() {
       );
     });
 
-    test('既定非表示(default_displayed = 0)かつ実績が無いタイルは返さない', () async {
-      await updateExpenseSmallCategoryDefaultDisplayed(
-        id: 4,
-        defaultDisplayed: 0,
-      );
+    test('削除済み(delete_flag = 1)かつ実績が無いタイルは返さない', () async {
+      await updateExpenseSmallCategoryDeleteFlag(id: 4, deleteFlag: 1);
 
       final results = await repository.fetchAll(
         incomeSourceBigCategoryId: 1,
@@ -95,11 +92,8 @@ void main() {
       expect(results.map((e) => e.id).toList(), [1, 2, 3]);
     });
 
-    test('既定非表示でも期間内に実績があればタイルを返す', () async {
-      await updateExpenseSmallCategoryDefaultDisplayed(
-        id: 4,
-        defaultDisplayed: 0,
-      );
+    test('削除済みでも期間内に実績があればタイルを返す', () async {
+      await updateExpenseSmallCategoryDeleteFlag(id: 4, deleteFlag: 1);
       await insertExpenseRow(
         id: 1,
         date: '20250701',
