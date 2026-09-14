@@ -24,12 +24,16 @@ enum AppYearMonthPickerMode {
 
   /// 年のみ1列表示（年度選択用）
   year,
+
+  /// 年・月の2列表示（暦月選択用。履歴タブ。KP-025）
+  calendarMonth,
 }
 
 /// AppBar 下にドロップダウン式オーバーレイで年月度／年度ピッカーを表示する。
 ///
 /// 戻り値:
-/// - 「適用」確定: yearMonth → DateTime(year, month, 1)、year → DateTime(year, 1, 1)
+/// - 「適用」確定: yearMonth → DateTime(year, month + 1, 0)（選択月の月末日）、year → DateTime(year, 1, 1)、
+///   calendarMonth → DateTime(year, month, 1)
 /// - 背景タップ: null
 Future<DateTime?> showAppYearMonthPicker({
   required BuildContext context,
@@ -157,6 +161,8 @@ class _AppYearMonthPickerOverlayState
           });
         }
       }
+      // 暦月モードは1日〜末日で決まるため期間の取得は不要
+      if (widget.mode == AppYearMonthPickerMode.calendarMonth) return;
       final period = await _computePeriod(_selectedYear, _selectedMonth);
       if (mounted) {
         setState(() => _period = period);
@@ -196,7 +202,7 @@ class _AppYearMonthPickerOverlayState
   }
 
   void _onShiftPrevious() {
-    if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+    if (_hasMonthColumn) {
       var newYear = _selectedYear;
       var newMonth = _selectedMonth - 1;
       if (newMonth < 1) {
@@ -230,7 +236,7 @@ class _AppYearMonthPickerOverlayState
   }
 
   void _onShiftNext() {
-    if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+    if (_hasMonthColumn) {
       var newYear = _selectedYear;
       var newMonth = _selectedMonth + 1;
       if (newMonth > 12) {
@@ -265,6 +271,24 @@ class _AppYearMonthPickerOverlayState
 
   Future<void> _onResetToCurrent() async {
     final now = ref.read(systemDatetimeNotifierProvider);
+    if (widget.mode == AppYearMonthPickerMode.calendarMonth) {
+      // 暦月は集計期間に依存しないため、今日を含む月へそのまま戻す（KP-025）
+      setState(() {
+        _selectedYear = now.year.clamp(widget.minYear, widget.maxYear);
+        _selectedMonth = now.month;
+      });
+      _yearController.animateToItem(
+        _selectedYear - widget.minYear,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+      _monthController.animateToItem(
+        _selectedMonth - 1,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+      return;
+    }
     if (widget.mode == AppYearMonthPickerMode.yearMonth) {
       // nowが属する月度の開始月・年を使って選択状態を更新する
       // now.monthを直接使うと集計開始日をまたいだ場合に1月度ずれるため
@@ -307,14 +331,21 @@ class _AppYearMonthPickerOverlayState
   }
 
   void _onConfirm() {
-    final result = widget.mode == AppYearMonthPickerMode.yearMonth
-        // 月末日を渡すことで fetchMonthPeriod が必ず選択月の月度を返すようにする
-        ? DateTime(_selectedYear, _selectedMonth + 1, 0)
-        : DateTime(_selectedYear, 1, 1);
+    final result = switch (widget.mode) {
+      // 月末日を渡すことで fetchMonthPeriod が必ず選択月の月度を返すようにする
+      AppYearMonthPickerMode.yearMonth =>
+        DateTime(_selectedYear, _selectedMonth + 1, 0),
+      AppYearMonthPickerMode.year => DateTime(_selectedYear, 1, 1),
+      AppYearMonthPickerMode.calendarMonth =>
+        DateTime(_selectedYear, _selectedMonth, 1),
+    };
     widget.onClose(result);
   }
 
   String _formatHeaderTitle() {
+    if (widget.mode == AppYearMonthPickerMode.calendarMonth) {
+      return '$_selectedYear年 $_selectedMonth月';
+    }
     final period = _period;
     if (widget.mode == AppYearMonthPickerMode.yearMonth) {
       // 集計開始日を含む月（期間のstartDatetime.month）を月度として表示
@@ -328,6 +359,10 @@ class _AppYearMonthPickerOverlayState
   }
 
   String _formatRange() {
+    if (widget.mode == AppYearMonthPickerMode.calendarMonth) {
+      final lastDay = DateTime(_selectedYear, _selectedMonth + 1, 0).day;
+      return '$_selectedMonth/1 - $_selectedMonth/$lastDay';
+    }
     final period = _period;
     if (period == null) return '';
     final start = period.startDatetime;
@@ -340,8 +375,11 @@ class _AppYearMonthPickerOverlayState
     }
   }
 
+  /// 年と月の2列で選ぶモード（月度・暦月）か
+  bool get _hasMonthColumn => widget.mode != AppYearMonthPickerMode.year;
+
   bool get _canShiftPrevious {
-    if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+    if (_hasMonthColumn) {
       if (_selectedMonth == 1) return _selectedYear > widget.minYear;
       return true;
     }
@@ -349,7 +387,7 @@ class _AppYearMonthPickerOverlayState
   }
 
   bool get _canShiftNext {
-    if (widget.mode == AppYearMonthPickerMode.yearMonth) {
+    if (_hasMonthColumn) {
       if (_selectedMonth == 12) return _selectedYear < widget.maxYear;
       return true;
     }
@@ -470,7 +508,7 @@ class _AppYearMonthPickerOverlayState
   Widget _buildPickerSection() {
     return SizedBox(
       height: 216,
-      child: widget.mode == AppYearMonthPickerMode.yearMonth
+      child: _hasMonthColumn
           ? Row(
               children: [
                 Expanded(child: _buildYearPicker()),
@@ -546,7 +584,12 @@ class _AppYearMonthPickerOverlayState
       children: List.generate(
         12,
         (i) => Center(
-          child: Text('${i + 1}月度', style: context.textStyles.pageHeaderNumeric),
+          child: Text(
+            widget.mode == AppYearMonthPickerMode.calendarMonth
+                ? '${i + 1}月'
+                : '${i + 1}月度',
+            style: context.textStyles.pageHeaderNumeric,
+          ),
         ),
       ),
     );
@@ -571,9 +614,11 @@ class _AppYearMonthPickerOverlayState
           child: MainButton(
             buttonType: ButtonColorType.secondary,
             onPressed: _onResetToCurrent,
-            buttonText: widget.mode == AppYearMonthPickerMode.yearMonth
-                ? '今月度に戻す'
-                : '今年度に戻す',
+            buttonText: switch (widget.mode) {
+              AppYearMonthPickerMode.yearMonth => '今月度に戻す',
+              AppYearMonthPickerMode.year => '今年度に戻す',
+              AppYearMonthPickerMode.calendarMonth => '今月に戻す',
+            },
           ),
         ),
         const SizedBox(width: AppSpacing.sm),

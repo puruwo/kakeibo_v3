@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_motion.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -30,6 +30,7 @@ import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_en
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_fixed_cost_value_provider.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/view/component/app_period_header.dart';
 import 'package:kakeibo/view/component/app_year_month_picker.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
@@ -47,12 +48,39 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
   /// 数フレームのチラつき（前月コンテンツの一瞬表示）を防ぐためのフラグ
   bool _isMonthSwitching = false;
 
+  /// 月度を切り替える。[target] はその月度に含まれる月末日（ピッカーの戻り値と同じ形）。
+  /// [currentStart] は表示中の月度の開始日（月度はこの日を含む月で数える）
+  void _changeMonth(DateTime target, DateTime? currentStart) {
+    // 同じ月度なら provider 再評価が走らないので、フラグも立てずに早期 return
+    if (currentStart != null &&
+        target.year == currentStart.year &&
+        target.month == currentStart.month) {
+      return;
+    }
+
+    // 切り替えた瞬間に強制ローディング表示にしてチラつきを防ぐ
+    setState(() => _isMonthSwitching = true);
+    ref
+        .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
+        .updateState(target);
+  }
+
   @override
   Widget build(BuildContext context) {
     //状態管理---------------------------------------------------------------------------------------
 
     // DBが更新されたらリビルドするため
     ref.watch(updateDBCountNotifierProvider);
+
+    // タブ再タップ（Foundation）など、この画面の外から月度が変わったときもチラつきを防ぐ（KP-025）
+    ref.listen<DateTime>(analyzePageSelectedDatetimeNotifierProvider, (
+      previous,
+      next,
+    ) {
+      if (previous != next && !_isMonthSwitching) {
+        setState(() => _isMonthSwitching = true);
+      }
+    });
 
     // 全カードの通信が完了するまでフルスケルトン表示する
     // 月切替時もスケルトンに戻すため、各providerのisLoadingを判定する
@@ -93,68 +121,67 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
+        // 歯車（actions 48）と同じ幅を左にも取り、期間ヘッダーを画面中央に置く（KP-025）
+        leading: const SizedBox.shrink(),
+        leadingWidth: 48,
+        titleSpacing: 0,
         flexibleSpace: const GlassAppBarBackground(),
         title: Consumer(
           builder: (context, ref, _) {
             final monthPeriodAsync = ref.watch(
               analyzePageDateScopeEntityProvider,
             );
-            final monthPeriod = monthPeriodAsync.whenOrNull(
-              data: (data) => data.aggregationMonthPeriod,
-            );
+            // 期間の再読み込み中は前の期間を出したままにし、新しい期間が届いたら
+            // ラベルをフェードで切り替える（空のラベルを挟まない。KP-025）
+            final monthPeriod =
+                monthPeriodAsync.valueOrNull?.aggregationMonthPeriod;
             final selectedDate = ref.watch(
               analyzePageSelectedDatetimeNotifierProvider,
             );
             final label = yyyyMMtoMMGetter(monthPeriod);
+            // 月度は期間の開始日を含む月で数える（ピッカーの月度表示と同じ）。
+            // 期間の読み込み中は移動先を決められないため矢印を非活性にする
+            final start = monthPeriod?.startDatetime;
+            final canPrevious = start != null &&
+                canShiftPeriodMonth(
+                  year: start.year,
+                  month: start.month,
+                  delta: -1,
+                );
+            final canNext = start != null &&
+                canShiftPeriodMonth(
+                  year: start.year,
+                  month: start.month,
+                  delta: 1,
+                );
             // 月ラベルの下に「生活収支」を小さく表示し、特別枠を含まない分析画面であることを示す
             // （ADR-025: UI上の会計種別ラベルは「生活収支/特別枠」で統一）
-            return GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () async {
+            return AppPeriodHeader(
+              label: label,
+              subLabel: '生活収支',
+              onTapLabel: () async {
                 final picked = await showAppYearMonthPicker(
                   context: context,
                   mode: AppYearMonthPickerMode.yearMonth,
                   // startDatetimeを渡すことで分析画面が表示中の月度と一致した状態でピッカーを開く
-                  initialDateTime: monthPeriod?.startDatetime ?? selectedDate,
+                  initialDateTime: start ?? selectedDate,
                 );
                 if (picked == null) return;
-                // 同月なら provider 再評価が走らないので、フラグも立てずに早期 return
-                if (DateUtils.isSameMonth(picked, selectedDate)) return;
-
-                // ピッカーが閉じた瞬間に強制ローディング表示にしてチラつきを防ぐ
-                setState(() => _isMonthSwitching = true);
-                ref
-                    .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
-                    .updateState(picked);
+                _changeMonth(picked, start);
               },
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 200),
-                transitionBuilder: (child, animation) =>
-                    FadeTransition(opacity: animation, child: child),
-                child: Column(
-                  key: ValueKey(label),
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
-                        const SizedBox(width: 28),
-                        Text(label, style: context.textStyles.pageHeaderNumeric),
-                        Transform.translate(
-                          offset: const Offset(-4, 0),
-                          child: Icon(
-                            AppIcons.dropdown,
-                            color: context.colors.icon,
-                            size: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Text('生活収支', style: context.textStyles.pageHeaderSubText),
-                  ],
-                ),
-              ),
+              // 移動先はその月度の月の月末日（ピッカーの戻り値と同じ形）
+              onPrevious: canPrevious
+                  ? () => _changeMonth(
+                        DateTime(start.year, start.month, 0),
+                        start,
+                      )
+                  : null,
+              onNext: canNext
+                  ? () => _changeMonth(
+                        DateTime(start.year, start.month + 2, 0),
+                        start,
+                      )
+                  : null,
             );
           },
         ),
@@ -174,7 +201,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
       // 同色になる surfaceElevated を明示しない（KP-013）
       // ローディング → コンテンツの切り替えをフェードで行う
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        // グロナビのタブ切替と同じ時間・曲線で揃える（KP-025）
+        duration: AppMotion.switchDuration,
+        switchInCurve: AppMotion.switchInCurve,
         // content → loading への切り替えは即時にする
         // （前コンテンツの透過残像で月切替時のチラつきが見えるのを防ぐ）
         reverseDuration: Duration.zero,

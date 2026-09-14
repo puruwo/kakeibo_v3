@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_motion.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
@@ -61,7 +62,9 @@ class _ExpenceHistoryAreaState extends ConsumerState<ExpenceHistoryArea> {
 
     return Expanded(
       child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 150),
+        // 月の移動で一覧が入れ替わるときも、グロナビのタブ切替と同じ時間・曲線で揃える（KP-025）
+        duration: AppMotion.switchDuration,
+        switchInCurve: AppMotion.switchInCurve,
         layoutBuilder: (currentChild, previousChildren) {
           return Stack(
             fit: StackFit.expand,

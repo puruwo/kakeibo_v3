@@ -2,9 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/constant/styles/app_motion.dart';
 import 'package:kakeibo/constant/styles/app_spacing.dart';
-import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 
 /// Local imports
@@ -26,6 +25,8 @@ import 'package:kakeibo/domain/ui_value/bonus_plan_value/bonus_section_display_t
 import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
+import 'package:kakeibo/util/extension/datetime_extension.dart';
+import 'package:kakeibo/view/component/app_period_header.dart';
 import 'package:kakeibo/view/component/app_year_month_picker.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view_model/state/date_scope/home_page/selected_datetime/home_selected_datetime.dart';
@@ -43,12 +44,29 @@ class _YearPageState extends ConsumerState<YearPage> {
   /// 数フレームのチラつき（前年コンテンツの一瞬表示）を防ぐためのフラグ
   bool _isYearSwitching = false;
 
+  /// 年度を [months] か月（±12）ずらす。選択日付ごと動かすため、
+  /// 代表年の数え方（開始側／終了側）や年度の区切り設定に依存しない（KP-025）
+  void _shiftYear(DateTime selectedDate, int months) {
+    // 切り替えた瞬間に強制ローディング表示にしてチラつきを防ぐ
+    setState(() => _isYearSwitching = true);
+    ref
+        .read(homeSelectedDatetimeNotifierProvider.notifier)
+        .updateState(selectedDate.addMonths(months));
+  }
+
   @override
   Widget build(BuildContext context) {
     //状態管理---------------------------------------------------------------------------------------
 
     // DBが更新されたらリビルドするため
     ref.watch(updateDBCountNotifierProvider);
+
+    // タブ再タップ（Foundation）など、この画面の外から年度が変わったときもチラつきを防ぐ（KP-025）
+    ref.listen<DateTime>(homeSelectedDatetimeNotifierProvider, (previous, next) {
+      if (previous != next && !_isYearSwitching) {
+        setState(() => _isYearSwitching = true);
+      }
+    });
 
     // 全カードの通信が完了するまでフルローディング表示する
     // 年切替時もローディングに戻すため、各providerのisLoadingを判定する
@@ -91,6 +109,10 @@ class _YearPageState extends ConsumerState<YearPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         centerTitle: true,
+        // 歯車（actions 48）と同じ幅を左にも取り、期間ヘッダーを画面中央に置く（KP-025）
+        leading: const SizedBox.shrink(),
+        leadingWidth: 48,
+        titleSpacing: 0,
         flexibleSpace: const GlassAppBarBackground(),
         title: Consumer(
           builder: (context, ref, _) {
@@ -98,67 +120,49 @@ class _YearPageState extends ConsumerState<YearPage> {
             final selectedDate = ref.watch(
               homeSelectedDatetimeNotifierProvider,
             );
+            // 期間の再読み込み中は前の期間のヘッダーを出したままにし、
+            // 新しい期間が届いたらラベルをフェードで切り替える（消えて出直すのを防ぐ。KP-025）
             return asyncValue.when(
-              data: (activeDt) => GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () async {
-                  final picked = await showAppYearMonthPicker(
-                    context: context,
-                    mode: AppYearMonthPickerMode.year,
-                    initialDateTime: selectedDate,
-                  );
-                  if (picked == null) return;
-                  // 同じ年なら provider 再評価が走らないので、フラグも立てずに早期return
-                  if (picked.year == selectedDate.year) return;
-
-                  // ピッカーが閉じた瞬間に強制ローディング表示にしてチラつきを防ぐ
-                  setState(() => _isYearSwitching = true);
-                  await ref
-                      .read(homeSelectedDatetimeNotifierProvider.notifier)
-                      .updateStateAsYear(picked.year);
-                },
-                child: AnimatedSwitcher(
-                  duration: const Duration(milliseconds: 200),
-                  transitionBuilder: (child, animation) =>
-                      FadeTransition(opacity: animation, child: child),
-                  child: () {
-                    final start = activeDt.yearPeriod.startDatetime;
-                    final end = activeDt.yearPeriod.endDatetime;
-                    final periodLabel =
-                        '${start.year}年${start.month}月 - ${end.year}年${end.month}月';
-                    final yearLabel = '${activeDt.representativeYear.year}年度';
-                    return Column(
-                      key: ValueKey('${start.year}${start.month}'),
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // アイコン分の幅を左側に補って、テキスト単体でセンタリングされるよう揃える
-                            const SizedBox(width: 32),
-                            Text(
-                              periodLabel,
-                              style: context.textStyles.pageHeaderNumeric,
-                            ),
-                            Transform.translate(
-                              offset: const Offset(-6, 0),
-                              child: Icon(
-                                AppIcons.dropdown,
-                                color: context.colors.icon,
-                                size: 30,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Text(
-                          yearLabel,
-                          style: context.textStyles.pageHeaderSubNumeric,
-                        ),
-                      ],
+              skipLoadingOnReload: true,
+              data: (activeDt) {
+                final start = activeDt.yearPeriod.startDatetime;
+                final end = activeDt.yearPeriod.endDatetime;
+                final representativeYear =
+                    int.parse(activeDt.representativeYear.year.toString());
+                // 矢印の移動範囲は表示中の年度（代表年）で判定する
+                final canPrevious =
+                    canShiftPeriodYear(year: representativeYear, delta: -1);
+                final canNext =
+                    canShiftPeriodYear(year: representativeYear, delta: 1);
+                return AppPeriodHeader(
+                  label:
+                      '${start.year}年${start.month}月 - ${end.year}年${end.month}月',
+                  subLabel: '$representativeYear年度',
+                  subLabelIsNumeric: true,
+                  onTapLabel: () async {
+                    // 表示中の年度（期間の開始年）で開き・比較する。選択日付の年は
+                    // 矢印やタブ再タップで年度の途中の日付になり、表示中の年度とずれることがある
+                    final shownYear = start.year;
+                    final picked = await showAppYearMonthPicker(
+                      context: context,
+                      mode: AppYearMonthPickerMode.year,
+                      initialDateTime: DateTime(shownYear, 1, 1),
                     );
-                  }(),
-                ),
-              ),
+                    if (picked == null) return;
+                    // 同じ年度なら provider 再評価が走らないので、フラグも立てずに早期return
+                    if (picked.year == shownYear) return;
+
+                    // ピッカーが閉じた瞬間に強制ローディング表示にしてチラつきを防ぐ
+                    setState(() => _isYearSwitching = true);
+                    await ref
+                        .read(homeSelectedDatetimeNotifierProvider.notifier)
+                        .updateStateAsYear(picked.year);
+                  },
+                  onPrevious:
+                      canPrevious ? () => _shiftYear(selectedDate, -12) : null,
+                  onNext: canNext ? () => _shiftYear(selectedDate, 12) : null,
+                );
+              },
               loading: () => const SizedBox.shrink(),
               error: (_, __) => const SizedBox.shrink(),
             );
@@ -180,7 +184,9 @@ class _YearPageState extends ConsumerState<YearPage> {
       // 同色になる surfaceElevated を明示しない（KP-013）
       // ローディング → コンテンツの切り替えをフェードで行う
       body: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 300),
+        // グロナビのタブ切替と同じ時間・曲線で揃える（KP-025）
+        duration: AppMotion.switchDuration,
+        switchInCurve: AppMotion.switchInCurve,
         // content → loading への切り替えは即時にする
         // （前コンテンツの透過残像で年切替時のチラつきが見えるのを防ぐ）
         reverseDuration: Duration.zero,
