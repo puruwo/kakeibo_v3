@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/batch/batch_history_usecase.dart';
 import 'package:kakeibo/constant/properties.dart';
+import 'package:kakeibo/constant/styles/app_motion.dart';
 import 'package:kakeibo/constant/styles/app_text_styles.dart';
+import 'package:kakeibo/domain_service/month_period_service/month_period_service.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
+import 'package:kakeibo/domain_service/year_period_service/month_period_service.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/logger.dart';
@@ -13,6 +17,11 @@ import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart'
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/year_page/year_page.dart';
+import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
+import 'package:kakeibo/view_model/state/date_scope/home_page/home_date_scope.dart';
+import 'package:kakeibo/view_model/state/date_scope/home_page/selected_datetime/home_selected_datetime.dart';
 import 'package:kakeibo/view_model/state/navigation_bar_number.dart';
 import 'package:kakeibo/view_model/state/initial_open.dart';
 import 'package:kakeibo/constant/icon.dart';
@@ -53,13 +62,13 @@ class _FoundationState extends ConsumerState<Foundation>
   void initState() {
     super.initState();
     _fadeController = AnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: AppMotion.switchDuration,
       vsync: this,
     );
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
-    ).animate(CurvedAnimation(parent: _fadeController, curve: Curves.easeIn));
+    ).animate(CurvedAnimation(parent: _fadeController, curve: AppMotion.switchInCurve));
     _fadeController.value = 1.0; // 初期状態では完全に表示
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _onBuildComplete(context, ref);
@@ -248,6 +257,36 @@ class _FoundationState extends ConsumerState<Foundation>
   }
 
   // タブがタップされたときの処理
+  /// 期間ヘッダーを持つタブ（全体・月間分析・履歴）の表示期間を、今日を含む期間に戻す（KP-025）。
+  /// すでに現在の期間を表示中なら何もしない（再読み込みを起こさない）
+  Future<void> _resetPeriodToCurrent(int index, WidgetRef ref) async {
+    final now = ref.read(systemDatetimeNotifierProvider);
+    switch (index) {
+      case 0:
+        final current =
+            await ref.read(yearPeriodServiceProvider).fetchYearPeriod(now);
+        final shown =
+            ref.read(homeDateScopeEntityProvider).valueOrNull?.yearPeriod;
+        if (shown?.startDatetime == current.startDatetime) return;
+        ref.read(homeSelectedDatetimeNotifierProvider.notifier).updateState(now);
+      case 1:
+        final current =
+            await ref.read(monthPeriodServiceProvider).fetchMonthPeriod(now);
+        final shown = ref
+            .read(analyzePageDateScopeEntityProvider)
+            .valueOrNull
+            ?.aggregationMonthPeriod;
+        if (shown?.startDatetime == current.startDatetime) return;
+        ref
+            .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
+            .updateState(now);
+      case 4:
+        ref
+            .read(calendarPageControllerNotifierProvider.notifier)
+            .jumpToMonth(now);
+    }
+  }
+
   void _selectTab(int index, WidgetRef ref) {
     // 2（入力）をタップしたときは、入力モーダルを表示する
     if (index == 2) {
@@ -257,8 +296,14 @@ class _FoundationState extends ConsumerState<Foundation>
     else {
       // 同じタブが再タップされた場合は、Navigatorを初期状態までポップしてリセットする
       if (index == ref.read(navigationBarNumberNotifierProvider)) {
-        // 同じタブが再タップされた場合、タブ内の Navigator を初期状態までポップしてリセットする
-        navigatorKeys[index].currentState?.popUntil((route) => route.isFirst);
+        final navigator = navigatorKeys[index].currentState;
+        // 下層ページを開いていれば、まずタブ内の Navigator を初期状態までポップしてリセットする
+        if (navigator != null && navigator.canPop()) {
+          navigator.popUntil((route) => route.isFirst);
+        } else {
+          // 最初の画面で再タップされたら、表示中の期間を現在の期間に戻す（KP-025 段階的に戻る）
+          _resetPeriodToCurrent(index, ref);
+        }
       } else {
         // タブを切り替える（フェードインは navigationBarNumber の変化を listen して実行）
         final notifier = ref.read(navigationBarNumberNotifierProvider.notifier);

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/calendar/calendar_usecase.dart';
+import 'package:kakeibo/util/extension/datetime_extension.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/date_box.dart';
 import 'package:kakeibo/view_model/state/date_scope/historical_page/selected_datetime/historical_selected_datetime.dart';
 import 'package:kakeibo/view_model/state/page_manager/page_manager.dart';
@@ -66,34 +67,25 @@ class _CalendarAreaState extends ConsumerState<CalendarArea> {
         // selectedDatetimeNotifierProviderの値を更新する
         onPageChanged: (page) {
           // pageは現在ページ
-
-          // ページの移動方向を判定する
-          // 1: 右に移動中
-          if (page > pageController.page!) {
-            ref
-                .read(historicalSelectedDatetimeNotifierProvider.notifier)
-                .updateToNextMonth();
-            // 全体管理の状態も更新
-            ref.read(pageManagerNotifierProvider.notifier).nextPage();
-            logger.d('Callendar: called updateToNextMonth()');
-          }
-
-          // -1: 左に移動中
-          else if (page < pageController.page!) {
-            ref
-                .read(historicalSelectedDatetimeNotifierProvider.notifier)
-                .updateToPreviousMonth();
-            // 全体管理の状態も更新
-            ref.read(pageManagerNotifierProvider.notifier).previousPage();
-            logger.d('Callendar: called updateToPreviousMonth()');
-          }
+          // 直前のページ（全体管理の状態）との差分だけ月を動かす。
+          // 矢印・スワイプは±1、ピッカーやタブ再タップによるジャンプは複数ページになる（KP-025）
+          final int diff =
+              (page - ref.read(pageManagerNotifierProvider)).toInt();
 
           // 0: ページが移動していない
-          else {
+          if (diff == 0) {
             logger.d('Callendar: called no page change');
+            return;
           }
 
-          logger.d('Callendar: page is $page');
+          final selected = ref.read(historicalSelectedDatetimeNotifierProvider);
+          ref
+              .read(historicalSelectedDatetimeNotifierProvider.notifier)
+              .updateState(selected.addMonths(diff));
+          // 全体管理の状態も更新
+          ref.read(pageManagerNotifierProvider.notifier).updateState(page);
+
+          logger.d('Callendar: page is $page (diff $diff)');
         },
 
         // 表示部分記述

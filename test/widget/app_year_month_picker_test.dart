@@ -229,4 +229,81 @@ void main() {
       expect(find.text('今月度に戻す'), findsNothing);
     });
   });
+
+  // 履歴タブ用（KP-025）。集計期間に依存せず、1日〜末日の暦月で選ぶ
+  group('showAppYearMonthPicker（暦月モード）', () {
+    testWidgets('見出しは「yyyy年 m月」、範囲は「m/1 - m/末日」、月列は「m月」', (tester) async {
+      await _pumpAndOpenPicker(
+        tester,
+        mode: AppYearMonthPickerMode.calendarMonth,
+        initialDateTime: DateTime(2025, 7, 1),
+      );
+
+      expect(find.text('2025年 7月'), findsOneWidget);
+      expect(find.text('7/1 - 7/31'), findsOneWidget);
+      expect(find.text('7月'), findsWidgets);
+      expect(find.text('7月度'), findsNothing);
+    });
+
+    testWidgets('戻すボタンの文言は「今月に戻す」の secondary', (tester) async {
+      await _pumpAndOpenPicker(
+        tester,
+        mode: AppYearMonthPickerMode.calendarMonth,
+        initialDateTime: DateTime(2025, 7, 1),
+      );
+
+      final reset = tester.widget<MainButton>(
+        find.widgetWithText(MainButton, '今月に戻す'),
+      );
+      expect(reset.buttonType, ButtonColorType.secondary);
+      expect(find.text('今月度に戻す'), findsNothing);
+    });
+
+    testWidgets('「適用」で選択中の月の1日を返す', (tester) async {
+      final result = await _pumpAndOpenPicker(
+        tester,
+        mode: AppYearMonthPickerMode.calendarMonth,
+        initialDateTime: DateTime(2025, 7, 1),
+      );
+
+      await tester.tap(find.text('適用'));
+      await pumpTimes(tester);
+
+      expect(result.value, DateTime(2025, 7, 1));
+    });
+
+    testWidgets('次へで1か月進めてから「適用」すると翌月の1日を返す（2月の末日表示も確認）', (
+      tester,
+    ) async {
+      final result = await _pumpAndOpenPicker(
+        tester,
+        mode: AppYearMonthPickerMode.calendarMonth,
+        initialDateTime: DateTime(2025, 1, 1),
+      );
+
+      await tester.tap(find.byKey(const ValueKey('year_month_picker_next')));
+      await pumpTimes(tester);
+      expect(find.text('2/1 - 2/28'), findsOneWidget);
+
+      await tester.tap(find.text('適用'));
+      await pumpTimes(tester);
+
+      expect(result.value, DateTime(2025, 2, 1));
+    });
+
+    testWidgets('「今月に戻す」でシステム日時の暦月（2025年7月）に戻る', (tester) async {
+      final result = await _pumpAndOpenPicker(
+        tester,
+        mode: AppYearMonthPickerMode.calendarMonth,
+        initialDateTime: DateTime(2024, 1, 1),
+      );
+
+      await tester.tap(find.text('今月に戻す'));
+      await pumpTimes(tester);
+      await tester.tap(find.text('適用'));
+      await pumpTimes(tester);
+
+      expect(result.value, DateTime(2025, 7, 1));
+    });
+  });
 }

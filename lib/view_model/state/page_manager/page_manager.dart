@@ -22,5 +22,10 @@ class PageManagerNotifier extends _$PageManagerNotifier {
   void nextPage() {
     // 次のページに移動
     state = state + 1;
-  }  
+  }
+
+  /// 指定したページにする（ピッカー・タブ再タップによる複数ページのジャンプ。KP-025）
+  void updateState(int page) {
+    state = page;
+  }
 }
