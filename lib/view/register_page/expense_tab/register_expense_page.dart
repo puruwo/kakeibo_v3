@@ -31,10 +31,18 @@ class RegisterExpensePage extends ConsumerStatefulWidget {
   /// 固定費トグルの初期状態（年ページ・月次固定費ビューの追加導線からはON）
   final bool initialFixedCostToggle;
 
+  /// 種別ピル（支出・収入の切替）を操作不可にするか（KP-026）
+  final bool lockTransactionMode;
+
+  /// 固定費トグルを操作不可にするか（固定費の追加導線。KP-026）
+  final bool lockFixedCostToggle;
+
   const RegisterExpensePage({
     this.mode = RegisterScreenMode.add,
     this.expenseEntity,
     this.initialFixedCostToggle = false,
+    this.lockTransactionMode = false,
+    this.lockFixedCostToggle = false,
     super.key,
   });
 
@@ -128,6 +136,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                   mode: widget.mode,
                   originalPrice: widget.expenseEntity?.price ?? 0,
                   status: priceInputFieldStatus,
+                  modeLocked: widget.lockTransactionMode,
                 ),
 
                 const SizedBox(height: AppSpacing.lg),
@@ -145,6 +154,7 @@ class _RegisterExpensePageState extends ConsumerState<RegisterExpensePage> {
                   note: widget.mode == RegisterScreenMode.edit
                       ? 'ONにすると、この支出を初回分として固定費を作成します'
                       : null,
+                  toggleLocked: widget.lockFixedCostToggle,
                 ),
 
                 const SizedBox(height: AppSpacing.lg),

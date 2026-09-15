@@ -10,6 +10,7 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
+import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/view/year_page/fixed_cost_button_area/fixed_cost_registration_list_page/fixed_cost_registration_list_page.dart';
 import 'package:kakeibo/constant/icon.dart';
 
@@ -178,8 +179,14 @@ void main() {
     await tester.tap(find.text('固定費を追加'));
     await pumpTimes(tester);
 
-    // 記録モーダル（追加モード）のヘッダー
-    expect(find.text('記録'), findsOneWidget);
+    // 記録モーダル（追加モード）のヘッダーは押したボタンと同じ文言（KP-026）
+    expect(
+      find.descendant(
+        of: find.byType(RegisaterPageBase),
+        matching: find.text('固定費を追加'),
+      ),
+      findsOneWidget,
+    );
     // v10で固定費タブは廃止。支出タブのトグルON状態で開く（仕様 §6.3）
     expect(find.text('固定費として登録'), findsOneWidget);
     expect(find.text('名称'), findsOneWidget);

@@ -220,8 +220,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             onTap: () {
                               showAppModalBottomSheet(
                                 context,
-                                child:
-                                    const RegisaterPageBase.addExpense(),
+                                child: const RegisaterPageBase.addExpense(
+                                  lockTransactionMode: true,
+                                ),
                               );
                             },
                             child: Row(
@@ -342,8 +343,9 @@ class _YearlyBalanceAreaState extends ConsumerState<YearlyBalanceArea> {
                             onTap: () {
                               showAppModalBottomSheet(
                                 context,
-                                child:
-                                    const RegisaterPageBase.addIncome(),
+                                child: const RegisaterPageBase.addIncome(
+                                  lockTransactionMode: true,
+                                ),
                               );
                             },
                             child: Row(

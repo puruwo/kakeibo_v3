@@ -200,7 +200,7 @@ void main() {
 
     // v10で未確定の確定操作は編集シートに一本化した（旧・金額入力ダイアログは廃止。仕様 §6.6）
     expect(find.byType(RegisaterPageBase), findsOneWidget);
-    expect(find.text('編集'), findsOneWidget);
+    expect(find.text('固定費を編集'), findsOneWidget);
     // 上部グループは変更不可の項目のみ（名称が最上段。仕様 §6.8）
     expect(find.text('名称'), findsOneWidget);
     expect(find.text('カテゴリー'), findsOneWidget);

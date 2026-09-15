@@ -12,9 +12,11 @@ import 'package:kakeibo/domain/core/category_selection/category_selection_types.
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
+import 'package:kakeibo/view/component/app_switch.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
 import 'package:kakeibo/view/register_page/expense_tab/expense_basic_group.dart';
 import 'package:kakeibo/view/register_page/expense_tab/fixed_cost_register_group.dart';
@@ -513,7 +515,8 @@ void main() {
       );
       await pumpTimes(tester);
 
-      expect(find.text('編集'), findsOneWidget);
+      // KP-026: 編集のタイトルは種別を含める
+      expect(find.text('支出を編集'), findsOneWidget);
       expect(find.text('更新'), findsOneWidget);
       expect(find.text('3,400'), findsOneWidget);
       expect(find.text('洗剤'), findsOneWidget);
@@ -830,6 +833,158 @@ void main() {
       await tester.tap(find.text('閉じる'));
       await pumpTimes(tester);
       expect(find.text('固定費を登録しました'), findsNothing);
+
+      await unmountRegisterPage(tester);
+    });
+  });
+
+  group('ヘッダーのタイトルと種別の固定（KP-026）', () {
+    testWidgets('切替できる導線はタイトル「記録」でピルに▼が付き収入へ切り替えられる', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('記録'), findsOneWidget);
+      expect(find.byIcon(AppIcons.expand), findsOneWidget);
+
+      await tester.tap(find.text('支出'));
+      await pumpTimes(tester, times: 5);
+      expect(find.text('収入'), findsOneWidget); // ドロップダウンの選択肢
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('支出に固定した導線はタイトル「支出を追加」でピルを押しても切り替わらない', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(lockTransactionMode: true),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('支出を追加'), findsOneWidget);
+      expect(find.text('記録'), findsNothing);
+      // 見た目は編集時と同じ（▼なし）
+      expect(find.byIcon(AppIcons.expand), findsNothing);
+
+      await tester.tap(find.text('支出'));
+      await pumpTimes(tester, times: 5);
+      expect(find.text('収入'), findsNothing);
+      expect(find.text('拠出元'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('収入に固定した導線はタイトル「収入を追加」でピルに▼が付かない', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addIncome(lockTransactionMode: true),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('収入を追加'), findsOneWidget);
+      expect(find.byIcon(AppIcons.expand), findsNothing);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('固定費の追加はタイトル「固定費を追加」で固定費トグルが操作できない', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addFixedCost(),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('固定費を追加'), findsOneWidget);
+      expect(find.byIcon(AppIcons.expand), findsNothing);
+
+      // 1つ目は「固定費として登録」（非活性）、2つ目は「支払い額が毎回変わる」（操作できる）
+      final switches = find.byType(Switch);
+      expect(tester.widget<Switch>(switches.first).value, isTrue);
+      expect(tester.widget<Switch>(switches.first).onChanged, isNull);
+      expect(tester.widget<Switch>(switches.last).onChanged, isNotNull);
+
+      // 非活性のトグルだけが薄く表示される（色固定のため Switch 標準の非活性表現が効かない）
+      double opacityOf(Finder switchFinder) => tester
+          .widget<Opacity>(
+            find.ancestor(of: switchFinder, matching: find.byType(Opacity)).first,
+          )
+          .opacity;
+      expect(opacityOf(switches.first), AppSwitch.disabledOpacity);
+      expect(opacityOf(switches.last), 1);
+
+      // 押してもOFFにならず、固定費の入力行が残る
+      await tester.tap(switches.first);
+      await pumpTimes(tester);
+      expect(find.text('名称'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('支出に固定した導線でも固定費トグルは操作できる', (tester) async {
+      // 論点4でトグルを固定するのは固定費の追加導線だけ（特別枠の支出等は対象外）
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(lockTransactionMode: true),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      expect(tester.widget<Switch>(find.byType(Switch)).onChanged, isNotNull);
+
+      // トグルONで登録されるのは固定費なので、タイトルも「固定費を追加」に切り替わる
+      await tester.tap(find.byType(Switch));
+      await pumpTimes(tester);
+      expect(find.text('固定費を追加'), findsOneWidget);
+      expect(find.text('支出を追加'), findsNothing);
+
+      // OFFに戻すと「支出を追加」に戻る
+      await tester.tap(find.byType(Switch).first);
+      await pumpTimes(tester);
+      expect(find.text('支出を追加'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('切替できる導線は固定費トグルをONにしてもタイトル「記録」のまま', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(find.byType(Switch));
+      await pumpTimes(tester);
+      expect(find.text('記録'), findsOneWidget);
+      expect(find.text('固定費を追加'), findsNothing);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('収入の編集はタイトル「収入を編集」になる', (tester) async {
+      // 集計期間6/25〜7/24内の収入を編集対象にする
+      const incomeTarget = IncomeEntity(
+        id: 7,
+        date: '20250701',
+        price: 250000,
+        categoryId: 1,
+        memo: '7月給与',
+      );
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.editIncome(incomeEntity: incomeTarget),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('収入を編集'), findsOneWidget);
+      expect(find.byIcon(AppIcons.expand), findsNothing);
 
       await unmountRegisterPage(tester);
     });

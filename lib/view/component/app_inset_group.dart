@@ -143,7 +143,8 @@ class AppInsetRow extends StatelessWidget {
     this.icon,
     required this.label,
     required bool this.switchValue,
-    required ValueChanged<bool> this.onSwitchChanged,
+    // null のときはスイッチを非活性にする（KP-026 固定費の追加導線）
+    required this.onSwitchChanged,
     this.iconColor,
     this.leading,
   })  : _type = _AppInsetRowType.switchRow,

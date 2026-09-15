@@ -29,7 +29,10 @@ class BonusRegisterPromptArea extends ConsumerWidget {
         );
         showAppModalBottomSheet(
           context,
-          child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
+          child: RegisaterPageBase.addIncome(
+            incomeEntity: newIncome,
+            lockTransactionMode: true,
+          ),
         );
       },
     );

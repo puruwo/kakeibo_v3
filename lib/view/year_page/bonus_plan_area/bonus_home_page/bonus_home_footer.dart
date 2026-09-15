@@ -43,7 +43,10 @@ class BonusHomeFooter extends ConsumerWidget {
           );
           showAppModalBottomSheet(
             context,
-            child: RegisaterPageBase.addExpense(expenseEntity: newExpense),
+            child: RegisaterPageBase.addExpense(
+              expenseEntity: newExpense,
+              lockTransactionMode: true,
+            ),
           );
         },
       ),
@@ -66,7 +69,10 @@ class BonusHomeFooter extends ConsumerWidget {
           );
           showAppModalBottomSheet(
             context,
-            child: RegisaterPageBase.addIncome(incomeEntity: newIncome),
+            child: RegisaterPageBase.addIncome(
+              incomeEntity: newIncome,
+              lockTransactionMode: true,
+            ),
           );
         },
       ),
