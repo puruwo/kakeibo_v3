@@ -398,8 +398,10 @@ void main() {
     final errors = await pumpAndCollectExceptions(tester);
     expect(errors, isEmpty, reason: '遷移先の描画で例外が出てはいけない');
 
-    // 遷移先（カテゴリー別利用状況）に小カテゴリー（外食）が並ぶ
-    expect(find.text('カテゴリー別利用状況'), findsOneWidget);
+    // 遷移先（カテゴリーのホーム画面。KP-027 でタイトルはカテゴリー名になった）に
+    // 集計タイルと小カテゴリー（外食）が並ぶ
+    expect(find.text('支出合計'), findsOneWidget);
+    expect(find.text('予算を設定'), findsOneWidget);
     expect(find.text('外食'), findsWidgets);
   });
 

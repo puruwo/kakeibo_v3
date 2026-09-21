@@ -10,6 +10,8 @@ import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/util/period_month_count.dart';
 import 'package:kakeibo/util/util.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/expense_category_icon.dart';
@@ -17,6 +19,7 @@ import 'package:kakeibo/view/component/expense_history_list_tile.dart';
 import 'package:kakeibo/view/component/month_accordion_section.dart';
 import 'package:kakeibo/view/component/summary_band_card.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/expense_month_group.dart';
+import 'package:kakeibo/view_model/state/page_mode_controller/page_mode.dart';
 import 'package:kakeibo/constant/icon.dart';
 
 /// カテゴリー別の支出明細画面（案件 UIデザイン改修 §6）
@@ -105,9 +108,30 @@ class _YearlyCategoryExpenseListPageState
               ),
               const SizedBox(width: AppSpacing.sm),
             ],
-            Text(widget.bigCategoryName, style: context.textStyles.pageHeaderText),
+            // 歯車から改名して戻ったときに追従するよう、再集計値の名前を優先する（KP-027）。
+            // 記録が無くなって再集計値から消えたときは、遷移時に受け取った名前を出す
+            Text(
+              category?.bigCategoryName ?? widget.bigCategoryName,
+              style: context.textStyles.pageHeaderText,
+            ),
           ],
         ),
+        // このカテゴリーの設定（大カテゴリー詳細編集）への入口（KP-027）
+        actions: [
+          IconButton(
+            tooltip: 'カテゴリーの設定',
+            icon: Icon(AppIcons.settings, color: context.colors.text),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CategoryDetailEditPage(
+                  screenMode: BigCategoryDetailEditScreenMode.edit,
+                  categoryType: CategoryType.expense,
+                  bigCategoryId: widget.bigCategoryId,
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
       body: valueAsync.when(
         data: (value) {

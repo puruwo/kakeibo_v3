@@ -5,9 +5,11 @@
 // 記録モーダルの「アイコンを並べ替える」から開く画面。
 // ドラッグ＆ドロップで並び順が入れ替わり、保存でリポジトリへ表示順が書かれるかを見る。
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/constant/icon.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/register_page/category_area/category_reorder_page.dart';
 
@@ -99,6 +101,43 @@ void main() {
     expect(
       tester.widget<MainButton>(find.byType(MainButton)).onPressed,
       isNull,
+    );
+  });
+
+  testWidgets('並び替えを保存しないままカテゴリー設定を開いて戻っても、並び順は保持される', (tester) async {
+    // KP-027: 説明文の下のリンクからカテゴリー設定を開く。設定側で何も変えなければ
+    // 未保存の並び順は残り、保存ボタンも活性のまま
+    await pumpApp(
+      tester,
+      home: const CategoryReorderPage(transactionMode: TransactionMode.expense),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    await dragCategory(tester, from: '食費', to: '交通');
+    expect(
+      tester.widget<MainButton>(find.byType(MainButton)).onPressed,
+      isNotNull,
+    );
+
+    await tester.tap(find.text('カテゴリーの追加・編集'));
+    await pumpTimes(tester);
+    expect(find.byType(CategorySettingPage), findsOneWidget);
+    expect(
+      tester
+          .widget<CategorySettingPage>(find.byType(CategorySettingPage))
+          .initialCategoryType,
+      CategoryType.expense,
+    );
+
+    // 左上の閉じるで並び替え画面へ戻る
+    await tester.tap(find.byIcon(AppIcons.close).last);
+    await pumpTimes(tester);
+
+    expect(find.byType(CategorySettingPage), findsNothing);
+    expect(
+      tester.widget<MainButton>(find.byType(MainButton)).onPressed,
+      isNotNull,
     );
   });
 

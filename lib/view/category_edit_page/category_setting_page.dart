@@ -22,7 +22,13 @@ enum CategoryType {
 }
 
 class CategorySettingPage extends ConsumerStatefulWidget {
-  const CategorySettingPage({super.key});
+  const CategorySettingPage({
+    super.key,
+    this.initialCategoryType = CategoryType.expense,
+  });
+
+  /// 開いた時に表示するタブ（KP-027）。記録モーダル・並び替え画面からは記録のモードに合わせる
+  final CategoryType initialCategoryType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -36,7 +42,11 @@ class _BigCategorySettingPageState extends ConsumerState<CategorySettingPage>
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(
+      length: 2,
+      vsync: this,
+      initialIndex: widget.initialCategoryType == CategoryType.income ? 1 : 0,
+    );
   }
 
   @override

@@ -5,16 +5,21 @@ import 'package:kakeibo/application/data_management/data_management_usecase.dart
 import 'package:kakeibo/application/export/export_provider.dart';
 import 'package:kakeibo/application/theme_mode/theme_mode_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/domain_service/system_datetime/system_datetime.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/app_delete_dialog.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/app_contents_header.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
 import 'package:kakeibo/view/component/app_switch.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/config/aggregation_setting_page.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 import 'package:kakeibo/view_model/state/theme_mode.dart';
 
 class ConfigTop extends ConsumerWidget {
@@ -100,6 +105,45 @@ class ConfigTop extends ConsumerWidget {
 
             const SizedBox(height: 16),
 
+            // カテゴリー設定・毎月の予算への入口（KP-027）
+            const AppContentsHeader(
+              type: AppContentsHeaderType.appCardSectionTitle,
+              title: 'カテゴリーと予算',
+            ),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: context.colors.fillTertiary,
+                border: Border.all(color: context.colors.surfaceBorder, width: 1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                children: [
+                  _ConfigRow(
+                    label: 'カテゴリーを設定する',
+                    isFirst: true,
+                    onTap: () => showAppModalBottomSheet(
+                      context,
+                      child: const CategorySettingPage(),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    indent: 16,
+                    color: context.colors.separator,
+                  ),
+                  _ConfigRow(
+                    label: '毎月の予算を設定する',
+                    isLast: true,
+                    onTap: () => _openMonthlyPlanHomePage(context, ref),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
             const AppContentsHeader(
               type: AppContentsHeaderType.appCardSectionTitle,
               title: 'データ管理',
@@ -136,6 +180,20 @@ class ConfigTop extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  /// 毎月の予算ページを今月度で開く（KP-027）
+  ///
+  /// 毎月の予算は月間分析で選択中の月度を対象にし、ページ内に月度の表示が無い。
+  /// 設定画面からはどの月度か分からないまま開くことになるため、今月度へ戻してから開く
+  /// （過去の月度のままだと編集できず、未来の月度のままだと意図せずその月を書き換える）。
+  void _openMonthlyPlanHomePage(BuildContext context, WidgetRef ref) {
+    ref
+        .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
+        .updateState(ref.read(systemDatetimeNotifierProvider));
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => const MonthlyPlanHomePage()),
     );
   }
 

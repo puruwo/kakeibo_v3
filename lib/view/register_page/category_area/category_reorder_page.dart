@@ -9,8 +9,12 @@ import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
 import 'package:kakeibo/constant/strings.dart';
 import 'package:kakeibo/theme/app_colors.dart';
+import 'package:kakeibo/util/common_widget/inkwell_util.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
+import 'package:kakeibo/view/component/modal.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/component/button_util.dart';
@@ -75,6 +79,27 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
           .read(reorderingCategoryListNotifierProvider.notifier)
           .setData(categories, widget.transactionMode);
     });
+  }
+
+  /// カテゴリー設定を並び替え中のモードのタブで開く（KP-027）
+  ///
+  /// 設定側で何も変更されなければ、未保存の並び順を保持したまま戻る。
+  /// カテゴリーが追加・編集・削除されていたら、古い一覧のまま保存しないよう読み込み直す
+  /// （このとき未保存の並び順は破棄される）。
+  Future<void> _openCategorySetting() async {
+    final dbCountBefore = ref.read(updateDBCountNotifierProvider);
+    await showAppModalBottomSheet(
+      context,
+      child: CategorySettingPage(
+        initialCategoryType: widget.transactionMode == TransactionMode.income
+            ? CategoryType.income
+            : CategoryType.expense,
+      ),
+    );
+    if (!mounted) return;
+    if (ref.read(updateDBCountNotifierProvider) != dbCountBefore) {
+      await _initializeData();
+    }
   }
 
   int get pageCount {
@@ -237,7 +262,36 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                           ),
                         ),
 
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 8),
+
+                        // カテゴリー設定への入口（KP-027）。未保存の並び順は保持したまま開く
+                        AppInkWell(
+                          borderRadius: BorderRadius.circular(8),
+                          onTap: _openCategorySetting,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 8,
+                              horizontal: 8,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  AppIcons.settings,
+                                  size: 14,
+                                  color: context.colors.primary,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'カテゴリーの追加・編集',
+                                  style: context.textStyles.textButtonTextStyle,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 8),
 
                         // グリッド部分
                         SizedBox(
