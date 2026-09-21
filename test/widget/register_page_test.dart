@@ -7,6 +7,7 @@
 //
 // 記録モーダルは単体でpumpできるため、Foundation経由ではなく直接pumpしている。
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
@@ -15,12 +16,14 @@ import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/app_switch.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
 import 'package:kakeibo/view/register_page/expense_tab/expense_basic_group.dart';
 import 'package:kakeibo/view/register_page/expense_tab/fixed_cost_register_group.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
@@ -125,8 +128,88 @@ void main() {
       // カテゴリーグリッド（カテゴリー2件）
       expect(find.text('食費'), findsOneWidget);
       expect(find.text('日用品'), findsOneWidget);
-      expect(find.text('アイコンを並べ替える'), findsOneWidget);
+      expect(find.text('並べ替え'), findsOneWidget);
       expect(find.text('追加'), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('カテゴリー設定への入口（「追加・編集」セルと下部のリンク）が出る', (tester) async {
+      // KP-027: カテゴリー2件なので最終ページ＝1ページ目。最後のカテゴリーの次にセルが1つ出る
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('追加・編集'), findsOneWidget);
+      expect(find.text('カテゴリーを設定'), findsOneWidget);
+      // セルは最後のカテゴリー（日用品）の右隣に並ぶ
+      expect(
+        tester.getCenter(find.text('追加・編集')).dx,
+        greaterThan(tester.getCenter(find.text('日用品')).dx),
+      );
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('「カテゴリーを設定」でカテゴリー設定が支出タブで開く', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(find.text('カテゴリーを設定'));
+      await pumpTimes(tester);
+
+      expect(find.byType(CategorySettingPage), findsOneWidget);
+      expect(
+        tester
+            .widget<CategorySettingPage>(find.byType(CategorySettingPage))
+            .initialCategoryType,
+        CategoryType.expense,
+      );
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('モーダルを開いたままカテゴリーが追加されると、グリッドに反映される', (tester) async {
+      // KP-027: 記録モーダルからカテゴリー設定を開いて追加・削除して戻る導線ができた。
+      // 支出カテゴリー一覧がDB更新を監視していないと、モーダルが watch し続けるため古い一覧が残る
+      final fakes = await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+      expect(find.text('おやつ'), findsNothing);
+
+      // カテゴリー設定での追加に相当する操作（小カテゴリーの追加＋DB更新の通知）
+      fakes.expenseSmallCategory.records.add(
+        const ExpenseSmallCategoryEntity(
+          id: 99,
+          smallCategoryOrderKey: 99,
+          bigCategoryKey: 1,
+          displayedOrderInBig: 99,
+          smallCategoryName: 'おやつ',
+          defaultDisplayed: 1,
+        ),
+      );
+      ProviderScope.containerOf(
+        tester.element(find.byType(RegisaterPageBase)),
+      ).read(updateDBCountNotifierProvider.notifier).incrementState();
+      await pumpTimes(tester);
+
+      expect(find.text('おやつ'), findsOneWidget);
 
       await unmountRegisterPage(tester);
     });
@@ -391,7 +474,7 @@ void main() {
       // 画面自体は出て、カテゴリーグリッドだけが空になる
       expect(find.text('記録'), findsOneWidget);
       expect(find.byType(SelectedIconButton), findsNothing);
-      expect(find.text('アイコンを並べ替える'), findsOneWidget);
+      expect(find.text('並べ替え'), findsOneWidget);
 
       await unmountRegisterPage(tester);
     });
@@ -744,7 +827,7 @@ void main() {
       await tester.tap(find.byType(Switch));
       await pumpTimes(tester);
 
-      final rearrangeLink = find.text('アイコンを並べ替える');
+      final rearrangeLink = find.text('並べ替え');
       // 前提: トグルON直後はリンクが画面の下端より下にある
       expect(tester.getRect(rearrangeLink).top, greaterThan(screenSize.height));
 

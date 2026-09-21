@@ -10,6 +10,8 @@ import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_category_expense_list_page.dart';
 import 'package:kakeibo/view/yearly_expense_list_page/yearly_expense_list_page.dart';
 import 'package:kakeibo/constant/icon.dart';
@@ -371,6 +373,29 @@ void main() {
       // 7月は生活の2件のみ
       expect(find.text('2件'), findsOneWidget);
       expect(find.text('¥ 40,000'), findsOneWidget);
+    });
+
+    testWidgets('AppBar の歯車でこのカテゴリーの設定（大カテゴリー詳細編集）が開く', (tester) async {
+      // KP-027: 支出カテゴリー明細から単一カテゴリーの設定へ直接入れる
+      await pumpApp(
+        tester,
+        home: YearlyCategoryExpenseListPage(
+          period: period,
+          bigCategoryId: 1,
+          bigCategoryName: '食費',
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(find.byTooltip('カテゴリーの設定'));
+      await pumpTimes(tester);
+
+      final page = tester.widget<CategoryDetailEditPage>(
+        find.byType(CategoryDetailEditPage),
+      );
+      expect(page.categoryType, CategoryType.expense);
+      expect(page.bigCategoryId, 1);
     });
   });
 }

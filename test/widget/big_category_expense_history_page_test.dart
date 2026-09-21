@@ -4,7 +4,8 @@
 //
 // 上部のカテゴリーサマリー＋小カテゴリー内訳と、下部の日別支出履歴の表示、
 // 小カテゴリー展開・支出編集の導線を見る。
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kakeibo/domain/core/category_accounting_entity/category_accounting_entity.dart';
 import 'package:kakeibo/domain/db/budget/budget_entity.dart';
@@ -12,8 +13,10 @@ import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_small_category/expense_small_category_entity.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
+import 'package:kakeibo/view/category_edit_page/big_category_detail_edit_page/expense_category_detail_edit_page/category_detail_edit_page.dart';
 import 'package:kakeibo/view/monthly_page/category_tile/big_category_expense_history_page/category_expense_hisotry_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 
 import '../helper/fake_repositories.dart';
 import '../helper/widget_test_helper.dart';
@@ -201,9 +204,12 @@ void main() {
     final errors = await pumpHistoryPage(tester, buildFakes());
     expectNoRenderErrors(errors);
 
-    expect(find.text('カテゴリー別利用状況'), findsOneWidget); // AppBar
-    // 大カテゴリー名はサマリーカードと支出タイル4件（固定費行を含む）の計5箇所に出る
+    // KP-027: タイトルは固定文言「カテゴリー別利用状況」からカテゴリー名に変わった
+    expect(find.text('カテゴリー別利用状況'), findsNothing);
+    // 大カテゴリー名は AppBar のタイトルと支出タイル4件（固定費行を含む）の計5箇所に出る
+    // （サマリーカードの見出しは「支出合計」になり、カテゴリー名は出さない）
     expect(find.text('食費'), findsNWidgets(5));
+    expect(find.text('支出合計'), findsOneWidget);
     expect(find.text('¥ 35,000'), findsOneWidget); // 大カテゴリー合計
     // 予算ラベルはRichText（「予算 」＋金額）
     expect(
@@ -296,5 +302,97 @@ void main() {
     expectNoRenderErrors(errors);
 
     expect(find.text('記録がまだありません'), findsOneWidget);
+  });
+
+  // ---- KP-027: カテゴリーのホーム画面としての導線 ----
+
+  testWidgets('予算があるときは残りが出る（予算50,000−支出35,000）', (tester) async {
+    final errors = await pumpHistoryPage(tester, buildFakes());
+    expectNoRenderErrors(errors);
+
+    expect(
+      find.textContaining('残り ¥ 15,000', findRichText: true),
+      findsOneWidget,
+    );
+    expect(find.text('予算を設定'), findsOneWidget);
+  });
+
+  testWidgets('「予算を設定」でこのカテゴリーの予算入力シートが開き、保存で予算が更新される', (tester) async {
+    final fakes = buildFakes();
+    final errors = await pumpHistoryPage(tester, fakes);
+    expectNoRenderErrors(errors);
+
+    final afterTap = await collectingErrors(() async {
+      await tester.tap(find.text('予算を設定'));
+      await pumpTimes(tester);
+    });
+    expectNoRenderErrors(afterTap);
+
+    // シートの見出しと、開いた時点の予算額（50,000）
+    expect(find.text('食費の予算'), findsOneWidget);
+    final field = find.byKey(const Key('singleCategoryBudgetSheetField'));
+    expect(tester.widget<TextField>(field).controller!.text, '50,000');
+
+    // 金額を変えていない間は保存できない（押しても何も起きないため非活性）
+    await tester.tap(find.text('保存'));
+    await pumpTimes(tester);
+    expect(fakes.budget.updatedEntities, isEmpty);
+
+    await tester.enterText(field, '60000');
+    await pumpTimes(tester);
+    await tester.tap(find.text('保存'));
+    await pumpTimes(tester);
+
+    // 登録済みの予算行（id=1）が新しい金額で更新される
+    expect(
+      fakes.budget.updatedEntities,
+      const [
+        BudgetEntity(
+          id: 1,
+          expenseBigCategoryId: 1,
+          month: monthKey,
+          price: 60000,
+        ),
+      ],
+    );
+    expect(fakes.budget.insertedEntities, isEmpty);
+    // 保存後はシートが閉じ、完了のスナックバーが出る
+    expect(find.text('食費の予算'), findsNothing);
+    expect(find.text('予算を保存しました'), findsOneWidget);
+  });
+
+  testWidgets('過去の月度では「予算を設定」でシートを開かず、編集できない旨を出す', (tester) async {
+    final errors = await pumpHistoryPage(tester, buildFakes());
+    expectNoRenderErrors(errors);
+
+    // 月間分析で前の月度（2025/5/25〜6/24）を選んだ状態にする
+    ProviderScope.containerOf(
+          tester.element(find.byType(CategoryExpenseHistoryPage)),
+        )
+        .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
+        .updateState(DateTime(2025, 6, 1));
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('予算を設定'));
+    await pumpTimes(tester);
+
+    expect(find.text('過去の予算は編集できません'), findsOneWidget);
+    expect(
+      find.byKey(const Key('singleCategoryBudgetSheetField')),
+      findsNothing,
+    );
+  });
+
+  testWidgets('AppBar の歯車でこのカテゴリーの設定（大カテゴリー詳細編集）が開く', (tester) async {
+    final errors = await pumpHistoryPage(tester, buildFakes());
+    expectNoRenderErrors(errors);
+
+    final afterTap = await collectingErrors(() async {
+      await tester.tap(find.byTooltip('カテゴリーの設定'));
+      await pumpTimes(tester);
+    });
+    expectNoRenderErrors(afterTap);
+
+    expect(find.byType(CategoryDetailEditPage), findsOneWidget);
   });
 }

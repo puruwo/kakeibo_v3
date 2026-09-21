@@ -4,9 +4,13 @@
 // aggregation_setting_page_test.dart）、データ削除の確認ダイアログまでを見る。
 // 実削除・エクスポートは実DBやプラットフォーム機能に繋がるため実行しない。
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/config/aggregation_setting_page.dart';
 import 'package:kakeibo/view/config/config_top.dart';
+import 'package:kakeibo/view/monthly_page/monthly_plan_area/monthy_plan_home_page/monthly_plan_home_page.dart';
+import 'package:kakeibo/view_model/state/date_scope/analyze_page/selected_datetime/analyze_page_selected_datetime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../helper/widget_test_helper.dart';
@@ -19,7 +23,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('設定項目が2つのグループに分かれて並ぶ', (tester) async {
+  testWidgets('設定項目が3つのグループに分かれて並ぶ', (tester) async {
     await pumpApp(tester, home: const ConfigTop());
     await pumpTimes(tester);
 
@@ -30,9 +34,54 @@ void main() {
     expect(find.text('集計期間を設定する'), findsOneWidget);
     expect(find.text('ダークモード'), findsOneWidget); // KP-013 のスイッチ行
 
+    // KP-027: カテゴリー設定・毎月の予算への入口
+    expect(find.text(' カテゴリーと予算'), findsOneWidget);
+    expect(find.text('カテゴリーを設定する'), findsOneWidget);
+    expect(find.text('毎月の予算を設定する'), findsOneWidget);
+
     expect(find.text(' データ管理'), findsOneWidget);
     expect(find.text('データベースを書き出す'), findsOneWidget);
     expect(find.text('すべてのデータを削除する'), findsOneWidget);
+  });
+
+  testWidgets('「カテゴリーを設定する」でカテゴリー設定が支出タブで開く', (tester) async {
+    await pumpApp(tester, home: const ConfigTop());
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('カテゴリーを設定する'));
+    await pumpTimes(tester);
+
+    expect(find.byType(CategorySettingPage), findsOneWidget);
+    expect(
+      tester
+          .widget<CategorySettingPage>(find.byType(CategorySettingPage))
+          .initialCategoryType,
+      CategoryType.expense,
+    );
+  });
+
+  testWidgets('「毎月の予算を設定する」は月間分析の選択月度を今月度へ戻してから開く', (tester) async {
+    // 毎月の予算は月間分析の選択月度を対象にし、ページ内に月度の表示が無い。
+    // 過去・未来の月度を選んだまま設定画面から開くと、どの月か分からないまま編集することになる
+    await pumpApp(tester, home: const ConfigTop());
+    await pumpTimes(tester);
+
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(ConfigTop)),
+    );
+    container
+        .read(analyzePageSelectedDatetimeNotifierProvider.notifier)
+        .updateState(DateTime(2025, 3, 1));
+
+    await tester.tap(find.text('毎月の予算を設定する'));
+    await pumpTimes(tester);
+
+    expect(find.byType(MonthlyPlanHomePage), findsOneWidget);
+    // システム日時（2025/7/6 固定）に戻っている
+    expect(
+      container.read(analyzePageSelectedDatetimeNotifierProvider),
+      kTestSystemDate,
+    );
   });
 
   testWidgets('「集計期間を設定する」で現在の設定値入りの設定ページへ遷移する（旧ダイアログは出ない）', (tester) async {

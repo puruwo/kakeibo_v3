@@ -5,6 +5,7 @@ import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
+import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
@@ -28,6 +29,7 @@ class CategoryArea extends ConsumerStatefulWidget {
     required this.originalCategoryId,
     required this.transactionMode,
     this.showRearrangeLink = true,
+    this.showCategorySettingEntry = true,
   });
 
   /// 初期選択されるカテゴリーID
@@ -38,6 +40,9 @@ class CategoryArea extends ConsumerStatefulWidget {
 
   /// アイコン並べ替えリンクを表示するか
   final bool showRearrangeLink;
+
+  /// カテゴリー設定への入口（最終ページ末尾の「追加・編集」セルと下部のリンク）を表示するか（KP-027）
+  final bool showCategorySettingEntry;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _CategoryAreaState();
@@ -111,15 +116,21 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     return ref
         .watch(categoriesByModeProvider(widget.transactionMode))
         .when(
+          // DB更新での再読み込み中は前の一覧を出したままにする（一瞬スピナーに替わるのを防ぐ。KP-027）
+          skipLoadingOnReload: true,
           data: (categories) {
+            // 「追加・編集」セルは最後のカテゴリーの次に1つだけ置く（KP-027）。
+            // ページ数・行数はこのセルを含めた個数で数える
+            // （カテゴリー数が15の倍数なら、セルだけの最終ページができる）
+            final cellCount =
+                categories.length + (widget.showCategorySettingEntry ? 1 : 0);
+
             // ページネーション情報を取得
-            final pagination = ref.watch(
-              categoryPaginationProvider(categories.length),
-            );
+            final pagination = ref.watch(categoryPaginationProvider(cellCount));
 
             // ADR-020: 3行分を常に確保せず、実際のカテゴリー数から必要な行数だけ枠を取る
             // （空セルを非表示にしても外枠が固定250pxのままだと下の要素が詰まらないため）
-            final rowsNeeded = _rowsNeededFor(categories.length);
+            final rowsNeeded = _rowsNeededFor(cellCount);
             final gridHeight = _gridHeightFor(
               rowsNeeded,
               screenVerticalMagnification,
@@ -162,8 +173,16 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                   ),
                 ),
 
-                // アイコンを並べ替えるリンク
-                if (widget.showRearrangeLink) ...[_buildRearrangeLink(context)],
+                // 「アイコンを並べ替える」「カテゴリーを設定」のリンク
+                // 狭い端末で横に収まらないときは折り返す
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  children: [
+                    if (widget.showRearrangeLink) _buildRearrangeLink(context),
+                    if (widget.showCategorySettingEntry)
+                      _buildCategorySettingLink(context),
+                  ],
+                ),
               ],
             );
           },
@@ -206,7 +225,33 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
         );
       },
       child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+        // 「カテゴリーを設定」と横に並べて収めるため左右を詰める（KP-027）
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // 歯車は「カテゴリーを設定」に譲り、並べ替えはアイコンの並びを表す絵にする（KP-027）
+            Icon(
+              AppIcons.iconGrid,
+              size: 16,
+              color: context.colors.textSecondary,
+            ),
+            const SizedBox(width: 6),
+            // 「カテゴリーを設定」と1行に収めるため文言を短くした（KP-027。旧「アイコンを並べ替える」）
+            Text('並べ替え', style: context.registerStyles.rearrangeLink),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// 「カテゴリーを設定」リンクを構築（KP-027）
+  Widget _buildCategorySettingLink(BuildContext context) {
+    return AppInkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: _openCategorySetting,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -216,11 +261,37 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               color: context.colors.textSecondary,
             ),
             const SizedBox(width: 6),
-            Text('アイコンを並べ替える', style: context.registerStyles.rearrangeLink),
+            Text('カテゴリーを設定', style: context.registerStyles.rearrangeLink),
           ],
         ),
       ),
     );
+  }
+
+  /// カテゴリー設定を記録のモードのタブで開く（KP-027）
+  ///
+  /// 閉じたら記録モーダルへ戻る。入力途中の値は保持し、選択中のカテゴリーが
+  /// 削除されていた場合だけ未選択に戻す。
+  Future<void> _openCategorySetting() async {
+    await showAppModalBottomSheet(
+      context,
+      child: CategorySettingPage(
+        initialCategoryType: widget.transactionMode == TransactionMode.income
+            ? CategoryType.income
+            : CategoryType.expense,
+      ),
+    );
+    if (!mounted) return;
+
+    final categories = await ref.read(
+      categoriesByModeProvider(widget.transactionMode).future,
+    );
+    if (!mounted) return;
+
+    final selected = ref.read(selectCategoryControllerNotifierProvider);
+    if (!categories.any((c) => c.id == selected.id)) {
+      ref.invalidate(selectCategoryControllerNotifierProvider);
+    }
   }
 
   /// カテゴリー数から必要な行数を算出（5列・最大3行）
@@ -265,6 +336,15 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               final buttonNumber =
                   pageIndex * itemsPerPage + rowIndex * columns + columnIndex;
 
+              // 最後のカテゴリーの次のセルは「追加・編集」（最終ページにだけ現れる。KP-027）
+              if (widget.showCategorySettingEntry &&
+                  buttonNumber == categories.length) {
+                return Padding(
+                  padding: _getPaddingForColumn(columnIndex),
+                  child: _buildCategorySettingCell(context),
+                );
+              }
+
               // ボタン状態を判定
               final buttonStatus = getButtonStatus(
                 buttonNumber: buttonNumber,
@@ -284,6 +364,41 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
             }),
           ),
         ),
+      ),
+    );
+  }
+
+  /// 「追加・編集」セルを構築（KP-027）
+  ///
+  /// 寸法は [NormalIconButton] と揃える（アイコン枠34・ラベル幅・下線ドット分の透明スロット）。
+  Widget _buildCategorySettingCell(BuildContext context) {
+    return AppInkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: _openCategorySetting,
+      child: Column(
+        children: [
+          SizedBox(
+            height: 34 * context.screenVerticalMagnification,
+            width: 34 * context.screenVerticalMagnification,
+            child: Icon(AppIcons.add, size: 25, color: context.colors.primary),
+          ),
+          SizedBox(
+            width: 62.2 * ((context.screenHorizontalMagnification - 1) / 5 + 1),
+            child: Center(
+              // 5文字はラベル幅にわずかに収まらず「追加・…」と省略されるため、幅に合わせて縮める
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  '追加・編集',
+                  style: context.registerStyles.categoryLabelUnselected
+                      .copyWith(color: context.colors.primary),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 3),
+          const SizedBox(width: 14, height: 2.5),
+        ],
       ),
     );
   }
