@@ -20,6 +20,8 @@ import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
+import 'package:kakeibo/view/monthly_page/unconfirmed_fixed_cost_banner.dart';
+import 'package:kakeibo/view/unconfirmed_fixed_cost_prompt/unconfirmed_fixed_cost_prompt_sheet.dart';
 import 'package:kakeibo/constant/icon.dart';
 
 import '../helper/fake_repositories.dart';
@@ -478,5 +480,66 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.text('適用'), findsOneWidget);
+  });
+
+  group('未確定固定費の注意バナー（KP-028）', () {
+    // フィクスチャの未確定行は電気代 7/5 支払い（予想 6,000円）
+
+    testWidgets('支払日から3日たっていなければバナーは出ない', (tester) async {
+      // 今日 7/6（基準シナリオ）→ 1日経過
+      await pumpApp(tester, home: const MonthlyPage(), fakes: buildFakes());
+      await pumpTimes(tester);
+
+      expect(find.byType(UnconfirmedFixedCostBanner), findsOneWidget);
+      expect(find.textContaining('金額が未入力の固定費が'), findsNothing);
+    });
+
+    testWidgets('支払日から3日たつと、件数と固定費名つきのバナーが先頭に出る', (tester) async {
+      await pumpApp(
+        tester,
+        home: const MonthlyPage(),
+        fakes: buildFakes(),
+        systemDate: DateTime(2025, 7, 8),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('金額が未入力の固定費が1件あります'), findsOneWidget);
+      // 1件のときだけ、どの固定費かを下段に出す
+      expect(find.text('電気代（7/5 支払い）'), findsOneWidget);
+      // 支出グラフより上にある
+      expect(
+        tester.getTopLeft(find.text('金額が未入力の固定費が1件あります')).dy,
+        lessThan(tester.getTopLeft(sectionTitle('支出グラフ')).dy),
+      );
+    });
+
+    testWidgets('バナーをタップすると、表示中の月度の未確定行の一覧シートが開く', (tester) async {
+      await pumpApp(
+        tester,
+        home: const MonthlyPage(),
+        fakes: buildFakes(),
+        systemDate: DateTime(2025, 7, 8),
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(find.text('金額が未入力の固定費が1件あります'));
+      await pumpTimes(tester);
+
+      expect(find.byType(UnconfirmedFixedCostPromptSheet), findsOneWidget);
+      expect(find.text('支払日を過ぎた固定費が1件、未入力のままです'), findsOneWidget);
+      expect(find.text('閉じる'), findsOneWidget);
+    });
+
+    testWidgets('固定費が無ければバナーは出ない', (tester) async {
+      await pumpApp(
+        tester,
+        home: const MonthlyPage(),
+        fakes: buildFakes(withFixedCost: false),
+        systemDate: DateTime(2025, 7, 8),
+      );
+      await pumpTimes(tester);
+
+      expect(find.textContaining('金額が未入力の固定費が'), findsNothing);
+    });
   });
 }

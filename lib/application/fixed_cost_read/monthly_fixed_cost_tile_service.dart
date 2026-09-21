@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kakeibo/domain/core/month_period_value/month_period_value.dart';
 import 'package:kakeibo/domain/core/payment_frequency_value/payment_frequency_value.dart';
+import 'package:kakeibo/domain/db/expense/expense_entity.dart';
 import 'package:kakeibo/domain/db/expense/expense_repository.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_entity.dart';
 import 'package:kakeibo/domain/db/expense_big_ctegory/expense_big_category_repository.dart';
@@ -74,6 +75,15 @@ class MonthlyFixedCostTileService {
     final rows = await _expenseRepo.fetchFixedCostRecordByPeriod(
       period: period,
     );
+    return buildEntries(rows: rows);
+  }
+
+  /// 固定費行のリストをタイルValueに変換する（並びは [rows] のまま）
+  ///
+  /// 期間以外の条件で集めた行（未確定固定費の促し。KP-028）も同じ組み立てを使う。
+  Future<List<MonthlyFixedCostTileEntry>> buildEntries({
+    required List<ExpenseEntity> rows,
+  }) async {
     if (rows.isEmpty) return [];
 
     // 小カテゴリー → (名称・大カテゴリーid) の対応表
