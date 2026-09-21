@@ -121,7 +121,7 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.byType(RegisaterPageBase), findsOneWidget);
-    expect(find.text('編集'), findsOneWidget);
+    expect(find.text('支出を編集'), findsOneWidget);
     expect(find.text('18,000'), findsWidgets); // 元の支出金額
 
     await unmountRegisterPage(tester);

@@ -327,7 +327,7 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.byType(RegisaterPageBase), findsOneWidget);
-    expect(find.text('編集'), findsOneWidget);
+    expect(find.text('支出を編集'), findsOneWidget);
     // 元の支出の金額が初期表示される
     expect(find.text('3,000'), findsWidgets);
 

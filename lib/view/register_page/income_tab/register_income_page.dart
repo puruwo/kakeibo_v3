@@ -23,10 +23,14 @@ class RegisterIncomePage extends ConsumerStatefulWidget {
   /// タブが見えるかどうか
   final bool isTabVisible;
 
+  /// 種別ピル（支出・収入の切替）を操作不可にするか（KP-026）
+  final bool lockTransactionMode;
+
   const RegisterIncomePage({
     this.mode = RegisterScreenMode.add,
     this.incomeEntity,
     required this.isTabVisible,
+    this.lockTransactionMode = false,
     super.key,
   });
 
@@ -97,6 +101,7 @@ class _RegisterIncomePageState extends ConsumerState<RegisterIncomePage> {
                 PriceInputRow(
                   mode: widget.mode,
                   originalPrice: initialIncomeData.price,
+                  modeLocked: widget.lockTransactionMode,
                 ),
 
                 const SizedBox(height: AppSpacing.lg),

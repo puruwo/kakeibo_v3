@@ -13,6 +13,7 @@ class PriceInputRow extends ConsumerWidget {
     required this.mode,
     this.status = PriceInputFieldStatus.normal,
     this.showEmptyWhenZero = false,
+    this.modeLocked = false,
   });
 
   final int originalPrice;
@@ -21,6 +22,9 @@ class PriceInputRow extends ConsumerWidget {
 
   /// 初期値が0のとき入力欄を空にするか（未確定の固定費行の編集で使う）
   final bool showEmptyWhenZero;
+
+  /// 種別ピルを操作不可にするか（用途が決まった導線。KP-026）
+  final bool modeLocked;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -34,6 +38,7 @@ class PriceInputRow extends ConsumerWidget {
         TransactionTypePill(
           mode: mode,
           currentMode: currentMode,
+          locked: modeLocked,
           onModeChanged: (mode) {
             // providerを更新
             ref.read(inputModeControllerProvider.notifier).updateState(mode);

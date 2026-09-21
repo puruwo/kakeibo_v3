@@ -198,7 +198,7 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.byType(RegisaterPageBase), findsOneWidget);
-    expect(find.text('編集'), findsOneWidget);
+    expect(find.text('収入を編集'), findsOneWidget);
     expect(find.text('260,000'), findsWidgets); // 元の収入金額
 
     await unmountRegisterPage(tester);
@@ -216,7 +216,14 @@ void main() {
     await pumpTimes(tester);
 
     expect(find.byType(RegisaterPageBase), findsOneWidget);
-    expect(find.text('記録'), findsOneWidget);
+    // ヘッダーは押したボタンと同じ文言（KP-026）
+    expect(
+      find.descendant(
+        of: find.byType(RegisaterPageBase),
+        matching: find.text('収入を追加'),
+      ),
+      findsOneWidget,
+    );
     // システム日時2025/7/6固定なので日付ピルはその日
     expect(find.text('7/6'), findsOneWidget);
 

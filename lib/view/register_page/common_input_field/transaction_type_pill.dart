@@ -17,15 +17,19 @@ class TransactionTypePill extends StatelessWidget {
     required this.mode,
     required this.currentMode,
     required this.onModeChanged,
+    this.locked = false,
   });
 
   final RegisterScreenMode mode;
   final TransactionMode currentMode;
   final ValueChanged<TransactionMode> onModeChanged;
 
+  /// 新規でも切替を固定するか（用途が決まった導線。見た目は編集時と同じ。KP-026）
+  final bool locked;
+
   @override
   Widget build(BuildContext context) {
-    final enabled = mode == RegisterScreenMode.add;
+    final enabled = mode == RegisterScreenMode.add && !locked;
     return AppPopupMenu<TransactionMode>(
       enabled: enabled,
       onSelected: onModeChanged,

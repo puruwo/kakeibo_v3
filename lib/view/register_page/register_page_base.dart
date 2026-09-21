@@ -35,6 +35,11 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
   /// 固定費の実績行（expenseのうち fixed_cost_id を持つ行）の編集シートか（仕様 §6.6）
   final bool isFixedCostRecordEdit;
 
+  /// 支出・収入の切替を固定するか（用途が決まった導線から開く場合。KP-026）
+  ///
+  /// true のときは種別ピルを操作不可にし、ヘッダーを「支出を追加」等の用途名にする。
+  final bool lockTransactionMode;
+
   /// 支出追加
   const RegisaterPageBase.addExpense({
     this.transactionMode = TransactionMode.expense,
@@ -43,6 +48,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.incomeEntity,
     this.initialFixedCostToggle = false,
     this.isFixedCostRecordEdit = false,
+    this.lockTransactionMode = false,
     super.key,
   });
 
@@ -54,6 +60,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.incomeEntity,
     this.initialFixedCostToggle = false,
     this.isFixedCostRecordEdit = false,
+    this.lockTransactionMode = true,
     super.key,
   });
 
@@ -65,6 +72,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.incomeEntity,
     this.initialFixedCostToggle = false,
     this.isFixedCostRecordEdit = false,
+    this.lockTransactionMode = false,
     super.key,
   });
 
@@ -76,10 +84,13 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     required this.incomeEntity,
     this.initialFixedCostToggle = false,
     this.isFixedCostRecordEdit = false,
+    this.lockTransactionMode = true,
     super.key,
   });
 
   /// 固定費追加（支出タブの固定費トグルをONにした状態で開く。仕様 §6.3）
+  ///
+  /// 種別と固定費トグルは固定し、通常の支出・収入へは切り替えさせない（KP-026）。
   const RegisaterPageBase.addFixedCost({
     this.transactionMode = TransactionMode.expense,
     this.registerMode = RegisterScreenMode.add,
@@ -87,6 +98,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.incomeEntity,
     this.initialFixedCostToggle = true,
     this.isFixedCostRecordEdit = false,
+    this.lockTransactionMode = true,
     super.key,
   });
 
@@ -98,6 +110,7 @@ class RegisaterPageBase extends ConsumerStatefulWidget {
     this.incomeEntity,
     this.initialFixedCostToggle = false,
     this.isFixedCostRecordEdit = true,
+    this.lockTransactionMode = true,
     super.key,
   });
 
@@ -135,6 +148,9 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
     ref.watch(enteredFixedCostNameControllerProvider);
     // 初期化フラグも監視して維持する（autoDisposeのため）
     ref.watch(inputInitializedControllerProvider);
+    // 固定費トグルの状態でタイトルを切り替えるため監視する（KP-026）
+    final isFixedCostToggleOn =
+        ref.watch(fixedCostRegisterToggleControllerNotifierProvider);
 
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
@@ -145,7 +161,7 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
           backgroundColor: Colors.transparent,
           title: SizedBox(
             child: Text(
-              widget.registerMode == RegisterScreenMode.add ? '記録' : '編集',
+              _headerTitle(isFixedCostToggleOn: isFixedCostToggleOn),
               style: context.textStyles.pageHeaderText,
             ),
           ),
@@ -189,6 +205,34 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
     );
   }
 
+  /// 開いた導線に応じたヘッダーのタイトル（KP-026）
+  ///
+  /// 用途が決まった導線は押したボタンの文言にそろえ、切替できる導線は「記録」のままにする。
+  /// 支出に固定した導線で固定費トグルをONにした場合は、登録されるものに合わせて「固定費を追加」にする。
+  String _headerTitle({required bool isFixedCostToggleOn}) {
+    if (widget.registerMode == RegisterScreenMode.edit) {
+      if (widget.isFixedCostRecordEdit) {
+        return '固定費を編集';
+      }
+      return switch (widget.transactionMode) {
+        TransactionMode.expense => '支出を編集',
+        TransactionMode.income => '収入を編集',
+      };
+    }
+    if (!widget.lockTransactionMode) {
+      return '記録';
+    }
+    if (widget.initialFixedCostToggle ||
+        (widget.transactionMode == TransactionMode.expense &&
+            isFixedCostToggleOn)) {
+      return '固定費を追加';
+    }
+    return switch (widget.transactionMode) {
+      TransactionMode.expense => '支出を追加',
+      TransactionMode.income => '収入を追加',
+    };
+  }
+
   /// モードに応じたページを返す
   /// AnimatedSwitcherが正しく動作するようにKeyを設定
   Widget _buildPageByMode(TransactionMode mode) {
@@ -206,12 +250,17 @@ class _RegisaterPageBaseState extends ConsumerState<RegisaterPageBase> {
         mode: widget.registerMode,
         expenseEntity: widget.expenseEntity,
         initialFixedCostToggle: widget.initialFixedCostToggle,
+        lockTransactionMode: widget.lockTransactionMode,
+        // 固定費の追加導線ではトグルもONのまま固定する（KP-026）
+        lockFixedCostToggle:
+            widget.lockTransactionMode && widget.initialFixedCostToggle,
       ),
       TransactionMode.income => RegisterIncomePage(
         key: const ValueKey('income'),
         mode: widget.registerMode,
         incomeEntity: widget.incomeEntity,
         isTabVisible: false,
+        lockTransactionMode: widget.lockTransactionMode,
       ),
     };
   }

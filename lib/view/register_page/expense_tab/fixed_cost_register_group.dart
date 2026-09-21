@@ -13,10 +13,17 @@ import 'package:kakeibo/constant/icon.dart';
 /// トグルOFFのときは「固定費として登録」の1行だけ。ONにすると
 /// 名称／初回支払日／頻度／支払い額が毎回変わる の4行が展開する（仕様 §6.1・§6.6）。
 class FixedCostRegisterGroup extends ConsumerWidget {
-  const FixedCostRegisterGroup({super.key, this.note});
+  const FixedCostRegisterGroup({
+    super.key,
+    this.note,
+    this.toggleLocked = false,
+  });
 
   /// グループの下に添える補足文（通常支出の編集では固定費化の説明を出す）
   final String? note;
+
+  /// 「固定費として登録」トグルを操作不可にするか（固定費の追加導線。KP-026）
+  final bool toggleLocked;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,7 +48,10 @@ class FixedCostRegisterGroup extends ConsumerWidget {
             icon: AppIcons.fixedCost,
             label: '固定費として登録',
             switchValue: isFixedCost,
-            onSwitchChanged: (value) => _onToggleChanged(ref, value),
+            // 非活性は onChanged を null にして表す（ボタンルール §3）
+            onSwitchChanged: toggleLocked
+                ? null
+                : (value) => _onToggleChanged(ref, value),
           ),
 
           if (isFixedCost) ...[
