@@ -1005,6 +1005,9 @@ class FakeBudgetRepository implements BudgetRepository {
   final List<BudgetEntity> updatedEntities = [];
   final List<int> deletedIds = [];
 
+  /// insert / update を失敗させたいときに設定する例外（既定はnull＝成功）
+  Object? writeError;
+
   @override
   Future<int> fetchMonthly({required int id, required MonthValue month}) async {
     // 本実装は fetchMonthlyByBigCategory（最新行採用・該当なしはprice 0）への委譲（ADR-024）
@@ -1058,8 +1061,14 @@ class FakeBudgetRepository implements BudgetRepository {
   ///
   /// 本物はINSERT直後からSELECTの対象になるため、Fakeも [records] へ反映する
   /// （idはAUTOINCREMENT相当で採番。[insertedEntities] は渡された内容そのもの）。
+  ///
+  /// 本物は書き込みの完了まで非同期に待たせるため、Fakeも1拍おいてから反映する
+  /// （呼び出し側がawaitを忘れると、更新通知の時点で [records] に入っておらず検知できる）。
+  /// [writeError] を設定すると、本物のDB例外の送出（rethrow）を模して失敗する。
   @override
-  void insert(BudgetEntity expenseEntity) {
+  Future<void> insert(BudgetEntity expenseEntity) async {
+    await Future<void>.value();
+    if (writeError != null) throw writeError!;
     insertedEntities.add(expenseEntity);
     records.add(expenseEntity.copyWith(id: _nextId++));
   }
@@ -1069,8 +1078,11 @@ class FakeBudgetRepository implements BudgetRepository {
   /// 本物は `WHERE _id = ?` で該当行を UPDATE する（更新列はid以外の全カラム）ため、
   /// Fakeも同じidの行をエンティティごと差し替える。
   /// 該当行が無い場合は0行更新で例外を投げない実装なので、Fakeも何もしない。
+  /// 反映のタイミングと [writeError] の扱いは [insert] と同じ。
   @override
-  void update(BudgetEntity expenseEntity) {
+  Future<void> update(BudgetEntity expenseEntity) async {
+    await Future<void>.value();
+    if (writeError != null) throw writeError!;
     updatedEntities.add(expenseEntity);
     final index = records.indexWhere((e) => e.id == expenseEntity.id);
     if (index >= 0) {

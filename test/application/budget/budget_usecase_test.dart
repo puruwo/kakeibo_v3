@@ -3,6 +3,7 @@ import 'package:kakeibo/application/budget/budget_usecase.dart';
 import 'package:kakeibo/domain/db/budget/budget_repository.dart';
 import 'package:kakeibo/domain/ui_value/budget_edit_value/budget_edit_value.dart';
 import 'package:kakeibo/view/component/app_exception.dart';
+import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
 import '../../helper/fake_repositories.dart';
 import '../../helper/test_container.dart';
@@ -140,6 +141,71 @@ void main() {
       expect(fakeRepository.updatedEntities.first.expenseBigCategoryId, 1);
       expect(fakeRepository.insertedEntities, hasLength(1));
       expect(fakeRepository.insertedEntities.first.expenseBigCategoryId, 2);
+    });
+
+    test('更新の通知は書き込みの完了後に出る（KP-029）', () async {
+      final fakeRepository = FakeBudgetRepository();
+      final container = createContainer(
+        overrides: [budgetRepositoryProvider.overrideWithValue(fakeRepository)],
+      );
+      final usecase = container.read(budgetUsecaseProvider);
+
+      // 通知が出た時点で書き込み済みだった件数を記録する。
+      // Fakeの書き込みは1拍おいて反映されるので、awaitせずに通知すると0件になる
+      final writtenCountsAtNotify = <int>[];
+      container.listen(updateDBCountNotifierProvider, (previous, next) {
+        writtenCountsAtNotify.add(
+          fakeRepository.updatedEntities.length +
+              fakeRepository.insertedEntities.length,
+        );
+      }, fireImmediately: false);
+
+      await usecase.edit(
+        originalValues: [
+          buildEditValue(id: 1, status: BudgetStatus.registerd, price: 10000),
+          buildEditValue(
+            id: -1,
+            status: BudgetStatus.notRegisterd,
+            price: 0,
+            bigCategoryId: 2,
+          ),
+        ],
+        editPrice: [12000, 8000],
+      );
+
+      // 通知は1回だけで、その時点で2件とも書き込み済み
+      expect(writtenCountsAtNotify, [2]);
+    });
+
+    test('書き込みに失敗したらエラーになり、更新は通知して再読み込みさせる（KP-029）', () async {
+      final fakeRepository = FakeBudgetRepository()
+        ..writeError = Exception('DB書き込み失敗');
+      final container = createContainer(
+        overrides: [budgetRepositoryProvider.overrideWithValue(fakeRepository)],
+      );
+      final usecase = container.read(budgetUsecaseProvider);
+      final dbCount = listenUpdateDBCount(container);
+      final before = dbCount.read();
+
+      await expectLater(
+        () => usecase.edit(
+          originalValues: [
+            buildEditValue(id: 1, status: BudgetStatus.registerd, price: 10000),
+          ],
+          editPrice: [15000],
+        ),
+        throwsA(
+          isA<AppException>().having(
+            (e) => e.message,
+            'message',
+            '予算の保存に失敗しました',
+          ),
+        ),
+      );
+
+      expect(fakeRepository.updatedEntities, isEmpty);
+      // 途中まで書き込めた分を画面へ反映するため、失敗時も更新を通知する
+      expect(dbCount.read(), before + 1);
     });
   });
 }

@@ -12,7 +12,6 @@ import 'package:kakeibo/view/component/success_snackbar.dart';
 import 'package:kakeibo/view/presentation_mixin.dart';
 import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_entity_provider/resolved_monthly_budget_provider.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/is_price_edited/is_price_edited.dart';
-import 'package:kakeibo/view_model/state/budget_edit_page/price_controller/price_controller.dart';
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/view_model/state/monthly_plan_page/footer_state_controller/footer_state_controller.dart';
 import 'package:kakeibo/view_model/state/budget_edit_page/editing_budget_prices/editing_budget_prices.dart';
@@ -96,20 +95,21 @@ class MonthlyPlanHomeFooter extends ConsumerWidget with PresentationMixin {
                     final isChanged = ref.watch(isPriceEditedNotifierProvider);
                     if (!isChanged) throw const AppException('予算が編集されていません');
 
-                    // 各カテゴリーのControllerに格納された値を代入するList
+                    // 各カテゴリーの保存する金額を代入するList
                     final editPriceLists = <int>[];
+
+                    // 編集中の金額（大カテゴリーID → 金額）
+                    // 入力欄のControllerは行が画面外へ出ると破棄されて入力値を失うため、
+                    // 保存する金額はこちらから取る（KP-029）
+                    final editingPrices =
+                        ref.read(editingBudgetPricesNotifierProvider);
 
                     // 取得したbudgetListの分だけ繰り返しして、実行する
                     for (BudgetEditValue budgetEditValue in budgetEditList) {
-                      // 入力金額を取得する
-                      // 正規表現による空文字の置き換えで、文字列から数字以外の文字を削除
-                      final enteredPriceText = ref
-                          .read(enteredBudgetPriceControllerProvider(
-                              budgetEditValue))
-                          .text
-                          .replaceAll(RegExp(r'\D'), '');
-
-                      final enteredPrice = int.tryParse(enteredPriceText) ?? 0;
+                      // 編集していないカテゴリーは編集前の金額のまま（書き込み対象外になる）
+                      final enteredPrice =
+                          editingPrices[budgetEditValue.expenseBigCategoryId] ??
+                              budgetEditValue.price;
 
                       editPriceLists.add(enteredPrice);
                     }

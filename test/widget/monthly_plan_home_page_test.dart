@@ -280,6 +280,83 @@ void main() {
     await waitForSnackBarDismissed(tester);
   });
 
+  testWidgets('入力した行がスクロールで画面外へ出ても完了で保存され、戻ると入力値が残っている（KP-029）', (
+    tester,
+  ) async {
+    // 一覧は遅延生成（ListView.builder）なので、画面外へ出た行は破棄される。
+    // 行が確実に破棄されるよう、画面に収まらない数（30件）のカテゴリーを用意する
+    final manyCategories = [
+      for (var i = 1; i <= 30; i++)
+        ExpenseBigCategoryEntity(
+          id: i,
+          colorCode: 'FFAA00',
+          bigCategoryName: 'カテゴリー$i',
+          resourcePath: 'assets/images/icon_meal.svg',
+          displayOrder: i,
+          isDisplayed: 1,
+        ),
+    ];
+    final fakes = TestFakes(
+      // 先頭のカテゴリー(id=1)だけ登録済み
+      budget: FakeBudgetRepository(
+        initialRecords: const [
+          BudgetEntity(
+            id: 1,
+            expenseBigCategoryId: 1,
+            month: monthKey,
+            price: 50000,
+          ),
+        ],
+      ),
+      expenseBigCategory: FakeExpenseBigCategoryRepository(
+        initialRecords: manyCategories,
+      ),
+      expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+        initialRecords: const [],
+      ),
+    );
+    await pumpApp(tester, home: const MonthlyPlanHomePage(), fakes: fakes);
+    await pumpTimes(tester);
+
+    await tester.tap(find.text('予算を編集する'));
+    await pumpTimes(tester);
+
+    // 先頭の行（カテゴリー1）を編集したあと、次の行（カテゴリー2）を編集する。
+    // フォーカス中の入力欄は画面外でも破棄されない（EditableTextのKeepAlive）ため、
+    // フォーカスを次の行へ移して、先頭の行が破棄される状況を作る
+    await tester.enterText(find.byType(TextField).at(0), '55000');
+    await pumpTimes(tester);
+    await tester.enterText(find.byType(TextField).at(1), '12000');
+    await pumpTimes(tester);
+
+    // 一覧を末尾までスクロールし、編集した行を画面外（キャッシュ範囲の外）へ出す
+    await tester.drag(find.byType(ListView), const Offset(0, -3000));
+    await pumpTimes(tester);
+    expect(find.text('カテゴリー1'), findsNothing);
+    expect(find.text('カテゴリー30'), findsOneWidget);
+
+    // 先頭へ戻すと、入力した値がそのまま表示される
+    await tester.drag(find.byType(ListView), const Offset(0, 3000));
+    await pumpTimes(tester);
+    expect(find.text('55,000'), findsOneWidget);
+
+    // もう一度画面外へ出した状態で完了する
+    await tester.drag(find.byType(ListView), const Offset(0, -3000));
+    await pumpTimes(tester);
+    await tester.tap(find.text('編集を完了'));
+    await pumpTimes(tester);
+
+    expect(fakes.budget.updatedEntities, hasLength(1));
+    expect(fakes.budget.updatedEntities.single.id, 1);
+    expect(fakes.budget.updatedEntities.single.price, 55000);
+    // カテゴリー2は未登録なのでinsert。触っていない行は書き込まれない
+    expect(fakes.budget.insertedEntities, hasLength(1));
+    expect(fakes.budget.insertedEntities.single.expenseBigCategoryId, 2);
+    expect(fakes.budget.insertedEntities.single.price, 12000);
+
+    await waitForSnackBarDismissed(tester);
+  });
+
   testWidgets('何も編集せず完了するとエラー文言が出て書き込まれない', (tester) async {
     final fakes = buildFakes();
     await pumpApp(tester, home: const MonthlyPlanHomePage(), fakes: fakes);
