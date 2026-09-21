@@ -22,6 +22,7 @@ import 'package:kakeibo/view/yearly_income_list_page/yearly_income_list_page.dar
 import 'package:kakeibo/view_model/state/date_scope/analyze_page/analyze_page_date_scope.dart';
 import 'package:kakeibo/application/prediction_graph/prediction_graph_provider.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
+import 'package:kakeibo/view/monthly_page/unconfirmed_fixed_cost_banner.dart';
 import 'package:kakeibo/view/component/page_loading_indicator.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 import 'package:kakeibo/domain/ui_value/category_card_value/all_category_card_value/all_category_card_entity.dart';
@@ -224,6 +225,9 @@ class _MonthlyPage extends ConsumerState<MonthlyPage> {
                         height:
                             MediaQuery.of(context).padding.top + kToolbarHeight,
                       ),
+
+                      // 未確定固定費の注意バナー（対象が無いときは高さ0。KP-028）
+                      const UnconfirmedFixedCostBanner(),
 
                       // 支出グラフ（支出・予算・収入がすべて0のときは非表示）
                       Consumer(

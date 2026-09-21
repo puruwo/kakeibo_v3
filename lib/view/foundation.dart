@@ -15,6 +15,8 @@ import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/family_page/family_page.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
+import 'package:kakeibo/view/unconfirmed_fixed_cost_prompt/unconfirmed_fixed_cost_prompt_sheet.dart';
+import 'package:kakeibo/application/unconfirmed_fixed_cost_prompt/unconfirmed_fixed_cost_prompt_provider.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/year_page/year_page.dart';
 import 'package:kakeibo/view_model/state/calendar_page/page_controller/calendar_page_controller.dart';
@@ -328,6 +330,28 @@ void _onBuildComplete(BuildContext context, WidgetRef ref) async {
   //状態を更新
   final initialOpenNotifier = ref.read(initialOpenNotifierProvider.notifier);
   initialOpenNotifier.updateState();
+
+  // バッチで当月分の固定費行が生成された後に、過去の月度の未確定固定費を促す（KP-028）
+  if (!context.mounted) return;
+  await _showUnconfirmedFixedCostPromptIfNeeded(context, ref);
+}
+
+/// 過去の月度に未確定の固定費行が残っていれば、一覧シートで金額確定を促す
+///
+/// 起動時に開く記録モーダルの上に重ねる（閉じると記録モーダルがそのまま使える）。
+/// 取得に失敗しても起動は継続させる。
+Future<void> _showUnconfirmedFixedCostPromptIfNeeded(
+  BuildContext context,
+  WidgetRef ref,
+) async {
+  try {
+    final targets =
+        await ref.read(launchUnconfirmedFixedCostTargetsProvider.future);
+    if (targets.isEmpty || !context.mounted) return;
+    await showUnconfirmedFixedCostPromptSheet(context);
+  } catch (e) {
+    logger.e('[FAIL]: 未確定固定費の促しの表示に失敗しました: $e');
+  }
 }
 
 void _showExpenseEntrySheet(BuildContext context) {
