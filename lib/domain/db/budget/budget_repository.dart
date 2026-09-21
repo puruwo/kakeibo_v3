@@ -19,9 +19,11 @@ abstract interface class BudgetRepository {
   /// 期間指定してをあるカテゴリーの月間予算を取得する
   Future<int> fetchMonthly({required int id ,required MonthValue month});
 
-  void insert(BudgetEntity expenseEntity);
+  /// 書き込みの完了を待てるようにFutureを返す。失敗は例外として呼び出し側へ返す
+  Future<void> insert(BudgetEntity expenseEntity);
 
-  void update(BudgetEntity expenseEntity);
+  /// 書き込みの完了を待てるようにFutureを返す。失敗は例外として呼び出し側へ返す
+  Future<void> update(BudgetEntity expenseEntity);
   
   void delete(int id);
 

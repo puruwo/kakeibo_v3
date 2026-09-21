@@ -133,12 +133,22 @@ class BudgetUsecase {
           price: editPrice[i],
         );
 
-        // もともと登録されていればあればupdate、なければadd
-        if (originalValues[i].budgetStatus == BudgetStatus.registerd) {
-          // SqfBudgetでデータをupdateする
-          _budgetRepositoryProvider.update(editEntity);
-        } else {
-          _budgetRepositoryProvider.insert(editEntity);
+        // 書き込みの完了を待ってから更新を通知する
+        // 待たずに進むと、再読み込みが書き込みより先に走り古い金額が表示され得る（KP-029）
+        try {
+          // もともと登録されていればあればupdate、なければadd
+          if (originalValues[i].budgetStatus == BudgetStatus.registerd) {
+            // SqfBudgetでデータをupdateする
+            await _budgetRepositoryProvider.update(editEntity);
+          } else {
+            await _budgetRepositoryProvider.insert(editEntity);
+          }
+        } catch (_) {
+          // ここまでに書き込めた分を画面へ反映してから失敗を返す
+          // （再読み込みしないと、やり直したときに登録済みの行を二重にinsertする）
+          _invalidateBudgetRepositoryProvider();
+          _updateDBCountNotifier.incrementState();
+          throw const AppException('予算の保存に失敗しました');
         }
       }
     }

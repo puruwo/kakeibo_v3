@@ -369,7 +369,7 @@ void main() {
 
   group('insert', () {
     test('1件追加され、指定した値がそのまま保存される', () async {
-      repository.insert(
+      await repository.insert(
         const BudgetEntity(
           expenseBigCategoryId: 5,
           month: '202506',
@@ -395,7 +395,7 @@ void main() {
         price: 35000,
       );
 
-      repository.insert(
+      await repository.insert(
         const BudgetEntity(
           expenseBigCategoryId: 1,
           month: '202507',
@@ -424,7 +424,7 @@ void main() {
         price: 5000,
       );
 
-      repository.update(
+      await repository.update(
         const BudgetEntity(
           id: 1,
           expenseBigCategoryId: 1,
@@ -432,12 +432,8 @@ void main() {
           price: 50000,
         ),
       );
-      await settleDbWrites();
-      await waitUntil(
-        () async =>
-            (await repository.fetchMonthly(id: 1, month: _month)) == 50000,
-        description: 'id=1の予算が更新されること',
-      );
+      // updateは完了を待てる（KP-029）ので、待機なしで直後に読める
+      expect(await repository.fetchMonthly(id: 1, month: _month), 50000);
 
       expect(await repository.fetchMonthly(id: 2, month: _month), 5000);
       expect(

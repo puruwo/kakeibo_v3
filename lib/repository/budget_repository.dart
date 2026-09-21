@@ -103,9 +103,9 @@ class ImplementsBudgetRepository implements BudgetRepository {
   }
 
   @override
-  void insert(BudgetEntity budgetEntity) async{
+  Future<void> insert(BudgetEntity budgetEntity) async{
     try {
-      // final id = 
+      // final id =
       await db.insert(SqfBudget.tableName, {
       SqfBudget.expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
       SqfBudget.month: budgetEntity.month,
@@ -115,13 +115,15 @@ class ImplementsBudgetRepository implements BudgetRepository {
     //     '====SQLが実行されました====\n ImplementsBudgetRepository insert(BudgetEntity budgetEntity)\n${SqfBudget.tableName}でinsert\n  budgetEntity: \n$budgetEntity \nid: $id');
     } catch (e) {
       logger.e('[FAIL]: $e');
+      // 失敗を成功として扱わないよう呼び出し側へ返す（KP-029）
+      rethrow;
     }
-    
+
   }
 
   @override
-  void update(BudgetEntity budgetEntity) {
-    db.update(
+  Future<void> update(BudgetEntity budgetEntity) async {
+    await db.update(
         SqfBudget.tableName,
         {
           SqfBudget.expenseBigCategoryId: budgetEntity.expenseBigCategoryId,
