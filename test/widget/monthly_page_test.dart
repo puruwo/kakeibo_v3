@@ -18,6 +18,7 @@ import 'package:kakeibo/domain/db/income_small_category/income_small_category_en
 import 'package:kakeibo/domain/ui_value/category_card_value/category_card_value/small_category_tile_entity/small_category_tile_entity.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/button_util.dart';
+import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/monthly_fixed_cost_page.dart';
 import 'package:kakeibo/view/monthly_page/monthly_page.dart';
 import 'package:kakeibo/view/monthly_page/prediction_graph_area/prediction_graph.dart';
 import 'package:kakeibo/view/monthly_page/unconfirmed_fixed_cost_banner.dart';
@@ -382,8 +383,9 @@ void main() {
     await pumpTimes(tester);
 
     // 遷移先（月間固定費ページ）のヘッダーと明細
-    // （月間分析タブ側のセクション見出しは先頭スペース付きなので別物）
-    expect(find.text('固定費'), findsOneWidget);
+    // ヘッダーは「◯月の固定費」（KP-030。月度の値は period_label_test が担保する）
+    expect(find.byType(MonthlyFixedCostPage), findsOneWidget);
+    expect(find.textContaining('月の固定費'), findsOneWidget);
     expect(find.text('家賃'), findsOneWidget);
   });
 

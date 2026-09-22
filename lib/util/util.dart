@@ -42,6 +42,24 @@ yyyyToyyyyGetter(DateScopeEntity dateScope) {
   return '${dateScope.representativeYear.year}年度';
 }
 
+// 選択月の月だけの表示（年なし）。「9月」「8 - 9月」。
+// 月のまたぎ方の規則は yyyyMMtoMMGetter と同じ
+String mmToMMGetter(PeriodValue monthPeriod) {
+  final referenceDay = monthPeriod.startDatetime;
+  if (referenceDay.day == 1) {
+    return '${referenceDay.month}月';
+  }
+  final nextMonth = referenceDay.month == 12 ? 1 : referenceDay.month + 1;
+  return '${referenceDay.month} - $nextMonth月';
+}
+
+// 期間の開始日〜終了日の表示。「8/25〜9/24」（終了日は期間に含む日）
+String periodDayRangeGetter(PeriodValue period) {
+  final start = period.startDatetime;
+  final end = period.endDatetime;
+  return '${start.month}/${start.day}〜${end.month}/${end.day}';
+}
+
 // 選択月の表示フォーマット取得
 yyyyMMtoMMGetter(PeriodValue? monthPeriod) {
   if (monthPeriod == null) {
