@@ -161,7 +161,7 @@ void main() {
     // ADR-022: 誘導カードは共通コンポーネント AppEmptyState で表示される
     expect(find.byType(AppEmptyState), findsOneWidget);
     // 案件 UIデザイン改修 §5: 0件時は見出し・一覧リンクも出さない
-    expect(find.textContaining('一覧（'), findsNothing);
+    expect(find.textContaining('登録中（'), findsNothing);
   });
 
   testWidgets('固定費セクションのミニカードと一覧リンクが出て、リンクで固定費登録リストへ遷移する',
@@ -173,13 +173,13 @@ void main() {
     );
     await pumpTimes(tester);
 
-    // 案件 UIデザイン改修 §5: 見出し「固定費」+「一覧（N件）」リンク+ミニカード
+    // 案件 UIデザイン改修 §5: 見出し「固定費」+「登録中（N件）」リンク+ミニカード
     expect(sectionTitle('固定費'), findsOneWidget);
-    expect(find.text('一覧（1件）'), findsOneWidget);
+    expect(find.text('登録中（1件）'), findsOneWidget);
     expect(find.text('家賃'), findsOneWidget); // ミニカードの固定費名
     expect(find.text('¥ 80,000'), findsOneWidget); // ミニカードの金額
 
-    await tester.tap(find.text('一覧（1件）'));
+    await tester.tap(find.text('登録中（1件）'));
     await pumpTimes(tester);
 
     // 遷移先（固定費登録リスト）が開いている

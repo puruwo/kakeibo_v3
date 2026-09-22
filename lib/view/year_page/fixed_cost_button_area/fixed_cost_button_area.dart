@@ -25,7 +25,7 @@ import 'package:kakeibo/constant/icon.dart';
 /// 「固定費」見出し＋横スクロールのミニカード列に刷新する。
 /// - 並び順は次回支払日が近い順（トップの役割=「次に何が来るか」）
 /// - 末尾に破線枠の追加カード
-/// - 見出し右の「一覧（N件）」リンクを常設（横スクロールの見落とし補完）
+/// - 見出し右の「登録中（N件）」リンクを常設（横スクロールの見落とし補完）
 /// - 0件時は従来どおり登録誘導カード（AppEmptyState）
 ///
 /// カード列を画面端までスクロール対象にするため、親（year_page）の横paddingの
@@ -72,7 +72,7 @@ class FixedCostButtonArea extends ConsumerWidget {
               AppContentsHeader(
                 type: AppContentsHeaderType.appCardSectionTitle,
                 title: '固定費',
-                subLabel: '一覧（${cards.length}件）',
+                subLabel: '登録中（${cards.length}件）',
                 isLinkable: true,
                 onTap: () {
                   Navigator.of(context).push(
