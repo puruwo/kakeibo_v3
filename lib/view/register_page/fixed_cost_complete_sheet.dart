@@ -119,7 +119,7 @@ class FixedCostCompleteSheet extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.xl),
             MainButton(
-              buttonText: '固定費一覧を見る',
+              buttonText: '登録中の固定費を見る',
               onPressed: () {
                 final navigator = Navigator.of(context, rootNavigator: true);
                 navigator.pop();

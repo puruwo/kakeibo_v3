@@ -127,7 +127,9 @@ void main() {
     ),
   );
 
-  testWidgets('ヘッダーに今月の固定費・確定分・未確定分（予想）の金額が出る', (tester) async {
+  testWidgets('AppBar に表示中の月度と期間が出て、ヘッダーに支払いの合計・確定分・未確定分（予想）の金額が出る', (
+    tester,
+  ) async {
     await pumpApp(
       tester,
       home: const MonthlyFixedCostPage(),
@@ -135,9 +137,11 @@ void main() {
     );
     await pumpTimes(tester);
 
-    expect(find.text('固定費'), findsOneWidget); // AppBar
-    expect(find.text('今月の固定費'), findsOneWidget);
-    // 今月の固定費＝確定80,000＋未確定の予想6,000
+    // AppBar（KP-030: 固定費登録リストページと見分けるため月度と期間を出す）
+    expect(find.text('6 - 7月の固定費'), findsOneWidget);
+    expect(find.text('6/25〜7/24'), findsOneWidget);
+    expect(find.text('支払いの合計'), findsOneWidget);
+    // 支払いの合計＝確定80,000＋未確定の予想6,000
     expect(find.text('¥ 86,000'), findsOneWidget);
     expect(find.text('確定分'), findsOneWidget);
     // 確定分はヘッダーと確定済みタイルの2箇所に出る
@@ -301,7 +305,7 @@ void main() {
     expect(find.text('¥ 0'), findsNWidgets(3));
   });
 
-  testWidgets('フッターの「固定費を管理」で固定費マスタ一覧へ遷移する', (tester) async {
+  testWidgets('フッターの「登録中の固定費を見る」で固定費マスタ一覧へ遷移する', (tester) async {
     await pumpApp(
       tester,
       home: const MonthlyFixedCostPage(),
@@ -311,10 +315,11 @@ void main() {
 
     expect(find.text('固定費を登録'), findsOneWidget);
 
-    await tester.tap(find.text('固定費を管理'));
+    await tester.tap(find.text('登録中の固定費を見る'));
     await pumpTimes(tester);
 
-    // 遷移先（固定費マスタ一覧）のFABラベル
+    // 遷移先（固定費マスタ一覧）のタイトルとFABラベル
+    expect(find.text('登録中の固定費'), findsOneWidget);
     expect(find.text('固定費を追加'), findsOneWidget);
   });
 }

@@ -12,7 +12,8 @@ import 'package:kakeibo/view_model/middle_provider/resolved_all_category_tile_en
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/view_model/state/update_DB_count.dart';
 
-/// 固定費画面の「今月の固定費」サマリー（案件 UIデザイン改修 §3）
+/// 月次固定費ページの「支払いの合計」サマリー（案件 UIデザイン改修 §3。
+/// 見出しは KP-030 で「今月の固定費」から変更）
 ///
 /// 画面幅いっぱいの帯＋ハードコード区切り線をやめ、
 /// CardContainer 1枚（合計＋確定分／未確定分の2カラム）に集約する。
@@ -52,7 +53,8 @@ class _FixedCostSummaryHeaderState
                       children: [
                         Expanded(
                           child: Text(
-                            '今月の固定費',
+                            // 月度は AppBar のタイトルに出す。過去の月度でも正しい文言にする
+                            '支払いの合計',
                             style: context.textStyles.appCardTitleLabel,
                           ),
                         ),
