@@ -120,6 +120,25 @@ class ReorderingCategoryListNotifier extends _$ReorderingCategoryListNotifier {
     state = state.copyWith(items: updatedList, hasChanges: true);
   }
 
+  /// 記録画面から外す（KP-032）。保存するまで確定しない
+  void removeById(int id) {
+    final updatedList = state.items.where((e) => e.id != id).toList();
+    if (updatedList.length == state.items.length) return;
+    state = state.copyWith(items: updatedList, hasChanges: true);
+  }
+
+  /// 記録画面に加える（末尾に付く。KP-032）。既に並んでいる項目は二重に足さない
+  void addCategory(ICategoryEntity entity) {
+    if (state.items.any((e) => e.id == entity.id)) return;
+    state = state.copyWith(
+      items: [...state.items, ReorderingCategoryItem.fromEntity(entity)],
+      hasChanges: true,
+    );
+  }
+
+  /// 現在並んでいるカテゴリーIDの列（保存時に使用。KP-032）
+  List<int> get displayedIds => state.items.map((e) => e.id).toList();
+
   /// 現在の並び順を取得（保存時に使用）
   /// キー: カテゴリーID, 値: 新しい表示順
   Map<int, int> getNewDisplayOrders() {

@@ -797,4 +797,77 @@ void main() {
       expect(updated.first.displayedOrderInBig, 3);
     });
   });
+
+  group('CategoryUsecase.updateRegisterGrid（KP-032）', () {
+    // fixture: 10 食費（key5・表示）/ 11 日用品（key1・非表示）/ 12 旅行（key9・表示）
+    test('並べたIDを表示（1）＋0からの連番にし、それ以外は非表示（0）で後ろに続ける', () async {
+      final container = createUsecaseContainer();
+      final usecase = container.read(categoryUsecaseProvider);
+
+      // 記録画面: 旅行 → 日用品 の順に出す（食費は外す）
+      await usecase.updateRegisterGrid([12, 11]);
+
+      final records = {for (final e in fakeSmallRepository.records) e.id: e};
+      expect(records[12]!.smallCategoryOrderKey, 0);
+      expect(records[12]!.defaultDisplayed, 1);
+      expect(records[11]!.smallCategoryOrderKey, 1);
+      expect(records[11]!.defaultDisplayed, 1);
+      // 外した食費は表示中の後ろ（2）で非表示
+      expect(records[10]!.smallCategoryOrderKey, 2);
+      expect(records[10]!.defaultDisplayed, 0);
+      // 表示順・表示フラグ以外は既存のまま
+      expect(records[10]!.smallCategoryName, '食費');
+      expect(records[10]!.displayedOrderInBig, 3);
+    });
+
+    test('内容が変わらない行はupdateしない', () async {
+      final container = createUsecaseContainer(
+        smalls: const [
+          ExpenseSmallCategoryEntity(
+            id: 10,
+            smallCategoryOrderKey: 0,
+            bigCategoryKey: 1,
+            displayedOrderInBig: 1,
+            smallCategoryName: '食費',
+            defaultDisplayed: 1,
+          ),
+          ExpenseSmallCategoryEntity(
+            id: 11,
+            smallCategoryOrderKey: 1,
+            bigCategoryKey: 1,
+            displayedOrderInBig: 2,
+            smallCategoryName: '日用品',
+            defaultDisplayed: 0,
+          ),
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      await usecase.updateRegisterGrid([10]);
+
+      expect(fakeSmallRepository.updatedEntities, isEmpty);
+    });
+
+    test('一覧に無いIDは無視し、削除済みの行は触らない', () async {
+      final container = createUsecaseContainer(
+        smalls: [
+          smallCategories[0],
+          smallCategories[1],
+          smallCategories[2].copyWith(deleteFlag: 1),
+        ],
+      );
+      final usecase = container.read(categoryUsecaseProvider);
+
+      await usecase.updateRegisterGrid([999, 11, 10]);
+
+      final updatedIds = fakeSmallRepository.updatedEntities.map((e) => e.id);
+      expect(updatedIds, isNot(contains(12)));
+      expect(updatedIds, isNot(contains(999)));
+      final records = {for (final e in fakeSmallRepository.records) e.id: e};
+      expect(records[11]!.smallCategoryOrderKey, 0);
+      expect(records[10]!.smallCategoryOrderKey, 1);
+      expect(records[12]!.deleteFlag, 1);
+      expect(records[12]!.smallCategoryOrderKey, 9);
+    });
+  });
 }

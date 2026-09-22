@@ -74,6 +74,9 @@ class AppIcons {
   static const IconData palette = Icons.palette_rounded;
   static const IconData accountType = Icons.sell_rounded;
 
+  /// 記録モーダルの「すべて」セル（全カテゴリーの一覧を開く。KP-032）
+  static const IconData allCategories = Icons.apps_rounded;
+
   // --- 空状態・誘導 ---
   static const IconData savings = Icons.savings_rounded;
   static const IconData chart = Icons.show_chart_rounded;

@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_selection_provider.dart';
+import 'package:kakeibo/application/category/displayed_category_provider.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
+import 'package:kakeibo/util/color_code.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/extension/media_query_extension.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view/category_list_page/category_big_list_page.dart';
 import 'package:kakeibo/view/component/app_error_state.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/none_icon_button.dart';
@@ -22,7 +26,8 @@ import 'package:kakeibo/constant/icon.dart';
 ///
 /// 支出・収入登録画面でカテゴリーを選択するためのグリッド表示。
 /// 1ページに15個（5列 x 3行）のカテゴリーを表示し、
-/// カテゴリー数が15個以上の場合はページネーションで表示。
+/// 記録画面に直接出すカテゴリー（最大29件・KP-032）を最大2ページで並べる。
+/// 末尾の1セルは「すべて」で、全カテゴリーの一覧からグリッドに無いカテゴリーも選べる。
 class CategoryArea extends ConsumerStatefulWidget {
   const CategoryArea({
     super.key,
@@ -41,7 +46,9 @@ class CategoryArea extends ConsumerStatefulWidget {
   /// アイコン並べ替えリンクを表示するか
   final bool showRearrangeLink;
 
-  /// カテゴリー設定への入口（最終ページ末尾の「追加・編集」セルと下部のリンク）を表示するか（KP-027）
+  /// カテゴリー設定への入口（下部の「カテゴリーを設定」リンク）を表示するか（KP-027）
+  ///
+  /// 最終ページ末尾の「追加・編集」セルは KP-032 で廃止した（末尾は「すべて」セル）。
   final bool showCategorySettingEntry;
 
   @override
@@ -112,18 +119,16 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     final screenHorizontalMagnification = context.screenHorizontalMagnification;
     final screenVerticalMagnification = context.screenVerticalMagnification;
 
-    // TransactionModeに応じたカテゴリーリストを取得
+    // 記録画面に直接出すカテゴリー（default_displayed = 1 の先頭29件。KP-032）
     return ref
-        .watch(categoriesByModeProvider(widget.transactionMode))
+        .watch(displayedCategoriesByModeProvider(widget.transactionMode))
         .when(
           // DB更新での再読み込み中は前の一覧を出したままにする（一瞬スピナーに替わるのを防ぐ。KP-027）
           skipLoadingOnReload: true,
           data: (categories) {
-            // 「追加・編集」セルは最後のカテゴリーの次に1つだけ置く（KP-027）。
-            // ページ数・行数はこのセルを含めた個数で数える
-            // （カテゴリー数が15の倍数なら、セルだけの最終ページができる）
-            final cellCount =
-                categories.length + (widget.showCategorySettingEntry ? 1 : 0);
+            // 「すべて」セルは最後のカテゴリーの次に1つ置く（KP-032）。
+            // ページ数・行数はこのセルを含めた個数で数える（最大30セル＝2ページ）
+            final cellCount = categories.length + 1;
 
             // ページネーション情報を取得
             final pagination = ref.watch(categoryPaginationProvider(cellCount));
@@ -173,7 +178,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
                   ),
                 ),
 
-                // 「アイコンを並べ替える」「カテゴリーを設定」のリンク
+                // 「並べ替え」「カテゴリーを設定」のリンク
                 // 狭い端末で横に収まらないときは折り返す
                 Wrap(
                   alignment: WrapAlignment.center,
@@ -214,7 +219,7 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     );
   }
 
-  /// 「アイコンを並べ替える」リンクを構築
+  /// 「並べ替え」リンクを構築（開く先は「記録画面のカテゴリー」）
   Widget _buildRearrangeLink(BuildContext context) {
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
@@ -294,6 +299,23 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     }
   }
 
+  /// 「すべて」セルから全カテゴリーの一覧を開き、選ばれたカテゴリーを選択状態にする（KP-032）
+  ///
+  /// 一覧は記録のモード（支出／収入）で開く。選ばずに閉じたときは何もしない。
+  Future<void> _openAllCategories() async {
+    final selected = ref.read(selectCategoryControllerNotifierProvider);
+    final result = await showAppModalBottomSheet<ICategoryEntity>(
+      context,
+      child: CategoryBigListPage(
+        transactionMode: widget.transactionMode,
+        mode: CategoryListMode.select,
+        selectedCategoryId: selected.id,
+      ),
+    );
+    if (!mounted || result == null) return;
+    ref.read(selectCategoryControllerNotifierProvider.notifier).setData(result);
+  }
+
   /// カテゴリー数から必要な行数を算出（5列・最大3行）
   int _rowsNeededFor(int categoryCount) {
     const columns = 5;
@@ -336,12 +358,15 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
               final buttonNumber =
                   pageIndex * itemsPerPage + rowIndex * columns + columnIndex;
 
-              // 最後のカテゴリーの次のセルは「追加・編集」（最終ページにだけ現れる。KP-027）
-              if (widget.showCategorySettingEntry &&
-                  buttonNumber == categories.length) {
+              // 最後のカテゴリーの次のセルは「すべて」（最終ページにだけ現れる。KP-032）
+              if (buttonNumber == categories.length) {
                 return Padding(
                   padding: _getPaddingForColumn(columnIndex),
-                  child: _buildCategorySettingCell(context),
+                  child: _buildAllCategoriesCell(
+                    context,
+                    selectedCategory: selectedCategory,
+                    categories: categories,
+                  ),
                 );
               }
 
@@ -368,36 +393,106 @@ class _CategoryAreaState extends ConsumerState<CategoryArea> {
     );
   }
 
-  /// 「追加・編集」セルを構築（KP-027）
+  /// 「すべて」セルを構築（KP-032）
   ///
   /// 寸法は [NormalIconButton] と揃える（アイコン枠34・ラベル幅・下線ドット分の透明スロット）。
-  Widget _buildCategorySettingCell(BuildContext context) {
-    return AppInkWell(
-      borderRadius: BorderRadius.circular(22),
-      onTap: _openCategorySetting,
-      child: Column(
+  /// グリッドに無いカテゴリーが選択中のときは、そのカテゴリーのアイコン＋名前の選択状態に
+  /// 変わり、アイコン右下に小さなグリッドの印を残す（一覧から他も選べることを示す）。
+  Widget _buildAllCategoriesCell(
+    BuildContext context, {
+    required ICategoryEntity selectedCategory,
+    required List<ICategoryEntity> categories,
+  }) {
+    final isHiddenSelected =
+        selectedCategory.id > 0 &&
+        !categories.any((c) => c.id == selectedCategory.id);
+    final iconBox = 34 * context.screenVerticalMagnification;
+    final labelWidth =
+        62.2 * ((context.screenHorizontalMagnification - 1) / 5 + 1);
+
+    final Widget icon;
+    final Widget label;
+    final Widget dot;
+    if (isHiddenSelected) {
+      final color = ColorCode.toColor(selectedCategory.colorCode);
+      icon = Stack(
+        clipBehavior: Clip.none,
         children: [
           SizedBox(
-            height: 34 * context.screenVerticalMagnification,
-            width: 34 * context.screenVerticalMagnification,
-            child: Icon(AppIcons.add, size: 25, color: context.colors.primary),
-          ),
-          SizedBox(
-            width: 62.2 * ((context.screenHorizontalMagnification - 1) / 5 + 1),
-            child: Center(
-              // 5文字はラベル幅にわずかに収まらず「追加・…」と省略されるため、幅に合わせて縮める
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  '追加・編集',
-                  style: context.registerStyles.categoryLabelUnselected
-                      .copyWith(color: context.colors.primary),
-                ),
+            width: iconBox,
+            height: iconBox,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: SvgPicture.asset(
+                selectedCategory.resourcePath,
+                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                semanticsLabel: 'categoryIcon',
+                width: 25,
+                height: 25,
               ),
             ),
           ),
+          // 一覧から選んだことを示す小さなグリッドの印
+          Positioned(
+            right: -2,
+            bottom: -2,
+            child: Container(
+              width: 14,
+              height: 14,
+              decoration: BoxDecoration(
+                color: context.colors.surfaceElevated,
+                shape: BoxShape.circle,
+                border: Border.all(color: context.colors.surfaceBorder),
+              ),
+              child: Icon(
+                AppIcons.allCategories,
+                size: 9,
+                color: context.colors.textSecondary,
+              ),
+            ),
+          ),
+        ],
+      );
+      label = Text(
+        selectedCategory.categoryName,
+        style: context.registerStyles.categoryLabelSelected,
+        overflow: TextOverflow.ellipsis,
+      );
+      dot = Container(
+        width: 14,
+        height: 2.5,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(2),
+        ),
+      );
+    } else {
+      icon = SizedBox(
+        width: iconBox,
+        height: iconBox,
+        child: Icon(
+          AppIcons.allCategories,
+          size: 25,
+          color: context.colors.textSecondary,
+        ),
+      );
+      label = Text(
+        'すべて',
+        style: context.registerStyles.categoryLabelUnselected,
+        overflow: TextOverflow.ellipsis,
+      );
+      dot = const SizedBox(width: 14, height: 2.5);
+    }
+
+    return AppInkWell(
+      borderRadius: BorderRadius.circular(22),
+      onTap: _openAllCategories,
+      child: Column(
+        children: [
+          icon,
+          SizedBox(width: labelWidth, child: Center(child: label)),
           const SizedBox(height: 3),
-          const SizedBox(width: 14, height: 2.5),
+          dot,
         ],
       ),
     );

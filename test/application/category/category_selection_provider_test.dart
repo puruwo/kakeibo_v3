@@ -207,6 +207,39 @@ void main() {
       expect(negative.id, 11);
     });
 
+    test('categoryIdが0以下なら記録画面に出しているカテゴリーの先頭を返す（KP-032）', () async {
+      // 表示順の先頭「日用品」が記録画面に出ていない（default_displayed = 0）ときは、
+      // 次に出ている「食費」が初期選択になる
+      final container = createContainer(
+        overrides: [
+          expenseSmallCategoryRepositoryProvider.overrideWithValue(
+            FakeExpenseSmallCategoryRepository(
+              initialRecords: [
+                expenseSmallCategories[0],
+                expenseSmallCategories[1].copyWith(defaultDisplayed: 0),
+                expenseSmallCategories[2],
+              ],
+            ),
+          ),
+          expensebigCategoryRepositoryProvider.overrideWithValue(
+            FakeExpenseBigCategoryRepository(
+              initialRecords: expenseBigCategories,
+            ),
+          ),
+        ],
+      );
+
+      final category = await container.read(
+        categoryByModeProvider(
+          mode: TransactionMode.expense,
+          categoryId: 0,
+        ).future,
+      );
+
+      expect(category.id, 10);
+      expect(category.categoryName, '食費');
+    });
+
     test('カテゴリーが1件も無いなら未選択（ID 0）のカテゴリーを返す', () async {
       // 支出小カテゴリーだけ空にする（マスタ検索へ進むと該当なしで落ちる状態）
       final container = createContainer(
