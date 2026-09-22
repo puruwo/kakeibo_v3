@@ -12,6 +12,7 @@ import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/app_empty_state.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
+import 'package:kakeibo/view/component/app_summary_cells.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/expense_category_icon.dart';
 import 'package:kakeibo/view/fixed_cost_setting_page/fixed_cost_history_price_label.dart';
@@ -205,20 +206,23 @@ class _SummaryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isVariable = fixedCost?.variable == 1;
-    final cells = <(String, String)>[
-      ('支払い合計', yenmarkFormattedPriceGetter(summary.totalPrice)),
-      ('支払い回数', '${summary.confirmedCount}回'),
+    final cells = <AppSummaryCell>[
+      AppSummaryCell(
+        label: '支払い合計',
+        value: yenmarkFormattedPriceGetter(summary.totalPrice),
+      ),
+      AppSummaryCell(label: '支払い回数', value: '${summary.confirmedCount}回'),
       if (isVariable)
-        (
-          '平均（確定分）',
-          summary.averagePrice == null
+        AppSummaryCell(
+          label: '平均（確定分）',
+          value: summary.averagePrice == null
               ? '—'
               : yenmarkFormattedPriceGetter(summary.averagePrice!),
         )
       else
-        (
-          '初回支払日',
-          summary.firstPaymentDate == null
+        AppSummaryCell(
+          label: '初回支払日',
+          value: summary.firstPaymentDate == null
               ? '—'
               : _formatYearMonth(summary.firstPaymentDate!),
         ),
@@ -230,38 +234,7 @@ class _SummaryCard extends StatelessWidget {
         border: Border.all(color: context.colors.surfaceBorder),
         borderRadius: appInsetGroupRadius,
       ),
-      child: IntrinsicHeight(
-        child: Row(
-          children: [
-            for (var i = 0; i < cells.length; i++) ...[
-              if (i > 0)
-                VerticalDivider(
-                  width: 0.5,
-                  thickness: 0.5,
-                  color: context.colors.separator,
-                ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: AppSpacing.md,
-                    horizontal: AppSpacing.sm,
-                  ),
-                  child: Column(
-                    children: [
-                      Text(cells[i].$1, style: context.textStyles.insetGroupNote),
-                      const SizedBox(height: 2),
-                      Text(
-                        cells[i].$2,
-                        style: context.textStyles.listTilePriceLabel,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
+      child: AppSummaryCells(cells: cells),
     );
   }
 }

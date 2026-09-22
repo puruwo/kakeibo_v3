@@ -151,6 +151,61 @@ void main() {
     expect(find.text('自動車税'), findsNothing);
   });
 
+  testWidgets('タイトルが「登録中の固定費」になり、先頭に件数・月あたり・年あたりのサマリーが出る', (
+    tester,
+  ) async {
+    await pumpApp(
+      tester,
+      home: const FixedCostRegistrationListPage(),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    // KP-030: 月次固定費ページと見分けるため、登録内容の一覧だと名前で示す
+    expect(find.text('登録中の固定費'), findsOneWidget);
+
+    // 削除済み（自動車税）は数えない
+    expect(find.text('登録中'), findsOneWidget);
+    expect(find.text('2件'), findsOneWidget);
+    // 月あたり＝家賃80,000＋電気代の予想額6,000
+    expect(find.text('月あたり'), findsOneWidget);
+    expect(find.text('¥ 86,000'), findsOneWidget);
+    expect(find.text('年あたり'), findsOneWidget);
+    expect(find.text('¥ 1,032,000'), findsOneWidget);
+    // 変動する固定費を含むので情報アイコンが出て、タップでツールチップが開く
+    expect(find.text(registrationSummaryTooltipMessage), findsNothing);
+    // 情報アイコンは「月あたり」「年あたり」の両方に付く
+    expect(find.byIcon(AppIcons.info), findsNWidgets(2));
+    await tester.tap(find.byIcon(AppIcons.info).first);
+    await pumpTimes(tester);
+    expect(
+      find.text(
+        '画面に記載される月あたり・年あたりの支払い合計額は、変動固定費の支払い予想額を含めて計算されます',
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('変動する固定費が無いときはサマリーに情報アイコンを出さない', (tester) async {
+    await pumpApp(
+      tester,
+      home: const FixedCostRegistrationListPage(),
+      fakes: TestFakes(
+        fixedCost: FakeFixedCostRepository(initialRecords: [fixedCosts.first]),
+        expenseSmallCategory: FakeExpenseSmallCategoryRepository(
+          initialRecords: expenseSmallCategories,
+        ),
+        expenseBigCategory: FakeExpenseBigCategoryRepository(
+          initialRecords: expenseBigCategories,
+        ),
+      ),
+    );
+    await pumpTimes(tester);
+
+    expect(find.text('1件'), findsOneWidget);
+    expect(find.byIcon(AppIcons.info), findsNothing);
+  });
+
   testWidgets('変動費は「平均」ラベルと「変動」チップ付きで想定額が出る', (tester) async {
     await pumpApp(
       tester,
