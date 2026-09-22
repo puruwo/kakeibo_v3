@@ -631,6 +631,52 @@ void main() {
     });
   });
 
+  group('deleteByIds', () {
+    // KP-031 一括削除。`DELETE ... WHERE _id IN (...)` を1トランザクションで実行する
+    test('指定した複数idの行だけが削除される', () async {
+      await _seedStandardExpenses();
+
+      await repository.deleteByIds([2, 4, 6]);
+
+      final results = await repository.fetchAll();
+      expect(results.map((e) => e.id).toList(), [1, 3, 5]);
+    });
+
+    test('存在しないidが混ざっていても他の行は削除される', () async {
+      await _seedStandardExpenses();
+
+      await repository.deleteByIds([3, 999]);
+
+      final results = await repository.fetchAll();
+      expect(results.map((e) => e.id).toList(), [1, 2, 4, 5, 6]);
+    });
+
+    test('空の一覧なら何も削除されない', () async {
+      await _seedStandardExpenses();
+
+      await repository.deleteByIds(const []);
+
+      expect(
+        await DatabaseHelper.instance.queryRowCount(SqfExpense.tableName),
+        6,
+      );
+    });
+
+    test('500件を超えるidでも全件削除される（IN句の分割）', () async {
+      // IN 句は500件ずつに分けるため、3回に分かれる件数で確かめる
+      for (var id = 1; id <= 1100; id++) {
+        await insertExpenseRow(id: id, date: '20250701', price: 1);
+      }
+      // 削除しない行を1件だけ残す
+      await insertExpenseRow(id: 2000, date: '20250701', price: 1);
+
+      await repository.deleteByIds([for (var id = 1; id <= 1100; id++) id]);
+
+      final results = await repository.fetchAll();
+      expect(results.map((e) => e.id).toList(), [2000]);
+    });
+  });
+
   // ---------------------------------------------------------------------
   // 固定費系のクエリ（v10で fixed_cost_record から移管）
   // ---------------------------------------------------------------------

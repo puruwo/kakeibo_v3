@@ -45,4 +45,8 @@ abstract interface class IncomeRepository {
   void update(IncomeEntity expenseEntity);
 
   void delete(int id);
+
+  // 複数の収入をID指定で1トランザクションで削除する（KP-031 一括削除）
+  // 空の一覧なら何もしない
+  Future<void> deleteByIds(List<int> ids);
 }

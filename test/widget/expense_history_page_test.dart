@@ -14,6 +14,7 @@ import 'package:kakeibo/domain/db/fixed_cost/fixed_cost_entity.dart';
 import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
+import 'package:kakeibo/view/bulk_delete_page/bulk_delete_page.dart';
 import 'package:kakeibo/view/component/app_chip_label.dart';
 import 'package:kakeibo/view/historical_calendar_page/calendar_area/date_box.dart';
 import 'package:kakeibo/view/historical_calendar_page/expense_history_page.dart';
@@ -332,6 +333,57 @@ void main() {
     expect(find.text('3,000'), findsWidgets);
 
     await unmountRegisterPage(tester);
+  });
+
+  testWidgets('支出タイルの長押しメニュー（編集／まとめて削除／削除）から一括削除ページが開く', (tester) async {
+    // KP-031: 履歴タブのタイルに長押しメニューを新設。スワイプ削除は残す
+    await pumpApp(
+      tester,
+      home: const ExpenseHistoryPage(),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    await tester.longPress(find.text(' ランチ'));
+    await pumpTimes(tester);
+
+    expect(find.text('編集'), findsOneWidget);
+    expect(find.text('まとめて削除'), findsOneWidget);
+    expect(find.text('削除'), findsOneWidget);
+    // 並びは 編集／まとめて削除／削除（破壊的な「削除」を末尾に）
+    expect(
+      rowsInOrder(tester, ['編集', 'まとめて削除', '削除']),
+      ['編集', 'まとめて削除', '削除'],
+    );
+
+    await tester.tap(find.text('まとめて削除'));
+    await pumpTimes(tester);
+
+    // 支出モードの一括削除ページが root Navigator で開き、長押しした行が選択済み
+    expect(find.byType(BulkDeletePage), findsOneWidget);
+    expect(find.text('支出をまとめて削除'), findsOneWidget);
+    expect(find.text('1件を削除'), findsOneWidget);
+  });
+
+  testWidgets('収入タイルの長押しメニューから収入モードの一括削除ページが開く', (tester) async {
+    await pumpApp(
+      tester,
+      home: const ExpenseHistoryPage(),
+      fakes: buildFakes(),
+    );
+    await pumpTimes(tester);
+
+    await tester.longPress(find.text(' 給与').first);
+    await pumpTimes(tester);
+
+    expect(find.text('まとめて削除'), findsOneWidget);
+
+    await tester.tap(find.text('まとめて削除'));
+    await pumpTimes(tester);
+
+    expect(find.byType(BulkDeletePage), findsOneWidget);
+    expect(find.text('収入をまとめて削除'), findsOneWidget);
+    expect(find.text('1件を削除'), findsOneWidget);
   });
 
   testWidgets('カレンダーの別の日をタップすると選択日が切り替わる', (tester) async {

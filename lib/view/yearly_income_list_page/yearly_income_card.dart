@@ -12,6 +12,8 @@ import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/application/bulk_delete/bulk_delete_mode.dart';
+import 'package:kakeibo/view/bulk_delete_page/open_bulk_delete_page.dart';
 
 class YearlyIncomeCard extends ConsumerWidget {
   const YearlyIncomeCard({
@@ -51,6 +53,12 @@ class YearlyIncomeCard extends ConsumerWidget {
         onPressed: () async {
           _showModalBottomSheet(context);
         },
+      ),
+      // 複数選択してまとめて削除（KP-031。並びは 編集／まとめて削除／削除）
+      bulkDeleteMenuItem(
+        context,
+        mode: BulkDeleteMode.income,
+        recordId: value.id,
       ),
       MenuDialogItem(
         label: '削除',

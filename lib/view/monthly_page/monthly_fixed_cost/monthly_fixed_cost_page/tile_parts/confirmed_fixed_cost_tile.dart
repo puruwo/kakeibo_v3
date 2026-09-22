@@ -9,6 +9,8 @@ import 'package:kakeibo/view/component/app_list_card.dart';
 import 'package:kakeibo/view/monthly_page/monthly_fixed_cost/monthly_fixed_cost_page/tile_parts/fixed_cost_tile_subtitle.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/application/bulk_delete/bulk_delete_mode.dart';
+import 'package:kakeibo/view/bulk_delete_page/open_bulk_delete_page.dart';
 
 class ConfirmedFixedCostTile extends ConsumerWidget {
   const ConfirmedFixedCostTile({
@@ -43,6 +45,12 @@ class ConfirmedFixedCostTile extends ConsumerWidget {
       },
       onLongPress: () async {
         return await showMenuDialog(context, items: [
+          // 複数選択してまとめて削除（KP-031。固定費行も支出レコードとして支出モードで開く）
+          bulkDeleteMenuItem(
+            context,
+            mode: BulkDeleteMode.expense,
+            recordId: value.id,
+          ),
           MenuDialogItem(
               label: '削除',
               icon: AppIcons.delete,

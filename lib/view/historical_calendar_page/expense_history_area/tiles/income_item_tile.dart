@@ -15,6 +15,9 @@ import 'package:kakeibo/util/util.dart';
 import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/application/bulk_delete/bulk_delete_mode.dart';
+import 'package:kakeibo/util/common_widget/app_dialog.dart';
+import 'package:kakeibo/view/bulk_delete_page/open_bulk_delete_page.dart';
 
 class IncomeItemTile extends ConsumerWidget {
   const IncomeItemTile({
@@ -30,8 +33,6 @@ class IncomeItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final incomeUsecase = ref.read(incomeUsecaseProvider);
-
     // アイコン
     final icon = FittedBox(
       fit: BoxFit.scaleDown,
@@ -52,9 +53,9 @@ class IncomeItemTile extends ConsumerWidget {
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
-      onTap: () async {
-        _showModalBottomSheet(context);
-      },
+      onTap: () => _showModalBottomSheet(context),
+      // 長押しメニュー（編集／まとめて削除／削除）。KP-031 で新設。スワイプ削除は残す
+      onLongPress: () => _showMenuDialog(context, ref),
       child: Dismissible(
         direction: DismissDirection.endToStart,
         key: Key(value.id.toString()),
@@ -76,9 +77,7 @@ class IncomeItemTile extends ConsumerWidget {
           }
           return null;
         },
-        onDismissed: (direction) {
-          incomeUsecase.delete(id: value.id);
-        },
+        onDismissed: (direction) => _delete(ref),
         child: Column(
           children: [
             Padding(
@@ -185,6 +184,35 @@ class IncomeItemTile extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// 1件削除
+  void _delete(WidgetRef ref) {
+    ref.read(incomeUsecaseProvider).delete(id: value.id);
+  }
+
+  /// 長押しメニュー（編集／まとめて削除／削除。KP-031）
+  Future<void> _showMenuDialog(BuildContext context, WidgetRef ref) async {
+    await showMenuDialog(context, items: [
+      MenuDialogItem(
+        label: '編集',
+        icon: AppIcons.edit,
+        onPressed: () => _showModalBottomSheet(context),
+      ),
+      bulkDeleteMenuItem(
+        context,
+        mode: BulkDeleteMode.income,
+        recordId: value.id,
+      ),
+      MenuDialogItem(
+        label: '削除',
+        icon: AppIcons.delete,
+        isDestructive: true,
+        onPressed: () {
+          showDeleteConfirmationDialog(context, onConfirm: () => _delete(ref));
+        },
+      ),
+    ]);
   }
 
   void _showModalBottomSheet(BuildContext context) {
