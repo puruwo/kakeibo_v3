@@ -41,6 +41,9 @@ class AppIcons {
   static const IconData edit = Icons.edit_rounded;
   static const IconData delete = Icons.delete_rounded;
 
+  /// 一覧から複数選択してまとめて削除する導線（長押しメニュー「まとめて削除」。KP-031）
+  static const IconData bulkSelect = Icons.checklist_rounded;
+
   /// 編集中リストの行頭に置く削除（カテゴリー設定の丸マイナス。KP-024）
   static const IconData deleteRow = Icons.remove_circle_rounded;
 

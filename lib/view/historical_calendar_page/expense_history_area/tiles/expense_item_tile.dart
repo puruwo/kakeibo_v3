@@ -19,6 +19,9 @@ import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/application/bulk_delete/bulk_delete_mode.dart';
+import 'package:kakeibo/util/common_widget/app_dialog.dart';
+import 'package:kakeibo/view/bulk_delete_page/open_bulk_delete_page.dart';
 
 class ExpenseItemTile extends ConsumerWidget {
   const ExpenseItemTile({
@@ -36,7 +39,6 @@ class ExpenseItemTile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final expenseUsecase = ref.read(expenseUsecaseProvider);
     final color = ColorCode.toColor(value.colorCode);
 
     // 固定費由来の行かどうか（仕様 §8.4）
@@ -62,26 +64,9 @@ class ExpenseItemTile extends ConsumerWidget {
 
     return AppInkWell(
       borderRadius: BorderRadius.circular(8),
-      onTap: () async {
-        // 固定費行は編集範囲が違うため専用シートを開く（仕様 §6.6）
-        if (isFixedCost) {
-          await openFixedCostRecordEditSheet(context, ref,
-              expenseId: value.id);
-          return;
-        }
-        final expenseEntity = ExpenseEntity(
-          id: value.id,
-          date: DateFormat('yyyyMMdd').format(value.date),
-          price: value.price,
-          paymentCategoryId: value.paymentCategoryId,
-          memo: value.memo,
-          incomeSourceBigCategory: value.incomeSourceBigCategory,
-        );
-        showAppModalBottomSheet(
-          context,
-          child: RegisaterPageBase.editExpense(expenseEntity: expenseEntity),
-        );
-      },
+      onTap: () async => await _openEditSheet(context, ref),
+      // 長押しメニュー（編集／まとめて削除／削除）。KP-031 で新設。スワイプ削除は残す
+      onLongPress: () => _showMenuDialog(context, ref),
       child: Dismissible(
         direction: DismissDirection.endToStart,
         key: Key(value.id.toString()),
@@ -103,14 +88,7 @@ class ExpenseItemTile extends ConsumerWidget {
           }
           return null;
         },
-        onDismissed: (direction) {
-          // 固定費行の削除は推定額の再計算を伴うため専用ユースケースを使う（仕様 §6.5）
-          if (isFixedCost) {
-            ref.read(fixedCostRecordUsecaseProvider).delete(id: value.id);
-          } else {
-            expenseUsecase.delete(id: value.id);
-          }
-        },
+        onDismissed: (direction) => _delete(ref),
         child: Column(
           children: [
             Padding(
@@ -220,5 +198,58 @@ class ExpenseItemTile extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  /// 編集シートを開く（固定費行は編集範囲が違うため専用シートを開く。仕様 §6.6）
+  Future<void> _openEditSheet(BuildContext context, WidgetRef ref) async {
+    if (value.fixedCostId != null) {
+      await openFixedCostRecordEditSheet(context, ref, expenseId: value.id);
+      return;
+    }
+    final expenseEntity = ExpenseEntity(
+      id: value.id,
+      date: DateFormat('yyyyMMdd').format(value.date),
+      price: value.price,
+      paymentCategoryId: value.paymentCategoryId,
+      memo: value.memo,
+      incomeSourceBigCategory: value.incomeSourceBigCategory,
+    );
+    showAppModalBottomSheet(
+      context,
+      child: RegisaterPageBase.editExpense(expenseEntity: expenseEntity),
+    );
+  }
+
+  /// 1件削除（固定費行の削除は推定額の再計算を伴うため専用ユースケースを使う。仕様 §6.5）
+  void _delete(WidgetRef ref) {
+    if (value.fixedCostId != null) {
+      ref.read(fixedCostRecordUsecaseProvider).delete(id: value.id);
+    } else {
+      ref.read(expenseUsecaseProvider).delete(id: value.id);
+    }
+  }
+
+  /// 長押しメニュー（編集／まとめて削除／削除。KP-031）
+  Future<void> _showMenuDialog(BuildContext context, WidgetRef ref) async {
+    await showMenuDialog(context, items: [
+      MenuDialogItem(
+        label: '編集',
+        icon: AppIcons.edit,
+        onPressed: () async => await _openEditSheet(context, ref),
+      ),
+      bulkDeleteMenuItem(
+        context,
+        mode: BulkDeleteMode.expense,
+        recordId: value.id,
+      ),
+      MenuDialogItem(
+        label: '削除',
+        icon: AppIcons.delete,
+        isDestructive: true,
+        onPressed: () {
+          showDeleteConfirmationDialog(context, onConfirm: () => _delete(ref));
+        },
+      ),
+    ]);
   }
 }

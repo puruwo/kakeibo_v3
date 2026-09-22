@@ -55,6 +55,10 @@ abstract interface class ExpenseRepository {
 
   void delete(int id);
 
+  // 複数の支出をID指定で1トランザクションで削除する（KP-031 一括削除）
+  // 空の一覧なら何もしない
+  Future<void> deleteByIds(List<int> ids);
+
   // ---------------------------------------------------------------------
   // 固定費系のクエリ（v10で廃止した旧固定費実績テーブルから移管）
   // 固定費行の判定は fixed_cost_id IS NOT NULL の1条件に集約する（仕様 §3）

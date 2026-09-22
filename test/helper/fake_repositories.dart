@@ -579,6 +579,31 @@ class FakeExpenseRepository implements ExpenseRepository {
     records.removeWhere((e) => e.id == id);
   }
 
+  /// 全ての支出を返す（KP-031 一括削除の全履歴の取得口）
+  ///
+  /// 本実装のSQLの ORDER BY id ASC に合わせる。
+  @override
+  Future<List<ExpenseEntity>> fetchAll() async {
+    final all = List.of(records);
+    all.sort((a, b) => a.id.compareTo(b.id));
+    return all;
+  }
+
+  /// deleteByIds に渡された ID 一覧の記録（検証用。呼び出し1回＝1要素）
+  final List<List<int>> deletedByIdsCalls = [];
+
+  /// 複数の支出を ID 指定で削除する（KP-031）
+  ///
+  /// 本物は `DELETE FROM expense WHERE _id IN (...)` を1トランザクションで実行する
+  /// 物理削除。Fakeも [records] から取り除き、[deletedIds] にも積む。
+  @override
+  Future<void> deleteByIds(List<int> ids) async {
+    deletedByIdsCalls.add(List.of(ids));
+    deletedIds.addAll(ids);
+    final idSet = ids.toSet();
+    records.removeWhere((e) => idSet.contains(e.id));
+  }
+
   // -------------------------------------------------------------------------
   // 固定費系のクエリ（v10で廃止した旧固定費実績テーブルから移管）
   //
@@ -983,6 +1008,21 @@ class FakeIncomeRepository implements IncomeRepository {
   void delete(int id) {
     deletedIds.add(id);
     records.removeWhere((e) => e.id == id);
+  }
+
+  /// deleteByIds に渡された ID 一覧の記録（検証用。呼び出し1回＝1要素）
+  final List<List<int>> deletedByIdsCalls = [];
+
+  /// 複数の収入を ID 指定で削除する（KP-031）
+  ///
+  /// 本物は `DELETE FROM income WHERE _id IN (...)` を1トランザクションで実行する
+  /// 物理削除。Fakeも [records] から取り除き、[deletedIds] にも積む。
+  @override
+  Future<void> deleteByIds(List<int> ids) async {
+    deletedByIdsCalls.add(List.of(ids));
+    deletedIds.addAll(ids);
+    final idSet = ids.toSet();
+    records.removeWhere((e) => idSet.contains(e.id));
   }
 
   @override

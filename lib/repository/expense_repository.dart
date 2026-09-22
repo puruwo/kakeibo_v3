@@ -11,6 +11,9 @@ import 'package:kakeibo/logger.dart';
 //DatabaseHelperの初期化
 DatabaseHelper db = DatabaseHelper.instance;
 
+/// deleteByIds で IN 句に並べる ID の上限（SQLite のバインド変数上限 999 未満に抑える）
+const int _deleteByIdsChunkSize = 500;
+
 class ImplementsExpenseRepository implements ExpenseRepository {
   // 全ての支出情報を取得する
   @override
@@ -304,6 +307,30 @@ class ImplementsExpenseRepository implements ExpenseRepository {
   void delete(int id) async {
     await db.delete(SqfExpense.tableName, id);
     // logger.i('${SqfExpense.tableName}で$idのレコードを削除しました');
+  }
+
+  // 複数の支出をID指定で削除する（KP-031 一括削除）
+  //
+  // 1トランザクションで実行し、途中で失敗したら全件ロールバックする。
+  // SQLite のバインド変数の上限（旧版は999）を避けるため、IN 句は
+  // [_deleteByIdsChunkSize] 件ずつに分けて同じトランザクション内で実行する。
+  @override
+  Future<void> deleteByIds(List<int> ids) async {
+    if (ids.isEmpty) return;
+    await db.runInTransaction((txn) async {
+      for (var start = 0; start < ids.length; start += _deleteByIdsChunkSize) {
+        final end = start + _deleteByIdsChunkSize < ids.length
+            ? start + _deleteByIdsChunkSize
+            : ids.length;
+        final chunk = ids.sublist(start, end);
+        final placeholders = List.filled(chunk.length, '?').join(', ');
+        await txn.delete(
+          SqfExpense.tableName,
+          where: '${SqfExpense.id} IN ($placeholders)',
+          whereArgs: chunk,
+        );
+      }
+    });
   }
 
   // -------------------------------------------------------------------------

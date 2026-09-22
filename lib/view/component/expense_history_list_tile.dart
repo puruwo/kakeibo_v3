@@ -16,6 +16,8 @@ import 'package:kakeibo/view/component/modal.dart';
 import 'package:kakeibo/view/register_page/expense_tab/open_fixed_cost_record_edit_sheet.dart';
 import 'package:kakeibo/view/register_page/register_page_base.dart';
 import 'package:kakeibo/constant/icon.dart';
+import 'package:kakeibo/application/bulk_delete/bulk_delete_mode.dart';
+import 'package:kakeibo/view/bulk_delete_page/open_bulk_delete_page.dart';
 
 /// 支出履歴の共通タイル（案件 UIデザイン改修 §6）
 ///
@@ -80,6 +82,12 @@ class ExpenseHistoryListTile extends ConsumerWidget {
         onPressed: () async {
           await _openEditSheet(context, ref);
         },
+      ),
+      // 複数選択してまとめて削除（KP-031。並びは 編集／まとめて削除／削除）
+      bulkDeleteMenuItem(
+        context,
+        mode: BulkDeleteMode.expense,
+        recordId: value.id,
       ),
       MenuDialogItem(
         label: '削除',
