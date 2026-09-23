@@ -314,6 +314,36 @@ void main() {
       await unmountRegisterPage(tester);
     });
 
+    testWidgets('最後の行が埋まっていなくても、列の位置は上の行と揃う', (tester) async {
+      // 6件＋「すべて」で2行目は「カテゴリー6・すべて・空セル3つ」。
+      // 空セルの幅が通常セルと違うと均等配置で2行目だけ列がずれる
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(manyCategories: 6),
+      );
+      await pumpTimes(tester);
+
+      expect(
+        tester.getCenter(find.text('カテゴリー6')).dx,
+        moreOrLessEquals(
+          tester.getCenter(find.text('カテゴリー1')).dx,
+          epsilon: 0.5,
+        ),
+      );
+      expect(
+        tester.getCenter(find.text('すべて')).dx,
+        moreOrLessEquals(
+          tester.getCenter(find.text('カテゴリー2')).dx,
+          epsilon: 0.5,
+        ),
+      );
+
+      await unmountRegisterPage(tester);
+    });
+
     testWidgets('「カテゴリーを設定」でカテゴリー設定が支出タブで開く', (tester) async {
       await pumpApp(
         tester,

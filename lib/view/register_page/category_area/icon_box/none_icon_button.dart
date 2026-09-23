@@ -11,7 +11,8 @@ class NoneIconBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 62.2 * context.screenHorizontalMagnification,
+      // 幅は NormalIconButton のラベル幅と同じ式にする（違うと最後の行だけ列がずれる）
+      width: 62.2 * ((context.screenHorizontalMagnification - 1) / 5 + 1),
       height: 34 * context.screenVerticalMagnification + 30,
     );
   }

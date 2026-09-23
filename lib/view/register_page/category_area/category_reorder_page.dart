@@ -468,8 +468,8 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                     labelWidth: labelWidth,
                   );
                 }
-                // 空枠
-                return SizedBox(width: iconBoxSize, height: iconBoxSize + 20);
+                // 空枠（幅をセルと揃えないと、均等配置の最後の行だけ列がずれる）
+                return SizedBox(width: labelWidth, height: iconBoxSize + 20);
               }
 
               final item = items[idx];

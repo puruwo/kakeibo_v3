@@ -317,6 +317,26 @@ void main() {
     expect(find.byType(CategoryBigListPage), findsOneWidget);
   });
 
+  testWidgets('最後の行が埋まっていなくても、列の位置は上の行と揃う', (tester) async {
+    // 6件＋「＋ 追加」で2行目は「カテゴリー6・追加・空枠3つ」。
+    // 空枠の幅がセルと違うと均等配置で2行目だけ列がずれる
+    await pumpApp(
+      tester,
+      home: const CategoryReorderPage(transactionMode: TransactionMode.expense),
+      fakes: buildFakes(smalls: manyDisplayed(6)),
+    );
+    await pumpTimes(tester);
+
+    expect(
+      tester.getCenter(find.text('カテゴリー6')).dx,
+      moreOrLessEquals(tester.getCenter(find.text('カテゴリー1')).dx, epsilon: 0.5),
+    );
+    expect(
+      tester.getCenter(find.text('追加')).dx,
+      moreOrLessEquals(tester.getCenter(find.text('カテゴリー2')).dx, epsilon: 0.5),
+    );
+  });
+
   testWidgets('29件で上限に達すると「＋ 追加」が出ず、リンクは非活性で注意文が出る', (tester) async {
     await pumpApp(
       tester,
