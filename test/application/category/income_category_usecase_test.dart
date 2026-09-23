@@ -436,6 +436,23 @@ void main() {
       expect(updated.first.bigCategoryKey, 1);
       expect(updated.first.displayedOrderInBig, 3);
     });
+
+    test('updateRegisterGrid: 並べたIDを表示＋連番にし、それ以外は非表示で後ろに続ける（KP-032）', () async {
+      // fixture: 10 基本給（key4・表示）/ 11 残業代（key1・非表示）/ 12 原稿料（key7・表示）
+      final container = createUsecaseContainer();
+      final usecase = container.read(incomeCategoryUsecaseProvider);
+
+      await usecase.updateRegisterGrid([11, 10]);
+
+      final records = {for (final e in fakeSmallRepository.records) e.id: e};
+      expect(records[11]!.smallCategoryOrderKey, 0);
+      expect(records[11]!.defaultDisplayed, 1);
+      expect(records[10]!.smallCategoryOrderKey, 1);
+      expect(records[10]!.defaultDisplayed, 1);
+      expect(records[12]!.smallCategoryOrderKey, 2);
+      expect(records[12]!.defaultDisplayed, 0);
+      expect(records[12]!.smallCategoryName, '原稿料');
+    });
   });
 
   group('IncomeCategoryUsecase.deleteBig', () {

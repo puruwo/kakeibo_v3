@@ -391,4 +391,38 @@ class IncomeCategoryUsecase {
 
     _updateDBCountNotifier.incrementState();
   }
+
+  /// 記録画面に直接出すカテゴリーとその並びをまとめて保存する（KP-032）
+  ///
+  /// 支出側（[CategoryUsecase.updateRegisterGrid]）と同じ規則。
+  Future<void> updateRegisterGrid(List<int> displayedIdsInOrder) async {
+    final all = await _smallCategoryRepositoryProvider.fetchAllActive();
+    final byId = {for (final e in all) e.id: e};
+    final displayedSet = displayedIdsInOrder.toSet();
+
+    var order = 0;
+    final updated = <IncomeSmallCategoryEntity>[];
+    for (final id in displayedIdsInOrder) {
+      final current = byId[id];
+      if (current == null) continue;
+      updated.add(
+        current.copyWith(smallCategoryOrderKey: order++, defaultDisplayed: 1),
+      );
+    }
+
+    final hidden = all.where((e) => !displayedSet.contains(e.id)).toList()
+      ..sort((a, b) => a.smallCategoryOrderKey.compareTo(b.smallCategoryOrderKey));
+    for (final current in hidden) {
+      updated.add(
+        current.copyWith(smallCategoryOrderKey: order++, defaultDisplayed: 0),
+      );
+    }
+
+    for (final entity in updated) {
+      if (entity == byId[entity.id]) continue;
+      await _smallCategoryRepositoryProvider.update(entity: entity);
+    }
+
+    _updateDBCountNotifier.incrementState();
+  }
 }

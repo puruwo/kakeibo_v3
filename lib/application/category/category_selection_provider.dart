@@ -2,6 +2,7 @@ import 'package:kakeibo/application/category/category_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
+import 'package:kakeibo/application/category/register_grid_category_rule.dart';
 import 'package:kakeibo/domain/core/category_entity/expense_category_entity/expense_category_entity.dart';
 import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/domain/core/category_selection/category_selection_types.dart';
@@ -22,6 +23,12 @@ Future<ICategoryEntity> categoryByMode(
   // categoryIdが0以下（未選択）の場合は最初のカテゴリーを返す
   if (categoryId <= 0) {
     final categories = await ref.watch(categoriesByModeProvider(mode).future);
+    // 記録画面に直接出しているカテゴリーの先頭を初期選択にする（KP-032）。
+    // 1件も出していないときは全件の先頭（旗の立て方によらず選択できる状態を保つ）
+    final displayed = RegisterGridCategoryRule.displayed(categories);
+    if (displayed.isNotEmpty) {
+      return displayed.first;
+    }
     if (categories.isNotEmpty) {
       return categories.first;
     }

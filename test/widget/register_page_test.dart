@@ -17,6 +17,8 @@ import 'package:kakeibo/domain/db/income/income_entity.dart';
 import 'package:kakeibo/domain/db/income_big_category/income_big_category_entity.dart';
 import 'package:kakeibo/domain/db/income_small_category/income_small_category_entity.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view/category_list_page/category_big_list_page.dart';
+import 'package:kakeibo/view/category_list_page/category_small_list_page.dart';
 import 'package:kakeibo/view/component/app_inset_group.dart';
 import 'package:kakeibo/view/component/app_switch.dart';
 import 'package:kakeibo/view/register_page/category_area/icon_box/selected_icon_button.dart';
@@ -81,13 +83,46 @@ void main() {
     ),
   ];
 
+  /// 記録画面に出していない支出小カテゴリー（KP-032）
+  const hiddenExpenseSmallCategory = ExpenseSmallCategoryEntity(
+    id: 12,
+    smallCategoryOrderKey: 3,
+    bigCategoryKey: 1,
+    displayedOrderInBig: 3,
+    smallCategoryName: 'おやつ',
+    defaultDisplayed: 0,
+  );
+
   /// 記録モーダル用のFake束を組み立てる
   ///
   /// [withExpenseCategories] をfalseにすると支出小カテゴリーが0件になる
   /// （カテゴリー未登録の初期状態を再現する）。
-  TestFakes buildFakes({bool withExpenseCategories = true}) => TestFakes(
+  /// [withHiddenCategory] で記録画面に出していない「おやつ」を足す。
+  /// [manyCategories] を渡すと、その件数の表示中カテゴリー（カテゴリー1…）に差し替える。
+  TestFakes buildFakes({
+    bool withExpenseCategories = true,
+    bool withHiddenCategory = false,
+    int? manyCategories,
+  }) => TestFakes(
     expenseSmallCategory: FakeExpenseSmallCategoryRepository(
-      initialRecords: withExpenseCategories ? expenseSmallCategories : const [],
+      initialRecords: manyCategories != null
+          ? List.generate(
+              manyCategories,
+              (i) => ExpenseSmallCategoryEntity(
+                id: 100 + i,
+                smallCategoryOrderKey: i,
+                bigCategoryKey: 1,
+                displayedOrderInBig: i,
+                smallCategoryName: 'カテゴリー${i + 1}',
+                defaultDisplayed: 1,
+              ),
+            )
+          : withExpenseCategories
+          ? [
+              ...expenseSmallCategories,
+              if (withHiddenCategory) hiddenExpenseSmallCategory,
+            ]
+          : const [],
     ),
     expenseBigCategory: FakeExpenseBigCategoryRepository(
       initialRecords: expenseBigCategories,
@@ -130,12 +165,15 @@ void main() {
       expect(find.text('日用品'), findsOneWidget);
       expect(find.text('並べ替え'), findsOneWidget);
       expect(find.text('追加'), findsOneWidget);
+      // 末尾の「すべて」セル（KP-032）
+      expect(find.text('すべて'), findsOneWidget);
 
       await unmountRegisterPage(tester);
     });
 
-    testWidgets('カテゴリー設定への入口（「追加・編集」セルと下部のリンク）が出る', (tester) async {
-      // KP-027: カテゴリー2件なので最終ページ＝1ページ目。最後のカテゴリーの次にセルが1つ出る
+    testWidgets('グリッド末尾に「すべて」セルが出て、下部に「カテゴリーを設定」リンクが出る', (tester) async {
+      // KP-032: カテゴリー2件なので1ページ。最後のカテゴリーの次に「すべて」セルが1つ出る。
+      // KP-027 の「追加・編集」セルは廃止した
       await pumpApp(
         tester,
         home: const RegisaterPageBase.addExpense(
@@ -145,12 +183,162 @@ void main() {
       );
       await pumpTimes(tester);
 
-      expect(find.text('追加・編集'), findsOneWidget);
+      expect(find.text('すべて'), findsOneWidget);
+      expect(find.byIcon(AppIcons.allCategories), findsOneWidget);
+      expect(find.text('追加・編集'), findsNothing);
       expect(find.text('カテゴリーを設定'), findsOneWidget);
       // セルは最後のカテゴリー（日用品）の右隣に並ぶ
       expect(
-        tester.getCenter(find.text('追加・編集')).dx,
+        tester.getCenter(find.text('すべて')).dx,
         greaterThan(tester.getCenter(find.text('日用品')).dx),
+      );
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('「すべて」から全カテゴリーの一覧を開いて表示外のカテゴリーを選ぶと、「すべて」セルがそのカテゴリーの選択状態になる', (
+      tester,
+    ) async {
+      // KP-032: 「おやつ」は記録画面に出していない（default_displayed = 0）
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(withHiddenCategory: true),
+      );
+      await pumpTimes(tester);
+      expect(find.text('おやつ'), findsNothing);
+
+      await tester.tap(find.text('すべて'));
+      await pumpTimes(tester);
+
+      // 画面1（大カテゴリー一覧・選択モード）→ 画面2（小カテゴリー一覧）
+      expect(find.byType(CategoryBigListPage), findsOneWidget);
+      expect(find.text('すべてのカテゴリー'), findsOneWidget);
+      await tester.tap(find.text('生活費'));
+      await pumpTimes(tester);
+      expect(find.byType(CategorySmallListPage), findsOneWidget);
+      // 選択中（食費）の行にチェック
+      expect(find.byIcon(AppIcons.done), findsOneWidget);
+
+      await tester.tap(find.text('おやつ'));
+      await pumpTimes(tester);
+
+      // 一覧が閉じ、「すべて」セルが「おやつ」の選択状態に変わる（グリッドの選択セルは無い）
+      expect(find.byType(CategoryBigListPage), findsNothing);
+      expect(find.text('おやつ'), findsOneWidget);
+      expect(find.text('すべて'), findsNothing);
+      expect(find.byType(SelectedIconButton), findsNothing);
+      expect(
+        tester.getCenter(find.text('おやつ')).dx,
+        greaterThan(tester.getCenter(find.text('日用品')).dx),
+      );
+
+      // グリッドの別のセルをタップすると「すべて」に戻る
+      await tester.tap(find.text('食費'));
+      await tester.pump();
+      expect(find.text('すべて'), findsOneWidget);
+      expect(find.text('おやつ'), findsNothing);
+      expect(
+        tester
+            .widget<SelectedIconButton>(find.byType(SelectedIconButton))
+            .categoryEntity
+            .categoryName,
+        '食費',
+      );
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('一覧で表示中のカテゴリーを選ぶとグリッド側が選択状態になり「すべて」は変わらない', (tester) async {
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(),
+      );
+      await pumpTimes(tester);
+
+      await tester.tap(find.text('すべて'));
+      await pumpTimes(tester);
+      await tester.tap(find.text('生活費'));
+      await pumpTimes(tester);
+      await tester.tap(find.text('日用品'));
+      await pumpTimes(tester);
+
+      expect(find.text('すべて'), findsOneWidget);
+      expect(
+        tester
+            .widget<SelectedIconButton>(find.byType(SelectedIconButton))
+            .categoryEntity
+            .categoryName,
+        '日用品',
+      );
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('30件以上あっても29件＋「すべて」の2ページに収まる', (tester) async {
+      // KP-032: 表示中は表示順の先頭29件で打ち切る
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(manyCategories: 31),
+      );
+      await pumpTimes(tester);
+
+      // 1ページ目: 1〜15件目。「すべて」はまだ無い
+      expect(find.text('カテゴリー1'), findsOneWidget);
+      expect(find.text('カテゴリー15'), findsOneWidget);
+      expect(find.text('すべて'), findsNothing);
+
+      // 2ページ目へ: 16〜29件目＋「すべて」。30件目以降は出ない
+      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
+      await pumpTimes(tester);
+      expect(find.text('カテゴリー16'), findsOneWidget);
+      expect(find.text('カテゴリー29'), findsOneWidget);
+      expect(find.text('すべて'), findsOneWidget);
+      expect(find.text('カテゴリー30'), findsNothing);
+      expect(find.text('カテゴリー31'), findsNothing);
+
+      // 3ページ目は無い
+      await tester.drag(find.byType(PageView).first, const Offset(-400, 0));
+      await pumpTimes(tester);
+      expect(find.text('すべて'), findsOneWidget);
+      expect(find.text('カテゴリー30'), findsNothing);
+
+      await unmountRegisterPage(tester);
+    });
+
+    testWidgets('最後の行が埋まっていなくても、列の位置は上の行と揃う', (tester) async {
+      // 6件＋「すべて」で2行目は「カテゴリー6・すべて・空セル3つ」。
+      // 空セルの幅が通常セルと違うと均等配置で2行目だけ列がずれる
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.addExpense(
+          transactionMode: TransactionMode.expense,
+        ),
+        fakes: buildFakes(manyCategories: 6),
+      );
+      await pumpTimes(tester);
+
+      expect(
+        tester.getCenter(find.text('カテゴリー6')).dx,
+        moreOrLessEquals(
+          tester.getCenter(find.text('カテゴリー1')).dx,
+          epsilon: 0.5,
+        ),
+      );
+      expect(
+        tester.getCenter(find.text('すべて')).dx,
+        moreOrLessEquals(
+          tester.getCenter(find.text('カテゴリー2')).dx,
+          epsilon: 0.5,
+        ),
       );
 
       await unmountRegisterPage(tester);
@@ -616,6 +804,32 @@ void main() {
       await unmountRegisterPage(tester);
     });
 
+    testWidgets('編集対象のカテゴリーが記録画面に出ていないとき、「すべて」セルがそのカテゴリーの選択状態になる', (
+      tester,
+    ) async {
+      // KP-032: 小カテゴリー12（おやつ）は default_displayed = 0
+      const hiddenTarget = ExpenseEntity(
+        id: 500,
+        paymentCategoryId: 12,
+        date: '20250701',
+        price: 300,
+        memo: 'チョコ',
+      );
+      await pumpApp(
+        tester,
+        home: const RegisaterPageBase.editExpense(expenseEntity: hiddenTarget),
+        fakes: buildFakes(withHiddenCategory: true),
+      );
+      await pumpTimes(tester);
+
+      expect(find.text('おやつ'), findsOneWidget);
+      expect(find.text('すべて'), findsNothing);
+      expect(find.byType(SelectedIconButton), findsNothing);
+      expect(find.byIcon(AppIcons.allCategories), findsOneWidget);
+
+      await unmountRegisterPage(tester);
+    });
+
     testWidgets('金額を変えて更新するとupdateが記録される', (tester) async {
       final fakes = buildFakes();
       await pumpApp(
@@ -844,7 +1058,7 @@ void main() {
       await tester.tap(rearrangeLink);
       await pumpTimes(tester);
 
-      expect(find.text('アイコンの並び替え'), findsOneWidget);
+      expect(find.text('記録画面のカテゴリー'), findsOneWidget);
 
       await unmountRegisterPage(tester);
     });

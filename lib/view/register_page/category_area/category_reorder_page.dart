@@ -3,14 +3,17 @@ import 'package:kakeibo/util/color_code.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:kakeibo/application/category/category_provider.dart';
-import 'package:kakeibo/application/category/category_selection_provider.dart';
 import 'package:kakeibo/application/category/category_usecase.dart';
+import 'package:kakeibo/application/category/displayed_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_provider.dart';
 import 'package:kakeibo/application/category/income_category_usecase.dart';
+import 'package:kakeibo/application/category/register_grid_category_rule.dart';
 import 'package:kakeibo/constant/strings.dart';
+import 'package:kakeibo/domain/core/category_entity/i_category_entity.dart';
 import 'package:kakeibo/theme/app_colors.dart';
 import 'package:kakeibo/util/common_widget/inkwell_util.dart';
 import 'package:kakeibo/view/category_edit_page/category_setting_page.dart';
+import 'package:kakeibo/view/category_list_page/category_big_list_page.dart';
 import 'package:kakeibo/view/component/failure_snackbar.dart';
 import 'package:kakeibo/view/component/glass_app_bar_background.dart';
 import 'package:kakeibo/view/component/modal.dart';
@@ -21,9 +24,13 @@ import 'package:kakeibo/view/component/button_util.dart';
 import 'package:kakeibo/view_model/state/category_reorder/reordering_category_list.dart';
 import 'package:kakeibo/constant/icon.dart';
 
-/// カテゴリー並び替えページ
+/// 記録画面のカテゴリー（旧「アイコンの並び替え」。KP-032）
 ///
-/// ドラッグ＆ドロップでカテゴリーアイコンの表示順を変更できる
+/// 記録モーダルのグリッドに直接出すカテゴリーを決める画面。
+/// - ドラッグ＆ドロップで表示順を変える（従来）
+/// - セル右上の「−」で記録画面から外す（表示中が1件のときは外せない）
+/// - 末尾の「＋ 追加」セル／下のリンク「記録画面に追加」で全カテゴリーの一覧から加える
+/// - 保存で `default_displayed` と表示順をまとめて更新する
 class CategoryReorderPage extends ConsumerStatefulWidget {
   const CategoryReorderPage({super.key, required this.transactionMode});
 
@@ -69,11 +76,11 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     }
   }
 
-  /// 初期データを読み込む
+  /// 初期データ（記録画面に表示中のカテゴリー）を読み込む
   Future<void> _initializeData() async {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final categories = await ref.read(
-        categoriesByModeProvider(widget.transactionMode).future,
+        displayedCategoriesByModeProvider(widget.transactionMode).future,
       );
       ref
           .read(reorderingCategoryListNotifierProvider.notifier)
@@ -102,11 +109,34 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     }
   }
 
+  /// 全カテゴリーの一覧（追加モード）を開き、選ばれたカテゴリーを末尾に加える（KP-032）
+  ///
+  /// 表示中の項目は一覧側で「表示中」になりタップできない。保存するまで確定しない。
+  Future<void> _openAddList() async {
+    final notifier = ref.read(reorderingCategoryListNotifierProvider.notifier);
+    final result = await showAppModalBottomSheet<ICategoryEntity>(
+      context,
+      child: CategoryBigListPage(
+        transactionMode: widget.transactionMode,
+        mode: CategoryListMode.add,
+        displayedIds: notifier.displayedIds.toSet(),
+      ),
+    );
+    if (!mounted || result == null) return;
+    notifier.addCategory(result);
+  }
+
+  /// 記録画面から外す（保存するまで確定しない）
+  void _remove(int id) {
+    ref.read(reorderingCategoryListNotifierProvider.notifier).removeById(id);
+  }
+
+  /// セル数（表示中＋上限未満なら「＋ 追加」セル）からページ数を求める
   int get pageCount {
     final items = ref.watch(reorderingCategoryListNotifierProvider).items;
-    return items.isEmpty
-        ? 1
-        : (items.length + slotsPerPage - 1) ~/ slotsPerPage;
+    final cellCount =
+        items.length + (RegisterGridCategoryRule.isFull(items.length) ? 0 : 1);
+    return RegisterGridCategoryRule.pageCountFor(cellCount);
   }
 
   /// ページ(page)のスロット(slot:0..14) -> items の index を返す（なければ null）
@@ -183,7 +213,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     );
   }
 
-  /// 並び替え結果を保存
+  /// 表示中のカテゴリーと並び順を保存
   Future<void> _saveOrder() async {
     final state = ref.read(reorderingCategoryListNotifierProvider);
     if (!state.hasChanges) {
@@ -191,22 +221,22 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
       return;
     }
 
-    final newOrders = ref
+    final displayedIds = ref
         .read(reorderingCategoryListNotifierProvider.notifier)
-        .getNewDisplayOrders();
+        .displayedIds;
 
     try {
       switch (widget.transactionMode) {
         case TransactionMode.expense:
           await ref
               .read(categoryUsecaseProvider)
-              .updateDisplayOrders(newOrders);
+              .updateRegisterGrid(displayedIds);
           ref.invalidate(allCategoriesProvider);
           break;
         case TransactionMode.income:
           await ref
               .read(incomeCategoryUsecaseProvider)
-              .updateDisplayOrders(newOrders);
+              .updateRegisterGrid(displayedIds);
           ref.invalidate(allIncomeCategoriesProvider);
           break;
       }
@@ -228,93 +258,127 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
   Widget build(BuildContext context) {
     final reorderingState = ref.watch(reorderingCategoryListNotifierProvider);
     final items = reorderingState.items;
+    final isFull = RegisterGridCategoryRule.isFull(items.length);
 
     return Scaffold(
       backgroundColor: context.colors.surfaceElevated,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         flexibleSpace: const GlassAppBarBackground(),
-        title: Text('アイコンの並び替え', style: context.textStyles.pageHeaderText),
+        title: Text('記録画面のカテゴリー', style: context.textStyles.pageHeaderText),
         leading: IconButton(
           onPressed: () => Navigator.of(context).pop(),
           icon: Icon(AppIcons.close, color: context.colors.text),
         ),
       ),
       body: SafeArea(
-        child: items.isEmpty
+        child: items.isEmpty && !reorderingState.hasChanges
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
                   // 保存ボタンを画面下部に固定するため、それ以外のコンテンツを
-                  // Expandedで上詰めにし、余った縦スペースをここで吸収する
+                  // Expandedで上詰めにし、余った縦スペースをここで吸収する。
+                  // 縦の短い端末では見出し・リンクが収まらないためスクロールを許可する（KP-032）
                   Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 16),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 16),
 
-                        // 説明テキスト
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          child: Text(
-                            'アイコンを長押しして並び替えができます',
-                            style: context.registerStyles.iconRearrangeDescription,
-                          ),
-                        ),
-
-                        const SizedBox(height: 8),
-
-                        // カテゴリー設定への入口（KP-027）。未保存の並び順は保持したまま開く
-                        AppInkWell(
-                          borderRadius: BorderRadius.circular(8),
-                          onTap: _openCategorySetting,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 8,
-                              horizontal: 8,
-                            ),
+                          // 見出し＋件数（n／29）
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
                             child: Row(
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.baseline,
+                              textBaseline: TextBaseline.alphabetic,
                               children: [
-                                Icon(
-                                  AppIcons.settings,
-                                  size: 14,
-                                  color: context.colors.primary,
-                                ),
-                                const SizedBox(width: 4),
                                 Text(
-                                  'カテゴリーの追加・編集',
-                                  style: context.textStyles.textButtonTextStyle,
+                                  '記録画面に表示',
+                                  style: context.textStyles.insetGroupHeader,
+                                ),
+                                Text(
+                                  '${items.length}／${RegisterGridCategoryRule.maxDisplayedCount}',
+                                  style: context
+                                      .textStyles
+                                      .insetGroupHeaderNumeric,
                                 ),
                               ],
                             ),
                           ),
-                        ),
 
-                        const SizedBox(height: 8),
+                          const SizedBox(height: 4),
 
-                        // グリッド部分
-                        SizedBox(
-                          height: 270 * context.screenVerticalMagnification,
-                          child: PageView.builder(
-                            controller: _pageController,
-                            itemCount: pageCount,
-                            itemBuilder: (context, page) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: _buildCategoryGrid(page, items),
-                              );
-                            },
+                          // 説明テキスト（上限到達時は注意文に差し替える）
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                isFull
+                                    ? '表示できるのは ${RegisterGridCategoryRule.maxDisplayedCount} 件までです。外してから追加してください'
+                                    : '長押しして並び替え',
+                                style: isFull
+                                    ? context
+                                          .registerStyles
+                                          .iconRearrangeDescription
+                                          .copyWith(
+                                            color: context.colors.danger,
+                                          )
+                                    : context
+                                          .registerStyles
+                                          .iconRearrangeDescription,
+                              ),
+                            ),
                           ),
-                        ),
 
-                        // ページインジケーター
-                        if (pageCount > 1) ...[
-                          const SizedBox(height: 16),
-                          _buildPageIndicator(),
+                          const SizedBox(height: 8),
+
+                          // グリッド部分
+                          SizedBox(
+                            height: 270 * context.screenVerticalMagnification,
+                            child: PageView.builder(
+                              controller: _pageController,
+                              itemCount: pageCount,
+                              itemBuilder: (context, page) {
+                                return Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                  ),
+                                  child: _buildCategoryGrid(page, items),
+                                );
+                              },
+                            ),
+                          ),
+
+                          // ページインジケーター
+                          if (pageCount > 1) ...[
+                            const SizedBox(height: 16),
+                            _buildPageIndicator(),
+                          ],
+
+                          const SizedBox(height: 8),
+
+                          // 追加の導線（上限到達時は非活性）とカテゴリー設定への入口
+                          Wrap(
+                            alignment: WrapAlignment.center,
+                            children: [
+                              _buildLink(
+                                icon: AppIcons.add,
+                                label: '記録画面に追加',
+                                onTap: isFull ? null : _openAddList,
+                              ),
+                              // KP-027 の「カテゴリーの追加・編集」。記録モーダルのリンクと文言をそろえた（KP-032）
+                              _buildLink(
+                                icon: AppIcons.settings,
+                                label: 'カテゴリーを設定',
+                                onTap: _openCategorySetting,
+                              ),
+                            ],
+                          ),
                         ],
-                      ],
+                      ),
                     ),
                   ),
                   Padding(
@@ -339,6 +403,41 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     );
   }
 
+  /// 本文内の補助リンク（`onTap` が null なら非活性）
+  Widget _buildLink({
+    required IconData icon,
+    required String label,
+    required VoidCallback? onTap,
+  }) {
+    final color = onTap == null
+        ? context.colors.textTertiary
+        : context.colors.primary;
+    final content = Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: color),
+          const SizedBox(width: 4),
+          Text(
+            label,
+            style: context.textStyles.textButtonTextStyle.copyWith(
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+    if (onTap == null) {
+      return Semantics(button: true, enabled: false, child: content);
+    }
+    return AppInkWell(
+      borderRadius: BorderRadius.circular(8),
+      onTap: onTap,
+      child: content,
+    );
+  }
+
   /// カテゴリーグリッドを構築
   Widget _buildCategoryGrid(int page, List<ReorderingCategoryItem> items) {
     final screenVerticalMagnification = context.screenVerticalMagnification;
@@ -360,9 +459,17 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
               final slot = rowIndex * columns + columnIndex;
               final idx = listIndexFromSlot(page, slot);
 
-              // 空枠
               if (idx == null) {
-                return SizedBox(width: iconBoxSize, height: iconBoxSize + 20);
+                // 最後のカテゴリーの次のセルは「＋ 追加」（上限到達時は出さない。KP-032）
+                if (page * slotsPerPage + slot == items.length &&
+                    !RegisterGridCategoryRule.isFull(items.length)) {
+                  return _buildAddCell(
+                    iconBoxSize: iconBoxSize,
+                    labelWidth: labelWidth,
+                  );
+                }
+                // 空枠（幅をセルと揃えないと、均等配置の最後の行だけ列がずれる）
+                return SizedBox(width: labelWidth, height: iconBoxSize + 20);
               }
 
               final item = items[idx];
@@ -421,6 +528,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                         iconBoxSize: iconBoxSize,
                         labelWidth: labelWidth,
                         isDragging: true,
+                        canRemove: items.length > 1,
                       ),
                     ),
                     child: _buildCategoryItem(
@@ -428,6 +536,7 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
                       iconBoxSize: iconBoxSize,
                       labelWidth: labelWidth,
                       isDragging: isDragging,
+                      canRemove: items.length > 1,
                     ),
                   );
                 },
@@ -439,30 +548,86 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
     );
   }
 
-  /// カテゴリーアイテム（アイコン＋ラベル）を構築
+  /// 「＋ 追加」セル（KP-032）。寸法はカテゴリーのセルと揃える
+  Widget _buildAddCell({
+    required double iconBoxSize,
+    required double labelWidth,
+  }) {
+    return Semantics(
+      button: true,
+      label: '記録画面に追加',
+      child: AppInkWell(
+        borderRadius: BorderRadius.circular(22),
+        onTap: _openAddList,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: iconBoxSize,
+              height: iconBoxSize,
+              child: Icon(
+                AppIcons.add,
+                size: 25,
+                color: context.colors.primary,
+              ),
+            ),
+            const SizedBox(height: 4),
+            SizedBox(
+              width: labelWidth,
+              child: Text(
+                '追加',
+                style: context.registerStyles.categoryLabel.copyWith(
+                  color: context.colors.primary,
+                ),
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// カテゴリーアイテム（アイコン＋ラベル＋右上の「−」）を構築
   Widget _buildCategoryItem({
     required ReorderingCategoryItem item,
     required double iconBoxSize,
     required double labelWidth,
     required bool isDragging,
+    required bool canRemove,
   }) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return Stack(
+      clipBehavior: Clip.none,
       children: [
-        SizedBox(
-          width: iconBoxSize,
-          height: iconBoxSize,
-          child: buildTile(isDragging: isDragging, child: animatedIcon(item)),
+        Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(
+              width: iconBoxSize,
+              height: iconBoxSize,
+              child: buildTile(
+                isDragging: isDragging,
+                child: animatedIcon(item),
+              ),
+            ),
+            const SizedBox(height: 4),
+            SizedBox(
+              width: labelWidth,
+              child: Text(
+                item.categoryName,
+                style: context.registerStyles.categoryLabel,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 4),
-        SizedBox(
-          width: labelWidth,
-          child: Text(
-            item.categoryName,
-            style: context.registerStyles.categoryLabel,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.center,
-          ),
+        // 記録画面から外す（表示中が1件のときは非活性。KP-032）
+        Positioned(
+          top: -6,
+          right: 0,
+          child: _RemoveBadge(onTap: canRemove ? () => _remove(item.id) : null),
         ),
       ],
     );
@@ -488,6 +653,42 @@ class _CategoryReorderPageState extends ConsumerState<CategoryReorderPage> {
           ),
         ),
       ),
+    );
+  }
+}
+
+/// セル右上の「−」（記録画面から外す。KP-032）
+///
+/// カテゴリー設定の行頭の削除（`CategoryDeleteRowButton`）と同じ絵柄・色で、
+/// セルの角に収まる小ささにしたもの。[onTap] が null のときは非活性。
+class _RemoveBadge extends StatelessWidget {
+  const _RemoveBadge({required this.onTap});
+
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final icon = Padding(
+      padding: const EdgeInsets.all(4),
+      child: Icon(
+        AppIcons.deleteRow,
+        size: 18,
+        color: onTap == null
+            ? context.colors.textTertiary
+            : context.colors.danger,
+      ),
+    );
+    return Semantics(
+      button: true,
+      enabled: onTap != null,
+      label: '記録画面から外す',
+      child: onTap == null
+          ? icon
+          : AppInkWell(
+              borderRadius: BorderRadius.circular(13),
+              onTap: onTap,
+              child: icon,
+            ),
     );
   }
 }

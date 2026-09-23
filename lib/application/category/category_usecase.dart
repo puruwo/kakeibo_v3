@@ -469,4 +469,42 @@ class CategoryUsecase {
     // DBの更新回数をインクリメント
     _updateDBCountNotifier.incrementState();
   }
+
+  /// 記録画面に直接出すカテゴリーとその並びをまとめて保存する（KP-032）
+  ///
+  /// [displayedIdsInOrder] に並ぶ小カテゴリーを表示（`default_displayed = 1`）にし、
+  /// 表示順（`small_category_order_key`）を 0 からの連番で振り直す。
+  /// それ以外の有効な小カテゴリーは表示しない（0）にし、表示順は表示中の後ろに
+  /// 元の相対順で続ける（キーの重複を作らない）。変更のあった行だけ update する。
+  Future<void> updateRegisterGrid(List<int> displayedIdsInOrder) async {
+    final all = await _smallCategoryRepositoryProvider.fetchAllActive();
+    final byId = {for (final e in all) e.id: e};
+    final displayedSet = displayedIdsInOrder.toSet();
+
+    var order = 0;
+    final updated = <ExpenseSmallCategoryEntity>[];
+    for (final id in displayedIdsInOrder) {
+      final current = byId[id];
+      // 一覧に無いID（削除済み等）は無視する
+      if (current == null) continue;
+      updated.add(
+        current.copyWith(smallCategoryOrderKey: order++, defaultDisplayed: 1),
+      );
+    }
+
+    final hidden = all.where((e) => !displayedSet.contains(e.id)).toList()
+      ..sort((a, b) => a.smallCategoryOrderKey.compareTo(b.smallCategoryOrderKey));
+    for (final current in hidden) {
+      updated.add(
+        current.copyWith(smallCategoryOrderKey: order++, defaultDisplayed: 0),
+      );
+    }
+
+    for (final entity in updated) {
+      if (entity == byId[entity.id]) continue;
+      await _smallCategoryRepositoryProvider.update(entity: entity);
+    }
+
+    _updateDBCountNotifier.incrementState();
+  }
 }
